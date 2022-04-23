@@ -28,12 +28,14 @@ import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionUtils;
+import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -58,6 +60,15 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		protected AbstractJedisCommand(final C client, final ProtocolCommand command){
 			super(client, command);
+		}
+
+		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response){
+			return JedisResult.Builder.<SV, TV>forResponse(response).build();
+		}
+
+		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response,
+															  final Converter<SV, TV> converter){
+			return JedisResult.Builder.<SV, TV>forResponse(response).mappedWith(converter).build();
 		}
 
 	}
@@ -85,6 +96,14 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		public <SR> JedisCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
 											 final Converter<SR, R> converter){
+			this.pipelineExecutor = new Executor<Pipeline, Response<R>>() {
+
+				@Override
+				public Response<R> execute(Pipeline context){
+					return null;
+				}
+				
+			};
 			//this.pipelineExecutor = context->converter.convert(executor.execute(context));
 			return this;
 		}
@@ -102,27 +121,27 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		@Override
 		public R execute(){
-			final RedisConnection connection = client.getConnection();
+			final JedisConnection connection = (JedisConnection) client.getConnection();
+
 			if(connection.isPipeline()){
 				if(pipelineExecutor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.PIPELINE, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
 				}else{
-					//client.getTxResults().add(pipelineExecutor.execute(null));
+					client.getTxResults()
+							.add((JedisResult<Object, Object>) newJedisResult(pipelineExecutor.execute(null)));
 				}
 			}else if(connection.isTransaction()){
 				if(transactionExecutor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.TRANSACTION, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
 				}else{
-					transactionExecutor.execute(null);
+					client.getTxResults()
+							.add((JedisResult<Object, Object>) newJedisResult(transactionExecutor.execute(null)));
 				}
 			}else{
 				if(executor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.NORMAL, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.NORMAL);
 				}else{
-					return executor.execute(null);
+					return executor.execute(connection.getJedis());
 				}
 			}
 			return null;
@@ -174,22 +193,19 @@ public interface JedisRedisOperations extends RedisOperations {
 			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
 				if(pipelineExecutor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.PIPELINE, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
 				}else{
 					pipelineExecutor.execute(null);
 				}
 			}else if(connection.isTransaction()){
 				if(transactionExecutor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.TRANSACTION, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
 				}else{
 					transactionExecutor.execute(null);
 				}
 			}else{
 				if(executor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.NORMAL, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.NORMAL);
 				}else{
 					return executor.execute(null);
 				}
@@ -243,22 +259,19 @@ public interface JedisRedisOperations extends RedisOperations {
 			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
 				if(pipelineExecutor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.PIPELINE, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
 				}else{
 					pipelineExecutor.execute(null);
 				}
 			}else if(connection.isTransaction()){
 				if(transactionExecutor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.TRANSACTION, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
 				}else{
 					transactionExecutor.execute(null);
 				}
 			}else{
 				if(executor == null){
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.NORMAL, getCommand());
+					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.NORMAL);
 				}else{
 					return executor.execute(null);
 				}

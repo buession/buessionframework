@@ -25,9 +25,11 @@
 package com.buession.redis.client.operations;
 
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 
 /**
@@ -57,6 +59,13 @@ public interface RedisOperations {
 		public R run(final CommandArguments arguments) throws RedisException{
 			return client.execute(this, arguments);
 		}
+
+		protected NotSupportedCommandException throwNotSupportedCommandException(
+				final NotSupportedCommandException.Type type){
+			return new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(client.getConnection()),
+					type, getCommand());
+		}
+
 	}
 
 }

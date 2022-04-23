@@ -116,92 +116,92 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public long bitCount(final String key, final long start, final long end){
-		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end));
+		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end));
 	}
 
 	@Override
 	public long bitCount(final byte[] key, final long start, final long end){
-		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end));
+		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end));
 	}
 
 	@Override
 	public long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption){
-		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end, bitCountOption));
+		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end, bitCountOption));
 	}
 
 	@Override
 	public long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption){
-		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end, bitCountOption));
+		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end, bitCountOption));
 	}
 
 	@Override
 	public List<Long> bitField(final String key, final String... arguments){
-		return bitMapOpsExecute((ops)->ops.bitField(key, arguments));
+		return bitMapOpsExecute((ops)->ops.bitField(rawKey(key), arguments));
 	}
 
 	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
-		return bitMapOpsExecute((ops)->ops.bitField(key, arguments));
+		return bitMapOpsExecute((ops)->ops.bitField(rawKey(key), arguments));
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments){
-		return bitMapOpsExecute((ops)->ops.bitFieldRo(key, arguments));
+		return bitMapOpsExecute((ops)->ops.bitFieldRo(rawKey(key), arguments));
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments){
-		return bitMapOpsExecute((ops)->ops.bitFieldRo(key, arguments));
+		return bitMapOpsExecute((ops)->ops.bitFieldRo(rawKey(key), arguments));
 	}
 
 	@Override
 	public long bitOp(final BitOperation operation, final String destKey, final String... keys){
-		return bitMapOpsExecute((ops)->ops.bitOp(operation, destKey, keys));
+		return bitMapOpsExecute((ops)->ops.bitOp(operation, rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
-		return bitMapOpsExecute((ops)->ops.bitOp(operation, destKey, keys));
+		return bitMapOpsExecute((ops)->ops.bitOp(operation, rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public long bitPos(final String key, final boolean value){
-		return bitMapOpsExecute((ops)->ops.bitPos(key, value));
+		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value));
 	}
 
 	@Override
 	public long bitPos(final byte[] key, final boolean value){
-		return bitMapOpsExecute((ops)->ops.bitPos(key, value));
+		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value));
 	}
 
 	@Override
 	public long bitPos(final String key, final boolean value, final long start, final long end){
-		return bitMapOpsExecute((ops)->ops.bitPos(key, value, start, end));
+		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value, start, end));
 	}
 
 	@Override
 	public long bitPos(final byte[] key, final boolean value, final long start, final long end){
-		return bitMapOpsExecute((ops)->ops.bitPos(key, value, start, end));
+		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value, start, end));
 	}
 
 	@Override
 	public boolean getBit(final String key, final long offset){
-		return bitMapOpsExecute((ops)->ops.getBit(key, offset));
+		return bitMapOpsExecute((ops)->ops.getBit(rawKey(key), offset));
 	}
 
 	@Override
 	public boolean getBit(final byte[] key, final long offset){
-		return bitMapOpsExecute((ops)->ops.getBit(key, offset));
+		return bitMapOpsExecute((ops)->ops.getBit(rawKey(key), offset));
 	}
 
 	@Override
 	public boolean setBit(final String key, final long offset, final boolean value){
-		return bitMapOpsExecute((ops)->ops.setBit(key, offset, value));
+		return bitMapOpsExecute((ops)->ops.setBit(rawKey(key), offset, value));
 	}
 
 	@Override
 	public boolean setBit(final byte[] key, final long offset, final boolean value){
-		return bitMapOpsExecute((ops)->ops.setBit(key, offset, value));
+		return bitMapOpsExecute((ops)->ops.setBit(rawKey(key), offset, value));
 	}
 
 	@Override
@@ -2056,12 +2056,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public long memoryUsage(final String key, final int samples){
-		return serverOpsExecute((ops)->ops.memoryUsage(key, samples));
+		return serverOpsExecute((ops)->ops.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override
 	public long memoryUsage(final byte[] key, final int samples){
-		return serverOpsExecute((ops)->ops.memoryUsage(key, samples));
+		return serverOpsExecute((ops)->ops.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override
@@ -4038,44 +4038,44 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start){
-		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start));
+		return streamOpsOpsExecute((ops)->ops.xRevRange(rawKey(key), end, start));
 	}
 
 	@Override
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start){
-		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start));
+		return streamOpsOpsExecute((ops)->ops.xRevRange(rawKey(key), end, start));
 	}
 
 	@Override
 	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
 									   final long count){
-		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start, count));
+		return streamOpsOpsExecute((ops)->ops.xRevRange(rawKey(key), end, start, count));
 	}
 
 	@Override
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
 									   final long count){
-		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start, count));
+		return streamOpsOpsExecute((ops)->ops.xRevRange(rawKey(key), end, start, count));
 	}
 
 	@Override
 	public long xTrim(final String key, final XTrimArgument xTrimArgument){
-		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument));
+		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument));
 	}
 
 	@Override
 	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
-		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument));
+		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument));
 	}
 
 	@Override
 	public long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit){
-		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument, limit));
+		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument, limit));
 	}
 
 	@Override
 	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit){
-		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument, limit));
+		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument, limit));
 	}
 
 	@Override
@@ -4212,92 +4212,92 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Status pSetEx(final String key, String value, int lifetime){
-		return stringOpsOpsExecute((ops)->ops.pSetEx(key, value, lifetime));
+		return stringOpsOpsExecute((ops)->ops.pSetEx(rawKey(key), value, lifetime));
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-		return stringOpsOpsExecute((ops)->ops.pSetEx(key, value, lifetime));
+		return stringOpsOpsExecute((ops)->ops.pSetEx(rawKey(key), value, lifetime));
 	}
 
 	@Override
 	public Status set(final String key, final String value){
-		return stringOpsOpsExecute((ops)->ops.set(key, value));
+		return stringOpsOpsExecute((ops)->ops.set(rawKey(key), value));
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
-		return stringOpsOpsExecute((ops)->ops.set(key, value));
+		return stringOpsOpsExecute((ops)->ops.set(rawKey(key), value));
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
-		return stringOpsOpsExecute((ops)->ops.set(key, value, setArgument));
+		return stringOpsOpsExecute((ops)->ops.set(rawKey(key), value, setArgument));
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		return stringOpsOpsExecute((ops)->ops.set(key, value, setArgument));
+		return stringOpsOpsExecute((ops)->ops.set(rawKey(key), value, setArgument));
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-		return stringOpsOpsExecute((ops)->ops.setEx(key, value, lifetime));
+		return stringOpsOpsExecute((ops)->ops.setEx(rawKey(key), value, lifetime));
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		return stringOpsOpsExecute((ops)->ops.setEx(key, value, lifetime));
+		return stringOpsOpsExecute((ops)->ops.setEx(rawKey(key), value, lifetime));
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
-		return stringOpsOpsExecute((ops)->ops.setNx(key, value));
+		return stringOpsOpsExecute((ops)->ops.setNx(rawKey(key), value));
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
-		return stringOpsOpsExecute((ops)->ops.setNx(key, value));
+		return stringOpsOpsExecute((ops)->ops.setNx(rawKey(key), value));
 	}
 
 	@Override
 	public long setRange(final String key, final long offset, final String value){
-		return stringOpsOpsExecute((ops)->ops.setRange(key, offset, value));
+		return stringOpsOpsExecute((ops)->ops.setRange(rawKey(key), offset, value));
 	}
 
 	@Override
 	public long setRange(final byte[] key, final long offset, final byte[] value){
-		return stringOpsOpsExecute((ops)->ops.setRange(key, offset, value));
+		return stringOpsOpsExecute((ops)->ops.setRange(rawKey(key), offset, value));
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
-		return stringOpsOpsExecute((ops)->ops.getRange(key, start, end));
+		return stringOpsOpsExecute((ops)->ops.getRange(rawKey(key), start, end));
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end){
-		return stringOpsOpsExecute((ops)->ops.getRange(key, start, end));
+		return stringOpsOpsExecute((ops)->ops.getRange(rawKey(key), start, end));
 	}
 
 	@Override
 	public long strlen(final String key){
-		return stringOpsOpsExecute((ops)->ops.strlen(key));
+		return stringOpsOpsExecute((ops)->ops.strlen(rawKey(key)));
 	}
 
 	@Override
 	public long strlen(final byte[] key){
-		return stringOpsOpsExecute((ops)->ops.strlen(key));
+		return stringOpsOpsExecute((ops)->ops.strlen(rawKey(key)));
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end){
-		return stringOpsOpsExecute((ops)->ops.substr(key, start, end));
+		return stringOpsOpsExecute((ops)->ops.substr(rawKey(key), start, end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
-		return stringOpsOpsExecute((ops)->ops.substr(key, start, end));
+		return stringOpsOpsExecute((ops)->ops.substr(rawKey(key), start, end));
 	}
 
 	@Override

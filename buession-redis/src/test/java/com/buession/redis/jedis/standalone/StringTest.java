@@ -22,27 +22,49 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.jedis.standalone;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.AbstractRedisOperations;
+import com.buession.lang.Status;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
 
 /**
- * Jedis Redis 命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> extends AbstractRedisOperations<C>
-		implements JedisRedisOperations {
+public class StringTest extends AbstractJedisRedisTest {
 
-	protected C client;
+	@Test
+	public void set(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
-	public AbstractJedisRedisOperations(final C client){
-		this.client = client;
+		User user = new User();
+		user.setId(1);
+		user.setUsername("test");
+
+		Assert.assertSame(redisTemplate.set("a", "A"), Status.SUCCESS);
+		Assert.assertSame(redisTemplate.set("user", user), Status.SUCCESS);
+	}
+
+	@Test
+	public void get(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+
+		Assert.assertTrue("A" .equals(redisTemplate.get("a")));
+		System.out.println(redisTemplate.get("user"));
+	}
+
+	@Test
+	public void getObject(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+
+		System.out.println(redisTemplate.getObject("user", User.class));
+		System.out.println(redisTemplate.getObject("user" .getBytes(StandardCharsets.UTF_8), User.class));
 	}
 
 }
