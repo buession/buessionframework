@@ -24,14 +24,13 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.TransactionResultConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -75,23 +74,15 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 
 	@Override
 	public List<Object> exec(){
-		return new JedisSentinelCommand<List<Object>>(client, ProtocolCommand.EXEC)
-				.transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					List<Object> results = connection.exec();
+		return new JedisSentinelCommand<List<Object>>(client, ProtocolCommand.EXEC) {
 
-					return new Response<>(new Builder<List<Object>>() {
+			@Override
+			public List<Object> execute() throws RedisException{
+				RedisConnection connection = client.getConnection();
+				return connection.exec();
+			}
 
-						@Override
-						public List<Object> build(Object data){
-							return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(
-									client.getTxResults()).convert(
-									results);
-						}
-
-					});
-				})
-				.run();
+		}.run();
 	}
 
 	@Override

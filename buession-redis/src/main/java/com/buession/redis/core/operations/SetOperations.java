@@ -53,7 +53,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	<V> long sAdd(final String key, final V... members);
+	<V> Long sAdd(final String key, final V... members);
 
 	/**
 	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -69,7 +69,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	<V> long sAdd(final byte[] key, final V... members);
+	<V> Long sAdd(final byte[] key, final V... members);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
@@ -781,7 +781,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> long sRem(final String key, final V member);
+	<V> Long sRem(final String key, final V member);
 
 	/**
 	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -797,7 +797,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> long sRem(final byte[] key, final V member);
+	<V> Long sRem(final byte[] key, final V member);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -813,7 +813,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> long sRem(final String key, final V... members);
+	<V> Long sRem(final String key, final V... members);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -829,7 +829,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> long sRem(final byte[] key, final V... members);
+	<V> Long sRem(final byte[] key, final V... members);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象

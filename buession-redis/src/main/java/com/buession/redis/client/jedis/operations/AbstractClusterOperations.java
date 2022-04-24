@@ -56,7 +56,7 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	}
 
 	@Override
-	public long clusterKeySlot(final byte[] key){
+	public Long clusterKeySlot(final byte[] key){
 		return clusterKeySlot(SafeEncoder.encode(key));
 	}
 

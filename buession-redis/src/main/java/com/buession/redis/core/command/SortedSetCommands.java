@@ -213,7 +213,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final String key, final Map<String, Double> members);
+	Long zAdd(final String key, final Map<String, Double> members);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -227,7 +227,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members);
+	Long zAdd(final byte[] key, final Map<byte[], Double> members);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -245,7 +245,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx);
+	Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -263,7 +263,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx);
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -281,7 +281,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt);
+	Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -299,7 +299,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt);
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -316,7 +316,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final String key, final Map<String, Double> members, final boolean ch);
+	Long zAdd(final String key, final Map<String, Double> members, final boolean ch);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -333,7 +333,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch);
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -355,138 +355,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt);
-
-	/**
-	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个 member 元素及其 score
-	 * @param nxXx
-	 * 		更新成员方式：
-	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
-	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
-	 * @param gtLt
-	 * 		更新新的分值方式：
-	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
-	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt);
-
-	/**
-	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个 member 元素及其 score
-	 * @param nxXx
-	 * 		更新成员方式：
-	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
-	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
-	 * @param ch
-	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
-	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch);
-
-	/**
-	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个 member 元素及其 score
-	 * @param nxXx
-	 * 		更新成员方式：
-	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
-	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
-	 * @param ch
-	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
-	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch);
-
-	/**
-	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个 member 元素及其 score
-	 * @param gtLt
-	 * 		更新新的分值方式：
-	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
-	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
-	 * @param ch
-	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
-	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch);
-
-	/**
-	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个 member 元素及其 score
-	 * @param gtLt
-	 * 		更新新的分值方式：
-	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
-	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
-	 * @param ch
-	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
-	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch);
-
-	/**
-	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个 member 元素及其 score
-	 * @param nxXx
-	 * 		更新成员方式：
-	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
-	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
-	 * @param gtLt
-	 * 		更新新的分值方式：
-	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
-	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
-	 * @param ch
-	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
-	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt, final boolean ch);
+	Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -505,13 +374,144 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		更新新的分值方式：
 	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
 	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
 	 * @param ch
 	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
 	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt, final boolean ch);
+	Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt, final boolean ch);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt, final boolean ch);
 
 	/**
 	 * 获取有序集 key 的基数
@@ -523,7 +523,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集 key 的基数
 	 */
-	long zCard(final String key);
+	Long zCard(final String key);
 
 	/**
 	 * 获取有序集 key 的基数
@@ -535,7 +535,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集 key 的基数
 	 */
-	long zCard(final byte[] key);
+	Long zCard(final byte[] key);
 
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
@@ -551,7 +551,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
-	long zCount(final String key, final double min, final double max);
+	Long zCount(final String key, final double min, final double max);
 
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
@@ -567,7 +567,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
-	long zCount(final byte[] key, final double min, final double max);
+	Long zCount(final byte[] key, final double min, final double max);
 
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
@@ -583,7 +583,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
-	long zCount(final String key, final String min, final String max);
+	Long zCount(final String key, final String min, final String max);
 
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
@@ -599,7 +599,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
-	long zCount(final byte[] key, final byte[] min, final byte[] max);
+	Long zCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -661,7 +661,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	long zDiffStore(final String destKey, final String... keys);
+	Long zDiffStore(final String destKey, final String... keys);
 
 	/**
 	 * Computes the difference between the first and all successive input sorted sets and stores the result in destination
@@ -675,7 +675,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	long zDiffStore(final byte[] destKey, final byte[]... keys);
+	Long zDiffStore(final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量 increment
@@ -691,7 +691,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	double zIncrBy(final String key, final double increment, final String member);
+	Double zIncrBy(final String key, final double increment, final String member);
 
 	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量 increment
@@ -707,7 +707,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	double zIncrBy(final byte[] key, final double increment, final byte[] member);
+	Double zIncrBy(final byte[] key, final double increment, final byte[] member);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -945,7 +945,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	long zInterStore(final String destKey, final String... keys);
+	Long zInterStore(final String destKey, final String... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -959,23 +959,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	long zInterStore(final byte[] destKey, final byte[]... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 *
-	 * @return 保存到 destKey 结果集的基数
-	 */
-	long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate);
+	Long zInterStore(final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -991,39 +975,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 保存到 destKey 结果集的基数
-	 */
-	long zInterStore(final String destKey, final String[] keys, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 保存到 destKey 结果集的基数
-	 */
-	long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights);
+	Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -1036,12 +988,42 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
+	 *
+	 * @return 保存到 destKey 结果集的基数
+	 */
+	Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param weights
 	 * 		每个给定有序集的乘法因子
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate, final double... weights);
+	Long zInterStore(final String destKey, final String[] keys, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 保存到 destKey 结果集的基数
+	 */
+	Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -1059,7 +1041,25 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate, final double... weights);
+	Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 保存到 destKey 结果集的基数
+	 */
+	Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate, final double... weights);
 
 	/**
 	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
@@ -1075,7 +1075,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
-	long zLexCount(final String key, final double min, final double max);
+	Long zLexCount(final String key, final double min, final double max);
 
 	/**
 	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
@@ -1091,7 +1091,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
-	long zLexCount(final byte[] key, final double min, final double max);
+	Long zLexCount(final byte[] key, final double min, final double max);
 
 	/**
 	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
@@ -1107,7 +1107,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
-	long zLexCount(final String key, final String min, final String max);
+	Long zLexCount(final String key, final String min, final String max);
 
 	/**
 	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
@@ -1123,7 +1123,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
-	long zLexCount(final byte[] key, final byte[] min, final byte[] max);
+	Long zLexCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
 	 * 返回有序集中指定成员的 members 的 scores
@@ -1794,7 +1794,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end);
+	Long zRangeStore(final String destKey, final String key, final long start, final long end);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1812,27 +1812,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end);
-
-	/**
-	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
-	 * 具有相同 score 值的成员按字典序来排列；
-	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 * @param by
-	 *        {@link ZRangeBy}
-	 *
-	 * @return The number of elements in the resulting sorted set
-	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by);
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1852,7 +1832,27 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by);
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param by
+	 *        {@link ZRangeBy}
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1872,7 +1872,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev);
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1892,7 +1892,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev);
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1914,7 +1914,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
 					 final long count);
 
 	/**
@@ -1937,7 +1937,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
 					 final long count);
 
 	/**
@@ -1960,7 +1960,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 					 final boolean rev);
 
 	/**
@@ -1983,7 +1983,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 					 final boolean rev);
 
 	/**
@@ -2008,7 +2008,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 					 final long offset, final long count);
 
 	/**
@@ -2033,7 +2033,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 					 final long offset, final long count);
 
 	/**
@@ -2058,7 +2058,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
 					 final long offset, final long count);
 
 	/**
@@ -2083,7 +2083,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
 					 final long offset, final long count);
 
 	/**
@@ -2110,7 +2110,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 					 final boolean rev, final long offset, final long count);
 
 	/**
@@ -2137,7 +2137,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 					 final boolean rev, final long offset, final long count);
 
 	/**
@@ -2182,7 +2182,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	long zRem(final String key, final String... members);
+	Long zRem(final String key, final String... members);
 
 	/**
 	 * 移除有序集 key 中的一个或多个成员，不存在的成员将被忽略
@@ -2196,7 +2196,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	long zRem(final byte[] key, final byte[]... members);
+	Long zRem(final byte[] key, final byte[]... members);
 
 	/**
 	 * 对于一个所有成员的分值都相同的有序集合键 key 来说，这个命令会移除该集合中，成员介于 min 和 max 范围内的所有元素
@@ -2212,7 +2212,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
-	long zRemRangeByLex(final String key, final double min, final double max);
+	Long zRemRangeByLex(final String key, final double min, final double max);
 
 	/**
 	 * 对于一个所有成员的分值都相同的有序集合键 key 来说，这个命令会移除该集合中，成员介于 min 和 max 范围内的所有元素
@@ -2228,7 +2228,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
-	long zRemRangeByLex(final byte[] key, final double min, final double max);
+	Long zRemRangeByLex(final byte[] key, final double min, final double max);
 
 	/**
 	 * 对于一个所有成员的分值都相同的有序集合键 key 来说，这个命令会移除该集合中，成员介于 min 和 max 范围内的所有元素
@@ -2244,7 +2244,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
-	long zRemRangeByLex(final String key, final String min, final String max);
+	Long zRemRangeByLex(final String key, final String min, final String max);
 
 	/**
 	 * 对于一个所有成员的分值都相同的有序集合键 key 来说，这个命令会移除该集合中，成员介于 min 和 max 范围内的所有元素
@@ -2260,7 +2260,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
-	long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max);
+	Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
 	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
@@ -2276,7 +2276,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
-	long zRemRangeByScore(final String key, final double min, final double max);
+	Long zRemRangeByScore(final String key, final double min, final double max);
 
 	/**
 	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
@@ -2292,7 +2292,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
-	long zRemRangeByScore(final byte[] key, final double min, final double max);
+	Long zRemRangeByScore(final byte[] key, final double min, final double max);
 
 	/**
 	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
@@ -2308,7 +2308,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
-	long zRemRangeByScore(final String key, final String min, final String max);
+	Long zRemRangeByScore(final String key, final String min, final String max);
 
 	/**
 	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
@@ -2324,7 +2324,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
-	long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max);
+	Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
 	 * 移除有序集 key 中，指定排名（rank）区间内的所有成员；
@@ -2341,7 +2341,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
-	long zRemRangeByRank(final String key, final long start, final long end);
+	Long zRemRangeByRank(final String key, final long start, final long end);
 
 	/**
 	 * 移除有序集 key 中，指定排名（rank）区间内的所有成员；
@@ -2358,7 +2358,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
-	long zRemRangeByRank(final byte[] key, final long start, final long end);
+	Long zRemRangeByRank(final byte[] key, final long start, final long end);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递减（从大到小）来排列；
@@ -2937,7 +2937,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 如果 member 是有序集 key 的成员，返回 member 的排名；
 	 * 如果 member 不是有序集 key 的成员，返回 null
 	 */
-	long zRevRank(final String key, final String member);
+	Long zRevRank(final String key, final String member);
 
 	/**
 	 * 获取有序集 key 中成员 member 的排名。其中有序集成员按 score 值递减（从大到小）排序
@@ -2952,7 +2952,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 如果 member 是有序集 key 的成员，返回 member 的排名；
 	 * 如果 member 不是有序集 key 的成员，返回 null
 	 */
-	long zRevRank(final byte[] key, final byte[] member);
+	Long zRevRank(final byte[] key, final byte[] member);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3474,7 +3474,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	long zUnionStore(final String destKey, final String... keys);
+	Long zUnionStore(final String destKey, final String... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
@@ -3488,23 +3488,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	long zUnionStore(final byte[] destKey, final byte[]... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zunionstore.html" target="_blank">http://redisdoc.com/sorted_set/zunionstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 *
-	 * @return 保存到 destKey 的结果集的基数
-	 */
-	long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate);
+	Long zUnionStore(final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
@@ -3520,39 +3504,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zunionstore.html" target="_blank">http://redisdoc.com/sorted_set/zunionstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 保存到 destKey 的结果集的基数
-	 */
-	long zUnionStore(final String destKey, final String[] keys, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zunionstore.html" target="_blank">http://redisdoc.com/sorted_set/zunionstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 保存到 destKey 的结果集的基数
-	 */
-	long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights);
+	Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
@@ -3565,12 +3517,42 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
+	 *
+	 * @return 保存到 destKey 的结果集的基数
+	 */
+	Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zunionstore.html" target="_blank">http://redisdoc.com/sorted_set/zunionstore.html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param weights
 	 * 		每个给定有序集的乘法因子
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate, final double... weights);
+	Long zUnionStore(final String destKey, final String[] keys, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zunionstore.html" target="_blank">http://redisdoc.com/sorted_set/zunionstore.html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 保存到 destKey 的结果集的基数
+	 */
+	Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
@@ -3588,6 +3570,24 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate, final double... weights);
+	Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zunionstore.html" target="_blank">http://redisdoc.com/sorted_set/zunionstore.html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 保存到 destKey 的结果集的基数
+	 */
+	Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate, final double... weights);
 
 }

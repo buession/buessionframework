@@ -51,8 +51,11 @@ import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.client.operations.StreamOperations;
 import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.client.operations.TransactionOperations;
+import com.buession.redis.core.Command;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
@@ -179,7 +182,23 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	public Pipeline pipeline(){
-		return execute((cmd)->client.pipeline());
+		return client.execute(new Command<Pipeline>() {
+
+			@Override
+			public ProtocolCommand getCommand(){
+				return null;
+			}
+
+			@Override
+			public Pipeline execute() throws RedisException{
+				return client.getConnection().openPipeline();
+			}
+
+			@Override
+			public Pipeline run(final CommandArguments arguments) throws RedisException{
+				return client.getConnection().openPipeline();
+			}
+		});
 	}
 
 	public <R> R execute(final SessionCallback<R> callback) throws RedisException{

@@ -70,21 +70,21 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
-	public int clusterCountFailureReports(final String nodeId){
+	public Integer clusterCountFailureReports(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisClusterCommand<Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 				.run(args);
 	}
 
 	@Override
-	public int clusterCountFailureReports(final byte[] nodeId){
+	public Integer clusterCountFailureReports(final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisClusterCommand<Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 				.run(args);
 	}
 
 	@Override
-	public long clusterCountKeysInSlot(final int slot){
+	public Long clusterCountKeysInSlot(final int slot){
 		final CommandArguments args = CommandArguments.create("slot", slot);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
 				.run(args);
@@ -124,7 +124,7 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
-	public long clusterKeySlot(final String key){
+	public Long clusterKeySlot(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 				.run(args);

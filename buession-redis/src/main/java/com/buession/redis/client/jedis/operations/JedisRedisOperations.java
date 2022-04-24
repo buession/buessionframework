@@ -33,11 +33,13 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.AbstractRedisCommand;
+import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.transaction.jedis.JedisTransaction;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.Pipeline;
@@ -113,7 +115,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 				@Override
 				public JedisResult<R, R> run() throws RedisException{
-					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) client.pipeline()).primitive();
+					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline));
 				}
 
@@ -128,7 +130,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 				@Override
 				public JedisResult<SR, R> run() throws RedisException{
-					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) client.pipeline()).primitive();
+					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline), converter);
 				}
 
@@ -138,18 +140,36 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		public JedisCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
-			//this.transactionExecutor = executor;
+			this.transactionRunner = new Runner() {
+
+				@Override
+				public JedisResult<R, R> run() throws RedisException{
+					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
+					return newJedisResult(executor.execute(transaction));
+				}
+
+			};
+
 			return this;
 		}
 
 		public <SR> JedisCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
 												final Converter<SR, R> converter){
-			//this.transactionExecutor = context->converter.convert(executor.execute(context));
+			this.transactionRunner = new Runner() {
+
+				@Override
+				public JedisResult<SR, R> run() throws RedisException{
+					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
+					return newJedisResult(executor.execute(transaction), converter);
+				}
+
+			};
+
 			return this;
 		}
 
 		@Override
-		public R execute(){
+		public R execute() throws RedisException{
 			final JedisConnection connection = (JedisConnection) client.getConnection();
 
 			if(connection.isPipeline()){
@@ -162,7 +182,8 @@ public interface JedisRedisOperations extends RedisOperations {
 				if(transactionRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
 				}else{
-					client.getTxResults().add(transactionRunner.run());
+					FutureResult<Response<Object>, Object, Object> a = transactionRunner.run();
+					client.getTxResults().add(a);
 				}
 			}else{
 				if(runner == null){
@@ -216,7 +237,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		@Override
-		public R execute(){
+		public R execute() throws RedisException{
 			/*
 			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
@@ -285,7 +306,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		@Override
-		public R execute(){
+		public R execute() throws RedisException{
 			/*
 			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){

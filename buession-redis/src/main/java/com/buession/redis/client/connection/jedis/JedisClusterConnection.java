@@ -25,7 +25,9 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,28 +61,43 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public boolean isTransaction(){
-		return false;
-	}
-
-	@Override
-	public Pipeline pipeline(){
+	public Pipeline openPipeline(){
 		return null;
 	}
 
 	@Override
-	public void multi(){
+	public void closePipeline(){
 
 	}
 
 	@Override
-	public List<Object> exec(){
+	public Transaction multi(){
 		return null;
 	}
 
-	@Override
-	public void discard(){
 
+	@Override
+	public List<Object> exec() throws RedisException{
+		if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
+		}
+	}
+
+	@Override
+	public void discard() throws RedisException{
+		if(transaction != null){
+			transaction.discard();
+			transaction = null;
+		}else{
+			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
+		}
 	}
 
 	@Override

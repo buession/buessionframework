@@ -52,7 +52,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	long hDel(final String key, final String... fields);
+	Long hDel(final String key, final String... fields);
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域
@@ -66,13 +66,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	long hDel(final byte[] key, final byte[]... fields);
+	Long hDel(final byte[] key, final byte[]... fields);
 
 	/**
 	 * 检查给定域 field 是否存在于哈希表 key 当中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hexists.html" target="_blank">http://redisdoc.com/hash/hexists
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hexists.html" target="_blank">http://redisdoc.com/hash/hexists.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -81,13 +80,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 域 field 是否存在于哈希表 key 中返回 true，否则返回 false
 	 */
-	boolean hExists(final String key, final String field);
+	Boolean hExists(final String key, final String field);
 
 	/**
 	 * 检查给定域 field 是否存在于哈希表 key 当中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hexists.html" target="_blank">http://redisdoc.com/hash/hexists
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hexists.html" target="_blank">http://redisdoc.com/hash/hexists.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -96,7 +94,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 域 field 是否存在于哈希表 key 中返回 true，否则返回 false
 	 */
-	boolean hExists(final byte[] key, final byte[] field);
+	Boolean hExists(final byte[] key, final byte[] field);
 
 	/**
 	 * 获取哈希表中给定域的值
@@ -164,7 +162,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中域 field 增量 increment 后的值
 	 */
-	long hIncrBy(final String key, final String field, final long value);
+	Long hIncrBy(final String key, final String field, final long value);
 
 	/**
 	 * 为哈希表 key 中的域 field 的值加上增量 increment
@@ -180,7 +178,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中域 field 增量 increment 后的值
 	 */
-	long hIncrBy(final byte[] key, final byte[] field, final long value);
+	Long hIncrBy(final byte[] key, final byte[] field, final long value);
 
 	/**
 	 * 为哈希表 key 中的域 field 加上浮点数增量 increment
@@ -196,7 +194,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中域 field 增量 increment 后的值
 	 */
-	double hIncrByFloat(final String key, final String field, final double value);
+	Double hIncrByFloat(final String key, final String field, final double value);
 
 	/**
 	 * 为哈希表 key 中的域 field 加上浮点数增量 increment
@@ -212,7 +210,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中域 field 增量 increment 后的值
 	 */
-	double hIncrByFloat(final byte[] key, final byte[] field, final double value);
+	Double hIncrByFloat(final byte[] key, final byte[] field, final double value);
 
 	/**
 	 * 获取哈希表 key 中的所有域
@@ -248,7 +246,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中域的数量
 	 */
-	long hLen(final String key);
+	Long hLen(final String key);
 
 	/**
 	 * 获取哈希表 key 中域的数量
@@ -260,7 +258,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中域的数量
 	 */
-	long hLen(final byte[] key);
+	Long hLen(final byte[] key);
 
 	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值
@@ -676,7 +674,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	long hSet(final String key, final String field, final String value);
+	Long hSet(final String key, final String field, final String value);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。
@@ -694,7 +692,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	long hSet(final byte[] key, final byte[] field, final byte[] value);
+	Long hSet(final byte[] key, final byte[] field, final byte[] value);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value
@@ -740,7 +738,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中，与给定域 field 相关联的值的字符串长度
 	 */
-	long hStrLen(final String key, final String field);
+	Long hStrLen(final String key, final String field);
 
 	/**
 	 * 获取哈希表 key 中，与给定域 field 相关联的值的字符串长度
@@ -754,7 +752,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 哈希表 key 中，与给定域 field 相关联的值的字符串长度
 	 */
-	long hStrLen(final byte[] key, final byte[] field);
+	Long hStrLen(final byte[] key, final byte[] field);
 
 	/**
 	 * 获取哈希表 key 中所有域的值

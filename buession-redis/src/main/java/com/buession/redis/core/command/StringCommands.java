@@ -53,7 +53,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 追加 value 之后 键 key 的值的长度
 	 */
-	long append(final String key, final String value);
+	Long append(final String key, final String value);
 
 	/**
 	 * 如果键 key 已经存在并且它的值是一个字符串，将 value 追加到键 key 现有值的末尾
@@ -67,7 +67,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 追加 value 之后 键 key 的值的长度
 	 */
-	long append(final byte[] key, final byte[] value);
+	Long append(final byte[] key, final byte[] value);
 
 	/**
 	 * 为键 key 储存的数字值加上一
@@ -79,7 +79,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 在执行加一操作之后的值
 	 */
-	long incr(final String key);
+	Long incr(final String key);
 
 	/**
 	 * 为键 key 储存的数字值加上一
@@ -92,7 +92,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 在执行加一操作之后的值
 	 */
-	long incr(final byte[] key);
+	Long incr(final byte[] key);
 
 	/**
 	 * 为键 key 储存的数字值加上增量 increment
@@ -106,7 +106,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 增量 increment 之后的值
 	 */
-	long incrBy(final String key, final long value);
+	Long incrBy(final String key, final long value);
 
 	/**
 	 * 为键 key 储存的数字值加上增量 increment
@@ -120,7 +120,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 增量 increment 之后的值
 	 */
-	long incrBy(final byte[] key, final long value);
+	Long incrBy(final byte[] key, final long value);
 
 	/**
 	 * 为键 key 储存的值加上浮点数增量 increment
@@ -134,7 +134,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 增量 increment 之后的值
 	 */
-	double incrByFloat(final String key, final double value);
+	Double incrByFloat(final String key, final double value);
 
 	/**
 	 * 为键 key 储存的值加上浮点数增量 increment
@@ -148,7 +148,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 增量 increment 之后的值
 	 */
-	double incrByFloat(final byte[] key, final double value);
+	Double incrByFloat(final byte[] key, final double value);
 
 	/**
 	 * 键 key 储存的数字值减去一
@@ -160,7 +160,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 在执行减一操作之后的值
 	 */
-	long decr(final String key);
+	Long decr(final String key);
 
 	/**
 	 * 键 key 储存的数字值减去一
@@ -172,7 +172,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 在执行减一操作之后的值
 	 */
-	long decr(final byte[] key);
+	Long decr(final byte[] key);
 
 	/**
 	 * 将键 key 储存的整数值减去减量 decrement
@@ -186,7 +186,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 减量 increment 之后的值
 	 */
-	long decrBy(final String key, final long value);
+	Long decrBy(final String key, final long value);
 
 	/**
 	 * 将键 key 储存的整数值减去减量 decrement
@@ -200,7 +200,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 键 key 减量 increment 之后的值
 	 */
-	long decrBy(final byte[] key, final long value);
+	Long decrBy(final byte[] key, final long value);
 
 	/**
 	 * 获取键 key 相关联的字符串值
@@ -530,7 +530,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 被修改之后，字符串值的长度
 	 */
-	long setRange(final String key, final long offset, final String value);
+	Long setRange(final String key, final long offset, final String value);
 
 	/**
 	 * 从偏移量 offset 开始，用 value 参数覆写键 key 储存的字符串值
@@ -546,7 +546,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 被修改之后，字符串值的长度
 	 */
-	long setRange(final byte[] key, final long offset, final byte[] value);
+	Long setRange(final byte[] key, final long offset, final byte[] value);
 
 	/**
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
@@ -592,7 +592,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 字符串值的长度；键 key 不存在时，命令返回 0 ；当 key 储存的不是字符串值时，抛出异常
 	 */
-	long strlen(final String key);
+	Long strlen(final String key);
 
 	/**
 	 * 获取键 key 储存的字符串值的长度
@@ -604,7 +604,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 字符串值的长度；键 key 不存在时，命令返回 0 ；当 key 储存的不是字符串值时，抛出异常
 	 */
-	long strlen(final byte[] key);
+	Long strlen(final byte[] key);
 
 	/**
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；

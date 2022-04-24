@@ -22,32 +22,49 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.transaction.jedis;
 
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisException;
+import com.buession.core.utils.Assert;
+import com.buession.redis.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
  */
-public interface Command<R> {
+public class JedisTransaction implements Transaction {
 
-	ProtocolCommand getCommand();
+	private redis.clients.jedis.Transaction delegate;
 
-	R execute() throws RedisException;
+	private final static Logger logger = LoggerFactory.getLogger(JedisTransaction.class);
 
-	default R run() throws RedisException{
-		return run(null);
+	public JedisTransaction(redis.clients.jedis.Transaction transaction){
+		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
+		this.delegate = transaction;
 	}
 
-	R run(final CommandArguments arguments) throws RedisException;
+	public redis.clients.jedis.Transaction primitive(){
+		return delegate;
+	}
 
-	interface Runner {
+	@Override
+	public List<Object> exec(){
+		logger.info("Redis transaction exec.");
+		return delegate.exec();
+	}
 
-		<R> R run() throws RedisException;
+	@Override
+	public String discard(){
+		logger.info("Redis transaction discard.");
+		return delegate.discard();
+	}
 
+	@Override
+	public void close(){
+		logger.info("Redis transaction close.");
+		delegate.close();
 	}
 
 }

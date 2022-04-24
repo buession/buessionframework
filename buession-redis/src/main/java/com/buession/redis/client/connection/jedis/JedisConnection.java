@@ -29,9 +29,12 @@ import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -188,12 +191,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public boolean isTransaction(){
-		return transaction != null;
-	}
-
-	@Override
-	public Pipeline pipeline(){
+	public Pipeline openPipeline(){
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());
 		}
@@ -202,20 +200,41 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public void multi(){
-		transaction = jedis.multi();
+	public void closePipeline(){
+		pipeline.close();
+		pipeline = null;
 	}
 
 	@Override
-	public List<Object> exec(){
-		return transaction != null ? transaction.exec() : null;
+	public Transaction multi(){
+		if(transaction == null){
+			transaction = new JedisTransaction(jedis.multi());
+		}
+
+		return transaction;
 	}
 
 	@Override
-	public void discard(){
+	public List<Object> exec() throws RedisException{
+		if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
+		}
+	}
+
+	@Override
+	public void discard() throws RedisException{
 		if(transaction != null){
 			transaction.discard();
 			transaction = null;
+		}else{
+			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
 		}
 	}
 

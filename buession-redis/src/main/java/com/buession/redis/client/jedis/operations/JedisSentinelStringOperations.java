@@ -52,7 +52,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long append(final String key, final String value){
+	public Long append(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.APPEND)
 				.general((cmd)->cmd.append(key, value)).pipeline((cmd)->cmd.append(key, value))
@@ -61,7 +61,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long append(final byte[] key, final byte[] value){
+	public Long append(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.APPEND)
 				.general((cmd)->cmd.append(key, value)).pipeline((cmd)->cmd.append(key, value))
@@ -70,7 +70,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long incr(final String key){
+	public Long incr(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCR)
 				.general((cmd)->cmd.incr(key))
@@ -80,7 +80,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long incr(final byte[] key){
+	public Long incr(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCR)
 				.general((cmd)->cmd.incr(key))
@@ -90,7 +90,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long incrBy(final String key, final long value){
+	public Long incrBy(final String key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCRBY)
 				.general((cmd)->cmd.incrBy(key, value))
@@ -100,7 +100,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long incrBy(final byte[] key, final long value){
+	public Long incrBy(final byte[] key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCRBY)
 				.general((cmd)->cmd.incrBy(key, value))
@@ -110,7 +110,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public double incrByFloat(final String key, final double value){
+	public Double incrByFloat(final String key, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
 				.general((cmd)->cmd.incrByFloat(key, value))
@@ -120,7 +120,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public double incrByFloat(final byte[] key, final double value){
+	public Double incrByFloat(final byte[] key, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
 				.general((cmd)->cmd.incrByFloat(key, value))
@@ -130,7 +130,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long decr(final String key){
+	public Long decr(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECR)
 				.general((cmd)->cmd.decr(key))
@@ -140,7 +140,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long decr(final byte[] key){
+	public Long decr(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECR)
 				.general((cmd)->cmd.decr(key))
@@ -150,7 +150,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long decrBy(final String key, final long value){
+	public Long decrBy(final String key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECRBY)
 				.general((cmd)->cmd.decrBy(key, value))
@@ -160,7 +160,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long decrBy(final byte[] key, final long value){
+	public Long decrBy(final byte[] key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECRBY)
 				.general((cmd)->cmd.decrBy(key, value))
@@ -410,7 +410,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long setRange(final String key, final long offset, final String value){
+	public Long setRange(final String key, final long offset, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setrange(key, offset, value))
@@ -419,7 +419,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long setRange(final byte[] key, final long offset, final byte[] value){
+	public Long setRange(final byte[] key, final long offset, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setrange(key, offset, value))
@@ -448,7 +448,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long strlen(final String key){
+	public Long strlen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.STRLEN)
 				.general((cmd)->cmd.strlen(key))
@@ -458,7 +458,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	}
 
 	@Override
-	public long strlen(final byte[] key){
+	public Long strlen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.STRLEN)
 				.general((cmd)->cmd.strlen(key))

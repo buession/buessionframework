@@ -54,7 +54,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default long hDelete(final String key, final String... fields){
+	default Long hDelete(final String key, final String... fields){
 		return hDel(key, fields);
 	}
 
@@ -70,7 +70,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default long hDelete(final byte[] key, final byte[]... fields){
+	default Long hDelete(final byte[] key, final byte[]... fields){
 		return hDel(key, fields);
 	}
 
@@ -292,7 +292,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default long hDecrBy(final String key, final String field, final long value){
+	default Long hDecrBy(final String key, final String field, final long value){
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -310,7 +310,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default long hDecrBy(final byte[] key, final byte[] field, final long value){
+	default Long hDecrBy(final byte[] key, final byte[] field, final long value){
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -328,7 +328,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default double hDecrByFloat(final String key, final String field, final double value){
+	default Double hDecrByFloat(final String key, final String field, final double value){
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -346,7 +346,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default double hDecrByFloat(final byte[] key, final byte[] field, final double value){
+	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value){
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -1620,7 +1620,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	<V> long hSet(final String key, final String field, final V value);
+	<V> Long hSet(final String key, final String field, final V value);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。
@@ -1638,7 +1638,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	<V> long hSet(final byte[] key, final byte[] field, final V value);
+	<V> Long hSet(final byte[] key, final byte[] field, final V value);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value

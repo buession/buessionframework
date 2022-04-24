@@ -733,12 +733,12 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> long hSet(final String key, final String field, final V value){
+	public <V> Long hSet(final String key, final String field, final V value){
 		return hSet(key, field, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> long hSet(final byte[] key, final byte[] field, final V value){
+	public <V> Long hSet(final byte[] key, final byte[] field, final V value){
 		return hSet(key, field, serializer.serializeAsBytes(value));
 	}
 
@@ -837,12 +837,12 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> long lInsert(final String key, final ListPosition position, final V pivot, final V value){
+	public <V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value){
 		return lInsert(key, position, serializer.serialize(pivot), serializer.serialize(value));
 	}
 
 	@Override
-	public <V> long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value){
+	public <V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value){
 		return lInsert(key, position, serializer.serializeAsBytes(pivot), serializer.serializeAsBytes(value));
 	}
 
@@ -1163,42 +1163,42 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> long lPush(final String key, final V value){
+	public <V> Long lPush(final String key, final V value){
 		return lPush(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> long lPush(final byte[] key, final V value){
+	public <V> Long lPush(final byte[] key, final V value){
 		return lPush(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> long lPush(final String key, final V... values){
+	public <V> Long lPush(final String key, final V... values){
 		return lPush(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> long lPush(final byte[] key, final V... values){
+	public <V> Long lPush(final byte[] key, final V... values){
 		return lPush(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
-	public <V> long lPushX(final String key, final V value){
+	public <V> Long lPushX(final String key, final V value){
 		return lPushX(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> long lPushX(final byte[] key, final V value){
+	public <V> Long lPushX(final byte[] key, final V value){
 		return lPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> long lPushX(final String key, final V... values){
+	public <V> Long lPushX(final String key, final V... values){
 		return lPushX(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> long lPushX(final byte[] key, final V... values){
+	public <V> Long lPushX(final byte[] key, final V... values){
 		return lPushX(key, serializer.serializeAsBytes(values));
 	}
 
@@ -1287,52 +1287,52 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> long rPush(final String key, final V value){
+	public <V> Long rPush(final String key, final V value){
 		return rPush(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> long rPush(final byte[] key, final V value){
+	public <V> Long rPush(final byte[] key, final V value){
 		return rPush(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> long rPush(final String key, final V... values){
+	public <V> Long rPush(final String key, final V... values){
 		return rPush(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> long rPush(final byte[] key, final V... values){
+	public <V> Long rPush(final byte[] key, final V... values){
 		return rPush(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
-	public <V> long rPushX(final String key, final V value){
+	public <V> Long rPushX(final String key, final V value){
 		return rPushX(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> long rPushX(final byte[] key, final V value){
+	public <V> Long rPushX(final byte[] key, final V value){
 		return rPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> long rPushX(final String key, final V... values){
+	public <V> Long rPushX(final String key, final V... values){
 		return rPushX(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> long rPushX(final byte[] key, final V... values){
+	public <V> Long rPushX(final byte[] key, final V... values){
 		return rPushX(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
-	public <V> long sAdd(final String key, final V... members){
+	public <V> Long sAdd(final String key, final V... members){
 		return sAdd(key, serializer.serialize(members));
 	}
 
 	@Override
-	public <V> long sAdd(final byte[] key, final V... members){
+	public <V> Long sAdd(final byte[] key, final V... members){
 		return sAdd(key, serializer.serializeAsBytes(members));
 	}
 
@@ -1631,22 +1631,22 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> long sRem(final String key, final V member){
+	public <V> Long sRem(final String key, final V member){
 		return sRem(key, serializer.serialize(member));
 	}
 
 	@Override
-	public <V> long sRem(final byte[] key, final V member){
+	public <V> Long sRem(final byte[] key, final V member){
 		return sRem(key, serializer.serializeAsBytes(member));
 	}
 
 	@Override
-	public <V> long sRem(final String key, final V... members){
+	public <V> Long sRem(final String key, final V... members){
 		return sRem(key, serializer.serialize(members));
 	}
 
 	@Override
-	public <V> long sRem(final byte[] key, final V... members){
+	public <V> Long sRem(final byte[] key, final V... members){
 		return sRem(key, serializer.serializeAsBytes(members));
 	}
 
@@ -1693,83 +1693,83 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member){
+	public <V> Long zAdd(final String key, final double score, final V member){
 		return zAdd(key, score, serializer.serialize(member));
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member){
+	public <V> Long zAdd(final byte[] key, final double score, final V member){
 		return zAdd(key, score, serializer.serialize(member));
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx){
+	public <V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx){
 		return zAdd(key, score, serializer.serialize(member), nxXx);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx){
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx){
 		return zAdd(key, score, serializer.serialize(member), nxXx);
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final GtLt gtLt){
+	public <V> Long zAdd(final String key, final double score, final V member, final GtLt gtLt){
 		return zAdd(key, score, serializer.serialize(member), gtLt);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt){
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt){
 		return zAdd(key, score, serializer.serialize(member), gtLt);
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final boolean ch){
+	public <V> Long zAdd(final String key, final double score, final V member, final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), ch);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final boolean ch){
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), ch);
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt){
+	public <V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt){
 		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt){
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt){
 		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt);
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final boolean ch){
+	public <V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx, final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), nxXx, ch);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final boolean ch){
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), nxXx, ch);
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final GtLt gtLt, final boolean ch){
+	public <V> Long zAdd(final String key, final double score, final V member, final GtLt gtLt, final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), gtLt, ch);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt, final boolean ch){
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt, final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), gtLt, ch);
 	}
 
 	@Override
-	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+	public <V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
 						 final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt, ch);
 	}
 
 	@Override
-	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
 						 final boolean ch){
 		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt, ch);
 	}
@@ -3246,14 +3246,16 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	public List<Object> exec(){
 		List<Object> result = super.exec();
 
-		Map<Integer, Function<?, ?>> map = txConverters.get();
+		if(result != null){
+			Map<Integer, Function<?, ?>> map = txConverters.get();
 
-		if(Validate.isNotEmpty(map)){
-			for(int i = 0; i < result.size(); i++){
-				Function<Object, Object> fun = (Function<Object, Object>) map.get(i);
+			if(Validate.isNotEmpty(map)){
+				for(int i = 0; i < result.size(); i++){
+					Function<Object, Object> fun = (Function<Object, Object>) map.get(i);
 
-				if(fun != null){
-					result.set(i, fun.apply(result.get(i)));
+					if(fun != null){
+						result.set(i, fun.apply(result.get(i)));
+					}
 				}
 			}
 		}
@@ -3275,9 +3277,9 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return txResult;
 	}
 
-	interface ObjectOperations<T> {
+	interface ObjectOperations {
 
-		abstract class AbstractObjectOperations<T> implements ObjectOperations<T> {
+		abstract class AbstractObjectOperations<T> implements ObjectOperations {
 
 			protected final T value;
 

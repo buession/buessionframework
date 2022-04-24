@@ -49,7 +49,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sAdd(final String key, final String... members){
+	public Long sAdd(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 		return new JedisCommand<Long>(client, ProtocolCommand.SADD)
 				.general((cmd)->cmd.sadd(key, members))
@@ -59,7 +59,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sAdd(final byte[] key, final byte[]... members){
+	public Long sAdd(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 		return new JedisCommand<Long>(client, ProtocolCommand.SADD)
 				.general((cmd)->cmd.sadd(key, members))
@@ -69,7 +69,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sCard(final String key){
+	public Long sCard(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.SCARD)
 				.general((cmd)->cmd.scard(key))
@@ -79,7 +79,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sCard(final byte[] key){
+	public Long sCard(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.SCARD)
 				.general((cmd)->cmd.scard(key))
@@ -109,7 +109,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sDiffStore(final String destKey, final String... keys){
+	public Long sDiffStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
 				.general((cmd)->cmd.sdiffstore(destKey, keys))
@@ -119,7 +119,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sDiffStore(final byte[] destKey, final byte[]... keys){
+	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
 				.general((cmd)->cmd.sdiffstore(destKey, keys))
@@ -149,7 +149,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sInterStore(final String destKey, final String... keys){
+	public Long sInterStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.SINTERSTORE)
 				.general((cmd)->cmd.sinterstore(destKey, keys))
@@ -159,7 +159,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sInterStore(final byte[] destKey, final byte[]... keys){
+	public Long sInterStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.SINTERSTORE)
 				.general((cmd)->cmd.sinterstore(destKey, keys))
@@ -169,7 +169,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public boolean sIsMember(final String key, final String member){
+	public Boolean sIsMember(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
 				.general((cmd)->cmd.sismember(key, member))
@@ -179,7 +179,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public boolean sIsMember(final byte[] key, final byte[] member){
+	public Boolean sIsMember(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
 				.general((cmd)->cmd.sismember(key, member))
@@ -325,7 +325,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sRem(final String key, final String... members){
+	public Long sRem(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 		return new JedisCommand<Long>(client, ProtocolCommand.SREM)
 				.general((cmd)->cmd.srem(key, members))
@@ -335,7 +335,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sRem(final byte[] key, final byte[]... members){
+	public Long sRem(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 		return new JedisCommand<Long>(client, ProtocolCommand.SREM)
 				.general((cmd)->cmd.srem(key, members))
@@ -479,7 +479,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sUnionStore(final String destKey, final String... keys){
+	public Long sUnionStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
 				.general((cmd)->cmd.sunionstore(destKey, keys))
@@ -489,7 +489,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	}
 
 	@Override
-	public long sUnionStore(final byte[] destKey, final byte[]... keys){
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
 				.general((cmd)->cmd.sunionstore(destKey, keys))

@@ -71,7 +71,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 	}
 
 	@Override
-	public long publish(final String channel, final String message){
+	public Long publish(final String channel, final String message){
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.PUBLISH)
 				.general((cmd)->cmd.publish(channel, message))
@@ -81,7 +81,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 	}
 
 	@Override
-	public long publish(final byte[] channel, final byte[] message){
+	public Long publish(final byte[] channel, final byte[] message){
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.PUBLISH)
 				.general((cmd)->cmd.publish(channel, message))
@@ -111,7 +111,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 	}
 
 	@Override
-	public long pubsubNumPat(){
+	public Long pubsubNumPat(){
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 				.run();
 	}

@@ -136,7 +136,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long aclDelUser(final String... usernames){
+	public Long aclDelUser(final String... usernames){
 		final CommandArguments args = CommandArguments.create("usernames", usernames);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
@@ -150,7 +150,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long aclDelUser(final byte[]... usernames){
+	public Long aclDelUser(final byte[]... usernames){
 		final CommandArguments args = CommandArguments.create("usernames", usernames);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
@@ -273,7 +273,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long dbSize(){
+	public Long dbSize(){
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DBSIZE)
 				.general((cmd)->cmd.dbSize()).pipeline((cmd)->cmd.dbSize())
 				.run();
@@ -369,7 +369,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long lastSave(){
+	public Long lastSave(){
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.LASTSAVE)
 				.run();
 	}
@@ -394,7 +394,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long memoryUsage(final String key){
+	public Long memoryUsage(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
@@ -404,7 +404,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long memoryUsage(final byte[] key){
+	public Long memoryUsage(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
@@ -414,7 +414,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long memoryUsage(final String key, final int samples){
+	public Long memoryUsage(final String key, final int samples){
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
@@ -424,7 +424,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long memoryUsage(final byte[] key, final int samples){
+	public Long memoryUsage(final byte[] key, final int samples){
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
@@ -566,7 +566,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public long slowLogLen(){
+	public Long slowLogLen(){
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SLOWLOG_LEN)
 				.general((cmd)->cmd.slowlogLen())
 				.run();

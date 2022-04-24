@@ -19,35 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
-
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisException;
-
 /**
  * @author Yong.Teng
- * @since 2.0.0
  */
-public interface Command<R> {
-
-	ProtocolCommand getCommand();
-
-	R execute() throws RedisException;
-
-	default R run() throws RedisException{
-		return run(null);
-	}
-
-	R run(final CommandArguments arguments) throws RedisException;
-
-	interface Runner {
-
-		<R> R run() throws RedisException;
-
-	}
-
-}
+package com.buession.redis.transaction.jedis;

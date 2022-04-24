@@ -52,7 +52,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	default long delete(final String... keys){
+	default Long delete(final String... keys){
 		return del(keys);
 	}
 
@@ -66,7 +66,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	default long delete(final byte[]... keys){
+	default Long delete(final byte[]... keys){
 		return del(keys);
 	}
 
@@ -149,8 +149,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
 	default Date ttlAt(final String key){
-		long ttl = ttl(key);
-		return ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
+		Long ttl = ttl(key);
+		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
 	}
 
 	/**
@@ -164,8 +164,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
 	default Date ttlAt(final byte[] key){
-		long ttl = ttl(key);
-		return ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
+		Long ttl = ttl(key);
+		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
 	}
 
 	/**
@@ -179,8 +179,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
 	default Date pTtlAt(final String key){
-		long ttl = pTtl(key);
-		return ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
+		Long ttl = pTtl(key);
+		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
 	}
 
 	/**
@@ -194,8 +194,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
 	default Date pTtlAt(final byte[] key){
-		long ttl = pTtl(key);
-		return ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
+		Long ttl = pTtl(key);
+		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
 	}
 
 	/**

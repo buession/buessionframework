@@ -58,7 +58,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	long geoAdd(final String key, final String member, final double longitude, final double latitude);
+	Long geoAdd(final String key, final String member, final double longitude, final double latitude);
 
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -76,7 +76,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude);
+	Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -90,7 +90,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	long geoAdd(final String key, final Map<String, Geo> memberCoordinates);
+	Long geoAdd(final String key, final Map<String, Geo> memberCoordinates);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -104,7 +104,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates);
+	Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates);
 
 	/**
 	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
@@ -176,7 +176,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 计算出的距离会以双精度浮点数的形式被返回（单位：米），如果给定的位置元素不存在，那么返回空值
 	 */
-	double geoDist(final String key, final String member1, final String member2);
+	Double geoDist(final String key, final String member1, final String member2);
 
 	/**
 	 * 计算两个给定位置之间的距离
@@ -192,7 +192,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 计算出的距离会以双精度浮点数的形式被返回（单位：米），如果给定的位置元素不存在，那么返回空值
 	 */
-	double geoDist(final byte[] key, final byte[] member1, final byte[] member2);
+	Double geoDist(final byte[] key, final byte[] member1, final byte[] member2);
 
 	/**
 	 * 计算两个给定位置之间的距离
@@ -210,7 +210,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 计算出的距离会以双精度浮点数的形式被返回，如果给定的位置元素不存在，那么返回空值
 	 */
-	double geoDist(final String key, final String member1, final String member2, final GeoUnit unit);
+	Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit);
 
 	/**
 	 * 计算两个给定位置之间的距离
@@ -228,7 +228,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 计算出的距离会以双精度浮点数的形式被返回，如果给定的位置元素不存在，那么返回空值
 	 */
-	double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit);
+	Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -491,9 +491,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * Read-only variant of the GEORADIUSBYMEMBER command
 	 *
-	 * <p>详情说明
-	 *
-	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -511,8 +509,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * Read-only variant of the GEORADIUSBYMEMBER command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -530,8 +527,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * Read-only variant of the GEORADIUSBYMEMBER command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -552,8 +548,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * Read-only variant of the GEORADIUSBYMEMBER command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key

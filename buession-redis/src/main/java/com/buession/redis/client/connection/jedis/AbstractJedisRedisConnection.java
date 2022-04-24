@@ -27,8 +27,9 @@ package com.buession.redis.client.connection.jedis;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Transaction;
 
 import java.io.IOException;
 
@@ -48,6 +49,11 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * 事务
 	 */
 	protected Transaction transaction;
+
+	/**
+	 * 管道
+	 */
+	protected volatile Pipeline pipeline;
 
 	/**
 	 * 构造函数
@@ -188,16 +194,29 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	}
 
 	@Override
-	public Transaction getTransaction(){
-		return transaction;
+	public boolean isPipeline(){
+		return pipeline != null;
+	}
+
+	@Override
+	public boolean isTransaction(){
+		return transaction != null;
 	}
 
 	@Override
 	protected void doDestroy() throws IOException{
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
 	}
 
 	@Override
 	protected void doClose() throws IOException{
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
 	}
 
 }

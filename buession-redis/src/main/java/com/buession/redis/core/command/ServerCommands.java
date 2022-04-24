@@ -160,7 +160,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 删除用户数量
 	 */
-	long aclDelUser(final String... usernames);
+	Long aclDelUser(final String... usernames);
 
 	/**
 	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
@@ -172,7 +172,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 删除用户数量
 	 */
-	long aclDelUser(final byte[]... usernames);
+	Long aclDelUser(final byte[]... usernames);
 
 	/**
 	 * ACL users need a solid password in order to authenticate to the server without security risks
@@ -345,7 +345,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 数据库的 key 的数量
 	 */
-	long dbSize();
+	Long dbSize();
 
 	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
@@ -486,7 +486,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 最近一次成功将数据保存到磁盘上的时间
 	 */
-	long lastSave();
+	Long lastSave();
 
 	/**
 	 * 列出 Redis 服务器遇到的不同类型的内存相关问题，并提供相应的解决建议
@@ -525,7 +525,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return the memory usage in bytes
 	 */
-	long memoryUsage(final String key);
+	Long memoryUsage(final String key);
 
 	/**
 	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
@@ -537,21 +537,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return the memory usage in bytes
 	 */
-	long memoryUsage(final byte[] key);
-
-	/**
-	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/memory-usage/" target="_blank">https://redis.io/commands/memory-usage/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param samples
-	 * 		Samples count
-	 *
-	 * @return the memory usage in bytes
-	 */
-	long memoryUsage(final String key, final int samples);
+	Long memoryUsage(final byte[] key);
 
 	/**
 	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
@@ -565,7 +551,21 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return the memory usage in bytes
 	 */
-	long memoryUsage(final byte[] key, final int samples);
+	Long memoryUsage(final String key, final int samples);
+
+	/**
+	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/memory-usage/" target="_blank">https://redis.io/commands/memory-usage/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param samples
+	 * 		Samples count
+	 *
+	 * @return the memory usage in bytes
+	 */
+	Long memoryUsage(final byte[] key, final int samples);
 
 	/**
 	 * Returns information about the modules loaded to the server
@@ -776,7 +776,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The number of entries in the slow log
 	 */
-	long slowLogLen();
+	Long slowLogLen();
 
 	/**
 	 * This command resets the slow log, clearing all entries in it

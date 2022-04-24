@@ -61,7 +61,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long del(final String... keys){
+	public Long del(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.DEL)
 				.general((cmd)->cmd.del(keys))
@@ -71,7 +71,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long del(final byte[]... keys){
+	public Long del(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.DEL)
 				.general((cmd)->cmd.del(keys))
@@ -101,7 +101,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public boolean exists(final String key){
+	public Boolean exists(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Boolean>(client, ProtocolCommand.EXISTS)
 				.general((cmd)->cmd.exists(key))
@@ -111,7 +111,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public boolean exists(final byte[] key){
+	public Boolean exists(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Boolean>(client, ProtocolCommand.EXISTS)
 				.general((cmd)->cmd.exists(key))
@@ -121,7 +121,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long exists(final String... keys){
+	public Long exists(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.EXISTS)
 				.general((cmd)->cmd.exists(keys))
@@ -131,7 +131,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long exists(final byte[]... keys){
+	public Long exists(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.EXISTS)
 				.general((cmd)->cmd.exists(keys))
@@ -265,7 +265,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long ttl(final String key){
+	public Long ttl(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.TTL)
 				.general((cmd)->cmd.ttl(key))
@@ -275,7 +275,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long ttl(final byte[] key){
+	public Long ttl(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.TTL)
 				.general((cmd)->cmd.ttl(key))
@@ -285,7 +285,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long pTtl(final String key){
+	public Long pTtl(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.PTTL)
 				.general((cmd)->cmd.pttl(key))
@@ -295,7 +295,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long pTtl(final byte[] key){
+	public Long pTtl(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.PTTL)
 				.general((cmd)->cmd.pttl(key))
@@ -815,7 +815,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long sort(final String key, final String destKey){
+	public Long sort(final String key, final String destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 		return new JedisCommand<Long>(client, ProtocolCommand.SORT)
 				.general((cmd)->cmd.sort(key, destKey))
@@ -825,7 +825,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long sort(final byte[] key, final byte[] destKey){
+	public Long sort(final byte[] key, final byte[] destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 		return new JedisCommand<Long>(client, ProtocolCommand.SORT)
 				.general((cmd)->cmd.sort(key, destKey))
@@ -835,7 +835,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long sort(final String key, final String destKey, final SortArgument sortArgument){
+	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
 		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
@@ -847,7 +847,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
+	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
 		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
@@ -859,7 +859,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long touch(final String... keys){
+	public Long touch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.TOUCH)
 				.general((cmd)->cmd.touch(keys))
@@ -869,7 +869,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long touch(final byte[]... keys){
+	public Long touch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.TOUCH)
 				.general((cmd)->cmd.touch(keys))
@@ -899,7 +899,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long unlink(final String... keys){
+	public Long unlink(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.UNLINK)
 				.general((cmd)->cmd.unlink(keys))
@@ -909,7 +909,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long unlink(final byte[]... keys){
+	public Long unlink(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisCommand<Long>(client, ProtocolCommand.UNLINK)
 				.general((cmd)->cmd.unlink(keys))
@@ -919,7 +919,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long wait(final int replicas, final int timeout){
+	public Long wait(final int replicas, final int timeout){
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
 		return new JedisCommand<Long>(client, ProtocolCommand.WAIT)
 				.general((cmd)->cmd.waitReplicas(replicas, timeout))
@@ -949,7 +949,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long objectFreq(final String key){
+	public Long objectFreq(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
 				.general((cmd)->cmd.objectFreq(key))
@@ -959,7 +959,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long objectFreq(final byte[] key){
+	public Long objectFreq(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
 				.general((cmd)->cmd.objectFreq(key))
@@ -969,7 +969,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long objectIdleTime(final String key){
+	public Long objectIdleTime(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
 				.general((cmd)->cmd.objectIdletime(key))
@@ -979,7 +979,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long objectIdleTime(final byte[] key){
+	public Long objectIdleTime(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
 				.general((cmd)->cmd.objectIdletime(key)).
@@ -989,7 +989,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long objectRefcount(final String key){
+	public Long objectRefcount(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
 				.general((cmd)->cmd.objectRefcount(key))
@@ -999,7 +999,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public long objectRefcount(final byte[] key){
+	public Long objectRefcount(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
 				.general((cmd)->cmd.objectRefcount(key))

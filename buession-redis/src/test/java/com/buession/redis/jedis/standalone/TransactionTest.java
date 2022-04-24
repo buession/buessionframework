@@ -22,32 +22,30 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.jedis.standalone;
 
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisException;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Test;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface Command<R> {
+public class TransactionTest extends AbstractJedisRedisTest {
 
-	ProtocolCommand getCommand();
+	@Test
+	public void transaction(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
-	R execute() throws RedisException;
-
-	default R run() throws RedisException{
-		return run(null);
-	}
-
-	R run(final CommandArguments arguments) throws RedisException;
-
-	interface Runner {
-
-		<R> R run() throws RedisException;
-
+		redisTemplate.multi();
+		redisTemplate.bitCount("str");
+		redisTemplate.get("user");
+		redisTemplate.get("a");
+		redisTemplate.getObject("user", User.class);
+		redisTemplate.zAdd("transaction", 1.0, "1");
+		System.out.println(redisTemplate.exec());
 	}
 
 }

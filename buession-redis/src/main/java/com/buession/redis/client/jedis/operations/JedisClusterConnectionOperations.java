@@ -107,7 +107,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	}
 
 	@Override
-	public long clientId(){
+	public Long clientId(){
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.run();
 	}

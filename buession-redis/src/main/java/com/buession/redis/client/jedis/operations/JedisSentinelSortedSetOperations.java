@@ -187,7 +187,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members){
+	public Long zAdd(final String key, final Map<String, Double> members){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members))
@@ -197,7 +197,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members))
@@ -207,7 +207,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
 		final JedisZAddParams params = new JedisZAddParams(nxXx);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
@@ -218,7 +218,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
 		final JedisZAddParams params = new JedisZAddParams(nxXx);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
@@ -229,7 +229,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt){
+	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(gtLt);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
@@ -240,7 +240,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(gtLt);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
@@ -251,7 +251,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(ch);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
@@ -262,7 +262,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(ch);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZADD)
@@ -273,7 +273,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt);
@@ -285,7 +285,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt);
@@ -297,7 +297,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, ch);
@@ -309,7 +309,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, ch);
@@ -321,7 +321,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(gtLt, ch);
@@ -333,7 +333,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(gtLt, ch);
@@ -345,7 +345,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
 					 final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
@@ -358,7 +358,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
 					 final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
@@ -371,7 +371,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zCard(final String key){
+	public Long zCard(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZCARD)
 				.general((cmd)->cmd.zcard(key))
@@ -381,7 +381,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zCard(final byte[] key){
+	public Long zCard(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZCARD)
 				.general((cmd)->cmd.zcard(key))
@@ -391,7 +391,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zCount(final String key, final double min, final double max){
+	public Long zCount(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
@@ -401,7 +401,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zCount(final byte[] key, final double min, final double max){
+	public Long zCount(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
@@ -411,7 +411,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zCount(final String key, final String min, final String max){
+	public Long zCount(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
@@ -421,7 +421,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zCount(final byte[] key, final byte[] min, final byte[] max){
+	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
@@ -471,7 +471,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zDiffStore(final String destKey, final String... keys){
+	public Long zDiffStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys)).pipeline((cmd)->cmd.zdiffStore(destKey, keys))
@@ -480,7 +480,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zDiffStore(final byte[] destKey, final byte[]... keys){
+	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys)).pipeline((cmd)->cmd.zdiffStore(destKey, keys))
@@ -489,7 +489,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public double zIncrBy(final String key, final double increment, final String member){
+	public Double zIncrBy(final String key, final double increment, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("increment", increment)
 				.put("member", member);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.ZINCRBY)
@@ -500,7 +500,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public double zIncrBy(final byte[] key, final double increment, final byte[] member){
+	public Double zIncrBy(final byte[] key, final double increment, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("increment", increment)
 				.put("member", member);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.ZINCRBY)
@@ -691,7 +691,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String... keys){
+	public Long zInterStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
@@ -701,7 +701,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[]... keys){
+	public Long zInterStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
@@ -711,7 +711,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate){
+	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -723,7 +723,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -735,7 +735,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String[] keys, final double... weights){
+	public Long zInterStore(final String destKey, final String[] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -747,7 +747,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights){
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -759,7 +759,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
+	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
@@ -772,7 +772,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
@@ -785,7 +785,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zLexCount(final String key, final double min, final double max){
+	public Long zLexCount(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, Double.toString(min), Double.toString(max)))
@@ -795,7 +795,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zLexCount(final byte[] key, final double min, final double max){
+	public Long zLexCount(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
@@ -805,7 +805,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zLexCount(final String key, final String min, final String max){
+	public Long zLexCount(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, min, max))
@@ -815,7 +815,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zLexCount(final byte[] key, final byte[] min, final byte[] max){
+	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, min, max))
@@ -1227,7 +1227,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end){
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end);
@@ -1239,7 +1239,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end){
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end);
@@ -1251,7 +1251,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
@@ -1264,7 +1264,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
@@ -1277,7 +1277,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final boolean rev){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
@@ -1290,7 +1290,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final boolean rev){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
@@ -1303,7 +1303,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
 							final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
@@ -1316,7 +1316,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
 							final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
@@ -1329,7 +1329,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by, final boolean rev){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
@@ -1342,7 +1342,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by, final boolean rev){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
@@ -1355,7 +1355,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by, final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
@@ -1368,7 +1368,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by, final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
@@ -1381,7 +1381,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
 							final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
@@ -1394,7 +1394,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
 							final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
@@ -1407,7 +1407,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 							final boolean rev, final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
@@ -1420,7 +1420,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 							final boolean rev, final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
@@ -1453,7 +1453,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRem(final String key, final String... members){
+	public Long zRem(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
@@ -1463,7 +1463,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRem(final byte[] key, final byte[]... members){
+	public Long zRem(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
@@ -1473,7 +1473,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByLex(final String key, final String min, final String max){
+	public Long zRemRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
 				.general((cmd)->cmd.zremrangeByLex(key, min, max))
@@ -1483,7 +1483,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
 				.general((cmd)->cmd.zremrangeByLex(key, min, max))
@@ -1493,7 +1493,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByScore(final String key, final double min, final double max){
+	public Long zRemRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1503,7 +1503,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByScore(final byte[] key, final double min, final double max){
+	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1513,7 +1513,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByScore(final String key, final String min, final String max){
+	public Long zRemRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1523,7 +1523,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1533,7 +1533,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByRank(final String key, final long start, final long end){
+	public Long zRemRangeByRank(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
 				.general((cmd)->cmd.zremrangeByRank(key, start, end))
@@ -1543,7 +1543,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRemRangeByRank(final byte[] key, final long start, final long end){
+	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
 				.general((cmd)->cmd.zremrangeByRank(key, start, end))
@@ -1823,7 +1823,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRevRank(final String key, final String member){
+	public Long zRevRank(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREVRANK)
 				.general((cmd)->cmd.zrevrank(key, member))
@@ -1833,7 +1833,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zRevRank(final byte[] key, final byte[] member){
+	public Long zRevRank(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREVRANK)
 				.general((cmd)->cmd.zrevrank(key, member))
@@ -2149,7 +2149,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String... keys){
+	public Long zUnionStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
@@ -2159,7 +2159,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[]... keys){
+	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
@@ -2169,7 +2169,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate){
+	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -2181,7 +2181,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -2193,7 +2193,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String[] keys, final double... weights){
+	public Long zUnionStore(final String destKey, final String[] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -2205,7 +2205,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights){
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -2217,7 +2217,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
+	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
@@ -2230,7 +2230,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);

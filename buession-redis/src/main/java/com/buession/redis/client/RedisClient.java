@@ -44,7 +44,6 @@ import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
 
 /**
  * @author Yong.Teng
@@ -54,8 +53,6 @@ public interface RedisClient {
 	RedisConnection getConnection();
 
 	void setConnection(RedisConnection connection);
-
-	Pipeline pipeline();
 
 	BitMapOperations bitMapOperations();
 

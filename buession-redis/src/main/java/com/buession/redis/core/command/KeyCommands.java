@@ -59,7 +59,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	long del(final String... keys);
+	Long del(final String... keys);
 
 	/**
 	 * 删除给定的一个或多个 key
@@ -71,7 +71,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	long del(final byte[]... keys);
+	Long del(final byte[]... keys);
 
 	/**
 	 * 序列化给定 key ，并返回被序列化的值
@@ -107,7 +107,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 检测结果
 	 */
-	boolean exists(final String key);
+	Boolean exists(final String key);
 
 	/**
 	 * 检查给定 key 是否存在
@@ -119,7 +119,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 检测结果
 	 */
-	boolean exists(final byte[] key);
+	Boolean exists(final byte[] key);
 
 	/**
 	 * 检查给定 key 是否存在
@@ -131,7 +131,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 检查给定 key 存在的数量
 	 */
-	long exists(final String... keys);
+	Long exists(final String... keys);
 
 	/**
 	 * 检查给定 key 是否存在
@@ -143,7 +143,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 检查给定 key 存在的数量
 	 */
-	long exists(final byte[]... keys);
+	Long exists(final byte[]... keys);
 
 	/**
 	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
@@ -325,7 +325,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以秒为单位，返回 key 的剩余生存时间
 	 */
-	long ttl(final String key);
+	Long ttl(final String key);
 
 	/**
 	 * 获取给定 key 的剩余生存时间
@@ -339,7 +339,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以秒为单位，返回 key 的剩余生存时间
 	 */
-	long ttl(final byte[] key);
+	Long ttl(final byte[] key);
 
 	/**
 	 * 获取给定 key 的剩余生存时间
@@ -353,7 +353,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
 	 */
-	long pTtl(final String key);
+	Long pTtl(final String key);
 
 	/**
 	 * 获取给定 key 的剩余生存时间
@@ -367,7 +367,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
 	 */
-	long pTtl(final byte[] key);
+	Long pTtl(final byte[] key);
 
 	/**
 	 * Copy the value stored at the source key to the destination key
@@ -1248,7 +1248,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 排序结果的元素数量
 	 */
-	long sort(final String key, final String destKey);
+	Long sort(final String key, final String destKey);
 
 	/**
 	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
@@ -1263,24 +1263,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 排序结果的元素数量
 	 */
-	long sort(final byte[] key, final byte[] destKey);
-
-	/**
-	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
-	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 key
-	 * @param sortArgument
-	 * 		排序参数
-	 *
-	 * @return 排序结果的元素数量
-	 */
-	long sort(final String key, final String destKey, final SortArgument sortArgument);
+	Long sort(final byte[] key, final byte[] destKey);
 
 	/**
 	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
@@ -1297,7 +1280,24 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 排序结果的元素数量
 	 */
-	long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument);
+	Long sort(final String key, final String destKey, final SortArgument sortArgument);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param sortArgument
+	 * 		排序参数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument);
 
 	/**
 	 * 修改指定一个或多个 key 最后访问时间
@@ -1309,7 +1309,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 操作的 key 的数量
 	 */
-	long touch(final String... keys);
+	Long touch(final String... keys);
 
 	/**
 	 * 修改指定一个或多个 key 最后访问时间
@@ -1321,7 +1321,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 操作的 key 的数量
 	 */
-	long touch(final byte[]... keys);
+	Long touch(final byte[]... keys);
 
 	/**
 	 * 获取 key 所储存的值的类型
@@ -1358,7 +1358,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	long unlink(final String... keys);
+	Long unlink(final String... keys);
 
 	/**
 	 * 删除给定的一个或多个 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。
@@ -1371,7 +1371,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	long unlink(final byte[]... keys);
+	Long unlink(final byte[]... keys);
 
 	/**
 	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
@@ -1385,7 +1385,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	long wait(final int replicas, final int timeout);
+	Long wait(final int replicas, final int timeout);
 
 	/**
 	 * 返回指定 key 对应 value 所使用的内部表示
@@ -1421,7 +1421,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return The counter’s value
 	 */
-	long objectFreq(final String key);
+	Long objectFreq(final String key);
 
 	/**
 	 * This command returns the logarithmic access frequency counter of a Redis object stored a key
@@ -1433,7 +1433,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return The counter’s value
 	 */
-	long objectFreq(final byte[] key);
+	Long objectFreq(final byte[] key);
 
 	/**
 	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
@@ -1445,7 +1445,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
 	 */
-	long objectIdleTime(final String key);
+	Long objectIdleTime(final String key);
 
 	/**
 	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
@@ -1457,7 +1457,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
 	 */
-	long objectIdleTime(final byte[] key);
+	Long objectIdleTime(final byte[] key);
 
 	/**
 	 * 返回指定 key 所对应 value 被引用的次数
@@ -1469,7 +1469,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 所对应 value 被引用的次数
 	 */
-	long objectRefcount(final String key);
+	Long objectRefcount(final String key);
 
 	/**
 	 * 返回指定 key 所对应 value 被引用的次数
@@ -1481,7 +1481,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 所对应 value 被引用的次数
 	 */
-	long objectRefcount(final byte[] key);
+	Long objectRefcount(final byte[] key);
 
 	/**
 	 * Restore 参数

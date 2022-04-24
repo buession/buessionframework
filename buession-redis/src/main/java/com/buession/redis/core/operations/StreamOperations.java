@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.collect.Arrays;
 import com.buession.lang.Status;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
@@ -57,15 +58,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	default long xAck(final String key, final String groupName, final String[] ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+	default Long xAck(final String key, final String groupName, final String[] ids){
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xAck(key, groupName, streamEntryIds);
 	}
 
@@ -83,15 +77,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	default long xAck(final byte[] key, final byte[] groupName, final byte[][] ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+	default Long xAck(final byte[] key, final byte[] groupName, final byte[][] ids){
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xAck(key, groupName, streamEntryIds);
 	}
 
@@ -198,14 +185,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									 final int minIdleTime, final String[] ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
@@ -430,14 +410,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
 									 final int minIdleTime, final byte[][] ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
@@ -465,14 +438,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									 final int minIdleTime, final String[] ids, final XClaimArgument xClaimArgument){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
 	}
 
@@ -499,14 +465,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
 									 final int minIdleTime, final byte[][] ids, final XClaimArgument xClaimArgument){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
 	}
 
@@ -531,14 +490,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											 final int minIdleTime, final String[] ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
@@ -563,14 +515,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
 											 final int minIdleTime, final byte[][] ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
@@ -586,15 +531,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The number of entries actually deleted
 	 */
-	default long xDel(final String key, final String... ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+	default Long xDel(final String key, final String... ids){
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xDel(key, streamEntryIds);
 	}
 
@@ -610,15 +548,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return The number of entries actually deleted
 	 */
-	default long xDel(final byte[] key, final byte[]... ids){
-		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
-
-		if(ids != null){
-			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(ids[i]);
-			}
-		}
-
+	default Long xDel(final byte[] key, final byte[]... ids){
+		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId::new);
 		return xDel(key, streamEntryIds);
 	}
 

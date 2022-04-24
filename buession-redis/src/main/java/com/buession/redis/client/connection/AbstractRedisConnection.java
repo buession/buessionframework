@@ -66,11 +66,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 */
 	private SslConfiguration sslConfiguration;
 
-	/**
-	 * 管道
-	 */
-	protected Pipeline pipeline;
-
 	private volatile boolean initialized = false;
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisConnection.class);
@@ -209,29 +204,16 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public boolean isPipeline(){
-		return pipeline != null;
-	}
-
-	@Override
 	public void destroy() throws IOException{
 		logger.info("Destroy redis server.");
 		doDestroy();
 
-		if(pipeline != null){
-			pipeline.close();
-			pipeline = null;
-		}
+
 	}
 
 	@Override
 	public void close() throws IOException{
 		logger.info("Closing redis server.");
-
-		if(pipeline != null){
-			pipeline.close();
-			pipeline = null;
-		}
 
 		doClose();
 	}

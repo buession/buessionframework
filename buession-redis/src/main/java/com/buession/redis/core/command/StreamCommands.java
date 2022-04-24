@@ -62,7 +62,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	long xAck(final String key, final String groupName, final StreamEntryId... ids);
+	Long xAck(final String key, final String groupName, final StreamEntryId... ids);
 
 	/**
 	 * The XACK command removes one or multiple messages from the Pending Entries List (PEL) of a stream consumer group
@@ -78,7 +78,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids);
+	Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids);
 
 	/**
 	 * Appends the specified stream entry to the stream at the specified key.
@@ -537,7 +537,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries actually deleted
 	 */
-	long xDel(final String key, final StreamEntryId... ids);
+	Long xDel(final String key, final StreamEntryId... ids);
 
 	/**
 	 * Removes the specified entries from a stream, and returns the number of entries deleted
@@ -551,7 +551,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries actually deleted
 	 */
-	long xDel(final byte[] key, final StreamEntryId... ids);
+	Long xDel(final byte[] key, final StreamEntryId... ids);
 
 	/**
 	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
@@ -635,7 +635,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return 删除数量
 	 */
-	long xGroupDelConsumer(final String key, final String groupName, final String consumerName);
+	Long xGroupDelConsumer(final String key, final String groupName, final String consumerName);
 
 	/**
 	 * The XGROUP DELCONSUMER command deletes a consumer from the consumer group
@@ -651,7 +651,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return 删除数量
 	 */
-	long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName);
+	Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName);
 
 	/**
 	 * The XGROUP DESTROY command completely destroys a consumer group
@@ -859,7 +859,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries of the stream at key
 	 */
-	long xLen(final String key);
+	Long xLen(final String key);
 
 	/**
 	 * Returns the number of entries inside a stream
@@ -871,7 +871,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries of the stream at key
 	 */
-	long xLen(final byte[] key);
+	Long xLen(final byte[] key);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1724,7 +1724,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
-	long xTrim(final String key, final XTrimArgument xTrimArgument);
+	Long xTrim(final String key, final XTrimArgument xTrimArgument);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -1738,23 +1738,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
-	long xTrim(final byte[] key, final XTrimArgument xTrimArgument);
-
-	/**
-	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param xTrimArgument
-	 *        {@link XTrimArgument}
-	 * @param limit
-	 * 		Limit
-	 *
-	 * @return The number of entries deleted from the stream.
-	 */
-	long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit);
+	Long xTrim(final byte[] key, final XTrimArgument xTrimArgument);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -1770,7 +1754,23 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
-	long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit);
+	Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param xTrimArgument
+	 *        {@link XTrimArgument}
+	 * @param limit
+	 * 		Limit
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit);
 
 	class XAddArgument {
 

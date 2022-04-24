@@ -51,7 +51,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hDel(final String key, final String... fields){
+	public Long hDel(final String key, final String... fields){
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", fields);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HDEL)
 				.general((cmd)->cmd.hdel(key, fields))
@@ -61,7 +61,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hDel(final byte[] key, final byte[]... fields){
+	public Long hDel(final byte[] key, final byte[]... fields){
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", fields);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HDEL)
 				.general((cmd)->cmd.hdel(key, fields))
@@ -71,7 +71,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public boolean hExists(final String key, final String field){
+	public Boolean hExists(final String key, final String field){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisClusterCommand<Boolean>(client, ProtocolCommand.HEXISTS)
 				.general((cmd)->cmd.hexists(key, field))
@@ -81,7 +81,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public boolean hExists(final byte[] key, final byte[] field){
+	public Boolean hExists(final byte[] key, final byte[] field){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisClusterCommand<Boolean>(client, ProtocolCommand.HEXISTS)
 				.general((cmd)->cmd.hexists(key, field))
@@ -131,7 +131,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hIncrBy(final String key, final String field, final long value){
+	public Long hIncrBy(final String key, final String field, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HINCRBY)
 				.general((cmd)->cmd.hincrBy(key, field, value))
@@ -141,7 +141,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hIncrBy(final byte[] key, final byte[] field, final long value){
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HINCRBY)
 				.general((cmd)->cmd.hincrBy(key, field, value))
@@ -151,7 +151,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public double hIncrByFloat(final String key, final String field, final double value){
+	public Double hIncrByFloat(final String key, final String field, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.HINCRBYFLOAT)
 				.general((cmd)->cmd.hincrByFloat(key, field, value))
@@ -161,7 +161,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.HINCRBYFLOAT)
 				.general((cmd)->cmd.hincrByFloat(key, field, value))
@@ -191,7 +191,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hLen(final String key){
+	public Long hLen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HLEN)
 				.general((cmd)->cmd.hlen(key))
@@ -201,7 +201,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hLen(final byte[] key){
+	public Long hLen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HLEN)
 				.general((cmd)->cmd.hlen(key))
@@ -424,7 +424,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hSet(final String key, final String field, final String value){
+	public Long hSet(final String key, final String field, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HSET)
 				.general((cmd)->cmd.hset(key, field, value))
@@ -434,7 +434,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hSet(final byte[] key, final byte[] field, final byte[] value){
+	public Long hSet(final byte[] key, final byte[] field, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HSET)
 				.general((cmd)->cmd.hset(key, field, value))
@@ -464,7 +464,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hStrLen(final String key, final String field){
+	public Long hStrLen(final String key, final String field){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HSTRLEN)
 				.general((cmd)->cmd.hstrlen(key, field))
@@ -474,7 +474,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	}
 
 	@Override
-	public long hStrLen(final byte[] key, final byte[] field){
+	public Long hStrLen(final byte[] key, final byte[] field){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.HSTRLEN)
 				.general((cmd)->cmd.hstrlen(key, field))

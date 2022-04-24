@@ -45,7 +45,6 @@ public class JedisPipeline implements Pipeline {
 		this.delegate = pipeline;
 	}
 
-	@SuppressWarnings({"unchecked"})
 	public redis.clients.jedis.Pipeline primitive(){
 		return delegate;
 	}

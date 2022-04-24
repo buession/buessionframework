@@ -31,6 +31,7 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -136,13 +137,6 @@ public interface RedisConnection extends Destroyable, Closeable {
 	<R> R execute(final Executor<RedisConnection, R> executor) throws RedisException;
 
 	/**
-	 * 当前是否处于事务状态
-	 *
-	 * @return 处于事务状态，则返回 true; 否则，返回 false
-	 */
-	boolean isTransaction();
-
-	/**
 	 * 当前是否处于管道状态
 	 *
 	 * @return 处于管道状态，则返回 true; 否则，返回 false
@@ -150,28 +144,48 @@ public interface RedisConnection extends Destroyable, Closeable {
 	boolean isPipeline();
 
 	/**
-	 * 获取管道
+	 * 打开管道
 	 *
 	 * @return 管道
 	 */
-	Pipeline pipeline();
+	Pipeline openPipeline();
+
+	/**
+	 * 关闭管道
+	 */
+	void closePipeline();
+
+	/**
+	 * 当前是否处于事务状态
+	 *
+	 * @return 处于事务状态，则返回 true; 否则，返回 false
+	 */
+	boolean isTransaction();
 
 	/**
 	 * 标记事务开始
+	 *
+	 * @return 事务
 	 */
-	void multi();
+	Transaction multi();
 
 	/**
 	 * 执行所有事务块内的命令
 	 *
 	 * @return 事务块内所有命令的返回值
+	 *
+	 * @throws RedisException
+	 * 		Redis Exception
 	 */
-	List<Object> exec();
+	List<Object> exec() throws RedisException;
 
 	/**
 	 * 取消事务
+	 *
+	 * @throws RedisException
+	 * 		Redis Exception
 	 */
-	void discard();
+	void discard() throws RedisException;
 
 	/**
 	 * 检测是否处于连接状态

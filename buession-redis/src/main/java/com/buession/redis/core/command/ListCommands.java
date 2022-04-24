@@ -85,7 +85,7 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	long lInsert(final String key, final ListPosition position, final String pivot, final String value);
+	Long lInsert(final String key, final ListPosition position, final String pivot, final String value);
 
 	/**
 	 * 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后
@@ -104,7 +104,7 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value);
+	Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value);
 
 	/**
 	 * 将列表 key 下标为 index 的元素的值设置为 value
@@ -148,7 +148,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 列表 key 的长度，如果 key 不是列表类型，则返回 -1
 	 */
-	long lLen(final String key);
+	Long lLen(final String key);
 
 	/**
 	 * 获取列表 key 的长度
@@ -160,7 +160,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 列表 key 的长度，如果 key 不是列表类型，则返回 -1
 	 */
-	long lLen(final byte[] key);
+	Long lLen(final byte[] key);
 
 	/**
 	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）；
@@ -212,7 +212,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
 	 */
-	long lPos(final String key, final String element);
+	Long lPos(final String key, final String element);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -226,7 +226,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
 	 */
-	long lPos(final byte[] key, final byte[] element);
+	Long lPos(final byte[] key, final byte[] element);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -242,7 +242,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
 	 */
-	long lPos(final String key, final String element, final LPosArgument lPosArgument);
+	Long lPos(final String key, final String element, final LPosArgument lPosArgument);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -258,7 +258,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
 	 */
-	long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument);
+	Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -310,7 +310,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	long lRem(final String key, final String value, final long count);
+	Long lRem(final String key, final String value, final long count);
 
 	/**
 	 * 移除列表中与参数 value 相等的 count 个元素元素
@@ -326,7 +326,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	long lRem(final byte[] key, final byte[] value, final long count);
+	Long lRem(final byte[] key, final byte[] value, final long count);
 
 	/**
 	 * 移除列表指定区间外的元素；
@@ -576,7 +576,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	long lPush(final String key, final String... values);
+	Long lPush(final String key, final String... values);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头
@@ -590,7 +590,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	long lPush(final byte[] key, final byte[]... values);
+	Long lPush(final byte[] key, final byte[]... values);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -604,7 +604,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	long lPushX(final String key, final String... values);
+	Long lPushX(final String key, final String... values);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -618,7 +618,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	long lPushX(final byte[] key, final byte[]... values);
+	Long lPushX(final byte[] key, final byte[]... values);
 
 	/**
 	 * 移除并返回列表 key 的尾元素
@@ -688,7 +688,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	long rPush(final String key, final String... values);
+	Long rPush(final String key, final String... values);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表尾
@@ -702,7 +702,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	long rPush(final byte[] key, final byte[]... values);
+	Long rPush(final byte[] key, final byte[]... values);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -716,7 +716,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	long rPushX(final String key, final String... values);
+	Long rPushX(final String key, final String... values);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -730,7 +730,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	long rPushX(final byte[] key, final byte[]... values);
+	Long rPushX(final byte[] key, final byte[]... values);
 
 	class LPosArgument {
 

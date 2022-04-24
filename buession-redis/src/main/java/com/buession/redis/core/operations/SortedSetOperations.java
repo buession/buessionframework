@@ -97,7 +97,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final NxXx nxXx){
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx){
 		return zAdd(key, MapBuilder.of(member, score), nxXx);
 	}
 
@@ -119,7 +119,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx){
 		return zAdd(key, MapBuilder.of(member, score), nxXx);
 	}
 
@@ -141,7 +141,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final GtLt gtLt){
+	default Long zAdd(final String key, final double score, final String member, final GtLt gtLt){
 		return zAdd(key, MapBuilder.of(member, score), gtLt);
 	}
 
@@ -163,7 +163,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt){
 		return zAdd(key, MapBuilder.of(member, score), gtLt);
 	}
 
@@ -184,7 +184,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final boolean ch){
+	default Long zAdd(final String key, final double score, final String member, final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), ch);
 	}
 
@@ -205,7 +205,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final boolean ch){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), ch);
 	}
 
@@ -231,7 +231,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt){
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt){
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt);
 	}
 
@@ -257,7 +257,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt){
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt);
 	}
 
@@ -282,7 +282,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final NxXx nxXx, final boolean ch){
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), nxXx, ch);
 	}
 
@@ -307,7 +307,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final boolean ch){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), nxXx, ch);
 	}
 
@@ -332,7 +332,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final GtLt gtLt, final boolean ch){
+	default Long zAdd(final String key, final double score, final String member, final GtLt gtLt, final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), gtLt, ch);
 	}
 
@@ -357,7 +357,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt, final boolean ch){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt, final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), gtLt, ch);
 	}
 
@@ -386,7 +386,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt,
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt,
 					  final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt, ch);
 	}
@@ -416,7 +416,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt,
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt,
 					  final boolean ch){
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt, ch);
 	}
@@ -437,7 +437,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final String key, final double score, final V member);
+	<V> Long zAdd(final String key, final double score, final V member);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -455,29 +455,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member);
-
-	/**
-	 * 将元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param score
-	 * 		score
-	 * @param member
-	 * 		元素
-	 * @param nxXx
-	 * 		更新成员方式：
-	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
-	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx);
+	<V> Long zAdd(final byte[] key, final double score, final V member);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -499,7 +477,29 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx);
+	<V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -521,7 +521,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final String key, final double score, final V member, final GtLt gtLt);
+	<V> Long zAdd(final String key, final double score, final V member, final GtLt gtLt);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -543,7 +543,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt);
+	<V> Long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -564,7 +564,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final String key, final double score, final V member, final boolean ch);
+	<V> Long zAdd(final String key, final double score, final V member, final boolean ch);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -585,33 +585,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final boolean ch);
-
-	/**
-	 * 将元素及其 score 值加入到有序集 key 当中
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param score
-	 * 		score
-	 * @param member
-	 * 		元素
-	 * @param nxXx
-	 * 		更新成员方式：
-	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
-	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
-	 * @param gtLt
-	 * 		更新新的分值方式：
-	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
-	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
-	 */
-	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt);
+	<V> Long zAdd(final byte[] key, final double score, final V member, final boolean ch);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -637,7 +611,33 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt);
+	<V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -662,7 +662,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final boolean ch);
+	<V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx, final boolean ch);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -687,7 +687,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final boolean ch);
+	<V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final boolean ch);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -712,7 +712,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final String key, final double score, final V member, final GtLt gtLt, final boolean ch);
+	<V> Long zAdd(final String key, final double score, final V member, final GtLt gtLt, final boolean ch);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -737,7 +737,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt, final boolean ch);
+	<V> Long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt, final boolean ch);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -766,7 +766,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+	<V> Long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
 				  final boolean ch);
 
 	/**
@@ -796,7 +796,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+	<V> Long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
 				  final boolean ch);
 
 	/**
@@ -905,7 +905,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default double zIncr(final String key, final String member){
+	default Double zIncr(final String key, final String member){
 		return zIncrBy(key, 1, member);
 	}
 
@@ -919,7 +919,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default double zIncr(final byte[] key, final byte[] member){
+	default Double zIncr(final byte[] key, final byte[] member){
 		return zIncrBy(key, 1, member);
 	}
 
@@ -933,7 +933,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default double zDecr(final String key, final String member){
+	default Double zDecr(final String key, final String member){
 		return zIncrBy(key, -1, member);
 	}
 
@@ -947,7 +947,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default double zDecr(final byte[] key, final byte[] member){
+	default Double zDecr(final byte[] key, final byte[] member){
 		return zIncrBy(key, -1, member);
 	}
 
@@ -965,7 +965,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default double zDecrBy(final String key, final double increment, final String member){
+	default Double zDecrBy(final String key, final double increment, final String member){
 		return zIncrBy(key, increment * -1, member);
 	}
 
@@ -983,7 +983,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default double zDecrBy(final byte[] key, final double increment, final byte[] member){
+	default Double zDecrBy(final byte[] key, final double increment, final byte[] member){
 		return zIncrBy(key, increment * -1, member);
 	}
 

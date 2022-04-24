@@ -26,6 +26,7 @@ package com.buession.redis.jedis.standalone;
 
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.User;
+import com.buession.redis.core.ListPosition;
 import com.buession.redis.jedis.AbstractJedisRedisTest;
 import com.buession.redis.pipeline.Pipeline;
 import org.junit.Test;
@@ -40,12 +41,18 @@ public class PipelineTest extends AbstractJedisRedisTest {
 	public void pipeline(){
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
-		Pipeline pipeline = redisTemplate.pipeline();
-		//redisTemplate.bitCount("str");
+		redisTemplate.pipeline();
+		redisTemplate.bitCount("str");
 		redisTemplate.get("user");
 		redisTemplate.get("a");
 		redisTemplate.getObject("user", User.class);
-		//redisTemplate.sync();
+		System.out.println(redisTemplate.exec());
+
+		redisTemplate.pipeline();
+		redisTemplate.bitCount("str");
+		redisTemplate.get("user");
+		redisTemplate.get("a");
+		redisTemplate.getObject("user", User.class);
 		System.out.println(redisTemplate.exec());
 	}
 

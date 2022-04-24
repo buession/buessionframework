@@ -84,7 +84,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	}
 
 	@Override
-	public long pfCount(final String... keys){
+	public Long pfCount(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
@@ -94,7 +94,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	}
 
 	@Override
-	public long pfCount(final byte[]... keys){
+	public Long pfCount(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))

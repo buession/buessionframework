@@ -32,7 +32,6 @@ import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,11 +77,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	public void setEnableTransactionSupport(boolean enableTransactionSupport){
 		this.enableTransactionSupport = enableTransactionSupport;
-	}
-
-	@Override
-	public Pipeline pipeline(){
-		return doExecute(RedisConnection::pipeline, null, null);
 	}
 
 	@Override

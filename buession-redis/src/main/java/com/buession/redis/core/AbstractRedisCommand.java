@@ -30,6 +30,8 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 
 /**
  * @author Yong.Teng
@@ -54,6 +56,14 @@ public abstract class AbstractRedisCommand<C extends RedisClient, R> implements 
 	@Override
 	public R run(final CommandArguments arguments) throws RedisException{
 		return client.execute(this, arguments);
+	}
+
+	protected Pipeline pipeline(){
+		return client.getConnection().openPipeline();
+	}
+
+	protected Transaction transaction(){
+		return client.getConnection().multi();
 	}
 
 	protected NotSupportedCommandException throwNotSupportedCommandException(

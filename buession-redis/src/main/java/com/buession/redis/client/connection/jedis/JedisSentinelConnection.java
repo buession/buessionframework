@@ -36,9 +36,12 @@ import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
@@ -549,12 +552,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	@Override
-	public boolean isTransaction(){
-		return transaction != null;
-	}
-
-	@Override
-	public Pipeline pipeline(){
+	public Pipeline openPipeline(){
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());
 		}
@@ -563,20 +561,41 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	@Override
-	public void multi(){
-		transaction = jedis.multi();
+	public void closePipeline(){
+		pipeline.close();
+		pipeline = null;
 	}
 
 	@Override
-	public List<Object> exec(){
-		return transaction != null ? transaction.exec() : null;
+	public Transaction multi(){
+		if(transaction == null){
+			transaction = new JedisTransaction(jedis.multi());
+		}
+
+		return transaction;
 	}
 
 	@Override
-	public void discard(){
+	public List<Object> exec() throws RedisException{
+		if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
+		}
+	}
+
+	@Override
+	public void discard() throws RedisException{
 		if(transaction != null){
 			transaction.discard();
 			transaction = null;
+		}else{
+			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
 		}
 	}
 

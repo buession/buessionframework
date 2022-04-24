@@ -54,7 +54,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public long geoAdd(final String key, final String member, final double longitude, final double latitude){
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.GEOADD)
@@ -65,7 +65,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.GEOADD)
@@ -76,7 +76,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
 		final Map<String, GeoCoordinate> geoCoordinates = GeoConverter.STRING_MAP_CONVERTER.convert(memberCoordinates);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.GEOADD)
@@ -87,7 +87,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
 		final Map<byte[], GeoCoordinate> geoCoordinates = GeoConverter.BINARY_MAP_CONVERTER.convert(memberCoordinates);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.GEOADD)
@@ -138,7 +138,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public double geoDist(final String key, final String member1, final String member2){
+	public Double geoDist(final String key, final String member1, final String member2){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.GEODIST)
@@ -149,7 +149,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.GEODIST)
@@ -160,7 +160,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -172,7 +172,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	}
 
 	@Override
-	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);

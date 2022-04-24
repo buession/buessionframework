@@ -101,7 +101,7 @@ public interface HyperLogLogCommands extends RedisCommands {
 	 *
 	 * @return 所有给定 HyperLogLog 的并集的近似基数
 	 */
-	long pfCount(final String... keys);
+	Long pfCount(final String... keys);
 
 	/**
 	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
@@ -113,6 +113,6 @@ public interface HyperLogLogCommands extends RedisCommands {
 	 *
 	 * @return 所有给定 HyperLogLog 的并集的近似基数
 	 */
-	long pfCount(final byte[]... keys);
+	Long pfCount(final byte[]... keys);
 
 }

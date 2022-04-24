@@ -114,14 +114,14 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long aclDelUser(final String... usernames){
+	public Long aclDelUser(final String... usernames){
 		final CommandArguments args = CommandArguments.create("usernames", usernames);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.run(args);
 	}
 
 	@Override
-	public long aclDelUser(final byte[]... usernames){
+	public Long aclDelUser(final byte[]... usernames){
 		final CommandArguments args = CommandArguments.create("usernames", usernames);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.run(args);
@@ -223,7 +223,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long dbSize(){
+	public Long dbSize(){
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.DBSIZE)
 				.general((cmd)->cmd.dbSize())
 				.pipeline((cmd)->cmd.dbSize())
@@ -305,7 +305,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long lastSave(){
+	public Long lastSave(){
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LASTSAVE)
 				.run();
 	}
@@ -329,7 +329,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long memoryUsage(final String key){
+	public Long memoryUsage(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
@@ -339,7 +339,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long memoryUsage(final byte[] key){
+	public Long memoryUsage(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
@@ -349,7 +349,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long memoryUsage(final String key, final int samples){
+	public Long memoryUsage(final String key, final int samples){
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
@@ -359,7 +359,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long memoryUsage(final byte[] key, final int samples){
+	public Long memoryUsage(final byte[] key, final int samples){
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
@@ -472,7 +472,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public long slowLogLen(){
+	public Long slowLogLen(){
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.SLOWLOG_LEN)
 				.run();
 	}

@@ -122,7 +122,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	}
 
 	@Override
-	public long clientId(){
+	public Long clientId(){
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.general((cmd)->cmd.clientId())
 				.run();

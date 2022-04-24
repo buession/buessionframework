@@ -49,12 +49,12 @@ public abstract class AbstractSortedSetOperations<C extends JedisRedisClient>
 	}
 
 	@Override
-	public long zRemRangeByLex(final String key, final double min, final double max){
+	public Long zRemRangeByLex(final String key, final double min, final double max){
 		return zRemRangeByLex(key, Double.toString(min), Double.toString(max));
 	}
 
 	@Override
-	public long zRemRangeByLex(final byte[] key, final double min, final double max){
+	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
 		return zRemRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 	}
 

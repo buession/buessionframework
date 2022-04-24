@@ -61,7 +61,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	}
 
 	@Override
-	public long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids){
+	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids){
 		return xAck(SafeEncoder.encode(key), SafeEncoder.encode(groupName), ids);
 	}
 
@@ -134,7 +134,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	}
 
 	@Override
-	public long xDel(final byte[] key, final StreamEntryId... ids){
+	public Long xDel(final byte[] key, final StreamEntryId... ids){
 		return xDel(SafeEncoder.encode(key), ids);
 	}
 

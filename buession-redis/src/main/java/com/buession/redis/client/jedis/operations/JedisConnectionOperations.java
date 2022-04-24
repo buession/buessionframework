@@ -122,7 +122,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	}
 
 	@Override
-	public long clientId(){
+	public Long clientId(){
 		return new JedisCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.general((cmd)->cmd.clientId())
 				.run();

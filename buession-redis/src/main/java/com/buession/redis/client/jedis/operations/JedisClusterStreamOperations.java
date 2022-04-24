@@ -75,7 +75,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xAck(final String key, final String groupName, final StreamEntryId... ids){
+	public Long xAck(final String key, final String groupName, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("ids", ids);
 		final StreamEntryID[] streamEntryIDS = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XACK)
@@ -283,7 +283,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xDel(final String key, final StreamEntryId... ids){
+	public Long xDel(final String key, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("ids", ids);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XDEL)
@@ -338,7 +338,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xGroupDelConsumer(final String key, final String groupName, final String consumerName){
+	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
@@ -349,7 +349,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
+	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
@@ -441,7 +441,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xLen(final String key){
+	public Long xLen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XLEN)
 				.general((cmd)->cmd.xlen(key))
@@ -451,7 +451,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xLen(final byte[] key){
+	public Long xLen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XLEN)
 				.general((cmd)->cmd.xlen(key))
@@ -835,7 +835,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xTrim(final String key, final XTrimArgument xTrimArgument){
+	public Long xTrim(final String key, final XTrimArgument xTrimArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XTRIM)
@@ -846,7 +846,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
+	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.XTRIM)
@@ -857,7 +857,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit){
+	public Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit){
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument).limit(limit);
@@ -869,7 +869,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	}
 
 	@Override
-	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit){
+	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit){
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument).limit(limit);

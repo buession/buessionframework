@@ -49,7 +49,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	long bitCount(final String key);
+	Long bitCount(final String key);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -61,23 +61,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	long bitCount(final byte[] key);
-
-	/**
-	 * 计算给定字符串中，被设置为 1 的比特位的数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitcount.html" target="_blank">http://redisdoc.com/bitmap/bitcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 被设置为 1 的位的数量
-	 */
-	long bitCount(final String key, final long start, final long end);
+	Long bitCount(final byte[] key);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -93,7 +77,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	long bitCount(final byte[] key, final long start, final long end);
+	Long bitCount(final String key, final long start, final long end);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -106,12 +90,10 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param bitCountOption
-	 *        {@link BitCountOption}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption);
+	Long bitCount(final byte[] key, final long start, final long end);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -129,7 +111,25 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption);
+	Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption);
+
+	/**
+	 * 计算给定字符串中，被设置为 1 的比特位的数量
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitcount.html" target="_blank">http://redisdoc.com/bitmap/bitcount.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param bitCountOption
+	 *        {@link BitCountOption}
+	 *
+	 * @return 被设置为 1 的位的数量
+	 */
+	Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption);
 
 	/**
 	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
@@ -210,7 +210,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 的字符串的长度
 	 */
-	long bitOp(final BitOperation operation, final String destKey, final String... keys);
+	Long bitOp(final BitOperation operation, final String destKey, final String... keys);
 
 	/**
 	 * 对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
@@ -227,7 +227,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 保存到 destKey 的字符串的长度
 	 */
-	long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys);
+	Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 获取位图中第一个值为 bit 的二进制位的位置
@@ -241,7 +241,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 位图中第一个值为 bit 的二进制位的位置
 	 */
-	long bitPos(final String key, final boolean value);
+	Long bitPos(final String key, final boolean value);
 
 	/**
 	 * 获取位图中第一个值为 bit 的二进制位的位置
@@ -255,25 +255,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 位图中第一个值为 bit 的二进制位的位置
 	 */
-	long bitPos(final byte[] key, final boolean value);
-
-	/**
-	 * 获取位图中第一个值为 bit 的二进制位的位置
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		位
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 位图中第一个值为 bit 的二进制位的位置
-	 */
-	long bitPos(final String key, final boolean value, final long start, final long end);
+	Long bitPos(final byte[] key, final boolean value);
 
 	/**
 	 * 获取位图中第一个值为 bit 的二进制位的位置
@@ -291,7 +273,25 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 位图中第一个值为 bit 的二进制位的位置
 	 */
-	long bitPos(final byte[] key, final boolean value, final long start, final long end);
+	Long bitPos(final String key, final boolean value, final long start, final long end);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 */
+	Long bitPos(final byte[] key, final boolean value, final long start, final long end);
 
 	/**
 	 * 获取 key 指定偏移量上的位
@@ -305,7 +305,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return Key 指定偏移量上的位
 	 */
-	boolean getBit(final String key, final long offset);
+	Boolean getBit(final String key, final long offset);
 
 	/**
 	 * 获取 key 指定偏移量上的位
@@ -319,7 +319,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return Key 指定偏移量上的位
 	 */
-	boolean getBit(final byte[] key, final long offset);
+	Boolean getBit(final byte[] key, final long offset);
 
 	/**
 	 * 对 key 所储存的字符串值，设置或清除指定偏移量上的位；位的设置或清除取决于 value 参数
@@ -335,7 +335,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 偏移量原来储存的位
 	 */
-	boolean setBit(final String key, final long offset, final boolean value);
+	Boolean setBit(final String key, final long offset, final boolean value);
 
 	/**
 	 * 对 key 所储存的字符串值，设置或清除指定偏移量上的位；位的设置或清除取决于 value 参数
@@ -351,6 +351,6 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @return 偏移量原来储存的位
 	 */
-	boolean setBit(final byte[] key, final long offset, final boolean value);
+	Boolean setBit(final byte[] key, final long offset, final boolean value);
 
 }

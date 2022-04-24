@@ -172,7 +172,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	<V> long lInsert(final String key, final ListPosition position, final V pivot, final V value);
+	<V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 当中，位于值 pivot 之前或之后
@@ -193,7 +193,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	<V> long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value);
+	<V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value);
 
 	/**
 	 * 将列表 key 下标为 index 的元素的值设置为 value 序列化的值
@@ -1115,7 +1115,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	<V> long lPush(final String key, final V value);
+	<V> Long lPush(final String key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表头
@@ -1131,23 +1131,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	<V> long lPush(final byte[] key, final V value);
-
-	/**
-	 * 将一个或多个值 value 序列化后，插入到列表 key 的表头
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lpush.html" target="_blank">http://redisdoc.com/list/lpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param values
-	 * 		一个或多个值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 执行 LPUSH 命令后，列表的长度
-	 */
-	<V> long lPush(final String key, final V... values);
+	<V> Long lPush(final byte[] key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表头
@@ -1163,7 +1147,23 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	<V> long lPush(final byte[] key, final V... values);
+	<V> Long lPush(final String key, final V... values);
+
+	/**
+	 * 将一个或多个值 value 序列化后，插入到列表 key 的表头
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lpush.html" target="_blank">http://redisdoc.com/list/lpush.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param values
+	 * 		一个或多个值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 执行 LPUSH 命令后，列表的长度
+	 */
+	<V> Long lPush(final byte[] key, final V... values);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -1179,7 +1179,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	<V> long lPushX(final String key, final V value);
+	<V> Long lPushX(final String key, final V value);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -1195,7 +1195,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	<V> long lPushX(final byte[] key, final V value);
+	<V> Long lPushX(final byte[] key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -1211,7 +1211,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	<V> long lPushX(final String key, final V... values);
+	<V> Long lPushX(final String key, final V... values);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -1227,7 +1227,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	<V> long lPushX(final byte[] key, final V... values);
+	<V> Long lPushX(final byte[] key, final V... values);
 
 	/**
 	 * 移除并返回列表 key 的尾元素，并反序列化为对象
@@ -1455,7 +1455,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	<V> long rPush(final String key, final V value);
+	<V> Long rPush(final String key, final V value);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾
@@ -1471,7 +1471,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	<V> long rPush(final byte[] key, final V value);
+	<V> Long rPush(final byte[] key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表尾
@@ -1487,7 +1487,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	<V> long rPush(final String key, final V... values);
+	<V> Long rPush(final String key, final V... values);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表尾
@@ -1503,7 +1503,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	<V> long rPush(final byte[] key, final V... values);
+	<V> Long rPush(final byte[] key, final V... values);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -1519,7 +1519,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	<V> long rPushX(final String key, final V value);
+	<V> Long rPushX(final String key, final V value);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -1535,7 +1535,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	<V> long rPushX(final byte[] key, final V value);
+	<V> Long rPushX(final byte[] key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -1551,7 +1551,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	<V> long rPushX(final String key, final V... values);
+	<V> Long rPushX(final String key, final V... values);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -1567,6 +1567,6 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	<V> long rPushX(final byte[] key, final V... values);
+	<V> Long rPushX(final byte[] key, final V... values);
 
 }

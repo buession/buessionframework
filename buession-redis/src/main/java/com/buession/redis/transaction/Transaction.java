@@ -22,32 +22,19 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.transaction;
 
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisException;
+import java.util.List;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
  */
-public interface Command<R> {
+public interface Transaction {
 
-	ProtocolCommand getCommand();
+	List<Object> exec();
 
-	R execute() throws RedisException;
+	String discard();
 
-	default R run() throws RedisException{
-		return run(null);
-	}
-
-	R run(final CommandArguments arguments) throws RedisException;
-
-	interface Runner {
-
-		<R> R run() throws RedisException;
-
-	}
+	void close();
 
 }

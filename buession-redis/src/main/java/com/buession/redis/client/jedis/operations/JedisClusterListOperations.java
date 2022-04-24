@@ -72,7 +72,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lInsert(final String key, final ListPosition position, final String pivot, final String value){
+	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
 		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
@@ -84,7 +84,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
+	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
 		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
@@ -116,7 +116,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lLen(final String key){
+	public Long lLen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LLEN)
 				.general((cmd)->cmd.llen(key))
@@ -126,7 +126,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lLen(final byte[] key){
+	public Long lLen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LLEN)
 				.general((cmd)->cmd.llen(key))
@@ -156,7 +156,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPos(final String key, final String element){
+	public Long lPos(final String key, final String element){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element))
@@ -166,7 +166,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPos(final byte[] key, final byte[] element){
+	public Long lPos(final byte[] key, final byte[] element){
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element))
@@ -176,7 +176,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPos(final String key, final String element, final LPosArgument lPosArgument){
+	public Long lPos(final String key, final String element, final LPosArgument lPosArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
 		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPOS)
@@ -187,7 +187,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
+	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
 		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPOS)
@@ -222,7 +222,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lRem(final String key, final String value, final long count){
+	public Long lRem(final String key, final String value, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LREM)
 				.general((cmd)->cmd.lrem(key, count, value))
@@ -232,7 +232,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lRem(final byte[] key, final byte[] value, final long count){
+	public Long lRem(final byte[] key, final byte[] value, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LREM)
 				.general((cmd)->cmd.lrem(key, count, value))
@@ -398,7 +398,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPush(final String key, final String... values){
+	public Long lPush(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPUSH)
 				.general((cmd)->cmd.lpush(key, values))
@@ -408,7 +408,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPush(final byte[] key, final byte[]... values){
+	public Long lPush(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPUSH)
 				.general((cmd)->cmd.lpush(key, values))
@@ -418,7 +418,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPushX(final String key, final String... values){
+	public Long lPushX(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPUSHX)
 				.general((cmd)->cmd.lpushx(key, values))
@@ -428,7 +428,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long lPushX(final byte[] key, final byte[]... values){
+	public Long lPushX(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LPUSHX)
 				.general((cmd)->cmd.lpushx(key, values))
@@ -478,7 +478,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long rPush(final String key, final String... values){
+	public Long rPush(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.RPUSH)
 				.general((cmd)->cmd.rpush(key, values))
@@ -488,7 +488,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long rPush(final byte[] key, final byte[]... values){
+	public Long rPush(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.RPUSH)
 				.general((cmd)->cmd.rpush(key, values))
@@ -498,7 +498,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long rPushX(final String key, final String... values){
+	public Long rPushX(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.RPUSHX)
 				.general((cmd)->cmd.rpushx(key, values))
@@ -508,7 +508,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public long rPushX(final byte[] key, final byte[]... values){
+	public Long rPushX(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.RPUSHX)
 				.general((cmd)->cmd.rpushx(key, values))

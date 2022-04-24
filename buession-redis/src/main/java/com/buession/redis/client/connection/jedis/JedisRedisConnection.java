@@ -26,7 +26,6 @@ package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Transaction;
 
 /**
  * Jedis Redis 连接对象
@@ -49,12 +48,5 @@ public interface JedisRedisConnection extends RedisConnection {
 	 * 		连接池配置
 	 */
 	void setPoolConfig(JedisPoolConfig poolConfig);
-
-	/**
-	 * 获取事务
-	 *
-	 * @return 事务
-	 */
-	Transaction getTransaction();
 
 }

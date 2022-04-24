@@ -75,6 +75,7 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
+import com.buession.redis.pipeline.Pipeline;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,32 +107,32 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long bitCount(final String key){
+	public Long bitCount(final String key){
 		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key)));
 	}
 
 	@Override
-	public long bitCount(final byte[] key){
+	public Long bitCount(final byte[] key){
 		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key)));
 	}
 
 	@Override
-	public long bitCount(final String key, final long start, final long end){
+	public Long bitCount(final String key, final long start, final long end){
 		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end));
 	}
 
 	@Override
-	public long bitCount(final byte[] key, final long start, final long end){
+	public Long bitCount(final byte[] key, final long start, final long end){
 		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end));
 	}
 
 	@Override
-	public long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption){
+	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption){
 		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end, bitCountOption));
 	}
 
 	@Override
-	public long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption){
+	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption){
 		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key), start, end, bitCountOption));
 	}
 
@@ -156,52 +157,52 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long bitOp(final BitOperation operation, final String destKey, final String... keys){
+	public Long bitOp(final BitOperation operation, final String destKey, final String... keys){
 		return bitMapOpsExecute((ops)->ops.bitOp(operation, rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
+	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
 		return bitMapOpsExecute((ops)->ops.bitOp(operation, rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long bitPos(final String key, final boolean value){
+	public Long bitPos(final String key, final boolean value){
 		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value));
 	}
 
 	@Override
-	public long bitPos(final byte[] key, final boolean value){
+	public Long bitPos(final byte[] key, final boolean value){
 		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value));
 	}
 
 	@Override
-	public long bitPos(final String key, final boolean value, final long start, final long end){
+	public Long bitPos(final String key, final boolean value, final long start, final long end){
 		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value, start, end));
 	}
 
 	@Override
-	public long bitPos(final byte[] key, final boolean value, final long start, final long end){
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
 		return bitMapOpsExecute((ops)->ops.bitPos(rawKey(key), value, start, end));
 	}
 
 	@Override
-	public boolean getBit(final String key, final long offset){
+	public Boolean getBit(final String key, final long offset){
 		return bitMapOpsExecute((ops)->ops.getBit(rawKey(key), offset));
 	}
 
 	@Override
-	public boolean getBit(final byte[] key, final long offset){
+	public Boolean getBit(final byte[] key, final long offset){
 		return bitMapOpsExecute((ops)->ops.getBit(rawKey(key), offset));
 	}
 
 	@Override
-	public boolean setBit(final String key, final long offset, final boolean value){
+	public Boolean setBit(final String key, final long offset, final boolean value){
 		return bitMapOpsExecute((ops)->ops.setBit(rawKey(key), offset, value));
 	}
 
 	@Override
-	public boolean setBit(final byte[] key, final long offset, final boolean value){
+	public Boolean setBit(final byte[] key, final long offset, final boolean value){
 		return bitMapOpsExecute((ops)->ops.setBit(rawKey(key), offset, value));
 	}
 
@@ -221,17 +222,17 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public int clusterCountFailureReports(final String nodeId){
+	public Integer clusterCountFailureReports(final String nodeId){
 		return clusterOpsExecute((ops)->ops.clusterCountFailureReports(nodeId));
 	}
 
 	@Override
-	public int clusterCountFailureReports(final byte[] nodeId){
+	public Integer clusterCountFailureReports(final byte[] nodeId){
 		return clusterOpsExecute((ops)->ops.clusterCountFailureReports(nodeId));
 	}
 
 	@Override
-	public long clusterCountKeysInSlot(final int slot){
+	public Long clusterCountKeysInSlot(final int slot){
 		return clusterOpsExecute((ops)->ops.clusterCountKeysInSlot(slot));
 	}
 
@@ -266,12 +267,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long clusterKeySlot(final String key){
+	public Long clusterKeySlot(final String key){
 		return clusterOpsExecute((ops)->ops.clusterKeySlot(rawKey(key)));
 	}
 
 	@Override
-	public long clusterKeySlot(final byte[] key){
+	public Long clusterKeySlot(final byte[] key){
 		return clusterOpsExecute((ops)->ops.clusterKeySlot(rawKey(key)));
 	}
 
@@ -426,7 +427,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long clientId(){
+	public Long clientId(){
 		return connectionOpsExecute((ops)->ops.clientId());
 	}
 
@@ -491,22 +492,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long geoAdd(final String key, final String member, final double longitude, final double latitude){
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
 		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), member, longitude, latitude));
 	}
 
 	@Override
-	public long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
 		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), member, longitude, latitude));
 	}
 
 	@Override
-	public long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
 		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), memberCoordinates));
 	}
 
 	@Override
-	public long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
 		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), memberCoordinates));
 	}
 
@@ -531,22 +532,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public double geoDist(final String key, final String member1, final String member2){
+	public Double geoDist(final String key, final String member1, final String member2){
 		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2));
 	}
 
 	@Override
-	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
 		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2));
 	}
 
 	@Override
-	public double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
 		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2, unit));
 	}
 
 	@Override
-	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
 		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2, unit));
 	}
 
@@ -651,22 +652,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long hDel(final String key, final String... fields){
+	public Long hDel(final String key, final String... fields){
 		return hashOpsExecute((ops)->ops.hDel(rawKey(key), fields));
 	}
 
 	@Override
-	public long hDel(final byte[] key, final byte[]... fields){
+	public Long hDel(final byte[] key, final byte[]... fields){
 		return hashOpsExecute((ops)->ops.hDel(rawKey(key), fields));
 	}
 
 	@Override
-	public boolean hExists(final String key, final String field){
+	public Boolean hExists(final String key, final String field){
 		return hashOpsExecute((ops)->ops.hExists(rawKey(key), field));
 	}
 
 	@Override
-	public boolean hExists(final byte[] key, final byte[] field){
+	public Boolean hExists(final byte[] key, final byte[] field){
 		return hashOpsExecute((ops)->ops.hExists(rawKey(key), field));
 	}
 
@@ -691,22 +692,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long hIncrBy(final String key, final String field, final long value){
+	public Long hIncrBy(final String key, final String field, final long value){
 		return hashOpsExecute((ops)->ops.hIncrBy(rawKey(key), field, value));
 	}
 
 	@Override
-	public long hIncrBy(final byte[] key, final byte[] field, final long value){
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
 		return hashOpsExecute((ops)->ops.hIncrBy(rawKey(key), field, value));
 	}
 
 	@Override
-	public double hIncrByFloat(final String key, final String field, final double value){
+	public Double hIncrByFloat(final String key, final String field, final double value){
 		return hashOpsExecute((ops)->ops.hIncrByFloat(rawKey(key), field, value));
 	}
 
 	@Override
-	public double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
 		return hashOpsExecute((ops)->ops.hIncrByFloat(rawKey(key), field, value));
 	}
 
@@ -721,12 +722,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long hLen(final String key){
+	public Long hLen(final String key){
 		return hashOpsExecute((ops)->ops.hLen(rawKey(key)));
 	}
 
 	@Override
-	public long hLen(final byte[] key){
+	public Long hLen(final byte[] key){
 		return hashOpsExecute((ops)->ops.hLen(rawKey(key)));
 	}
 
@@ -865,12 +866,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long hSet(final String key, final String field, final String value){
+	public Long hSet(final String key, final String field, final String value){
 		return hashOpsExecute((ops)->ops.hSet(rawKey(key), field, value));
 	}
 
 	@Override
-	public long hSet(final byte[] key, final byte[] field, final byte[] value){
+	public Long hSet(final byte[] key, final byte[] field, final byte[] value){
 		return hashOpsExecute((ops)->ops.hSet(rawKey(key), field, value));
 	}
 
@@ -885,12 +886,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long hStrLen(final String key, final String field){
+	public Long hStrLen(final String key, final String field){
 		return hashOpsExecute((ops)->ops.hStrLen(rawKey(key), field));
 	}
 
 	@Override
-	public long hStrLen(final byte[] key, final byte[] field){
+	public Long hStrLen(final byte[] key, final byte[] field){
 		return hashOpsExecute((ops)->ops.hStrLen(rawKey(key), field));
 	}
 
@@ -925,22 +926,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long pfCount(final String... keys){
+	public Long pfCount(final String... keys){
 		return hyperLogLogOpsExecute((ops)->ops.pfCount(rawKeys(keys)));
 	}
 
 	@Override
-	public long pfCount(final byte[]... keys){
+	public Long pfCount(final byte[]... keys){
 		return hyperLogLogOpsExecute((ops)->ops.pfCount(rawKeys(keys)));
 	}
 
 	@Override
-	public long del(final String... keys){
+	public Long del(final String... keys){
 		return keyOpsExecute((ops)->ops.del(rawKeys(keys)));
 	}
 
 	@Override
-	public long del(final byte[]... keys){
+	public Long del(final byte[]... keys){
 		return keyOpsExecute((ops)->ops.del(rawKeys(keys)));
 	}
 
@@ -955,22 +956,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public boolean exists(final String key){
+	public Boolean exists(final String key){
 		return keyOpsExecute((ops)->ops.exists(rawKey(key)));
 	}
 
 	@Override
-	public boolean exists(final byte[] key){
+	public Boolean exists(final byte[] key){
 		return keyOpsExecute((ops)->ops.exists(rawKey(key)));
 	}
 
 	@Override
-	public long exists(final String... keys){
+	public Long exists(final String... keys){
 		return keyOpsExecute((ops)->ops.exists(rawKeys(keys)));
 	}
 
 	@Override
-	public long exists(final byte[]... keys){
+	public Long exists(final byte[]... keys){
 		return keyOpsExecute((ops)->ops.exists(rawKeys(keys)));
 	}
 
@@ -1035,22 +1036,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long ttl(final String key){
+	public Long ttl(final String key){
 		return keyOpsExecute((ops)->ops.ttl(rawKey(key)));
 	}
 
 	@Override
-	public long ttl(final byte[] key){
+	public Long ttl(final byte[] key){
 		return keyOpsExecute((ops)->ops.ttl(rawKey(key)));
 	}
 
 	@Override
-	public long pTtl(final String key){
+	public Long pTtl(final String key){
 		return keyOpsExecute((ops)->ops.pTtl(rawKey(key)));
 	}
 
 	@Override
-	public long pTtl(final byte[] key){
+	public Long pTtl(final byte[] key){
 		return keyOpsExecute((ops)->ops.pTtl(rawKey(key)));
 	}
 
@@ -1322,32 +1323,32 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long sort(final String key, final String destKey){
+	public Long sort(final String key, final String destKey){
 		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
-	public long sort(final byte[] key, final byte[] destKey){
+	public Long sort(final byte[] key, final byte[] destKey){
 		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
-	public long sort(final String key, final String destKey, final SortArgument sortArgument){
+	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
 		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey), sortArgument));
 	}
 
 	@Override
-	public long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
+	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
 		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey), sortArgument));
 	}
 
 	@Override
-	public long touch(final String... keys){
+	public Long touch(final String... keys){
 		return keyOpsExecute((ops)->ops.touch(rawKeys(keys)));
 	}
 
 	@Override
-	public long touch(final byte[]... keys){
+	public Long touch(final byte[]... keys){
 		return keyOpsExecute((ops)->ops.touch(rawKeys(keys)));
 	}
 
@@ -1362,17 +1363,17 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long unlink(final String... keys){
+	public Long unlink(final String... keys){
 		return keyOpsExecute((ops)->ops.unlink(rawKeys(keys)));
 	}
 
 	@Override
-	public long unlink(final byte[]... keys){
+	public Long unlink(final byte[]... keys){
 		return keyOpsExecute((ops)->ops.unlink(rawKeys(keys)));
 	}
 
 	@Override
-	public long wait(final int replicas, final int timeout){
+	public Long wait(final int replicas, final int timeout){
 		return keyOpsExecute((ops)->ops.wait(replicas, timeout));
 	}
 
@@ -1387,32 +1388,32 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long objectFreq(final String key){
+	public Long objectFreq(final String key){
 		return keyOpsExecute((ops)->ops.objectFreq(rawKey(key)));
 	}
 
 	@Override
-	public long objectFreq(final byte[] key){
+	public Long objectFreq(final byte[] key){
 		return keyOpsExecute((ops)->ops.objectFreq(rawKey(key)));
 	}
 
 	@Override
-	public long objectIdleTime(final String key){
+	public Long objectIdleTime(final String key){
 		return keyOpsExecute((ops)->ops.objectIdleTime(rawKey(key)));
 	}
 
 	@Override
-	public long objectIdleTime(final byte[] key){
+	public Long objectIdleTime(final byte[] key){
 		return keyOpsExecute((ops)->ops.objectIdleTime(rawKey(key)));
 	}
 
 	@Override
-	public long objectRefcount(final String key){
+	public Long objectRefcount(final String key){
 		return keyOpsExecute((ops)->ops.objectRefcount(rawKey(key)));
 	}
 
 	@Override
-	public long objectRefcount(final byte[] key){
+	public Long objectRefcount(final byte[] key){
 		return keyOpsExecute((ops)->ops.objectRefcount(rawKey(key)));
 	}
 
@@ -1427,12 +1428,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long lInsert(final String key, final ListPosition position, final String pivot, final String value){
+	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value){
 		return listOpsExecute((ops)->ops.lInsert(rawKey(key), position, pivot, value));
 	}
 
 	@Override
-	public long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
+	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
 		return listOpsExecute((ops)->ops.lInsert(rawKey(key), position, pivot, value));
 	}
 
@@ -1447,12 +1448,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long lLen(final String key){
+	public Long lLen(final String key){
 		return listOpsExecute((ops)->ops.lLen(rawKey(key)));
 	}
 
 	@Override
-	public long lLen(final byte[] key){
+	public Long lLen(final byte[] key){
 		return listOpsExecute((ops)->ops.lLen(rawKey(key)));
 	}
 
@@ -1467,22 +1468,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long lPos(final String key, final String element){
+	public Long lPos(final String key, final String element){
 		return listOpsExecute((ops)->ops.lPos(rawKey(key), element));
 	}
 
 	@Override
-	public long lPos(final byte[] key, final byte[] element){
+	public Long lPos(final byte[] key, final byte[] element){
 		return listOpsExecute((ops)->ops.lPos(rawKey(key), element));
 	}
 
 	@Override
-	public long lPos(final String key, final String element, final LPosArgument lPosArgument){
+	public Long lPos(final String key, final String element, final LPosArgument lPosArgument){
 		return listOpsExecute((ops)->ops.lPos(rawKey(key), element, lPosArgument));
 	}
 
 	@Override
-	public long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
+	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
 		return listOpsExecute((ops)->ops.lPos(rawKey(key), element, lPosArgument));
 	}
 
@@ -1497,12 +1498,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long lRem(final String key, final String value, final long count){
+	public Long lRem(final String key, final String value, final long count){
 		return listOpsExecute((ops)->ops.lRem(rawKey(key), value, count));
 	}
 
 	@Override
-	public long lRem(final byte[] key, final byte[] value, final long count){
+	public Long lRem(final byte[] key, final byte[] value, final long count){
 		return listOpsExecute((ops)->ops.lRem(rawKey(key), value, count));
 	}
 
@@ -1579,22 +1580,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long lPush(final String key, final String... values){
+	public Long lPush(final String key, final String... values){
 		return listOpsExecute((ops)->ops.lPush(rawKey(key), values));
 	}
 
 	@Override
-	public long lPush(final byte[] key, final byte[]... values){
+	public Long lPush(final byte[] key, final byte[]... values){
 		return listOpsExecute((ops)->ops.lPush(rawKey(key), values));
 	}
 
 	@Override
-	public long lPushX(final String key, final String... values){
+	public Long lPushX(final String key, final String... values){
 		return listOpsExecute((ops)->ops.lPushX(rawKey(key), values));
 	}
 
 	@Override
-	public long lPushX(final byte[] key, final byte[]... values){
+	public Long lPushX(final byte[] key, final byte[]... values){
 		return listOpsExecute((ops)->ops.lPushX(rawKey(key), values));
 	}
 
@@ -1619,22 +1620,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long rPush(final String key, final String... values){
+	public Long rPush(final String key, final String... values){
 		return listOpsExecute((ops)->ops.rPush(rawKey(key), values));
 	}
 
 	@Override
-	public long rPush(final byte[] key, final byte[]... values){
+	public Long rPush(final byte[] key, final byte[]... values){
 		return listOpsExecute((ops)->ops.rPush(rawKey(key), values));
 	}
 
 	@Override
-	public long rPushX(final String key, final String... values){
+	public Long rPushX(final String key, final String... values){
 		return listOpsExecute((ops)->ops.rPushX(rawKey(key), values));
 	}
 
 	@Override
-	public long rPushX(final byte[] key, final byte[]... values){
+	public Long rPushX(final byte[] key, final byte[]... values){
 		return listOpsExecute((ops)->ops.rPushX(rawKey(key), values));
 	}
 
@@ -1655,12 +1656,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long publish(final String channel, final String message){
+	public Long publish(final String channel, final String message){
 		return pubSubOpsExecute((ops)->ops.publish(channel, message));
 	}
 
 	@Override
-	public long publish(final byte[] channel, final byte[] message){
+	public Long publish(final byte[] channel, final byte[] message){
 		return pubSubOpsExecute((ops)->ops.publish(channel, message));
 	}
 
@@ -1680,7 +1681,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long pubsubNumPat(){
+	public Long pubsubNumPat(){
 		return pubSubOpsExecute((ops)->ops.pubsubNumPat());
 	}
 
@@ -1881,12 +1882,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long aclDelUser(final String... usernames){
+	public Long aclDelUser(final String... usernames){
 		return serverOpsExecute((ops)->ops.aclDelUser(usernames));
 	}
 
 	@Override
-	public long aclDelUser(final byte[]... username){
+	public Long aclDelUser(final byte[]... username){
 		return serverOpsExecute((ops)->ops.aclDelUser(username));
 	}
 
@@ -1966,7 +1967,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long dbSize(){
+	public Long dbSize(){
 		return serverOpsExecute((ops)->ops.dbSize());
 	}
 
@@ -2026,7 +2027,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long lastSave(){
+	public Long lastSave(){
 		return serverOpsExecute((ops)->ops.lastSave());
 	}
 
@@ -2046,22 +2047,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long memoryUsage(final String key){
+	public Long memoryUsage(final String key){
 		return serverOpsExecute((ops)->ops.memoryUsage(key));
 	}
 
 	@Override
-	public long memoryUsage(final byte[] key){
+	public Long memoryUsage(final byte[] key){
 		return serverOpsExecute((ops)->ops.memoryUsage(key));
 	}
 
 	@Override
-	public long memoryUsage(final String key, final int samples){
+	public Long memoryUsage(final String key, final int samples){
 		return serverOpsExecute((ops)->ops.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override
-	public long memoryUsage(final byte[] key, final int samples){
+	public Long memoryUsage(final byte[] key, final int samples){
 		return serverOpsExecute((ops)->ops.memoryUsage(rawKey(key), samples));
 	}
 
@@ -2163,7 +2164,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long slowLogLen(){
+	public Long slowLogLen(){
 		return serverOpsExecute((ops)->ops.slowLogLen());
 	}
 
@@ -2183,22 +2184,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long sAdd(final String key, final String... members){
+	public Long sAdd(final String key, final String... members){
 		return setOpsExecute((ops)->ops.sAdd(rawKey(key), members));
 	}
 
 	@Override
-	public long sAdd(final byte[] key, final byte[]... members){
+	public Long sAdd(final byte[] key, final byte[]... members){
 		return setOpsExecute((ops)->ops.sAdd(rawKey(key), members));
 	}
 
 	@Override
-	public long sCard(final String key){
+	public Long sCard(final String key){
 		return setOpsExecute((ops)->ops.sCard(rawKey(key)));
 	}
 
 	@Override
-	public long sCard(final byte[] key){
+	public Long sCard(final byte[] key){
 		return setOpsExecute((ops)->ops.sCard(rawKey(key)));
 	}
 
@@ -2213,12 +2214,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long sDiffStore(final String destKey, final String... keys){
+	public Long sDiffStore(final String destKey, final String... keys){
 		return setOpsExecute((ops)->ops.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long sDiffStore(final byte[] destKey, final byte[]... keys){
+	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
 		return setOpsExecute((ops)->ops.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
@@ -2233,22 +2234,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long sInterStore(final String destKey, final String... keys){
+	public Long sInterStore(final String destKey, final String... keys){
 		return setOpsExecute((ops)->ops.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long sInterStore(final byte[] destKey, final byte[]... keys){
+	public Long sInterStore(final byte[] destKey, final byte[]... keys){
 		return setOpsExecute((ops)->ops.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public boolean sIsMember(final String key, final String member){
+	public Boolean sIsMember(final String key, final String member){
 		return setOpsExecute((ops)->ops.sIsMember(rawKey(key), member));
 	}
 
 	@Override
-	public boolean sIsMember(final byte[] key, final byte[] member){
+	public Boolean sIsMember(final byte[] key, final byte[] member){
 		return setOpsExecute((ops)->ops.sIsMember(rawKey(key), member));
 	}
 
@@ -2323,12 +2324,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long sRem(final String key, final String... members){
+	public Long sRem(final String key, final String... members){
 		return setOpsExecute((ops)->ops.sRem(rawKey(key), members));
 	}
 
 	@Override
-	public long sRem(final byte[] key, final byte[]... members){
+	public Long sRem(final byte[] key, final byte[]... members){
 		return setOpsExecute((ops)->ops.sRem(rawKey(key), members));
 	}
 
@@ -2425,12 +2426,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long sUnionStore(final String destKey, final String... keys){
+	public Long sUnionStore(final String destKey, final String... keys){
 		return setOpsExecute((ops)->ops.sUnionStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long sUnionStore(final byte[] destKey, final byte[]... keys){
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		return setOpsExecute((ops)->ops.sUnionStore(rawKey(destKey), rawKeys(keys)));
 	}
 
@@ -2495,114 +2496,114 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members){
+	public Long zAdd(final String key, final Map<String, Double> members){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt){
+	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, gtLt));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, gtLt));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, ch));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, ch));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx, gtLt));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx, gtLt));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx, ch));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx, ch));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, gtLt, ch));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, gtLt, ch));
 	}
 
 	@Override
-	public long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
 					 final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx, gtLt, ch));
 	}
 
 	@Override
-	public long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
 					 final boolean ch){
 		return sortedSetOpsExecute((ops)->ops.zAdd(rawKey(key), members, nxXx, gtLt, ch));
 	}
 
 	@Override
-	public long zCard(final String key){
+	public Long zCard(final String key){
 		return sortedSetOpsExecute((ops)->ops.zCard(rawKey(key)));
 	}
 
 	@Override
-	public long zCard(final byte[] key){
+	public Long zCard(final byte[] key){
 		return sortedSetOpsExecute((ops)->ops.zCard(rawKey(key)));
 	}
 
 	@Override
-	public long zCount(final String key, final double min, final double max){
+	public Long zCount(final String key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zCount(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zCount(final byte[] key, final double min, final double max){
+	public Long zCount(final byte[] key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zCount(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zCount(final String key, final String min, final String max){
+	public Long zCount(final String key, final String min, final String max){
 		return sortedSetOpsExecute((ops)->ops.zCount(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zCount(final byte[] key, final byte[] min, final byte[] max){
+	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
 		return sortedSetOpsExecute((ops)->ops.zCount(rawKey(key), min, max));
 	}
 
@@ -2627,22 +2628,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zDiffStore(final String destKey, final String... keys){
+	public Long zDiffStore(final String destKey, final String... keys){
 		return sortedSetOpsExecute((ops)->ops.zDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long zDiffStore(final byte[] destKey, final byte[]... keys){
+	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
 		return sortedSetOpsExecute((ops)->ops.zDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public double zIncrBy(final String key, final double increment, final String member){
+	public Double zIncrBy(final String key, final double increment, final String member){
 		return sortedSetOpsExecute((ops)->ops.zIncrBy(rawKey(key), increment, member));
 	}
 
 	@Override
-	public double zIncrBy(final byte[] key, final double increment, final byte[] member){
+	public Double zIncrBy(final byte[] key, final double increment, final byte[] member){
 		return sortedSetOpsExecute((ops)->ops.zIncrBy(rawKey(key), increment, member));
 	}
 
@@ -2727,64 +2728,64 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String... keys){
+	public Long zInterStore(final String destKey, final String... keys){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[]... keys){
+	public Long zInterStore(final byte[] destKey, final byte[]... keys){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate){
+	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String[] keys, final double... weights){
+	public Long zInterStore(final String destKey, final String[] keys, final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys), weights));
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights){
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys), weights));
 	}
 
 	@Override
-	public long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
+	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zInterStore(rawKey(destKey), rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public long zLexCount(final String key, final double min, final double max){
+	public Long zLexCount(final String key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zLexCount(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zLexCount(final byte[] key, final double min, final double max){
+	public Long zLexCount(final byte[] key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zLexCount(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zLexCount(final String key, final String min, final String max){
+	public Long zLexCount(final String key, final String min, final String max){
 		return sortedSetOpsExecute((ops)->ops.zLexCount(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zLexCount(final byte[] key, final byte[] min, final byte[] max){
+	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
 		return sortedSetOpsExecute((ops)->ops.zLexCount(rawKey(key), min, max));
 	}
 
@@ -2981,98 +2982,98 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end){
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end){
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final boolean rev){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, rev));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final boolean rev){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, rev));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
 							final long count){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
 							final long count){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 							final boolean rev){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, rev));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 							final boolean rev){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, rev));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 							final long offset, final long count){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 							final long offset, final long count){
 		return sortedSetOpsExecute((ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
 							final long offset, final long count){
 		return sortedSetOpsExecute(
 				(ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, rev, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
 							final long offset, final long count){
 		return sortedSetOpsExecute(
 				(ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, rev, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 							final boolean rev, final long offset, final long count){
 		return sortedSetOpsExecute(
 				(ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, rev, offset, count));
 	}
 
 	@Override
-	public long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 							final boolean rev, final long offset, final long count){
 		return sortedSetOpsExecute(
 				(ops)->ops.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, rev, offset, count));
@@ -3089,62 +3090,62 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zRem(final String key, final String... members){
+	public Long zRem(final String key, final String... members){
 		return sortedSetOpsExecute((ops)->ops.zRem(rawKey(key), members));
 	}
 
 	@Override
-	public long zRem(final byte[] key, final byte[]... members){
+	public Long zRem(final byte[] key, final byte[]... members){
 		return sortedSetOpsExecute((ops)->ops.zRem(rawKey(key), members));
 	}
 
 	@Override
-	public long zRemRangeByLex(final String key, final double min, final double max){
+	public Long zRemRangeByLex(final String key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByLex(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByLex(final byte[] key, final double min, final double max){
+	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByLex(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByLex(final String key, final String min, final String max){
+	public Long zRemRangeByLex(final String key, final String min, final String max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByLex(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByLex(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByScore(final String key, final double min, final double max){
+	public Long zRemRangeByScore(final String key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByScore(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByScore(final byte[] key, final double min, final double max){
+	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByScore(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByScore(final String key, final String min, final String max){
+	public Long zRemRangeByScore(final String key, final String min, final String max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByScore(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByScore(rawKey(key), min, max));
 	}
 
 	@Override
-	public long zRemRangeByRank(final String key, final long start, final long end){
+	public Long zRemRangeByRank(final String key, final long start, final long end){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByRank(rawKey(key), start, end));
 	}
 
 	@Override
-	public long zRemRangeByRank(final byte[] key, final long start, final long end){
+	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
 		return sortedSetOpsExecute((ops)->ops.zRemRangeByRank(rawKey(key), start, end));
 	}
 
@@ -3301,12 +3302,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zRevRank(final String key, final String member){
+	public Long zRevRank(final String key, final String member){
 		return sortedSetOpsExecute((ops)->ops.zRevRank(rawKey(key), member));
 	}
 
 	@Override
-	public long zRevRank(final byte[] key, final byte[] member){
+	public Long zRevRank(final byte[] key, final byte[] member){
 		return sortedSetOpsExecute((ops)->ops.zRevRank(rawKey(key), member));
 	}
 
@@ -3481,54 +3482,54 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String... keys){
+	public Long zUnionStore(final String destKey, final String... keys){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[]... keys){
+	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate){
+	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String[] keys, final double... weights){
+	public Long zUnionStore(final String destKey, final String[] keys, final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), weights));
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights){
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), weights));
 	}
 
 	@Override
-	public long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
+	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public long xAck(final String key, final String groupName, final StreamEntryId... ids){
+	public Long xAck(final String key, final String groupName, final StreamEntryId... ids){
 		return streamOpsOpsExecute((ops)->ops.xAck(rawKey(key), groupName, ids));
 	}
 
 	@Override
-	public long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids){
+	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids){
 		return streamOpsOpsExecute((ops)->ops.xAck(rawKey(key), groupName, ids));
 	}
 
@@ -3673,12 +3674,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long xDel(final String key, final StreamEntryId... ids){
+	public Long xDel(final String key, final StreamEntryId... ids){
 		return streamOpsOpsExecute((ops)->ops.xDel(rawKey(key), ids));
 	}
 
 	@Override
-	public long xDel(final byte[] key, final StreamEntryId... ids){
+	public Long xDel(final byte[] key, final StreamEntryId... ids){
 		return streamOpsOpsExecute((ops)->ops.xDel(rawKey(key), ids));
 	}
 
@@ -3705,12 +3706,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long xGroupDelConsumer(final String key, final String groupName, final String consumerName){
+	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName){
 		return streamOpsOpsExecute((ops)->ops.xGroupDelConsumer(rawKey(key), groupName, consumerName));
 	}
 
 	@Override
-	public long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
+	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
 		return streamOpsOpsExecute((ops)->ops.xGroupDelConsumer(rawKey(key), groupName, consumerName));
 	}
 
@@ -3785,12 +3786,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long xLen(final String key){
+	public Long xLen(final String key){
 		return streamOpsOpsExecute((ops)->ops.xLen(rawKey(key)));
 	}
 
 	@Override
-	public long xLen(final byte[] key){
+	public Long xLen(final byte[] key){
 		return streamOpsOpsExecute((ops)->ops.xLen(rawKey(key)));
 	}
 
@@ -4060,82 +4061,82 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long xTrim(final String key, final XTrimArgument xTrimArgument){
+	public Long xTrim(final String key, final XTrimArgument xTrimArgument){
 		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument));
 	}
 
 	@Override
-	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
+	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
 		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument));
 	}
 
 	@Override
-	public long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit){
+	public Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit){
 		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument, limit));
 	}
 
 	@Override
-	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit){
+	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit){
 		return streamOpsOpsExecute((ops)->ops.xTrim(rawKey(key), xTrimArgument, limit));
 	}
 
 	@Override
-	public long append(final String key, final String value){
+	public Long append(final String key, final String value){
 		return stringOpsOpsExecute((ops)->ops.append(rawKey(key), value));
 	}
 
 	@Override
-	public long append(final byte[] key, final byte[] value){
+	public Long append(final byte[] key, final byte[] value){
 		return stringOpsOpsExecute((ops)->ops.append(rawKey(key), value));
 	}
 
 	@Override
-	public long incr(final String key){
+	public Long incr(final String key){
 		return stringOpsOpsExecute((ops)->ops.incr(rawKey(key)));
 	}
 
 	@Override
-	public long incr(final byte[] key){
+	public Long incr(final byte[] key){
 		return stringOpsOpsExecute((ops)->ops.incr(rawKey(key)));
 	}
 
 	@Override
-	public long incrBy(final String key, final long value){
+	public Long incrBy(final String key, final long value){
 		return stringOpsOpsExecute((ops)->ops.incrBy(rawKey(key), value));
 	}
 
 	@Override
-	public long incrBy(final byte[] key, final long value){
+	public Long incrBy(final byte[] key, final long value){
 		return stringOpsOpsExecute((ops)->ops.incrBy(rawKey(key), value));
 	}
 
 	@Override
-	public double incrByFloat(final String key, final double value){
+	public Double incrByFloat(final String key, final double value){
 		return stringOpsOpsExecute((ops)->ops.incrByFloat(rawKey(key), value));
 	}
 
 	@Override
-	public double incrByFloat(final byte[] key, final double value){
+	public Double incrByFloat(final byte[] key, final double value){
 		return stringOpsOpsExecute((ops)->ops.incrByFloat(rawKey(key), value));
 	}
 
 	@Override
-	public long decr(final String key){
+	public Long decr(final String key){
 		return stringOpsOpsExecute((ops)->ops.decr(rawKey(key)));
 	}
 
 	@Override
-	public long decr(final byte[] key){
+	public Long decr(final byte[] key){
 		return stringOpsOpsExecute((ops)->ops.decr(rawKey(key)));
 	}
 
 	@Override
-	public long decrBy(final String key, final long value){
+	public Long decrBy(final String key, final long value){
 		return stringOpsOpsExecute((ops)->ops.decrBy(rawKey(key), value));
 	}
 
 	@Override
-	public long decrBy(final byte[] key, final long value){
+	public Long decrBy(final byte[] key, final long value){
 		return stringOpsOpsExecute((ops)->ops.decrBy(rawKey(key), value));
 	}
 
@@ -4254,12 +4255,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long setRange(final String key, final long offset, final String value){
+	public Long setRange(final String key, final long offset, final String value){
 		return stringOpsOpsExecute((ops)->ops.setRange(rawKey(key), offset, value));
 	}
 
 	@Override
-	public long setRange(final byte[] key, final long offset, final byte[] value){
+	public Long setRange(final byte[] key, final long offset, final byte[] value){
 		return stringOpsOpsExecute((ops)->ops.setRange(rawKey(key), offset, value));
 	}
 
@@ -4274,12 +4275,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public long strlen(final String key){
+	public Long strlen(final String key){
 		return stringOpsOpsExecute((ops)->ops.strlen(rawKey(key)));
 	}
 
 	@Override
-	public long strlen(final byte[] key){
+	public Long strlen(final byte[] key){
 		return stringOpsOpsExecute((ops)->ops.strlen(rawKey(key)));
 	}
 
@@ -4300,7 +4301,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Object> exec(){
-		return transactionOpsExecute((ops)->ops.exec());
+		RedisConnection connection = client.getConnection();
+
+		if(connection.isPipeline()){
+			final Pipeline pipeline = connection.openPipeline();
+			try{
+				return pipeline.syncAndReturnAll();
+			}finally{
+				connection.closePipeline();
+			}
+		}else{
+			return transactionOpsExecute((ops)->ops.exec());
+		}
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	default long geoAdd(final String key, final String member, final Geo geo){
+	default Long geoAdd(final String key, final String member, final Geo geo){
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
@@ -72,7 +72,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	default long geoAdd(final byte[] key, final byte[] member, final Geo geo){
+	default Long geoAdd(final byte[] key, final byte[] member, final Geo geo){
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
