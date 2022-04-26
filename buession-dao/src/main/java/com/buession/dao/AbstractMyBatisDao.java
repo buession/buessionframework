@@ -281,7 +281,8 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 
 		try{
-			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds(offset, size));
+			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters,
+					new RowBounds(offset, size));
 		}catch(OperationException e){
 			logger.error(e.getMessage());
 		}
@@ -451,7 +452,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 
 		for(ResultMap resultMap : resultMaps){
-			if(resultMap.getType() == e.getClass()){
+			if(e.getClass().equals(resultMap.getType())){
 				List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
 				if(Validate.isNotEmpty(resultMappings)){
@@ -459,6 +460,10 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 						try{
 							FieldUtils.writeField(e, resultMapping.getProperty(), primary, true);
 						}catch(IllegalAccessException ex){
+							if(logger.isErrorEnabled()){
+								logger.error("Update resultMap[{}] id field '{}' with value: [{}] failure: {}",
+										resultMap.getId(), resultMapping.getProperty(), primary, ex.getMessage());
+							}
 						}
 					}
 				}
