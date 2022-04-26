@@ -22,42 +22,40 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis.standalone;
+package com.buession.redis.jedis.sentinel;
 
-import com.buession.lang.Geo;
-import com.buession.redis.RedisTemplate;
-import com.buession.redis.User;
+import com.buession.redis.core.RedisServer;
 import com.buession.redis.jedis.AbstractJedisRedisTest;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class TransactionTest extends AbstractJedisRedisTest {
+public class SentinelTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void exec(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+	public void masters(){
+		List<RedisServer> masters = createJedisSentinelConnection().masters();
 
-		redisTemplate.multi();
-		redisTemplate.bitCount("str");
-		redisTemplate.get("user");
-		redisTemplate.get("a");
-		redisTemplate.getObject("user", User.class);
-		redisTemplate.zAdd("transaction", 1.0, "1");
-		redisTemplate.geoAdd("sichuan", "zigong", new Geo(53.2D, 44D));
-		System.out.println(redisTemplate.exec());
+		if(masters != null){
+			for(RedisServer server : masters){
+				System.out.println(server);
+			}
+		}
 	}
 
 	@Test
-	public void discard(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+	public void slaves(){
+		List<RedisServer> masters = createJedisSentinelConnection().slaves("test_master");
 
-		redisTemplate.multi();
-		redisTemplate.zAdd("transaction", 3.0, "3");
-		redisTemplate.geoAdd("sichuan", "zigong", new Geo(53.2, 44));
-		redisTemplate.discard();
+		if(masters != null){
+			for(RedisServer server : masters){
+				System.out.println(server);
+			}
+		}
 	}
 
 }

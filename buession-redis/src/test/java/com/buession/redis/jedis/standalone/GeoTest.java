@@ -32,12 +32,12 @@ import org.junit.Test;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class KeyTest extends AbstractJedisRedisTest {
+public class GeoTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void type(){
+	public void geoPos(){
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-		System.out.println(redisTemplate.type("sichuan"));
+		System.out.println(redisTemplate.geoPos("sichuan", "zigong"));
 	}
 
 }

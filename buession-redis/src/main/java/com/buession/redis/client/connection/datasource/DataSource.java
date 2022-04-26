@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
@@ -30,5 +30,50 @@ package com.buession.redis.client.connection.datasource;
  * @author Yong.Teng
  */
 public interface DataSource {
+
+	/**
+	 * 返回用户名
+	 *
+	 * @return 用户名
+	 */
+	String getUsername();
+
+	/**
+	 * 设置用户名
+	 *
+	 * @param username
+	 * 		用户名
+	 */
+	void setUsername(String username);
+
+	/**
+	 * 返回密码
+	 *
+	 * @return 密码
+	 */
+	String getPassword();
+
+	/**
+	 * 设置密码
+	 *
+	 * @param password
+	 * 		密码
+	 */
+	void setPassword(String password);
+
+	/**
+	 * 返回客户端名称
+	 *
+	 * @return 客户端名称
+	 */
+	String getClientName();
+
+	/**
+	 * 设置客户端名称
+	 *
+	 * @param clientName
+	 * 		客户端名称
+	 */
+	void setClientName(String clientName);
 
 }

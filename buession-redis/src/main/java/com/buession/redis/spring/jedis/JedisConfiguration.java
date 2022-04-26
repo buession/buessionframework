@@ -27,7 +27,6 @@ package com.buession.redis.spring.jedis;
 import com.buession.core.utils.Assert;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.spring.StandaloneConfiguration;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 工厂配置
@@ -47,31 +46,9 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 	private int port = RedisNode.DEFAULT_PORT;
 
 	/**
-	 * 用户
-	 */
-	private String user;
-
-	/**
-	 * 密码
-	 */
-	private String password;
-
-	/**
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
-
-	/**
-	 * Client Name
-	 */
-	private String clientName;
-
-	/**
-	 * 连接池配置
-	 *
-	 * @since 1.3.0
-	 */
-	private JedisPoolConfig poolConfig;
 
 	@Override
 	public String getHost(){
@@ -93,24 +70,6 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 		this.port = port;
 	}
 
-	public String getUser(){
-		return user;
-	}
-
-	public void setUser(String user){
-		this.user = user;
-	}
-
-	@Override
-	public String getPassword(){
-		return password;
-	}
-
-	@Override
-	public void setPassword(String password){
-		this.password = password;
-	}
-
 	@Override
 	public int getDatabase(){
 		return database;
@@ -120,39 +79,6 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 	public void setDatabase(int database){
 		Assert.isNegative(database, "invalid DB index (a positive index required)");
 		this.database = database;
-	}
-
-	@Override
-	public String getClientName(){
-		return clientName;
-	}
-
-	@Override
-	public void setClientName(String clientName){
-		this.clientName = clientName;
-	}
-
-	/**
-	 * 获取连接池配置
-	 *
-	 * @return 连接池配置
-	 *
-	 * @since 1.3.0
-	 */
-	public JedisPoolConfig getPoolConfig(){
-		return poolConfig;
-	}
-
-	/**
-	 * 设置连接池配置
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 1.3.0
-	 */
-	public void setPoolConfig(JedisPoolConfig poolConfig){
-		this.poolConfig = poolConfig;
 	}
 
 }

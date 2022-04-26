@@ -55,7 +55,7 @@ public class StringTest extends AbstractJedisRedisTest {
 	public void get(){
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
-		Assert.assertTrue("A" .equals(redisTemplate.get("a")));
+		Assert.assertEquals("A", redisTemplate.get("a"));
 		System.out.println(redisTemplate.get("user"));
 	}
 

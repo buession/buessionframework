@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import java.util.Properties;
+
 /**
  * @author Yong.Teng
  */
@@ -35,6 +37,11 @@ public class RedisServer extends RedisNode {
 	 * Redis 服务器主机 IP 地址
 	 */
 	private final String ip;
+
+	/**
+	 * Redis 服务器信息
+	 */
+	private Properties properties;
 
 	/**
 	 * 构造函数
@@ -89,12 +96,81 @@ public class RedisServer extends RedisNode {
 	}
 
 	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param properties
+	 * 		Redis 服务器信息
+	 */
+	public RedisServer(final String host, final Properties properties){
+		this(host);
+		this.properties = properties;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param properties
+	 * 		Redis 服务器信息
+	 */
+	public RedisServer(final String host, final int port, final Properties properties){
+		this(host, port);
+		this.properties = properties;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param role
+	 * 		节点角色
+	 * @param properties
+	 * 		Redis 服务器信息
+	 */
+	public RedisServer(final String host, final Role role, final Properties properties){
+		this(host, role);
+		this.properties = properties;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param role
+	 * 		节点角色
+	 * @param properties
+	 * 		Redis 服务器信息
+	 */
+	public RedisServer(final String host, final int port, final Role role, final Properties properties){
+		this(host, port, role);
+		this.properties = properties;
+	}
+
+	/**
 	 * 获取 Redis 服务器主机 IP 地址
 	 *
 	 * @return Redis 服务器主机 IP 地址
 	 */
 	public String getIp(){
 		return ip;
+	}
+
+	/**
+	 * 返回 Redis 服务器信息
+	 *
+	 * @return Redis 服务器信息
+	 */
+	public Properties getProperties(){
+		return properties;
 	}
 
 }

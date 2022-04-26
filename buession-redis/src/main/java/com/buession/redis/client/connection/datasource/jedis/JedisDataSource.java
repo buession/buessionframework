@@ -45,24 +45,9 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	private int port = RedisNode.DEFAULT_PORT;
 
 	/**
-	 * 用户
-	 */
-	private String user;
-
-	/**
-	 * 密码
-	 */
-	private String password;
-
-	/**
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
-
-	/**
-	 * Client Name
-	 */
-	private String clientName;
 
 	@Override
 	public String getHost(){
@@ -85,26 +70,6 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	}
 
 	@Override
-	public String getUser(){
-		return user;
-	}
-
-	@Override
-	public void setUser(String user){
-		this.user = user;
-	}
-
-	@Override
-	public String getPassword(){
-		return password;
-	}
-
-	@Override
-	public void setPassword(String password){
-		this.password = password;
-	}
-
-	@Override
 	public int getDatabase(){
 		return database;
 	}
@@ -112,16 +77,6 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	@Override
 	public void setDatabase(int database){
 		this.database = database;
-	}
-
-	@Override
-	public String getClientName(){
-		return clientName;
-	}
-
-	@Override
-	public void setClientName(String clientName){
-		this.clientName = clientName;
 	}
 
 }

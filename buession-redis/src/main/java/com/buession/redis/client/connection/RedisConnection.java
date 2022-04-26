@@ -29,6 +29,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -116,10 +117,10 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 *
 	 * @return 连接成功，则返回 Status.SUCCESS; 否则，返回 Status.FAILURE
 	 *
-	 * @throws IOException
-	 * 		I/O 异常
+	 * @throws RedisConnectionFailureException
+	 * 		Redis 连接失败异常
 	 */
-	Status connect() throws IOException;
+	Status connect() throws RedisConnectionFailureException;
 
 	/**
 	 * 执行 Redis 命令

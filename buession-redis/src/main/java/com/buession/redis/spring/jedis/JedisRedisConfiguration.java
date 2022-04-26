@@ -25,6 +25,7 @@
 package com.buession.redis.spring.jedis;
 
 import com.buession.redis.spring.RedisConfiguration;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 工厂配置
@@ -33,5 +34,24 @@ import com.buession.redis.spring.RedisConfiguration;
  * @since 1.3.0
  */
 public interface JedisRedisConfiguration extends RedisConfiguration {
+
+	/**
+	 * 获取连接池配置
+	 *
+	 * @return 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	JedisPoolConfig getPoolConfig();
+
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	void setPoolConfig(JedisPoolConfig poolConfig);
 
 }

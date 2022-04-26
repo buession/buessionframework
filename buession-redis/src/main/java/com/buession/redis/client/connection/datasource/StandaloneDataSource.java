@@ -62,36 +62,6 @@ public interface StandaloneDataSource extends DataSource {
 	void setPort(int port);
 
 	/**
-	 * 返回用户
-	 *
-	 * @return 用户
-	 */
-	String getUser();
-
-	/**
-	 * 设置用户
-	 *
-	 * @param user
-	 * 		用户
-	 */
-	void setUser(String user);
-
-	/**
-	 * 返回密码
-	 *
-	 * @return 密码
-	 */
-	String getPassword();
-
-	/**
-	 * 设置密码
-	 *
-	 * @param password
-	 * 		密码
-	 */
-	void setPassword(String password);
-
-	/**
 	 * 返回数据库
 	 *
 	 * @return 数据库
@@ -105,20 +75,5 @@ public interface StandaloneDataSource extends DataSource {
 	 * 		数据库
 	 */
 	void setDatabase(int database);
-
-	/**
-	 * 返回 Client Name
-	 *
-	 * @return Client Name
-	 */
-	String getClientName();
-
-	/**
-	 * 设置 Client Name
-	 *
-	 * @param clientName
-	 * 		Client Name
-	 */
-	void setClientName(String clientName);
 
 }

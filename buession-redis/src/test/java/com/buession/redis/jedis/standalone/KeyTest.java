@@ -21,10 +21,29 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.jedis.standalone;/**
- * 
- *
+ */
+package com.buession.redis.jedis.standalone;
+
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class KeyTest {
+ */
+public class KeyTest extends AbstractJedisRedisTest {
+
+	@Test
+	public void type(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		System.out.println(redisTemplate.type("sichuan"));
+	}
+
+	@Test
+	public void ttlAt(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		System.out.println(redisTemplate.ttlAt("sichuan"));
+	}
+
 }

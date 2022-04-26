@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring.jedis;
 
 import com.buession.redis.spring.AbstractRedisConfiguration;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 工厂配置抽象类
@@ -33,6 +33,24 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Yong.Teng
  * @since 1.3.0
  */
-public abstract class AbstractJedisRedisConfiguration extends AbstractRedisConfiguration implements JedisRedisConfiguration {
+public abstract class AbstractJedisRedisConfiguration extends AbstractRedisConfiguration
+		implements JedisRedisConfiguration {
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	private JedisPoolConfig poolConfig;
+
+	@Override
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	@Override
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
 
 }

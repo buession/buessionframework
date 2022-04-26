@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
@@ -35,6 +35,16 @@ import com.buession.net.ssl.SslConfiguration;
 public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 
 	/**
+	 * 用户名
+	 */
+	private String username;
+
+	/**
+	 * 密码
+	 */
+	private String password;
+
+	/**
 	 * 连接超时（单位：秒）
 	 */
 	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
@@ -45,9 +55,34 @@ public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
+	 * Client Name
+	 */
+	private String clientName;
+
+	/**
 	 * SSL 配置
 	 */
 	private SslConfiguration sslConfiguration;
+
+	@Override
+	public String getUsername(){
+		return username;
+	}
+
+	@Override
+	public void setUsername(String username){
+		this.username = username;
+	}
+
+	@Override
+	public String getPassword(){
+		return password;
+	}
+
+	@Override
+	public void setPassword(String password){
+		this.password = password;
+	}
 
 	@Override
 	public int getConnectTimeout(){
@@ -79,4 +114,11 @@ public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 		this.sslConfiguration = sslConfiguration;
 	}
 
+	public String getClientName(){
+		return clientName;
+	}
+
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
 }

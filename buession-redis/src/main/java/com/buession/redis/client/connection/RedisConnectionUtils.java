@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
 import com.buession.core.utils.Assert;
-import com.buession.lang.Status;
 import com.buession.redis.core.RedisMode;
+import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.spring.ClusterConfiguration;
 import com.buession.redis.spring.RedisConfiguration;
 import com.buession.redis.spring.SentinelConfiguration;
@@ -197,11 +197,10 @@ public final class RedisConnectionUtils {
 		}
 
 		try{
-			if(connection.connect() == Status.FAILURE){
-				logger.error("Redis connection failure.");
-			}
-		}catch(IOException e){
+			connection.connect();
+		}catch(RedisConnectionFailureException e){
 			logger.error("Redis connection failure: {}", e.getMessage());
+			throw e;
 		}finally{
 			if(logger.isDebugEnabled()){
 				long finishTime = System.nanoTime();
@@ -250,7 +249,7 @@ public final class RedisConnectionUtils {
 		proxyFactory.addAdvice(new ConnectionSplittingInterceptor(factory));
 
 		logger.debug("Create Redis Connection Proxy.");
-		return RedisConnection.class.cast(proxyFactory.getProxy());
+		return (RedisConnection) proxyFactory.getProxy();
 	}
 
 	private static void connectionClose(final RedisConnection connection){

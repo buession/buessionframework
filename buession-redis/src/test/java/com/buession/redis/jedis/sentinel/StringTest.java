@@ -22,42 +22,49 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis.standalone;
+package com.buession.redis.jedis.sentinel;
 
-import com.buession.lang.Geo;
+import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.User;
 import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class TransactionTest extends AbstractJedisRedisTest {
+public class StringTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void exec(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+	public void set(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
 
-		redisTemplate.multi();
-		redisTemplate.bitCount("str");
-		redisTemplate.get("user");
-		redisTemplate.get("a");
-		redisTemplate.getObject("user", User.class);
-		redisTemplate.zAdd("transaction", 1.0, "1");
-		redisTemplate.geoAdd("sichuan", "zigong", new Geo(53.2D, 44D));
-		System.out.println(redisTemplate.exec());
+		User user = new User();
+		user.setId(1);
+		user.setUsername("test");
+
+		Assert.assertSame(redisTemplate.setEx("a", "A", 5 * 60), Status.SUCCESS);
+		Assert.assertSame(redisTemplate.setEx("user", user, 30), Status.SUCCESS);
 	}
 
 	@Test
-	public void discard(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+	public void get(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
 
-		redisTemplate.multi();
-		redisTemplate.zAdd("transaction", 3.0, "3");
-		redisTemplate.geoAdd("sichuan", "zigong", new Geo(53.2, 44));
-		redisTemplate.discard();
+		Assert.assertEquals("A", redisTemplate.get("a"));
+		System.out.println(redisTemplate.get("user"));
+	}
+
+	@Test
+	public void getObject(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+
+		System.out.println(redisTemplate.getObject("user", User.class));
+		System.out.println(redisTemplate.getObject("user" .getBytes(StandardCharsets.UTF_8), User.class));
 	}
 
 }

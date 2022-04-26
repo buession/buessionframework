@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis.standalone;
+package com.buession.redis.jedis.sentinel;
 
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.jedis.AbstractJedisRedisTest;
@@ -35,9 +35,15 @@ import org.junit.Test;
 public class KeyTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void type(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-		System.out.println(redisTemplate.type("sichuan"));
+	public void ttl(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+		System.out.println(redisTemplate.ttl("sichuan"));
+	}
+
+	@Test
+	public void ttlAt(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+		System.out.println(redisTemplate.ttlAt("sichuan"));
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
@@ -62,21 +62,6 @@ public interface StandaloneConfiguration extends RedisConfiguration {
 	void setPort(int port);
 
 	/**
-	 * 获取密码
-	 *
-	 * @return 密码
-	 */
-	String getPassword();
-
-	/**
-	 * 设置密码
-	 *
-	 * @param password
-	 * 		密码
-	 */
-	void setPassword(String password);
-
-	/**
 	 * 获取数据库
 	 *
 	 * @return 数据库
@@ -90,20 +75,5 @@ public interface StandaloneConfiguration extends RedisConfiguration {
 	 * 		数据库
 	 */
 	void setDatabase(int database);
-
-	/**
-	 * 获取 Client Name
-	 *
-	 * @return Client Name
-	 */
-	String getClientName();
-
-	/**
-	 * 设置 Client Name
-	 *
-	 * @param clientName
-	 * 		Client Name
-	 */
-	void setClientName(String clientName);
 
 }

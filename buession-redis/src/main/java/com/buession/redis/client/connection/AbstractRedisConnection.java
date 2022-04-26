@@ -29,6 +29,7 @@ import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
@@ -179,7 +180,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public Status connect() throws IOException{
+	public Status connect() throws RedisConnectionFailureException{
 		logger.info("Connection redis server.");
 
 		try{
@@ -189,7 +190,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 			return Status.SUCCESS;
 		}catch(Exception e){
 			logger.error("Connection redis server error: {}.", e.getMessage());
-			return Status.FAILURE;
+			throw new RedisConnectionFailureException(e.getMessage(), e);
 		}
 	}
 

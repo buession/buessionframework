@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisClusterClient;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.operations.JedisClusterBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
@@ -51,12 +52,24 @@ import com.buession.redis.client.jedis.operations.JedisClusterTransactionOperati
  */
 public class JedisClusterClient extends AbstractJedisRedisClient implements RedisClusterClient {
 
+	private JedisClusterConnection connection;
+
 	public JedisClusterClient(){
 		super();
 	}
 
 	public JedisClusterClient(final JedisClusterConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public JedisClusterConnection getConnection(){
+		return connection;
+	}
+
+	@Override
+	public void setConnection(RedisConnection connection){
+		this.connection = (JedisClusterConnection) connection;
 	}
 
 	@Override

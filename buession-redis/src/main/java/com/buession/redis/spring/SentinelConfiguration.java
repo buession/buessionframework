@@ -24,6 +24,10 @@
  */
 package com.buession.redis.spring;
 
+import com.buession.redis.core.RedisNode;
+
+import java.util.List;
+
 /**
  * Redis 哨兵模式工厂连接配置
  *
@@ -31,5 +35,95 @@ package com.buession.redis.spring;
  * @since 2.0.0
  */
 public interface SentinelConfiguration extends RedisConfiguration {
+
+	/**
+	 * 返回哨兵节点连接超时（单位：秒）
+	 *
+	 * @return 哨兵节点连接超时
+	 */
+	int getSentinelConnectTimeout();
+
+	/**
+	 * 设置哨兵节点连接超时
+	 *
+	 * @param sentinelConnectTimeout
+	 * 		哨兵节点连接超时（单位：秒）
+	 */
+	void setSentinelConnectTimeout(int sentinelConnectTimeout);
+
+	/**
+	 * 返回哨兵节点读取超时（单位：秒）
+	 *
+	 * @return 哨兵节点读取超时
+	 */
+	int getSentinelSoTimeout();
+
+	/**
+	 * 设置哨兵节点读取超时
+	 *
+	 * @param sentinelSoTimeout
+	 * 		哨兵节点读取超时（单位：秒）
+	 */
+	void setSentinelSoTimeout(int sentinelSoTimeout);
+
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
+	int getDatabase();
+
+	/**
+	 * 设置数据库
+	 *
+	 * @param database
+	 * 		数据库
+	 */
+	void setDatabase(int database);
+
+	/**
+	 * 返回 Master 名称
+	 *
+	 * @return Master 名称
+	 */
+	String getMasterName();
+
+	/**
+	 * 返回 Sentinel Client Name
+	 *
+	 * @return Sentinel Client Name
+	 */
+	String getSentinelClientName();
+
+	/**
+	 * 设置 Sentinel Client Name
+	 *
+	 * @param sentinelClientName
+	 * 		Sentinel Client Name
+	 */
+	void setSentinelClientName(String sentinelClientName);
+
+	/**
+	 * 设置 Master 名称
+	 *
+	 * @param masterName
+	 * 		Master 名称
+	 */
+	void setMasterName(String masterName);
+
+	/**
+	 * 返回哨兵节点
+	 *
+	 * @return 哨兵节点
+	 */
+	List<RedisNode> getSentinels();
+
+	/**
+	 * 设置哨兵节点
+	 *
+	 * @param sentinels
+	 * 		哨兵节点
+	 */
+	void setSentinels(List<RedisNode> sentinels);
 
 }

@@ -28,11 +28,15 @@ import com.buession.core.utils.StringUtils;
 import com.buession.redis.AbstractRedisTest;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.spring.JedisConnectionFactoryBean;
 import com.buession.redis.spring.jedis.JedisConfiguration;
 import com.buession.redis.spring.jedis.JedisSentinelConfiguration;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
@@ -62,24 +66,26 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		}
 	}
 
-	protected RedisConnection createJedisSentinelConnection(){
+	protected JedisSentinelConnection createJedisSentinelConnection(){
 		JedisSentinelConfiguration configuration = new JedisSentinelConfiguration();
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
 
 		poolConfig.setMaxIdle(3);
 
-		//configuration.setHost("127.0.0.1");
-		//configuration.setPort(56379);
-		//configuration.setPassword("passwd");
-		//configuration.setDatabase(12);
-		//configuration.setClientName(StringUtils.random(6));
-		//configuration.setPoolConfig(poolConfig);
+		configuration.setSentinels(Arrays.asList(new RedisNode("127.0.0.1", 26379), new RedisNode("127.0.0.1", 36379),
+				new RedisNode("127.0.0.1", 36379)));
+		configuration.setSentinelClientName("SentinelClientName");
+		configuration.setClientName(StringUtils.random(6));
+		configuration.setMasterName("test_master");
+		configuration.setPassword("passwd");
+		configuration.setDatabase(6);
+		configuration.setPoolConfig(poolConfig);
 
 		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
 
 		try{
 			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
+			return (JedisSentinelConnection) factoryBean.getObject();
 		}catch(Exception e){
 			return null;
 		}

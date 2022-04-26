@@ -25,7 +25,6 @@
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
-import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
 
 import java.util.List;
@@ -49,16 +48,6 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	private int port = RedisNode.DEFAULT_SENTINEL_PORT;
 
 	/**
-	 * 用户
-	 */
-	private String user;
-
-	/**
-	 * 密码
-	 */
-	private String password;
-
-	/**
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
@@ -69,27 +58,17 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	private String clientName;
 
 	/**
-	 * Sentinel 用户
-	 */
-	private String sentinelUser;
-
-	/**
-	 * Sentinel 密码
-	 */
-	private String sentinelPassword;
-
-	/**
 	 * Sentinel Client Name
 	 */
 	private String sentinelClientName;
 
 	/**
-	 * Master 节点
+	 * Master 名称
 	 */
-	private RedisNamedNode master;
+	private String masterName;
 
 	/**
-	 * 设置哨兵节点
+	 * 哨兵节点
 	 */
 	private List<RedisNode> sentinels;
 
@@ -114,26 +93,6 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	}
 
 	@Override
-	public String getUser(){
-		return user;
-	}
-
-	@Override
-	public void setUser(String user){
-		this.user = user;
-	}
-
-	@Override
-	public String getPassword(){
-		return password;
-	}
-
-	@Override
-	public void setPassword(String password){
-		this.password = password;
-	}
-
-	@Override
 	public int getDatabase(){
 		return database;
 	}
@@ -141,36 +100,6 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setDatabase(int database){
 		this.database = database;
-	}
-
-	@Override
-	public String getClientName(){
-		return clientName;
-	}
-
-	@Override
-	public void setClientName(String clientName){
-		this.clientName = clientName;
-	}
-
-	@Override
-	public String getSentinelUser(){
-		return sentinelUser;
-	}
-
-	@Override
-	public void setSentinelUser(String sentinelUser){
-		this.sentinelUser = sentinelUser;
-	}
-
-	@Override
-	public String getSentinelPassword(){
-		return sentinelPassword;
-	}
-
-	@Override
-	public void setSentinelPassword(String sentinelPassword){
-		this.sentinelPassword = sentinelPassword;
 	}
 
 	@Override
@@ -184,13 +113,13 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	}
 
 	@Override
-	public RedisNamedNode getMaster(){
-		return master;
+	public String getMasterName(){
+		return masterName;
 	}
 
 	@Override
-	public void setMaster(RedisNamedNode master){
-		this.master = master;
+	public void setMasterName(String masterName){
+		this.masterName = masterName;
 	}
 
 	@Override

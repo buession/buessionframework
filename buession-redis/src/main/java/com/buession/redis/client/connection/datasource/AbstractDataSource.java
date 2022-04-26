@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
@@ -30,5 +30,83 @@ package com.buession.redis.client.connection.datasource;
  * @author Yong.Teng
  */
 public abstract class AbstractDataSource implements DataSource {
+
+	/**
+	 * 用户名
+	 */
+	private String username;
+
+	/**
+	 * 密码
+	 */
+	private String password;
+
+	/**
+	 * 客户端名称
+	 */
+	private String clientName;
+
+	/**
+	 * 返回用户名
+	 *
+	 * @return 用户名
+	 */
+	@Override
+	public String getUsername(){
+		return username;
+	}
+
+	/**
+	 * 设置用户名
+	 *
+	 * @param username
+	 * 		用户名
+	 */
+	@Override
+	public void setUsername(String username){
+		this.username = username;
+	}
+
+	/**
+	 * 返回密码
+	 *
+	 * @return 密码
+	 */
+	@Override
+	public String getPassword(){
+		return password;
+	}
+
+	/**
+	 * 设置密码
+	 *
+	 * @param password
+	 * 		密码
+	 */
+	@Override
+	public void setPassword(String password){
+		this.password = password;
+	}
+
+	/**
+	 * 返回客户端名称
+	 *
+	 * @return 客户端名称
+	 */
+	@Override
+	public String getClientName(){
+		return clientName;
+	}
+
+	/**
+	 * 设置客户端名称
+	 *
+	 * @param clientName
+	 * 		客户端名称
+	 */
+	@Override
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
 
 }

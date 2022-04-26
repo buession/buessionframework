@@ -36,6 +36,7 @@ import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
+import com.buession.redis.core.Role;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
@@ -48,14 +49,20 @@ import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.exceptions.JedisException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -74,12 +81,12 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	private int infiniteSoTimeout;
 
 	/**
-	 * Sentinel 连接超时（单位：秒）
+	 * 哨兵节点连接超时（单位：秒）
 	 */
 	private int sentinelConnectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
 	/**
-	 * Sentinel 读取超时（单位：秒）
+	 * 哨兵节点读取超时（单位：秒）
 	 */
 	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
@@ -118,9 +125,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
@@ -132,13 +139,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
 								   int sentinelConnectTimeout, int sentinelSoTimeout){
@@ -165,9 +172,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -182,13 +189,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -206,9 +213,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sslConfiguration
@@ -228,15 +235,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 *
@@ -270,9 +277,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout){
@@ -287,13 +294,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
@@ -310,9 +317,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 */
@@ -330,15 +337,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
@@ -371,9 +378,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -390,13 +397,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -416,9 +423,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sslConfiguration
@@ -438,15 +445,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -459,7 +466,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	/**
-	 * 返回 Infinite 读取超时
+	 * 返回 Infinite 读取超时（单位：秒）
 	 *
 	 * @return Infinite 读取超时
 	 */
@@ -471,45 +478,45 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * 设置 Infinite 读取超时
 	 *
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：秒）
 	 */
 	public void setInfiniteSoTimeout(int infiniteSoTimeout){
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	/**
-	 * 返回 Sentinel 连接超时
+	 * 返回哨兵节点连接超时（单位：秒）
 	 *
-	 * @return Sentinel 连接超时
+	 * @return 哨兵节点连接超时
 	 */
 	public int getSentinelConnectTimeout(){
 		return sentinelConnectTimeout;
 	}
 
 	/**
-	 * 设置 Sentinel 连接超时
+	 * 设置哨兵节点连接超时
 	 *
 	 * @param sentinelConnectTimeout
-	 * 		Sentinel 连接超时
+	 * 		哨兵节点连接超时（单位：秒）
 	 */
 	public void setSentinelConnectTimeout(int sentinelConnectTimeout){
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 	}
 
 	/**
-	 * 返回 Sentinel 读取超时
+	 * 返回哨兵节点读取超时（单位：秒）
 	 *
-	 * @return Sentinel 读取超时
+	 * @return 哨兵节点读取超时
 	 */
 	public int getSentinelSoTimeout(){
 		return sentinelSoTimeout;
 	}
 
 	/**
-	 * 设置 Sentinel 读取超时
+	 * 设置哨兵节点读取超时
 	 *
 	 * @param sentinelSoTimeout
-	 * 		Sentinel 读取超时
+	 * 		哨兵节点读取超时（单位：秒）
 	 */
 	public void setSentinelSoTimeout(int sentinelSoTimeout){
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -517,8 +524,34 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 	@Override
 	public List<RedisServer> masters(){
-		jedis.sentinelMasters();
-		return null;
+		DataSource dataSource = getDataSource();
+		if(dataSource == null){
+			return null;
+		}
+
+		final List<Map<String, String>> masterNodes = Objects.requireNonNull(createSentinelJedis(
+				(JedisSentinelDataSource) dataSource)).sentinelMasters();
+		if(masterNodes == null){
+			return null;
+		}
+
+		final List<RedisServer> result = new ArrayList<>(masterNodes.size());
+		RedisServer redisServer;
+		Properties properties;
+
+		for(Map<String, String> masterNode : masterNodes){
+			properties = new Properties();
+			properties.putAll(masterNode);
+
+			redisServer = new RedisServer(masterNode.get("ip"), Integer.parseInt(masterNode.get("port")),
+					properties);
+			redisServer.setName(masterNode.get("name"));
+			redisServer.setRole(Role.MASTER);
+
+			result.add(redisServer);
+		}
+
+		return result;
 	}
 
 	@Override
@@ -530,8 +563,35 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	@Override
 	public List<RedisServer> slaves(String masterName){
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading slaves.");
-		jedis.sentinelSlaves(masterName);
-		return null;
+
+		DataSource dataSource = getDataSource();
+		if(dataSource == null){
+			return null;
+		}
+
+		final List<Map<String, String>> slaveNodes = Objects.requireNonNull(createSentinelJedis(
+				(JedisSentinelDataSource) dataSource)).sentinelSlaves(masterName);
+		if(slaveNodes == null){
+			return null;
+		}
+
+		final List<RedisServer> result = new ArrayList<>(slaveNodes.size());
+		RedisServer redisServer;
+		Properties properties;
+
+		for(Map<String, String> slaveNode : slaveNodes){
+			properties = new Properties();
+			properties.putAll(slaveNode);
+
+			redisServer = new RedisServer(slaveNode.get("ip"), Integer.parseInt(slaveNode.get("port")),
+					properties);
+			redisServer.setName(slaveNode.get("name"));
+			redisServer.setRole(Role.SLAVE);
+
+			result.add(redisServer);
+		}
+
+		return result;
 	}
 
 	@Override
@@ -539,7 +599,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		Assert.isNull(namedNode, "Redis master node cloud not be 'null' for failover.");
 		Assert.isBlank(namedNode.getName(), "Redis master name cloud not be 'null' or empty for failover.");
 
-		jedis.sentinelFailover(namedNode.getName());
+		DataSource dataSource = getDataSource();
+		if(dataSource == null){
+			return;
+		}
+
+		Objects.requireNonNull(createSentinelJedis((JedisSentinelDataSource) dataSource))
+				.sentinelFailover(namedNode.getName());
 	}
 
 	@Override
@@ -548,7 +614,17 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		Assert.isBlank(server.getName(), "Name of server to monitor must not be 'null' or empty.");
 		Assert.isBlank(server.getHost(), "Host must not be 'null' for server to monitor.");
 
-		jedis.sentinelMonitor(server.getName(), server.getHost(), server.getPort(), server.getQuorum());
+		DataSource dataSource = getDataSource();
+		if(dataSource == null){
+			return;
+		}
+
+		Objects.requireNonNull(createSentinelJedis((JedisSentinelDataSource) dataSource))
+				.sentinelMonitor(server.getName(), server.getHost(), server.getPort(), server.getQuorum());
+	}
+
+	public Jedis getJedis(){
+		return jedis;
 	}
 
 	@Override
@@ -603,7 +679,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	public void remove(RedisNamedNode master){
 		Assert.isNull(master, "Master node cloud be 'null' when trying to remove.");
 		remove(master.getName());
-
 	}
 
 	@Override
@@ -637,17 +712,53 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		}
 	}
 
+	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource){
+		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
+		final JedisClientConfig clientConfig = createSentinelClientConfig(dataSource);
+
+		for(HostAndPort sentinel : sentinels){
+			try(Jedis jedis = new Jedis(sentinel, clientConfig)){
+				return jedis;
+			}catch(JedisException e){
+				logger.warn("Cannot get master address from sentinel running @ {}. Reason: {}. Trying next one.",
+						sentinel, e);
+			}
+		}
+
+		return null;
+	}
+
+	protected JedisClientConfig createSentinelClientConfig(final JedisSentinelDataSource dataSource){
+		final SslConfiguration sslConfiguration = getSslConfiguration();
+		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
+
+		builder.connectionTimeoutMillis(getSentinelConnectTimeout())
+				.socketTimeoutMillis(getSentinelSoTimeout());
+
+		if(Validate.hasText(dataSource.getSentinelClientName())){
+			builder.clientName(dataSource.getSentinelClientName());
+		}
+
+		if(sslConfiguration == null){
+		}else{
+			builder.ssl(isUseSsl()).sslSocketFactory(sslConfiguration.getSslSocketFactory())
+					.sslParameters(sslConfiguration.getSslParameters())
+					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
+		}
+
+		return builder.build();
+	}
+
 	protected JedisSentinelPool createPool(final JedisSentinelDataSource dataSource){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
 		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
-		final DefaultJedisClientConfig.Builder sentinelBuilder = DefaultJedisClientConfig.builder();
 
 		builder.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
 				.blockingSocketTimeoutMillis(getInfiniteSoTimeout()).database(dataSource.getDatabase());
 
-		if(Validate.hasText(dataSource.getUser())){
-			builder.user(dataSource.getUser());
+		if(Validate.hasText(dataSource.getUsername())){
+			builder.user(dataSource.getUsername());
 		}
 
 		if(Validate.hasText(dataSource.getPassword())){
@@ -658,21 +769,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			builder.clientName(dataSource.getClientName());
 		}
 
-		sentinelBuilder.connectionTimeoutMillis(getSentinelConnectTimeout())
-				.socketTimeoutMillis(getSentinelSoTimeout());
-
-		if(Validate.hasText(dataSource.getSentinelUser())){
-			sentinelBuilder.user(dataSource.getSentinelUser());
-		}
-
-		if(Validate.hasText(dataSource.getSentinelPassword())){
-			sentinelBuilder.password(dataSource.getSentinelPassword());
-		}
-
-		if(Validate.hasText(dataSource.getSentinelClientName())){
-			sentinelBuilder.clientName(dataSource.getSentinelClientName());
-		}
-
 		if(sslConfiguration == null){
 			logger.debug("Create jedis sentinel pool.");
 		}else{
@@ -680,25 +776,23 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			builder.ssl(isUseSsl()).sslSocketFactory(sslConfiguration.getSslSocketFactory())
 					.sslParameters(sslConfiguration.getSslParameters())
 					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
-			sentinelBuilder.ssl(isUseSsl()).sslSocketFactory(sslConfiguration.getSslSocketFactory())
-					.sslParameters(sslConfiguration.getSslParameters())
-					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
 		}
 
-		return new JedisSentinelPool(dataSource.getMaster().getName(), sentinels, getPoolConfig(), builder.build(),
-				sentinelBuilder.build());
+		return new JedisSentinelPool(dataSource.getMasterName(), sentinels, getPoolConfig(), builder.build(),
+				createSentinelClientConfig(dataSource));
 	}
 
-	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> nodes){
-		if(Validate.isEmpty(nodes)){
+	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes){
+		if(Validate.isEmpty(sentinelNodes)){
 			return Collections.emptySet();
 		}
 
-		Set<HostAndPort> convertedNodes = new LinkedHashSet<>(nodes.size());
+		Set<HostAndPort> convertedNodes = new LinkedHashSet<>(sentinelNodes.size());
 
-		for(RedisNode node : nodes){
+		for(RedisNode node : sentinelNodes){
 			if(node != null){
-				convertedNodes.add(new HostAndPort(node.getHost(), node.getPort()));
+				int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+				convertedNodes.add(new HostAndPort(node.getHost(), port));
 			}
 		}
 
@@ -707,9 +801,32 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 	protected Jedis createJedis(final JedisSentinelDataSource dataSource){
 		SslConfiguration sslConfiguration = getSslConfiguration();
+		DefaultJedisClientConfig.Builder builder;
 
 		for(RedisNode node : dataSource.getSentinels()){
-			Jedis jedis = new Jedis(node.getHost(), node.getPort(), getConnectTimeout(), getSoTimeout());
+			builder = DefaultJedisClientConfig.builder()
+					.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
+					.ssl(isUseSsl()).clientName(dataSource.getClientName()).database(dataSource.getDatabase());
+
+			if(Validate.hasText(dataSource.getUsername())){
+				builder.user(dataSource.getUsername());
+			}
+
+			if(Validate.hasText(dataSource.getPassword())){
+				builder.password(dataSource.getPassword());
+			}
+
+			if(sslConfiguration == null){
+				logger.debug("Create jedis.");
+			}else{
+				builder.sslSocketFactory(sslConfiguration.getSslSocketFactory());
+				builder.sslParameters(sslConfiguration.getSslParameters());
+				builder.hostnameVerifier(sslConfiguration.getHostnameVerifier());
+				logger.debug("Create jedis with ssl.");
+			}
+
+			Jedis jedis = new Jedis(new HostAndPort(dataSource.getHost(), dataSource.getPort()),
+					builder.build());
 
 			try{
 				if(Constants.PONG.equalsIgnoreCase(jedis.ping())){
@@ -719,6 +836,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 					return jedis;
 				}
 			}catch(Exception ex){
+				jedis.close();
 				logger.warn("Ping failed for sentinel host: {}", node.getHost(), ex);
 			}
 		}
@@ -783,12 +901,12 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 		logger.info("Jedis destroy.");
 		if(pool != null){
-			logger.info("Jedis Pool for {} destroy.", pool.getClass().getName());
+			logger.info("Jedis sentinel pool for {} destroy.", pool.getClass().getName());
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Jedis pool.", ex);
+				logger.warn("Cannot properly close Jedis sentinel pool.", ex);
 			}
 
 			pool = null;

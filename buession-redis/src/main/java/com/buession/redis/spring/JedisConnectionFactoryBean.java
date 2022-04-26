@@ -26,6 +26,7 @@ package com.buession.redis.spring;
 
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
@@ -72,13 +73,13 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 
 		dataSource.setHost(configuration.getHost());
 		dataSource.setPort(configuration.getPort());
-		dataSource.setUser(configuration.getUser());
+		dataSource.setUsername(configuration.getUsername());
 		dataSource.setPassword(configuration.getPassword());
 		dataSource.setDatabase(configuration.getDatabase());
 		dataSource.setClientName(configuration.getClientName());
 
-		final JedisConnection connection = new JedisConnection(dataSource, getConfiguration().getConnectTimeout(),
-				getConfiguration().getSoTimeout(), getConfiguration().getSslConfiguration());
+		final JedisConnection connection = new JedisConnection(dataSource, configuration.getConnectTimeout(),
+				configuration.getSoTimeout(), configuration.getSslConfiguration());
 
 		if(configuration.getPoolConfig() != null){
 			connection.setPoolConfig(configuration.getPoolConfig());
@@ -91,14 +92,21 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 	}
 
 	protected JedisSentinelConnection createJedisSentinelConnection(final JedisSentinelConfiguration configuration){
-		/*
-		final JedisSentinelDataSource dataSource = new JedisSentinelDataSource(configuration.getHost(),
-				configuration.getPort(), configuration.getPassword(), configuration.getDatabase(),
-				configuration.getClientName());
+		final JedisSentinelDataSource dataSource = new JedisSentinelDataSource();
 
-		final JedisSentinelDataSource connection = new JedisSentinelDataSource(dataSource,
-				getConfiguration().getConnectTimeout(),
-				getConfiguration().getSoTimeout(), getConfiguration().getSslConfiguration());
+		dataSource.setUsername(configuration.getUsername());
+		dataSource.setPassword(configuration.getPassword());
+		dataSource.setDatabase(configuration.getDatabase());
+		dataSource.setClientName(configuration.getClientName());
+		
+		dataSource.setSentinelClientName(configuration.getSentinelClientName());
+		dataSource.setMasterName(configuration.getMasterName());
+		dataSource.setSentinels(configuration.getSentinels());
+
+		final JedisSentinelConnection connection = new JedisSentinelConnection(dataSource,
+				configuration.getConnectTimeout(), configuration.getSoTimeout(),
+				configuration.getSentinelConnectTimeout(), configuration.getSentinelSoTimeout(),
+				configuration.getSslConfiguration());
 
 		if(configuration.getPoolConfig() != null){
 			connection.setPoolConfig(configuration.getPoolConfig());
@@ -108,9 +116,6 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 		}
 
 		return connection;
-
-		 */
-		return null;
 	}
 
 	protected JedisClusterConnection createJedisClusterConnection(final JedisClusterConfiguration configuration){

@@ -88,9 +88,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 */
 	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
@@ -114,9 +114,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -145,9 +145,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout){
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
@@ -175,9 +175,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param poolConfig
 	 * 		连接池配置
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -269,12 +269,12 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		if(sslConfiguration == null){
 			logger.debug("Create jedis pool.");
 			return new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
-					getSoTimeout(), dataSource.getUser(), redisPassword(dataSource.getPassword()),
+					getSoTimeout(), dataSource.getUsername(), redisPassword(dataSource.getPassword()),
 					dataSource.getDatabase(), dataSource.getClientName(), isUseSsl());
 		}else{
 			logger.debug("Create jedis pool with ssl.");
 			return new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
-					getSoTimeout(), dataSource.getUser(), redisPassword(dataSource.getPassword()),
+					getSoTimeout(), dataSource.getUsername(), redisPassword(dataSource.getPassword()),
 					dataSource.getDatabase(), dataSource.getClientName(), isUseSsl(),
 					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
 					sslConfiguration.getHostnameVerifier());
@@ -287,8 +287,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 				.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
 				.ssl(isUseSsl()).clientName(dataSource.getClientName()).database(dataSource.getDatabase());
 
-		if(Validate.hasText(dataSource.getUser())){
-			builder.user(dataSource.getUser());
+		if(Validate.hasText(dataSource.getUsername())){
+			builder.user(dataSource.getUsername());
 		}
 
 		if(Validate.hasText(dataSource.getPassword())){
@@ -328,8 +328,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 					jedis.connect();
 
 					if(Validate.hasText(dataSource.getPassword())){
-						if(Validate.hasText(dataSource.getUser())){
-							jedis.auth(dataSource.getUser(), redisPassword(dataSource.getPassword()));
+						if(Validate.hasText(dataSource.getUsername())){
+							jedis.auth(dataSource.getUsername(), redisPassword(dataSource.getPassword()));
 						}else{
 							jedis.auth(dataSource.getPassword());
 						}
@@ -367,7 +367,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 		logger.info("Jedis destroy.");
 		if(pool != null){
-			logger.info("Jedis Pool for {} destroy.", pool.getClass().getName());
+			logger.info("Jedis pool for {} destroy.", pool.getClass().getName());
 
 			try{
 				pool.destroy();

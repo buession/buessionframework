@@ -26,8 +26,6 @@ package com.buession.redis.client;
 
 import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.RedisConnectionFactory;
-import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -40,12 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractRedisClient implements RedisClient {
 
-	private RedisConnectionFactory connectionFactory;
-
-	private RedisConnection connection;
-
-	private boolean enableTransactionSupport = true;
-
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public AbstractRedisClient(){
@@ -57,47 +49,15 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public RedisConnection getConnection(){
-		return connection;
-	}
-
-	@Override
-	public void setConnection(RedisConnection connection){
-		this.connection = connection;
-		connectionFactory = new RedisConnectionFactory(connection);
-	}
-
-	public boolean isEnableTransactionSupport(){
-		return getEnableTransactionSupport();
-	}
-
-	public boolean getEnableTransactionSupport(){
-		return enableTransactionSupport;
-	}
-
-	public void setEnableTransactionSupport(boolean enableTransactionSupport){
-		this.enableTransactionSupport = enableTransactionSupport;
-	}
-
-	@Override
 	public <R> R execute(final Command<R> command, final CommandArguments arguments){
 		return doExecute((conn)->command.execute(), command.getCommand(), arguments);
 	}
 
 	private <R> R doExecute(final Executor<RedisConnection, R> executor, final ProtocolCommand command,
 							final CommandArguments arguments){
-		RedisConnection connection;
-
 		long startTime = 0;
 		if(logger.isDebugEnabled()){
 			startTime = System.nanoTime();
-		}
-
-		if(enableTransactionSupport){
-			// only bind resources in case of potential transaction synchronization
-			connection = RedisConnectionUtils.bindConnection(connectionFactory, true);
-		}else{
-			connection = RedisConnectionUtils.getConnection(connectionFactory);
 		}
 
 		String argumentsString = logger.isDebugEnabled() || logger.isErrorEnabled() && arguments != null ?
@@ -112,7 +72,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}
 
 		try{
-			return connection.execute(executor);
+			return getConnection().execute(executor);
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
@@ -128,8 +88,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 				long finishTime = System.nanoTime();
 				logger.debug("Command execution time: {}", finishTime - startTime);
 			}
-
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 

@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
 
 import java.util.List;
@@ -68,36 +67,6 @@ public interface SentinelDataSource extends DataSource {
 	void setPort(int port);
 
 	/**
-	 * 返回用户
-	 *
-	 * @return 用户
-	 */
-	String getUser();
-
-	/**
-	 * 设置用户
-	 *
-	 * @param user
-	 * 		用户
-	 */
-	void setUser(String user);
-
-	/**
-	 * 获取密码
-	 *
-	 * @return 密码
-	 */
-	String getPassword();
-
-	/**
-	 * 设置密码
-	 *
-	 * @param password
-	 * 		密码
-	 */
-	void setPassword(String password);
-
-	/**
 	 * 获取数据库
 	 *
 	 * @return 数据库
@@ -111,51 +80,6 @@ public interface SentinelDataSource extends DataSource {
 	 * 		数据库
 	 */
 	void setDatabase(int database);
-
-	/**
-	 * 获取 Client Name
-	 *
-	 * @return Client Name
-	 */
-	String getClientName();
-
-	/**
-	 * 设置 Client Name
-	 *
-	 * @param clientName
-	 * 		Client Name
-	 */
-	void setClientName(String clientName);
-
-	/**
-	 * 返回 Sentinel 用户
-	 *
-	 * @return Sentinel 用户
-	 */
-	String getSentinelUser();
-
-	/**
-	 * 设置 Sentinel 用户
-	 *
-	 * @param sentinelUser
-	 * 		Sentinel 用户
-	 */
-	void setSentinelUser(String sentinelUser);
-
-	/**
-	 * 返回 Sentinel 密码
-	 *
-	 * @return Sentinel 密码
-	 */
-	String getSentinelPassword();
-
-	/**
-	 * 设置 Sentinel 密码
-	 *
-	 * @param sentinelPassword
-	 * 		Sentinel 密码
-	 */
-	void setSentinelPassword(String sentinelPassword);
 
 	/**
 	 * 返回 Sentinel Client Name
@@ -173,19 +97,19 @@ public interface SentinelDataSource extends DataSource {
 	void setSentinelClientName(String sentinelClientName);
 
 	/**
-	 * 返回 Master 节点
+	 * 返回 Master 名称
 	 *
-	 * @return Master 节点
+	 * @return Master 名称
 	 */
-	RedisNamedNode getMaster();
+	String getMasterName();
 
 	/**
-	 * 设置 Master 节点
+	 * 设置 Master 名称
 	 *
-	 * @param master
-	 * 		Master 节点
+	 * @param masterName
+	 * 		Master 名称
 	 */
-	void setMaster(RedisNamedNode master);
+	void setMasterName(String masterName);
 
 	/**
 	 * 返回哨兵节点
