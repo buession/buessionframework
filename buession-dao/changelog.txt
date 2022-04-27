@@ -5,6 +5,7 @@ Buession Framework Dao Changelog
 Changes in version 2.0.0 (2022-02-22)
 -------------------------------------
 *【优化】优化部分底层逻辑
+*【修复】MyBatis Dao updatePrimary
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------
