@@ -37,36 +37,31 @@ import org.springframework.beans.factory.InitializingBean;
  * @author Yong.Teng
  */
 public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements FactoryBean<DatabaseResolver>,
-        InitializingBean {
+		InitializingBean {
 
-    private DatabaseResolver resolver;
+	private DatabaseResolver resolver;
 
-    private final static Logger logger = LoggerFactory.getLogger(GeoIPResolverFactoryBean.class);
+	private final static Logger logger = LoggerFactory.getLogger(GeoIPResolverFactoryBean.class);
 
-    @Override
-    public DatabaseResolver getObject() throws Exception{
-        return resolver;
-    }
+	@Override
+	public DatabaseResolver getObject() throws Exception{
+		return resolver;
+	}
 
-    @Override
-    public Class<? extends DatabaseResolver> getObjectType(){
-        return DatabaseResolver.class;
-    }
+	@Override
+	public Class<? extends DatabaseResolver> getObjectType(){
+		return DatabaseResolver.class;
+	}
 
-    @Override
-    public boolean isSingleton(){
-        return true;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception{
-        if(getLoadMode() == LoadMode.STREAM){
-            resolver = isEnableCache() ? new CacheDatabaseResolver(getStream()) : new DatabaseResolver(getStream());
-            logger.info("Read db path from stream");
-        }else{
-            resolver = isEnableCache() ? new CacheDatabaseResolver(getDbPath()) : new DatabaseResolver(getDbPath());
-            logger.info("Read db path from file {}", getDbPath());
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception{
+		if(getLoadMode() == LoadMode.STREAM){
+			resolver = isEnableCache() ? new CacheDatabaseResolver(getStream()) : new DatabaseResolver(getStream());
+			logger.info("Read db path from stream");
+		}else{
+			resolver = isEnableCache() ? new CacheDatabaseResolver(getDbPath()) : new DatabaseResolver(getDbPath());
+			logger.info("Read db path from file {}", getDbPath());
+		}
+	}
 
 }
