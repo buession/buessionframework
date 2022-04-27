@@ -55,6 +55,11 @@ import java.util.List;
 public class JedisConnection extends AbstractJedisRedisConnection implements RedisStandaloneConnection {
 
 	/**
+	 * 连接池配置
+	 */
+	private JedisPoolConfig poolConfig;
+
+	/**
 	 * 连接池
 	 */
 	private JedisPool pool;
@@ -174,7 +179,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		连接池配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig){
-		super(dataSource, poolConfig);
+		super(dataSource);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -190,7 +196,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		读取超时
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout){
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
+		super(dataSource, connectTimeout, soTimeout);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -209,7 +216,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 						   int soTimeout, int infiniteSoTimeout){
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -223,7 +231,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, sslConfiguration);
+		super(dataSource, sslConfiguration);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -242,7 +251,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -263,7 +273,27 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 返回连接池配置 {@link JedisPoolConfig}
+	 *
+	 * @return 连接池配置
+	 */
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置 {@link JedisPoolConfig}
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 	public Jedis getJedis(){
@@ -343,6 +373,10 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		}
 	}
 
+	protected boolean isUsePool(){
+		return getPoolConfig() != null;
+	}
+
 	protected JedisPool createPool(final JedisDataSource dataSource){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 
@@ -363,8 +397,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	protected Jedis createJedis(final JedisDataSource dataSource){
 		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder(dataSource, getConnectTimeout(),
-				getSoTimeout(), getInfiniteSoTimeout()).database(
-				dataSource.getDatabase());
+				getSoTimeout(), getInfiniteSoTimeout()).database(dataSource.getDatabase());
 
 		if(Validate.hasText(dataSource.getUsername())){
 			builder.user(dataSource.getUsername());
@@ -376,10 +409,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 		return new Jedis(new HostAndPort(dataSource.getHost(), dataSource.getPort()),
 				builder.build());
-	}
-
-	protected boolean isUsePool(){
-		return getPoolConfig() != null;
 	}
 
 	@Override

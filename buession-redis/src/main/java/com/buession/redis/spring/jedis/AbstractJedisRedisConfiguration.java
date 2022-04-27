@@ -25,7 +25,6 @@
 package com.buession.redis.spring.jedis;
 
 import com.buession.redis.spring.AbstractRedisConfiguration;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 工厂配置抽象类
@@ -35,22 +34,5 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 public abstract class AbstractJedisRedisConfiguration extends AbstractRedisConfiguration
 		implements JedisRedisConfiguration {
-
-	/**
-	 * 连接池配置
-	 *
-	 * @since 2.0.0
-	 */
-	private JedisPoolConfig poolConfig;
-
-	@Override
-	public JedisPoolConfig getPoolConfig(){
-		return poolConfig;
-	}
-
-	@Override
-	public void setPoolConfig(JedisPoolConfig poolConfig){
-		this.poolConfig = poolConfig;
-	}
 
 }

@@ -26,7 +26,7 @@ package com.buession.redis.client.connection.datasource;
 
 import com.buession.redis.core.RedisNode;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Redis 集群（Cluster）模式数据源
@@ -40,7 +40,7 @@ public interface ClusterDataSource extends DataSource {
 	 *
 	 * @return 集群主机节点
 	 */
-	Set<RedisNode> getNodes();
+	List<RedisNode> getNodes();
 
 	/**
 	 * 设置集群主机节点
@@ -48,6 +48,6 @@ public interface ClusterDataSource extends DataSource {
 	 * @param nodes
 	 * 		集群主机节点
 	 */
-	void setNodes(Set<RedisNode> nodes);
+	void setNodes(List<RedisNode> nodes);
 
 }

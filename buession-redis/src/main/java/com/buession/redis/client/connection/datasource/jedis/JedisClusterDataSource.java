@@ -27,7 +27,7 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.core.RedisNode;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Jedis 集群模式数据源
@@ -40,32 +40,15 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	/**
 	 * 集群主机节点
 	 */
-	private Set<RedisNode> nodes;
-
-	/**
-	 * 构造函数
-	 */
-	public JedisClusterDataSource(){
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param nodes
-	 * 		集群主机节点
-	 */
-	public JedisClusterDataSource(final Set<RedisNode> nodes){
-		this.nodes = nodes;
-	}
+	private List<RedisNode> nodes;
 
 	@Override
-	public Set<RedisNode> getNodes(){
+	public List<RedisNode> getNodes(){
 		return nodes;
 	}
 
 	@Override
-	public void setNodes(Set<RedisNode> nodes){
+	public void setNodes(List<RedisNode> nodes){
 		this.nodes = nodes;
 	}
 

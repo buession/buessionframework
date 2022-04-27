@@ -32,21 +32,39 @@ package com.buession.redis.client.connection;
  */
 public interface RedisClusterConnection extends RedisConnection {
 
-	int DEFAULT_MAX_RETRIES = 5;
+	/**
+	 * 默认最大重定向次数
+	 */
+	int DEFAULT_MAX_REDIRECTS = 5;
 
 	/**
-	 * 获取最大重试次数
+	 * 返回最大重定向次数
 	 *
-	 * @return 最大重试次数
+	 * @return 最大重定向次数
 	 */
-	int getMaxRetries();
+	int getMaxRedirects();
 
 	/**
-	 * 最大重试次数
+	 * 设置最大重定向次数
 	 *
-	 * @param maxRetries
-	 * 		最大重试次数
+	 * @param maxRedirects
+	 * 		最大重定向次数
 	 */
-	void setMaxRetries(int maxRetries);
+	void setMaxRedirects(int maxRedirects);
+
+	/**
+	 * 返回最大重试持续时长（单位：秒）
+	 *
+	 * @return 最大重试持续时长
+	 */
+	int getMaxTotalRetriesDuration();
+
+	/**
+	 * 设置最大重试持续时长（单位：秒）
+	 *
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试持续时长
+	 */
+	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
 
 }

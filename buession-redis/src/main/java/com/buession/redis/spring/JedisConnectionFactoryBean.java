@@ -25,6 +25,7 @@
 package com.buession.redis.spring;
 
 import com.buession.redis.client.connection.RedisConnectionUtils;
+import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
@@ -120,13 +121,24 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 	}
 
 	protected JedisClusterConnection createJedisClusterConnection(final JedisClusterConfiguration configuration){
-		/*
-		final JedisClusterDataSource dataSource = new JedisClusterDataSource(configuration.getHost(),
-				configuration.getPort(), configuration.getPassword(), configuration.getDatabase(),
-				configuration.getClientName());
+		final JedisClusterDataSource dataSource = new JedisClusterDataSource();
+
+		dataSource.setUsername(configuration.getUsername());
+		dataSource.setPassword(configuration.getPassword());
+		dataSource.setClientName(configuration.getClientName());
+		dataSource.setNodes(configuration.getNodes());
+
 		final JedisClusterConnection connection = new JedisClusterConnection(dataSource,
-				getConfiguration().getConnectTimeout(),
-				getConfiguration().getSoTimeout(), getConfiguration().getSslConfiguration());
+				configuration.getConnectTimeout(), configuration.getSoTimeout(), configuration.getInfiniteSoTimeout(),
+				configuration.getSslConfiguration());
+
+		if(configuration.getMaxRedirects() > 0){
+			connection.setMaxRedirects(configuration.getMaxRedirects());
+		}
+
+		if(configuration.getMaxTotalRetriesDuration() > 0){
+			connection.setMaxTotalRetriesDuration(configuration.getMaxTotalRetriesDuration());
+		}
 
 		if(configuration.getPoolConfig() != null){
 			connection.setPoolConfig(configuration.getPoolConfig());
@@ -136,10 +148,6 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 		}
 
 		return connection;
-
-		 */
-
-		return null;
 	}
 
 }

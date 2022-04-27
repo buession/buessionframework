@@ -39,6 +39,8 @@ public interface Constants {
 
 	int DEFAULT_SO_TIMEOUT = 5000;
 
+	int DEFAULT_INFINITE_SO_TIMEOUT = 5000;
+
 	String SCAN_POINTER_START = "0";
 
 	byte[] SCAN_POINTER_START_BINARY = SafeEncoder.encode(SCAN_POINTER_START);

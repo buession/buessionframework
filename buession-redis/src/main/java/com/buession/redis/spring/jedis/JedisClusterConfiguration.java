@@ -24,7 +24,12 @@
  */
 package com.buession.redis.spring.jedis;
 
+import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.spring.ClusterConfiguration;
+import redis.clients.jedis.ConnectionPoolConfig;
+
+import java.util.List;
 
 /**
  * Jedis Redis 集群工厂配置
@@ -33,5 +38,101 @@ import com.buession.redis.spring.ClusterConfiguration;
  * @since 2.0.0
  */
 public class JedisClusterConfiguration extends AbstractJedisRedisConfiguration implements ClusterConfiguration {
+
+	/**
+	 * 集群主机节点
+	 */
+	private List<RedisNode> nodes;
+
+	/**
+	 * 最大重定向次数
+	 */
+	private int maxRedirects = RedisClusterConnection.DEFAULT_MAX_REDIRECTS;
+
+	/**
+	 * 最大重数时长（单位：秒）
+	 */
+	private int maxTotalRetriesDuration = -1;
+
+	/**
+	 * 连接池配置
+	 */
+	private ConnectionPoolConfig poolConfig;
+
+	/**
+	 * 获取集群主机节点
+	 *
+	 * @return 集群主机节点
+	 */
+	public List<RedisNode> getNodes(){
+		return nodes;
+	}
+
+	/**
+	 * 设置集群主机节点
+	 *
+	 * @param nodes
+	 * 		集群主机节点
+	 */
+	public void setNodes(List<RedisNode> nodes){
+		this.nodes = nodes;
+	}
+
+	/**
+	 * 返回最大重定向次数
+	 *
+	 * @return 最大重定向次数
+	 */
+	public int getMaxRedirects(){
+		return maxRedirects;
+	}
+
+	/**
+	 * 设置最大重定向次数
+	 *
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 */
+	public void setMaxRedirects(int maxRedirects){
+		this.maxRedirects = maxRedirects;
+	}
+
+	/**
+	 * 返回最大重试持续时长（单位：秒）
+	 *
+	 * @return 最大重试持续时长
+	 */
+	public int getMaxTotalRetriesDuration(){
+		return maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 设置最大重试持续时长（单位：秒）
+	 *
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试持续时长
+	 */
+	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration){
+		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 返回连接池配置 {@link ConnectionPoolConfig}
+	 *
+	 * @return 连接池配置
+	 */
+	public ConnectionPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置 {@link ConnectionPoolConfig}
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public void setPoolConfig(ConnectionPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
 
 }

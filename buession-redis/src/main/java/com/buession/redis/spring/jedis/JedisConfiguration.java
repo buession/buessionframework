@@ -27,6 +27,7 @@ package com.buession.redis.spring.jedis;
 import com.buession.core.utils.Assert;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.spring.StandaloneConfiguration;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 工厂配置
@@ -49,6 +50,13 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	private JedisPoolConfig poolConfig;
 
 	@Override
 	public String getHost(){
@@ -79,6 +87,27 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 	public void setDatabase(int database){
 		Assert.isNegative(database, "invalid DB index (a positive index required)");
 		this.database = database;
+	}
+
+	/**
+	 * 获取连接池配置
+	 *
+	 * @return 连接池配置
+	 */
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 }

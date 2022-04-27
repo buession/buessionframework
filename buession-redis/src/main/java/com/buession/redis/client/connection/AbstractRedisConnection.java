@@ -66,7 +66,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 *
 	 * @since 2.0.0
 	 */
-	private int infiniteSoTimeout;
+	private int infiniteSoTimeout = Constants.DEFAULT_INFINITE_SO_TIMEOUT;
 
 	/**
 	 * SSL 配置

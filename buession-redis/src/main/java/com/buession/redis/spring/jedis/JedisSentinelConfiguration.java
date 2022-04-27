@@ -28,6 +28,7 @@ import com.buession.core.utils.Assert;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.spring.SentinelConfiguration;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.List;
 
@@ -68,6 +69,13 @@ public class JedisSentinelConfiguration extends AbstractJedisRedisConfiguration 
 	 * 哨兵节点
 	 */
 	private List<RedisNode> sentinels;
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	private JedisPoolConfig poolConfig;
 
 	@Override
 	public int getSentinelConnectTimeout(){
@@ -128,6 +136,29 @@ public class JedisSentinelConfiguration extends AbstractJedisRedisConfiguration 
 	@Override
 	public void setSentinels(List<RedisNode> sentinels){
 		this.sentinels = sentinels;
+	}
+
+	/**
+	 * 获取连接池配置
+	 *
+	 * @return 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 }

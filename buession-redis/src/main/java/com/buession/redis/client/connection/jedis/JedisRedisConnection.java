@@ -25,7 +25,6 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 连接对象
@@ -33,20 +32,5 @@ import redis.clients.jedis.JedisPoolConfig;
  * @author Yong.Teng
  */
 public interface JedisRedisConnection extends RedisConnection {
-
-	/**
-	 * 返回连接池配置 {@link JedisPoolConfig}
-	 *
-	 * @return 连接池配置
-	 */
-	JedisPoolConfig getPoolConfig();
-
-	/**
-	 * 设置连接池配置 {@link JedisPoolConfig}
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	void setPoolConfig(JedisPoolConfig poolConfig);
 
 }

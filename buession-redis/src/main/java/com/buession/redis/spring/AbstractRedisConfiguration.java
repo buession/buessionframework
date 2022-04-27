@@ -55,7 +55,7 @@ public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
-	 * Infinite 读取超时
+	 * Infinite 读取超时（单位：秒）
 	 *
 	 * @since 2.0.0
 	 */
