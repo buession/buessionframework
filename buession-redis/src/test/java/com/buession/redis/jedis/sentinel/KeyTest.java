@@ -25,6 +25,7 @@
 package com.buession.redis.jedis.sentinel;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.jedis.AbstractJedisRedisTest;
 import org.junit.Test;
 
@@ -44,6 +45,13 @@ public class KeyTest extends AbstractJedisRedisTest {
 	public void ttlAt(){
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
 		System.out.println(redisTemplate.ttlAt("sichuan"));
+	}
+
+	@Test
+	public void set(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+		System.out.println(
+				redisTemplate.set("set_key", "value", StringCommands.SetArgument.Builder.create().ex(5000).build()));
 	}
 
 }

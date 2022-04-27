@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
@@ -27,25 +27,28 @@ package com.buession.redis.exception;
 /**
  * @author Yong.Teng
  */
-public class PoolException extends RedisException {
+public class PoolException extends RedisConnectionFailureException {
+
+    private static final long serialVersionUID = 6014038319970079646L;
 
     public PoolException(){
-        super();
-    }
+		super();
+	}
 
-    public PoolException(String message){
-        super(message);
-    }
+	public PoolException(String message){
+		super(message);
+	}
 
-    public PoolException(String message, Throwable cause){
-        super(message, cause);
-    }
+	public PoolException(String message, Throwable cause){
+		super(message, cause);
+	}
 
-    public PoolException(Throwable cause){
-        super(cause);
-    }
+	public PoolException(Throwable cause){
+		super(cause);
+	}
 
-    public PoolException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public PoolException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
 }

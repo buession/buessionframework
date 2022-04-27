@@ -31,8 +31,7 @@ import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.RedisExceptionUtils;
-import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.exception.JedisRedisExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +60,13 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * 读取超时（单位：秒）
 	 */
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
+
+	/**
+	 * Infinite 读取超时
+	 *
+	 * @since 2.0.0
+	 */
+	private int infiniteSoTimeout;
 
 	/**
 	 * SSL 配置
@@ -108,6 +114,26 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 *
+	 * @since 2.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
+								   int infiniteSoTimeout){
+		this(dataSource, connectTimeout, soTimeout);
+		this.infiniteSoTimeout = infiniteSoTimeout;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -132,6 +158,28 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 								   SslConfiguration sslConfiguration){
 		this(dataSource, connectTimeout, soTimeout);
 		this.sslConfiguration = sslConfiguration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 2.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
+								   int infiniteSoTimeout, SslConfiguration sslConfiguration){
+		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	@Override
@@ -162,6 +210,16 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public void setSoTimeout(int soTimeout){
 		this.soTimeout = soTimeout;
+	}
+
+	@Override
+	public int getInfiniteSoTimeout(){
+		return infiniteSoTimeout;
+	}
+
+	@Override
+	public void setInfiniteSoTimeout(int infiniteSoTimeout){
+		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	@Override
@@ -200,7 +258,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 			return executor.execute(this);
 		}catch(Exception e){
 			logger.error("Redis execute command failure: {}", e.getMessage(), e);
-			throw RedisExceptionUtils.convert(e);
+			throw JedisRedisExceptionUtils.convert(e);
 		}
 	}
 
@@ -236,7 +294,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	protected abstract void internalInit();
 
-	protected abstract void doConnect() throws IOException;
+	protected abstract void doConnect() throws RedisConnectionFailureException;
 
 	protected abstract void doDestroy() throws IOException;
 

@@ -37,36 +37,6 @@ import java.util.List;
 public interface SentinelDataSource extends DataSource {
 
 	/**
-	 * 获取 Redis 主机地址
-	 *
-	 * @return Redis 主机地址
-	 */
-	String getHost();
-
-	/**
-	 * 设置 Redis 主机地址
-	 *
-	 * @param host
-	 * 		Redis 主机地址
-	 */
-	void setHost(String host);
-
-	/**
-	 * 获取 Redis 端口
-	 *
-	 * @return Redis 端口
-	 */
-	int getPort();
-
-	/**
-	 * 设置 Redis 端口
-	 *
-	 * @param port
-	 * 		Redis 端口
-	 */
-	void setPort(int port);
-
-	/**
 	 * 获取数据库
 	 *
 	 * @return 数据库

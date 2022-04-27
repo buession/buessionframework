@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -46,7 +47,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	protected void doConnect() throws IOException{
+	protected void doConnect() throws RedisConnectionFailureException{
 
 	}
 

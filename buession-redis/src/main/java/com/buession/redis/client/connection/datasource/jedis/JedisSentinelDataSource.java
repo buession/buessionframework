@@ -38,24 +38,9 @@ import java.util.List;
 public class JedisSentinelDataSource extends AbstractJedisDataSource implements SentinelDataSource {
 
 	/**
-	 * Redis 主机地址
-	 */
-	private String host = RedisNode.DEFAULT_HOST;
-
-	/**
-	 * Redis 端口
-	 */
-	private int port = RedisNode.DEFAULT_SENTINEL_PORT;
-
-	/**
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
-
-	/**
-	 * Client Name
-	 */
-	private String clientName;
 
 	/**
 	 * Sentinel Client Name
@@ -71,26 +56,6 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	 * 哨兵节点
 	 */
 	private List<RedisNode> sentinels;
-
-	@Override
-	public String getHost(){
-		return host;
-	}
-
-	@Override
-	public void setHost(String host){
-		this.host = host;
-	}
-
-	@Override
-	public int getPort(){
-		return port;
-	}
-
-	@Override
-	public void setPort(int port){
-		this.port = port;
-	}
 
 	@Override
 	public int getDatabase(){

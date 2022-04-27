@@ -79,7 +79,8 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 		dataSource.setClientName(configuration.getClientName());
 
 		final JedisConnection connection = new JedisConnection(dataSource, configuration.getConnectTimeout(),
-				configuration.getSoTimeout(), configuration.getSslConfiguration());
+				configuration.getSoTimeout(), configuration.getInfiniteSoTimeout(),
+				configuration.getSslConfiguration());
 
 		if(configuration.getPoolConfig() != null){
 			connection.setPoolConfig(configuration.getPoolConfig());
@@ -98,13 +99,13 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 		dataSource.setPassword(configuration.getPassword());
 		dataSource.setDatabase(configuration.getDatabase());
 		dataSource.setClientName(configuration.getClientName());
-		
+
 		dataSource.setSentinelClientName(configuration.getSentinelClientName());
 		dataSource.setMasterName(configuration.getMasterName());
 		dataSource.setSentinels(configuration.getSentinels());
 
 		final JedisSentinelConnection connection = new JedisSentinelConnection(dataSource,
-				configuration.getConnectTimeout(), configuration.getSoTimeout(),
+				configuration.getConnectTimeout(), configuration.getSoTimeout(), configuration.getInfiniteSoTimeout(),
 				configuration.getSentinelConnectTimeout(), configuration.getSentinelSoTimeout(),
 				configuration.getSslConfiguration());
 

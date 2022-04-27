@@ -55,6 +55,13 @@ public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
+	 * Infinite 读取超时
+	 *
+	 * @since 2.0.0
+	 */
+	private int infiniteSoTimeout;
+
+	/**
 	 * Client Name
 	 */
 	private String clientName;
@@ -105,6 +112,16 @@ public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 	}
 
 	@Override
+	public int getInfiniteSoTimeout(){
+		return infiniteSoTimeout;
+	}
+
+	@Override
+	public void setInfiniteSoTimeout(int infiniteSoTimeout){
+		this.infiniteSoTimeout = infiniteSoTimeout;
+	}
+
+	@Override
 	public SslConfiguration getSslConfiguration(){
 		return sslConfiguration;
 	}
@@ -114,11 +131,14 @@ public abstract class AbstractRedisConfiguration implements RedisConfiguration {
 		this.sslConfiguration = sslConfiguration;
 	}
 
+	@Override
 	public String getClientName(){
 		return clientName;
 	}
 
+	@Override
 	public void setClientName(String clientName){
 		this.clientName = clientName;
 	}
+
 }

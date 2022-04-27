@@ -29,6 +29,7 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
+import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
@@ -91,6 +92,25 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 *
+	 * @since 2.0.0
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
+										int infiniteSoTimeout){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -113,6 +133,27 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
 										SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 2.0.0
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
+										int infiniteSoTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	/**
@@ -153,6 +194,26 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * 		Redis 数据源
 	 * @param poolConfig
 	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+										int soTimeout, int infiniteSoTimeout){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -177,9 +238,30 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * 		SSL 配置
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-										int soTimeout,
-										SslConfiguration sslConfiguration){
+										int soTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+										int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.poolConfig = poolConfig;
 	}
 
@@ -201,6 +283,27 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	@Override
 	public boolean isTransaction(){
 		return transaction != null;
+	}
+
+	protected DefaultJedisClientConfig.Builder createJedisClientConfigBuilder(final JedisRedisDataSource dataSource,
+																			  final int connectTimeout,
+																			  final int soTimeout,
+																			  final int infiniteSoTimeout){
+		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder()
+				.connectionTimeoutMillis(connectTimeout)
+				.socketTimeoutMillis(soTimeout)
+				.blockingSocketTimeoutMillis(infiniteSoTimeout)
+				.clientName(dataSource.getClientName())
+				.ssl(isUseSsl());
+
+
+		if(getSslConfiguration() != null){
+			builder.sslSocketFactory(getSslConfiguration().getSslSocketFactory())
+					.sslParameters(getSslConfiguration().getSslParameters())
+					.hostnameVerifier(getSslConfiguration().getHostnameVerifier());
+		}
+
+		return builder;
 	}
 
 	@Override

@@ -24,7 +24,16 @@
  */
 package com.buession.redis.core;
 
+import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -171,6 +180,169 @@ public class RedisServer extends RedisNode {
 	 */
 	public Properties getProperties(){
 		return properties;
+	}
+
+	public Long getQuorum(){
+		return getLongValueOf(Key.QUORUM);
+	}
+
+	public String getRunId(){
+		return get(Key.RUNID);
+	}
+
+	public Long getNumSlaves(){
+		return getLongValueOf(Key.NUMBER_SLAVES);
+	}
+
+	public Long getNumOtherSentinels(){
+		return getLongValueOf(Key.NUMBER_OTHER_SENTINELS);
+	}
+
+	public Long getParallelSyncs(){
+		return getLongValueOf(Key.PARALLEL_SYNCS);
+	}
+
+	public Long getConfigEpoch(){
+		return getLongValueOf(Key.CONFIG_EPOCH);
+	}
+
+	public Long getInfoRefresh(){
+		return getLongValueOf(Key.INFO_REFRESH);
+	}
+
+	public Role getRoleReported(){
+		String roleName = get(Key.ROLE_REPORTED);
+		return Validate.hasText(roleName) ? EnumUtils.getEnum(Role.class, roleName) : null;
+	}
+
+	public Long getRoleReportedTime(){
+		return getLongValueOf(Key.ROLE_REPORTED_TIME);
+	}
+
+	public Long getLastPingSent(){
+		return getLongValueOf(Key.LAST_PING_SENT);
+	}
+
+	public Long getLastPingReply(){
+		return getLongValueOf(Key.LAST_PING_REPLY);
+	}
+
+	public Long getLastOkPingReply(){
+		return getLongValueOf(Key.LAST_OK_PING_REPLY);
+	}
+
+	public Long getLinkPendingCommands(){
+		return getLongValueOf(Key.LINK_PENDING_COMMANDS);
+	}
+
+	public Long getFailoverTimeout(){
+		return getLongValueOf(Key.FAILOVER_TIMEOUT);
+	}
+
+	public Long getLinkRefcount(){
+		return getLongValueOf(Key.LINK_REFCOUNT);
+	}
+
+	public Long getODownTime(){
+		return getLongValueOf(Key.O_DOWN_TIME);
+	}
+
+	public Long getSDownTime(){
+		return getLongValueOf(Key.S_DOWN_TIME);
+	}
+
+	public Long getDownAfterMilliseconds(){
+		return getLongValueOf(Key.DOWN_AFTER_MILLISECONDS);
+	}
+
+	public Set<String> getFlags(){
+		String value = get(Key.FLAGS);
+
+		if(value == null){
+			return null;
+		}else if(value.length() == 0){
+			return Collections.emptySet();
+		}else{
+			return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(StringUtils.split(value, ','))));
+		}
+	}
+
+	public String get(final Key key){
+		Assert.isNull(key, "Cannot retrieve client information for 'null'.");
+		return properties.getProperty(key.getKey());
+	}
+
+	private Long getLongValueOf(final Key key){
+		String value = get(key);
+		return value == null ? null : Long.valueOf(value);
+	}
+
+	public enum Key {
+
+		NAME("name"),
+
+		HOST("ip"),
+
+		PORT("port"),
+
+		RUNID("runid"),
+
+		FLAGS("flags"),
+
+		PENDING_COMMANDS("pending-commands"),
+
+		LINK_PENDING_COMMANDS("link-pending-commands"),
+
+		LAST_PING_SENT("last-ping-sent"),
+
+		LAST_PING_REPLY("last-ping-reply"),
+
+		LAST_OK_PING_REPLY("last-ok-ping-reply"),
+
+		DOWN_AFTER_MILLISECONDS("down-after-milliseconds"),
+
+		INFO_REFRESH("info-refresh"),
+
+		ROLE_REPORTED("role-reported"),
+
+		ROLE_REPORTED_TIME("role-reported-time"),
+
+		CONFIG_EPOCH("config-epoch"),
+
+		NUMBER_SLAVES("num-slaves"),
+
+		NUMBER_OTHER_SENTINELS("num-other-sentinels"),
+
+		BUFFER_LENGTH("qbuf"),
+
+		BUFFER_FREE_SPACE("qbuf-free"),
+
+		OUTPUT_BUFFER_LENGTH("obl"),
+
+		OUTPUT_LIST_LENGTH("number-other-sentinels"),
+
+		QUORUM("quorum"),
+
+		FAILOVER_TIMEOUT("failover-timeout"),
+
+		PARALLEL_SYNCS("parallel-syncs"),
+
+		LINK_REFCOUNT("link-refcount"),
+
+		O_DOWN_TIME("o-down-time"),
+
+		S_DOWN_TIME("s-down-time");
+
+		private final String key;
+
+		Key(final String key){
+			this.key = key;
+		}
+
+		public String getKey(){
+			return key;
+		}
+
 	}
 
 }

@@ -55,11 +55,6 @@ public class JedisSentinelConfiguration extends AbstractJedisRedisConfiguration 
 	private int database = RedisNode.DEFAULT_DATABASE;
 
 	/**
-	 * Client Name
-	 */
-	private String clientName;
-
-	/**
 	 * Sentinel Client Name
 	 */
 	private String sentinelClientName;
@@ -103,16 +98,6 @@ public class JedisSentinelConfiguration extends AbstractJedisRedisConfiguration 
 	public void setDatabase(int database){
 		Assert.isNegative(database, "invalid DB index (a positive index required)");
 		this.database = database;
-	}
-
-	@Override
-	public String getClientName(){
-		return clientName;
-	}
-
-	@Override
-	public void setClientName(String clientName){
-		this.clientName = clientName;
 	}
 
 	@Override

@@ -24,17 +24,18 @@
  */
 package com.buession.redis.exception;
 
+import com.buession.core.utils.StringUtils;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 /**
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class RedisExceptionUtils {
+public class JedisRedisExceptionUtils {
 
 	public static RedisException convert(final Exception e){
 		if(e instanceof JedisConnectionException){
-			if(e.getMessage().contains("pool")){
+			if(StringUtils.contains(e.getMessage(), "pool")){
 				return new PoolException(e.getMessage(), e);
 			}else{
 				return new RedisConnectionFailureException(e.getMessage(), e);

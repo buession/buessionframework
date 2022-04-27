@@ -94,6 +94,21 @@ public interface RedisConfiguration {
 	void setSoTimeout(int soTimeout);
 
 	/**
+	 * 返回 Infinite 读取超时（单位：秒）
+	 *
+	 * @return Infinite 读取超时
+	 */
+	int getInfiniteSoTimeout();
+
+	/**
+	 * 设置 Infinite 读取超时
+	 *
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：秒）
+	 */
+	void setInfiniteSoTimeout(int infiniteSoTimeout);
+
+	/**
 	 * 获取客户端名称
 	 *
 	 * @return 客户端名称

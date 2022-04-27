@@ -79,7 +79,7 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		configuration.setMasterName("test_master");
 		configuration.setPassword("passwd");
 		configuration.setDatabase(6);
-		configuration.setPoolConfig(poolConfig);
+		//configuration.setPoolConfig(poolConfig);
 
 		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
 

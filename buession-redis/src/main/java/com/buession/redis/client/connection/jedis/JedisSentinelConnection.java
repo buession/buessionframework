@@ -29,7 +29,6 @@ import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNamedNode;
@@ -37,15 +36,15 @@ import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
+import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.RedisExceptionUtils;
+import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
@@ -72,13 +71,6 @@ import java.util.Set;
  * @since 2.0.0
  */
 public class JedisSentinelConnection extends AbstractJedisRedisConnection implements RedisSentinelConnection {
-
-	/**
-	 * Infinite 读取超时
-	 *
-	 * @since 2.0.0
-	 */
-	private int infiniteSoTimeout;
 
 	/**
 	 * 哨兵节点连接超时（单位：秒）
@@ -125,12 +117,184 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 *
+	 * @since 2.0.0
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+								   int infiniteSoTimeout){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+								   SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 2.0.0
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+								   int infiniteSoTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig){
+		super(dataSource, poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+								   int soTimeout){
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+								   int soTimeout, int infiniteSoTimeout){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig,
+								   SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+								   int soTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+								   int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	/**
@@ -159,28 +323,22 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, SslConfiguration sslConfiguration){
-		super(dataSource, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
 	 * @param connectTimeout
 	 * 		连接超时（单位：秒）
 	 * @param soTimeout
 	 * 		读取超时（单位：秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param sentinelConnectTimeout
+	 * 		哨兵节点连接超时（单位：秒）
+	 * @param sentinelSoTimeout
+	 * 		哨兵节点读取超时（单位：秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration){
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+								   int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
+		this.sentinelConnectTimeout = sentinelConnectTimeout;
+		this.sentinelSoTimeout = sentinelSoTimeout;
 	}
 
 	/**
@@ -218,72 +376,19 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * 		读取超时（单位：秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration){
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.infiniteSoTimeout = infiniteSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
 	 * @param sentinelConnectTimeout
 	 * 		哨兵节点连接超时（单位：秒）
 	 * @param sentinelSoTimeout
 	 * 		哨兵节点读取超时（单位：秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
 								   int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
 								   SslConfiguration sslConfiguration){
-		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig){
-		super(dataSource, poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：秒）
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-								   int soTimeout){
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
 	}
 
 	/**
@@ -304,29 +409,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
-		this(dataSource, poolConfig, connectTimeout, soTimeout);
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-								   int soTimeout, int infiniteSoTimeout){
-		this(dataSource, poolConfig, connectTimeout, soTimeout);
-		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	/**
@@ -350,43 +435,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
 								   int sentinelSoTimeout){
-		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig,
-								   SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-								   int soTimeout, SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
 	/**
@@ -410,31 +461,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
 								   SslConfiguration sslConfiguration){
-		this(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-								   int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
-		this(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	/**
@@ -460,28 +489,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
 								   int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
 								   int sentinelSoTimeout, SslConfiguration sslConfiguration){
-		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-	}
-
-	/**
-	 * 返回 Infinite 读取超时（单位：秒）
-	 *
-	 * @return Infinite 读取超时
-	 */
-	public int getInfiniteSoTimeout(){
-		return infiniteSoTimeout;
-	}
-
-	/**
-	 * 设置 Infinite 读取超时
-	 *
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：秒）
-	 */
-	public void setInfiniteSoTimeout(int infiniteSoTimeout){
-		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	/**
@@ -714,7 +724,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource){
 		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
-		final JedisClientConfig clientConfig = createSentinelClientConfig(dataSource);
+		final JedisClientConfig clientConfig = createJedisClientConfigBuilder(dataSource, getSentinelConnectTimeout(),
+				getSentinelSoTimeout(), getInfiniteSoTimeout()).build();
 
 		for(HostAndPort sentinel : sentinels){
 			try(Jedis jedis = new Jedis(sentinel, clientConfig)){
@@ -728,34 +739,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		return null;
 	}
 
-	protected JedisClientConfig createSentinelClientConfig(final JedisSentinelDataSource dataSource){
-		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
-
-		builder.connectionTimeoutMillis(getSentinelConnectTimeout())
-				.socketTimeoutMillis(getSentinelSoTimeout());
-
-		if(Validate.hasText(dataSource.getSentinelClientName())){
-			builder.clientName(dataSource.getSentinelClientName());
-		}
-
-		if(sslConfiguration == null){
-		}else{
-			builder.ssl(isUseSsl()).sslSocketFactory(sslConfiguration.getSslSocketFactory())
-					.sslParameters(sslConfiguration.getSslParameters())
-					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
-		}
-
-		return builder.build();
-	}
-
 	protected JedisSentinelPool createPool(final JedisSentinelDataSource dataSource){
-		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
-		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
-
-		builder.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
-				.blockingSocketTimeoutMillis(getInfiniteSoTimeout()).database(dataSource.getDatabase());
+		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder(dataSource, getConnectTimeout(),
+				getSoTimeout(), getInfiniteSoTimeout()).database(dataSource.getDatabase());
+		final DefaultJedisClientConfig.Builder sentinelBuilder = createJedisClientConfigBuilder(dataSource,
+				getSentinelConnectTimeout(),
+				getSentinelSoTimeout(), getInfiniteSoTimeout());
 
 		if(Validate.hasText(dataSource.getUsername())){
 			builder.user(dataSource.getUsername());
@@ -769,17 +759,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			builder.clientName(dataSource.getClientName());
 		}
 
-		if(sslConfiguration == null){
-			logger.debug("Create jedis sentinel pool.");
-		}else{
-			logger.debug("Create jedis sentinel pool with ssl.");
-			builder.ssl(isUseSsl()).sslSocketFactory(sslConfiguration.getSslSocketFactory())
-					.sslParameters(sslConfiguration.getSslParameters())
-					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
-		}
-
 		return new JedisSentinelPool(dataSource.getMasterName(), sentinels, getPoolConfig(), builder.build(),
-				createSentinelClientConfig(dataSource));
+				sentinelBuilder.build());
 	}
 
 	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes){
@@ -800,48 +781,50 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	protected Jedis createJedis(final JedisSentinelDataSource dataSource){
-		SslConfiguration sslConfiguration = getSslConfiguration();
-		DefaultJedisClientConfig.Builder builder;
+		final DefaultJedisClientConfig clientConfig = createJedisClientConfigBuilder(dataSource,
+				getSentinelConnectTimeout(), getSentinelSoTimeout(), getInfiniteSoTimeout()).build();
+		boolean sentinelAvailable = false;
 
 		for(RedisNode node : dataSource.getSentinels()){
-			builder = DefaultJedisClientConfig.builder()
-					.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
-					.ssl(isUseSsl()).clientName(dataSource.getClientName()).database(dataSource.getDatabase());
+			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+			try(Jedis jedis = new Jedis(new HostAndPort(node.getHost(), port), clientConfig)){
+				List<String> masterAddr = jedis.sentinelGetMasterAddrByName(dataSource.getMasterName());
+				sentinelAvailable = true;
 
-			if(Validate.hasText(dataSource.getUsername())){
-				builder.user(dataSource.getUsername());
-			}
-
-			if(Validate.hasText(dataSource.getPassword())){
-				builder.password(dataSource.getPassword());
-			}
-
-			if(sslConfiguration == null){
-				logger.debug("Create jedis.");
-			}else{
-				builder.sslSocketFactory(sslConfiguration.getSslSocketFactory());
-				builder.sslParameters(sslConfiguration.getSslParameters());
-				builder.hostnameVerifier(sslConfiguration.getHostnameVerifier());
-				logger.debug("Create jedis with ssl.");
-			}
-
-			Jedis jedis = new Jedis(new HostAndPort(dataSource.getHost(), dataSource.getPort()),
-					builder.build());
-
-			try{
-				if(Constants.PONG.equalsIgnoreCase(jedis.ping())){
-					if(Validate.hasText(node.getName())){
-						jedis.clientSetname(node.getName());
-					}
-					return jedis;
+				if(masterAddr == null || masterAddr.size() != 2){
+					logger.warn("Can not get master addr, master name: {}. Sentinel: {}", dataSource.getMasterName(),
+							node);
+					continue;
 				}
-			}catch(Exception ex){
-				jedis.close();
-				logger.warn("Ping failed for sentinel host: {}", node.getHost(), ex);
+
+				final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder(dataSource,
+						getConnectTimeout(),
+						getSoTimeout(), getInfiniteSoTimeout()).database(dataSource.getDatabase());
+
+				if(Validate.hasText(dataSource.getUsername())){
+					builder.user(dataSource.getUsername());
+				}
+
+				if(Validate.hasText(dataSource.getPassword())){
+					builder.password(dataSource.getPassword());
+				}
+
+				if(Validate.hasText(dataSource.getClientName())){
+					builder.clientName(dataSource.getClientName());
+				}
+
+				return new Jedis(new HostAndPort(masterAddr.get(0), Integer.parseInt(masterAddr.get(1))),
+						builder.build());
 			}
 		}
 
-		throw new InvalidDataAccessResourceUsageException("No Sentinel found");
+		if(sentinelAvailable){
+			throw new RedisConnectionFailureException("Can connect to sentinel, but " + dataSource.getMasterName()
+					+ " seems to be not monitored...");
+		}else{
+			throw new RedisConnectionFailureException("All sentinels down, cannot determine where is "
+					+ dataSource.getMasterName() + " master is running...");
+		}
 	}
 
 	protected boolean isUsePool(){
@@ -849,7 +832,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	@Override
-	protected void doConnect() throws IOException{
+	protected void doConnect() throws RedisConnectionFailureException{
 		boolean usePool = isUsePool();
 
 		try{
@@ -860,7 +843,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 					logger.info("Jedis initialized with pool success.");
 				}
 			}else{
-				JedisDataSource dataSource = (JedisDataSource) getDataSource();
+				JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
 
 				if(jedis.isConnected() == false){
 					jedis.connect();
@@ -891,7 +874,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 				}
 			}
 
-			throw RedisExceptionUtils.convert(e);
+			throw JedisRedisExceptionUtils.convert(e);
 		}
 	}
 
