@@ -578,7 +578,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 			hostAndPorts.add(new HostAndPort(node.getHost(), port));
 		}
 
-		int maxRedirects = getMaxRedirects() <= 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
+		int maxRedirects = getMaxRedirects() < 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
 		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder(jedisClusterDataSource,
 				getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout());
 

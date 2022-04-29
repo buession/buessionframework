@@ -22,37 +22,22 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.jedis.cluster;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.RedisClusterServer;
-import com.buession.redis.utils.ResponseUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Test;
 
 /**
- * Jedis Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
+public class ServerTest extends AbstractJedisRedisTest {
 
-	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
-
-	@Override
-	public List<ClusterRedisNode> convert(final String source){
-		String[] rows = ResponseUtils.parseRows(source);
-
-		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
-
-		for(String row : rows){
-			nodes.add(ClusterNodeConverter.INSTANCE.convert(row));
-		}
-
-		return nodes;
+	@Test
+	public void info(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJediClusterConnection());
+		System.out.println(redisTemplate.info());
 	}
 
 }

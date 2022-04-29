@@ -267,6 +267,19 @@ public class RedisServer extends RedisNode {
 		}
 	}
 
+	@Override
+	public String asString(){
+		final StringBuilder sb = new StringBuilder();
+
+		if(getId() != null){
+			sb.append(getId()).append(" ");
+		}
+
+		sb.append(getHost()).append(':').append(getPort());
+
+		return sb.toString();
+	}
+
 	public String get(final Key key){
 		Assert.isNull(key, "Cannot retrieve client information for 'null'.");
 		return properties.getProperty(key.getKey());

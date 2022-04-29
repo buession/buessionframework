@@ -25,34 +25,51 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.RedisClusterServer;
-import com.buession.redis.utils.ResponseUtils;
+import com.buession.redis.core.SlotRange;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Jedis Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
+ * Jedis Cluster Slaves 命令结果转换为 {@link RedisClusterServer}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
+public final class ClusterNodeConverter implements Converter<String, ClusterRedisNode> {
 
-	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
+	public final static ClusterNodeConverter INSTANCE = new ClusterNodeConverter();
+
+	public final static ListConverter<String, ClusterRedisNode> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public List<ClusterRedisNode> convert(final String source){
-		String[] rows = ResponseUtils.parseRows(source);
+	public ClusterRedisNode convert(final String source){
+		String[] values = StringUtils.split(source, " ");
+		String[] hostAndPort = StringUtils.split(values[1], ":");
+		String host = hostAndPort[0];
+		String port = hostAndPort[1].substring(0, hostAndPort[1].indexOf('@'));
+		String[] flagsValues = StringUtils.split(values[2], ":");
+		Set<ClusterRedisNode.Flag> flags = new HashSet<>(flagsValues.length);
 
-		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
-
-		for(String row : rows){
-			nodes.add(ClusterNodeConverter.INSTANCE.convert(row));
+		for(String flagsValue : flagsValues){
+			flags.add(EnumUtils.getEnumIgnoreCase(ClusterRedisNode.Flag.class, flagsValue));
 		}
 
-		return nodes;
+		ClusterRedisNode.LinkState linkState = EnumUtils.getEnumIgnoreCase(ClusterRedisNode.LinkState.class, values[7]);
+		SlotRange slotRange = null;
+
+		if(values.length == 9){
+			String[] slotRangeValues = StringUtils.split(values[8], "-");
+			slotRange = new SlotRange(Integer.parseInt(slotRangeValues[0]), Integer.parseInt(slotRangeValues[1]));
+		}
+
+		return new ClusterRedisNode(values[0], host, Integer.parseInt(port), flags, values[3],
+				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 
 }

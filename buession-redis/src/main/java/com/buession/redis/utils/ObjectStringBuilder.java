@@ -122,12 +122,12 @@ public final class ObjectStringBuilder {
 
 	public ObjectStringBuilder add(final String name, final String value){
 		if(value != null){
-			if(initialized == false){
+			if(initialized){
 				sb.append(", ");
-				initialized = true;
 			}
 
 			sb.append(name).append('=').append(value);
+			initialized = true;
 		}
 
 		return this;
@@ -135,12 +135,12 @@ public final class ObjectStringBuilder {
 
 	public ObjectStringBuilder add(final String name, final Object value){
 		if(value != null){
-			if(initialized == false){
+			if(initialized){
 				sb.append(", ");
-				initialized = true;
 			}
 
 			sb.append(name).append('=').append(value);
+			initialized = true;
 		}
 
 		return this;
@@ -148,12 +148,12 @@ public final class ObjectStringBuilder {
 
 	public ObjectStringBuilder append(final CharSequence seq){
 		if(seq != null){
-			if(initialized == false){
+			if(initialized){
 				sb.append(", ");
-				initialized = true;
 			}
 
 			sb.append(seq);
+			initialized = true;
 		}
 
 		return this;

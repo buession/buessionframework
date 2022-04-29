@@ -33,11 +33,6 @@ public class RedisClusterServer extends RedisServer {
 	private final static long serialVersionUID = 4843502163987630437L;
 
 	/**
-	 * Redis 服务器主机 IP 地址
-	 */
-	private String ip;
-
-	/**
 	 * 构造函数
 	 *
 	 * @param host
@@ -45,7 +40,6 @@ public class RedisClusterServer extends RedisServer {
 	 */
 	public RedisClusterServer(final String host){
 		super(host);
-		this.ip = host;
 	}
 
 	/**
@@ -58,7 +52,6 @@ public class RedisClusterServer extends RedisServer {
 	 */
 	public RedisClusterServer(final String host, final int port){
 		super(host, port);
-		this.ip = host;
 	}
 
 	/**
@@ -71,7 +64,6 @@ public class RedisClusterServer extends RedisServer {
 	 */
 	public RedisClusterServer(final String host, final Role role){
 		super(host, role);
-		this.ip = host;
 	}
 
 	/**
@@ -86,17 +78,6 @@ public class RedisClusterServer extends RedisServer {
 	 */
 	public RedisClusterServer(final String host, final int port, final Role role){
 		super(host, port, role);
-		this.ip = host;
-	}
-
-	/**
-	 * 获取 Redis 服务器主机 IP 地址
-	 *
-	 * @return Redis 服务器主机 IP 地址
-	 */
-	@Override
-	public String getIp(){
-		return ip;
 	}
 
 }

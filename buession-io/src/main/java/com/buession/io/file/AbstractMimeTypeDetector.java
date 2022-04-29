@@ -54,10 +54,10 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 
 	@Override
 	public final MimeType probe(String path) throws IOException{
-		if(Validate.hasText(path) == false){
-			throw new NullPointerException("File path is null or empty.");
-		}else{
+		if(Validate.hasText(path)){
 			return implProbeMimeType(path);
+		}else{
+			throw new NullPointerException("File path is null or empty.");
 		}
 	}
 
@@ -99,7 +99,8 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 	protected abstract MimeType implProbeMimeType(final Path path);
 
 	protected void putIfAbsent(final String extension, final String contentType, final String description){
-		if(Validate.isNotEmpty(extension) && Validate.isNotEmpty(contentType) && internalMimetypes.containsKey(extension) == false){
+		if(Validate.isNotEmpty(extension) && Validate.isNotEmpty(contentType) &&
+				internalMimetypes.containsKey(extension) == false){
 			MimeType mimeType = MimeType.parse(contentType);
 
 			mimeType.setDescription(description);
@@ -133,7 +134,7 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 	}
 
 	private static boolean isTokenChar(char c){
-		return c > ' ' && c < 127 && "()<>@,;:/[]?=\\\"".indexOf(c) < 0;
+		return c > ' ' && c < 127 && "()<>@,;:/[]?=\\\"" .indexOf(c) < 0;
 	}
 
 	private static boolean isValidToken(String str){
@@ -143,7 +144,7 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 			return false;
 		}else{
 			for(int i = 0; i < strLength; ++i){
-				if(!isTokenChar(str.charAt(i))){
+				if(isTokenChar(str.charAt(i)) == false){
 					return false;
 				}
 			}

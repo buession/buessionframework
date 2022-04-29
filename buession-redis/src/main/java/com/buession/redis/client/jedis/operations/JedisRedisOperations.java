@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
@@ -157,8 +158,11 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, R> {
 
+		private final JedisConnection connection;
+
 		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command){
 			super(client, command);
+			connection = client.getConnection();
 		}
 
 		public JedisCommand<R> general(final Executor<Jedis, R> executor){
@@ -166,7 +170,6 @@ public interface JedisRedisOperations extends RedisOperations {
 
 				@Override
 				public R run() throws RedisException{
-					final JedisConnection connection = client.getConnection();
 					return executor.execute(connection.getJedis());
 				}
 
@@ -180,7 +183,6 @@ public interface JedisRedisOperations extends RedisOperations {
 
 				@Override
 				public R run() throws RedisException{
-					final JedisConnection connection = client.getConnection();
 					return converter.convert(executor.execute(connection.getJedis()));
 				}
 
@@ -215,8 +217,11 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, R> {
 
+		private final JedisSentinelConnection connection;
+
 		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command){
 			super(client, command);
+			connection = client.getConnection();
 		}
 
 		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor){
@@ -224,7 +229,6 @@ public interface JedisRedisOperations extends RedisOperations {
 
 				@Override
 				public R run() throws RedisException{
-					final JedisSentinelConnection connection = client.getConnection();
 					return executor.execute(connection.getJedis());
 				}
 
@@ -239,7 +243,6 @@ public interface JedisRedisOperations extends RedisOperations {
 
 				@Override
 				public R run() throws RedisException{
-					final JedisSentinelConnection connection = client.getConnection();
 					return converter.convert(executor.execute(connection.getJedis()));
 				}
 
@@ -274,18 +277,37 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, R> {
 
+		private final JedisClusterConnection connection;
+
 		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command){
 			super(client, command);
+			connection = client.getConnection();
 		}
 
 		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor){
-			//this.executor = executor;
+			this.runner = new Runner() {
+
+				@Override
+				public R run() throws RedisException{
+					return executor.execute(connection.getCluster());
+				}
+
+			};
+
 			return this;
 		}
 
 		public <SR> JedisClusterCommand<R> general(final Executor<JedisCluster, SR> executor,
 												   final Converter<SR, R> converter){
-			//this.executor = context->converter.convert(executor.execute(context));
+			this.runner = new Runner() {
+
+				@Override
+				public R run() throws RedisException{
+					return converter.convert(executor.execute(connection.getCluster()));
+				}
+
+			};
+
 			return this;
 		}
 

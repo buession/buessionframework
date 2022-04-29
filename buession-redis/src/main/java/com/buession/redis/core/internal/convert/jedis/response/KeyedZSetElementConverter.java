@@ -52,10 +52,6 @@ public final class KeyedZSetElementConverter
 
 		@Override
 		public KeyedZSetElement convert(final List<byte[]> source){
-			if(source.isEmpty()){
-				return null;
-			}
-
 			return new KeyedZSetElement(source.get(0), source.get(1), BuilderFactory.DOUBLE.build(source.get(2)));
 		}
 

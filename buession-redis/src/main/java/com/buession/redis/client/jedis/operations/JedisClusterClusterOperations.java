@@ -24,15 +24,16 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
-import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 
@@ -144,22 +145,22 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterNodes(){
-		return new JedisClusterCommand<List<RedisClusterServer>>(client, ProtocolCommand.CLUSTER_NODES)
+	public List<ClusterRedisNode> clusterNodes(){
+		return new JedisClusterCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_NODES)
 				.run();
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterSlaves(final String nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new JedisClusterCommand<List<RedisClusterServer>>(client, ProtocolCommand.CLUSTER_SLAVES)
+		return new JedisClusterCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_SLAVES)
 				.run(args);
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterReplicas(final String nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new JedisClusterCommand<List<RedisClusterServer>>(client, ProtocolCommand.CLUSTER_REPLICAS)
+		return new JedisClusterCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_REPLICAS)
 				.run(args);
 	}
 
@@ -191,8 +192,8 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
-	public BumpEpoch clusterBumpEpoch(){
-		return new JedisClusterCommand<BumpEpoch>(client, ProtocolCommand.CLUSTER_BUMPEPOCH)
+	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch(){
+		return new JedisClusterCommand<KeyValue<BumpEpoch, Integer>>(client, ProtocolCommand.CLUSTER_BUMPEPOCH)
 				.run();
 	}
 

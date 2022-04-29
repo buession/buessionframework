@@ -25,7 +25,9 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.utils.KeyValueParser;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.utils.ResponseUtils;
 
 /**
  * Jedis Cluster Info 命令结果转换为 {@link ClusterInfo}
@@ -39,7 +41,67 @@ public final class ClusterInfoConverter implements Converter<String, ClusterInfo
 
 	@Override
 	public ClusterInfo convert(final String source){
-		return null;
+		String[] rows = ResponseUtils.parseRows(source);
+		KeyValueParser keyValueParser;
+		ClusterInfo.State state = null;
+		int slotsAssigned = 0;
+		int slotsOk = 0;
+		int slotsPfail = 0;
+		int slotsFail = 0;
+		int knownNodes = 0;
+		int size = 0;
+		int currentEpoch = 0;
+		int myEpoch = 0;
+		long messagesPingSent = 0;
+		long messagesPongSent = 0;
+		long messagesSent = 0;
+		long messagesPingReceived = 0;
+		long messagesPongReceived = 0;
+		long messagesMeetReceived = 0;
+		long messagesReceived = 0;
+
+		for(String row : rows){
+			keyValueParser = new KeyValueParser(row, ':');
+
+			if(ClusterInfo.Key.STATE.getValue().equals(keyValueParser.getKey())){
+				state = "ok".equalsIgnoreCase(
+						keyValueParser.getValue()) ? ClusterInfo.State.OK : ClusterInfo.State.FAIL;
+			}else if(ClusterInfo.Key.SLOTS_ASSIGNED.getValue().equals(keyValueParser.getKey())){
+				slotsAssigned = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.SLOTS_OK.getValue().equals(keyValueParser.getKey())){
+				slotsOk = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.SLOTS_PFAIL.getValue().equals(keyValueParser.getKey())){
+				slotsPfail = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.SLOTS_FAIL.getValue().equals(keyValueParser.getKey())){
+				slotsFail = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.KNOWN_NODES.getValue().equals(keyValueParser.getKey())){
+				knownNodes = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.SIZE.getValue().equals(keyValueParser.getKey())){
+				size = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.CURRENT_EPOCH.getValue().equals(keyValueParser.getKey())){
+				currentEpoch = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MY_EPOCH.getValue().equals(keyValueParser.getKey())){
+				myEpoch = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_PING_SENT.getValue().equals(keyValueParser.getKey())){
+				messagesPingSent = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_PONG_SENT.getValue().equals(keyValueParser.getKey())){
+				messagesPongSent = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_SENT.getValue().equals(keyValueParser.getKey())){
+				messagesSent = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_PING_RECEIVED.getValue().equals(keyValueParser.getKey())){
+				messagesPingReceived = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_PONG_RECEIVED.getValue().equals(keyValueParser.getKey())){
+				messagesPongReceived = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_MEET_RECEIVED.getValue().equals(keyValueParser.getKey())){
+				messagesMeetReceived = keyValueParser.getIntValue();
+			}else if(ClusterInfo.Key.MESSAGES_RECEIVED.getValue().equals(keyValueParser.getKey())){
+				messagesReceived = keyValueParser.getIntValue();
+			}
+		}
+
+		return new ClusterInfo(state, slotsAssigned, slotsOk, slotsPfail, slotsFail, knownNodes, size, currentEpoch,
+				myEpoch, messagesPingSent, messagesPongSent, messagesSent, messagesPingReceived, messagesPongReceived,
+				messagesMeetReceived, messagesReceived);
 	}
 
 }

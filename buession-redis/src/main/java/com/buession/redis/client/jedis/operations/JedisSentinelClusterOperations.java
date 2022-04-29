@@ -24,15 +24,16 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
-import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.ClusterFailoverOptionConverter;
@@ -41,7 +42,7 @@ import com.buession.redis.core.internal.convert.jedis.response.ClusterInfoConver
 import com.buession.redis.core.internal.convert.jedis.response.ClusterNodesConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterReplicasConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterResetOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ClusterSlaveConverter;
+import com.buession.redis.core.internal.convert.jedis.response.ClusterNodeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterSlotConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
@@ -168,24 +169,24 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterNodes(){
-		return new JedisSentinelCommand<List<RedisClusterServer>>(client, ProtocolCommand.CLUSTER_NODES)
+	public List<ClusterRedisNode> clusterNodes(){
+		return new JedisSentinelCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_NODES)
 				.general((cmd)->cmd.clusterNodes(), ClusterNodesConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterSlaves(final String nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new JedisSentinelCommand<List<RedisClusterServer>>(client, ProtocolCommand.CLUSTER_SLAVES)
-				.general((cmd)->cmd.clusterSlaves(nodeId), ClusterSlaveConverter.LIST_CONVERTER)
+		return new JedisSentinelCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_SLAVES)
+				.general((cmd)->cmd.clusterSlaves(nodeId), ClusterNodeConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterReplicas(final String nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new JedisSentinelCommand<List<RedisClusterServer>>(client, ProtocolCommand.CLUSTER_REPLICAS)
+		return new JedisSentinelCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_REPLICAS)
 				.general((cmd)->cmd.clusterReplicas(nodeId), ClusterReplicasConverter.INSTANCE)
 				.run(args);
 	}
@@ -223,8 +224,8 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public BumpEpoch clusterBumpEpoch(){
-		return new JedisSentinelCommand<BumpEpoch>(client, ProtocolCommand.CLUSTER_BUMPEPOCH)
+	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch(){
+		return new JedisSentinelCommand<KeyValue<BumpEpoch, Integer>>(client, ProtocolCommand.CLUSTER_BUMPEPOCH)
 				.general((cmd)->cmd.clusterBumpEpoch(), BumpEpochConverter.INSTANCE)
 				.run();
 	}

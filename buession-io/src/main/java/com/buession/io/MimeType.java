@@ -30,6 +30,7 @@ import com.buession.core.validator.Validate;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * MimeType
@@ -38,9 +39,9 @@ import java.util.Objects;
  */
 public final class MimeType {
 
-	private String type;
+	private final String type;
 
-	private String subtype;
+	private final String subtype;
 
 	/**
 	 * MimeType 描述
@@ -164,11 +165,7 @@ public final class MimeType {
 
 	@Override
 	public String toString(){
-		final StringBuilder sb = new StringBuilder(type.length() + subtype.length() + 1);
-
-		sb.append(type).append('/').append(subtype);
-
-		return sb.toString();
+		return new StringJoiner("/").add(type).add(subtype).toString();
 	}
 
 }

@@ -170,7 +170,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 		return new JedisSentinelCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
 						ClientConverter.ClientListConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override

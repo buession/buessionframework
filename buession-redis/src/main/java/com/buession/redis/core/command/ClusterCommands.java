@@ -24,14 +24,17 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.core.RedisServer;
 
 import java.util.List;
 import java.util.Map;
@@ -238,7 +241,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 集群配置信息
 	 */
-	List<RedisClusterServer> clusterNodes();
+	List<ClusterRedisNode> clusterNodes();
 
 	/**
 	 * 列出指定 master 节点所有 slave 节点
@@ -250,7 +253,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 指定 master 节点所有 slave 节点
 	 */
-	List<RedisClusterServer> clusterSlaves(final String nodeId);
+	List<ClusterRedisNode> clusterSlaves(final String nodeId);
 
 	/**
 	 * 列出指定 master 节点所有 slave 节点
@@ -262,7 +265,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 指定 master 节点所有 slave 节点
 	 */
-	List<RedisClusterServer> clusterSlaves(final byte[] nodeId);
+	List<ClusterRedisNode> clusterSlaves(final byte[] nodeId);
 
 	/**
 	 * 列出指定主节点的辅助副本节点
@@ -274,7 +277,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 主节点的辅助副本节点
 	 */
-	List<RedisClusterServer> clusterReplicas(final String nodeId);
+	List<ClusterRedisNode> clusterReplicas(final String nodeId);
 
 	/**
 	 * 列出指定主节点的辅助副本节点
@@ -286,7 +289,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 主节点的辅助副本节点
 	 */
-	List<RedisClusterServer> clusterReplicas(final byte[] nodeId);
+	List<ClusterRedisNode> clusterReplicas(final byte[] nodeId);
 
 	/**
 	 * 重新配置一个节点成为指定master的salve节点
@@ -364,7 +367,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return {@link BumpEpoch}
 	 */
-	BumpEpoch clusterBumpEpoch();
+	KeyValue<BumpEpoch, Integer> clusterBumpEpoch();
 
 	/**
 	 * 根据如下子命令选项，修改接受节点中哈希槽的状态

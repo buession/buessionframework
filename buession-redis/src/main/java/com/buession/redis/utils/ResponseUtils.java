@@ -22,37 +22,20 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.utils;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.RedisClusterServer;
-import com.buession.redis.utils.ResponseUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.buession.core.utils.StringUtils;
 
 /**
- * Jedis Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
+public class ResponseUtils {
 
-	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
+	public final static String ROW_SEPARATOR = "\r\n";
 
-	@Override
-	public List<ClusterRedisNode> convert(final String source){
-		String[] rows = ResponseUtils.parseRows(source);
-
-		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
-
-		for(String row : rows){
-			nodes.add(ClusterNodeConverter.INSTANCE.convert(row));
-		}
-
-		return nodes;
+	public static String[] parseRows(final String str){
+		return StringUtils.split(str, ROW_SEPARATOR);
 	}
 
 }

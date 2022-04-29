@@ -27,6 +27,11 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ClusterSlot;
+import com.buession.redis.core.RedisServer;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Jedis Cluster Slots 命令结果转换为 {@link ClusterSlot}
@@ -41,7 +46,32 @@ public final class ClusterSlotConverter implements Converter<Object, ClusterSlot
 	public final static ListConverter<Object, ClusterSlot> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
+	@SuppressWarnings({"unchecked"})
 	public ClusterSlot convert(final Object source){
+		if(source instanceof List){
+			List<Object> data = (List<Object>) source;
+
+			if(data.size() >= 3){
+				final long start = (long) data.get(0);
+				final long end = (long) data.get(1);
+				final List<RedisServer> masterNodes = new ArrayList<>(data.size() - 2);
+				List<Object> masterNode;
+
+				for(int i = 2; i < data.size(); i++){
+					masterNode = (List<Object>) data.get(i);
+
+					RedisServer redisServer = new RedisServer(
+							SafeEncoder.encode((byte[]) masterNode.get(0)), ((Long) masterNode.get(1)).intValue());
+
+					redisServer.setId(SafeEncoder.encode((byte[]) masterNode.get(2)));
+
+					masterNodes.add(redisServer);
+				}
+
+				return new ClusterSlot(start, end, masterNodes);
+			}
+		}
+
 		return null;
 	}
 

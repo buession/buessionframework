@@ -26,6 +26,7 @@ package com.buession.redis;
 
 import com.buession.core.collect.Maps;
 import com.buession.lang.Geo;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.AclLog;
@@ -39,6 +40,7 @@ import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
@@ -58,6 +60,7 @@ import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.RedisMonitor;
+import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
@@ -287,27 +290,27 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterNodes(){
+	public List<ClusterRedisNode> clusterNodes(){
 		return clusterOpsExecute((ops)->ops.clusterNodes());
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterSlaves(final String nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final String nodeId){
 		return clusterOpsExecute((ops)->ops.clusterSlaves(nodeId));
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId){
 		return clusterOpsExecute((ops)->ops.clusterSlaves(nodeId));
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterReplicas(final String nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final String nodeId){
 		return clusterOpsExecute((ops)->ops.clusterReplicas(nodeId));
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId){
 		return clusterOpsExecute((ops)->ops.clusterReplicas(nodeId));
 	}
 
@@ -342,7 +345,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public BumpEpoch clusterBumpEpoch(){
+	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch(){
 		return clusterOpsExecute((ops)->ops.clusterBumpEpoch());
 	}
 

@@ -44,11 +44,13 @@ public class MimeTypeStringSerializer extends JsonSerializer<MimeType> {
 	}
 
 	@Override
-	public void serialize(MimeType value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException{
+	public void serialize(MimeType value, JsonGenerator jsonGenerator, SerializerProvider serializers)
+			throws IOException{
 		if(value == null){
 			jsonGenerator.writeNull();
 		}else{
 			jsonGenerator.writeString(value.toString());
 		}
 	}
+	
 }

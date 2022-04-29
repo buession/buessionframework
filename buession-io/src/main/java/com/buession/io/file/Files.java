@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -37,15 +37,12 @@ import java.nio.file.attribute.GroupPrincipal;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public class Files {
-
-	public final static UserPrincipalLookupService LOOKUP_SERVICE = FileSystems.getDefault().getUserPrincipalLookupService();
 
 	/**
 	 * 更改文件所属用户组
@@ -107,8 +104,10 @@ public class Files {
 		Assert.isNull(path, "File path cloud not be null.");
 		Assert.isNull(group, "Group cloud not be null.");
 
-		GroupPrincipal groupPrincipal = LOOKUP_SERVICE.lookupPrincipalByGroupName(group);
-		PosixFileAttributeView view = java.nio.file.Files.getFileAttributeView(path, PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
+		GroupPrincipal groupPrincipal = FileSystems.getDefault().getUserPrincipalLookupService()
+				.lookupPrincipalByGroupName(group);
+		PosixFileAttributeView view = java.nio.file.Files.getFileAttributeView(path, PosixFileAttributeView.class,
+				LinkOption.NOFOLLOW_LINKS);
 
 		if(view == null){
 			throw new UnsupportedOperationException();
@@ -209,7 +208,8 @@ public class Files {
 		Assert.isNull(path, "File path cloud not be null.");
 		Assert.isNull(owner, "Owner coult not be null.");
 
-		java.nio.file.Files.setOwner(path, LOOKUP_SERVICE.lookupPrincipalByName(owner));
+		java.nio.file.Files.setOwner(path,
+				FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(owner));
 	}
 
 	/**

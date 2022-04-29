@@ -121,7 +121,7 @@ public class KeyValueParser {
 
 	public Boolean getBoolValue(){
 		if(boolValue == null){
-			boolValue = Boolean.parseBoolean(value);
+			boolValue = Boolean.parseBoolean(value) || "1" .equals(value);
 		}
 
 		return boolValue;
@@ -130,7 +130,8 @@ public class KeyValueParser {
 	public Status getStatusValue(){
 		if(statusValue == null){
 			statusValue =
-					StatusUtils.valueOf("OK".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) || "on".equalsIgnoreCase(value) || "1".equals(value) || "true".equalsIgnoreCase(value));
+					StatusUtils.valueOf("OK" .equalsIgnoreCase(value) || "yes" .equalsIgnoreCase(value) ||
+							"on" .equalsIgnoreCase(value) || "1" .equals(value) || "true" .equalsIgnoreCase(value));
 		}
 
 		return statusValue;

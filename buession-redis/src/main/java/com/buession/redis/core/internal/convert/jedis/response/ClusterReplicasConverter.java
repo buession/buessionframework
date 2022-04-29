@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.RedisClusterServer;
 
 import java.util.List;
@@ -35,12 +36,12 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterReplicasConverter implements Converter<String, List<RedisClusterServer>> {
+public final class ClusterReplicasConverter implements Converter<String, List<ClusterRedisNode>> {
 
 	public final static ClusterReplicasConverter INSTANCE = new ClusterReplicasConverter();
 
 	@Override
-	public List<RedisClusterServer> convert(final String source){
+	public List<ClusterRedisNode> convert(final String source){
 		return null;
 	}
 

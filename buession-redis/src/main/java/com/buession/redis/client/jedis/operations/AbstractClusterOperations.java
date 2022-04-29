@@ -27,9 +27,9 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
+import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
-import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -61,12 +61,12 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId){
 		return clusterSlaves(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId){
 		return clusterReplicas(SafeEncoder.encode(nodeId));
 	}
 

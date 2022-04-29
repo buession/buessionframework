@@ -28,12 +28,15 @@ import com.buession.core.utils.StringUtils;
 import com.buession.redis.AbstractRedisTest;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.spring.JedisConnectionFactoryBean;
+import com.buession.redis.spring.jedis.JedisClusterConfiguration;
 import com.buession.redis.spring.jedis.JedisConfiguration;
 import com.buession.redis.spring.jedis.JedisSentinelConfiguration;
+import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.Arrays;
@@ -50,9 +53,9 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		poolConfig.setMaxIdle(3);
 
 		configuration.setHost("test.redis.server");
-		configuration.setPort(6379);
+		configuration.setPort(36379);
 		configuration.setPassword("rds_PWD");
-		configuration.setDatabase(60);
+		//configuration.setDatabase(60);
 		configuration.setClientName(StringUtils.random(6));
 		configuration.setPoolConfig(poolConfig);
 
@@ -86,6 +89,31 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		try{
 			factoryBean.afterPropertiesSet();
 			return (JedisSentinelConnection) factoryBean.getObject();
+		}catch(Exception e){
+			return null;
+		}
+	}
+
+	protected JedisClusterConnection createJediClusterConnection(){
+		JedisClusterConfiguration configuration = new JedisClusterConfiguration();
+		ConnectionPoolConfig poolConfig = new ConnectionPoolConfig();
+
+		poolConfig.setMaxIdle(3);
+
+		configuration.setNodes(
+				Arrays.asList(new RedisNode("test.redis.server", 36379), new RedisNode("test.redis.server", 36380),
+						new RedisNode("test.redis.server", 36381), new RedisNode("test.redis.server", 36382),
+						new RedisNode("test.redis.server", 36383), new RedisNode("test.redis.server", 36384)));
+		configuration.setClientName(StringUtils.random(6));
+		configuration.setPassword("rds_PWD");
+		configuration.setPoolConfig(poolConfig);
+		configuration.setMaxRedirects(1);
+
+		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
+
+		try{
+			factoryBean.afterPropertiesSet();
+			return (JedisClusterConnection) factoryBean.getObject();
 		}catch(Exception e){
 			return null;
 		}

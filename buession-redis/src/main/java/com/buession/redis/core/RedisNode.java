@@ -283,6 +283,9 @@ public class RedisNode implements Serializable, RedisNamedNode {
 		final StringBuilder sb = new StringBuilder(host);
 
 		sb.append(':').append(port);
+		if(id != null){
+			sb.append("[id: ").append(id).append(']');
+		}
 
 		return sb.toString();
 	}

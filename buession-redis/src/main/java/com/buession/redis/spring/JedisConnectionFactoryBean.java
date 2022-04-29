@@ -132,9 +132,7 @@ public class JedisConnectionFactoryBean extends RedisConnectionFactoryBean<Jedis
 				configuration.getConnectTimeout(), configuration.getSoTimeout(), configuration.getInfiniteSoTimeout(),
 				configuration.getSslConfiguration());
 
-		if(configuration.getMaxRedirects() > 0){
-			connection.setMaxRedirects(configuration.getMaxRedirects());
-		}
+		connection.setMaxRedirects(configuration.getMaxRedirects());
 
 		if(configuration.getMaxTotalRetriesDuration() > 0){
 			connection.setMaxTotalRetriesDuration(configuration.getMaxTotalRetriesDuration());

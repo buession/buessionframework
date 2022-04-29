@@ -46,7 +46,8 @@ public class MimeTypeStringDeserializer extends JsonDeserializer<MimeType> {
 	}
 
 	@Override
-	public MimeType deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JacksonException{
+	public MimeType deserialize(JsonParser jsonParser, DeserializationContext context)
+			throws IOException, JacksonException{
 		Object currentValue = jsonParser.getCurrentValue();
 		Class<?> clazz = currentValue.getClass();
 
@@ -58,6 +59,9 @@ public class MimeTypeStringDeserializer extends JsonDeserializer<MimeType> {
 			}
 		}
 
-		throw new JsonParseException(jsonParser, clazz.getName() + " cloud not deserialize to: " + MimeType.class.getName(), jsonParser.getCurrentLocation());
+		throw new JsonParseException(jsonParser,
+				clazz.getName() + " cloud not deserialize to: " + MimeType.class.getName(),
+				jsonParser.getCurrentLocation());
 	}
+
 }

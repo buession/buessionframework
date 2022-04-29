@@ -22,37 +22,65 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.RedisClusterServer;
-import com.buession.redis.utils.ResponseUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * Jedis Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
+ * 哈希槽范围
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
+public class SlotRange implements Serializable {
 
-	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
+	private final static long serialVersionUID = -185528503728995147L;
 
-	@Override
-	public List<ClusterRedisNode> convert(final String source){
-		String[] rows = ResponseUtils.parseRows(source);
+	private final int lowerBound;
 
-		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
+	private final int upperBound;
 
-		for(String row : rows){
-			nodes.add(ClusterNodeConverter.INSTANCE.convert(row));
+	private final Set<Integer> range;
+
+	public SlotRange(int lowerBound, int upperBound){
+		this.range = new LinkedHashSet<>();
+		this.lowerBound = lowerBound;
+		this.upperBound = upperBound;
+
+		for(int i = lowerBound; i <= upperBound; i++){
+			this.range.add(i);
+		}
+	}
+
+	public boolean contains(int slot){
+		return range.contains(slot);
+	}
+
+	public Set<Integer> getSlots(){
+		return Collections.unmodifiableSet(range);
+	}
+
+	public int[] getSlotsArray(){
+		int[] slots = new int[range.size()];
+		int pos = 0;
+
+		for(Integer value : range){
+			slots[pos++] = value;
 		}
 
-		return nodes;
+		return slots;
+	}
+
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append(lowerBound).append('-').append(upperBound);
+
+		return sb.toString();
 	}
 
 }

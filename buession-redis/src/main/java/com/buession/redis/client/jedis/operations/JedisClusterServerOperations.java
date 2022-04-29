@@ -288,7 +288,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	public Status flushDb(final FlushMode mode){
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.run();
+				.run(args);
 	}
 
 	@Override

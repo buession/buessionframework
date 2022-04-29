@@ -22,27 +22,22 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.jedis.cluster;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Test;
 
 /**
- * Jedis Cluster Slaves 命令结果转换为 {@link RedisClusterServer}
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterSlaveConverter implements Converter<String, RedisClusterServer> {
+public class BitMapTest extends AbstractJedisRedisTest {
 
-	public final static ClusterSlaveConverter INSTANCE = new ClusterSlaveConverter();
-
-	public final static ListConverter<String, RedisClusterServer> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
-	@Override
-	public RedisClusterServer convert(final String source){
-		return null;
+	@Test
+	public void bitCount(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJediClusterConnection());
+		System.out.println(redisTemplate.bitCount("test_str"));
 	}
 
 }

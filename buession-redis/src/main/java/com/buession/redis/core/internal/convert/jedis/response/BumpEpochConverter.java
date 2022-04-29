@@ -25,6 +25,9 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.KeyValueParser;
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.BumpEpoch;
 
 /**
@@ -33,13 +36,15 @@ import com.buession.redis.core.BumpEpoch;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class BumpEpochConverter implements Converter<String, BumpEpoch> {
+public final class BumpEpochConverter implements Converter<String, KeyValue<BumpEpoch, Integer>> {
 
 	public final static BumpEpochConverter INSTANCE = new BumpEpochConverter();
 
 	@Override
-	public BumpEpoch convert(final String source){
-		return null;
+	public KeyValue<BumpEpoch, Integer> convert(final String source){
+		KeyValueParser keyValueParser = new KeyValueParser(source, " ");
+		return new KeyValue<>(EnumUtils.getEnum(BumpEpoch.class, keyValueParser.getKey()),
+				keyValueParser.getIntValue());
 	}
 
 }
