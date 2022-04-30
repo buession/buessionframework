@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -35,11 +35,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public class TransactionUtils {
 
 	private TransactionUtils(){
-
 	}
 
 	public static boolean isActualNonReadonlyTransactionActive(){
-		return TransactionSynchronizationManager.isActualTransactionActive() && !TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+		return TransactionSynchronizationManager.isActualTransactionActive() &&
+				!TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 	}
 
 	public static void bindResource(final RedisConnectionFactory factory,

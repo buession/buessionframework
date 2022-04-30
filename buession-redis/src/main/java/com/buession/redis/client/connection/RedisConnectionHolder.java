@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -31,45 +31,44 @@ import org.springframework.transaction.support.ResourceHolder;
  */
 public class RedisConnectionHolder implements ResourceHolder {
 
-    private boolean unbound;
+	private boolean unbound;
 
-    private final RedisConnection connection;
+	private final RedisConnection connection;
 
-    private boolean transactionSyncronisationActive;
+	private boolean transactionSyncronisationActive;
 
-    public RedisConnectionHolder(RedisConnection connection){
-        this.connection = connection;
-    }
+	public RedisConnectionHolder(RedisConnection connection){
+		this.connection = connection;
+	}
 
-    public boolean isTransactionSyncronisationActive(){
-        return getTransactionSyncronisationActive();
-    }
+	public boolean isTransactionSyncronisationActive(){
+		return getTransactionSyncronisationActive();
+	}
 
-    public boolean getTransactionSyncronisationActive(){
-        return transactionSyncronisationActive;
-    }
+	public boolean getTransactionSyncronisationActive(){
+		return transactionSyncronisationActive;
+	}
 
-    public void setTransactionSyncronisationActive(boolean transactionSyncronisationActive){
-        this.transactionSyncronisationActive = transactionSyncronisationActive;
-    }
+	public void setTransactionSyncronisationActive(boolean transactionSyncronisationActive){
+		this.transactionSyncronisationActive = transactionSyncronisationActive;
+	}
 
-    public RedisConnection getConnection(){
-        return connection;
-    }
+	public RedisConnection getConnection(){
+		return connection;
+	}
 
-    @Override
-    public void reset(){
+	@Override
+	public void reset(){
+	}
 
-    }
+	@Override
+	public void unbound(){
+		unbound = true;
+	}
 
-    @Override
-    public void unbound(){
-        unbound = true;
-    }
-
-    @Override
-    public boolean isVoid(){
-        return unbound;
-    }
+	@Override
+	public boolean isVoid(){
+		return unbound;
+	}
 
 }

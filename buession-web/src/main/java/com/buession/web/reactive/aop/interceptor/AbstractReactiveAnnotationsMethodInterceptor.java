@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.interceptor;
@@ -32,13 +32,14 @@ import java.util.Collection;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractReactiveAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+public abstract class AbstractReactiveAnnotationsMethodInterceptor<R> extends AbstractAnnotationsMethodInterceptor<R> {
 
-    public AbstractReactiveAnnotationsMethodInterceptor(){
-        super();
-    }
+	public AbstractReactiveAnnotationsMethodInterceptor(){
+		super();
+	}
 
-    public AbstractReactiveAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
-        super(methodInterceptors);
-    }
+	public AbstractReactiveAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
+		super(methodInterceptors);
+	}
+
 }

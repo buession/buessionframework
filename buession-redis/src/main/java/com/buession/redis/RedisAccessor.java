@@ -131,7 +131,7 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	public RedisAccessor(RedisConnection connection){
-		this.connection = connection;
+		setConnection(connection);
 	}
 
 	public Options getOptions(){
@@ -158,11 +158,11 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	@Nullable
-	public RedisConnection getConnection(){
+	public final RedisConnection getConnection(){
 		return connection;
 	}
 
-	public void setConnection(RedisConnection connection){
+	public final void setConnection(RedisConnection connection){
 		this.connection = connection;
 	}
 
@@ -220,6 +220,7 @@ public abstract class RedisAccessor implements Closeable {
 			public Pipeline run(final CommandArguments arguments) throws RedisException{
 				return client.getConnection().openPipeline();
 			}
+
 		});
 	}
 
@@ -228,7 +229,6 @@ public abstract class RedisAccessor implements Closeable {
 		checkInitialized();
 
 		if(enableTransactionSupport){
-			// only bind resources in case of potential transaction synchronization
 			connection = RedisConnectionUtils.bindConnection(connectionFactory, true);
 		}else{
 			connection = RedisConnectionUtils.getConnection(connectionFactory);
@@ -370,11 +370,11 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	protected boolean isTransaction(){
-		return getConnection().isTransaction();
+		return connection.isTransaction();
 	}
 
 	protected boolean isPipeline(){
-		return getConnection().isPipeline();
+		return connection.isPipeline();
 	}
 
 	protected boolean isTransactionOrPipeline(){

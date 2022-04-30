@@ -29,28 +29,138 @@ package com.buession.redis.serializer;
 import com.buession.core.serializer.type.TypeReference;
 
 /**
+ * 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public interface Serializer {
 
+	/**
+	 * 将任意对象序列化为字符串
+	 *
+	 * @param object
+	 * 		待序列化对象
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 序列化后的字符串
+	 */
 	<V> String serialize(final V object);
 
+	/**
+	 * 将任意对象数组序列化为字符串
+	 *
+	 * @param objects
+	 * 		待序列化对象数组
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 序列化后的字符串
+	 */
 	<V> String[] serialize(final V... objects);
 
+	/**
+	 * 将任意对象序列化为字节
+	 *
+	 * @param object
+	 * 		待序列化对象
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 序列化后的字节
+	 */
 	<V> byte[] serializeAsBytes(final V object);
 
+	/**
+	 * 将任意对象数组序列化为字节
+	 *
+	 * @param objects
+	 * 		待序列化对象数组
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 序列化后的字节
+	 */
 	<V> byte[][] serializeAsBytes(final V... objects);
 
+	/**
+	 * 将字符串反序列化为对象
+	 *
+	 * @param str
+	 * 		待反序列化的字符串
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
 	<V> V deserialize(final String str);
 
+	/**
+	 * 将字节反序列化为对象
+	 *
+	 * @param bytes
+	 * 		待反序列化的字节
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
 	<V> V deserializeBytes(final byte[] bytes);
 
+	/**
+	 * 将字符串反序列化为 clazz 指定的对象
+	 *
+	 * @param str
+	 * 		待反序列化的字符串
+	 * @param clazz
+	 * 		对象类
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
 	<V> V deserialize(final String str, final Class<V> clazz);
 
+	/**
+	 * 将字节反序列化为 clazz 指定的对象
+	 *
+	 * @param bytes
+	 * 		待反序列化的字节
+	 * @param clazz
+	 * 		对象类
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
 	<V> V deserializeBytes(final byte[] bytes, final Class<V> clazz);
 
+	/**
+	 * 将字符串反序列化为 type 指定的对象
+	 *
+	 * @param str
+	 * 		待反序列化的字符串
+	 * @param type
+	 * 		对象引用
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
 	<V> V deserialize(final String str, final TypeReference<V> type);
 
+	/**
+	 * 将字符串反序列化为 type 指定的对象
+	 *
+	 * @param bytes
+	 * 		待反序列化的字节
+	 * @param type
+	 * 		对象引用
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
 	<V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type);
 
 }

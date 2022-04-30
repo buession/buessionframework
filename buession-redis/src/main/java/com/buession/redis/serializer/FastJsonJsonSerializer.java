@@ -30,10 +30,15 @@ import com.buession.core.serializer.SerializerException;
 import com.buession.core.serializer.type.TypeReference;
 
 /**
+ * FastJSON 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class FastJsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.FastJsonJsonSerializer> {
 
+	/**
+	 * 构造函数
+	 */
 	public FastJsonJsonSerializer(){
 		super(new com.buession.core.serializer.FastJsonJsonSerializer());
 	}

@@ -30,10 +30,15 @@ import com.buession.core.serializer.SerializerException;
 import com.buession.core.serializer.type.TypeReference;
 
 /**
+ * Jackson2 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.JacksonJsonSerializer> {
 
+	/**
+	 * 构造函数
+	 */
 	public JacksonJsonSerializer(){
 		super(new com.buession.core.serializer.JacksonJsonSerializer());
 	}

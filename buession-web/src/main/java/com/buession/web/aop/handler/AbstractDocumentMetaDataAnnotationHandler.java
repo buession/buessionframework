@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
@@ -41,7 +41,7 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 	}
 
 	protected static void addModelAttribute(final Model model, final DocumentMetaData metaData){
-		String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() :
+		final String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() :
 				DocumentMetaData.DEFAULT_ATTR_NAME;
 		model.addAttribute(attrName, metaDataConvert(metaData));
 	}

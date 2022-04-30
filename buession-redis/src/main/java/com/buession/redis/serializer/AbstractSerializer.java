@@ -33,14 +33,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 序列化和反序列化抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractSerializer<T extends com.buession.core.serializer.Serializer> implements Serializer {
 
+	/**
+	 * 序列化器
+	 */
 	protected final T serializer;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * 构造函数
+	 *
+	 * @param serializer
+	 * 		序列化器
+	 */
 	protected AbstractSerializer(final T serializer){
 		Assert.isNull(serializer, "original serializer object cloud not be null.");
 		this.serializer = serializer;

@@ -30,10 +30,15 @@ import com.buession.core.serializer.SerializerException;
 import com.buession.core.serializer.type.TypeReference;
 
 /**
+ * GSON 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.GsonJsonSerializer> {
 
+	/**
+	 * 构造函数
+	 */
 	public GsonJsonSerializer(){
 		super(new com.buession.core.serializer.GsonJsonSerializer());
 	}

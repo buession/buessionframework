@@ -3235,11 +3235,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	@Override
 	public void discard(){
 		super.discard();
-
-		if(isTransactionOrPipeline()){
-			index.set(-1);
-			txConverters.remove();
-		}
+		resetTransactionOrPipeline();
 	}
 
 	@Override
@@ -3260,8 +3256,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 		}
 
-		index.set(-1);
-		txConverters.remove();
+		resetTransactionOrPipeline();
 
 		return result;
 	}
@@ -3275,6 +3270,11 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		}
 
 		return txResult;
+	}
+
+	protected void resetTransactionOrPipeline(){
+		index.set(-1);
+		txConverters.remove();
 	}
 
 	interface ObjectOperations {
@@ -3296,12 +3296,14 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				this.serializer = redisTemplate.serializer;
 			}
 
-			protected static <V> void addConverter(AtomicInteger index, Function<String, V> function){
+			protected static <V> V addConverter(AtomicInteger index, Function<String, V> function){
 				getTxConverters().put(index.get(), function);
+				return null;
 			}
 
-			protected static <V> void addBinaryConverter(AtomicInteger index, Function<byte[], V> function){
+			protected static <V> V addBinaryConverter(AtomicInteger index, Function<byte[], V> function){
 				getTxConverters().put(index.get(), function);
+				return null;
 			}
 
 		}
@@ -3314,32 +3316,26 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 			public <V> V operation(){
 				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, serializer::deserialize);
+					return addConverter(index, serializer::deserialize);
 				}else{
 					return serializer.deserialize(this.value);
 				}
-
-				return null;
 			}
 
 			public <V> V operation(final Class<V> clazz){
 				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, clazz));
+					return addConverter(index, (value)->serializer.deserialize(value, clazz));
 				}else{
 					return serializer.deserialize(this.value, clazz);
 				}
-
-				return null;
 			}
 
 			public <V> V operation(final TypeReference<V> type){
 				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, type));
+					return addConverter(index, (value)->serializer.deserialize(value, type));
 				}else{
 					return serializer.deserialize(this.value, type);
 				}
-
-				return null;
 			}
 
 		}
@@ -3352,32 +3348,26 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 			public <V> V operation(){
 				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, serializer::deserializeBytes);
+					return addBinaryConverter(index, serializer::deserializeBytes);
 				}else{
 					return serializer.deserializeBytes(this.value);
 				}
-
-				return null;
 			}
 
 			public <V> V operation(final Class<V> clazz){
 				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
+					return addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
 				}else{
 					return serializer.deserializeBytes(this.value, clazz);
 				}
-
-				return null;
 			}
 
 			public <V> V operation(final TypeReference<V> type){
 				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
+					return addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
 				}else{
 					return serializer.deserializeBytes(this.value, type);
 				}
-
-				return null;
 			}
 
 		}

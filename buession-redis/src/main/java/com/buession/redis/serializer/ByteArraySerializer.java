@@ -30,10 +30,15 @@ import com.buession.core.serializer.DefaultByteArraySerializer;
 import com.buession.core.serializer.type.TypeReference;
 
 /**
+ * 字节数组序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class ByteArraySerializer extends AbstractSerializer<DefaultByteArraySerializer> {
 
+	/**
+	 * 构造函数
+	 */
 	public ByteArraySerializer(){
 		super(new DefaultByteArraySerializer());
 	}
