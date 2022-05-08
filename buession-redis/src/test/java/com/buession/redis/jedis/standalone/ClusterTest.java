@@ -39,13 +39,13 @@ public class ClusterTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void clusterMyId(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.clusterMyId());
 	}
 
 	@Test
 	public void clusterSlots(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		List<ClusterSlot> clusterSlots = redisTemplate.clusterSlots();
 
 		if(clusterSlots != null){
@@ -57,31 +57,31 @@ public class ClusterTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void clusterInfo(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.clusterInfo());
 	}
 
 	@Test
 	public void clusterNodes(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.clusterNodes());
 	}
 
 	@Test
 	public void clusterSlaves(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.clusterSlaves("ea693713bafd2e17963b361e269183a30b43a4d1"));
 	}
 
 	@Test
 	public void clusterReplicas(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.clusterReplicas("ea693713bafd2e17963b361e269183a30b43a4d1"));
 	}
 
 	@Test
 	public void clusterBumpEpoch(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.clusterBumpEpoch());
 	}
 

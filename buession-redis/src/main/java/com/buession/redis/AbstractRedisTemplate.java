@@ -27,7 +27,7 @@ package com.buession.redis;
 import com.buession.core.collect.Arrays;
 import com.buession.core.utils.ByteUtils;
 import com.buession.core.validator.Validate;
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.command.*;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -49,11 +49,11 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 	/**
 	 * 构造函数
 	 *
-	 * @param connection
-	 * 		Redis 连接对称
+	 * @param dataSource
+	 * 		数据源
 	 */
-	public AbstractRedisTemplate(RedisConnection connection){
-		super(connection);
+	public AbstractRedisTemplate(DataSource dataSource){
+		super(dataSource);
 	}
 
 	protected final String rawKey(final String key){

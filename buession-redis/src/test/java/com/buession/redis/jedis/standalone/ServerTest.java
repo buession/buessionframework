@@ -36,7 +36,7 @@ public class ServerTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void info(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.info());
 	}
 

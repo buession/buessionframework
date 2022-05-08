@@ -37,19 +37,19 @@ public class KeyTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void ttl(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelDataSource());
 		System.out.println(redisTemplate.ttl("sichuan"));
 	}
 
 	@Test
 	public void ttlAt(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelDataSource());
 		System.out.println(redisTemplate.ttlAt("sichuan"));
 	}
 
 	@Test
 	public void set(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisSentinelDataSource());
 		System.out.println(
 				redisTemplate.set("set_key", "value", StringCommands.SetArgument.Builder.create().ex(5000).build()));
 	}

@@ -27,10 +27,6 @@ package com.buession.redis.client.connection;
 import com.buession.core.utils.Assert;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.spring.ClusterConfiguration;
-import com.buession.redis.spring.RedisConfiguration;
-import com.buession.redis.spring.SentinelConfiguration;
-import com.buession.redis.spring.StandaloneConfiguration;
 import com.buession.redis.transaction.TransactionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,42 +43,6 @@ public final class RedisConnectionUtils {
 	private final static Logger logger = LoggerFactory.getLogger(RedisConnectionUtils.class);
 
 	private RedisConnectionUtils(){
-	}
-
-	/**
-	 * 监测是否是单机模式连接
-	 *
-	 * @param configuration
-	 * 		RedisConfiguration
-	 *
-	 * @return 是否是单机模式连接
-	 */
-	public static boolean isStandaloneConnection(final RedisConfiguration configuration){
-		return configuration instanceof StandaloneConfiguration;
-	}
-
-	/**
-	 * 监测是否是哨兵模式连接
-	 *
-	 * @param configuration
-	 * 		RedisConfiguration
-	 *
-	 * @return 是否是哨兵模式连接
-	 */
-	public static boolean isSentinelConnection(final RedisConfiguration configuration){
-		return configuration instanceof SentinelConfiguration;
-	}
-
-	/**
-	 * 监测是否是集群模式连接
-	 *
-	 * @param configuration
-	 * 		RedisConfiguration
-	 *
-	 * @return 是否是集群模式连接
-	 */
-	public static boolean isClusterConnection(final RedisConfiguration configuration){
-		return configuration instanceof ClusterConfiguration;
 	}
 
 	/**

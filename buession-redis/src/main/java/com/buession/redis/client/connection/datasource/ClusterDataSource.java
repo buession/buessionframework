@@ -36,6 +36,11 @@ import java.util.List;
 public interface ClusterDataSource extends DataSource {
 
 	/**
+	 * 默认最大重定向次数
+	 */
+	int DEFAULT_MAX_REDIRECTS = 5;
+
+	/**
 	 * 获取集群主机节点
 	 *
 	 * @return 集群主机节点
@@ -49,5 +54,35 @@ public interface ClusterDataSource extends DataSource {
 	 * 		集群主机节点
 	 */
 	void setNodes(List<RedisNode> nodes);
+
+	/**
+	 * 返回最大重定向次数
+	 *
+	 * @return 最大重定向次数
+	 */
+	int getMaxRedirects();
+
+	/**
+	 * 设置最大重定向次数
+	 *
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 */
+	void setMaxRedirects(int maxRedirects);
+
+	/**
+	 * 返回最大重试持续时长（单位：秒）
+	 *
+	 * @return 最大重试持续时长
+	 */
+	int getMaxTotalRetriesDuration();
+
+	/**
+	 * 设置最大重试持续时长（单位：秒）
+	 *
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试持续时长
+	 */
+	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
 
 }

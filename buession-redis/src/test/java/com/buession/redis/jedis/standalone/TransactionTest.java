@@ -38,7 +38,7 @@ public class TransactionTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void exec(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 
 		redisTemplate.multi();
 		redisTemplate.bitCount("str");
@@ -52,7 +52,7 @@ public class TransactionTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void discard(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 
 		redisTemplate.multi();
 		redisTemplate.zAdd("transaction", 3.0, "3");

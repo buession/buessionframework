@@ -22,92 +22,41 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring.jedis;
+package com.buession.redis.utils;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.core.RedisNode;
-import com.buession.redis.spring.StandaloneConfiguration;
-import redis.clients.jedis.JedisPoolConfig;
+import com.buession.redis.core.PoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
- * Jedis Redis 工厂配置
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class JedisConfiguration extends AbstractJedisRedisConfiguration implements StandaloneConfiguration {
+public class PoolConfigUtils {
 
-	/**
-	 * Redis 主机地址
-	 */
-	private String host = RedisNode.DEFAULT_HOST;
+	public static <T> GenericObjectPoolConfig<T> convert(final PoolConfig config,
+														 final GenericObjectPoolConfig<T> poolConfig){
+		poolConfig.setLifo(config.getLifo());
+		poolConfig.setFairness(config.getFairness());
+		poolConfig.setMaxWait(config.getMaxWait());
+		poolConfig.setMinEvictableIdleTime(config.getMinEvictableIdleTime());
+		poolConfig.setSoftMinEvictableIdleTime(config.getSoftMinEvictableIdleTime());
+		poolConfig.setEvictionPolicyClassName(config.getEvictionPolicyClassName());
+		poolConfig.setEvictorShutdownTimeout(config.getEvictorShutdownTimeout());
+		poolConfig.setNumTestsPerEvictionRun(config.getNumTestsPerEvictionRun());
+		poolConfig.setTestOnCreate(config.getTestOnCreate());
+		poolConfig.setTestOnBorrow(config.getTestOnBorrow());
+		poolConfig.setTestOnReturn(config.getTestOnReturn());
+		poolConfig.setTestWhileIdle(config.getTestWhileIdle());
+		poolConfig.setTimeBetweenEvictionRuns(config.getTimeBetweenEvictionRuns());
+		poolConfig.setBlockWhenExhausted(config.getBlockWhenExhausted());
+		poolConfig.setJmxEnabled(config.getJmxEnabled());
+		poolConfig.setJmxNamePrefix(config.getJmxNamePrefix());
+		poolConfig.setJmxNameBase(config.getJmxNameBase());
+		poolConfig.setMaxTotal(config.getMaxTotal());
+		poolConfig.setMinIdle(config.getMinIdle());
+		poolConfig.setMaxIdle(config.getMaxIdle());
 
-	/**
-	 * Redis 端口
-	 */
-	private int port = RedisNode.DEFAULT_PORT;
-
-	/**
-	 * 数据库
-	 */
-	private int database = RedisNode.DEFAULT_DATABASE;
-
-	/**
-	 * 连接池配置
-	 *
-	 * @since 2.0.0
-	 */
-	private JedisPoolConfig poolConfig;
-
-	@Override
-	public String getHost(){
-		return host;
-	}
-
-	@Override
-	public void setHost(String host){
-		this.host = host;
-	}
-
-	@Override
-	public int getPort(){
-		return port;
-	}
-
-	@Override
-	public void setPort(int port){
-		this.port = port;
-	}
-
-	@Override
-	public int getDatabase(){
-		return database;
-	}
-
-	@Override
-	public void setDatabase(int database){
-		Assert.isNegative(database, "invalid DB index (a positive index required)");
-		this.database = database;
-	}
-
-	/**
-	 * 获取连接池配置
-	 *
-	 * @return 连接池配置
-	 */
-	public JedisPoolConfig getPoolConfig(){
 		return poolConfig;
-	}
-
-	/**
-	 * 设置连接池配置
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 2.0.0
-	 */
-	public void setPoolConfig(JedisPoolConfig poolConfig){
-		this.poolConfig = poolConfig;
 	}
 
 }

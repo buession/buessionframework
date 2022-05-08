@@ -36,13 +36,13 @@ public class KeyTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void type(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.type("sichuan"));
 	}
 
 	@Test
 	public void ttlAt(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.ttlAt("sichuan"));
 	}
 

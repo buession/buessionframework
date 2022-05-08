@@ -24,8 +24,12 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
+import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.utils.PoolConfigUtils;
+import redis.clients.jedis.ConnectionPoolConfig;
 
 import java.util.List;
 
@@ -42,6 +46,16 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	 */
 	private List<RedisNode> nodes;
 
+	/**
+	 * 最大重定向次数
+	 */
+	private int maxRedirects = DEFAULT_MAX_REDIRECTS;
+
+	/**
+	 * 最大重数时长（单位：秒）
+	 */
+	private int maxTotalRetriesDuration = -1;
+
 	@Override
 	public List<RedisNode> getNodes(){
 		return nodes;
@@ -50,6 +64,37 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	@Override
 	public void setNodes(List<RedisNode> nodes){
 		this.nodes = nodes;
+	}
+
+	@Override
+	public int getMaxRedirects(){
+		return maxRedirects;
+	}
+
+	@Override
+	public void setMaxRedirects(int maxRedirects){
+		this.maxRedirects = maxRedirects;
+	}
+
+	@Override
+	public int getMaxTotalRetriesDuration(){
+		return maxTotalRetriesDuration;
+	}
+
+	@Override
+	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration){
+		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	@Override
+	public RedisConnection getConnection(){
+		final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
+
+		PoolConfigUtils.convert(getPoolConfig(), connectionPoolConfig);
+
+		return new JedisClusterConnection(this, connectionPoolConfig,
+				getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(), getMaxRedirects(),
+				getMaxTotalRetriesDuration(), getSslConfiguration());
 	}
 
 }

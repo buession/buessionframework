@@ -36,7 +36,7 @@ public class GeoTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void geoPos(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.geoPos("sichuan", "zigong"));
 	}
 

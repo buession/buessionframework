@@ -52,6 +52,36 @@ public interface SentinelDataSource extends DataSource {
 	void setDatabase(int database);
 
 	/**
+	 * 返回哨兵节点连接超时（单位：秒）
+	 *
+	 * @return 哨兵节点连接超时
+	 */
+	int getSentinelConnectTimeout();
+
+	/**
+	 * 设置哨兵节点连接超时
+	 *
+	 * @param sentinelConnectTimeout
+	 * 		哨兵节点连接超时（单位：秒）
+	 */
+	void setSentinelConnectTimeout(int sentinelConnectTimeout);
+
+	/**
+	 * 返回哨兵节点读取超时（单位：秒）
+	 *
+	 * @return 哨兵节点读取超时
+	 */
+	int getSentinelSoTimeout();
+
+	/**
+	 * 设置哨兵节点读取超时
+	 *
+	 * @param sentinelSoTimeout
+	 * 		哨兵节点读取超时（单位：秒）
+	 */
+	void setSentinelSoTimeout(int sentinelSoTimeout);
+
+	/**
 	 * 返回 Sentinel Client Name
 	 *
 	 * @return Sentinel Client Name

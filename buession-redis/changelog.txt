@@ -7,6 +7,7 @@ Changes in version 2.0.0 (2022-02-22)
 *【新增】支持哨兵模式（Sentine）和集群模式（Cluster）
 *【新增】支持 xtream 命令
 *【新增】支持 redis 6.0.x
+*【变化】RedisTemplate 通过 DataSource 初始化，不再通过 RedisConnection 初始化
 *【移除】jedis shared redis API
 *【优化】内部 API
 

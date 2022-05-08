@@ -36,7 +36,7 @@ public class SetTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void sAdd(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJediClusterConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisClusterDataSource());
 		System.out.println(redisTemplate.sAdd("set_name1", "1", "2"));
 	}
 

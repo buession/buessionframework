@@ -24,6 +24,10 @@
  */
 package com.buession.redis.client.connection.datasource;
 
+import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.core.Constants;
+import com.buession.redis.core.PoolConfig;
+
 /**
  * Redis 数据源抽象类
  *
@@ -45,6 +49,37 @@ public abstract class AbstractDataSource implements DataSource {
 	 * 客户端名称
 	 */
 	private String clientName;
+
+	/**
+	 * 连接超时（单位：秒）
+	 */
+	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
+
+	/**
+	 * 读取超时（单位：秒）
+	 */
+	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
+
+	/**
+	 * Infinite 读取超时
+	 *
+	 * @since 2.0.0
+	 */
+	private int infiniteSoTimeout = Constants.DEFAULT_INFINITE_SO_TIMEOUT;
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	private PoolConfig poolConfig;
+
+	/**
+	 * SSL 配置
+	 *
+	 * @since 2.0.0
+	 */
+	private SslConfiguration sslConfiguration;
 
 	/**
 	 * 返回用户名
@@ -107,6 +142,68 @@ public abstract class AbstractDataSource implements DataSource {
 	@Override
 	public void setClientName(String clientName){
 		this.clientName = clientName;
+	}
+
+	@Override
+	public int getConnectTimeout(){
+		return connectTimeout;
+	}
+
+	@Override
+	public void setConnectTimeout(int connectTimeout){
+		this.connectTimeout = connectTimeout;
+	}
+
+	@Override
+	public int getSoTimeout(){
+		return soTimeout;
+	}
+
+	@Override
+	public void setSoTimeout(int soTimeout){
+		this.soTimeout = soTimeout;
+	}
+
+	@Override
+	public int getInfiniteSoTimeout(){
+		return infiniteSoTimeout;
+	}
+
+	@Override
+	public void setInfiniteSoTimeout(int infiniteSoTimeout){
+		this.infiniteSoTimeout = infiniteSoTimeout;
+	}
+
+	@Override
+	public PoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	@Override
+	public void setPoolConfig(PoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
+
+	@Override
+	public SslConfiguration getSslConfiguration(){
+		return sslConfiguration;
+	}
+
+	@Override
+	public void setSslConfiguration(SslConfiguration sslConfiguration){
+		this.sslConfiguration = sslConfiguration;
+	}
+
+	protected static String redisPassword(final String password){
+		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
+	}
+
+	protected boolean isUseSsl(){
+		return sslConfiguration != null;
+	}
+
+	protected boolean isUsePool(){
+		return getPoolConfig() != null;
 	}
 
 }

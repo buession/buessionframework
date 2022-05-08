@@ -36,7 +36,7 @@ public class BitMapTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void bitCount(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 		System.out.println(redisTemplate.bitCount("test_str"));
 	}
 

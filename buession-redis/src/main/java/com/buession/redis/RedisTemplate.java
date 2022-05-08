@@ -29,7 +29,7 @@ import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.GtLt;
@@ -71,11 +71,11 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	/**
 	 * 构造函数
 	 *
-	 * @param connection
-	 * 		Redis 连接对称
+	 * @param dataSource
+	 * 		数据源
 	 */
-	public RedisTemplate(RedisConnection connection){
-		super(connection);
+	public RedisTemplate(DataSource dataSource){
+		super(dataSource);
 	}
 
 	@Override
@@ -3315,27 +3315,39 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> V operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					return addConverter(index, serializer::deserialize);
 				}else{
 					return serializer.deserialize(this.value);
 				}
+
+				 */
+				return null;
 			}
 
 			public <V> V operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					return addConverter(index, (value)->serializer.deserialize(value, clazz));
 				}else{
 					return serializer.deserialize(this.value, clazz);
 				}
+
+				 */
+				return null;
 			}
 
 			public <V> V operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					return addConverter(index, (value)->serializer.deserialize(value, type));
 				}else{
 					return serializer.deserialize(this.value, type);
 				}
+
+				 */
+				return null;
 			}
 
 		}
@@ -3347,27 +3359,39 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> V operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					return addBinaryConverter(index, serializer::deserializeBytes);
 				}else{
 					return serializer.deserializeBytes(this.value);
 				}
+
+				 */
+				return null;
 			}
 
 			public <V> V operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					return addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
 				}else{
 					return serializer.deserializeBytes(this.value, clazz);
 				}
+
+				 */
+				return null;
 			}
 
 			public <V> V operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					return addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
 				}else{
 					return serializer.deserializeBytes(this.value, type);
 				}
+
+				 */
+				return null;
 			}
 
 		}
@@ -3379,6 +3403,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> List<V> operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, serializer::deserialize);
 				}else{
@@ -3393,10 +3418,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> List<V> operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, (value)->serializer.deserialize(value, clazz));
 				}else{
@@ -3406,10 +3434,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> List<V> operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, (value)->serializer.deserialize(value, type));
 				}else{
@@ -3418,6 +3449,8 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 								.collect(Collectors.toCollection(ArrayList::new));
 					}
 				}
+
+				 */
 
 				return null;
 			}
@@ -3431,6 +3464,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> List<V> operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, serializer::deserializeBytes);
 				}else{
@@ -3445,10 +3479,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> List<V> operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
 				}else{
@@ -3458,10 +3495,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> List<V> operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
 				}else{
@@ -3470,6 +3510,8 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 								.collect(Collectors.toCollection(ArrayList::new));
 					}
 				}
+
+				 */
 
 				return null;
 			}
@@ -3483,6 +3525,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> Set<V> operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, serializer::deserialize);
 				}else{
@@ -3497,10 +3540,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Set<V> operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, (value)->serializer.deserialize(value, clazz));
 				}else{
@@ -3510,10 +3556,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Set<V> operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, (value)->serializer.deserialize(value, type));
 				}else{
@@ -3522,6 +3571,8 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 								.collect(Collectors.toCollection(LinkedHashSet::new));
 					}
 				}
+
+				 */
 
 				return null;
 			}
@@ -3535,6 +3586,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> Set<V> operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, serializer::deserializeBytes);
 				}else{
@@ -3549,10 +3601,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Set<V> operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
 				}else{
@@ -3562,10 +3617,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Set<V> operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
 				}else{
@@ -3574,6 +3632,8 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 								.collect(Collectors.toCollection(LinkedHashSet::new));
 					}
 				}
+
+				 */
 
 				return null;
 			}
@@ -3587,6 +3647,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> Map<String, V> operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, serializer::deserialize);
 				}else{
@@ -3595,10 +3656,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Map<String, V> operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, (value)->serializer.deserialize(value, clazz));
 				}else{
@@ -3607,10 +3671,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Map<String, V> operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addConverter(index, (value)->serializer.deserialize(value, type));
 				}else{
@@ -3618,6 +3685,8 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 						return Maps.map(this.value, (key)->key, (value)->serializer.deserialize(value, type));
 					}
 				}
+
+				 */
 
 				return null;
 			}
@@ -3631,6 +3700,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 			}
 
 			public <V> Map<byte[], V> operation(){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, serializer::deserializeBytes);
 				}else{
@@ -3639,10 +3709,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Map<byte[], V> operation(final Class<V> clazz){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
 				}else{
@@ -3651,10 +3724,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 					}
 				}
 
+				 */
+
 				return null;
 			}
 
 			public <V> Map<byte[], V> operation(final TypeReference<V> type){
+				/*
 				if(redisTemplate.isTransactionOrPipeline()){
 					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
 				}else{
@@ -3662,6 +3738,8 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 						return Maps.map(this.value, (key)->key, (value)->serializer.deserializeBytes(value, type));
 					}
 				}
+
+				 */
 
 				return null;
 			}

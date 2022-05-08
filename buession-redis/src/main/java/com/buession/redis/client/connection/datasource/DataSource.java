@@ -24,6 +24,10 @@
  */
 package com.buession.redis.client.connection.datasource;
 
+import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.PoolConfig;
+
 /**
  * Redis 数据源
  *
@@ -75,5 +79,97 @@ public interface DataSource {
 	 * 		客户端名称
 	 */
 	void setClientName(String clientName);
+
+	/**
+	 * 获取连接超时
+	 *
+	 * @return 连接超时（单位：秒）
+	 */
+	int getConnectTimeout();
+
+	/**
+	 * 设置连接超时
+	 *
+	 * @param connectTimeout
+	 * 		连接超时（单位：秒）
+	 */
+	void setConnectTimeout(int connectTimeout);
+
+	/**
+	 * 设置读取超时
+	 *
+	 * @return 读取超时（单位：秒）
+	 */
+	int getSoTimeout();
+
+	/**
+	 * 设置读取超时
+	 *
+	 * @param soTimeout
+	 * 		读取超时（单位：秒）
+	 */
+	void setSoTimeout(int soTimeout);
+
+	/**
+	 * 返回 Infinite 读取超时（单位：秒）
+	 *
+	 * @return Infinite 读取超时
+	 */
+	int getInfiniteSoTimeout();
+
+	/**
+	 * 设置 Infinite 读取超时
+	 *
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：秒）
+	 */
+	void setInfiniteSoTimeout(int infiniteSoTimeout);
+
+	/**
+	 * 返回连接池配置
+	 *
+	 * @return 连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	PoolConfig getPoolConfig();
+
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 2.0.0
+	 */
+	void setPoolConfig(PoolConfig poolConfig);
+
+	/**
+	 * 返回 SSL 配置
+	 *
+	 * @return SSL 配置
+	 *
+	 * @since 2.0.0
+	 */
+	SslConfiguration getSslConfiguration();
+
+	/**
+	 * 设置 SSL 配置
+	 *
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 2.0.0
+	 */
+	void setSslConfiguration(SslConfiguration sslConfiguration);
+
+	/**
+	 * 获取 Redis 连接实例 {@link RedisConnection}
+	 *
+	 * @return Redis 连接实例 {@link RedisConnection}
+	 *
+	 * @since 2.0.0
+	 */
+	RedisConnection getConnection();
 
 }

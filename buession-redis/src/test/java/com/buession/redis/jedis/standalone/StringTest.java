@@ -41,7 +41,7 @@ public class StringTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void set(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 
 		User user = new User();
 		user.setId(1);
@@ -53,7 +53,7 @@ public class StringTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void get(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 
 		Assert.assertEquals("A", redisTemplate.get("a"));
 		System.out.println(redisTemplate.get("user"));
@@ -61,10 +61,10 @@ public class StringTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void getObject(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 
 		System.out.println(redisTemplate.getObject("user", User.class));
-		System.out.println(redisTemplate.getObject("user" .getBytes(StandardCharsets.UTF_8), User.class));
+		System.out.println(redisTemplate.getObject("user".getBytes(StandardCharsets.UTF_8), User.class));
 	}
 
 }

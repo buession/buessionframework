@@ -24,10 +24,24 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.core.validator.Validate;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
+import com.buession.redis.client.connection.jedis.JedisConnection;
+import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.utils.PoolConfigUtils;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisSentinelPool;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Jedis 哨兵模式数据源
@@ -41,6 +55,16 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
+
+	/**
+	 * 哨兵节点连接超时（单位：秒）
+	 */
+	private int sentinelConnectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
+
+	/**
+	 * 哨兵节点读取超时（单位：秒）
+	 */
+	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
 	 * Sentinel Client Name
@@ -65,6 +89,26 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setDatabase(int database){
 		this.database = database;
+	}
+
+	@Override
+	public int getSentinelConnectTimeout(){
+		return sentinelConnectTimeout;
+	}
+
+	@Override
+	public void setSentinelConnectTimeout(int sentinelConnectTimeout){
+		this.sentinelConnectTimeout = sentinelConnectTimeout;
+	}
+
+	@Override
+	public int getSentinelSoTimeout(){
+		return sentinelSoTimeout;
+	}
+
+	@Override
+	public void setSentinelSoTimeout(int sentinelSoTimeout){
+		this.sentinelSoTimeout = sentinelSoTimeout;
 	}
 
 	@Override
@@ -95,6 +139,53 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setSentinels(List<RedisNode> sentinels){
 		this.sentinels = sentinels;
+	}
+
+	@Override
+	public RedisConnection getConnection(){
+		if(isUsePool()){
+			return new JedisSentinelConnection(this, createPool(), getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
+		}else{
+			return new JedisSentinelConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+					getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
+		}
+	}
+
+	protected JedisSentinelPool createPool(){
+		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(getSentinels());
+		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder().database(getDatabase());
+		final DefaultJedisClientConfig.Builder sentinelBuilder = createJedisClientConfigBuilder();
+		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+
+		PoolConfigUtils.convert(getPoolConfig(), jedisPoolConfig);
+
+		if(Validate.hasText(getPassword())){
+			if(Validate.hasText(getUsername())){
+				builder.user(getUsername());
+			}
+			builder.password(getPassword());
+		}
+
+		return new JedisSentinelPool(getMasterName(), sentinels, jedisPoolConfig, builder.build(),
+				sentinelBuilder.build());
+	}
+
+	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes){
+		if(Validate.isEmpty(sentinelNodes)){
+			return Collections.emptySet();
+		}
+
+		Set<HostAndPort> convertedNodes = new LinkedHashSet<>(sentinelNodes.size());
+
+		for(RedisNode node : sentinelNodes){
+			if(node != null){
+				int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+				convertedNodes.add(new HostAndPort(node.getHost(), port));
+			}
+		}
+
+		return convertedNodes;
 	}
 
 }

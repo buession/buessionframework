@@ -24,6 +24,15 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.redis.core.RedisMode;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
+
+import java.util.List;
+
 /**
  * Redis 集群连接器
  *
@@ -31,11 +40,6 @@ package com.buession.redis.client.connection;
  * @since 2.0.0
  */
 public interface RedisClusterConnection extends RedisConnection {
-
-	/**
-	 * 默认最大重定向次数
-	 */
-	int DEFAULT_MAX_REDIRECTS = 5;
 
 	/**
 	 * 返回最大重定向次数
@@ -66,5 +70,30 @@ public interface RedisClusterConnection extends RedisConnection {
 	 * 		最大重试持续时长
 	 */
 	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
+
+	@Override
+	default Pipeline openPipeline(){
+		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
+	}
+
+	@Override
+	default void closePipeline(){
+		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
+	}
+
+	@Override
+	default Transaction multi(){
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.MULTI);
+	}
+
+	@Override
+	default List<Object> exec() throws RedisException{
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.EXEC);
+	}
+
+	@Override
+	default void discard() throws RedisException{
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.DISCARD);
+	}
 
 }

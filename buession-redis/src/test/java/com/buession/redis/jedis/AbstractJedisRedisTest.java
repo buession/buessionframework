@@ -27,17 +27,13 @@ package com.buession.redis.jedis;
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.AbstractRedisTest;
 import com.buession.redis.RedisTemplate;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
+import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.spring.JedisConnectionFactoryBean;
-import com.buession.redis.spring.jedis.JedisClusterConfiguration;
-import com.buession.redis.spring.jedis.JedisConfiguration;
-import com.buession.redis.spring.jedis.JedisSentinelConfiguration;
-import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.Arrays;
 
@@ -46,81 +42,60 @@ import java.util.Arrays;
  */
 public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
-	protected RedisConnection createJedisConnection(){
-		JedisConfiguration configuration = new JedisConfiguration();
-		JedisPoolConfig poolConfig = new JedisPoolConfig();
+	protected JedisDataSource createJedisDataSource(){
+		JedisDataSource dataSource = new JedisDataSource();
+		PoolConfig poolConfig = new PoolConfig();
 
 		poolConfig.setMaxIdle(3);
 
-		configuration.setHost("test.redis.server");
-		configuration.setPort(36379);
-		configuration.setPassword("rds_PWD");
-		//configuration.setDatabase(60);
-		configuration.setClientName(StringUtils.random(6));
-		configuration.setPoolConfig(poolConfig);
+		dataSource.setHost("test.redis.server");
+		dataSource.setPort(6379);
+		dataSource.setPassword("rds_PWD");
+		dataSource.setDatabase(60);
+		dataSource.setClientName(StringUtils.random(6));
+		dataSource.setPoolConfig(poolConfig);
 
-		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+		return dataSource;
 	}
 
-	protected JedisSentinelConnection createJedisSentinelConnection(){
-		JedisSentinelConfiguration configuration = new JedisSentinelConfiguration();
-		JedisPoolConfig poolConfig = new JedisPoolConfig();
+	protected JedisSentinelDataSource createJedisSentinelDataSource(){
+		JedisSentinelDataSource dataSource = new JedisSentinelDataSource();
+		PoolConfig poolConfig = new PoolConfig();
 
 		poolConfig.setMaxIdle(3);
 
-		configuration.setSentinels(Arrays.asList(new RedisNode("127.0.0.1", 26379), new RedisNode("127.0.0.1", 36379),
+		dataSource.setSentinels(Arrays.asList(new RedisNode("127.0.0.1", 26379), new RedisNode("127.0.0.1", 36379),
 				new RedisNode("127.0.0.1", 36379)));
-		configuration.setSentinelClientName("SentinelClientName");
-		configuration.setClientName(StringUtils.random(6));
-		configuration.setMasterName("test_master");
-		configuration.setPassword("passwd");
-		configuration.setDatabase(6);
+		dataSource.setSentinelClientName("SentinelClientName");
+		dataSource.setClientName(StringUtils.random(6));
+		dataSource.setMasterName("test_master");
+		dataSource.setPassword("passwd");
+		dataSource.setDatabase(6);
 		//configuration.setPoolConfig(poolConfig);
 
-		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return (JedisSentinelConnection) factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+		return dataSource;
 	}
 
-	protected JedisClusterConnection createJediClusterConnection(){
-		JedisClusterConfiguration configuration = new JedisClusterConfiguration();
-		ConnectionPoolConfig poolConfig = new ConnectionPoolConfig();
+	protected JedisClusterDataSource createJedisClusterDataSource(){
+		JedisClusterDataSource dataSource = new JedisClusterDataSource();
+		PoolConfig poolConfig = new PoolConfig();
 
 		poolConfig.setMaxIdle(3);
 
-		configuration.setNodes(
+		dataSource.setNodes(
 				Arrays.asList(new RedisNode("test.redis.server", 36379), new RedisNode("test.redis.server", 36380),
 						new RedisNode("test.redis.server", 36381), new RedisNode("test.redis.server", 36382),
 						new RedisNode("test.redis.server", 36383), new RedisNode("test.redis.server", 36384)));
-		configuration.setClientName(StringUtils.random(6));
-		configuration.setPassword("rds_PWD");
-		configuration.setPoolConfig(poolConfig);
-		configuration.setMaxRedirects(1);
+		dataSource.setClientName(StringUtils.random(6));
+		dataSource.setPassword("rds_PWD");
+		dataSource.setPoolConfig(poolConfig);
+		dataSource.setMaxRedirects(1);
 
-		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return (JedisClusterConnection) factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+		return dataSource;
 	}
 
-	protected RedisTemplate getRedisTemplate(RedisConnection connection){
-		RedisTemplate redisTemplate = new RedisTemplate(connection);
+	protected RedisTemplate getRedisTemplate(DataSource dataSource){
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource);
 
 		Options options = new Options();
 

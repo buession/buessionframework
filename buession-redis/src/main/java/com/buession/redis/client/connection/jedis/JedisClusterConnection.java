@@ -29,15 +29,8 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.ConnectionPoolConfig;
@@ -48,7 +41,6 @@ import redis.clients.jedis.JedisCluster;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -67,12 +59,12 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects = DEFAULT_MAX_REDIRECTS;
+	private int maxRedirects;
 
 	/**
 	 * 最大重数时长（单位：秒）
 	 */
-	private int maxTotalRetriesDuration = -1;
+	private int maxTotalRetriesDuration;
 
 	/**
 	 * JedisCluster 对象
@@ -538,32 +530,6 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public Pipeline openPipeline(){
-		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
-	}
-
-	@Override
-	public void closePipeline(){
-		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
-	}
-
-	@Override
-	public Transaction multi(){
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.MULTI);
-	}
-
-
-	@Override
-	public List<Object> exec() throws RedisException{
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.EXEC);
-	}
-
-	@Override
-	public void discard() throws RedisException{
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.DISCARD);
-	}
-
-	@Override
 	protected void internalInit(){
 		DataSource dataSource = getDataSource();
 		if(dataSource == null){
@@ -578,15 +544,15 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 			hostAndPorts.add(new HostAndPort(node.getHost(), port));
 		}
 
-		int maxRedirects = getMaxRedirects() < 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
+		int maxRedirects = getMaxRedirects() < 0 ? JedisClusterDataSource.DEFAULT_MAX_REDIRECTS : getMaxRedirects();
 		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder(jedisClusterDataSource,
 				getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout());
 
-		if(Validate.hasText(dataSource.getUsername())){
-			builder.user(dataSource.getUsername());
-		}
-
 		if(Validate.hasText(dataSource.getPassword())){
+			if(Validate.hasText(dataSource.getUsername())){
+				builder.user(dataSource.getUsername());
+			}
+
 			builder.password(dataSource.getPassword());
 		}
 

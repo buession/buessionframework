@@ -44,8 +44,6 @@ import java.io.IOException;
  */
 public abstract class AbstractRedisConnection implements RedisConnection {
 
-	protected final static int DEFAULT_DB = 0;
-
 	/**
 	 * Redis 数据源
 	 */
@@ -75,7 +73,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	private volatile boolean initialized = false;
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisConnection.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 构造函数
@@ -266,19 +264,12 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	public void destroy() throws IOException{
 		logger.info("Destroy redis server.");
 		doDestroy();
-
-
 	}
 
 	@Override
 	public void close() throws IOException{
 		logger.info("Closing redis server.");
-
 		doClose();
-	}
-
-	protected static String redisPassword(final String password){
-		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
 	}
 
 	protected void initialized(){

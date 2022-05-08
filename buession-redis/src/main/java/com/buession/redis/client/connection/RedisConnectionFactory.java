@@ -19,31 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
+
+import com.buession.redis.client.connection.datasource.DataSource;
 
 /**
  * @author Yong.Teng
  */
 public class RedisConnectionFactory {
 
-	private RedisConnection connection;
+	private final DataSource dataSource;
 
-	public RedisConnectionFactory(){
-	}
-
-	public RedisConnectionFactory(final RedisConnection connection){
-		this.connection = connection;
-	}
-
-	public void setConnection(RedisConnection connection){
-		this.connection = connection;
+	public RedisConnectionFactory(final DataSource dataSource){
+		this.dataSource = dataSource;
 	}
 
 	public RedisConnection getConnection(){
-		return connection;
+		return dataSource.getConnection();
 	}
 
 }

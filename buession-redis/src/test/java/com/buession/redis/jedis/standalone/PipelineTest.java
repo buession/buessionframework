@@ -39,7 +39,7 @@ public class PipelineTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void pipeline(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
 
 		redisTemplate.pipeline();
 		redisTemplate.bitCount("str");
