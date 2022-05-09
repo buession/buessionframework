@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
+import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.SetCommands;
 
 import java.util.List;
@@ -830,6 +831,986 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
 	<V> Long sRem(final byte[] key, final V... members);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
+										final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
+										final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
+										final TypeReference<V> type);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象

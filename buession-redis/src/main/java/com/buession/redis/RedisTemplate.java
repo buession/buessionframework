@@ -24,7 +24,6 @@
  */
 package com.buession.redis;
 
-import com.buession.core.collect.Maps;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
@@ -37,17 +36,12 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.operations.*;
-import com.buession.redis.serializer.Serializer;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Redis 基本操作封装扩展，可序列化对象和反序列化为对象
@@ -58,8 +52,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		ConnectionOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations, ListOperations,
 		PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
 		StreamOperations, StringOperations, TransactionOperations {
-
-	private final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
 	/**
 	 * 构造函数
@@ -80,128 +72,92 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> V hGetObject(final String key, final String field){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				hGet(key, field), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				hGet(key, field), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V hGetObject(final String key, final String field, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				hGet(key, field), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				hGet(key, field), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V hGetObject(final String key, final String field, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				hGet(key, field), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				hGet(key, field), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key){
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				hGetAll(key), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)), mapStringObjectConverter());
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key){
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				hGetAll(key), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)), mapBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key, final Class<V> clazz){
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				hGetAll(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)), mapStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				hGetAll(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)), mapBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				hGetAll(key), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)), mapStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				hGetAll(key), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)), mapBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String... fields){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				hMGet(key, fields), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[]... fields){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				hMGet(key, fields), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String[] fields, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				hMGet(key, fields), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields), listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				hMGet(key, fields), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields), listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				hMGet(key, fields), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields), listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				hMGet(key, fields), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields), listBinaryObjectConverter(type));
 	}
 
 	@Override
@@ -228,508 +184,358 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count){
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				hRandFieldWithValues(key, count), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
+				mapStringObjectConverter());
 	}
 
 	@Override
 	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count){
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				hRandFieldWithValues(key, count), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
+				mapBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, long count, final Class<V> clazz){
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				hRandFieldWithValues(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
+				mapStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz){
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				hRandFieldWithValues(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
+				mapBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count,
 														 final TypeReference<V> type){
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				hRandFieldWithValues(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
+				mapStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count,
 														 final TypeReference<V> type){
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				hRandFieldWithValues(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
+				mapBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor,
 													  final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor,
 													  final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 													  final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 													  final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 													  final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 													  final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 													  final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 													  final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 													  final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 													  final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(cursor, operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
 													  final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
 													  final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, long count,
 													  TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
 													  final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
 													  final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
 													  final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
 													  final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
 													  final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 													  final long count){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 													  final long count){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 													  final long count, final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 													  final long count, final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 													  final long count, final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 													  final long count, final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 													  final long count){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapStringConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 													  final long count){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation());
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapBinaryConverter());
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 													  final long count, final Class<V> clazz){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapStringConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 													  final long count, final Class<V> clazz){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(clazz));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapBinaryConverter(clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 													  final long count, final TypeReference<V> type){
-		final ScanResult<Map<String, String>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapStringObjectOperations operations = new ObjectOperations.MapStringObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapStringConverter(type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 													  final long count, final TypeReference<V> type){
-		final ScanResult<Map<byte[], byte[]>> result = hScan(key, cursor, pattern, count);
-		final ObjectOperations.MapBinaryObjectOperations operations = new ObjectOperations.MapBinaryObjectOperations(
-				result.getResults(), this);
-
-		return new ScanResult<>(result.getCursor(), operations.operation(type));
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
+				scanResultMapBinaryConverter(type));
 	}
 
 	@Override
@@ -754,86 +560,62 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> List<V> hValsObject(final String key){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				hVals(key), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hVals(rawKey(key)), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				hVals(key), this);
-		return operations.operation();
+		return execute((client)->client.hashOperations().hVals(rawKey(key)), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final String key, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				hVals(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hVals(rawKey(key)), listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				hVals(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.hashOperations().hVals(rawKey(key)), listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				hVals(key), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hVals(rawKey(key)), listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				hVals(key), this);
-		return operations.operation(type);
+		return execute((client)->client.hashOperations().hVals(rawKey(key)), listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final long index){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final long index){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index), binaryObjectConverter(type));
 	}
 
 	@Override
@@ -858,308 +640,254 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final long start, final long end){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				stringObjectConverter());
 	}
 
 	@Override
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							 final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							 final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							 final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							 final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							  final int timeout){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				stringObjectConverter());
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							  final int timeout){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							  final int timeout, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							  final int timeout, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							  final int timeout, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							  final int timeout, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final String[] keys, final int timeout){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				blPop(keys, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final byte[][] keys, final int timeout){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				blPop(keys, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final String[] keys, final int timeout, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				blPop(keys, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final byte[][] keys, final int timeout, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				blPop(keys, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final String[] keys, final int timeout, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				blPop(keys, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				blPop(keys, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final String[] keys, final int timeout){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				brPop(keys, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().brPop(rawKeys(keys), timeout), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final byte[][] keys, final int timeout){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				brPop(keys, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().brPop(rawKeys(keys), timeout), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final String[] keys, final int timeout, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				brPop(keys, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().brPop(rawKeys(keys), timeout),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final byte[][] keys, final int timeout, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				brPop(keys, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().brPop(rawKeys(keys), timeout),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final String[] keys, final int timeout, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				brPop(keys, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().brPop(rawKeys(keys), timeout),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				brPop(keys, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().brPop(rawKeys(keys), timeout),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				brPoplPush(key, destKey, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().brPoplPush(rawKey(key), rawKey(destKey), timeout),
+				stringObjectConverter());
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				brPoplPush(key, destKey, timeout), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().brPoplPush(rawKey(key), rawKey(destKey), timeout),
+				binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				brPoplPush(key, destKey, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().brPoplPush(rawKey(key), rawKey(destKey), timeout),
+				stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				brPoplPush(key, destKey, timeout), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().brPoplPush(rawKey(key), rawKey(destKey), timeout),
+				binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout,
 								  final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				brPoplPush(key, destKey, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().brPoplPush(rawKey(key), rawKey(destKey), timeout),
+				stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout,
 								  final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				brPoplPush(key, destKey, timeout), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().brPoplPush(rawKey(key), rawKey(destKey), timeout),
+				binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V lPopObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lPop(key), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lPop(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V lPopObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lPop(key), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().lPop(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V lPopObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lPop(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lPop(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V lPopObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lPop(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().lPop(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V lPopObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lPop(key), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lPop(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V lPopObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lPop(key), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().lPop(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
@@ -1204,86 +932,68 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> V rPopObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				rPop(key), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().rPop(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V rPopObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				rPop(key), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().rPop(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V rPopObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				rPop(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().rPop(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V rPopObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				rPop(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().rPop(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V rPopObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				rPop(key), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().rPop(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V rPopObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				rPop(key), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().rPop(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				rPoplPush(key, destKey), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().rPoplPush(rawKey(key), rawKey(destKey)),
+				stringObjectConverter());
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				rPoplPush(key, destKey), this);
-		return operations.operation();
+		return execute((client)->client.listOperations().rPoplPush(rawKey(key), rawKey(destKey)),
+				binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				rPoplPush(key, destKey), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().rPoplPush(rawKey(key), rawKey(destKey)),
+				stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				rPoplPush(key, destKey), this);
-		return operations.operation(clazz);
+		return execute((client)->client.listOperations().rPoplPush(rawKey(key), rawKey(destKey)),
+				binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				rPoplPush(key, destKey), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().rPoplPush(rawKey(key), rawKey(destKey)),
+				stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				rPoplPush(key, destKey), this);
-		return operations.operation(type);
+		return execute((client)->client.listOperations().rPoplPush(rawKey(key), rawKey(destKey)),
+				binaryObjectConverter(type));
 	}
 
 	@Override
@@ -1338,296 +1048,217 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> Set<V> sDiffObject(final String[] keys){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(keys), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sDiff(rawKeys(keys)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final byte[][] keys){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(keys), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sDiff(rawKeys(keys)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sDiff(rawKeys(keys)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sDiff(rawKeys(keys)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sDiff(rawKeys(keys)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sDiff(rawKeys(keys)), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sInterObject(final String[] keys){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sInter(keys), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sInter(rawKeys(keys)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sInterObject(final byte[][] keys){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sInter(keys), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sInter(rawKeys(keys)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sInterObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sInter(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sInter(rawKeys(keys)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sInterObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sInter(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sInter(rawKeys(keys)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sInterObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sInter(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sInter(rawKeys(keys)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sInter(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sInter(rawKeys(keys)), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final String key){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sMembers(key), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sMembers(rawKey(key)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final byte[] key){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sMembers(key), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sMembers(rawKey(key)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final String key, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sMembers(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sMembers(rawKey(key)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sMembers(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sMembers(rawKey(key)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sMembers(key), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sMembers(rawKey(key)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sMembers(key), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sMembers(rawKey(key)), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V sPopObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				sPop(key), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sPop(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V sPopObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				sPop(key), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sPop(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V sPopObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				sPop(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sPop(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V sPopObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				sPop(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sPop(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V sPopObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				sPop(key), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sPop(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V sPopObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				sPop(key), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sPop(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sPopObject(final String key, final long count){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sPop(key, count), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sPop(rawKey(key), count), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sPopObject(final byte[] key, final long count){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sPop(key, count), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sPop(rawKey(key), count), setBinaryObjectConverter());
+
 	}
 
 	@Override
 	public <V> Set<V> sPopObject(final String key, final long count, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sPop(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sPop(rawKey(key), count), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sPopObject(final byte[] key, final long count, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sPop(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sPop(rawKey(key), count), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sPop(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sPop(rawKey(key), count), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sPop(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sPop(rawKey(key), count), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				sRandMember(key), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sRandMember(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				sRandMember(key), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sRandMember(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				sRandMember(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				sRandMember(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				sRandMember(key), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				sRandMember(key), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sRandMember(rawKey(key), count), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sRandMember(rawKey(key), count), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
@@ -1651,45 +1282,351 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, long count,
+											   TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
+											   final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
+											   final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+											   final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+											   final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+											   final long count, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+											   final long count, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
+											   final long count, final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
+											   final long count, final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+											   final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListStringConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+											   final long count){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListBinaryConverter());
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+											   final long count, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListStringConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+											   final long count, final Class<V> clazz){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListBinaryConverter(clazz));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
+											   final long count, final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListStringConverter(type));
+	}
+
+	@Override
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+											   final long count, final TypeReference<V> type){
+		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
+				scanResultListBinaryConverter(type));
+	}
+
+	@Override
 	public <V> Set<V> sUnionObject(final String[] keys){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sUnion(keys), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sUnion(rawKeys(keys)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sUnionObject(final byte[][] keys){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sUnion(keys), this);
-		return operations.operation();
+		return execute((client)->client.setOperations().sUnion(rawKeys(keys)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> sUnionObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sUnion(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sUnion(rawKeys(keys)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sUnionObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sUnion(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.setOperations().sUnion(rawKeys(keys)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> sUnionObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sUnion(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sUnion(rawKeys(keys)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> sUnionObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sUnion(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.setOperations().sUnion(rawKeys(keys)), setBinaryObjectConverter(type));
 	}
 
 	@Override
@@ -1776,1410 +1713,1172 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> Set<V> zDiffObject(final String[] keys){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zDiff(keys), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zDiffObject(final byte[][] keys){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zDiff(keys), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zDiffObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zDiff(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zDiffObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zDiff(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zDiffObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zDiff(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zDiffObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zDiff(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, aggregate), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
+				setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, aggregate), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
+				setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, aggregate), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
+				setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, aggregate), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
+				setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, aggregate), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
+				setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, aggregate), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
+				setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final double[] weights){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
+				setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
+				setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
+				setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
+				setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
+				setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
+				setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, aggregate, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
+				setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, aggregate, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
+				setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
 								   final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, aggregate, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
+				setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 								   final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, aggregate, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
+				setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
 								   final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zInter(keys, aggregate, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
+				setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 								   final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zInter(keys, aggregate, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
+				setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V zRandMemberObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				zRandMember(key), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V zRandMemberObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				zRandMember(key), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V zRandMemberObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				zRandMember(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V zRandMemberObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				zRandMember(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V zRandMemberObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				zRandMember(key), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V zRandMemberObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				zRandMember(key), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRandMemberObject(final String key, final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRandMember(key, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRandMemberObject(final byte[] key, final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRandMember(key, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRandMemberObject(final String key, final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRandMember(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRandMember(key, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRandMemberObject(final String key, final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRandMember(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRandMember(key, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeObject(final String key, final long start, final long end){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRange(rawKey(key), start, end),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeObject(final byte[] key, final long start, final long end){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRange(rawKey(key), start, end),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeObject(final String key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRange(key, start, end), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRange(rawKey(key), start, end),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRange(key, start, end), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRange(rawKey(key), start, end),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRange(key, start, end), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRange(rawKey(key), start, end),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRange(key, start, end), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRange(rawKey(key), start, end),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final String key, final double min, final double max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final String key, final double min, final double max, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final String key, final double min, final double max,
 										 final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max,
 										 final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max,
 										 final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
 										 final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max,
 										   final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max,
 										   final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max,
 										   final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
 										   final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
 										   final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 										   final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
 										   final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 										   final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
 										   final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 										   final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
 										   final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										   final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
 										   final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										   final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
 										   final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										   final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeObject(final String key, final long start, final long end){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeObject(final byte[] key, final long start, final long end){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeObject(final String key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRange(key, start, end), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRange(key, start, end), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRange(key, start, end), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max,
 											final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max,
 											final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max,
 											final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
 											final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
 											final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
 											final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
 											final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
 											final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
 											final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
 											final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByLex(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max,
 											  final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max,
 											  final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max,
 											  final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max,
 											  final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
 											  final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
 											  final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
 											  final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
 											  final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
 											  final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 											  final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
 											  final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 											  final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
 											  final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 											  final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
 											  final long count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											  final long count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
 											  final long count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											  final long count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
 											  final long count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											  final long count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				zRevRangeByScore(key, min, max, offset, count), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
+				listBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)), setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)), setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)), setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)), setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)), setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)), setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, aggregate), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
+				setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, aggregate), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
+				setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, aggregate), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
+				setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, aggregate), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
+				setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, aggregate), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
+				setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, aggregate), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
+				setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
+				setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
+				setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
+				setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
+				setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
+				setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
+				setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, aggregate, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
+				setStringObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, aggregate, weights), this);
-		return operations.operation();
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
+				setBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
 								   final Class<V> clazz){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, aggregate, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
+				setStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 								   final Class<V> clazz){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, aggregate, weights), this);
-		return operations.operation(clazz);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
+				setBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
 								   final TypeReference<V> type){
-		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zUnion(keys, aggregate, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
+				setStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 								   final TypeReference<V> type){
-		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zUnion(keys, aggregate, weights), this);
-		return operations.operation(type);
+		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
+				setBinaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				get(key), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().get(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V getObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(get(key),
-				this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().get(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V getObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				get(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().get(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(get(key),
-				this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().get(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				get(key), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().get(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(get(key),
-				this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().get(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getExObject(final String key, final GetExArgument getExArgument){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().getEx(rawKey(key), getExArgument), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().getEx(rawKey(key), getExArgument), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V getExObject(final String key, final GetExArgument getExArgument, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().getEx(rawKey(key), getExArgument),
+				stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().getEx(rawKey(key), getExArgument),
+				binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().getEx(rawKey(key), getExArgument),
+				stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().getEx(rawKey(key), getExArgument),
+				binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getSet(key, serializer.serialize(value)), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().getSet(rawKey(key), serializer.serialize(value)),
+				stringObjectConverter());
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getSet(key, serializer.serializeAsBytes(value)), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().getSet(rawKey(key), serializer.serializeAsBytes(value)),
+				binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getSet(key, serializer.serialize(value)), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().getSet(rawKey(key), serializer.serialize(value)),
+				stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getSet(key, serializer.serializeAsBytes(value)), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().getSet(rawKey(key), serializer.serializeAsBytes(value)),
+				binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getSet(key, serializer.serialize(value)), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().getSet(rawKey(key), serializer.serialize(value)),
+				stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getSet(key, serializer.serializeAsBytes(value)), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().getSet(rawKey(key), serializer.serializeAsBytes(value)),
+				binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getDelObject(final String key){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getDel(key), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().getDel(rawKey(key)), stringObjectConverter());
 	}
 
 	@Override
 	public <V> V getDelObject(final byte[] key){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getDel(key), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().getDel(rawKey(key)), binaryObjectConverter());
 	}
 
 	@Override
 	public <V> V getDelObject(final String key, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getDel(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().getDel(rawKey(key)), stringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getDelObject(final byte[] key, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getDel(key), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().getDel(rawKey(key)), binaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> V getDelObject(final String key, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getDel(key), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().getDel(rawKey(key)), stringObjectConverter(type));
 	}
 
 	@Override
 	public <V> V getDelObject(final byte[] key, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getDel(key), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().getDel(rawKey(key)), binaryObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final String... keys){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				mGet(keys), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().mGet(rawKeys(keys)), listStringObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final byte[]... keys){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				mGet(keys), this);
-		return operations.operation();
+		return execute((client)->client.stringOperations().mGet(rawKeys(keys)), listBinaryObjectConverter());
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final String[] keys, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				mGet(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().mGet(rawKeys(keys)), listStringObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final byte[][] keys, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				mGet(keys), this);
-		return operations.operation(clazz);
+		return execute((client)->client.stringOperations().mGet(rawKeys(keys)), listBinaryObjectConverter(clazz));
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final String[] keys, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				mGet(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().mGet(rawKeys(keys)), listStringObjectConverter(type));
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				mGet(keys), this);
-		return operations.operation(type);
+		return execute((client)->client.stringOperations().mGet(rawKeys(keys)), listBinaryObjectConverter(type));
 	}
 
 	@Override
@@ -3259,493 +2958,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		resetTransactionOrPipeline();
 
 		return result;
-	}
-
-	protected static Map<Integer, Function<?, ?>> getTxConverters(){
-		Map<Integer, Function<?, ?>> txResult = txConverters.get();
-
-		if(txResult == null){
-			txResult = new LinkedHashMap<>(16, 0.8F);
-			txConverters.set(txResult);
-		}
-
-		return txResult;
-	}
-
-	protected void resetTransactionOrPipeline(){
-		index.set(-1);
-		txConverters.remove();
-	}
-
-	interface ObjectOperations {
-
-		abstract class AbstractObjectOperations<T> implements ObjectOperations {
-
-			protected final T value;
-
-			protected final RedisTemplate redisTemplate;
-
-			protected final AtomicInteger index;
-
-			protected final Serializer serializer;
-
-			public AbstractObjectOperations(final T value, final RedisTemplate redisTemplate){
-				this.value = value;
-				this.redisTemplate = redisTemplate;
-				this.index = redisTemplate.index;
-				this.serializer = redisTemplate.serializer;
-			}
-
-			protected static <V> V addConverter(AtomicInteger index, Function<String, V> function){
-				getTxConverters().put(index.get(), function);
-				return null;
-			}
-
-			protected static <V> V addBinaryConverter(AtomicInteger index, Function<byte[], V> function){
-				getTxConverters().put(index.get(), function);
-				return null;
-			}
-
-		}
-
-		final class StringObjectOperations extends AbstractObjectOperations<String> {
-
-			public StringObjectOperations(final String value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> V operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					return addConverter(index, serializer::deserialize);
-				}else{
-					return serializer.deserialize(this.value);
-				}
-
-				 */
-				return null;
-			}
-
-			public <V> V operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					return addConverter(index, (value)->serializer.deserialize(value, clazz));
-				}else{
-					return serializer.deserialize(this.value, clazz);
-				}
-
-				 */
-				return null;
-			}
-
-			public <V> V operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					return addConverter(index, (value)->serializer.deserialize(value, type));
-				}else{
-					return serializer.deserialize(this.value, type);
-				}
-
-				 */
-				return null;
-			}
-
-		}
-
-		final class BinaryObjectOperations extends AbstractObjectOperations<byte[]> {
-
-			public BinaryObjectOperations(final byte[] value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> V operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					return addBinaryConverter(index, serializer::deserializeBytes);
-				}else{
-					return serializer.deserializeBytes(this.value);
-				}
-
-				 */
-				return null;
-			}
-
-			public <V> V operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					return addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
-				}else{
-					return serializer.deserializeBytes(this.value, clazz);
-				}
-
-				 */
-				return null;
-			}
-
-			public <V> V operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					return addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
-				}else{
-					return serializer.deserializeBytes(this.value, type);
-				}
-
-				 */
-				return null;
-			}
-
-		}
-
-		final class ListStringObjectOperations extends AbstractObjectOperations<List<String>> {
-
-			public ListStringObjectOperations(final List<String> value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> List<V> operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, serializer::deserialize);
-				}else{
-					if(this.value != null){
-						final List<V> result = new ArrayList<>(this.value.size());
-
-						for(String s : this.value){
-							result.add(serializer.deserialize(s));
-						}
-
-						return result;
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> List<V> operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, clazz));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserialize(value, clazz))
-								.collect(Collectors.toCollection(ArrayList::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> List<V> operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, type));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserialize(value, type))
-								.collect(Collectors.toCollection(ArrayList::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-		}
-
-		final class ListBinaryObjectOperations extends AbstractObjectOperations<List<byte[]>> {
-
-			public ListBinaryObjectOperations(final List<byte[]> value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> List<V> operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, serializer::deserializeBytes);
-				}else{
-					if(this.value != null){
-						final List<V> result = new ArrayList<>(this.value.size());
-
-						for(byte[] b : this.value){
-							result.add(serializer.deserializeBytes(b));
-						}
-
-						return result;
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> List<V> operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserializeBytes(value, clazz))
-								.collect(Collectors.toCollection(ArrayList::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> List<V> operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserializeBytes(value, type))
-								.collect(Collectors.toCollection(ArrayList::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-		}
-
-		final class SetStringObjectOperations extends AbstractObjectOperations<Set<String>> {
-
-			public SetStringObjectOperations(final Set<String> value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> Set<V> operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, serializer::deserialize);
-				}else{
-					if(this.value != null){
-						final Set<V> result = new LinkedHashSet<>(this.value.size());
-
-						for(String s : this.value){
-							result.add(serializer.deserialize(s));
-						}
-
-						return result;
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Set<V> operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, clazz));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserialize(value, clazz))
-								.collect(Collectors.toCollection(LinkedHashSet::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Set<V> operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, type));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserialize(value, type))
-								.collect(Collectors.toCollection(LinkedHashSet::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-		}
-
-		final class SetBinaryObjectOperations extends AbstractObjectOperations<Set<byte[]>> {
-
-			public SetBinaryObjectOperations(final Set<byte[]> value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> Set<V> operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, serializer::deserializeBytes);
-				}else{
-					if(this.value != null){
-						final Set<V> result = new LinkedHashSet<>(this.value.size());
-
-						for(byte[] b : this.value){
-							result.add(serializer.deserializeBytes(b));
-						}
-
-						return result;
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Set<V> operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserializeBytes(value, clazz))
-								.collect(Collectors.toCollection(LinkedHashSet::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Set<V> operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
-				}else{
-					if(this.value != null){
-						return this.value.stream().map((value)->serializer.deserializeBytes(value, type))
-								.collect(Collectors.toCollection(LinkedHashSet::new));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-		}
-
-		final class MapStringObjectOperations extends AbstractObjectOperations<Map<String, String>> {
-
-			public MapStringObjectOperations(final Map<String, String> value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> Map<String, V> operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, serializer::deserialize);
-				}else{
-					if(this.value != null){
-						return Maps.map(this.value, (key)->key, serializer::deserialize);
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Map<String, V> operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, clazz));
-				}else{
-					if(this.value != null){
-						return Maps.map(this.value, (key)->key, (value)->serializer.deserialize(value, clazz));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Map<String, V> operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addConverter(index, (value)->serializer.deserialize(value, type));
-				}else{
-					if(this.value != null){
-						return Maps.map(this.value, (key)->key, (value)->serializer.deserialize(value, type));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-		}
-
-		final class MapBinaryObjectOperations extends AbstractObjectOperations<Map<byte[], byte[]>> {
-
-			public MapBinaryObjectOperations(final Map<byte[], byte[]> value, final RedisTemplate redisTemplate){
-				super(value, redisTemplate);
-			}
-
-			public <V> Map<byte[], V> operation(){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, serializer::deserializeBytes);
-				}else{
-					if(this.value != null){
-						return Maps.map(this.value, (key)->key, serializer::deserializeBytes);
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Map<byte[], V> operation(final Class<V> clazz){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, clazz));
-				}else{
-					if(this.value != null){
-						return Maps.map(this.value, (key)->key, (value)->serializer.deserializeBytes(value, clazz));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-			public <V> Map<byte[], V> operation(final TypeReference<V> type){
-				/*
-				if(redisTemplate.isTransactionOrPipeline()){
-					addBinaryConverter(index, (value)->serializer.deserializeBytes(value, type));
-				}else{
-					if(this.value != null){
-						return Maps.map(this.value, (key)->key, (value)->serializer.deserializeBytes(value, type));
-					}
-				}
-
-				 */
-
-				return null;
-			}
-
-		}
-
 	}
 
 }

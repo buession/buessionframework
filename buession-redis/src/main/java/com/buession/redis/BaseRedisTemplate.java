@@ -4355,6 +4355,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Object> exec(){
+		/*
 		RedisConnection connection = client.getConnection();
 
 		if(connection.isPipeline()){
@@ -4367,6 +4368,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		}else{
 			return execute((client)->client.getConnection().exec());
 		}
+
+		 */
+		return null;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ Changes in version 2.0.0 (2022-02-22)
 *【变化】RedisTemplate 通过 DataSource 初始化，不再通过 RedisConnection 初始化
 *【移除】jedis shared redis API
 *【优化】内部 API
+*【修复】多线程下各种异常
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------
