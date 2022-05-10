@@ -50,7 +50,6 @@ import org.springframework.lang.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 /**
@@ -72,12 +71,13 @@ public abstract class RedisAccessor {
 
 	protected boolean enableTransactionSupport = false;
 
-	protected AtomicInteger index = new AtomicInteger(-1);
-
 	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
+
+	protected final static ThreadLocal<Integer> index = new ThreadLocal<>();
 
 	static{
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
+		index.set(-1);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public abstract class RedisAccessor {
 		client.setConnection(connection);
 
 		if(isTransactionOrPipeline(connection)){
-			index.getAndIncrement();
+			index.set(index.get() + 1);
 		}
 
 		try{
@@ -191,7 +191,7 @@ public abstract class RedisAccessor {
 		client.setConnection(connection);
 
 		if(isTransactionOrPipeline(connection)){
-			index.getAndIncrement();
+			index.set(index.get() + 1);
 		}
 
 		try{
@@ -255,7 +255,7 @@ public abstract class RedisAccessor {
 	}
 
 	protected void resetTransactionOrPipeline(){
-		index.set(-1);
+		index.remove();
 		txConverters.remove();
 	}
 

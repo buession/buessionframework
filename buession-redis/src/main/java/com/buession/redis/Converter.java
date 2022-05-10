@@ -36,7 +36,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,59 +49,61 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractConverter<SV, TV> implements Converter<SV, TV> {
 
-		protected final AtomicInteger index;
+		protected final ThreadLocal<Integer> index;
 
 		protected final Serializer serializer;
 
 		public AbstractConverter(final RedisAccessor accessor){
-			this.index = accessor.index;
+			this.index = RedisAccessor.index;
 			this.serializer = accessor.serializer;
 		}
 
-		protected static <V> V addConverter(AtomicInteger index, Function<String, V> function){
+		protected static <V> V addConverter(ThreadLocal<Integer> index, Function<String, V> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> V addBinaryConverter(AtomicInteger index, Function<byte[], V> function){
+		protected static <V> V addBinaryConverter(ThreadLocal<Integer> index, Function<byte[], V> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> List<V> addListConverter(AtomicInteger index, Function<List<String>, List<V>> function){
+		protected static <V> List<V> addListConverter(ThreadLocal<Integer> index,
+													  Function<List<String>, List<V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> List<V> addListBinaryConverter(AtomicInteger index,
+		protected static <V> List<V> addListBinaryConverter(ThreadLocal<Integer> index,
 															Function<List<byte[]>, List<V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> Set<V> addSetConverter(AtomicInteger index, Function<Set<String>, Set<V>> function){
+		protected static <V> Set<V> addSetConverter(ThreadLocal<Integer> index, Function<Set<String>, Set<V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> Set<V> addSetBinaryConverter(AtomicInteger index, Function<Set<byte[]>, Set<V>> function){
+		protected static <V> Set<V> addSetBinaryConverter(ThreadLocal<Integer> index,
+														  Function<Set<byte[]>, Set<V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> Map<String, V> addMapConverter(AtomicInteger index,
+		protected static <V> Map<String, V> addMapConverter(ThreadLocal<Integer> index,
 															Function<Map<String, String>, Map<String, V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> Map<byte[], V> addMapBinaryConverter(AtomicInteger index,
+		protected static <V> Map<byte[], V> addMapBinaryConverter(ThreadLocal<Integer> index,
 																  Function<Map<byte[], byte[]>, Map<byte[], V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <T, V> ScanResult<V> addScanResultConverter(AtomicInteger index,
+		protected static <T, V> ScanResult<V> addScanResultConverter(ThreadLocal<Integer> index,
 																	 Function<ScanResult<T>, ScanResult<V>> function){
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
