@@ -4355,22 +4355,20 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Object> exec(){
-		/*
-		RedisConnection connection = client.getConnection();
+		return execute((client)->{
+			RedisConnection connection = client.getConnection();
 
-		if(connection.isPipeline()){
-			final Pipeline pipeline = connection.openPipeline();
-			try{
-				return pipeline.syncAndReturnAll();
-			}finally{
-				connection.closePipeline();
+			if(connection.isPipeline()){
+				final Pipeline pipeline = connection.openPipeline();
+				try{
+					return pipeline.syncAndReturnAll();
+				}finally{
+					connection.closePipeline();
+				}
+			}else{
+				return client.getConnection().exec();
 			}
-		}else{
-			return execute((client)->client.getConnection().exec());
-		}
-
-		 */
-		return null;
+		});
 	}
 
 	@Override

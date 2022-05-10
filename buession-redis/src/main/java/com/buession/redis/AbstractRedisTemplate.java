@@ -68,7 +68,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 
 	protected final String[] rawKeys(final String[] keys){
 		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, this::rawKey);
+		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
 	}
 
 	protected final byte[][] rawKeys(final byte[][] keys){
@@ -79,7 +79,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 		}
 
 		byte[] prefixByte = SafeEncoder.encode(prefix);
-		return Arrays.map(keys, (value)->ByteUtils.concat(prefixByte, value));
+		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
 	}
 
 }

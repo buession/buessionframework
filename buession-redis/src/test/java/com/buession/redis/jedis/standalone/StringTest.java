@@ -49,6 +49,7 @@ public class StringTest extends AbstractJedisRedisTest {
 
 		Assert.assertSame(redisTemplate.set("a", "A"), Status.SUCCESS);
 		Assert.assertSame(redisTemplate.set("user", user), Status.SUCCESS);
+		Assert.assertSame(redisTemplate.set("user1", user), Status.SUCCESS);
 	}
 
 	@Test
@@ -65,6 +66,20 @@ public class StringTest extends AbstractJedisRedisTest {
 
 		System.out.println(redisTemplate.getObject("user", User.class));
 		System.out.println(redisTemplate.getObject("user".getBytes(StandardCharsets.UTF_8), User.class));
+	}
+
+	@Test
+	public void mGet(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
+
+		System.out.println(redisTemplate.mGet("user", "user1"));
+	}
+
+	@Test
+	public void mGetObject(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisDataSource());
+
+		System.out.println(redisTemplate.mGetObject(new String[]{"user", "user1"}, User.class));
 	}
 
 }

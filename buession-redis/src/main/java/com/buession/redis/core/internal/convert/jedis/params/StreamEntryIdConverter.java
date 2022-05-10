@@ -40,7 +40,8 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryId, St
 
 	public final static StreamEntryIdConverter INSTANCE = new StreamEntryIdConverter();
 
-	public final static ArrayConverter<StreamEntryId, StreamEntryID> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE);
+	public final static ArrayConverter<StreamEntryId, StreamEntryID> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE,
+			StreamEntryID.class);
 
 	@Override
 	public StreamEntryID convert(final StreamEntryId source){

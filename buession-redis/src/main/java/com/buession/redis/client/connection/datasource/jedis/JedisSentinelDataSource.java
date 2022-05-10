@@ -81,6 +81,8 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	 */
 	private List<RedisNode> sentinels;
 
+	private JedisSentinelPool pool;
+
 	@Override
 	public int getDatabase(){
 		return database;
@@ -144,7 +146,10 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public RedisConnection getConnection(){
 		if(isUsePool()){
-			return new JedisSentinelConnection(this, createPool(), getConnectTimeout(), getSoTimeout(),
+			if(pool == null){
+				pool = createPool();
+			}
+			return new JedisSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
 					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 		}else{
 			return new JedisSentinelConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),

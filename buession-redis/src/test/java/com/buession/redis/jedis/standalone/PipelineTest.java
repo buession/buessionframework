@@ -47,13 +47,6 @@ public class PipelineTest extends AbstractJedisRedisTest {
 		redisTemplate.get("a");
 		redisTemplate.getObject("user", User.class);
 		System.out.println(redisTemplate.exec());
-
-		redisTemplate.pipeline();
-		redisTemplate.bitCount("str");
-		redisTemplate.get("user");
-		redisTemplate.get("a");
-		redisTemplate.getObject("user", User.class);
-		System.out.println(redisTemplate.exec());
 	}
 
 }

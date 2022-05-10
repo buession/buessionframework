@@ -57,6 +57,8 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
 
+	private JedisPool pool;
+
 	private final static Logger logger = LoggerFactory.getLogger(JedisDataSource.class);
 
 	@Override
@@ -92,7 +94,11 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	@Override
 	public RedisConnection getConnection(){
 		if(isUsePool()){
-			return new JedisConnection(this, createPool(), getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+			if(pool == null){
+				pool = createPool();
+			}
+			
+			return new JedisConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
 					getSslConfiguration());
 		}else{
 			return new JedisConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),

@@ -53,7 +53,8 @@ public interface Converters {
 	MapConverter<byte[], byte[], String, String> BINARY_MAP_TO_STRING_MAP_CONVERTER = new MapConverter<>(
 			SafeEncoder::encode, SafeEncoder::encode);
 
-	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new ArrayConverter<>(SafeEncoder::encode);
+	ArrayConverter<byte[], String> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new ArrayConverter<>(
+			SafeEncoder::encode, String.class);
 
 	EnumConverter<Type> TYPE_RESULT_CONVERTER = new EnumConverter<>(Type.class);
 

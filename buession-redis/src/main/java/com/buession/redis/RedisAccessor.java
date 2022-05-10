@@ -167,7 +167,7 @@ public abstract class RedisAccessor {
 		RedisClient client = doGetRedisClient();
 		client.setConnection(connection);
 
-		if(isTransactionOrPipeline()){
+		if(isTransactionOrPipeline(connection)){
 			index.getAndIncrement();
 		}
 
@@ -180,7 +180,7 @@ public abstract class RedisAccessor {
 		}
 	}
 
-	public <SR, TR> TR execute(final SessionCallback<SR> callback, final Converter<SR, TR> operations)
+	public <SR, TR> TR execute(final SessionCallback<SR> callback, final Converter<SR, TR> converter)
 			throws RedisException{
 		Assert.isNull(callback, "callback cloud not be null.");
 		checkInitialized();
@@ -190,12 +190,12 @@ public abstract class RedisAccessor {
 		RedisClient client = doGetRedisClient();
 		client.setConnection(connection);
 
-		if(isTransactionOrPipeline()){
+		if(isTransactionOrPipeline(connection)){
 			index.getAndIncrement();
 		}
 
 		try{
-			return operations.operation(connection, callback.execute(client));
+			return converter.convert(connection, callback.execute(client));
 		}catch(Exception e){
 			throw new RedisException(e.getMessage(), e);
 		}finally{
@@ -239,8 +239,8 @@ public abstract class RedisAccessor {
 		return connection.isPipeline();
 	}
 
-	protected boolean isTransactionOrPipeline(){
-		return false || isTransaction(null) || isPipeline(null);
+	protected boolean isTransactionOrPipeline(final RedisConnection connection){
+		return isTransaction(connection) || isPipeline(connection);
 	}
 
 	protected static Map<Integer, Function<?, ?>> getTxConverters(){
