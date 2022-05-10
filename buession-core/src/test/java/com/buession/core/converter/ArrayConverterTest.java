@@ -22,25 +22,23 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.collect;
+package com.buession.core.converter;
 
-import com.buession.core.converter.ArrayConverter;
+import com.buession.core.collect.Arrays;
 import org.junit.Test;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ArraysTest {
+public class ArrayConverterTest {
 
 	@Test
-	public void convert(){
+	public void map(){
 		String[] data = new String[]{"1", "2"};
-		ArrayConverter<String, Integer> converter = new ArrayConverter<>((value)->Integer.parseInt(value),
-				Integer.class);
-		Integer[] result = converter.convert(data);
+		String[] result = Arrays.map(data, String.class, (value)->"key" + value);
 
-		for(Integer s : result){
+		for(String s : result){
 			System.out.println(s);
 		}
 	}

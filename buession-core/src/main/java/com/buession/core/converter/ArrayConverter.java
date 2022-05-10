@@ -25,6 +25,7 @@
 package com.buession.core.converter;
 
 import com.buession.core.collect.Arrays;
+import com.buession.core.utils.Assert;
 
 /**
  * 数组转换器
@@ -39,19 +40,26 @@ public class ArrayConverter<S, T> implements Converter<S[], T[]> {
 	 */
 	private final Converter<S, T> itemConverter;
 
+	private final Class<T> clazz;
+
 	/**
 	 * 构造函数
 	 *
 	 * @param itemConverter
 	 * 		List item 转换器
+	 * @param clazz
+	 * 		目标数组类型
 	 */
-	public ArrayConverter(final Converter<S, T> itemConverter){
+	public ArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz){
+		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
+		Assert.isNull(clazz, "Target clazz cloud not be null.");
 		this.itemConverter = itemConverter;
+		this.clazz = clazz;
 	}
 
 	@Override
 	public T[] convert(final S[] source){
-		return Arrays.map(source, itemConverter::convert);
+		return Arrays.map(source, clazz, itemConverter::convert);
 	}
 
 }

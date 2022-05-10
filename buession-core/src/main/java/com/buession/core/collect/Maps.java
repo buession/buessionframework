@@ -24,17 +24,17 @@
  */
 package com.buession.core.collect;
 
-import com.buession.core.exception.ClassInstantiationException;
-import com.buession.core.utils.ClassUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 
 /**
@@ -73,9 +73,15 @@ public class Maps {
 
 		Map<TK, TV> result;
 
-		try{
-			result = ClassUtils.instantiate(map.getClass(), map.size());
-		}catch(ClassInstantiationException e){
+		if(map instanceof LinkedHashMap){
+			result = new LinkedHashMap<>(map.size());
+		}else if(map instanceof IdentityHashMap){
+			result = new IdentityHashMap<>(map.size());
+		}else if(map instanceof TreeMap){
+			result = new TreeMap<>();
+		}else if(map instanceof WeakHashMap){
+			result = new WeakHashMap<>(map.size());
+		}else{
 			result = new HashMap<>(map.size());
 		}
 

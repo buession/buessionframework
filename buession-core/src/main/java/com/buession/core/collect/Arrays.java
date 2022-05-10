@@ -28,6 +28,7 @@ import com.buession.core.utils.Assert;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Constants;
 
+import java.lang.reflect.Array;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -2753,6 +2754,8 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 	 *
 	 * @param arrays
 	 * 		需操作的数组
+	 * @param clazz
+	 * 		目标数组类型
 	 * @param fn
 	 * 		Value 操作函数
 	 * @param <S>
@@ -2763,11 +2766,11 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 新的 Map
 	 */
 	@SuppressWarnings("unchecked")
-	public static <S, T> T[] map(final S[] arrays, final Function<S, T> fn){
+	public static <S, T> T[] map(final S[] arrays, final Class<T> clazz, final Function<S, T> fn){
 		if(arrays == null){
 			return null;
 		}else{
-			final T[] result = (T[]) new Object[arrays.length];
+			T[] result = (T[]) Array.newInstance(clazz, arrays.length);
 
 			for(int i = 0; i < arrays.length; i++){
 				result[i] = fn.apply(arrays[i]);
