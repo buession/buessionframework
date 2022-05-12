@@ -25,16 +25,17 @@
 package com.buession.web.mvc.controller;
 
 import com.buession.web.mvc.Response;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
+ * REST 控制器抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractRestController extends AbstractController implements RestController {
 
-	protected Response<?> pageNotFound(final ServerHttpRequest request, final ServerHttpResponse response){
-		return response(false, PAGE_NOT_FOUND_ERROR_CODE, request.getPath().toString());
+	@Override
+	protected Response<?> pageNotFound(final String uri){
+		return response(false, PAGE_NOT_FOUND_ERROR_CODE, uri);
 	}
 
 }

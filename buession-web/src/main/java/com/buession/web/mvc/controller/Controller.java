@@ -19,16 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.controller;
 
 /**
+ * 控制器接口
+ *
  * @author Yong.Teng
  */
 public interface Controller {
 
-    int PAGE_NOT_FOUND_ERROR_CODE = 404;
+	int PAGE_NOT_FOUND_ERROR_CODE = 404;
 
 }

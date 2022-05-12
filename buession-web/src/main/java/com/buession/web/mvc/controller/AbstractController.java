@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.controller;
@@ -27,9 +27,9 @@ package com.buession.web.mvc.controller;
 import com.buession.web.exception.PageNotFoundException;
 import com.buession.web.mvc.Response;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
+ * 控制器抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractController implements Controller {
@@ -42,11 +42,7 @@ public abstract class AbstractController implements Controller {
 		return new Response<>(state, code, message, data);
 	}
 
-	protected void pageNotFound(final HttpServletRequest request) throws PageNotFoundException{
-		pageNotFound(request, request.getRequestURI());
-	}
-
-	protected void pageNotFound(final HttpServletRequest request, final String uri) throws PageNotFoundException{
+	protected <T> T pageNotFound(final String uri) throws PageNotFoundException{
 		throw new PageNotFoundException(uri);
 	}
 
