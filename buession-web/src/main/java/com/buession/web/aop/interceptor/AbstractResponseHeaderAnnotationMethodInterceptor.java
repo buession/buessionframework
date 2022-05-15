@@ -27,24 +27,24 @@ package com.buession.web.aop.interceptor;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.ResponseHeader;
 
 /**
- * {@link PrimitiveCrossOrigin} 注解拦截器抽象类
+ * {@link ResponseHeader} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractPrimitiveCrossOriginAnnotationMethodInterceptor
-		extends AbstractAnnotationMethodInterceptor<PrimitiveCrossOrigin>
-		implements PrimitiveCrossOriginAnnotationMethodInterceptor {
+public abstract class AbstractResponseHeaderAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<ResponseHeader>
+		implements ResponseHeaderAnnotationMethodInterceptor {
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler){
+	public AbstractResponseHeaderAnnotationMethodInterceptor(AnnotationHandler<ResponseHeader> handler){
 		super(handler);
 	}
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler,
-																   AnnotationResolver<PrimitiveCrossOrigin> resolver){
+	public AbstractResponseHeaderAnnotationMethodInterceptor(AnnotationHandler<ResponseHeader> handler,
+															 AnnotationResolver<ResponseHeader> resolver){
 		super(handler, resolver);
 	}
 

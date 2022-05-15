@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeadersAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -33,7 +34,6 @@ import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
 import com.buession.web.reactive.aop.MethodUtils;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -53,21 +53,19 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 	}
 
 	@Override
-	public Void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-		doExecute(AopUtils.getServerHttp(mi), responseHeaders);
-		return null;
+	public Object execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+		return doExecute(AopUtils.getServerHttp(mi), responseHeaders);
 	}
 
 	@Override
-	public Void execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
-		doExecute(MethodUtils.createServerHttpFromArguments(arguments), responseHeaders);
-		return null;
+	public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
+		return doExecute(MethodUtils.createServerHttpFromArguments(arguments), responseHeaders);
 	}
 
-	private static void doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
+	private static Object doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return;
+			return null;
 		}
 
 		ResponseHeader[] headers = responseHeaders.value();
@@ -88,6 +86,8 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 				}
 			}
 		}
+
+		return null;
 	}
 
 }

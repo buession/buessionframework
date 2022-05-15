@@ -27,23 +27,24 @@ package com.buession.web.aop.interceptor;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.annotation.ContentType;
+import com.buession.web.mvc.view.document.DocumentMetaData;
 
 /**
- * {@link ContentType} 注解拦截器抽象类
+ * {@link DocumentMetaData} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractContentTypeAnnotationMethodInterceptor
-		extends AbstractAnnotationMethodInterceptor<ContentType> implements ContentTypeAnnotationMethodInterceptor {
+public abstract class AbstractDocumentMetaDataAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<DocumentMetaData>
+		implements DocumentMetaDataAnnotationMethodInterceptor {
 
-	public AbstractContentTypeAnnotationMethodInterceptor(AnnotationHandler<ContentType> handler){
+	public AbstractDocumentMetaDataAnnotationMethodInterceptor(AnnotationHandler<DocumentMetaData> handler){
 		super(handler);
 	}
 
-	public AbstractContentTypeAnnotationMethodInterceptor(AnnotationHandler<ContentType> handler,
-														  AnnotationResolver<ContentType> resolver){
+	public AbstractDocumentMetaDataAnnotationMethodInterceptor(AnnotationHandler<DocumentMetaData> handler,
+															   AnnotationResolver<DocumentMetaData> resolver){
 		super(handler, resolver);
 	}
 

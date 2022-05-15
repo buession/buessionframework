@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.aop.MethodUtils;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,24 +47,23 @@ public class ReactiveDocumentMetaDataAnnotationHandler extends AbstractDocumentM
 	}
 
 	@Override
-	public Void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
-		doExecute(AopUtils.getServerHttp(mi), documentMetaData);
-		return null;
+	public Object execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+		return doExecute(AopUtils.getServerHttp(mi), documentMetaData);
 	}
 
 	@Override
-	public Void execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
-		doExecute(MethodUtils.createServerHttpFromArguments(arguments), documentMetaData);
-		return null;
+	public Object execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
+		return doExecute(MethodUtils.createServerHttpFromArguments(arguments), documentMetaData);
 	}
 
-	private static void doExecute(final ServerHttp serverHttp, final DocumentMetaData documentMetaData){
+	private static Object doExecute(final ServerHttp serverHttp, final DocumentMetaData documentMetaData){
 		if(serverHttp == null || serverHttp.getModel() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "Model");
-			return;
+			return null;
 		}
 
 		addModelAttribute(serverHttp.getModel(), documentMetaData);
+		return null;
 	}
 
 }

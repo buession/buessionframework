@@ -35,14 +35,14 @@ import com.buession.web.servlet.aop.handler.ServletResponseHeadersAnnotationHand
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ResponseHeadersAnnotationMethodInterceptor
+public class ServletResponseHeadersAnnotationMethodInterceptor
 		extends AbstractResponseHeadersAnnotationMethodInterceptor {
 
-	public ResponseHeadersAnnotationMethodInterceptor(){
+	public ServletResponseHeadersAnnotationMethodInterceptor(){
 		super(new ServletResponseHeadersAnnotationHandler());
 	}
 
-	public ResponseHeadersAnnotationMethodInterceptor(AnnotationResolver<ResponseHeaders> resolver){
+	public ServletResponseHeadersAnnotationMethodInterceptor(AnnotationResolver<ResponseHeaders> resolver){
 		super(new ServletResponseHeadersAnnotationHandler(), resolver);
 	}
 

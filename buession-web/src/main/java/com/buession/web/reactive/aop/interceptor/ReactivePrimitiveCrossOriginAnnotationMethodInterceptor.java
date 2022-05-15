@@ -35,14 +35,14 @@ import com.buession.web.reactive.aop.handler.ReactivePrimitiveCrossOriginAnnotat
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class PrimitiveCrossOriginAnnotationMethodInterceptor
+public class ReactivePrimitiveCrossOriginAnnotationMethodInterceptor
 		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	public PrimitiveCrossOriginAnnotationMethodInterceptor(){
+	public ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(){
 		super(new ReactivePrimitiveCrossOriginAnnotationHandler());
 	}
 
-	public PrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<PrimitiveCrossOrigin> resolver){
+	public ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<PrimitiveCrossOrigin> resolver){
 		super(new ReactivePrimitiveCrossOriginAnnotationHandler(), resolver);
 	}
 

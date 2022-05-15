@@ -25,12 +25,13 @@
 package com.buession.web.servlet.aop.aspect.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ContentTypeAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.PrimitiveCrossOriginAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ResponseHeaderAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ResponseHeadersAnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletPrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.Collection;
 
@@ -38,17 +39,17 @@ import java.util.Collection;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletHttpAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspectAnnotationsMethodInterceptor {
 
-	public ServletHttpAspectAnnotationsMethodInterceptor(){
+	public ServletWebAspectAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(4);
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(4);
 
-		methodInterceptors.add(new ContentTypeAnnotationMethodInterceptor());
-		methodInterceptors.add(new PrimitiveCrossOriginAnnotationMethodInterceptor());
-		methodInterceptors.add(new ResponseHeaderAnnotationMethodInterceptor());
-		methodInterceptors.add(new ResponseHeadersAnnotationMethodInterceptor());
+		methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor());
+		methodInterceptors.add(new ServletPrimitiveCrossOriginAnnotationMethodInterceptor());
+		methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor());
+		methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor());
 
 		setMethodInterceptors(methodInterceptors);
 	}

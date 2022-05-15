@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.aop.MethodUtils;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -49,21 +49,19 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 	}
 
 	@Override
-	public Void execute(MethodInvocation mi, ContentType contentType){
-		doExecute(AopUtils.getServerHttp(mi), contentType);
-		return null;
+	public Object execute(MethodInvocation mi, ContentType contentType){
+		return doExecute(AopUtils.getServerHttp(mi), contentType);
 	}
 
 	@Override
-	public Void execute(Object target, Method method, Object[] arguments, ContentType contentType){
-		doExecute(MethodUtils.createServerHttpFromArguments(arguments), contentType);
-		return null;
+	public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
+		return doExecute(MethodUtils.createServerHttpFromArguments(arguments), contentType);
 	}
 
-	private static void doExecute(final ServerHttp serverHttp, final ContentType contentType){
+	private static Object doExecute(final ServerHttp serverHttp, final ContentType contentType){
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return;
+			return null;
 		}
 
 		String mime = contentType.mime();
@@ -73,6 +71,8 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 		String subType = mime.substring(i);
 
 		serverHttp.getResponse().getHeaders().setContentType(new MediaType(type, subType, charset));
+
+		return null;
 	}
 
 }

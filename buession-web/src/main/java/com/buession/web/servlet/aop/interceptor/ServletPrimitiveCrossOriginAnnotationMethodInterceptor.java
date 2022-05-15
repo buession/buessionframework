@@ -35,14 +35,14 @@ import com.buession.web.servlet.aop.handler.ServletPrimitiveCrossOriginAnnotatio
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class PrimitiveCrossOriginAnnotationMethodInterceptor
+public class ServletPrimitiveCrossOriginAnnotationMethodInterceptor
 		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	public PrimitiveCrossOriginAnnotationMethodInterceptor(){
+	public ServletPrimitiveCrossOriginAnnotationMethodInterceptor(){
 		super(new ServletPrimitiveCrossOriginAnnotationHandler());
 	}
 
-	public PrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<PrimitiveCrossOrigin> resolver){
+	public ServletPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<PrimitiveCrossOrigin> resolver){
 		super(new ServletPrimitiveCrossOriginAnnotationHandler(), resolver);
 	}
 

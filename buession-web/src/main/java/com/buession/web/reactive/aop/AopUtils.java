@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop;
 
 import com.buession.web.reactive.http.ServerHttp;
-import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
 
 /**
@@ -37,7 +36,15 @@ public class AopUtils {
 
 	}
 
-	public static ServerHttp getServerHttp(final MethodInvocation mi){
+	public static ServerHttp getServerHttp(final com.buession.aop.MethodInvocation mi){
+		if(mi == null || mi.getArguments() == null){
+			return null;
+		}else{
+			return MethodUtils.createServerHttpFromArguments(mi.getArguments());
+		}
+	}
+
+	public static ServerHttp getServerHttp(final org.aopalliance.intercept.MethodInvocation mi){
 		if(mi == null || mi.getArguments() == null){
 			return null;
 		}else{

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.aop.aopalliance.interceptor;
+package com.buession.web.reactive.aop.aopalliance.interceptor;
 
 import com.buession.web.aop.aopalliance.AbstractWebAttributeSourcePointcutAdvisor;
 
@@ -30,12 +30,12 @@ import com.buession.web.aop.aopalliance.AbstractWebAttributeSourcePointcutAdviso
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletHttpAttributeSourcePointcutAdvisor extends AbstractWebAttributeSourcePointcutAdvisor {
+public class ReactiveHttpAttributeSourcePointcutAdvisor extends AbstractWebAttributeSourcePointcutAdvisor {
 
 	private static final long serialVersionUID = 8267117305963633132L;
 
-	public ServletHttpAttributeSourcePointcutAdvisor(){
-		super(new ServletAopAllianceAnnotationsMethodInterceptor());
+	public ReactiveHttpAttributeSourcePointcutAdvisor(){
+		super(new ReactiveAopAllianceAnnotationsMethodInterceptor());
 	}
 
 }

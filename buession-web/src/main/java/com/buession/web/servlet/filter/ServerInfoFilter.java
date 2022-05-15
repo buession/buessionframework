@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
 
+import com.buession.web.http.response.IServerInfoFilter;
 import com.buession.web.utils.ServerUtils;
 
 import java.util.Collections;
@@ -34,8 +35,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class IServerInfoFilter extends ResponseHeadersFilter implements
-		com.buession.web.http.response.IServerInfoFilter {
+public class ServerInfoFilter extends ResponseHeadersFilter implements IServerInfoFilter {
 
 	private String headerName = SERVER_NAME_HEADER_NAME;
 

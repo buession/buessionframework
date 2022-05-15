@@ -27,24 +27,24 @@ package com.buession.web.aop.interceptor;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.http.response.annotation.ResponseHeaders;
 
 /**
- * {@link ResponseHeader} 注解拦截器抽象类
+ * {@link ResponseHeaders} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractResponseHeaderAnnotationMethodInterceptor
-		extends AbstractAnnotationMethodInterceptor<ResponseHeader>
-		implements ResponseHeaderAnnotationMethodInterceptor {
+public abstract class AbstractResponseHeadersAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<ResponseHeaders>
+		implements ResponseHeadersAnnotationMethodInterceptor {
 
-	public AbstractResponseHeaderAnnotationMethodInterceptor(AnnotationHandler<ResponseHeader> handler){
+	public AbstractResponseHeadersAnnotationMethodInterceptor(AnnotationHandler<ResponseHeaders> handler){
 		super(handler);
 	}
 
-	public AbstractResponseHeaderAnnotationMethodInterceptor(AnnotationHandler<ResponseHeader> handler,
-															 AnnotationResolver<ResponseHeader> resolver){
+	public AbstractResponseHeadersAnnotationMethodInterceptor(AnnotationHandler<ResponseHeaders> handler,
+															  AnnotationResolver<ResponseHeaders> resolver){
 		super(handler, resolver);
 	}
 

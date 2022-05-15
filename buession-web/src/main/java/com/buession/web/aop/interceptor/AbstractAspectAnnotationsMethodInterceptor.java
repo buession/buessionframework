@@ -21,10 +21,34 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.web.aop.interceptor;/**
- * 
- *
+ */
+package com.buession.web.aop.interceptor;
+
+import com.buession.aop.aspectj.BeforeAdviceMethodInvocationAdapter;
+import com.buession.web.aop.aspect.AspectjAnnotationsMethodInterceptorLogUtils;
+import org.aspectj.lang.JoinPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class AbstractAspectAnnotationsMethodInterceptor {
+ */
+public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	public AbstractAspectAnnotationsMethodInterceptor(){
+		super();
+	}
+
+	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
+		AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
+
+		// 1. Adapt the join point into a method invocation
+		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
+
 }

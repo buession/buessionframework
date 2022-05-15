@@ -30,7 +30,8 @@ import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractPrimitiveCrossOriginAnnotationHandler extends AbstractAnnotationHandler<PrimitiveCrossOrigin, Void> implements PrimitiveCrossOriginAnnotationHandler {
+public abstract class AbstractPrimitiveCrossOriginAnnotationHandler
+		extends AbstractAnnotationHandler<PrimitiveCrossOrigin> implements PrimitiveCrossOriginAnnotationHandler {
 
 	public AbstractPrimitiveCrossOriginAnnotationHandler(){
 		super(PrimitiveCrossOrigin.class);

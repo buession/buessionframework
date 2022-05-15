@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -32,7 +33,6 @@ import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
 import com.buession.web.reactive.aop.MethodUtils;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -51,26 +51,24 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 	}
 
 	@Override
-	public Void execute(MethodInvocation mi, ResponseHeader responseHeader){
-		doExecute(AopUtils.getServerHttp(mi), responseHeader);
-		return null;
+	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
+		return doExecute(AopUtils.getServerHttp(mi), responseHeader);
 	}
 
 	@Override
-	public Void execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
-		doExecute(MethodUtils.createServerHttpFromArguments(arguments), responseHeader);
-		return null;
+	public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
+		return doExecute(MethodUtils.createServerHttpFromArguments(arguments), responseHeader);
 	}
 
-	private static void doExecute(final ServerHttp serverHttp, final ResponseHeader responseHeader){
+	private static Object doExecute(final ServerHttp serverHttp, final ResponseHeader responseHeader){
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return;
+			return null;
 		}
 
 		ServerHttpResponse response = serverHttp.getResponse();
 
-		if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name()) == true){
+		if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name())){
 			if(Validate.isNumeric(responseHeader.value())){
 				ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
 			}else{
@@ -79,6 +77,8 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 		}else{
 			response.getHeaders().set(responseHeader.name(), responseHeader.value());
 		}
+
+		return null;
 	}
 
 }

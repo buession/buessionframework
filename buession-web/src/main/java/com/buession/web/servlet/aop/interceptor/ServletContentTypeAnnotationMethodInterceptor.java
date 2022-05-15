@@ -35,13 +35,13 @@ import com.buession.web.servlet.aop.handler.ServletContentTypeAnnotationHandler;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ContentTypeAnnotationMethodInterceptor extends AbstractContentTypeAnnotationMethodInterceptor {
+public class ServletContentTypeAnnotationMethodInterceptor extends AbstractContentTypeAnnotationMethodInterceptor {
 
-	public ContentTypeAnnotationMethodInterceptor(){
+	public ServletContentTypeAnnotationMethodInterceptor(){
 		super(new ServletContentTypeAnnotationHandler());
 	}
 
-	public ContentTypeAnnotationMethodInterceptor(AnnotationResolver<ContentType> resolver){
+	public ServletContentTypeAnnotationMethodInterceptor(AnnotationResolver<ContentType> resolver){
 		super(new ServletContentTypeAnnotationHandler(), resolver);
 	}
 

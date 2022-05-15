@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -32,7 +33,6 @@ import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.response.ResponseUtils;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,13 +51,13 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
 	}
 
 	@Override
-	public Void execute(MethodInvocation mi, ResponseHeader responseHeader){
+	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
 		doExecute(AopUtils.getHttpServlet(mi), responseHeader);
 		return null;
 	}
 
 	@Override
-	public Void execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
+	public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
 		doExecute(MethodUtils.createHttpServletFromArguments(arguments), responseHeader);
 		return null;
 	}

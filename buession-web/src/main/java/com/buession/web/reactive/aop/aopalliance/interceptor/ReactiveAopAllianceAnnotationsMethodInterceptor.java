@@ -22,18 +22,39 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.aop.aopalliance.interceptor;
+package com.buession.web.reactive.aop.aopalliance.interceptor;
 
+import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.aop.resolver.SpringAnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractAopAllianceAnnotationsMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveContentTypeAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactivePrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletAopAllianceAnnotationsMethodInterceptor extends AbstractAopAllianceAnnotationsMethodInterceptor {
+public class ReactiveAopAllianceAnnotationsMethodInterceptor extends AbstractAopAllianceAnnotationsMethodInterceptor {
 
-	public ServletAopAllianceAnnotationsMethodInterceptor(){
+	public ReactiveAopAllianceAnnotationsMethodInterceptor(){
 		super();
+
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(4);
+
+		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(
+				new ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(
+				new ReactiveResponseHeadersAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+
+		setMethodInterceptors(methodInterceptors);
 	}
 
 }

@@ -24,27 +24,57 @@
  */
 package com.buession.web.aop.interceptor;
 
-import com.buession.aop.aspectj.BeforeAdviceMethodInvocationAdapter;
-import com.buession.web.aop.aspect.AspectjAnnotationsMethodInterceptorLogUtils;
-import org.aspectj.lang.JoinPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor
+		implements MethodInterceptor {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	public AbstractAopAllianceAnnotationsMethodInterceptor(){
+		super();
+	}
 
-	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
-		AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
+	@Override
+	public Object invoke(MethodInvocation methodInvocation) throws Throwable{
+		com.buession.aop.MethodInvocation mi = createMethodInvocation(methodInvocation);
+		return super.invoke(mi);
+	}
 
-		// 1. Adapt the join point into a method invocation
-		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
-		// 2. Delegate the authorization of the method call to the super class
-		super.invoke(mi);
+	protected com.buession.aop.MethodInvocation createMethodInvocation(final MethodInvocation mi){
+		return new com.buession.aop.MethodInvocation() {
+
+			@Override
+			public Object getThis(){
+				return mi.getThis();
+			}
+
+			@Override
+			public Method getMethod(){
+				return mi.getMethod();
+			}
+
+			@Override
+			public Object[] getArguments(){
+				return mi.getArguments();
+			}
+
+			@Override
+			public Object proceed() throws Throwable{
+				return mi.proceed();
+			}
+
+			@Override
+			public String toString(){
+				return "Method invocation [" + mi.getMethod() + "]";
+			}
+
+		};
 	}
 
 }

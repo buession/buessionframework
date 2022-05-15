@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
-import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +47,13 @@ public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMe
 	}
 
 	@Override
-	public Void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+	public Object execute(MethodInvocation mi, DocumentMetaData documentMetaData){
 		doExecute(AopUtils.getHttpServlet(mi), documentMetaData);
 		return null;
 	}
 
 	@Override
-	public Void execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
+	public Object execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
 		doExecute(MethodUtils.createHttpServletFromArguments(arguments), documentMetaData);
 		return null;
 	}

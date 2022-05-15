@@ -27,7 +27,7 @@ package com.buession.web.http.response;
 /**
  * @author Yong.Teng
  */
-public interface ServerInfoFilterInterface {
+public interface IServerInfoFilter {
 
 	String SERVER_NAME_HEADER_NAME = "Server-Name";
 

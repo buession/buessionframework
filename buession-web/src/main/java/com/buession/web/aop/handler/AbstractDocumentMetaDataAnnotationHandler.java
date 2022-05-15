@@ -33,8 +33,8 @@ import org.springframework.ui.Model;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData,
-		Void> implements DocumentMetaDataAnnotationHandler {
+public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData>
+		implements DocumentMetaDataAnnotationHandler {
 
 	public AbstractDocumentMetaDataAnnotationHandler(){
 		super(DocumentMetaData.class);

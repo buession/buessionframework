@@ -35,13 +35,14 @@ import com.buession.web.reactive.aop.handler.ReactiveResponseHeaderAnnotationHan
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ResponseHeaderAnnotationMethodInterceptor extends AbstractResponseHeaderAnnotationMethodInterceptor {
+public class ReactiveResponseHeaderAnnotationMethodInterceptor
+		extends AbstractResponseHeaderAnnotationMethodInterceptor {
 
-	public ResponseHeaderAnnotationMethodInterceptor(){
+	public ReactiveResponseHeaderAnnotationMethodInterceptor(){
 		super(new ReactiveResponseHeaderAnnotationHandler());
 	}
 
-	public ResponseHeaderAnnotationMethodInterceptor(AnnotationResolver<ResponseHeader> resolver){
+	public ReactiveResponseHeaderAnnotationMethodInterceptor(AnnotationResolver<ResponseHeader> resolver){
 		super(new ReactiveResponseHeaderAnnotationHandler(), resolver);
 	}
 

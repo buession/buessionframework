@@ -27,24 +27,24 @@ package com.buession.web.aop.interceptor;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.mvc.view.document.DocumentMetaData;
+import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 
 /**
- * {@link DocumentMetaData} 注解拦截器抽象类
+ * {@link PrimitiveCrossOrigin} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractDocumentMetaDataAnnotationMethodInterceptor
-		extends AbstractAnnotationMethodInterceptor<DocumentMetaData>
-		implements DocumentMetaDataAnnotationMethodInterceptor {
+public abstract class AbstractPrimitiveCrossOriginAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<PrimitiveCrossOrigin>
+		implements PrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	public AbstractDocumentMetaDataAnnotationMethodInterceptor(AnnotationHandler<DocumentMetaData> handler){
+	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler){
 		super(handler);
 	}
 
-	public AbstractDocumentMetaDataAnnotationMethodInterceptor(AnnotationHandler<DocumentMetaData> handler,
-															   AnnotationResolver<DocumentMetaData> resolver){
+	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler,
+																   AnnotationResolver<PrimitiveCrossOrigin> resolver){
 		super(handler, resolver);
 	}
 

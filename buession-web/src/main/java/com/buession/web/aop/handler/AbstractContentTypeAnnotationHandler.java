@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
@@ -30,7 +30,8 @@ import com.buession.web.http.response.annotation.ContentType;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractContentTypeAnnotationHandler extends AbstractAnnotationHandler<ContentType, Void> implements ContentTypeAnnotationHandler {
+public abstract class AbstractContentTypeAnnotationHandler extends AbstractAnnotationHandler<ContentType>
+		implements ContentTypeAnnotationHandler {
 
 	public AbstractContentTypeAnnotationHandler(){
 		super(ContentType.class);

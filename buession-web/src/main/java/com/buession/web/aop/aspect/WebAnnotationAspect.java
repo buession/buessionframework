@@ -19,33 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.aspect;
+
+import org.aspectj.lang.JoinPoint;
 
 /**
  * @author Yong.Teng
  */
 public interface WebAnnotationAspect {
 
-    String CONTENT_TYPE_EXPRESSION = "execution(@com.buession.web.http.response.ContentType * *(..))";
+	String EXPRESSIONS = "execution(@com.buession.web.http.response.ContentType * *(..)) || "
+			+ "execution(@com.buession.web.http.response.DisableHttpCache * *(..)) || "
+			+ "execution(@com.buession.web.http.response.EnableHttpCache * *(..)) || "
+			+ "execution(@com.buession.web.http.response.PrimitiveCrossOrigin * *(..)) || "
+			+ "execution(@com.buession.web.http.response.ResponseHeader * *(..)) || "
+			+ "execution(@com.buession.web.http.response.ResponseHeaders * *(..)) || "
+			+ "execution(@com.buession.web.mvc.view.document.DocumentMetaData * *(..))";
 
-    String DISABLE_HTTP_CACHE_EXPRESSION = "execution(@com.buession.web.http.response.DisableHttpCache * *(..))";
+	void anyAnnotatedMethod();
 
-    String ENABLE_HTTP_CACHE_EXPRESSION = "execution(@com.buession.web.http.response.EnableHttpCache * *(..))";
+	void anyAnnotatedMethodCall(JoinPoint joinPoint);
 
-    String PRIMITIVE_CROSS_ORIGIN_EXPRESSION = "execution(@com.buession.web.http.response.PrimitiveCrossOrigin * *" +
-            "(..))";
-
-    String RESPONSE_HEADER_EXPRESSION = "execution(@com.buession.web.http.response.ResponseHeader * *(..))";
-
-    String RESPONSE_HEADERS_EXPRESSION = "execution(@com.buession.web.http.response.ResponseHeaders * *(..))";
-
-    String DOCUMENT_META_DATA_EXPRESSION = "execution(@com.buession.web.mvc.view.document.DocumentMetaData * *(..))";
-
-    String EXPRESSIONS = CONTENT_TYPE_EXPRESSION + " || " + DISABLE_HTTP_CACHE_EXPRESSION + " || " +
-            ENABLE_HTTP_CACHE_EXPRESSION + " || " + PRIMITIVE_CROSS_ORIGIN_EXPRESSION + " || " +
-            RESPONSE_HEADER_EXPRESSION + " || " + RESPONSE_HEADERS_EXPRESSION + " || " + DOCUMENT_META_DATA_EXPRESSION;
+	void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable;
 
 }

@@ -25,12 +25,13 @@
 package com.buession.web.reactive.aop.aspect.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ContentTypeAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.PrimitiveCrossOriginAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ResponseHeaderAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ResponseHeadersAnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveContentTypeAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactivePrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.Collection;
 
@@ -38,17 +39,17 @@ import java.util.Collection;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ReactiveHttpResponseAspectAnnotationsWebMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+public class ReactiveWebAspectAnnotationsMethodInterceptor extends AbstractAspectAnnotationsMethodInterceptor {
 
-	public ReactiveHttpResponseAspectAnnotationsWebMethodInterceptor(){
+	public ReactiveWebAspectAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(4);
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(4);
 
-		methodInterceptors.add(new ContentTypeAnnotationMethodInterceptor());
-		methodInterceptors.add(new PrimitiveCrossOriginAnnotationMethodInterceptor());
-		methodInterceptors.add(new ResponseHeaderAnnotationMethodInterceptor());
-		methodInterceptors.add(new ResponseHeadersAnnotationMethodInterceptor());
+		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor());
+		methodInterceptors.add(new ReactivePrimitiveCrossOriginAnnotationMethodInterceptor());
+		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor());
+		methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor());
 
 		setMethodInterceptors(methodInterceptors);
 	}

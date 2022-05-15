@@ -21,10 +21,10 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.interceptor;
+package com.buession.web.aop.aopalliance;
 
 import com.buession.web.aop.AopUtils;
 import com.buession.web.http.response.annotation.ContentType;
@@ -34,6 +34,7 @@ import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.mvc.view.document.DocumentMetaData;
+import org.aopalliance.aop.Advice;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 
 import java.lang.annotation.Annotation;
@@ -41,6 +42,7 @@ import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
 public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
@@ -50,6 +52,14 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMe
 	private final static Class<? extends Annotation>[] WEB_ANNOTATION_CLASSES = new Class[]{ResponseHeader.class,
 			ResponseHeaders.class, ContentType.class, PrimitiveCrossOrigin.class, HttpCache.class,
 			DisableHttpCache.class, DocumentMetaData.class};
+
+	public AbstractWebAttributeSourcePointcutAdvisor(){
+		super();
+	}
+
+	public AbstractWebAttributeSourcePointcutAdvisor(Advice advice){
+		super(advice);
+	}
 
 	@Override
 	public boolean matches(Method method, Class<?> targetClass){
@@ -61,7 +71,8 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMe
 
 		try{
 			m = targetClass.getMethod(m.getName(), m.getParameterTypes());
-			return AopUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES) || AopUtils.hasClassAnnotationPresent(targetClass, WEB_ANNOTATION_CLASSES);
+			return AopUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES) ||
+					AopUtils.hasClassAnnotationPresent(targetClass, WEB_ANNOTATION_CLASSES);
 		}catch(NoSuchMethodException e){
 			return false;
 		}

@@ -21,10 +21,30 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.web.aop.interceptor;/**
- * 
+ */
+package com.buession.web.aop.interceptor;
+
+import com.buession.aop.handler.AnnotationHandler;
+import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
+import com.buession.aop.resolver.AnnotationResolver;
+import com.buession.web.http.response.annotation.ContentType;
+
+/**
+ * {@link ContentType} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class AbstractContentTypeAnnotationMethodInterceptor {
+ */
+public abstract class AbstractContentTypeAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<ContentType> implements ContentTypeAnnotationMethodInterceptor {
+
+	public AbstractContentTypeAnnotationMethodInterceptor(AnnotationHandler<ContentType> handler){
+		super(handler);
+	}
+
+	public AbstractContentTypeAnnotationMethodInterceptor(AnnotationHandler<ContentType> handler,
+														  AnnotationResolver<ContentType> resolver){
+		super(handler, resolver);
+	}
+
 }

@@ -24,39 +24,19 @@
  */
 package com.buession.web.servlet.aop.aspect;
 
-import com.buession.web.aop.aspect.WebAnnotationAspect;
+import com.buession.web.aop.aspect.AbstractWebAnnotationAspect;
 import com.buession.web.servlet.aop.aspect.interceptor.ServletWebAspectAnnotationsMethodInterceptor;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
 @Aspect
-public class ServletHttpAnnotationAspect implements WebAnnotationAspect {
+public class ServletWebAnnotationAspect
+		extends AbstractWebAnnotationAspect<ServletWebAspectAnnotationsMethodInterceptor> {
 
-	private final ServletWebAspectAnnotationsMethodInterceptor methodInterceptor = new ServletWebAspectAnnotationsMethodInterceptor();
-
-	private final static Logger logger = LoggerFactory.getLogger(ServletHttpAnnotationAspect.class);
-
-	@Pointcut(EXPRESSIONS)
-	public void anyAnnotatedMethod(){
-		logger.debug("Call ServletHttpAnnotationAspect::anyAnnotatedMethod()");
-	}
-
-	@Pointcut(EXPRESSIONS)
-	void anyAnnotatedMethodCall(JoinPoint joinPoint){
-		logger.debug("Call ServletHttpAnnotationAspect::anyAnnotatedMethodCall()");
-	}
-
-	@After("anyAnnotatedMethodCall(joinPoint)")
-	public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
-		logger.debug("Call ServletHttpAnnotationAspect::executeAnnotatedMethod()");
-		methodInterceptor.performAfterInterception(joinPoint);
+	public ServletWebAnnotationAspect(){
+		super(new ServletWebAspectAnnotationsMethodInterceptor());
 	}
 
 }

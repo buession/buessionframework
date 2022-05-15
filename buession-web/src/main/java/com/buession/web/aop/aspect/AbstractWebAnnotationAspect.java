@@ -21,10 +21,58 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.web.aop.aspect;/**
- * 
- *
+ */
+package com.buession.web.aop.aspect;
+
+import com.buession.core.utils.Assert;
+import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodInterceptor;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class AbstractWebAnnotationAspect {
+ */
+public abstract class AbstractWebAnnotationAspect<T extends AbstractAspectAnnotationsMethodInterceptor>
+		implements WebAnnotationAspect {
+
+	private final T methodInterceptor;
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	public AbstractWebAnnotationAspect(final T methodInterceptor){
+		Assert.isNull(methodInterceptor,
+				"The instance for " + AbstractAspectAnnotationsMethodInterceptor.class.getName() +
+						" cloud not be null.");
+		this.methodInterceptor = methodInterceptor;
+	}
+
+	@Pointcut(EXPRESSIONS)
+	@Override
+	public void anyAnnotatedMethod(){
+		if(logger.isDebugEnabled()){
+			logger.debug("Call {}::anyAnnotatedMethod()", getClass().getName());
+		}
+	}
+
+	@Pointcut(EXPRESSIONS)
+	@Override
+	public void anyAnnotatedMethodCall(JoinPoint joinPoint){
+		if(logger.isDebugEnabled()){
+			logger.debug("Call {}::anyAnnotatedMethodCall()", getClass().getName());
+		}
+	}
+
+	@After("anyAnnotatedMethodCall(joinPoint)")
+	@Override
+	public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
+		if(logger.isDebugEnabled()){
+			logger.debug("Call {}::executeAnnotatedMethod()", getClass().getName());
+		}
+		methodInterceptor.performAfterInterception(joinPoint);
+	}
+
 }

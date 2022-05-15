@@ -19,18 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.advice;
+package com.buession.web.aop.interceptor;
 
-import com.buession.aop.advice.AnnotationMethodAdvice;
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.ContentType;
 
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationMethodAdvice extends AnnotationMethodInterceptor<ContentType> {
+public interface ContentTypeAnnotationMethodInterceptor extends AnnotationMethodInterceptor<ContentType> {
 
 }
