@@ -19,57 +19,45 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.resolver;
 
-import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.core.annotation.AnnotatedElementUtils;
+import com.buession.aop.MethodInvocation;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
+ * Spring 注解解析器
+ *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
  */
-public class SpringAnnotationResolver extends AbstractAnnotationResolver {
+public class SpringAnnotationResolver<A extends Annotation> extends AbstractAnnotationResolver<A> {
 
 	@Override
-	public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
+	public A getAnnotation(MethodInvocation mi, Class<A> clazz){
 		Method method = mi.getMethod();
 
-		Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
+		A annotation = AnnotationUtils.findAnnotation(method, clazz);
 		if(annotation != null){
 			return annotation;
 		}
 
 		Class<?> targetClass = mi.getThis().getClass();
 		method = ClassUtils.getMostSpecificMethod(method, targetClass);
-		annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
+		annotation = AnnotationUtils.findAnnotation(method, clazz);
 		if(annotation != null){
 			return annotation;
 		}
 
-		return AnnotatedElementUtils.findMergedAnnotation(targetClass, clazz);
-	}
-
-	@Override
-	public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
-		Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
-		if(annotation != null){
-			return annotation;
-		}
-
-		Class<?> targetClass = method.getDeclaringClass();
-		method = ClassUtils.getMostSpecificMethod(method, targetClass);
-		annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
-		if(annotation != null){
-			return annotation;
-		}
-
-		return AnnotatedElementUtils.findMergedAnnotation(targetClass, clazz);
+		return AnnotationUtils.findAnnotation(targetClass, clazz);
 	}
 
 }

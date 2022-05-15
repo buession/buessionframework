@@ -29,9 +29,14 @@ import com.buession.core.utils.Assert;
 import java.lang.annotation.Annotation;
 
 /**
+ * JSR-175 注解读取和处理抽象类
+ *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractAnnotationHandler<A extends Annotation, R> implements AnnotationHandler<A, R> {
+public abstract class AbstractAnnotationHandler<A extends Annotation> implements AnnotationHandler<A> {
 
 	protected Class<A> annotationClass;
 
@@ -44,7 +49,8 @@ public abstract class AbstractAnnotationHandler<A extends Annotation, R> impleme
 		return annotationClass;
 	}
 
-	protected void setAnnotationClass(Class<A> annotationClass) throws IllegalArgumentException{
+	@Override
+	public void setAnnotationClass(Class<A> annotationClass){
 		Assert.isNull(annotationClass, "Annotation class argument could not be null");
 		this.annotationClass = annotationClass;
 	}

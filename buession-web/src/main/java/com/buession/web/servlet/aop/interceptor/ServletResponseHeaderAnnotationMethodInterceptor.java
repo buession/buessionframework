@@ -22,32 +22,27 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
+package com.buession.web.servlet.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
-
-import java.lang.annotation.Annotation;
+import com.buession.aop.resolver.AnnotationResolver;
+import com.buession.web.aop.interceptor.AbstractResponseHeaderAnnotationMethodInterceptor;
+import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.servlet.aop.handler.ServletResponseHeaderAnnotationHandler;
 
 /**
- * 注解解析器
- *
- * @param <A>
- * 		注解类型
+ * {@link ResponseHeader} 注解拦截器
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface AnnotationResolver<A extends Annotation> {
+public class ResponseHeaderAnnotationMethodInterceptor extends AbstractResponseHeaderAnnotationMethodInterceptor {
 
-	/**
-	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
-	 *
-	 * @param mi
-	 * 		the intercepted method to be invoked
-	 * @param clazz
-	 * 		the annotation class of the annotation to find
-	 *
-	 * @return 注解实例
-	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+	public ResponseHeaderAnnotationMethodInterceptor(){
+		super(new ServletResponseHeaderAnnotationHandler());
+	}
+
+	public ResponseHeaderAnnotationMethodInterceptor(AnnotationResolver<ResponseHeader> resolver){
+		super(new ServletResponseHeaderAnnotationHandler(), resolver);
+	}
 
 }

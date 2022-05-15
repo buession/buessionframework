@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aspectj;
 
-import org.aopalliance.intercept.MethodInvocation;
+import com.buession.aop.MethodInvocation;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 
 /**
@@ -34,11 +33,11 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInvocation {
 
-	private Object object;
+	private final Object object;
 
-	private Method method;
+	private final Method method;
 
-	private Object[] arguments;
+	private final Object[] arguments;
 
 	public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
 		this.object = object;
@@ -53,11 +52,6 @@ public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInv
 
 	@Override
 	public Method getMethod(){
-		return method;
-	}
-
-	@Override
-	public AccessibleObject getStaticPart(){
 		return method;
 	}
 

@@ -19,14 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.resolver;
 
+import java.lang.annotation.Annotation;
+
 /**
+ * 注解解析器抽象类
+ *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractAnnotationResolver implements AnnotationResolver {
+public abstract class AbstractAnnotationResolver<A extends Annotation> implements AnnotationResolver<A> {
 
 }

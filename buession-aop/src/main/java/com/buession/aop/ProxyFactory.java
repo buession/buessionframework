@@ -22,32 +22,14 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
-
-import com.buession.aop.MethodInvocation;
-
-import java.lang.annotation.Annotation;
+package com.buession.aop;
 
 /**
- * 注解解析器
- *
- * @param <A>
- * 		注解类型
+ * 代理工厂
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface AnnotationResolver<A extends Annotation> {
-
-	/**
-	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
-	 *
-	 * @param mi
-	 * 		the intercepted method to be invoked
-	 * @param clazz
-	 * 		the annotation class of the annotation to find
-	 *
-	 * @return 注解实例
-	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+public interface ProxyFactory {
 
 }

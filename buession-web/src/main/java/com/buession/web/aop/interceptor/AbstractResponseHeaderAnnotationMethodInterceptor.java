@@ -22,68 +22,30 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.interceptor;
+package com.buession.web.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.aop.handler.AnnotationHandler;
+import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.aop.resolver.DefaultAnnotationResolver;
-import com.buession.core.utils.Assert;
-
-import java.lang.annotation.Annotation;
-import java.util.Optional;
+import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 
 /**
- * 方法注解拦截器抽象类
+ * {@link PrimitiveCrossOrigin} 注解拦截器抽象类
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
-		implements AnnotationMethodInterceptor<A> {
+public abstract class AbstractPrimitiveCrossOriginAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<PrimitiveCrossOrigin>
+		implements PrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	private AnnotationHandler<A> handler;
-
-	private AnnotationResolver<A> resolver;
-
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
-		this(handler, new DefaultAnnotationResolver<>());
+	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler){
+		super(handler);
 	}
 
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver<A> resolver){
-		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
-		setHandler(handler);
-		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver<>()));
-	}
-
-	public AnnotationHandler<A> getHandler(){
-		return handler;
-	}
-
-	public void setHandler(AnnotationHandler<A> handler){
-		this.handler = handler;
-	}
-
-	public AnnotationResolver<A> getResolver(){
-		return resolver;
-	}
-
-	public void setResolver(AnnotationResolver<A> resolver){
-		this.resolver = resolver;
-	}
-
-	@Override
-	public boolean isSupport(MethodInvocation mi){
-		return getAnnotation(mi) != null;
-	}
-
-	protected A getAnnotation(MethodInvocation mi){
-		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked"})
-	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		getHandler().execute(mi, getAnnotation(mi));
+	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler,
+																   AnnotationResolver<PrimitiveCrossOrigin> resolver){
+		super(handler, resolver);
 	}
 
 }

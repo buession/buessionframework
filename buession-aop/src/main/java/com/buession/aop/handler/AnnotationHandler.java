@@ -19,25 +19,43 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.handler;
 
-import org.aopalliance.intercept.MethodInvocation;
+import com.buession.aop.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
+ * JSR-175 注解读取和处理接口
+ *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
  */
-public interface AnnotationHandler<A extends Annotation, R> {
+public interface AnnotationHandler<A extends Annotation> {
 
+	/**
+	 * 返回注解类
+	 *
+	 * @return 注解类
+	 */
 	Class<A> getAnnotationClass();
 
-	R execute(MethodInvocation mi, A annotation);
+	/**
+	 * 设置注解类
+	 *
+	 * @param annotationClass
+	 * 		注解类
+	 */
+	void setAnnotationClass(Class<A> annotationClass);
 
-	R execute(Object target, Method method, Object[] arguments, A annotation);
+	Object execute(MethodInvocation mi, A annotation);
+
+	Object execute(Object target, Method method, Object[] arguments, A annotation);
 
 }

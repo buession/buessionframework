@@ -26,7 +26,6 @@
  */
 package com.buession.web.servlet.filter;
 
-import com.buession.web.http.response.ServerInfoFilterInterface;
 import com.buession.web.utils.ServerUtils;
 
 import java.util.Collections;
@@ -35,7 +34,8 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class ServerInfoFilter extends ResponseHeadersFilter implements ServerInfoFilterInterface {
+public class IServerInfoFilter extends ResponseHeadersFilter implements
+		com.buession.web.http.response.IServerInfoFilter {
 
 	private String headerName = SERVER_NAME_HEADER_NAME;
 

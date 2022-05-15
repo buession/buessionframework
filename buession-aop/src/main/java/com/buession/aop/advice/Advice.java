@@ -24,13 +24,11 @@
  */
 package com.buession.aop.advice;
 
-import java.lang.reflect.Method;
-
 /**
+ * 通知/增强，通知是指拦截到Joinpoint之后所要做的事情就是通知.通知分为前置通知、后置通知,异常通知,最终通知,环绕通知
+ *
  * @author Yong.Teng
  */
-public interface Advice<R> {
-
-	R invoke(Object target, Method method, Object[] arguments) throws Throwable;
+public interface Advice {
 
 }

@@ -22,32 +22,41 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
+package com.buession.web.servlet.aop.aspect;
 
-import com.buession.aop.MethodInvocation;
-
-import java.lang.annotation.Annotation;
+import com.buession.web.aop.aspect.WebAnnotationAspect;
+import com.buession.web.servlet.aop.aspect.interceptor.ServletWebAspectAnnotationsMethodInterceptor;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * 注解解析器
- *
- * @param <A>
- * 		注解类型
- *
  * @author Yong.Teng
  */
-public interface AnnotationResolver<A extends Annotation> {
+@Aspect
+public class ServletHttpAnnotationAspect implements WebAnnotationAspect {
 
-	/**
-	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
-	 *
-	 * @param mi
-	 * 		the intercepted method to be invoked
-	 * @param clazz
-	 * 		the annotation class of the annotation to find
-	 *
-	 * @return 注解实例
-	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+	private final ServletWebAspectAnnotationsMethodInterceptor methodInterceptor = new ServletWebAspectAnnotationsMethodInterceptor();
+
+	private final static Logger logger = LoggerFactory.getLogger(ServletHttpAnnotationAspect.class);
+
+	@Pointcut(EXPRESSIONS)
+	public void anyAnnotatedMethod(){
+		logger.debug("Call ServletHttpAnnotationAspect::anyAnnotatedMethod()");
+	}
+
+	@Pointcut(EXPRESSIONS)
+	void anyAnnotatedMethodCall(JoinPoint joinPoint){
+		logger.debug("Call ServletHttpAnnotationAspect::anyAnnotatedMethodCall()");
+	}
+
+	@After("anyAnnotatedMethodCall(joinPoint)")
+	public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
+		logger.debug("Call ServletHttpAnnotationAspect::executeAnnotatedMethod()");
+		methodInterceptor.performAfterInterception(joinPoint);
+	}
 
 }

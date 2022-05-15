@@ -22,32 +22,35 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
+package com.buession.web.servlet.aop.aspect.interceptor;
 
-import com.buession.aop.MethodInvocation;
+import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ContentTypeAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.PrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ResponseHeaderAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ResponseHeadersAnnotationMethodInterceptor;
 
-import java.lang.annotation.Annotation;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 /**
- * 注解解析器
- *
- * @param <A>
- * 		注解类型
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface AnnotationResolver<A extends Annotation> {
+public class ServletHttpAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
 
-	/**
-	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
-	 *
-	 * @param mi
-	 * 		the intercepted method to be invoked
-	 * @param clazz
-	 * 		the annotation class of the annotation to find
-	 *
-	 * @return 注解实例
-	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+	public ServletHttpAspectAnnotationsMethodInterceptor(){
+		super();
+
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(4);
+
+		methodInterceptors.add(new ContentTypeAnnotationMethodInterceptor());
+		methodInterceptors.add(new PrimitiveCrossOriginAnnotationMethodInterceptor());
+		methodInterceptors.add(new ResponseHeaderAnnotationMethodInterceptor());
+		methodInterceptors.add(new ResponseHeadersAnnotationMethodInterceptor());
+
+		setMethodInterceptors(methodInterceptors);
+	}
 
 }

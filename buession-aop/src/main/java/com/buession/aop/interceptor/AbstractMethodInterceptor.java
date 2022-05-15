@@ -24,21 +24,23 @@
  */
 package com.buession.aop.interceptor;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
+import com.buession.aop.MethodInvocation;
 
 /**
+ * 方法拦截器抽象类
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractMethodInterceptor<R> implements MethodInterceptor {
+public abstract class AbstractMethodInterceptor implements MethodInterceptor {
 
 	@Override
-	@SuppressWarnings({"unchecked"})
-	public R invoke(MethodInvocation mi) throws Throwable{
+	public Object invoke(MethodInvocation mi) throws Throwable{
 		doInvoke(mi);
-		return (R) mi.proceed();
+		return mi.proceed();
 	}
 
-	protected abstract void doInvoke(MethodInvocation mi) throws Throwable;
+	protected void doInvoke(MethodInvocation mi) throws Throwable{
+		
+	}
 
 }

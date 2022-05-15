@@ -19,46 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.resolver;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.core.utils.Assert;
-import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
+ * 默认注解解析器
+ *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
  */
-public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
+public class DefaultAnnotationResolver<A extends Annotation> extends AbstractAnnotationResolver<A> {
 
 	@Override
-	public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
+	public A getAnnotation(MethodInvocation mi, Class<A> clazz){
 		Assert.isNull(mi, "method arguments cloud not be null");
 
 		Method method = mi.getMethod();
 		Assert.isNull(method, MethodInvocation.class.getName() + " parameter incorrectly constructed.getMethod() " +
 				"returned null.");
 
-		Annotation annotation = method.getAnnotation(clazz);
+		A annotation = method.getAnnotation(clazz);
 		if(annotation == null){
 			Object miThis = mi.getThis();
 			annotation = miThis != null ? miThis.getClass().getAnnotation(clazz) : null;
-		}
-
-		return annotation;
-	}
-
-	@Override
-	public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
-		Assert.isNull(method, "method arguments cloud not be null");
-
-		Annotation annotation = method.getAnnotation(clazz);
-		if(annotation == null){
-			annotation = method.getDeclaringClass().getAnnotation(clazz);
 		}
 
 		return annotation;

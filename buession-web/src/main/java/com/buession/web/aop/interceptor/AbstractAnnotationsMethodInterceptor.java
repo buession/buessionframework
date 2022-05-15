@@ -24,51 +24,25 @@
  */
 package com.buession.web.aop.interceptor;
 
-import com.buession.aop.interceptor.AbstractMethodInterceptor;
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.core.validator.Validate;
-import org.aopalliance.intercept.MethodInvocation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractAnnotationsMethodInterceptor<R> extends AbstractMethodInterceptor<R> {
+public class AbstractAnnotationsAuthorizingMethodInterceptor {
 
-	private Collection<AnnotationMethodInterceptor> methodInterceptors;
+	private Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(5);
 
-	public AbstractAnnotationsMethodInterceptor(){
-	}
-
-	public AbstractAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
+	public AbstractAnnotationsAuthorizingMethodInterceptor(){
 		this.methodInterceptors = methodInterceptors;
 	}
 
 	public Collection<AnnotationMethodInterceptor> getMethodInterceptors(){
 		return methodInterceptors;
 	}
-
-	public void setMethodInterceptors(Collection<AnnotationMethodInterceptor> methodInterceptors){
-		this.methodInterceptors = methodInterceptors;
-	}
-
-	protected Object continueInvocation(Object aopAllianceMethodInvocation) throws Throwable{
-		MethodInvocation mi = (MethodInvocation) aopAllianceMethodInvocation;
-		return mi.proceed();
-	}
-
-	@Override
-	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		Collection<AnnotationMethodInterceptor> methodInterceptors = getMethodInterceptors();
-
-		if(Validate.isNotEmpty(methodInterceptors)){
-			for(AnnotationMethodInterceptor methodInterceptor : methodInterceptors){
-				if(methodInterceptor.isSupport(mi)){
-					methodInterceptor.invoke(mi);
-				}
-			}
-		}
-	}
-
+	
 }

@@ -22,32 +22,28 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
+package com.buession.web.servlet.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
-
-import java.lang.annotation.Annotation;
+import com.buession.aop.resolver.AnnotationResolver;
+import com.buession.web.aop.interceptor.AbstractPrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.servlet.aop.handler.ServletPrimitiveCrossOriginAnnotationHandler;
 
 /**
- * 注解解析器
- *
- * @param <A>
- * 		注解类型
+ * {@link PrimitiveCrossOrigin} 注解拦截器
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface AnnotationResolver<A extends Annotation> {
+public class PrimitiveCrossOriginAnnotationMethodInterceptor
+		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	/**
-	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
-	 *
-	 * @param mi
-	 * 		the intercepted method to be invoked
-	 * @param clazz
-	 * 		the annotation class of the annotation to find
-	 *
-	 * @return 注解实例
-	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+	public PrimitiveCrossOriginAnnotationMethodInterceptor(){
+		super(new ServletPrimitiveCrossOriginAnnotationHandler());
+	}
+
+	public PrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<PrimitiveCrossOrigin> resolver){
+		super(new ServletPrimitiveCrossOriginAnnotationHandler(), resolver);
+	}
 
 }

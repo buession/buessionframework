@@ -24,15 +24,20 @@
  */
 package com.buession.aop.interceptor;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
+import com.buession.aop.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 
 /**
+ * 方法注解拦截器
+ *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
+ * @see MethodInterceptor
  */
-public interface AnnotationMethodInterceptor extends MethodInterceptor {
+public interface AnnotationMethodInterceptor<A extends Annotation> extends MethodInterceptor {
 
 	boolean isSupport(MethodInvocation mi);
 

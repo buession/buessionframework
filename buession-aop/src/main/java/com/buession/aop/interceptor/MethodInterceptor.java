@@ -25,65 +25,26 @@
 package com.buession.aop.interceptor;
 
 import com.buession.aop.MethodInvocation;
-import com.buession.aop.handler.AnnotationHandler;
-import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.aop.resolver.DefaultAnnotationResolver;
-import com.buession.core.utils.Assert;
-
-import java.lang.annotation.Annotation;
-import java.util.Optional;
 
 /**
- * 方法注解拦截器抽象类
+ * 方法拦截器，所有的通知均需要转换为 {@link MethodInterceptor} 类型的，最终多个 {@link MethodInterceptor} 组成一个方法拦截器连
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
-		implements AnnotationMethodInterceptor<A> {
+public interface MethodInterceptor extends Interceptor {
 
-	private AnnotationHandler<A> handler;
-
-	private AnnotationResolver<A> resolver;
-
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
-		this(handler, new DefaultAnnotationResolver<>());
-	}
-
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver<A> resolver){
-		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
-		setHandler(handler);
-		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver<>()));
-	}
-
-	public AnnotationHandler<A> getHandler(){
-		return handler;
-	}
-
-	public void setHandler(AnnotationHandler<A> handler){
-		this.handler = handler;
-	}
-
-	public AnnotationResolver<A> getResolver(){
-		return resolver;
-	}
-
-	public void setResolver(AnnotationResolver<A> resolver){
-		this.resolver = resolver;
-	}
-
-	@Override
-	public boolean isSupport(MethodInvocation mi){
-		return getAnnotation(mi) != null;
-	}
-
-	protected A getAnnotation(MethodInvocation mi){
-		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked"})
-	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		getHandler().execute(mi, getAnnotation(mi));
-	}
+	/**
+	 * 拦截目标方法的执行，可以在这个方法内部实现需要增强的逻辑，以及主动调用目标方法
+	 *
+	 * @param mi
+	 * 		方法调用的描述
+	 *
+	 * @return 目标方法的执行结果
+	 *
+	 * @throws Throwable
+	 * 		目标方法的执行异常时抛出
+	 */
+	Object invoke(MethodInvocation mi) throws Throwable;
 
 }

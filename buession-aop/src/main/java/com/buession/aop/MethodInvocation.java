@@ -22,32 +22,47 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
+package com.buession.aop;
 
-import com.buession.aop.MethodInvocation;
-
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
- * 注解解析器
- *
- * @param <A>
- * 		注解类型
+ * 方法调用的描述，在方法调用时提供给拦截器；方法调用是一个连接点，可以被方法拦截器拦截；可以获取调用过程中的目标方法
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface AnnotationResolver<A extends Annotation> {
+public interface MethodInvocation {
 
 	/**
-	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
+	 * 返回当前连接点静态部分的对，一般指被代理的目标对象
 	 *
-	 * @param mi
-	 * 		the intercepted method to be invoked
-	 * @param clazz
-	 * 		the annotation class of the annotation to find
-	 *
-	 * @return 注解实例
+	 * @return 当前连接点静态部分的对象，一般指被代理的目标对象
 	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+	Object getThis();
+
+	/**
+	 * 返回正在被调用的方法的 {@link Method} 对象
+	 *
+	 * @return 正在被调用的方法的 {@link Method} 对象
+	 */
+	Method getMethod();
+
+	/**
+	 * 返回调用目标方法的参数
+	 *
+	 * @return 调用目标方法的参数
+	 */
+	Object[] getArguments();
+
+	/**
+	 * 转到拦截器链中的下一个拦截器
+	 *
+	 * @return 当前拦截器的任意返回值
+	 *
+	 * @throws Throwable
+	 * 		异常
+	 */
+	Object proceed() throws Throwable;
 
 }
