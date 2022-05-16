@@ -19,10 +19,31 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.web.reactive.aop.interceptor;
+
+import com.buession.aop.resolver.AnnotationResolver;
+import com.buession.web.aop.interceptor.AbstractPrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.reactive.aop.handler.ReactivePrimitiveCrossOriginAnnotationHandler;
+
 /**
+ * {@link Cors} 注解拦截器
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-package com.buession.web.aop.advice;
+public class ReactivePrimitiveCrossOriginAnnotationMethodInterceptor
+		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
+
+	public ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(){
+		super(new ReactivePrimitiveCrossOriginAnnotationHandler());
+	}
+
+	public ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<Cors> resolver){
+		super(new ReactivePrimitiveCrossOriginAnnotationHandler(), resolver);
+	}
+
+}

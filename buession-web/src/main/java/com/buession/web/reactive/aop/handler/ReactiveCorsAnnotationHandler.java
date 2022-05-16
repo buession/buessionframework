@@ -28,7 +28,7 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.request.RequestUtils;
@@ -51,18 +51,18 @@ public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimi
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
-		doExecute(AopUtils.getServerHttp(mi), primitiveCrossOrigin);
+	public Object execute(MethodInvocation mi, Cors cors){
+		doExecute(AopUtils.getServerHttp(mi), cors);
 		return null;
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
-		doExecute(MethodUtils.createServerHttpFromArguments(arguments), primitiveCrossOrigin);
+	public Object execute(Object target, Method method, Object[] arguments, Cors cors){
+		doExecute(MethodUtils.createServerHttpFromArguments(arguments), cors);
 		return null;
 	}
 
-	private static void doExecute(final ServerHttp serverHttp, final PrimitiveCrossOrigin primitiveCrossOrigin){
+	private static void doExecute(final ServerHttp serverHttp, final Cors cors){
 		if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
 			if(serverHttp == null){
 				logger.debug("ServerHttp is null.");

@@ -27,7 +27,6 @@ package com.buession.aop.handler;
 import com.buession.aop.MethodInvocation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 /**
  * JSR-175 注解读取和处理接口
@@ -55,7 +54,5 @@ public interface AnnotationHandler<A extends Annotation> {
 	void setAnnotationClass(Class<A> annotationClass);
 
 	Object execute(MethodInvocation mi, A annotation);
-
-	Object execute(Object target, Method method, Object[] arguments, A annotation);
 
 }

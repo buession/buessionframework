@@ -28,7 +28,7 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
@@ -51,18 +51,16 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
-		doExecute(AopUtils.getHttpServlet(mi), primitiveCrossOrigin);
-		return null;
+	public Object execute(MethodInvocation mi, Cors cors){
+		return doExecute(AopUtils.getHttpServlet(mi), cors);
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
-		doExecute(MethodUtils.createHttpServletFromArguments(arguments), primitiveCrossOrigin);
-		return null;
+	public Object execute(Object target, Method method, Object[] arguments, Cors cors){
+		return doExecute(MethodUtils.createHttpServletFromArguments(arguments), cors);
 	}
 
-	private static void doExecute(final HttpServlet httpServlet, final PrimitiveCrossOrigin primitiveCrossOrigin){
+	private static Object doExecute(final HttpServlet httpServlet, final Cors cors){
 		if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
 			if(httpServlet == null){
 				logger.debug("HttpServlet is null.");
@@ -71,13 +69,13 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
 			}else if(httpServlet.getResponse() == null){
 				logger.debug("HttpServletResponse is null.");
 			}
-			return;
+			return null;
 		}
 
 		HttpServletRequest request = httpServlet.getRequest();
 		if(RequestUtils.isAjaxRequest(request) == false){
 			logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getRequestURI());
-			return;
+			return null;
 		}
 
 		String accessControlAllowOrigin = request.getHeader(HttpHeader.ORIGIN.getValue());
@@ -85,6 +83,8 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
 			httpServlet.getResponse().setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(),
 					accessControlAllowOrigin);
 		}
+
+		return null;
 	}
 
 }

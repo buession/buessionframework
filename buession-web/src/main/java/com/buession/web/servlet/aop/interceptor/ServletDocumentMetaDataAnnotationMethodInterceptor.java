@@ -19,52 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop;
+package com.buession.web.servlet.aop.interceptor;
 
-import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
-import org.springframework.core.annotation.AnnotationUtils;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import com.buession.aop.resolver.AnnotationResolver;
+import com.buession.web.aop.interceptor.AbstractContentTypeAnnotationMethodInterceptor;
+import com.buession.web.http.response.annotation.ContentType;
+import com.buession.web.servlet.aop.handler.ServletContentTypeAnnotationHandler;
 
 /**
+ * {@link ContentType} 注解拦截器
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class AopUtils {
+public class ServletContentTypeAnnotationMethodInterceptor extends AbstractContentTypeAnnotationMethodInterceptor {
 
-	public static boolean hasClassAnnotationPresent(final Class<?> clazz,
-													final Class<? extends Annotation>[] annotations){
-		Assert.isNull(clazz, "Find annotation class cloud not be null.");
-
-		if(Validate.isNotEmpty(annotations)){
-			for(Class<? extends Annotation> annotationClazz : annotations){
-				Annotation annotation = AnnotationUtils.findAnnotation(clazz, annotationClazz);
-				if(annotation != null){
-					return true;
-				}
-			}
-		}
-
-		return false;
+	public ServletContentTypeAnnotationMethodInterceptor(){
+		super(new ServletContentTypeAnnotationHandler());
 	}
 
-	public static boolean hasMethodAnnotationPresent(Method method, final Class<? extends Annotation>[] annotations){
-		Assert.isNull(method, "Find annotation method cloud not be null.");
-
-		if(Validate.isNotEmpty(annotations)){
-			for(Class<? extends Annotation> annotationClazz : annotations){
-				Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClazz);
-				if(annotation != null){
-					return true;
-				}
-			}
-		}
-
-		return false;
+	public ServletContentTypeAnnotationMethodInterceptor(AnnotationResolver<ContentType> resolver){
+		super(new ServletContentTypeAnnotationHandler(), resolver);
 	}
 
 }

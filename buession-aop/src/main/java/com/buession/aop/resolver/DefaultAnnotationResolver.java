@@ -45,7 +45,7 @@ public class DefaultAnnotationResolver<A extends Annotation> extends AbstractAnn
 		Assert.isNull(mi, "method arguments cloud not be null");
 
 		Method method = mi.getMethod();
-		Assert.isNull(method, MethodInvocation.class.getName() + " parameter incorrectly constructed.getMethod() " +
+		Assert.isNull(method, mi.getClass().getName() + " parameter incorrectly constructed.getMethod() " +
 				"returned null.");
 
 		A annotation = method.getAnnotation(clazz);

@@ -26,24 +26,24 @@ package com.buession.web.reactive.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractPrimitiveCrossOriginAnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
-import com.buession.web.reactive.aop.handler.ReactivePrimitiveCrossOriginAnnotationHandler;
+import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.reactive.aop.handler.ReactiveCorsAnnotationHandler;
 
 /**
- * {@link PrimitiveCrossOrigin} 注解拦截器
+ * {@link Cors} 注解拦截器
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ReactivePrimitiveCrossOriginAnnotationMethodInterceptor
+public class ReactiveCorsAnnotationMethodInterceptor
 		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	public ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(){
-		super(new ReactivePrimitiveCrossOriginAnnotationHandler());
+	public ReactiveCorsAnnotationMethodInterceptor(){
+		super(new ReactiveCorsAnnotationHandler());
 	}
 
-	public ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationResolver<PrimitiveCrossOrigin> resolver){
-		super(new ReactivePrimitiveCrossOriginAnnotationHandler(), resolver);
+	public ReactiveCorsAnnotationMethodInterceptor(AnnotationResolver<Cors> resolver){
+		super(new ReactiveCorsAnnotationHandler(), resolver);
 	}
 
 }
