@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response.annotation;
 
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -40,14 +39,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @ResponseHeader(name = "Expires")
-@Mapping
 public @interface HttpCache {
 
 	/**
 	 * Alias for {@link ResponseHeader#value()}.
 	 *
-	 * @return 缓存过期时间
+	 * @return 缓存值
 	 */
-	@AliasFor(annotation = ResponseHeader.class) String value() default "";
+	@AliasFor(annotation = ResponseHeader.class)
+	String[] value() default {};
 
 }

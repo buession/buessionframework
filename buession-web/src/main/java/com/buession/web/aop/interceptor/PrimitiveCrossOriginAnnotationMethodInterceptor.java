@@ -25,12 +25,12 @@
 package com.buession.web.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.Cors;
 
 /**
  * @author Yong.Teng
  */
 public interface PrimitiveCrossOriginAnnotationMethodInterceptor extends
-		AnnotationMethodInterceptor<PrimitiveCrossOrigin> {
+		AnnotationMethodInterceptor<Cors> {
 
 }

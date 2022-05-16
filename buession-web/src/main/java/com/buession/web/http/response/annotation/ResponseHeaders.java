@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response.annotation;
@@ -35,6 +35,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Http 响应头注解，用于设置多个 HTTP 响应头，
+ * 有关 HTTP 响应头详细介绍可查看 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers</a>
+ *
  * @author Yong.Teng
  */
 @Target({ElementType.TYPE, ElementType.METHOD})

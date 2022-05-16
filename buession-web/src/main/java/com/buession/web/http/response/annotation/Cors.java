@@ -24,6 +24,8 @@
  */
 package com.buession.web.http.response.annotation;
 
+import com.buession.web.http.HttpMethod;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
@@ -33,15 +35,67 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Http 响应头 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Type" target="_blank">Content-Type</a> 注解
+ * Http <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS" target="_blank">跨源资源共享（CORS）</a> 注解
  *
  * @author Yong.Teng
- * @see
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Mapping
-public @interface PrimitiveCrossOrigin {
+public @interface Cors {
+
+	/**
+	 * 允许请求的域，如果值为 '$http_origin' 则设置为请求头 {@link com.buession.web.http.HttpHeader#ORIGIN} 的值，
+	 * {@link #origins} 的别名
+	 *
+	 * @return 允许请求的域
+	 */
+	@AliasFor("origins")
+	String[] value() default {};
+
+	/**
+	 * 允许请求的域，如果值为 '$http_origin' 则设置为请求头 {@link com.buession.web.http.HttpHeader#ORIGIN} 的值，
+	 * {@link #value} 的别名
+	 *
+	 * @return 允许请求的域
+	 */
+	@AliasFor("value")
+	String[] origins() default {};
+
+	/**
+	 * 允许请求的方法
+	 *
+	 * @return 请求的方法
+	 */
+	HttpMethod[] allowedMethods() default {};
+
+	/**
+	 * 实际请求中允许携带的首部字段
+	 *
+	 * @return 实际请求中允许携带的首部字段
+	 */
+	String[] allowedHeaders() default {};
+
+	/**
+	 * 允许浏览器访问的头
+	 *
+	 * @return 允许浏览器访问的头
+	 */
+	String[] exposedHeaders() default {};
+
+	/**
+	 * 当浏览器的 credentials 设置为 true 时是否允许浏览器读取 response 的内容
+	 *
+	 * @return 当浏览器的 credentials 设置为 true 时是否允许浏览器读取 response 的内容
+	 */
+	char allowCredentials() default '\0';
+
+	/**
+	 * 指定了 preflight 请求的结果能够被缓存时间（单位：秒）
+	 *
+	 * @return preflight 请求的结果能够被缓存时间
+	 */
+	long maxAge() default -1;
 
 }

@@ -32,37 +32,28 @@ import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.request.RequestUtils;
-import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
  */
-public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
+public class ReactiveCorsAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
 
-	private final static Logger logger = LoggerFactory.getLogger(ReactivePrimitiveCrossOriginAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReactiveCorsAnnotationHandler.class);
 
-	public ReactivePrimitiveCrossOriginAnnotationHandler(){
+	public ReactiveCorsAnnotationHandler(){
 		super();
 	}
 
 	@Override
 	public Object execute(MethodInvocation mi, Cors cors){
-		doExecute(AopUtils.getServerHttp(mi), cors);
-		return null;
-	}
-
-	@Override
-	public Object execute(Object target, Method method, Object[] arguments, Cors cors){
-		doExecute(MethodUtils.createServerHttpFromArguments(arguments), cors);
-		return null;
-	}
-
-	private static void doExecute(final ServerHttp serverHttp, final Cors cors){
+		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 		if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
 			if(serverHttp == null){
 				logger.debug("ServerHttp is null.");
@@ -71,20 +62,55 @@ public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimi
 			}else if(serverHttp.getResponse() == null){
 				logger.debug("ServerHttpResponse is null.");
 			}
-			return;
+			return null;
 		}
 
 		ServerHttpRequest request = serverHttp.getRequest();
 
 		if(RequestUtils.isAjaxRequest(request) == false){
 			logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getURI());
-			return;
+			return null;
 		}
 
-		String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
-		if(Validate.hasText(accessControlAllowOrigin)){
-			serverHttp.getResponse().getHeaders().setAccessControlAllowOrigin(accessControlAllowOrigin);
+		HttpHeaders httpHeaders = serverHttp.getResponse().getHeaders();
+
+		if(Validate.isNotEmpty(cors.origins())){
+			for(String origin : cors.origins()){
+				if(isDynamicOrigin(origin)){
+					String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
+
+					if(Validate.hasText(accessControlAllowOrigin)){
+						httpHeaders.setAccessControlAllowOrigin(origin);
+					}
+				}else{
+					httpHeaders.setAccessControlAllowOrigin(origin);
+				}
+			}
 		}
+
+		if(Validate.isNotEmpty(cors.allowedMethods())){
+			httpHeaders.set(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(),
+					StringUtils.collectionToCommaDelimitedString(Arrays.asList(cors.allowedMethods())));
+		}
+
+		if(Validate.isNotEmpty(cors.allowedHeaders())){
+			httpHeaders.setAccessControlAllowHeaders(Arrays.asList(cors.allowedHeaders()));
+		}
+
+		if(Validate.isNotEmpty(cors.exposedHeaders())){
+			httpHeaders.setAccessControlExposeHeaders(Arrays.asList(cors.exposedHeaders()));
+		}
+
+		Boolean allowCredentials = allowCredentials(cors);
+		if(allowCredentials != null){
+			httpHeaders.setAccessControlAllowCredentials(allowCredentials);
+		}
+
+		if(cors.maxAge() > -1){
+			httpHeaders.setAccessControlMaxAge(cors.maxAge());
+		}
+
+		return null;
 	}
 
 }

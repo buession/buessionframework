@@ -19,22 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop;
+package com.buession.web.utils;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
+ * 注解工具类
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class AopUtils {
+public class AnnotationUtils extends org.springframework.core.annotation.AnnotationUtils {
 
 	/**
 	 * 检测一个类是否含有 annotations 中的任意一个注解
@@ -52,7 +54,7 @@ public class AopUtils {
 
 		if(Validate.isNotEmpty(annotations)){
 			for(Class<? extends Annotation> annotationClazz : annotations){
-				Annotation annotation = AnnotationUtils.findAnnotation(clazz, annotationClazz);
+				Annotation annotation = findAnnotation(clazz, annotationClazz);
 				if(annotation != null){
 					return true;
 				}
@@ -63,21 +65,21 @@ public class AopUtils {
 	}
 
 	/**
-	 * 检测一个类是否含有 annotations 中的任意一个注解
+	 * 检测一个方法是否含有 annotations 中的任意一个注解
 	 *
-	 * @param clazz
-	 * 		待验证的类
+	 * @param method
+	 * 		待验证的方法
 	 * @param annotations
 	 * 		检测是否含有的注解
 	 *
-	 * @return 类包含有 annotations 中的任意一个注解返回 true；否则返回 false
+	 * @return 方法包含有 annotations 中的任意一个注解返回 true；否则返回 false
 	 */
 	public static boolean hasMethodAnnotationPresent(Method method, final Class<? extends Annotation>[] annotations){
 		Assert.isNull(method, "Find annotation method cloud not be null.");
 
 		if(Validate.isNotEmpty(annotations)){
 			for(Class<? extends Annotation> annotationClazz : annotations){
-				Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClazz);
+				Annotation annotation = findAnnotation(method, annotationClazz);
 				if(annotation != null){
 					return true;
 				}

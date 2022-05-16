@@ -24,11 +24,11 @@
  */
 package com.buession.web.aop.handler;
 
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.Cors;
 
 /**
  * @author Yong.Teng
  */
-public interface PrimitiveCrossOriginAnnotationHandler extends WebAnnotationHandler<PrimitiveCrossOrigin> {
+public interface PrimitiveCrossOriginAnnotationHandler extends WebAnnotationHandler<Cors> {
 
 }

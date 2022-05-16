@@ -31,14 +31,12 @@ import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -53,20 +51,10 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 
 	@Override
 	public Object execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-		doExecute(AopUtils.getHttpServlet(mi), responseHeaders);
-		return null;
-	}
-
-	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
-		doExecute(MethodUtils.createHttpServletFromArguments(arguments), responseHeaders);
-		return null;
-	}
-
-	private static void doExecute(final HttpServlet httpServlet, final ResponseHeaders responseHeaders){
+		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 		if(httpServlet == null || httpServlet.getResponse() == null){
 			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
-			return;
+			return null;
 		}
 
 		ResponseHeader[] headers = responseHeaders.value();
@@ -74,17 +62,23 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 		if(Validate.isNotEmpty(headers)){
 			HttpServletResponse response = httpServlet.getResponse();
 			for(ResponseHeader header : headers){
-				if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name())){
-					if(Validate.isNumeric(header.value())){
-						ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+				final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name());
+
+				for(String value : header.value()){
+					if(isExpires){
+						if(Validate.isNumeric(value)){
+							ResponseUtils.httpCache(response, Integer.parseInt(value));
+						}else{
+							ResponseUtils.httpCache(response, value);
+						}
 					}else{
-						ResponseUtils.httpCache(response, header.value());
+						response.setHeader(header.name(), value);
 					}
-				}else{
-					response.setHeader(header.name(), header.value());
 				}
 			}
 		}
+
+		return null;
 	}
 
 }

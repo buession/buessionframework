@@ -27,24 +27,24 @@ package com.buession.web.aop.interceptor;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.Cors;
 
 /**
- * {@link PrimitiveCrossOrigin} 注解拦截器抽象类
+ * {@link Cors} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public abstract class AbstractPrimitiveCrossOriginAnnotationMethodInterceptor
-		extends AbstractAnnotationMethodInterceptor<PrimitiveCrossOrigin>
+		extends AbstractAnnotationMethodInterceptor<Cors>
 		implements PrimitiveCrossOriginAnnotationMethodInterceptor {
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler){
+	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<Cors> handler){
 		super(handler);
 	}
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<PrimitiveCrossOrigin> handler,
-																   AnnotationResolver<PrimitiveCrossOrigin> resolver){
+	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<Cors> handler,
+																   AnnotationResolver<Cors> resolver){
 		super(handler, resolver);
 	}
 

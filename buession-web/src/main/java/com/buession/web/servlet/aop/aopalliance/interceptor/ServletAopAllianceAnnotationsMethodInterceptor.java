@@ -24,7 +24,18 @@
  */
 package com.buession.web.servlet.aop.aopalliance.interceptor;
 
+import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.aop.resolver.SpringAnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractAopAllianceAnnotationsMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletCorsAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 /**
  * @author Yong.Teng
@@ -34,6 +45,19 @@ public class ServletAopAllianceAnnotationsMethodInterceptor extends AbstractAopA
 
 	public ServletAopAllianceAnnotationsMethodInterceptor(){
 		super();
+
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(4);
+
+		methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(
+				new ServletCorsAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(
+				new ServletDocumentMetaDataAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(
+				new ServletResponseHeadersAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+
+		setMethodInterceptors(methodInterceptors);
 	}
 
 }

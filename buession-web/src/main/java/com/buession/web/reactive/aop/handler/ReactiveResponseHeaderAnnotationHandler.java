@@ -32,12 +32,9 @@ import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
-import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-
-import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -52,30 +49,25 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 
 	@Override
 	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
-		return doExecute(AopUtils.getServerHttp(mi), responseHeader);
-	}
-
-	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
-		return doExecute(MethodUtils.createServerHttpFromArguments(arguments), responseHeader);
-	}
-
-	private static Object doExecute(final ServerHttp serverHttp, final ResponseHeader responseHeader){
+		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
 			return null;
 		}
 
 		ServerHttpResponse response = serverHttp.getResponse();
+		final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name());
 
-		if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name())){
-			if(Validate.isNumeric(responseHeader.value())){
-				ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+		for(String value : responseHeader.value()){
+			if(isExpires){
+				if(Validate.isNumeric(value)){
+					ResponseUtils.httpCache(response, Integer.parseInt(value));
+				}else{
+					ResponseUtils.httpCache(response, value);
+				}
 			}else{
-				ResponseUtils.httpCache(response, responseHeader.value());
+				response.getHeaders().set(responseHeader.name(), value);
 			}
-		}else{
-			response.getHeaders().set(responseHeader.name(), responseHeader.value());
 		}
 
 		return null;

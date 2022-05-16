@@ -25,25 +25,25 @@
 package com.buession.web.reactive.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.aop.interceptor.AbstractPrimitiveCrossOriginAnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.Cors;
-import com.buession.web.reactive.aop.handler.ReactiveCorsAnnotationHandler;
+import com.buession.web.aop.interceptor.AbstractDocumentMetaDataAnnotationMethodInterceptor;
+import com.buession.web.mvc.view.document.DocumentMetaData;
+import com.buession.web.reactive.aop.handler.ReactiveDocumentMetaDataAnnotationHandler;
 
 /**
- * {@link Cors} 注解拦截器
+ * {@link DocumentMetaData} 注解拦截器
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ReactiveCorsAnnotationMethodInterceptor
-		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
+public class ReactiveDocumentMetaDataAnnotationMethodInterceptor
+		extends AbstractDocumentMetaDataAnnotationMethodInterceptor {
 
-	public ReactiveCorsAnnotationMethodInterceptor(){
-		super(new ReactiveCorsAnnotationHandler());
+	public ReactiveDocumentMetaDataAnnotationMethodInterceptor(){
+		super(new ReactiveDocumentMetaDataAnnotationHandler());
 	}
 
-	public ReactiveCorsAnnotationMethodInterceptor(AnnotationResolver<Cors> resolver){
-		super(new ReactiveCorsAnnotationHandler(), resolver);
+	public ReactiveDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver<DocumentMetaData> resolver){
+		super(new ReactiveDocumentMetaDataAnnotationHandler(), resolver);
 	}
 
 }

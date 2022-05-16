@@ -98,8 +98,8 @@ public enum HttpHeader {
 	ACCESS_CONTROL_ALLOW_METHODS("Access-Control-Allow-Methods"),
 
 	/**
-	 * 详细说明：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials"
-	 * target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials</a>
+	 * 详细说明：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Origin"
+	 * target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Origin</a>
 	 */
 	ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
 

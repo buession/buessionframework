@@ -40,4 +40,21 @@ public class UUIDTest {
 		System.out.println(UUID.nameUUIDFromBytes("ABC".getBytes()).toString());
 	}
 
+	@Test
+	public void test(){
+		int months = (2035 - 2022) * 12 + 5;
+		int result = months * 1750;
+		int lixi = 0;
+		int a = 1157;
+
+		for(int j = months; j >= 0; j--){
+			lixi += a;
+			a = a - 7;
+		}
+
+		result += lixi;
+
+		System.out.println("还款月份：" + months + " 个月, 还款金额：" + result + "元");
+	}
+
 }

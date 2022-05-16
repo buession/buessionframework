@@ -19,12 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response.annotation;
-
-import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,14 +31,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 禁用 HTTP 缓存注解，参考：
+ * <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control" target="_blank">Cache-Control</a>、
+ * <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Pragma" target="_blank">Pragma</a>、
+ * <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Expires" target="_blank">Expires</a>
+ *
  * @author Yong.Teng
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ResponseHeaders({@ResponseHeader(name = "Cache-Control", value = "no-cache"),
-		@ResponseHeader(name = "Pragma", value = "no-cache"), @ResponseHeader(name = "Expires", value = "0")})
-@Mapping
+@ResponseHeaders({
+		@ResponseHeader(name = "Cache-Control", value = "no-cache"),
+		@ResponseHeader(name = "Pragma", value = "no-cache"),
+		@ResponseHeader(name = "Expires", value = "0")
+})
 public @interface DisableHttpCache {
 
 }

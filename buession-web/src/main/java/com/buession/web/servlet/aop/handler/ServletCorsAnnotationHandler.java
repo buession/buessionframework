@@ -28,39 +28,31 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
+import com.buession.web.http.HttpMethod;
 import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
-public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
+public class ServletCorsAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
 
-	private final static Logger logger = LoggerFactory.getLogger(ServletPrimitiveCrossOriginAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletCorsAnnotationHandler.class);
 
-	public ServletPrimitiveCrossOriginAnnotationHandler(){
+	public ServletCorsAnnotationHandler(){
 		super();
 	}
 
 	@Override
 	public Object execute(MethodInvocation mi, Cors cors){
-		return doExecute(AopUtils.getHttpServlet(mi), cors);
-	}
-
-	@Override
-	public Object execute(Object target, Method method, Object[] arguments, Cors cors){
-		return doExecute(MethodUtils.createHttpServletFromArguments(arguments), cors);
-	}
-
-	private static Object doExecute(final HttpServlet httpServlet, final Cors cors){
+		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 		if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
 			if(httpServlet == null){
 				logger.debug("HttpServlet is null.");
@@ -78,10 +70,48 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
 			return null;
 		}
 
-		String accessControlAllowOrigin = request.getHeader(HttpHeader.ORIGIN.getValue());
-		if(Validate.hasText(accessControlAllowOrigin)){
-			httpServlet.getResponse().setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(),
-					accessControlAllowOrigin);
+		HttpServletResponse response = httpServlet.getResponse();
+
+		if(Validate.isNotEmpty(cors.origins())){
+			for(String origin : cors.origins()){
+				if(isDynamicOrigin(origin)){
+					String accessControlAllowOrigin = request.getHeader(HttpHeader.ORIGIN.getValue());
+
+					if(Validate.hasText(accessControlAllowOrigin)){
+						response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), origin);
+					}
+				}else{
+					response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), origin);
+				}
+			}
+		}
+
+		if(Validate.isNotEmpty(cors.allowedMethods())){
+			for(HttpMethod method : cors.allowedMethods()){
+				response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(), method.name());
+			}
+		}
+
+		if(Validate.isNotEmpty(cors.allowedHeaders())){
+			for(String allowedHeader : cors.allowedHeaders()){
+				response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_HEADERS.getValue(), allowedHeader);
+			}
+		}
+
+		if(Validate.isNotEmpty(cors.exposedHeaders())){
+			for(String exposedHeader : cors.exposedHeaders()){
+				response.setHeader(HttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS.getValue(), exposedHeader);
+			}
+		}
+
+		Boolean allowCredentials = allowCredentials(cors);
+		if(allowCredentials != null){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS.getValue(),
+					Boolean.toString(allowCredentials));
+		}
+
+		if(cors.maxAge() > -1){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_MAX_AGE.getValue(), Long.toString(cors.maxAge()));
 		}
 
 		return null;

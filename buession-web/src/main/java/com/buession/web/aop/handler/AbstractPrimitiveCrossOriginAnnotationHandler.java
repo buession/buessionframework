@@ -25,16 +25,30 @@
 package com.buession.web.aop.handler;
 
 import com.buession.aop.handler.AbstractAnnotationHandler;
-import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.Cors;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractPrimitiveCrossOriginAnnotationHandler
-		extends AbstractAnnotationHandler<PrimitiveCrossOrigin> implements PrimitiveCrossOriginAnnotationHandler {
+		extends AbstractAnnotationHandler<Cors> implements PrimitiveCrossOriginAnnotationHandler {
 
 	public AbstractPrimitiveCrossOriginAnnotationHandler(){
-		super(PrimitiveCrossOrigin.class);
+		super(Cors.class);
+	}
+
+	protected static boolean isDynamicOrigin(final String origin){
+		return "$http_origin".equalsIgnoreCase(origin);
+	}
+
+	protected static Boolean allowCredentials(final Cors cors){
+		if('1' == cors.allowCredentials()){
+			return true;
+		}else if('0' == cors.allowCredentials()){
+			return false;
+		}else{
+			return null;
+		}
 	}
 
 }

@@ -51,7 +51,7 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 			return null;
 		}
 
-		MetaData metaData = new MetaData();
+		final MetaData metaData = new MetaData();
 
 		metaData.setTitle(documentMetaData.title());
 		metaData.setAuthor(documentMetaData.author());

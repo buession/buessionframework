@@ -25,24 +25,25 @@
 package com.buession.web.servlet.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.aop.interceptor.AbstractContentTypeAnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.ContentType;
-import com.buession.web.servlet.aop.handler.ServletContentTypeAnnotationHandler;
+import com.buession.web.aop.interceptor.AbstractDocumentMetaDataAnnotationMethodInterceptor;
+import com.buession.web.mvc.view.document.DocumentMetaData;
+import com.buession.web.servlet.aop.handler.ServletDocumentMetaDataAnnotationHandler;
 
 /**
- * {@link ContentType} 注解拦截器
+ * {@link DocumentMetaData} 注解拦截器
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletContentTypeAnnotationMethodInterceptor extends AbstractContentTypeAnnotationMethodInterceptor {
+public class ServletDocumentMetaDataAnnotationMethodInterceptor
+		extends AbstractDocumentMetaDataAnnotationMethodInterceptor {
 
-	public ServletContentTypeAnnotationMethodInterceptor(){
-		super(new ServletContentTypeAnnotationHandler());
+	public ServletDocumentMetaDataAnnotationMethodInterceptor(){
+		super(new ServletDocumentMetaDataAnnotationHandler());
 	}
 
-	public ServletContentTypeAnnotationMethodInterceptor(AnnotationResolver<ContentType> resolver){
-		super(new ServletContentTypeAnnotationHandler(), resolver);
+	public ServletDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver<DocumentMetaData> resolver){
+		super(new ServletDocumentMetaDataAnnotationHandler(), resolver);
 	}
 
 }

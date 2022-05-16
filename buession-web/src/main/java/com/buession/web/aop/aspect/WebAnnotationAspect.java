@@ -31,12 +31,12 @@ import org.aspectj.lang.JoinPoint;
  */
 public interface WebAnnotationAspect {
 
-	String EXPRESSIONS = "execution(@com.buession.web.http.response.ContentType * *(..)) || "
-			+ "execution(@com.buession.web.http.response.DisableHttpCache * *(..)) || "
-			+ "execution(@com.buession.web.http.response.EnableHttpCache * *(..)) || "
-			+ "execution(@com.buession.web.http.response.PrimitiveCrossOrigin * *(..)) || "
-			+ "execution(@com.buession.web.http.response.ResponseHeader * *(..)) || "
-			+ "execution(@com.buession.web.http.response.ResponseHeaders * *(..)) || "
+	String EXPRESSIONS = "execution(@com.buession.web.http.response.annotation.ContentType * *(..)) || "
+			+ "execution(@com.buession.web.http.response.annotation.DisableHttpCache * *(..)) || "
+			+ "execution(@com.buession.web.http.response.annotation.EnableHttpCache * *(..)) || "
+			+ "execution(@com.buession.web.http.response.annotation.PrimitiveCrossOrigin * *(..)) || "
+			+ "execution(@com.buession.web.http.response.annotation.ResponseHeader * *(..)) || "
+			+ "execution(@com.buession.web.http.response.annotation.ResponseHeaders * *(..)) || "
 			+ "execution(@com.buession.web.mvc.view.document.DocumentMetaData * *(..))";
 
 	void anyAnnotatedMethod();

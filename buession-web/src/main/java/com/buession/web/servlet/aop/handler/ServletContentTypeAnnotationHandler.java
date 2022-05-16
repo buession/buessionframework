@@ -30,12 +30,9 @@ import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -50,20 +47,10 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 
 	@Override
 	public Object execute(MethodInvocation mi, ContentType contentType){
-		doExecute(AopUtils.getHttpServlet(mi), contentType);
-		return null;
-	}
-
-	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
-		doExecute(MethodUtils.createHttpServletFromArguments(arguments), contentType);
-		return null;
-	}
-
-	private static void doExecute(final HttpServlet httpServlet, final ContentType contentType){
+		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 		if(httpServlet == null || httpServlet.getResponse() == null){
 			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
-			return;
+			return null;
 		}
 
 		StringBuilder sb = new StringBuilder(contentType.mime().length() + 24);
@@ -75,6 +62,7 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 		}
 
 		httpServlet.getResponse().addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
+		return null;
 	}
 
 }
