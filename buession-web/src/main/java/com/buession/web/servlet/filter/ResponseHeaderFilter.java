@@ -21,40 +21,47 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web;
+package com.buession.web.servlet.filter;
 
-import org.junit.Test;
+import com.buession.core.validator.Validate;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.util.UUID;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 /**
+ * 响应头过滤器，批量设置响应头
+ *
  * @author Yong.Teng
  */
-public class UUIDTest {
+public class ResponseHeadersFilter extends OncePerRequestFilter {
 
-	@Test
-	public void uuid(){
-		System.out.println(UUID.nameUUIDFromBytes("ABC".getBytes()).toString());
+	private Map<String, String> headers;
+
+	public Map<String, String> getHeaders(){
+		return headers;
 	}
 
-	@Test
-	public void test(){
-		int months = (2035 - 2022) * 12 + 5;
-		int result = months * 1750;
-		int lixi = 0;
-		int a = 1157;
+	public void setHeaders(Map<String, String> headers){
+		this.headers = headers;
+	}
 
-		for(int j = months; j >= 0; j--){
-			lixi += a;
-			a = a - 7;
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException{
+		Map<String, String> headers = getHeaders();
+		if(Validate.isNotEmpty(headers)){
+			headers.forEach(response::addHeader);
 		}
 
-		result += lixi;
-
-		System.out.println("还款月份：" + months + " 个月, 还款金额：" + result + "元");
+		filterChain.doFilter(request, response);
 	}
 
 }

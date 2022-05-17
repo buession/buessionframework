@@ -55,7 +55,7 @@ import java.util.function.Function;
 /**
  * @author Yong.Teng
  */
-public abstract class RedisAccessor {
+public abstract class RedisAccessor implements AutoCloseable {
 
 	protected final static Options DEFAULT_OPTIONS = new Options();
 
@@ -201,6 +201,11 @@ public abstract class RedisAccessor {
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
+	}
+
+	@Override
+	public void close() throws Exception{
+		
 	}
 
 	protected RedisConnection fetchConnection(){
