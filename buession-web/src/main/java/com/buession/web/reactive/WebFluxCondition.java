@@ -22,31 +22,22 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.json.annotation;
+package com.buession.web.servlet;
 
-import com.buession.json.deserializer.DateDeserializers;
-import com.buession.json.serializer.DateSerializers;
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.ClassUtils;
 
 /**
- * {@link java.util.Date} 和 Unix 时间戳序列化、反序列化；
- * 通过该注解，可以将 {@link java.util.Date} 序列化为 Unix 时间戳；
- * 将 Unix 时间戳反序列化为 {@link java.util.Date}
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-@JacksonAnnotationsInside
-@JsonSerialize(using = DateSerializers.DateUnixTimestampSerializer.class)
-@JsonDeserialize(using = DateDeserializers.DateUnixTimestampDeserializer.class)
-public @interface DateUnixTimestamp {
+public class ServletCondition implements Condition {
 
+	@Override
+	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata){
+		return ClassUtils.isPresent("javax.servlet.Servlet", context.getClassLoader());
+	}
+	
 }

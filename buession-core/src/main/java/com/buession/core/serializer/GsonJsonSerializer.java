@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -32,6 +32,8 @@ import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 
 /**
+ * Gson JSON 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class GsonJsonSerializer extends AbstractJsonSerializer {
@@ -65,7 +67,9 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 	@Override
 	public <V> V deserialize(final String str) throws SerializerException{
 		Gson gson = new Gson();
-		return (V) gson.fromJson(str, LinkedHashMap.class);
+		return gson.fromJson(str, new TypeReference<V>() {
+
+		}.getType());
 	}
 
 	@Override

@@ -27,6 +27,8 @@ package com.buession.core.serializer;
 import java.nio.charset.Charset;
 
 /**
+ * byte 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public interface ByteArraySerializer extends Serializer {

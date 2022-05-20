@@ -21,19 +21,19 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
-
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * 类方法工具类 More {@link org.apache.commons.lang3.reflect.MethodUtils}
+ * 类方法工具类
  *
  * @author Yong.Teng
+ * @see org.apache.commons.lang3.reflect.MethodUtils
  */
 public class MethodUtils extends org.apache.commons.lang3.reflect.MethodUtils {
 
@@ -59,7 +59,9 @@ public class MethodUtils extends org.apache.commons.lang3.reflect.MethodUtils {
 	public static void setAccessible(Method method){
 		Assert.isNull(method, "The method cloud not be null.");
 
-		if((Modifier.isPublic(method.getModifiers()) == false || Modifier.isPublic(method.getDeclaringClass().getModifiers()) == false || Modifier.isFinal(method.getModifiers())) && method.isAccessible() == false){
+		if((Modifier.isPublic(method.getModifiers()) == false ||
+				Modifier.isPublic(method.getDeclaringClass().getModifiers()) == false ||
+				Modifier.isFinal(method.getModifiers())) && method.isAccessible() == false){
 			method.setAccessible(true);
 		}
 	}

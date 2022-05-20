@@ -2938,8 +2938,9 @@ public interface HttpClient {
 	 * 		请求参数
 	 *
 	 * @return Response {@link Response}
-	 * c
 	 *
+	 * @throws IOException
+	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */

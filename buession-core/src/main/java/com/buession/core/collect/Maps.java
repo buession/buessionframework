@@ -127,11 +127,11 @@ public class Maps {
 	 * @param map
 	 * 		需要转换的 Map
 	 * @param <K>
-	 * 		Key
+	 * 		Key 类型
 	 * @param <V>
-	 * 		Value
+	 * 		Value 类型
 	 *
-	 * @return 转换结果
+	 * @return 当 map 为 null 时，返回 null；否则返回 V 类型的 {@link List}
 	 */
 	public static <K, V> List<V> toList(final Map<K, V> map){
 		return map == null ? null : new ArrayList<>(map.values());
@@ -143,11 +143,11 @@ public class Maps {
 	 * @param map
 	 * 		需要转换的 Map
 	 * @param <K>
-	 * 		Key
+	 * 		Key 类型
 	 * @param <V>
-	 * 		Value
+	 * 		Value 类型
 	 *
-	 * @return 转换结果
+	 * @return 当 map 为 null 时，返回 null；否则返回 V 类型的 {@link Set}
 	 */
 	public static <K, V> Set<V> toSet(final Map<K, V> map){
 		if(map == null){

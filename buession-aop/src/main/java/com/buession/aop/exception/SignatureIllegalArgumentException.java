@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.exception;
@@ -31,23 +31,27 @@ import org.aspectj.lang.Signature;
  */
 public class SignatureIllegalArgumentException extends IllegalArgumentException {
 
-    private Signature signature;
+	private final static long serialVersionUID = 6148632731869242050L;
 
-    public SignatureIllegalArgumentException(Signature signature){
-        this(signature, "The join point signature is invalid: expected a MethodSignature or an AdviceSignature but "
-                + "was ");
-    }
+	private final Signature signature;
 
-    public SignatureIllegalArgumentException(Signature signature, String message){
-        super(message + signature);
-    }
+	public SignatureIllegalArgumentException(Signature signature){
+		this(signature,
+				"The join point signature is invalid: expected a MethodSignature or an AdviceSignature but was ");
+	}
 
-    public SignatureIllegalArgumentException(Signature signature, String message, Throwable cause){
-        super(message + signature, cause);
-    }
+	public SignatureIllegalArgumentException(Signature signature, String message){
+		super(message + signature);
+		this.signature = signature;
+	}
 
-    public Signature getSignature(){
-        return signature;
-    }
+	public SignatureIllegalArgumentException(Signature signature, String message, Throwable cause){
+		super(message + signature, cause);
+		this.signature = signature;
+	}
+
+	public Signature getSignature(){
+		return signature;
+	}
 
 }

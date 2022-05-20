@@ -29,16 +29,37 @@ import com.buession.aop.MethodInvocation;
 import java.lang.reflect.Method;
 
 /**
+ * 方法调用的描述，在方法调用时提供给拦截器适配器抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInvocation {
 
+	/**
+	 * 当前连接点静态部分的对象，一般指被代理的目标对象
+	 */
 	private final Object object;
 
+	/**
+	 * 正在被调用的方法的 {@link Method} 对象
+	 */
 	private final Method method;
 
+	/**
+	 * 调用目标方法的参数
+	 */
 	private final Object[] arguments;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param object
+	 * 		当前连接点静态部分的对象，一般指被代理的目标对象
+	 * @param method
+	 * 		正在被调用的方法的 {@link Method} 对象
+	 * @param arguments
+	 * 		调用目标方法的参数
+	 */
 	public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
 		this.object = object;
 		this.method = method;

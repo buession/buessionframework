@@ -19,34 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
 /**
+ * 序列化和反序列化异常
+ *
  * @author Yong.Teng
  */
 public class SerializerException extends Exception {
 
-    public SerializerException(){
-        super();
-    }
+	private static final long serialVersionUID = -2972164960660225243L;
 
-    public SerializerException(String message){
-        super(message);
-    }
+	public SerializerException(){
+		super();
+	}
 
-    public SerializerException(String message, Throwable cause){
-        super(message, cause);
-    }
+	public SerializerException(String message){
+		super(message);
+	}
 
-    public SerializerException(Throwable cause){
-        super(cause);
-    }
+	public SerializerException(String message, Throwable cause){
+		super(message, cause);
+	}
 
-    public SerializerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public SerializerException(Throwable cause){
+		super(cause);
+	}
+
+	public SerializerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 
 }

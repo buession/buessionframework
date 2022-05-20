@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.annotation;
@@ -36,6 +36,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@link java.util.Calendar} 和 Unix 时间戳序列化、反序列化；
+ * 通过该注解，可以将 {@link java.util.Calendar} 序列化为 Unix 时间戳；
+ * 将 Unix 时间戳反序列化为 {@link java.util.Calendar}
+ *
  * @author Yong.Teng
  */
 @Retention(RetentionPolicy.RUNTIME)

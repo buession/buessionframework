@@ -27,6 +27,8 @@ package com.buession.core.serializer;
 import java.nio.charset.Charset;
 
 /**
+ * JSON 序列化和反序列化抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractJsonSerializer extends AbstractSerializer implements JsonSerializer {

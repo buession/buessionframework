@@ -152,8 +152,22 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return 空 Map
 	 */
-	public static <K, V> Map<K, V> of(){
+	public static <K, V> Map<K, V> empty(){
 		return MapBuilder.<K, V>create().build();
+	}
+
+	/**
+	 * 创建空 Map
+	 *
+	 * @param <K>
+	 * 		Key 类型
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return 空 Map
+	 */
+	public static <K, V> Map<K, V> of(){
+		return empty();
 	}
 
 	/**

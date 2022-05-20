@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 public interface MethodInvocation {
 
 	/**
-	 * 返回当前连接点静态部分的对，一般指被代理的目标对象
+	 * 返回当前连接点静态部分的对象，一般指被代理的目标对象
 	 *
 	 * @return 当前连接点静态部分的对象，一般指被代理的目标对象
 	 */

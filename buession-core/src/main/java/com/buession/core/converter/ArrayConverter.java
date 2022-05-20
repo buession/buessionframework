@@ -30,6 +30,11 @@ import com.buession.core.utils.Assert;
 /**
  * 数组转换器
  *
+ * @param <S>
+ * 		原类型
+ * @param <T>
+ * 		目标类型
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */

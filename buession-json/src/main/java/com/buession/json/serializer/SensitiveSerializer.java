@@ -52,7 +52,8 @@ public class SensitiveSerializer extends JsonSerializer<CharSequence> implements
 	private String replacement;
 
 	@Override
-	public void serialize(CharSequence value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException{
+	public void serialize(CharSequence value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+			throws IOException{
 		if(value == null){
 			jsonGenerator.writeNull();
 		}else if(value.length() == 0){
@@ -60,8 +61,8 @@ public class SensitiveSerializer extends JsonSerializer<CharSequence> implements
 		}else{
 			String str;
 			if(Validate.hasText(format)){
-				str = value.toString().replaceAll(format,
-						Optional.ofNullable(replacement).orElse(Constants.EMPTY_STRING));
+				str = value.toString()
+						.replaceAll(format, Optional.ofNullable(replacement).orElse(Constants.EMPTY_STRING));
 			}else{
 				str = strategy.getFunction().apply(value.toString());
 			}
@@ -70,7 +71,8 @@ public class SensitiveSerializer extends JsonSerializer<CharSequence> implements
 	}
 
 	@Override
-	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property) throws JsonMappingException{
+	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
+			throws JsonMappingException{
 		Sensitive annotation = property.getAnnotation(Sensitive.class);
 
 		if(Objects.nonNull(annotation) && CharSequence.class.isAssignableFrom(property.getType().getRawClass())){

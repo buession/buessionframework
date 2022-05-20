@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -39,9 +39,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 类工具类 More {@link org.apache.commons.lang3.ClassUtils}
+ * 类工具类
  *
  * @author Yong.Teng
+ * @see org.apache.commons.lang3.ClassUtils
  * @since 1.2.0
  */
 public class ClassUtils extends org.apache.commons.lang3.ClassUtils {

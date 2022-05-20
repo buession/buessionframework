@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -39,6 +39,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 默认 byte 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
@@ -65,7 +67,9 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		if((object instanceof Serializable) == false){
-			throw new SerializerException("Required a Serializable payload but received an object of type [" + object.getClass().getName() + "]");
+			throw new SerializerException(
+					"Required a Serializable payload but received an object of type [" + object.getClass().getName() +
+							"]");
 		}
 
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(BYTE_ARRAY_OUTPUT_STREAM_SIZE);

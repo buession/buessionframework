@@ -30,6 +30,9 @@ import com.buession.core.utils.EnumUtils;
 /**
  * 枚举转换器，将字符串转换为枚举
  *
+ * @param <E>
+ * 		枚举类型
+ *
  * @author Yong.Teng
  * @since 1.2.1
  */

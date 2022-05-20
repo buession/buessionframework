@@ -35,6 +35,8 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
+ * Jackson JSON 序列化和反序列化
+ *
  * @author Yong.Teng
  */
 public class JacksonJsonSerializer extends AbstractJsonSerializer {
@@ -131,7 +133,8 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 			return getObjectMapper().readValue(bytes, clazz);
 		}catch(IOException e){
 			final String className = clazz == null ? "null" : clazz.getName();
-			throw new SerializerException(Arrays.toString(bytes) + " json deserialize to " + className + " failure.", e);
+			throw new SerializerException(Arrays.toString(bytes) + " json deserialize to " + className + " failure.",
+					e);
 		}
 	}
 

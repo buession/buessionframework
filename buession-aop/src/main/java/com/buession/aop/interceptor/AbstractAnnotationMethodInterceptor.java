@@ -36,19 +36,42 @@ import java.util.Optional;
 /**
  * 方法注解拦截器抽象类
  *
+ * @param <A>
+ * 		注解类型
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
 		implements AnnotationMethodInterceptor<A> {
 
+	/**
+	 * JSR-175 注解读取和处理器
+	 */
 	private AnnotationHandler<A> handler;
 
+	/**
+	 * 注解解析器
+	 */
 	private AnnotationResolver<A> resolver;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param handler
+	 * 		JSR-175 注解读取和处理器
+	 */
 	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
 		this(handler, new DefaultAnnotationResolver<>());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param handler
+	 * 		JSR-175 注解读取和处理器
+	 * @param resolver
+	 * 		注解解析器
+	 */
 	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver<A> resolver){
 		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
 		setHandler(handler);

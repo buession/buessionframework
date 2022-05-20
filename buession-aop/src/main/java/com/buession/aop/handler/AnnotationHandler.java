@@ -29,7 +29,7 @@ import com.buession.aop.MethodInvocation;
 import java.lang.annotation.Annotation;
 
 /**
- * JSR-175 注解读取和处理接口
+ * JSR-175 注解读取和处理器接口
  *
  * @param <A>
  * 		注解类型
@@ -53,6 +53,16 @@ public interface AnnotationHandler<A extends Annotation> {
 	 */
 	void setAnnotationClass(Class<A> annotationClass);
 
+	/**
+	 * JSR-175 注解读取和处理器执行方法
+	 *
+	 * @param mi
+	 * 		方法调用的描述 {@link MethodInvocation}
+	 * @param annotation
+	 * 		注解实例
+	 *
+	 * @return 处理结果
+	 */
 	Object execute(MethodInvocation mi, A annotation);
 
 }

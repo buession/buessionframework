@@ -29,7 +29,7 @@ import com.buession.core.utils.Assert;
 import java.lang.annotation.Annotation;
 
 /**
- * JSR-175 注解读取和处理抽象类
+ * JSR-175 注解读取和处理器抽象类
  *
  * @param <A>
  * 		注解类型
@@ -38,8 +38,17 @@ import java.lang.annotation.Annotation;
  */
 public abstract class AbstractAnnotationHandler<A extends Annotation> implements AnnotationHandler<A> {
 
+	/**
+	 * 注解类
+	 */
 	protected Class<A> annotationClass;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param annotationClass
+	 * 		注解类
+	 */
 	public AbstractAnnotationHandler(Class<A> annotationClass){
 		setAnnotationClass(annotationClass);
 	}

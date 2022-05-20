@@ -26,7 +26,9 @@ package com.buession.core.collect;
 
 import com.buession.core.utils.StringUtils;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * List 工具类
@@ -44,7 +46,7 @@ public class Lists {
 	 * @param data
 	 * 		需要拼接的 List
 	 * @param <O>
-	 * 		类
+	 * 		List 类型
 	 *
 	 * @return 拼接后的字符串
 	 */
@@ -60,12 +62,26 @@ public class Lists {
 	 * @param glue
 	 * 		拼接字符串
 	 * @param <O>
-	 * 		类
+	 * 		List 类型
 	 *
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final List<O> data, final String glue){
 		return StringUtils.join(data, glue);
+	}
+
+	/**
+	 * 将 O 型 List 转换成 {@link Set}
+	 *
+	 * @param data
+	 * 		待转换的 List
+	 * @param <O>
+	 * 		List 类型
+	 *
+	 * @return 当 data 为 null 时，返回 null；否则，返回 O 类型的 {@link Set}
+	 */
+	public static <O> Set<O> toSet(final List<O> data){
+		return data == null ? null : new LinkedHashSet<>(data);
 	}
 
 }

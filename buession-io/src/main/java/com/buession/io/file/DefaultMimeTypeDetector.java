@@ -26,6 +26,8 @@ package com.buession.io.file;
 
 import com.buession.core.validator.Validate;
 import com.buession.io.MimeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,6 +44,8 @@ import java.util.regex.Pattern;
  * @since 1.3.2
  */
 public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
+
+	private final static Logger logger = LoggerFactory.getLogger(DefaultMimeTypeDetector.class);
 
 	/**
 	 * 构造函数
@@ -123,7 +127,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 							parseMimeEntry(entry);
 						}
 					}catch(Exception e){
-
+						logger.error("Load mimetype error: {}", e.getMessage(), e);
 					}finally{
 						if(is != null){
 							try{

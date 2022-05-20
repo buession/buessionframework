@@ -26,6 +26,7 @@ package com.buession.core.collect;
 
 import com.buession.core.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class Sets {
 	 * @param data
 	 * 		需要拼接的 Set
 	 * @param <O>
-	 * 		类
+	 * 		Set 类型
 	 *
 	 * @return 拼接后的字符串
 	 */
@@ -61,12 +62,26 @@ public class Sets {
 	 * @param glue
 	 * 		拼接字符串
 	 * @param <O>
-	 * 		类
+	 * 		Set 类型
 	 *
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final Set<O> data, final String glue){
 		return StringUtils.join(data, glue);
+	}
+
+	/**
+	 * 将 O 型 Set 转换成 {@link List}
+	 *
+	 * @param data
+	 * 		待转换的 Set
+	 * @param <O>
+	 * 		Set 类型
+	 *
+	 * @return 当 data 为 null 时，返回 null；否则，返回 O 类型的 {@link List}
+	 */
+	public static <O> List<O> toList(final Set<O> data){
+		return data == null ? null : new ArrayList<>(data);
 	}
 
 }

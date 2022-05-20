@@ -19,30 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.json.annotation;
+package com.buession.web.servlet.config;
 
-import com.buession.json.deserializer.DateDeserializers;
-import com.buession.json.serializer.DateSerializers;
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.web.bind.converter.CaseTypeConverter;
+import com.buession.web.bind.converter.DomainTLDConverter;
+import com.buession.web.bind.converter.DomainTLDTypeConverter;
+import com.buession.web.bind.converter.GenderConverter;
+import com.buession.web.bind.converter.ISBNTypeConverter;
+import com.buession.web.bind.converter.IpTypeConverter;
+import com.buession.web.bind.converter.OrderConverter;
+import com.buession.web.bind.converter.StatusConverter;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-@JacksonAnnotationsInside
-@JsonSerialize(using = DateSerializers.DateUnixTimestampSerializer.class)
-@JsonDeserialize(using = DateDeserializers.DateUnixTimestampDeserializer.class)
-public @interface UnixTimestamp {
+@Configuration
+public class BindWebMvcConfigurerConfiguration implements WebMvcConfigurer {
+
+	@Override
+	public void addFormatters(FormatterRegistry registry){
+		registry.addConverter(new CaseTypeConverter());
+		registry.addConverter(new DomainTLDConverter());
+		registry.addConverter(new DomainTLDTypeConverter());
+		registry.addConverter(new GenderConverter());
+		registry.addConverter(new IpTypeConverter());
+		registry.addConverter(new ISBNTypeConverter());
+		registry.addConverter(new OrderConverter());
+		registry.addConverter(new StatusConverter());
+	}
 
 }

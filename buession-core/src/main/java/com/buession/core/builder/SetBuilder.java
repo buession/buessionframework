@@ -89,6 +89,21 @@ public class SetBuilder<V> {
 	}
 
 	/**
+	 * 添加元素，仅当 value 不为 null 时
+	 *
+	 * @param value
+	 * 		值
+	 *
+	 * @return {@link SetBuilder} 实例
+	 */
+	public SetBuilder<V> addIfPresent(final V value){
+		if(value != null){
+			data.add(value);
+		}
+		return this;
+	}
+
+	/**
 	 * 批量添加元素
 	 *
 	 * @param data
@@ -143,8 +158,20 @@ public class SetBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Set<V> of(){
+	public static <V> Set<V> empty(){
 		return SetBuilder.<V>create().build();
+	}
+
+	/**
+	 * 创建空 Set
+	 *
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return 空 Set
+	 */
+	public static <V> Set<V> of(){
+		return empty();
 	}
 
 	/**

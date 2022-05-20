@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
@@ -33,20 +33,24 @@ import java.util.function.Predicate;
 /**
  * 通过 {@link Predicate} 比较参数值转换为 {@link Status}
  *
+ * @param <T>
+ * 		谓词的输入类型
+ *
  * @author Yong.Teng
+ * @see Predicate
  * @since 1.2.1
  */
-public class PredicateStatusConverter<S> implements Converter<S, Status> {
+public class PredicateStatusConverter<T> implements Converter<T, Status> {
 
-	private final Predicate<S> predicate;
+	private final Predicate<T> predicate;
 
-	public PredicateStatusConverter(final Predicate<S> predicate){
+	public PredicateStatusConverter(final Predicate<T> predicate){
 		Assert.isNull(predicate, "Predicate cloud not be null.");
 		this.predicate = predicate;
 	}
 
 	@Override
-	public Status convert(final S source){
+	public Status convert(final T source){
 		return StatusUtils.valueOf(predicate.test(source));
 	}
 

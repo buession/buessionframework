@@ -89,6 +89,21 @@ public class QueueBuilder<V> {
 	}
 
 	/**
+	 * 添加元素，仅当 value 不为 null 时
+	 *
+	 * @param value
+	 * 		值
+	 *
+	 * @return {@link QueueBuilder} 实例
+	 */
+	public QueueBuilder<V> addIfPresent(final V value){
+		if(value != null){
+			data.add(value);
+		}
+		return this;
+	}
+
+	/**
 	 * 批量添加元素
 	 *
 	 * @param data
@@ -143,8 +158,20 @@ public class QueueBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Queue<V> of(){
+	public static <V> Queue<V> empty(){
 		return QueueBuilder.<V>create().build();
+	}
+
+	/**
+	 * 创建空 Queue
+	 *
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return 空 Set
+	 */
+	public static <V> Queue<V> of(){
+		return empty();
 	}
 
 	/**

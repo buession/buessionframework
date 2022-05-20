@@ -33,6 +33,9 @@ import java.nio.charset.StandardCharsets;
 /**
  * 枚举转换器，将 byte 数组转换为枚举
  *
+ * @param <E>
+ * 		枚举类型
+ *
  * @author Yong.Teng
  * @since 1.2.1
  */

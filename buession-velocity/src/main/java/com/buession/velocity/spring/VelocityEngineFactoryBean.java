@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.spring;
@@ -36,28 +36,23 @@ import java.io.IOException;
  * @author Yong.Teng
  */
 public class VelocityEngineFactoryBean extends VelocityEngineFactory implements FactoryBean<VelocityEngine>,
-        InitializingBean, ResourceLoaderAware {
+		InitializingBean, ResourceLoaderAware {
 
-    private VelocityEngine velocityEngine;
+	private VelocityEngine velocityEngine;
 
-    @Override
-    public VelocityEngine getObject(){
-        return velocityEngine;
-    }
+	@Override
+	public VelocityEngine getObject(){
+		return velocityEngine;
+	}
 
-    @Override
-    public Class<? extends VelocityEngine> getObjectType(){
-        return VelocityEngine.class;
-    }
+	@Override
+	public Class<? extends VelocityEngine> getObjectType(){
+		return VelocityEngine.class;
+	}
 
-    @Override
-    public boolean isSingleton(){
-        return true;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws IOException, VelocityException{
-        this.velocityEngine = createVelocityEngine();
-    }
+	@Override
+	public void afterPropertiesSet() throws IOException, VelocityException{
+		this.velocityEngine = createVelocityEngine();
+	}
 
 }

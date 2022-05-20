@@ -113,7 +113,7 @@ public class ListBuilder<V> {
 	}
 
 	/**
-	 * 添加元素
+	 * 添加元素，仅当 value 不为 null 时
 	 *
 	 * @param value
 	 * 		值
@@ -126,7 +126,6 @@ public class ListBuilder<V> {
 		if(value != null){
 			data.add(value);
 		}
-
 		return this;
 	}
 
@@ -178,7 +177,19 @@ public class ListBuilder<V> {
 	}
 
 	/**
-	 * 创建空 Map
+	 * 创建空 List
+	 *
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return 空 Set
+	 */
+	public static <V> List<V> empty(){
+		return ListBuilder.<V>create().build();
+	}
+
+	/**
+	 * 创建空 List
 	 *
 	 * @param <V>
 	 * 		Value 类型
@@ -186,7 +197,7 @@ public class ListBuilder<V> {
 	 * @return 空 Set
 	 */
 	public static <V> List<V> of(){
-		return ListBuilder.<V>create().build();
+		return empty();
 	}
 
 	/**

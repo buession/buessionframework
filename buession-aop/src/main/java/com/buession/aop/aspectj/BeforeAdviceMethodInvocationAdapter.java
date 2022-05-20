@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aspectj;
@@ -33,26 +33,46 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 
 /**
+ * 方法调用的描述，在方法调用时前置拦截器适配器
+ *
  * @author Yong.Teng
  */
 public class BeforeAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
 
-    public BeforeAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
-        super(object, method, arguments);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param object
+	 * 		当前连接点静态部分的对象，一般指被代理的目标对象
+	 * @param method
+	 * 		正在被调用的方法的 {@link Method} 对象
+	 * @param arguments
+	 * 		调用目标方法的参数
+	 */
+	public BeforeAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
+		super(object, method, arguments);
+	}
 
-    public static BeforeAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint){
-        Signature signature = joinPoint.getSignature();
+	/**
+	 * 从 AspectJ {@link JoinPoint} 创建 {@link BeforeAdviceMethodInvocationAdapter} 实例
+	 *
+	 * @param joinPoint
+	 * 		AspectJ {@link JoinPoint}
+	 *
+	 * @return {@link BeforeAdviceMethodInvocationAdapter} 实例
+	 */
+	public static BeforeAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint){
+		Signature signature = joinPoint.getSignature();
 
-        if(signature instanceof MethodSignature){
-            return new BeforeAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
-                    .getMethod(), joinPoint.getArgs());
-        }else if(signature instanceof AdviceSignature){
-            return new BeforeAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
-                    .getAdvice(), joinPoint.getArgs());
-        }else{
-            throw new SignatureIllegalArgumentException(signature);
-        }
-    }
+		if(signature instanceof MethodSignature){
+			return new BeforeAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
+					.getMethod(), joinPoint.getArgs());
+		}else if(signature instanceof AdviceSignature){
+			return new BeforeAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
+					.getAdvice(), joinPoint.getArgs());
+		}else{
+			throw new SignatureIllegalArgumentException(signature);
+		}
+	}
 
 }
