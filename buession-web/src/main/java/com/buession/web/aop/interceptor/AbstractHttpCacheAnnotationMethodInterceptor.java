@@ -27,22 +27,24 @@ package com.buession.web.aop.interceptor;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.http.response.annotation.HttpCache;
 
 /**
- * {@link Cors} 注解拦截器抽象类
+ * {@link HttpCache} 注解拦截器抽象类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractCorsAnnotationMethodInterceptor extends AbstractAnnotationMethodInterceptor<Cors>
-		implements CorsAnnotationMethodInterceptor {
+public abstract class AbstractHttpCacheAnnotationMethodInterceptor
+		extends AbstractAnnotationMethodInterceptor<HttpCache>
+		implements HttpCacheAnnotationMethodInterceptor {
 
-	public AbstractCorsAnnotationMethodInterceptor(AnnotationHandler<Cors> handler){
+	public AbstractHttpCacheAnnotationMethodInterceptor(AnnotationHandler<HttpCache> handler){
 		super(handler);
 	}
 
-	public AbstractCorsAnnotationMethodInterceptor(AnnotationHandler<Cors> handler, AnnotationResolver<Cors> resolver){
+	public AbstractHttpCacheAnnotationMethodInterceptor(AnnotationHandler<HttpCache> handler,
+														AnnotationResolver<HttpCache> resolver){
 		super(handler, resolver);
 	}
 

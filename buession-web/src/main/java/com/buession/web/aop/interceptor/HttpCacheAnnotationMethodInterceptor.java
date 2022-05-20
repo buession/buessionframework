@@ -26,10 +26,11 @@ package com.buession.web.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.http.response.annotation.HttpCache;
 
 /**
  * @author Yong.Teng
  */
-public interface CorsAnnotationMethodInterceptor extends AnnotationMethodInterceptor<Cors> {
+public interface HttpCacheAnnotationMethodInterceptor extends AnnotationMethodInterceptor<HttpCache> {
 
 }

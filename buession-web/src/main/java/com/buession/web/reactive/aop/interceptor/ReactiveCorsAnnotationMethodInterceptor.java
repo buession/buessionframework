@@ -25,7 +25,7 @@
 package com.buession.web.reactive.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.aop.interceptor.AbstractPrimitiveCrossOriginAnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractCorsAnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.reactive.aop.handler.ReactiveCorsAnnotationHandler;
 
@@ -35,8 +35,7 @@ import com.buession.web.reactive.aop.handler.ReactiveCorsAnnotationHandler;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ReactiveCorsAnnotationMethodInterceptor
-		extends AbstractPrimitiveCrossOriginAnnotationMethodInterceptor {
+public class ReactiveCorsAnnotationMethodInterceptor extends AbstractCorsAnnotationMethodInterceptor {
 
 	public ReactiveCorsAnnotationMethodInterceptor(){
 		super(new ReactiveCorsAnnotationHandler());

@@ -21,12 +21,14 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.config;
 
+import com.buession.web.reactive.WebFluxCondition;
 import com.buession.web.reactive.annotation.RequestClientIpHandlerMethodArgumentResolver;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
@@ -35,6 +37,7 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
  * @author Yong.Teng
  */
 @Configuration(proxyBeanMethods = false)
+@Conditional(WebFluxCondition.class)
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	@Override

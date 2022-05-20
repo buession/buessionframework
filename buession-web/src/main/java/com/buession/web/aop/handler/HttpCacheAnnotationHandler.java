@@ -24,11 +24,11 @@
  */
 package com.buession.web.aop.handler;
 
-import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.http.response.annotation.HttpCache;
 
 /**
  * @author Yong.Teng
  */
-public interface ResponseHeaderAnnotationHandler extends WebAnnotationHandler<ResponseHeader> {
+public interface HttpCacheAnnotationHandler extends WebAnnotationHandler<HttpCache> {
 
 }

@@ -26,12 +26,11 @@ package com.buession.web.servlet.aop.handler;
 
 import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
-import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
+import com.buession.web.aop.handler.AbstractHttpCacheAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.http.HttpServlet;
-import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,16 +39,16 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Yong.Teng
  */
-public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHeaderAnnotationHandler {
+public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotationHandler {
 
-	private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeaderAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletHttpCacheAnnotationHandler.class);
 
-	public ServletResponseHeaderAnnotationHandler(){
+	public ServletHttpCacheAnnotationHandler(){
 		super();
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
+	public Object execute(MethodInvocation mi, HttpCache httpCache){
 		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 		if(httpServlet == null || httpServlet.getResponse() == null){
 			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
@@ -57,18 +56,23 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
 		}
 
 		HttpServletResponse response = httpServlet.getResponse();
-		final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name());
+		boolean isSetCacheControl = false;
 
-		for(String value : responseHeader.value()){
-			if(isExpires){
-				if(Validate.isNumeric(value)){
-					ResponseUtils.httpCache(response, Integer.parseInt(value));
-				}else{
-					ResponseUtils.httpCache(response, value);
-				}
-			}else{
-				response.setHeader(responseHeader.name(), value);
+		if(Validate.hasText(httpCache.cacheControl())){
+			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), httpCache.cacheControl());
+			isSetCacheControl = true;
+		}
+
+		if(Validate.hasText(httpCache.expires()) && Validate.isNumeric(httpCache.expires())){
+			response.setHeader(HttpHeader.EXPIRES.getValue(), httpCache.expires());
+
+			if(isSetCacheControl == false){
+				response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), "max-age=" + httpCache.expires());
 			}
+		}
+
+		if(Validate.hasText(httpCache.pragma())){
+			response.setHeader(HttpHeader.PRAGMA.getValue(), httpCache.pragma());
 		}
 
 		return null;

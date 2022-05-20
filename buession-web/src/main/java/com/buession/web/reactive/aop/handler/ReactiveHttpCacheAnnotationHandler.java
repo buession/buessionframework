@@ -26,88 +26,55 @@ package com.buession.web.reactive.aop.handler;
 
 import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
-import com.buession.web.aop.handler.AbstractCorsAnnotationHandler;
-import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.aop.handler.AbstractHttpCacheAnnotationHandler;
+import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
-import com.buession.web.reactive.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.util.StringUtils;
-
-import java.util.Arrays;
 
 /**
  * @author Yong.Teng
  */
-public class ReactiveCorsAnnotationHandler extends AbstractCorsAnnotationHandler {
+public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotationHandler {
 
-	private final static Logger logger = LoggerFactory.getLogger(ReactiveCorsAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReactiveHttpCacheAnnotationHandler.class);
 
-	public ReactiveCorsAnnotationHandler(){
+	public ReactiveHttpCacheAnnotationHandler(){
 		super();
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, Cors cors){
+	public Object execute(MethodInvocation mi, HttpCache httpCache){
 		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
+		if(serverHttp == null || serverHttp.getResponse() == null){
 			if(serverHttp == null){
 				logger.debug("ServerHttp is null.");
-			}else if(serverHttp.getRequest() == null){
-				logger.debug("ServerHttpRequest is null.");
 			}else if(serverHttp.getResponse() == null){
 				logger.debug("ServerHttpResponse is null.");
 			}
 			return null;
 		}
 
-		ServerHttpRequest request = serverHttp.getRequest();
+		HttpHeaders httpHeaders = serverHttp.getResponse().getHeaders();
+		boolean isSetCacheControl = false;
 
-		if(RequestUtils.isAjaxRequest(request) == false){
-			logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getURI());
-			return null;
+		if(Validate.hasText(httpCache.cacheControl())){
+			httpHeaders.setCacheControl(httpCache.cacheControl());
+			isSetCacheControl = true;
 		}
 
-		HttpHeaders httpHeaders = serverHttp.getResponse().getHeaders();
+		if(Validate.hasText(httpCache.expires()) && Validate.isNumeric(httpCache.expires())){
+			httpHeaders.setExpires(Long.parseLong(httpCache.expires()));
 
-		if(Validate.isNotEmpty(cors.origins())){
-			for(String origin : cors.origins()){
-				if(isDynamicOrigin(origin)){
-					String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
-
-					if(Validate.hasText(accessControlAllowOrigin)){
-						httpHeaders.setAccessControlAllowOrigin(origin);
-					}
-				}else{
-					httpHeaders.setAccessControlAllowOrigin(origin);
-				}
+			if(isSetCacheControl == false){
+				httpHeaders.setCacheControl("max-age=" + httpCache.expires());
 			}
 		}
 
-		if(Validate.isNotEmpty(cors.allowedMethods())){
-			httpHeaders.set(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(),
-					StringUtils.collectionToCommaDelimitedString(Arrays.asList(cors.allowedMethods())));
-		}
-
-		if(Validate.isNotEmpty(cors.allowedHeaders())){
-			httpHeaders.setAccessControlAllowHeaders(Arrays.asList(cors.allowedHeaders()));
-		}
-
-		if(Validate.isNotEmpty(cors.exposedHeaders())){
-			httpHeaders.setAccessControlExposeHeaders(Arrays.asList(cors.exposedHeaders()));
-		}
-
-		Boolean allowCredentials = allowCredentials(cors);
-		if(allowCredentials != null){
-			httpHeaders.setAccessControlAllowCredentials(allowCredentials);
-		}
-
-		if(cors.maxAge() > -1){
-			httpHeaders.setAccessControlMaxAge(cors.maxAge());
+		if(Validate.hasText(httpCache.pragma())){
+			httpHeaders.setPragma(httpCache.pragma());
 		}
 
 		return null;

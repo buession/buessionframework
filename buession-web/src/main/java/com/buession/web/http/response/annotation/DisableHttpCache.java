@@ -41,11 +41,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ResponseHeaders({
-		@ResponseHeader(name = "Cache-Control", value = "no-cache"),
-		@ResponseHeader(name = "Pragma", value = "no-cache"),
-		@ResponseHeader(name = "Expires", value = "0")
-})
+@HttpCache(cacheControl = "no-cache", expires = "0", pragma = "no-cache")
 public @interface DisableHttpCache {
 
 }

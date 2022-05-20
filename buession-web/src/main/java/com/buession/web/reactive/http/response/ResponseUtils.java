@@ -19,14 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.http.response;
 
+import com.buession.core.validator.Validate;
+import com.buession.web.http.CorsConfig;
+import com.buession.web.http.HttpHeader;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -55,6 +61,46 @@ public class ResponseUtils {
 		if(response != null){
 			long maxAge = date.getTime() - System.currentTimeMillis();
 			httpCache(response, maxAge, date.getTime());
+		}
+	}
+
+	public static void cors(final CorsConfig corsConfig, final ServerHttpRequest request,
+							final ServerHttpResponse response){
+		HttpHeaders httpHeaders = response.getHeaders();
+
+		if(Validate.isNotEmpty(corsConfig.getOrigins())){
+			for(String origin : corsConfig.getOrigins()){
+				if("$http_origin".equalsIgnoreCase(origin)){
+					String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
+
+					if(Validate.hasText(accessControlAllowOrigin)){
+						httpHeaders.setAccessControlAllowOrigin(origin);
+					}
+				}else{
+					httpHeaders.setAccessControlAllowOrigin(origin);
+				}
+			}
+		}
+
+		if(Validate.isNotEmpty(corsConfig.getAllowedMethods())){
+			httpHeaders.set(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(),
+					StringUtils.collectionToCommaDelimitedString(new ArrayList<>(corsConfig.getAllowedMethods())));
+		}
+
+		if(Validate.isNotEmpty(corsConfig.getAllowedHeaders())){
+			httpHeaders.setAccessControlAllowHeaders(new ArrayList<>(corsConfig.getAllowedHeaders()));
+		}
+
+		if(Validate.isNotEmpty(corsConfig.getExposedHeaders())){
+			httpHeaders.setAccessControlExposeHeaders(new ArrayList<>(corsConfig.getExposedHeaders()));
+		}
+
+		if(corsConfig.getAllowCredentials() != null){
+			httpHeaders.setAccessControlAllowCredentials(corsConfig.getAllowCredentials());
+		}
+
+		if(corsConfig.getMaxAge() != null){
+			httpHeaders.setAccessControlMaxAge(corsConfig.getMaxAge());
 		}
 	}
 

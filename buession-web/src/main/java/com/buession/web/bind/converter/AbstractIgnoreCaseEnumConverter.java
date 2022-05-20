@@ -19,16 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.bind.converter;
 
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
-
-import java.util.Locale;
 
 /**
  * 忽略大小写将字符串转换为枚举值
@@ -63,15 +62,7 @@ public abstract class AbstractIgnoreCaseEnumConverter<E extends Enum<E>> impleme
 			return null;
 		}
 
-		try{
-			return Enum.valueOf(enumType, source.trim().toUpperCase());
-		}catch(IllegalArgumentException e){
-			try{
-				return Enum.valueOf(enumType, source.trim().toLowerCase());
-			}catch(IllegalArgumentException ex){
-				return null;
-			}
-		}
+		return EnumUtils.getEnumIgnoreCase(enumType, source);
 	}
 
 }

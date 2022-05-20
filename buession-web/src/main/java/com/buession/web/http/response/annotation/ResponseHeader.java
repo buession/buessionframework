@@ -26,7 +26,6 @@
  */
 package com.buession.web.http.response.annotation;
 
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
@@ -59,7 +58,6 @@ public @interface ResponseHeader {
 	 *
 	 * @return 响应头值
 	 */
-	@AliasFor("values")
 	String[] value() default {};
 
 }

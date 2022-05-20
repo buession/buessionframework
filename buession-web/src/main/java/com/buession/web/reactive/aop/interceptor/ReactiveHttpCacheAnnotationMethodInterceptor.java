@@ -25,25 +25,24 @@
 package com.buession.web.reactive.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.aop.interceptor.AbstractCorsAnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.Cors;
-import com.buession.web.reactive.aop.handler.ReactiveCorsAnnotationHandler;
+import com.buession.web.aop.interceptor.AbstractHttpCacheAnnotationMethodInterceptor;
+import com.buession.web.http.response.annotation.HttpCache;
+import com.buession.web.reactive.aop.handler.ReactiveHttpCacheAnnotationHandler;
 
 /**
- * {@link Cors} 注解拦截器
+ * {@link HttpCache} 注解拦截器
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ReactiveCorsAnnotationMethodInterceptor
-		extends AbstractCorsAnnotationMethodInterceptor {
+public class ReactiveHttpCacheAnnotationMethodInterceptor extends AbstractHttpCacheAnnotationMethodInterceptor {
 
-	public ReactiveCorsAnnotationMethodInterceptor(){
-		super(new ReactiveCorsAnnotationHandler());
+	public ReactiveHttpCacheAnnotationMethodInterceptor(){
+		super(new ReactiveHttpCacheAnnotationHandler());
 	}
 
-	public ReactiveCorsAnnotationMethodInterceptor(AnnotationResolver<Cors> resolver){
-		super(new ReactiveCorsAnnotationHandler(), resolver);
+	public ReactiveHttpCacheAnnotationMethodInterceptor(AnnotationResolver<HttpCache> resolver){
+		super(new ReactiveHttpCacheAnnotationHandler(), resolver);
 	}
 
 }

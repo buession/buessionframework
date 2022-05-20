@@ -30,6 +30,7 @@ import com.buession.web.aop.interceptor.AbstractAopAllianceAnnotationsMethodInte
 import com.buession.web.reactive.aop.interceptor.ReactiveContentTypeAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveCorsAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveDocumentMetaDataAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.interceptor.ReactiveHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
 
@@ -46,13 +47,14 @@ public class ReactiveAopAllianceAnnotationsMethodInterceptor extends AbstractAop
 	public ReactiveAopAllianceAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(5);
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(6);
 
 		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
 		methodInterceptors.add(
 				new ReactiveCorsAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
 		methodInterceptors.add(
 				new ReactiveDocumentMetaDataAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(new ReactiveHttpCacheAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
 		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
 		methodInterceptors.add(
 				new ReactiveResponseHeadersAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));

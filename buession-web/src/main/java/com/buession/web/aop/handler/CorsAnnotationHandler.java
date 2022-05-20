@@ -29,6 +29,6 @@ import com.buession.web.http.response.annotation.Cors;
 /**
  * @author Yong.Teng
  */
-public interface PrimitiveCrossOriginAnnotationHandler extends WebAnnotationHandler<Cors> {
+public interface CorsAnnotationHandler extends WebAnnotationHandler<Cors> {
 
 }

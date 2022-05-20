@@ -37,22 +37,57 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * 响应头过滤器，批量设置响应头
+ *
  * @author Yong.Teng
  */
 public class ResponseHeadersFilter extends OncePerRequestFilter {
 
+	/**
+	 * Key =&gt; Value 形式的响应头
+	 */
 	private Map<String, String> headers;
 
+	/**
+	 * 构造函数
+	 */
+	public ResponseHeadersFilter(){
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param headers
+	 * 		响应头，Key =&gt; Value 形式的响应头
+	 *
+	 * @since 2.0.0
+	 */
+	public ResponseHeadersFilter(Map<String, String> headers){
+		this.headers = headers;
+	}
+
+	/**
+	 * 返回响应头
+	 *
+	 * @return 响应头，Key =&gt; Value 形式
+	 */
 	public Map<String, String> getHeaders(){
 		return headers;
 	}
 
+	/**
+	 * 设置响应头
+	 *
+	 * @param headers
+	 * 		响应头，Key =&gt; Value 形式
+	 */
 	public void setHeaders(Map<String, String> headers){
 		this.headers = headers;
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException{
 		Map<String, String> headers = getHeaders();
 		if(Validate.isNotEmpty(headers)){
 			headers.forEach(response::addHeader);

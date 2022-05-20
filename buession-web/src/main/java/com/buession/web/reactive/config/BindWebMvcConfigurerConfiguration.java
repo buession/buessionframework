@@ -22,37 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.config;
+package com.buession.web.reactive.config;
 
-import com.buession.web.bind.converter.CaseTypeConverter;
-import com.buession.web.bind.converter.DomainTLDConverter;
-import com.buession.web.bind.converter.DomainTLDTypeConverter;
-import com.buession.web.bind.converter.GenderConverter;
-import com.buession.web.bind.converter.ISBNTypeConverter;
-import com.buession.web.bind.converter.IpTypeConverter;
-import com.buession.web.bind.converter.OrderConverter;
-import com.buession.web.bind.converter.StatusConverter;
+import com.buession.web.bind.converter.FormatterRegistryUtils;
+import com.buession.web.reactive.WebFluxCondition;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-@Configuration
-public class BindWebMvcConfigurerConfiguration implements WebMvcConfigurer {
+@Configuration(proxyBeanMethods = false)
+@Conditional(WebFluxCondition.class)
+public class BindWebMvcConfigurerConfiguration implements WebFluxConfigurer {
 
 	@Override
 	public void addFormatters(FormatterRegistry registry){
-		registry.addConverter(new CaseTypeConverter());
-		registry.addConverter(new DomainTLDConverter());
-		registry.addConverter(new DomainTLDTypeConverter());
-		registry.addConverter(new GenderConverter());
-		registry.addConverter(new IpTypeConverter());
-		registry.addConverter(new ISBNTypeConverter());
-		registry.addConverter(new OrderConverter());
-		registry.addConverter(new StatusConverter());
+		FormatterRegistryUtils.addConverters(registry);
 	}
 
 }

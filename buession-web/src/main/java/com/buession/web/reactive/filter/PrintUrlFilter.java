@@ -24,6 +24,7 @@
  */
 package com.buession.web.reactive.filter;
 
+import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -44,10 +45,22 @@ public class PrintUrlFilter implements WebFilter {
 		ServerHttpRequest request = exchange.getRequest();
 
 		if(logger.isInfoEnabled()){
-			logger.info("Request URL: {}", request.getURI());
+			String url = parseFullUrl(request);
+
+			if(Validate.hasText(url)){
+				logger.info("Request URL: {}", url);
+			}
 		}
 
 		return chain.filter(exchange);
+	}
+
+	protected String parseUrl(final ServerHttpRequest request){
+		return request.getURI().toString();
+	}
+
+	protected String parseFullUrl(final ServerHttpRequest request){
+		return parseUrl(request);
 	}
 
 }

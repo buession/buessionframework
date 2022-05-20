@@ -30,15 +30,11 @@ import com.buession.web.http.response.annotation.Cors;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractPrimitiveCrossOriginAnnotationHandler
-		extends AbstractAnnotationHandler<Cors> implements PrimitiveCrossOriginAnnotationHandler {
+public abstract class AbstractCorsAnnotationHandler extends AbstractAnnotationHandler<Cors>
+		implements CorsAnnotationHandler {
 
-	public AbstractPrimitiveCrossOriginAnnotationHandler(){
+	public AbstractCorsAnnotationHandler(){
 		super(Cors.class);
-	}
-
-	protected static boolean isDynamicOrigin(final String origin){
-		return "$http_origin".equalsIgnoreCase(origin);
 	}
 
 	protected static Boolean allowCredentials(final Cors cors){

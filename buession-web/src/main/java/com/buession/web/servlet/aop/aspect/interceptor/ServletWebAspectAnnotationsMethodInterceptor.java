@@ -29,6 +29,7 @@ import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodIntercept
 import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletCorsAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotationMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.ServletHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
 
@@ -45,11 +46,12 @@ public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspect
 	public ServletWebAspectAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(5);
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(6);
 
 		methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletCorsAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor());
+		methodInterceptors.add(new ServletHttpCacheAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor());
 

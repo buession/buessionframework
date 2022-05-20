@@ -34,31 +34,87 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 /**
- * 响应头过滤器，批量设置响应头
+ * 响应头过滤器，设置响应头
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class ResponseHeadersFilter extends OncePerRequestFilter {
+public class ResponseHeaderFilter extends OncePerRequestFilter {
 
-	private Map<String, String> headers;
+	/**
+	 * 响应头名称
+	 */
+	private String name;
 
-	public Map<String, String> getHeaders(){
-		return headers;
+	/**
+	 * 响应头值
+	 */
+	private String value;
+
+	/**
+	 * 构造函数
+	 */
+	public ResponseHeaderFilter(){
 	}
 
-	public void setHeaders(Map<String, String> headers){
-		this.headers = headers;
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		响应头名称
+	 * @param value
+	 * 		响应头值
+	 */
+	public ResponseHeaderFilter(String name, String value){
+		this.name = name;
+		this.value = value;
+	}
+
+	/**
+	 * 返回响应头名称
+	 *
+	 * @return 响应头名称
+	 */
+	public String getName(){
+		return name;
+	}
+
+	/**
+	 * 设置响应头名称
+	 *
+	 * @param name
+	 * 		响应头名称
+	 */
+	public void setName(String name){
+		this.name = name;
+	}
+
+	/**
+	 * 返回响应头值
+	 *
+	 * @return 响应头值
+	 */
+	public String getValue(){
+		return value;
+	}
+
+	/**
+	 * 设置响应头值
+	 *
+	 * @param value
+	 * 		响应头值
+	 */
+	public void setValue(String value){
+		this.value = value;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException{
-		Map<String, String> headers = getHeaders();
-		if(Validate.isNotEmpty(headers)){
-			headers.forEach(response::addHeader);
+		if(Validate.hasText(getName())){
+			response.addHeader(getName(), getValue());
 		}
 
 		filterChain.doFilter(request, response);

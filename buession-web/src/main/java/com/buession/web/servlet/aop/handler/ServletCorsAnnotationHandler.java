@@ -25,14 +25,15 @@
 package com.buession.web.servlet.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.collect.Arrays;
 import com.buession.core.validator.Validate;
-import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
-import com.buession.web.http.HttpHeader;
-import com.buession.web.http.HttpMethod;
+import com.buession.web.aop.handler.AbstractCorsAnnotationHandler;
+import com.buession.web.http.CorsConfig;
 import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.request.RequestUtils;
+import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Yong.Teng
  */
-public class ServletCorsAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
+public class ServletCorsAnnotationHandler extends AbstractCorsAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletCorsAnnotationHandler.class);
 
@@ -72,47 +73,31 @@ public class ServletCorsAnnotationHandler extends AbstractPrimitiveCrossOriginAn
 
 		HttpServletResponse response = httpServlet.getResponse();
 
-		if(Validate.isNotEmpty(cors.origins())){
-			for(String origin : cors.origins()){
-				if(isDynamicOrigin(origin)){
-					String accessControlAllowOrigin = request.getHeader(HttpHeader.ORIGIN.getValue());
+		CorsConfig.Builder corsConfigBuilder = CorsConfig.Builder.create();
 
-					if(Validate.hasText(accessControlAllowOrigin)){
-						response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), origin);
-					}
-				}else{
-					response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), origin);
-				}
-			}
+		if(Validate.isNotEmpty(cors.origins())){
+			corsConfigBuilder.origins(Arrays.toSet(cors.origins()));
 		}
 
 		if(Validate.isNotEmpty(cors.allowedMethods())){
-			for(HttpMethod method : cors.allowedMethods()){
-				response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(), method.name());
-			}
+			corsConfigBuilder.allowedMethods(Arrays.toSet(cors.allowedMethods()));
 		}
 
 		if(Validate.isNotEmpty(cors.allowedHeaders())){
-			for(String allowedHeader : cors.allowedHeaders()){
-				response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_HEADERS.getValue(), allowedHeader);
-			}
+			corsConfigBuilder.allowedHeaders(Arrays.toSet(cors.allowedHeaders()));
 		}
 
 		if(Validate.isNotEmpty(cors.exposedHeaders())){
-			for(String exposedHeader : cors.exposedHeaders()){
-				response.setHeader(HttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS.getValue(), exposedHeader);
-			}
+			corsConfigBuilder.exposedHeaders(Arrays.toSet(cors.exposedHeaders()));
 		}
 
-		Boolean allowCredentials = allowCredentials(cors);
-		if(allowCredentials != null){
-			response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS.getValue(),
-					Boolean.toString(allowCredentials));
-		}
+		corsConfigBuilder.allowCredentials(allowCredentials(cors));
 
 		if(cors.maxAge() > -1){
-			response.setHeader(HttpHeader.ACCESS_CONTROL_MAX_AGE.getValue(), Long.toString(cors.maxAge()));
+			corsConfigBuilder.maxAge(cors.maxAge());
 		}
+
+		ResponseUtils.cors(corsConfigBuilder.build(), request, response);
 
 		return null;
 	}

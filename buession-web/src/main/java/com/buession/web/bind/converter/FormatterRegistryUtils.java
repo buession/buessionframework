@@ -21,10 +21,26 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.web.bind.converter;/**
- * 
- *
+ */
+package com.buession.web.bind.converter;
+
+import org.springframework.format.FormatterRegistry;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class FormatterRegistryUtils {
+ */
+public class FormatterRegistryUtils {
+
+	public static void addConverters(final FormatterRegistry registry){
+		registry.addConverter(new CaseTypeConverter());
+		registry.addConverter(new DomainTLDConverter());
+		registry.addConverter(new DomainTLDTypeConverter());
+		registry.addConverter(new GenderConverter());
+		registry.addConverter(new IpTypeConverter());
+		registry.addConverter(new ISBNTypeConverter());
+		registry.addConverter(new OrderConverter());
+		registry.addConverter(new StatusConverter());
+	}
+
 }

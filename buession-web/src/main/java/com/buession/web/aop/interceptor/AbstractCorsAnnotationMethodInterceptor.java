@@ -35,16 +35,14 @@ import com.buession.web.http.response.annotation.Cors;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractPrimitiveCrossOriginAnnotationMethodInterceptor
-		extends AbstractAnnotationMethodInterceptor<Cors>
-		implements PrimitiveCrossOriginAnnotationMethodInterceptor {
+public abstract class AbstractCorsAnnotationMethodInterceptor extends AbstractAnnotationMethodInterceptor<Cors>
+		implements CorsAnnotationMethodInterceptor {
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<Cors> handler){
+	public AbstractCorsAnnotationMethodInterceptor(AnnotationHandler<Cors> handler){
 		super(handler);
 	}
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodInterceptor(AnnotationHandler<Cors> handler,
-																   AnnotationResolver<Cors> resolver){
+	public AbstractCorsAnnotationMethodInterceptor(AnnotationHandler<Cors> handler, AnnotationResolver<Cors> resolver){
 		super(handler, resolver);
 	}
 

@@ -19,32 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.bind.converter;
+package com.buession.web.servlet.config;
 
+import com.buession.web.bind.converter.FormatterRegistryUtils;
+import com.buession.web.servlet.ServletCondition;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author Yong.Teng
- * @since 1.2.2
+ * @since 2.0.0
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
+@Conditional(ServletCondition.class)
 public class BindWebMvcConfigurerConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addFormatters(FormatterRegistry registry){
-		registry.addConverter(new CaseTypeConverter());
-		registry.addConverter(new DomainTLDConverter());
-		registry.addConverter(new DomainTLDTypeConverter());
-		registry.addConverter(new GenderConverter());
-		registry.addConverter(new IpTypeConverter());
-		registry.addConverter(new ISBNTypeConverter());
-		registry.addConverter(new OrderConverter());
-		registry.addConverter(new StatusConverter());
+		FormatterRegistryUtils.addConverters(registry);
 	}
 
 }

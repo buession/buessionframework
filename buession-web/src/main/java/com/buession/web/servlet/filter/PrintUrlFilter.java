@@ -24,6 +24,7 @@
  */
 package com.buession.web.servlet.filter;
 
+import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -33,6 +34,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -42,12 +44,39 @@ public class PrintUrlFilter extends OncePerRequestFilter {
 	private final static Logger logger = LoggerFactory.getLogger(PrintUrlFilter.class);
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException{
 		if(logger.isInfoEnabled()){
-			logger.info("Request URL: {}", request.getRequestURL());
+			String url = parseFullUrl(request);
+
+			if(Validate.hasText(url)){
+				logger.info("Request URL: {}", url);
+			}
 		}
 
 		filterChain.doFilter(request, response);
+	}
+
+	protected String parseUrl(final HttpServletRequest request){
+		return request.getRequestURL().toString();
+	}
+
+	protected String parseFullUrl(final HttpServletRequest request){
+		String url = parseUrl(request);
+
+		if(Validate.hasText(url)){
+			String queryString = request.getQueryString();
+
+			if(Validate.hasText(queryString)){
+				final StringBuilder sb = new StringBuilder(url);
+				
+				sb.append('?').append(queryString);
+
+				return sb.toString();
+			}
+		}
+
+		return url;
 	}
 
 }

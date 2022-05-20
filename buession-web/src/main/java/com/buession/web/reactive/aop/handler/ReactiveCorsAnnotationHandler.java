@@ -25,25 +25,24 @@
 package com.buession.web.reactive.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.collect.Arrays;
 import com.buession.core.validator.Validate;
-import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
-import com.buession.web.http.HttpHeader;
+import com.buession.web.aop.handler.AbstractCorsAnnotationHandler;
+import com.buession.web.http.CorsConfig;
 import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.request.RequestUtils;
+import com.buession.web.reactive.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.util.StringUtils;
-
-import java.util.Arrays;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
  * @author Yong.Teng
  */
-public class ReactiveCorsAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
+public class ReactiveCorsAnnotationHandler extends AbstractCorsAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveCorsAnnotationHandler.class);
 
@@ -72,43 +71,33 @@ public class ReactiveCorsAnnotationHandler extends AbstractPrimitiveCrossOriginA
 			return null;
 		}
 
-		HttpHeaders httpHeaders = serverHttp.getResponse().getHeaders();
+		ServerHttpResponse response = serverHttp.getResponse();
+
+		CorsConfig.Builder corsConfigBuilder = CorsConfig.Builder.create();
 
 		if(Validate.isNotEmpty(cors.origins())){
-			for(String origin : cors.origins()){
-				if(isDynamicOrigin(origin)){
-					String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
-
-					if(Validate.hasText(accessControlAllowOrigin)){
-						httpHeaders.setAccessControlAllowOrigin(origin);
-					}
-				}else{
-					httpHeaders.setAccessControlAllowOrigin(origin);
-				}
-			}
+			corsConfigBuilder.origins(Arrays.toSet(cors.origins()));
 		}
 
 		if(Validate.isNotEmpty(cors.allowedMethods())){
-			httpHeaders.set(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(),
-					StringUtils.collectionToCommaDelimitedString(Arrays.asList(cors.allowedMethods())));
+			corsConfigBuilder.allowedMethods(Arrays.toSet(cors.allowedMethods()));
 		}
 
 		if(Validate.isNotEmpty(cors.allowedHeaders())){
-			httpHeaders.setAccessControlAllowHeaders(Arrays.asList(cors.allowedHeaders()));
+			corsConfigBuilder.allowedHeaders(Arrays.toSet(cors.allowedHeaders()));
 		}
 
 		if(Validate.isNotEmpty(cors.exposedHeaders())){
-			httpHeaders.setAccessControlExposeHeaders(Arrays.asList(cors.exposedHeaders()));
+			corsConfigBuilder.exposedHeaders(Arrays.toSet(cors.exposedHeaders()));
 		}
 
-		Boolean allowCredentials = allowCredentials(cors);
-		if(allowCredentials != null){
-			httpHeaders.setAccessControlAllowCredentials(allowCredentials);
-		}
+		corsConfigBuilder.allowCredentials(allowCredentials(cors));
 
 		if(cors.maxAge() > -1){
-			httpHeaders.setAccessControlMaxAge(cors.maxAge());
+			corsConfigBuilder.maxAge(cors.maxAge());
 		}
+
+		ResponseUtils.cors(corsConfigBuilder.build(), request, response);
 
 		return null;
 	}

@@ -61,6 +61,7 @@ public abstract class AbstractBasicRestController<P, E, V> extends AbstractRestC
 		return pageNotFound(request);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	protected Response<V> pageNotFound(final ServerHttpRequest request){
 		return (Response<V>) super.pageNotFound(request.getPath().toString());
 	}

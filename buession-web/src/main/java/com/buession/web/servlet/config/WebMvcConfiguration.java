@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.config;
 
+import com.buession.web.servlet.ServletCondition;
 import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -35,6 +37,7 @@ import java.util.List;
  * @author Yong.Teng
  */
 @Configuration(proxyBeanMethods = false)
+@Conditional(ServletCondition.class)
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Override

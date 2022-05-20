@@ -30,7 +30,6 @@ import com.buession.web.http.response.annotation.Cors;
 /**
  * @author Yong.Teng
  */
-public interface PrimitiveCrossOriginAnnotationMethodInterceptor extends
-		AnnotationMethodInterceptor<Cors> {
+public interface CorsAnnotationMethodInterceptor extends AnnotationMethodInterceptor<Cors> {
 
 }

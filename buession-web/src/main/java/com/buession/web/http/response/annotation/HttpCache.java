@@ -38,15 +38,36 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ResponseHeader(name = "Expires")
 public @interface HttpCache {
 
 	/**
-	 * Alias for {@link ResponseHeader#value()}.
+	 * 缓存指令，详细描述：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control</a>
 	 *
-	 * @return 缓存值
+	 * @return 缓存指令
 	 */
-	@AliasFor(annotation = ResponseHeader.class)
-	String[] value() default {};
+	@AliasFor("value")
+	String cacheControl() default "";
+
+	/**
+	 * 缓存指令，详细描述：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control</a>
+	 *
+	 * @return 缓存指令
+	 */
+	@AliasFor("cacheControl")
+	String value() default "";
+
+	/**
+	 * 缓存过期时间，详细描述：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Expires" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Expires</a>
+	 *
+	 * @return 缓存过期时间
+	 */
+	String expires() default "";
+
+	/**
+	 * Pragma 是一个在 HTTP/1.0 中规定的通用首部，这个首部的效果依赖于不同的实现，所以在“请求-响应”链中可能会有不同的效果。它用来向后兼容只支持 HTTP/1.0 协议的缓存服务器，详细描述：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Pragma" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Pragma</a>
+	 *
+	 * @return 缓存指令
+	 */
+	String pragma() default "";
 
 }

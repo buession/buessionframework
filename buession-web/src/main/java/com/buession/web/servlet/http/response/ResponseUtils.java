@@ -21,13 +21,17 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.http.response;
 
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+import com.buession.web.http.CorsConfig;
 import com.buession.web.http.HttpHeader;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
@@ -57,6 +61,47 @@ public class ResponseUtils {
 		if(response != null){
 			long maxAge = date.getTime() - System.currentTimeMillis();
 			httpCache(response, maxAge, date);
+		}
+	}
+
+	public static void cors(final CorsConfig corsConfig, final HttpServletRequest request,
+							final HttpServletResponse response){
+		if(Validate.isNotEmpty(corsConfig.getOrigins())){
+			for(String origin : corsConfig.getOrigins()){
+				if("$http_origin".equalsIgnoreCase(origin)){
+					String accessControlAllowOrigin = request.getHeader(HttpHeader.ORIGIN.getValue());
+
+					if(Validate.hasText(accessControlAllowOrigin)){
+						response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), origin);
+					}
+				}else{
+					response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), origin);
+				}
+			}
+		}
+
+		if(Validate.isNotEmpty(corsConfig.getAllowedMethods())){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_METHODS.getValue(),
+					StringUtils.join(corsConfig.getAllowedMethods(), ","));
+		}
+
+		if(Validate.isNotEmpty(corsConfig.getAllowedHeaders())){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_HEADERS.getValue(),
+					StringUtils.join(corsConfig.getAllowedHeaders(), ","));
+		}
+
+		if(Validate.isNotEmpty(corsConfig.getExposedHeaders())){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS.getValue(),
+					StringUtils.join(corsConfig.getExposedHeaders(), ","));
+		}
+
+		if(corsConfig.getAllowCredentials() != null){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS.getValue(),
+					Boolean.toString(corsConfig.getAllowCredentials()));
+		}
+
+		if(corsConfig.getMaxAge() != null){
+			response.setHeader(HttpHeader.ACCESS_CONTROL_MAX_AGE.getValue(), Long.toString(corsConfig.getMaxAge()));
 		}
 	}
 

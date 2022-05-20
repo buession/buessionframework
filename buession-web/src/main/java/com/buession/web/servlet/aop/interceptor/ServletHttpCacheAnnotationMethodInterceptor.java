@@ -25,9 +25,10 @@
 package com.buession.web.servlet.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.aop.interceptor.AbstractCorsAnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.Cors;
-import com.buession.web.servlet.aop.handler.ServletCorsAnnotationHandler;
+import com.buession.web.http.response.annotation.HttpCache;
+import com.buession.web.servlet.aop.handler.ServletHttpCacheAnnotationHandler;
 
 /**
  * {@link Cors} 注解拦截器
@@ -35,15 +36,14 @@ import com.buession.web.servlet.aop.handler.ServletCorsAnnotationHandler;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletCorsAnnotationMethodInterceptor
-		extends AbstractCorsAnnotationMethodInterceptor {
+public class ServletHttpCacheAnnotationMethodInterceptor extends AbstractHttpCacheAnnotationMethodInterceptor {
 
-	public ServletCorsAnnotationMethodInterceptor(){
-		super(new ServletCorsAnnotationHandler());
+	public ServletHttpCacheAnnotationMethodInterceptor(){
+		super(new ServletHttpCacheAnnotationHandler());
 	}
 
-	public ServletCorsAnnotationMethodInterceptor(AnnotationResolver<Cors> resolver){
-		super(new ServletCorsAnnotationHandler(), resolver);
+	public ServletHttpCacheAnnotationMethodInterceptor(AnnotationResolver<HttpCache> resolver){
+		super(new ServletHttpCacheAnnotationHandler(), resolver);
 	}
 
 }

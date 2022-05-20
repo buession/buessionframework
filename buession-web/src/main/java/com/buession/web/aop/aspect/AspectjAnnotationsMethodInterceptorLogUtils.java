@@ -43,7 +43,7 @@ public class AspectjAnnotationsMethodInterceptorLogUtils {
 		if(logger.isTraceEnabled()){
 			final StringBuilder message = new StringBuilder(255);
 
-			message.append("Invoking a method decorated with a Buession annotation\n");
+			message.append("Invoking a method decorated with a Buession annotation").append("\n");
 			message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
 			message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
 			message.append("\tannotations: ")
