@@ -26,7 +26,7 @@
  */
 package com.buession.web.reactive.config;
 
-import com.buession.web.reactive.WebFluxCondition;
+import com.buession.web.reactive.OnWebFluxCondition;
 import com.buession.web.reactive.annotation.RequestClientIpHandlerMethodArgumentResolver;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +37,7 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
  * @author Yong.Teng
  */
 @Configuration(proxyBeanMethods = false)
-@Conditional(WebFluxCondition.class)
+@Conditional(OnWebFluxCondition.class)
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	@Override

@@ -25,7 +25,7 @@
 package com.buession.web.reactive.config;
 
 import com.buession.web.bind.converter.FormatterRegistryUtils;
-import com.buession.web.reactive.WebFluxCondition;
+import com.buession.web.reactive.OnWebFluxCondition;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -36,7 +36,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
  * @since 2.0.0
  */
 @Configuration(proxyBeanMethods = false)
-@Conditional(WebFluxCondition.class)
+@Conditional(OnWebFluxCondition.class)
 public class BindWebMvcConfigurerConfiguration implements WebFluxConfigurer {
 
 	@Override

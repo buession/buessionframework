@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.reactive;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -33,14 +33,15 @@ import org.springframework.util.ClassUtils;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletCondition implements Condition {
+public class OnWebFluxCondition implements Condition {
 
 	private static Boolean result = null;
 
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata){
 		if(result == null){
-			result = ClassUtils.isPresent("javax.servlet.Servlet", context.getClassLoader());
+			result = ClassUtils.isPresent("org.springframework.web.reactive.config.WebFluxConfigurationSupport",
+					context.getClassLoader());
 		}
 
 		return result;

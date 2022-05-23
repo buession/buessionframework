@@ -24,7 +24,7 @@
  */
 package com.buession.web.servlet.config;
 
-import com.buession.web.servlet.ServletCondition;
+import com.buession.web.servlet.OnServletCondition;
 import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +37,7 @@ import java.util.List;
  * @author Yong.Teng
  */
 @Configuration(proxyBeanMethods = false)
-@Conditional(ServletCondition.class)
+@Conditional(OnServletCondition.class)
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Override
