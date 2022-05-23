@@ -93,7 +93,7 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 		sb.append(url);
 
 		if(Validate.isNotEmpty(parameters)){
-			final String queryString = HttpURI.toQueryString(parameters, false);
+			final String queryString = HttpURI.toQueryString(parameters, true);
 
 			if(url.contains("?")){
 				if(StringUtils.endsWith(url, '&') == false){
