@@ -37,7 +37,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
  */
 @Configuration(proxyBeanMethods = false)
 @Conditional(OnWebFluxCondition.class)
-public class WebFluxBindWebMvcrConfiguration implements WebFluxConfigurer {
+public class WebFluxBindWebMvcConfigurerConfiguration implements WebFluxConfigurer {
 
 	@Override
 	public void addFormatters(FormatterRegistry registry){

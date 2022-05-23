@@ -37,7 +37,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration(proxyBeanMethods = false)
 @Conditional(OnServletCondition.class)
-public class BindWebMvcConfigurerConfiguration implements WebMvcConfigurer {
+public class ServletBindWebMvcConfigurerConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addFormatters(FormatterRegistry registry){
