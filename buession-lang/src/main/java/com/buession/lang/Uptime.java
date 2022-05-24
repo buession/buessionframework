@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -106,8 +106,7 @@ public class Uptime implements Serializable {
 	public String toString(){
 		final StringBuilder sb = new StringBuilder(32);
 
-		sb.append("days=").append(days).append(", ");
-		sb.append("seconds=").append(seconds);
+		sb.append("days=").append(days).append(", ").append("seconds=").append(seconds);
 
 		return sb.toString();
 	}

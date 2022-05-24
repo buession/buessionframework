@@ -47,6 +47,7 @@ import java.util.function.Function;
  * Redis 基本操作封装扩展，可序列化对象和反序列化为对象
  *
  * @author Yong.Teng
+ * @see BaseRedisTemplate
  */
 public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations, ClusterOperations,
 		ConnectionOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations, ListOperations,

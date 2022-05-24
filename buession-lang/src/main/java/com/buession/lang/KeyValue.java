@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -28,28 +28,63 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * Key =&lt; Value 键值对对象
+ *
+ * @param <K>
+ * 		键类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  */
 public class KeyValue<K, V> implements Serializable {
 
 	private final static long serialVersionUID = 7107772931418041867L;
 
+	/**
+	 * 键名
+	 */
 	private K key;
 
+	/**
+	 * 值
+	 */
 	private V value;
 
+	/**
+	 * 构造函数
+	 */
 	public KeyValue(){
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param key
+	 * 		键名
+	 * @param value
+	 * 		值
+	 */
 	public KeyValue(K key, V value){
 		setKey(key);
 		this.value = value;
 	}
 
+	/**
+	 * 返回键名
+	 *
+	 * @return 键名
+	 */
 	public K getKey(){
 		return key;
 	}
 
+	/**
+	 * 设置键名
+	 *
+	 * @param key
+	 * 		键名
+	 */
 	public void setKey(K key){
 		if(key == null){
 			throw new IllegalArgumentException("Key cloud not be null.");
@@ -57,10 +92,21 @@ public class KeyValue<K, V> implements Serializable {
 		this.key = key;
 	}
 
+	/**
+	 * 返回值
+	 *
+	 * @return 值
+	 */
 	public V getValue(){
 		return value;
 	}
 
+	/**
+	 * 设置值
+	 *
+	 * @param value
+	 * 		值
+	 */
 	public void setValue(V value){
 		this.value = value;
 	}

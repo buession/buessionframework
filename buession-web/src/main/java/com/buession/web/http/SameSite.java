@@ -21,10 +21,30 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.web.http;/**
- * 
+ */
+package com.buession.web.http;
+
+/**
+ * SameSite 是HTTP响应头 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie/SameSite" target="_blank"></a>Set-Cookie 的属性之一，它允许您声明该 Cookie 是否仅限于第一方或者同一站点上下文
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public enum SameSite {
+ */
+public enum SameSite {
+
+	/**
+	 * Cookies 将在所有上下文中发送，即允许跨站发送
+	 */
+	NONE,
+
+	/**
+	 * Cookies 允许与顶级导航一起发送，并将与第三方网站发起的GET请求一起发送，这是浏览器中的默认值
+	 */
+	LAX,
+
+	/**
+	 * Cookies 只会在第一方上下文中发送，不会与第三方网站发起的请求一起发送
+	 */
+	STRICT
+
 }

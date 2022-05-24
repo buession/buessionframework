@@ -19,43 +19,87 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * 地理位置
+ *
  * @author Yong.Teng
  */
-public class Geo {
+public class Geo implements Serializable {
 
+	private final static long serialVersionUID = 957160301954808183L;
+
+	/**
+	 * 精度
+	 */
 	private double longitude;
 
+	/**
+	 * 纬度
+	 */
 	private double latitude;
 
+	/**
+	 * 构造函数
+	 */
 	public Geo(){
 
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param longitude
+	 * 		精度
+	 * @param latitude
+	 * 		纬度
+	 */
 	public Geo(double longitude, double latitude){
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}
 
+	/**
+	 * 返回精度
+	 *
+	 * @return 精度
+	 */
 	public double getLongitude(){
 		return longitude;
 	}
 
+	/**
+	 * 设置精度
+	 *
+	 * @param longitude
+	 * 		精度
+	 */
 	public void setLongitude(double longitude){
 		this.longitude = longitude;
 	}
 
+	/**
+	 * 返回纬度
+	 *
+	 * @return 纬度
+	 */
 	public double getLatitude(){
 		return latitude;
 	}
 
+	/**
+	 * 设置纬度
+	 *
+	 * @param latitude
+	 * 		纬度
+	 */
 	public void setLatitude(double latitude){
 		this.latitude = latitude;
 	}

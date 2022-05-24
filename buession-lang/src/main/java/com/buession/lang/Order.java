@@ -19,18 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
 
 /**
+ * 排序
+ *
  * @author Yong.Teng
  */
 public enum Order {
 
-    ASC,
+	ASC,
 
-    DESC
+	DESC
 
 }

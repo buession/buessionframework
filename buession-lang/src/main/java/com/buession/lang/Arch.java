@@ -25,13 +25,21 @@
 package com.buession.lang;
 
 /**
+ * 架构
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public enum Arch {
 
+	/**
+	 * 32 位架构
+	 */
 	BIT_32("32"),
 
+	/**
+	 * 64 位架构
+	 */
 	BIT_64("64"),
 
 	UNKNOWN("Unknown");
