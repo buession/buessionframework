@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Http 客户端
+ *
  * @author Yong.Teng
  */
 public interface HttpClient {

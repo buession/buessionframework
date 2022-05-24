@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Http 客户端抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractHttpClient implements HttpClient {
@@ -197,13 +199,13 @@ public abstract class AbstractHttpClient implements HttpClient {
 	@Override
 	public Response post(String url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return post(url, data, parameters);
+		return post(url, data, parameters, null);
 	}
 
 	@Override
 	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return post(url, data, parameters);
+		return post(url, data, parameters, null);
 	}
 
 	@Override
