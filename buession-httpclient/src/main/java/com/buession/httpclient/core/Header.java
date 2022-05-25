@@ -26,6 +26,7 @@ package com.buession.httpclient.core;
 
 import com.buession.core.utils.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -63,6 +64,104 @@ public class Header {
 	public Header(String name, String value){
 		this.name = name;
 		this.value = value;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, char value){
+		this(name, Character.toString(value));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, byte[] value){
+		this(name, new String(value, StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, short value){
+		this(name, Short.toString(value));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, int value){
+		this(name, Integer.toString(value));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, long value){
+		this(name, Long.toString(value));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, float value){
+		this(name, Float.toString(value));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @since 2.0.0
+	 */
+	public Header(String name, double value){
+		this(name, Double.toString(value));
 	}
 
 	/**
@@ -124,11 +223,10 @@ public class Header {
 
 	@Override
 	public String toString(){
-		final StringJoiner stringJoiner = new StringJoiner(": ");
-
-		stringJoiner.add(name).add(value);
-
-		return stringJoiner.toString();
+		return new StringJoiner(": ")
+				.add(name)
+				.add(value)
+				.toString();
 	}
 
 }
