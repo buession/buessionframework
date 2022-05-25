@@ -19,29 +19,56 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.core.utils;
 
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
+ * {@link Character}、{@link char} 工具类
+ *
  * @author Yong.Teng
- * @since 1.3.2
+ * @since 2.0.0
  */
-public class ListTest {
+public class CharacterUtils extends org.apache.commons.lang3.CharUtils {
 
-	@Test
-	public void test(){
-		List<Object> list = new ArrayList<>(2);
+	/**
+	 * 将 char 转换为 byte 数组
+	 *
+	 * @param c
+	 * 		char
+	 *
+	 * @return byte 数组
+	 */
+	public static byte[] toBytes(char c){
+		final byte[] result = new byte[2];
 
-		list.add("A");
-		list.add("B");
-		
+		result[0] = (byte) ((c & 0xFF00) >> 8);
+		result[1] = (byte) (c & 0xFF);
+
+		return result;
+	}
+
+	/**
+	 * 将 char 数组转换为 byte 数组
+	 *
+	 * @param chars
+	 * 		char 数组
+	 *
+	 * @return byte 数组
+	 */
+	public static byte[] toBytes(char[] chars){
+		CharBuffer charBuffer = CharBuffer.allocate(chars.length);
+
+		charBuffer.put(chars);
+		charBuffer.flip();
+
+		ByteBuffer byteBuffer = StandardCharsets.US_ASCII.encode(charBuffer);
+		return byteBuffer.array();
 	}
 
 }

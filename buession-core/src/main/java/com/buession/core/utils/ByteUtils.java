@@ -24,15 +24,48 @@
  */
 package com.buession.core.utils;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
- * Byte 工具类
+ * {@link Byte}、byte 工具类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public class ByteUtils {
+
+	/**
+	 * 将 byte 数组转换为 char
+	 *
+	 * @param bytes
+	 * 		byte 数组
+	 *
+	 * @return char
+	 */
+	public static char toChar(byte[] bytes){
+		return (char) (((bytes[0] & 0xFF) << 8) | (bytes[1] & 0xFF));
+	}
+
+	/**
+	 * 将 byte 数组转换为 char 数组
+	 *
+	 * @param bytes
+	 * 		byte 数组
+	 *
+	 * @return char 数组
+	 */
+	public static char[] toChars(byte[] bytes){
+		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
+
+		byteBuffer.put(bytes);
+		byteBuffer.flip();
+
+		CharBuffer charBuffer = StandardCharsets.US_ASCII.decode(byteBuffer);
+		return charBuffer.array();
+	}
 
 	/**
 	 * Byte 连接
