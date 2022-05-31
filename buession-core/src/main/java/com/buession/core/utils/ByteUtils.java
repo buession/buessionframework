@@ -63,7 +63,7 @@ public class ByteUtils {
 		byteBuffer.put(bytes);
 		byteBuffer.flip();
 
-		CharBuffer charBuffer = StandardCharsets.US_ASCII.decode(byteBuffer);
+		CharBuffer charBuffer = StandardCharsets.UTF_8.decode(byteBuffer);
 		return charBuffer.array();
 	}
 

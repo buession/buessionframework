@@ -67,7 +67,7 @@ public class CharacterUtils extends org.apache.commons.lang3.CharUtils {
 		charBuffer.put(chars);
 		charBuffer.flip();
 
-		ByteBuffer byteBuffer = StandardCharsets.US_ASCII.encode(charBuffer);
+		ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(charBuffer);
 		return byteBuffer.array();
 	}
 
