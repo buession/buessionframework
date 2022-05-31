@@ -19,16 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.annotation;
 
+import com.buession.core.validator.constraintvalidators.TelConstraintValidator;
 import com.buession.core.validator.routines.TelValidator;
 
 import javax.validation.Constraint;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -40,7 +42,8 @@ import java.lang.annotation.Target;
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {TelConstraintValidator.class})
+@Repeatable(Tel.List.class)
 public @interface Tel {
 
 	String message() default "{buession.validation.constraints.Tel.message}";
@@ -53,5 +56,15 @@ public @interface Tel {
 	 * @return 当值为 null ，是否验证
 	 */
 	boolean validWhenNull() default true;
+
+	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
+			ElementType.PARAMETER, ElementType.TYPE_USE})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Documented
+	@interface List {
+
+		Tel[] value();
+
+	}
 
 }
