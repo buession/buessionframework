@@ -8,7 +8,7 @@
 [![GitHub release](https://img.shields.io/github/release/buession/buessionframework.svg)](https://github.com/buession/buessionframework/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-![Buession Framework](docs/imags/logo.png "Buession Framework")
+![Buession Framework](docs/images/logo.png "Buession Framework")
 
 ## Requirements
 
