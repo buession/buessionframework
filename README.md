@@ -7,6 +7,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.buession/buession-core.svg)](https://search.maven.org/search?q=g:com.buession)
 [![GitHub release](https://img.shields.io/github/release/buession/buessionframework.svg)](https://github.com/buession/buessionframework/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![Java support](https://img.shields.io/badge/Java-8+-green?logo=java&logoColor=white)](https://openjdk.java.net/)
 
 <img src="docs/images/logo.png" alt="Buession Framework" title="Buession Framework" width="280px" style="text-align:center" />
 
