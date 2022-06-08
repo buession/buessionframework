@@ -26,19 +26,15 @@
  */
 package com.buession.web.servlet.filter;
 
-import com.buession.core.Framework;
-
-import java.util.Collections;
-import java.util.Map;
-
 /**
  * @author Yong.Teng
+ * @see PoweredByFilter
  */
-public class PoweredByHeaderFilter extends ResponseHeadersFilter {
+@Deprecated
+public class PoweredByHeaderFilter extends PoweredByFilter {
 
-	@Override
-	public Map<String, String> getHeaders(){
-		return Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION);
+	public PoweredByHeaderFilter(){
+		super();
 	}
 
 }

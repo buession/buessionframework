@@ -33,11 +33,36 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * Server 信息过滤器
+ *
  * @author Yong.Teng
  */
 public class ServerInfoFilter extends ResponseHeadersFilter implements IServerInfoFilter {
 
+	/**
+	 * 响应头名称
+	 */
 	private String headerName = SERVER_NAME_HEADER_NAME;
+
+	/**
+	 * 构造函数
+	 */
+	public ServerInfoFilter(){
+		super();
+		setHeaders();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param headerName
+	 * 		响应头名称
+	 */
+	public ServerInfoFilter(final String headerName){
+		super();
+		this.headerName = headerName;
+		setHeaders();
+	}
 
 	@Override
 	public String getHeaderName(){
@@ -49,13 +74,12 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 		this.headerName = headerName;
 	}
 
-	@Override
-	public Map<String, String> getHeaders(){
-		return Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName()));
-	}
-
 	protected String format(final String computerName){
 		return computerName;
+	}
+
+	protected void setHeaders(){
+		setHeaders(Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName())));
 	}
 
 }

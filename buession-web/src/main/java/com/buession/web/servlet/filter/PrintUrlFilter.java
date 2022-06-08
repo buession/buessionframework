@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * 打印当前请求 URL 过滤器
+ *
  * @author Yong.Teng
  */
 public class PrintUrlFilter extends OncePerRequestFilter {
@@ -69,7 +71,7 @@ public class PrintUrlFilter extends OncePerRequestFilter {
 
 			if(Validate.hasText(queryString)){
 				final StringBuilder sb = new StringBuilder(url);
-				
+
 				sb.append('?').append(queryString);
 
 				return sb.toString();

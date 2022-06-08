@@ -90,7 +90,7 @@ public class CorsFilter extends OncePerRequestFilter {
 	 * @param allowedMethods
 	 * 		允许请求的方法
 	 */
-	public CorsFilter(Set<String> origins, Set<HttpMethod> allowedMethods){
+	public CorsFilter(final Set<String> origins, final Set<HttpMethod> allowedMethods){
 		setOrigins(origins);
 		setAllowedMethods(allowedMethods);
 	}
@@ -111,8 +111,8 @@ public class CorsFilter extends OncePerRequestFilter {
 	 * @param maxAge
 	 * 		preflight 请求的结果能够被缓存时间（单位：秒）
 	 */
-	public CorsFilter(Set<String> origins, Set<HttpMethod> allowedMethods, Set<String> allowedHeaders,
-					  Set<String> exposedHeaders, Boolean allowCredentials, Long maxAge){
+	public CorsFilter(final Set<String> origins, final Set<HttpMethod> allowedMethods, final Set<String> allowedHeaders,
+					  final Set<String> exposedHeaders, final Boolean allowCredentials, final Long maxAge){
 		this(origins, allowedMethods);
 		setAllowedHeaders(allowedHeaders);
 		setExposedHeaders(exposedHeaders);

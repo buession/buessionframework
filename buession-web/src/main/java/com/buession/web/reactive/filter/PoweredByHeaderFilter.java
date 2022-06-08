@@ -21,24 +21,23 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
 
-import com.buession.core.Framework;
-
-import java.util.Collections;
-import java.util.Map;
-
 /**
  * @author Yong.Teng
+ * @see PoweredByFilter
  */
-public class PoweredByHeaderFilter extends ResponseHeadersFilter {
+@Deprecated
+public class PoweredByHeaderFilter extends PoweredByFilter {
 
-	@Override
-	public Map<String, String> getHeaders(){
-		return Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION);
+	/**
+	 * 构造函数
+	 */
+	public PoweredByHeaderFilter(){
+		super();
 	}
 
 }

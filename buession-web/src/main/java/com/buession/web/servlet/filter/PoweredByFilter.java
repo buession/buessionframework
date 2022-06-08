@@ -21,65 +21,30 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
+package com.buession.web.servlet.filter;
 
-import com.buession.web.http.response.IServerInfoFilter;
-import com.buession.web.utils.ServerUtils;
+import com.buession.core.Framework;
 
 import java.util.Collections;
 import java.util.Map;
 
 /**
- * Server 信息过滤器
+ * Powered By 过滤器
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class ServerInfoFilter extends ResponseHeadersFilter implements IServerInfoFilter {
-
-	/**
-	 * 响应头名称
-	 */
-	private String headerName = SERVER_NAME_HEADER_NAME;
+public class PoweredByFilter extends ResponseHeadersFilter {
 
 	/**
 	 * 构造函数
 	 */
-	public ServerInfoFilter(){
+	public PoweredByFilter(){
 		super();
-		setHeaders();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param headerName
-	 * 		响应头名称
-	 */
-	public ServerInfoFilter(final String headerName){
-		super();
-		this.headerName = headerName;
-		setHeaders();
-	}
-
-	@Override
-	public String getHeaderName(){
-		return headerName;
-	}
-
-	@Override
-	public void setHeaderName(String headerName){
-		this.headerName = headerName;
-	}
-
-	protected String format(final String computerName){
-		return computerName;
-	}
-
-	protected void setHeaders(){
-		setHeaders(Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName())));
+		setHeaders(Collections.singletonMap("X-Powered-By", Framework.NAME + "/" + Framework.VERSION));
 	}
 
 }

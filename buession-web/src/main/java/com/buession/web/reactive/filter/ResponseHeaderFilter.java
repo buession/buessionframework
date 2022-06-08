@@ -24,6 +24,7 @@
  */
 package com.buession.web.reactive.filter;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -62,8 +63,8 @@ public class ResponseHeaderFilter implements WebFilter {
 	 * @param value
 	 * 		响应头值
 	 */
-	public ResponseHeaderFilter(String name, String value){
-		this.name = name;
+	public ResponseHeaderFilter(final String name, final String value){
+		setName(name);
 		this.value = value;
 	}
 
@@ -83,6 +84,7 @@ public class ResponseHeaderFilter implements WebFilter {
 	 * 		响应头名称
 	 */
 	public void setName(String name){
+		Assert.isBlank(name, "HTTP Response header name cloud not be empty or null");
 		this.name = name;
 	}
 

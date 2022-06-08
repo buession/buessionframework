@@ -25,14 +25,30 @@
 package com.buession.web.http.response;
 
 /**
+ * Server 信息过滤器，将主机名称通过响应头输出
+ *
  * @author Yong.Teng
  */
 public interface IServerInfoFilter {
 
+	/**
+	 * 默认响应头名称
+	 */
 	String SERVER_NAME_HEADER_NAME = "Server-Name";
 
+	/**
+	 * 返回响应头名称
+	 *
+	 * @return 响应头名称
+	 */
 	String getHeaderName();
 
+	/**
+	 * 设置响应头名称
+	 *
+	 * @param headerName
+	 * 		响应头名称
+	 */
 	void setHeaderName(String headerName);
 
 }

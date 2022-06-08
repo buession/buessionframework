@@ -46,15 +46,6 @@ public class ResponseHeadersFilter implements WebFilter {
 	private Map<String, String> headers;
 
 	/**
-	 * 返回响应头
-	 *
-	 * @return 响应头，Key =&gt; Value 形式
-	 */
-	public Map<String, String> getHeaders(){
-		return headers;
-	}
-
-	/**
 	 * 构造函数
 	 */
 	public ResponseHeadersFilter(){
@@ -68,8 +59,17 @@ public class ResponseHeadersFilter implements WebFilter {
 	 *
 	 * @since 2.0.0
 	 */
-	public ResponseHeadersFilter(Map<String, String> headers){
+	public ResponseHeadersFilter(final Map<String, String> headers){
 		this.headers = headers;
+	}
+
+	/**
+	 * 返回响应头
+	 *
+	 * @return 响应头，Key =&gt; Value 形式
+	 */
+	public Map<String, String> getHeaders(){
+		return headers;
 	}
 
 	/**
@@ -92,4 +92,5 @@ public class ResponseHeadersFilter implements WebFilter {
 
 		return chain.filter(exchange);
 	}
+
 }

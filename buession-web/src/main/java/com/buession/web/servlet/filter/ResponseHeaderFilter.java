@@ -26,6 +26,7 @@
  */
 package com.buession.web.servlet.filter;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -67,8 +68,8 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 * @param value
 	 * 		响应头值
 	 */
-	public ResponseHeaderFilter(String name, String value){
-		this.name = name;
+	public ResponseHeaderFilter(final String name, final String value){
+		setName(name);
 		this.value = value;
 	}
 
@@ -88,6 +89,7 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 * 		响应头名称
 	 */
 	public void setName(String name){
+		Assert.isBlank(name, "HTTP Response header name cloud not be empty or null");
 		this.name = name;
 	}
 
