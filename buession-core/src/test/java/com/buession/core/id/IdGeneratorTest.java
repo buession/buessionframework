@@ -37,4 +37,11 @@ public class IdGeneratorTest {
 		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator();
 		System.out.println(idGenerator.nextId());
 	}
+
+	@Test
+	public void nanoId(){
+		NanoIDIdGenerator idGenerator = new NanoIDIdGenerator();
+		System.out.println(idGenerator.nextId());
+	}
+
 }
