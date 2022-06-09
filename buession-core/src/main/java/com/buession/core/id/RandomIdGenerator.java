@@ -36,9 +36,14 @@ import com.buession.core.utils.StringUtils;
 public class RandomIdGenerator implements IdGenerator<String> {
 
 	/**
+	 * 默认随机长度
+	 */
+	public final static int DEFAULT_LENGTH = 16;
+
+	/**
 	 * 随机长度
 	 */
-	private int length = 16;
+	private int length = DEFAULT_LENGTH;
 
 	/**
 	 * 构造函数，生成 16 位随机 ID
