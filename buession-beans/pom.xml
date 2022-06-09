@@ -49,16 +49,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.buession</groupId>
-			<artifactId>buession-lang</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.buession</groupId>
-			<artifactId>buession-aop</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.buession</groupId>
 			<artifactId>buession-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
