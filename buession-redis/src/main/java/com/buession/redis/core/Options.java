@@ -19,50 +19,201 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.serializer.Serializer;
+import com.buession.redis.serializer.ByteArraySerializer;
+import com.buession.redis.serializer.FastJsonJsonSerializer;
+import com.buession.redis.serializer.GsonJsonSerializer;
+import com.buession.redis.serializer.JacksonJsonSerializer;
 
 /**
  * @author Yong.Teng
  */
 public class Options {
 
+	/**
+	 * Key 前缀
+	 */
 	private String prefix;
 
+	/**
+	 * 序列化实例
+	 *
+	 * @see Serializer
+	 * @see ByteArraySerializer
+	 * @see FastJsonJsonSerializer
+	 * @see GsonJsonSerializer
+	 * @see JacksonJsonSerializer
+	 */
 	private Serializer serializer;
 
+	/**
+	 * 是否开启事务支持
+	 */
 	private boolean enableTransactionSupport;
 
+	/**
+	 * 返回 Key 前缀
+	 *
+	 * @return Key 前缀
+	 */
 	public String getPrefix(){
 		return prefix;
 	}
 
+	/**
+	 * 设置 Key 前缀
+	 *
+	 * @param prefix
+	 * 		Key 前缀
+	 */
 	public void setPrefix(String prefix){
 		this.prefix = prefix;
 	}
 
+	/**
+	 * 返回序列化实例
+	 *
+	 * @return 序列化实例
+	 *
+	 * @see Serializer
+	 * @see ByteArraySerializer
+	 * @see FastJsonJsonSerializer
+	 * @see GsonJsonSerializer
+	 * @see JacksonJsonSerializer
+	 */
 	public Serializer getSerializer(){
 		return serializer;
 	}
 
+	/**
+	 * 设置序列化实例
+	 *
+	 * @param serializer
+	 * 		序列化实例
+	 *
+	 * @see Serializer
+	 * @see ByteArraySerializer
+	 * @see FastJsonJsonSerializer
+	 * @see GsonJsonSerializer
+	 * @see JacksonJsonSerializer
+	 */
 	public void setSerializer(Serializer serializer){
 		this.serializer = serializer;
 	}
 
+	/**
+	 * 返回是否开启事务支持
+	 *
+	 * @return 是否开启事务支持
+	 */
 	public boolean isEnableTransactionSupport(){
 		return getEnableTransactionSupport();
 	}
 
+	/**
+	 * 返回是否开启事务支持
+	 *
+	 * @return 是否开启事务支持
+	 */
 	public boolean getEnableTransactionSupport(){
 		return enableTransactionSupport;
 	}
 
+	/**
+	 * 设置是否开启事务支持
+	 *
+	 * @param enableTransactionSupport
+	 * 		是否开启事务支持
+	 */
 	public void setEnableTransactionSupport(boolean enableTransactionSupport){
 		this.enableTransactionSupport = enableTransactionSupport;
+	}
+
+	/**
+	 * {@link Builder} 构建器
+	 *
+	 * @author yong.teng
+	 * @since 2.0.0
+	 */
+	public final static class Builder {
+
+		private final Options options = new Options();
+
+		private Builder(){
+
+		}
+
+		/**
+		 * 获取 {@link Builder} 实例
+		 *
+		 * @return {@link Builder} 实例
+		 */
+		public static Builder getInstance(){
+			return new Builder();
+		}
+
+		/**
+		 * 设置 Key 前缀
+		 *
+		 * @param prefix
+		 * 		Key 前缀
+		 *
+		 * @return {@link Builder} 实例
+		 */
+		public Builder prefix(String prefix){
+			options.setPrefix(prefix);
+			return this;
+		}
+
+		/**
+		 * 设置序列化实例
+		 *
+		 * @param serializer
+		 * 		序列化实例
+		 *
+		 * @return {@link Builder} 实例
+		 *
+		 * @see Serializer
+		 * @see ByteArraySerializer
+		 * @see FastJsonJsonSerializer
+		 * @see GsonJsonSerializer
+		 * @see JacksonJsonSerializer
+		 */
+		public Builder serializer(Serializer serializer){
+			options.setSerializer(serializer);
+			return this;
+		}
+
+		/**
+		 * 设置是否开启事务支持
+		 *
+		 * @param enableTransactionSupport
+		 * 		是否开启事务支持
+		 *
+		 * @return {@link Builder} 实例
+		 */
+		public Builder enableTransactionSupport(Boolean enableTransactionSupport){
+			if(enableTransactionSupport != null){
+				options.setEnableTransactionSupport(enableTransactionSupport);
+			}
+			
+			return this;
+		}
+
+		/**
+		 * 构建 {@link Options}
+		 *
+		 * @return {@link Options} 实例
+		 */
+		public Options build(){
+			return options;
+		}
+
 	}
 
 }

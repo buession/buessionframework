@@ -4,6 +4,11 @@
 
 ## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-02-21)
 
+### 🔨依赖升级
+
+-
+
+
 ### ⭐ 新特性
 
 - **buession-core：** 新增 ListBuilder 增加 addIfPresent 方法，值为 null，不添加到 List 中

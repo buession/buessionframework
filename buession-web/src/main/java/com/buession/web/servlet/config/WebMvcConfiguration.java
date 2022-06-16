@@ -24,12 +24,14 @@
  */
 package com.buession.web.servlet.config;
 
+import com.buession.web.bind.converter.FormatterRegistryUtils;
 import com.buession.web.servlet.OnServletCondition;
 import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -38,10 +40,15 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @Conditional(OnServletCondition.class)
-public class WebMvcConfiguration extends WebMvcConfigurationSupport {
+public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	@Override
-	protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+	public void addFormatters(FormatterRegistry registry){
+		FormatterRegistryUtils.addConverters(registry);
+	}
+
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
 		argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
 	}
 

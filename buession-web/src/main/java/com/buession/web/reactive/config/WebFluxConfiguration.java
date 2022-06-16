@@ -26,10 +26,12 @@
  */
 package com.buession.web.reactive.config;
 
+import com.buession.web.bind.converter.FormatterRegistryUtils;
 import com.buession.web.reactive.OnWebFluxCondition;
 import com.buession.web.reactive.annotation.RequestClientIpHandlerMethodArgumentResolver;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
 
@@ -39,6 +41,11 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
 @Configuration(proxyBeanMethods = false)
 @Conditional(OnWebFluxCondition.class)
 public class WebFluxConfiguration implements WebFluxConfigurer {
+
+	@Override
+	public void addFormatters(FormatterRegistry registry){
+		FormatterRegistryUtils.addConverters(registry);
+	}
 
 	@Override
 	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer){
