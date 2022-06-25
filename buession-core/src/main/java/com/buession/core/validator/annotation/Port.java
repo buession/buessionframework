@@ -24,7 +24,7 @@
  */
 package com.buession.core.validator.annotation;
 
-import com.buession.core.validator.constraintvalidators.XdigitConstraintValidator;
+import com.buession.core.validator.constraintvalidators.PortConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -37,17 +37,17 @@ import java.lang.annotation.Target;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {XdigitConstraintValidator.CharSequenceXdigitConstraintValidator.class,
-		XdigitConstraintValidator.CharXdigitConstraintValidator.class})
-@Repeatable(Xdigit.List.class)
-public @interface Xdigit {
+@Constraint(validatedBy = {PortConstraintValidator.class})
+@Repeatable(Port.List.class)
+public @interface Port {
 
-	String message() default "{buession.validation.constraints.Xdigit.message}";
+	String message() default "{buession.validation.constraints.Port.message}";
 
 	Class<?>[] groups() default {};
 
@@ -66,7 +66,7 @@ public @interface Xdigit {
 	@Documented
 	@interface List {
 
-		Xdigit[] value();
+		Port[] value();
 
 	}
 

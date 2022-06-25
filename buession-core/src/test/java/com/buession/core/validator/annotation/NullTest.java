@@ -24,50 +24,57 @@
  */
 package com.buession.core.validator.annotation;
 
-import com.buession.core.validator.constraintvalidators.XdigitConstraintValidator;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-		ElementType.PARAMETER, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Constraint(validatedBy = {XdigitConstraintValidator.CharSequenceXdigitConstraintValidator.class,
-		XdigitConstraintValidator.CharXdigitConstraintValidator.class})
-@Repeatable(Xdigit.List.class)
-public @interface Xdigit {
+@Configuration
+@ComponentScan(basePackages = {"com.buession"})
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {NullTest.class})
+public class NullTest {
 
-	String message() default "{buession.validation.constraints.Xdigit.message}";
+	@Test
+	public void test(){
+		User user = new User();
 
-	Class<?>[] groups() default {};
+		user.setUsername(null);
+		System.out.println(user.getUsername());
+	}
 
-	Class<? extends Payload>[] payload() default {};
+	@Valid
+	private final static class User {
 
-	/**
-	 * 当值为 null ，是否验证；true：需验证，false：不验证
-	 *
-	 * @return 当值为 null ，是否验证
-	 */
-	boolean whenNull() default true;
+		@Valid
+		@Null
+		private String username;
 
-	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-			ElementType.PARAMETER, ElementType.TYPE_USE})
-	@Retention(RetentionPolicy.RUNTIME)
-	@Documented
-	@interface List {
+		public String getUsername(){
+			return username;
+		}
 
-		Xdigit[] value();
+		public void setUsername(@Valid @Null String username){
+			this.username = username;
+		}
 
+		@Override
+		public String toString(){
+			return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+					.add("username='" + username + "'")
+					.toString();
+		}
 	}
 
 }

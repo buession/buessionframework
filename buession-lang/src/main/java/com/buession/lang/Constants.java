@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -29,32 +29,38 @@ package com.buession.lang;
 /**
  * @author Yong.Teng
  */
-public class Constants {
+public interface Constants {
 
-	public final static String EMPTY_STRING = "";
+	/**
+	 * 空字符串
+	 */
+	String EMPTY_STRING = "";
 
-	public final static char EMPTY_CHAR = '\0';
+	/**
+	 * 空字符
+	 */
+	char EMPTY_CHAR = '\0';
 
 	/**
 	 * @since 1.2.1
 	 */
-	public final static String SPACING_STRING = " ";
+	String SPACING_STRING = " ";
 
 	/**
 	 * @since 1.2.1
 	 */
-	public final static char SPACING_CHAR = ' ';
+	char SPACING_CHAR = ' ';
 
-	public final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
-			'f'};
+	/**
+	 * 十六进制字符表
+	 */
+	char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-	public final static char[] ALNUM = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-			'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-			'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5',
-			'6', '7', '8', '9'};
-
-	private Constants(){
-
-	}
+	/**
+	 * 数字、大小写字母表
+	 */
+	char[] ALNUM = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+			'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 }

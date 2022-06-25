@@ -24,7 +24,10 @@
  */
 package com.buession.core.validator.annotation;
 
+import com.buession.core.validator.constraintvalidators.NullConstraintValidator;
+
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -39,11 +42,15 @@ import java.lang.annotation.Target;
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {NullConstraintValidator.class})
 @Repeatable(Null.List.class)
 public @interface Null {
 
 	String message() default "{buession.validation.constraints.Null.message}";
+
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 
 	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 			ElementType.PARAMETER, ElementType.TYPE_USE})

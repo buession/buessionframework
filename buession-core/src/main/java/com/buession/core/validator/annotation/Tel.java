@@ -28,6 +28,7 @@ import com.buession.core.validator.constraintvalidators.TelConstraintValidator;
 import com.buession.core.validator.routines.TelValidator;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -48,6 +49,10 @@ public @interface Tel {
 
 	String message() default "{buession.validation.constraints.Tel.message}";
 
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
+
 	TelValidator.AreaCodeType areaCodeType() default TelValidator.AreaCodeType.BOTH;
 
 	/**
@@ -55,7 +60,7 @@ public @interface Tel {
 	 *
 	 * @return 当值为 null ，是否验证
 	 */
-	boolean validWhenNull() default true;
+	boolean whenNull() default true;
 
 	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 			ElementType.PARAMETER, ElementType.TYPE_USE})

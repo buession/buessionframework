@@ -21,20 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
 import com.buession.core.collect.Maps;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Map 工具类
@@ -43,38 +35,6 @@ import java.util.Set;
  * @author Yong.Teng
  */
 @Deprecated
-public class MapUtils {
-
-	/**
-	 * 将 Map 转换为 List
-	 *
-	 * @param map
-	 * 		需要转换的 Map
-	 * @param <K>
-	 * 		Key
-	 * @param <V>
-	 * 		Value
-	 *
-	 * @return 转换结果
-	 */
-	public static <K, V> List<V> toList(final Map<K, V> map){
-		return Maps.toList(map);
-	}
-
-	/**
-	 * 将 Map 转换为 Set
-	 *
-	 * @param map
-	 * 		需要转换的 Map
-	 * @param <K>
-	 * 		Key
-	 * @param <V>
-	 * 		Value
-	 *
-	 * @return 转换结果
-	 */
-	public static <K, V> Set<V> toSet(final Map<K, V> map){
-		return Maps.toSet(map);
-	}
+public class MapUtils extends Maps {
 
 }

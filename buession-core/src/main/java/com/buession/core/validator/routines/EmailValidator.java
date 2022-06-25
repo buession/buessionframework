@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -60,6 +60,9 @@ public class EmailValidator {
 	private final static Pattern IP_DOMAIN_PATTERN = Pattern.compile(IP_DOMAIN_REGEX);
 
 	private final static Pattern USER_PATTERN = Pattern.compile(USER_REGEX);
+
+	private EmailValidator(){
+	}
 
 	public static boolean isValid(final CharSequence charSequence){
 		if(Validate.isBlank(charSequence)){

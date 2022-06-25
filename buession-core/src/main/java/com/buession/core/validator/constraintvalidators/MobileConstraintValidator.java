@@ -39,7 +39,7 @@ public class MobileConstraintValidator implements ConstraintValidator<Mobile, Ch
 
 	@Override
 	public void initialize(Mobile mobile){
-		this.validWhenNull = mobile.validWhenNull();
+		this.validWhenNull = mobile.whenNull();
 	}
 
 	@Override

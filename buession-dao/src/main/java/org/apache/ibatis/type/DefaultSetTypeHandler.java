@@ -26,7 +26,7 @@
  */
 package org.apache.ibatis.type;
 
-import com.buession.core.utils.ArrayUtils;
+import com.buession.core.collect.Arrays;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
@@ -48,7 +48,7 @@ public class DefaultSetTypeHandler extends AbstractSetTypeHandler<String> {
 	@Override
 	protected Set<String> parseResult(final String str) throws SQLException{
 		if(Validate.hasText(str)){
-			return ArrayUtils.toSet(StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER));
+			return Arrays.toSet(StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER));
 		}
 
 		return null;

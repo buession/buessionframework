@@ -19,18 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net.utils;
 
-import com.buession.core.utils.ArrayUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 
 /**
  * @author Yong.Teng
@@ -55,7 +53,7 @@ public class InetAddressUtils {
 			l = l >> 8;
 		}
 
-		return ArrayUtils.toString(result, ".");
+		return StringUtils.join(result, '.');
 	}
 
 	/**

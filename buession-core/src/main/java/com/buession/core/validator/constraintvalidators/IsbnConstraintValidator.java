@@ -46,7 +46,7 @@ public class IsbnConstraintValidator implements ConstraintValidator<Isbn, CharSe
 	public void initialize(Isbn isbn){
 		this.type = isbn.type();
 		this.separator = isbn.separator();
-		this.validWhenNull = isbn.validWhenNull();
+		this.validWhenNull = isbn.whenNull();
 	}
 
 	@Override
@@ -55,13 +55,12 @@ public class IsbnConstraintValidator implements ConstraintValidator<Isbn, CharSe
 			return true;
 		}
 
-		switch(type){
-			case ISBN_TYPE_10:
-				return Validate.isIsbn10(value, separator);
-			case ISBN_TYPE_13:
-				return Validate.isIsbn13(value, separator);
-			default:
-				return Validate.isIsbn(value, separator);
+		if(type == ISBNType.ISBN_TYPE_10){
+			return Validate.isIsbn10(value, separator);
+		}else if(type == ISBNType.ISBN_TYPE_13){
+			return Validate.isIsbn13(value, separator);
+		}else{
+			return Validate.isIsbn(value, separator);
 		}
 	}
 

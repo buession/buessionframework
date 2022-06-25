@@ -37,7 +37,7 @@ public enum Multiplexing {
 
 	private final String value;
 
-	Multiplexing(String value){
+	Multiplexing(final String value){
 		this.value = value;
 	}
 

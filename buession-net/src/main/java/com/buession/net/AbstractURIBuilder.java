@@ -58,14 +58,14 @@ public abstract class AbstractURIBuilder<T> {
 	}
 
 	public AbstractURIBuilder port(final int port){
-		Assert.isTrue(Validate.isPort(port), String.format("Port out of range: %s", port));
+		Assert.isTrue(Validate.isPort(port), "Port out of range: " + port + ".");
 		this.port = port;
 		return this;
 	}
 
 	public AbstractURIBuilder hostAndPort(final String host, final int port){
 		Assert.isBlank(host, "Host must not be null or empty.");
-		Assert.isTrue(Validate.isPort(port), String.format("Port out of range: %s", port));
+		Assert.isTrue(Validate.isPort(port), "Port out of range: " + port + ".");
 
 		this.host = host;
 		this.port = port;

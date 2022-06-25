@@ -24,7 +24,7 @@
  */
 package com.buession.jdbc.datasource;
 
-import com.buession.core.utils.ArrayUtils;
+import com.buession.core.collect.Arrays;
 import com.buession.core.validator.Validate;
 import com.buession.jdbc.datasource.config.DruidPoolConfiguration;
 import org.slf4j.Logger;
@@ -39,7 +39,8 @@ import java.util.concurrent.TimeUnit;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.DruidDataSource, DruidPoolConfiguration> {
+public class DruidDataSource
+		extends AbstractDataSource<com.alibaba.druid.pool.DruidDataSource, DruidPoolConfiguration> {
 
 	private final static Logger logger = LoggerFactory.getLogger(DruidDataSource.class);
 
@@ -70,7 +71,8 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 	}
 
 	@Override
-	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource, final DruidPoolConfiguration poolConfiguration){
+	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
+										  final DruidPoolConfiguration poolConfiguration){
 		if(poolConfiguration.getDriverClassName() != null){
 			dataSource.setDriverClassName(poolConfiguration.getDriverClassName());
 		}
@@ -144,11 +146,13 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 		}
 
 		if(poolConfiguration.getValidationQueryTimeout() != null){
-			dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
+			dataSource.setValidationQueryTimeout(
+					(int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
 		}
 
 		if(poolConfiguration.getQueryTimeout() != null){
-			dataSource.setQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getQueryTimeout().toMillis()));
+			dataSource.setQueryTimeout(
+					(int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getQueryTimeout().toMillis()));
 		}
 
 		dataSource.setNotFullTimeoutRetryCount(poolConfiguration.getNotFullTimeoutRetryCount());
@@ -187,7 +191,8 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 		dataSource.setTransactionThresholdMillis(poolConfiguration.getTransactionThreshold());
 
 		if(poolConfiguration.getTransactionQueryTimeout() != null){
-			dataSource.setTransactionQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getTransactionQueryTimeout().toMillis()));
+			dataSource.setTransactionQueryTimeout(
+					(int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getTransactionQueryTimeout().toMillis()));
 		}
 
 		dataSource.setDefaultAutoCommit(poolConfiguration.isDefaultAutoCommit());
@@ -195,14 +200,16 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 		dataSource.setPoolPreparedStatements(poolConfiguration.isPoolPreparedStatements());
 		dataSource.setMaxOpenPreparedStatements(poolConfiguration.getMaxOpenPreparedStatements());
 		dataSource.setSharePreparedStatements(poolConfiguration.isSharePreparedStatements());
-		dataSource.setMaxPoolPreparedStatementPerConnectionSize(poolConfiguration.getMaxPoolPreparedStatementPerConnectionSize());
+		dataSource.setMaxPoolPreparedStatementPerConnectionSize(
+				poolConfiguration.getMaxPoolPreparedStatementPerConnectionSize());
 
 		if(Validate.isNotEmpty(poolConfiguration.getFilters())){
 			try{
-				dataSource.setFilters(ArrayUtils.toString(poolConfiguration.getFilters().toArray(new String[]{}), ","));
+				dataSource.setFilters(Arrays.toString(poolConfiguration.getFilters().toArray(new String[]{}), ","));
 			}catch(SQLException e){
 				if(logger.isErrorEnabled()){
-					logger.error("Set filters error: {}(errorCode: {}, sqlState: {})", e.getMessage(), e.getErrorCode(), e.getSQLState());
+					logger.error("Set filters error: {}(errorCode: {}, sqlState: {})", e.getMessage(), e.getErrorCode(),
+							e.getSQLState());
 				}
 			}
 		}

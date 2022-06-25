@@ -26,6 +26,7 @@ package com.buession.lang;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Key =&lt; Value 键值对对象
@@ -132,11 +133,10 @@ public class KeyValue<K, V> implements Serializable {
 
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("{key: ").append(key).append(", value: ").append(value).append('}');
-
-		return sb.toString();
+		return new StringJoiner(", ", "{", "}")
+				.add("key: " + key)
+				.add("value: " + value)
+				.toString();
 	}
 
 }

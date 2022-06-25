@@ -24,7 +24,7 @@
  */
 package org.apache.ibatis.type;
 
-import com.buession.core.utils.ArrayUtils;
+import com.buession.core.collect.Arrays;
 import com.buession.core.utils.Assert;
 
 import java.sql.CallableStatement;
@@ -54,8 +54,9 @@ public abstract class AbstractSetTypeHandler<E> extends BaseTypeHandler<Set<E>> 
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws SQLException{
-		ps.setString(i, ArrayUtils.toString(parameter, DELIMITER));
+	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType)
+			throws SQLException{
+		ps.setString(i, Arrays.toString(parameter, DELIMITER));
 	}
 
 	@Override

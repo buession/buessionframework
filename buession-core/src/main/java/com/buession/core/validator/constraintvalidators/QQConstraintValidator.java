@@ -39,7 +39,7 @@ public class QQConstraintValidator implements ConstraintValidator<QQ, CharSequen
 
 	@Override
 	public void initialize(QQ postCode){
-		this.validWhenNull = postCode.validWhenNull();
+		this.validWhenNull = postCode.whenNull();
 	}
 
 	@Override

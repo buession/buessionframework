@@ -22,52 +22,44 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.core.validator.constraintvalidators;
 
-import com.buession.core.validator.constraintvalidators.XdigitConstraintValidator;
+import com.buession.core.validator.Validate;
+import com.buession.core.validator.annotation.Ip;
+import com.buession.lang.IpType;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-		ElementType.PARAMETER, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Constraint(validatedBy = {XdigitConstraintValidator.CharSequenceXdigitConstraintValidator.class,
-		XdigitConstraintValidator.CharXdigitConstraintValidator.class})
-@Repeatable(Xdigit.List.class)
-public @interface Xdigit {
+public abstract class IpConstraintValidator implements ConstraintValidator<Ip, CharSequence> {
 
-	String message() default "{buession.validation.constraints.Xdigit.message}";
+	protected IpType type;
 
-	Class<?>[] groups() default {};
+	protected boolean validWhenNull;
 
-	Class<? extends Payload>[] payload() default {};
+	@Override
+	public void initialize(Ip ip){
+		this.type = ip.type();
+		this.validWhenNull = ip.whenNull();
+	}
 
-	/**
-	 * 当值为 null ，是否验证；true：需验证，false：不验证
-	 *
-	 * @return 当值为 null ，是否验证
-	 */
-	boolean whenNull() default true;
+	@Override
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+		if(validWhenNull == false){
+			return true;
+		}
 
-	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-			ElementType.PARAMETER, ElementType.TYPE_USE})
-	@Retention(RetentionPolicy.RUNTIME)
-	@Documented
-	@interface List {
-
-		Xdigit[] value();
-
+		if(type == IpType.IP_V4){
+			return Validate.isIpV4(value);
+		}else if(type == IpType.IP_V6){
+			return Validate.isIpV6(value);
+		}else{
+			return Validate.isIp(value);
+		}
 	}
 
 }

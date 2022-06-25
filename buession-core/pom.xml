@@ -65,6 +65,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${springframework.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -118,20 +124,14 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-jdk8</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>

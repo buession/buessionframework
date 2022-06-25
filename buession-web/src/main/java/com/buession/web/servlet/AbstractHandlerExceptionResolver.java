@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
 
-import com.buession.core.utils.ArrayUtils;
+import com.buession.core.collect.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -61,7 +61,9 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractHandlerExceptionResolver extends org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver implements ServletExceptionHandlerResolver {
+public abstract class AbstractHandlerExceptionResolver
+		extends org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver
+		implements ServletExceptionHandlerResolver {
 
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
@@ -198,7 +200,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleMethodArgumentNotValidException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final MethodArgumentNotValidException ex) throws IOException{
+																 final MethodArgumentNotValidException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
@@ -224,7 +227,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleMissingServletRequestPartException(final HttpServletRequest request,
 																	final HttpServletResponse response,
 																	@Nullable final Object handler,
-																	final MissingServletRequestPartException ex) throws IOException{
+																	final MissingServletRequestPartException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
@@ -248,7 +252,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleBindException(final HttpServletRequest request, final HttpServletResponse response,
-											   @Nullable final Object handler, final BindException ex) throws IOException{
+											   @Nullable final Object handler, final BindException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
@@ -274,7 +279,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleMissingServletRequestParameterException(final HttpServletRequest request,
 																		 final HttpServletResponse response,
 																		 @Nullable final Object handler,
-																		 final MissingServletRequestParameterException ex) throws IOException{
+																		 final MissingServletRequestParameterException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		return doResolve(request, response, ex);
 	}
@@ -300,7 +306,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleServletRequestBindingException(final HttpServletRequest request,
 																final HttpServletResponse response,
 																@Nullable final Object handler,
-																final ServletRequestBindingException ex) throws IOException{
+																final ServletRequestBindingException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		return doResolve(request, response, ex);
 	}
@@ -325,7 +332,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	 */
 	protected ModelAndView handleTypeMismatchException(final HttpServletRequest request,
 													   final HttpServletResponse response,
-													   @Nullable final Object handler, final TypeMismatchException ex) throws IOException{
+													   @Nullable final Object handler, final TypeMismatchException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
@@ -351,7 +359,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleHttpMessageNotReadableException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final HttpMessageNotReadableException ex) throws IOException{
+																 final HttpMessageNotReadableException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
@@ -404,12 +413,13 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleHttpRequestMethodNotSupportedException(final HttpServletRequest request,
 																		final HttpServletResponse response,
 																		@Nullable final Object handler,
-																		final HttpRequestMethodNotSupportedException ex) throws IOException{
+																		final HttpRequestMethodNotSupportedException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
 
 		String[] supportedMethods = ex.getSupportedMethods();
 		if(supportedMethods != null){
-			response.setHeader("Allow", ArrayUtils.toString(supportedMethods, ", "));
+			response.setHeader("Allow", Arrays.toString(supportedMethods, ", "));
 		}
 
 		return doResolve(request, response, ex);
@@ -436,7 +446,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleHttpMediaTypeNotAcceptableException(final HttpServletRequest request,
 																	 final HttpServletResponse response,
 																	 @Nullable final Object handler,
-																	 final HttpMediaTypeNotAcceptableException ex) throws IOException{
+																	 final HttpMediaTypeNotAcceptableException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
 		return doResolve(request, response, ex);
 	}
@@ -462,7 +473,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleHttpMediaTypeNotSupportedException(final HttpServletRequest request,
 																	final HttpServletResponse response,
 																	@Nullable final Object handler,
-																	final HttpMediaTypeNotSupportedException ex) throws IOException{
+																	final HttpMediaTypeNotSupportedException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 
 		List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
@@ -520,7 +532,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleConversionNotSupportedException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final ConversionNotSupportedException ex) throws IOException{
+																 final ConversionNotSupportedException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return doResolve(request, response, ex);
 	}
@@ -546,7 +559,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	protected ModelAndView handleHttpMessageNotWritableException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final HttpMessageNotWritableException ex) throws IOException{
+																 final HttpMessageNotWritableException ex)
+			throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return doResolve(request, response, ex);
 	}

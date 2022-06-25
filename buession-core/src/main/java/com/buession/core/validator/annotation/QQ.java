@@ -24,7 +24,10 @@
  */
 package com.buession.core.validator.annotation;
 
+import com.buession.core.validator.constraintvalidators.QQConstraintValidator;
+
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -39,18 +42,22 @@ import java.lang.annotation.Target;
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {QQConstraintValidator.class})
 @Repeatable(QQ.List.class)
 public @interface QQ {
 
 	String message() default "{buession.validation.constraints.QQ.message}";
+
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 
 	/**
 	 * 当值为 null ，是否验证；true：需验证，false：不验证
 	 *
 	 * @return 当值为 null ，是否验证
 	 */
-	boolean validWhenNull() default true;
+	boolean whenNull() default true;
 
 	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 			ElementType.PARAMETER, ElementType.TYPE_USE})

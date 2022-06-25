@@ -22,52 +22,30 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.core.validator.constraintvalidators;
 
-import com.buession.core.validator.constraintvalidators.XdigitConstraintValidator;
+import com.buession.core.validator.Validate;
+import com.buession.core.validator.annotation.MimeType;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-		ElementType.PARAMETER, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Constraint(validatedBy = {XdigitConstraintValidator.CharSequenceXdigitConstraintValidator.class,
-		XdigitConstraintValidator.CharXdigitConstraintValidator.class})
-@Repeatable(Xdigit.List.class)
-public @interface Xdigit {
+public abstract class MimeTypeConstraintValidator implements ConstraintValidator<MimeType, CharSequence> {
 
-	String message() default "{buession.validation.constraints.Xdigit.message}";
+	protected boolean validWhenNull;
 
-	Class<?>[] groups() default {};
+	@Override
+	public void initialize(MimeType mimeType){
+		this.validWhenNull = mimeType.whenNull();
+	}
 
-	Class<? extends Payload>[] payload() default {};
-
-	/**
-	 * 当值为 null ，是否验证；true：需验证，false：不验证
-	 *
-	 * @return 当值为 null ，是否验证
-	 */
-	boolean whenNull() default true;
-
-	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-			ElementType.PARAMETER, ElementType.TYPE_USE})
-	@Retention(RetentionPolicy.RUNTIME)
-	@Documented
-	@interface List {
-
-		Xdigit[] value();
-
+	@Override
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+		return validWhenNull == false || Validate.isMimeType(value);
 	}
 
 }

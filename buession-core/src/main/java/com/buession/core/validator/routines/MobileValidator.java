@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -33,42 +33,41 @@ import com.buession.core.validator.Validate;
  */
 public class MobileValidator {
 
-    private final static int MOBILE_LENGTH = 11;
+	private final static int MOBILE_LENGTH = 11;
 
-    private final static char FIRST_CHAR = '1';
+	private final static char FIRST_CHAR = '1';
 
-    private MobileValidator(){
+	private MobileValidator(){
+	}
 
-    }
+	public static boolean isValid(final CharSequence charSequence){
+		if(charSequence == null){
+			return false;
+		}
 
-    public static boolean isValid(final CharSequence charSequence){
-        if(charSequence == null){
-            return false;
-        }
+		int len = charSequence.length();
+		if(len != MOBILE_LENGTH){
+			return false;
+		}
 
-        int len = charSequence.length();
-        if(len != MOBILE_LENGTH){
-            return false;
-        }
+		if(charSequence.charAt(0) != FIRST_CHAR){
+			return false;
+		}
 
-        if(charSequence.charAt(0) != FIRST_CHAR){
-            return false;
-        }
+		char c = charSequence.charAt(1);
+		char c2 = charSequence.charAt(2);
 
-        char c = charSequence.charAt(1);
-        char c2 = charSequence.charAt(2);
+		if(c == '3' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'){
+			return Validate.isNumeric(charSequence.subSequence(2, len - 1));
+		}else if(c == '4'){
+			if(c2 != '4' && c2 != '5' && c2 != '7' && c2 != '8'){
+				return false;
+			}
+		}else{
+			return false;
+		}
 
-        if(c == '3' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9'){
-            return Validate.isNumeric(charSequence.subSequence(2, len - 1));
-        }else if(c == '4'){
-            if(c2 != '4' && c2 != '5' && c2 != '7' && c2 != '8'){
-                return false;
-            }
-        }else{
-            return false;
-        }
-
-        return Validate.isNumeric(charSequence.subSequence(3, len - 1));
-    }
+		return Validate.isNumeric(charSequence.subSequence(3, len - 1));
+	}
 
 }

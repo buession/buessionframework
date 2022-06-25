@@ -39,7 +39,7 @@ public abstract class XdigitConstraintValidator<T> implements ConstraintValidato
 
 	@Override
 	public void initialize(Xdigit xdigit){
-		this.validWhenNull = xdigit.validWhenNull();
+		this.validWhenNull = xdigit.whenNull();
 	}
 
 	public final static class CharSequenceXdigitConstraintValidator extends XdigitConstraintValidator<CharSequence> {

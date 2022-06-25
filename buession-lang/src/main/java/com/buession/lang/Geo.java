@@ -125,11 +125,7 @@ public class Geo implements Serializable {
 
 	@Override
 	public String toString(){
-		final StringBuilder sb = new StringBuilder();
-
-		sb.append(longitude).append(", ").append(latitude);
-
-		return sb.toString();
+		return longitude + ", " + latitude;
 	}
 
 }

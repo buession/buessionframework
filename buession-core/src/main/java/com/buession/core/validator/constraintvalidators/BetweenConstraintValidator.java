@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -48,7 +48,7 @@ public class BetweenConstraintValidator implements ConstraintValidator<Between, 
 		this.minValue = between.min();
 		this.maxValue = between.max();
 		this.isContain = between.contain();
-		this.validWhenNull = between.validWhenNull();
+		this.validWhenNull = between.whenNull();
 	}
 
 	@Override

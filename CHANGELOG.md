@@ -12,12 +12,14 @@
 ### ⭐ 新特性
 
 - **buession-core：** 新增 ListBuilder 增加 addIfPresent 方法，值为 null，不添加到 List 中
+- **buession-core：** 新增属性工具类 com.buession.core.utils.PropertiesUtils
 - **buession-core：** 新增 System Property 工具类 com.buession.core.utils.SystemPropertyUtils
 - **buession-core：** 新增数组转换器 com.buession.core.converter.ArrayConverter
 - **buession-core：** 新增字节数组转枚举转换器 com.buession.core.converter.BinaryEnumConverter
 - **buession-core：** 新增 com.buession.core.collect.Arrays 增加数组合并方法
 - **buession-core：** 新增 Character、char 工具类 CharacterUtils
 - **buession-core：** 新增 Byte、byte 工具类 ByteUtils
+- **buession-core：** 新增 IP、端口、MimeType 验证注解 @Ip、@Port、@MimeType
 - **buession-httpclient：** 新增 Header 对象，value 值增加对数字类型、char 类型、byte[] 类型的支持
 - **buession-redis：** 新增支持哨兵模式（Sentine）和集群模式（Cluster）
 - **buession-redis：** 新增支持 xtream 命令
@@ -48,6 +50,7 @@
 
 ### 🐞 Bug 修复
 
+- **buession-core：** 修复 validate 注解不生效 BUG
 - **buession-dao：** 修复 MyBatis Dao updatePrimary 类型转换错误
 - **buession-httpclient：** 修复 post 请求中，部分 api 循环调用的问题
 - **buession-redis：** 修复多线程下异常

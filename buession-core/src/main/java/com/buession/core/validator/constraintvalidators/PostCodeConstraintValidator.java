@@ -39,7 +39,7 @@ public class PostCodeConstraintValidator implements ConstraintValidator<PostCode
 
 	@Override
 	public void initialize(PostCode postCode){
-		this.validWhenNull = postCode.validWhenNull();
+		this.validWhenNull = postCode.whenNull();
 	}
 
 	@Override

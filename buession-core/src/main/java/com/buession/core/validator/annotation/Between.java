@@ -24,7 +24,10 @@
  */
 package com.buession.core.validator.annotation;
 
+import com.buession.core.validator.constraintvalidators.BetweenConstraintValidator;
+
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -39,15 +42,19 @@ import java.lang.annotation.Target;
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {BetweenConstraintValidator.class})
 @Repeatable(Between.List.class)
 public @interface Between {
+
+	String message() default "{buession.validation.constraints.Between.message}";
+
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 
 	double min();
 
 	double max();
-
-	String message() default "{buession.validation.constraints.Between.message}";
 
 	/**
 	 * 是否包含边界值
@@ -61,7 +68,7 @@ public @interface Between {
 	 *
 	 * @return 当值为 null ，是否验证
 	 */
-	boolean validWhenNull() default true;
+	boolean whenNull() default true;
 
 	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 			ElementType.PARAMETER, ElementType.TYPE_USE})

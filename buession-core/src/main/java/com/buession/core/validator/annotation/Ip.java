@@ -24,7 +24,8 @@
  */
 package com.buession.core.validator.annotation;
 
-import com.buession.core.validator.constraintvalidators.XdigitConstraintValidator;
+import com.buession.core.validator.constraintvalidators.IpConstraintValidator;
+import com.buession.lang.IpType;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -37,21 +38,23 @@ import java.lang.annotation.Target;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {XdigitConstraintValidator.CharSequenceXdigitConstraintValidator.class,
-		XdigitConstraintValidator.CharXdigitConstraintValidator.class})
-@Repeatable(Xdigit.List.class)
-public @interface Xdigit {
+@Constraint(validatedBy = {IpConstraintValidator.class})
+@Repeatable(Ip.List.class)
+public @interface Ip {
 
-	String message() default "{buession.validation.constraints.Xdigit.message}";
+	String message() default "{buession.validation.constraints.Ip.message}";
 
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
+
+	IpType type();
 
 	/**
 	 * 当值为 null ，是否验证；true：需验证，false：不验证
@@ -66,7 +69,7 @@ public @interface Xdigit {
 	@Documented
 	@interface List {
 
-		Xdigit[] value();
+		Ip[] value();
 
 	}
 

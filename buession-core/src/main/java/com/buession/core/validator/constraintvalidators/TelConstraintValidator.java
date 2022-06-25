@@ -43,7 +43,7 @@ public class TelConstraintValidator implements ConstraintValidator<Tel, CharSequ
 	@Override
 	public void initialize(Tel tel){
 		this.areaCodeType = tel.areaCodeType();
-		this.validWhenNull = tel.validWhenNull();
+		this.validWhenNull = tel.whenNull();
 	}
 
 	@Override
