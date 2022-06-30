@@ -27,7 +27,6 @@ package com.buession.web.reactive.aop.aspect.interceptor;
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveContentTypeAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveCorsAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveDocumentMetaDataAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
@@ -46,10 +45,9 @@ public class ReactiveWebAspectAnnotationsMethodInterceptor extends AbstractAspec
 	public ReactiveWebAspectAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(6);
+		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(5);
 
 		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor());
-		methodInterceptors.add(new ReactiveCorsAnnotationMethodInterceptor());
 		methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor());
 		methodInterceptors.add(new ReactiveHttpCacheAnnotationMethodInterceptor());
 		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor());

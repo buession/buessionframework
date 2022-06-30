@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -29,45 +29,46 @@ package com.buession.httpclient.core;
  */
 public enum RequestMethod {
 
-    GET,
+	GET,
 
-    POST,
+	POST,
 
-    PUT,
+	PUT,
 
-    PATCH,
+	PATCH,
 
-    DELETE,
+	DELETE,
 
-    CONNECT,
+	CONNECT,
 
-    TRACE,
+	TRACE,
 
-    COPY,
+	COPY,
 
-    MOVE,
+	MOVE,
 
-    HEAD,
+	HEAD,
 
-    OPTIONS,
+	OPTIONS,
 
-    LINK,
+	LINK,
 
-    UNLINK,
+	UNLINK,
 
-    PURGE,
+	PURGE,
 
-    LOCK,
+	LOCK,
 
-    UNLOCK,
+	UNLOCK,
 
-    PROPFIND,
+	PROPFIND,
 
-    PROPPATCH,
+	PROPPATCH,
 
-    REPORT,
+	REPORT,
 
-    VIEW,
+	VIEW,
 
-    WRAPPED
+	WRAPPED
+
 }

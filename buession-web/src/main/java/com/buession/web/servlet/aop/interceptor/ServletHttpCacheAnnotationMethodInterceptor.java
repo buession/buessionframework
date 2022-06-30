@@ -26,12 +26,11 @@ package com.buession.web.servlet.aop.interceptor;
 
 import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractHttpCacheAnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.servlet.aop.handler.ServletHttpCacheAnnotationHandler;
 
 /**
- * {@link Cors} 注解拦截器
+ * {@link HttpCache} 注解拦截器
  *
  * @author Yong.Teng
  * @since 2.0.0

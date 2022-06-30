@@ -27,6 +27,7 @@ package com.buession.web.servlet;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -38,9 +39,16 @@ public class OnServletCondition implements Condition {
 	private static Boolean result = null;
 
 	@Override
-	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata){
+	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata){
 		if(result == null){
-			result = ClassUtils.isPresent("javax.servlet.Servlet", context.getClassLoader());
+			synchronized(OnServletCondition.class){
+				if(result == null){
+					ClassLoader classLoader =
+							context == null || context.getClassLoader() ==
+									null ? OnServletCondition.class.getClassLoader() : context.getClassLoader();
+					result = ClassUtils.isPresent("javax.servlet.Filter", classLoader);
+				}
+			}
 		}
 
 		return result;

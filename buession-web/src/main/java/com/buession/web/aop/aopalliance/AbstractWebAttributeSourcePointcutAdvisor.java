@@ -26,11 +26,10 @@
  */
 package com.buession.web.aop.aopalliance;
 
-import com.buession.web.utils.AnnotationUtils;
+import com.buession.core.utils.AnnotationUtils;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.http.response.annotation.DisableHttpCache;
 import com.buession.web.http.response.annotation.HttpCache;
-import com.buession.web.http.response.annotation.Cors;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.mvc.view.document.DocumentMetaData;
@@ -50,7 +49,7 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMe
 
 	@SuppressWarnings({"unchecked"})
 	private final static Class<? extends Annotation>[] WEB_ANNOTATION_CLASSES = new Class[]{ResponseHeader.class,
-			ResponseHeaders.class, ContentType.class, Cors.class, HttpCache.class,
+			ResponseHeaders.class, ContentType.class, HttpCache.class,
 			DisableHttpCache.class, DocumentMetaData.class};
 
 	public AbstractWebAttributeSourcePointcutAdvisor(){

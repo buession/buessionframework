@@ -46,6 +46,7 @@
 - **buession-redis：** 优化内部 API
 - **buession-web：** 移除 com.buession.web.reponse 包中的 response 注解，改由 com.buession.web.reponse.annotation 包中 response 注解替代
 - **buession-web：** AOP 注解重构
+- **buession-web：** @Cors 注解
 
 
 ### 🐞 Bug 修复

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.utils;
+package com.buession.core.utils;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;

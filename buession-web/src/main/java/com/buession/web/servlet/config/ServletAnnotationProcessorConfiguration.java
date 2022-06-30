@@ -22,28 +22,27 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.interceptor;
+package com.buession.web.servlet.config;
 
-import com.buession.aop.handler.AnnotationHandler;
-import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
-import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.servlet.OnServletCondition;
+import com.buession.web.servlet.aop.aopalliance.interceptor.ServletHttpAttributeSourcePointcutAdvisor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * {@link Cors} 注解拦截器抽象类
+ * Servlet 环境注解拦截器切入点自动配置类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractCorsAnnotationMethodInterceptor extends AbstractAnnotationMethodInterceptor<Cors>
-		implements CorsAnnotationMethodInterceptor {
+@Configuration(proxyBeanMethods = false)
+@Conditional(OnServletCondition.class)
+public class ServletAnnotationProcessorConfiguration {
 
-	public AbstractCorsAnnotationMethodInterceptor(AnnotationHandler<Cors> handler){
-		super(handler);
-	}
-
-	public AbstractCorsAnnotationMethodInterceptor(AnnotationHandler<Cors> handler, AnnotationResolver<Cors> resolver){
-		super(handler, resolver);
+	@Bean
+	public ServletHttpAttributeSourcePointcutAdvisor httpAttributeSourcePointcutAdvisor(){
+		return new ServletHttpAttributeSourcePointcutAdvisor();
 	}
 
 }

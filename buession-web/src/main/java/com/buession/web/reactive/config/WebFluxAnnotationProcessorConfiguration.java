@@ -22,13 +22,27 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.handler;
+package com.buession.web.reactive.config;
 
-import com.buession.web.http.response.annotation.Cors;
+import com.buession.web.reactive.OnWebFluxCondition;
+import com.buession.web.reactive.aop.aopalliance.interceptor.ReactiveHttpAttributeSourcePointcutAdvisor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
 
 /**
+ * WebFlux 环境注解拦截器切入点自动配置类
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface CorsAnnotationHandler extends WebAnnotationHandler<Cors> {
+@Configuration(proxyBeanMethods = false)
+@Conditional(OnWebFluxCondition.class)
+public class WebFluxAnnotationProcessorConfiguration {
+
+	@Bean
+	public ReactiveHttpAttributeSourcePointcutAdvisor httpAttributeSourcePointcutAdvisor(){
+		return new ReactiveHttpAttributeSourcePointcutAdvisor();
+	}
 
 }

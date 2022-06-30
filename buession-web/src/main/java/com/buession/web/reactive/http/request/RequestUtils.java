@@ -94,7 +94,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public static boolean isMobile(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
-		return isMobile(httpHeaders.getFirst(HttpHeader.USER_AGENT.getValue()), httpHeaders.getFirst(HttpHeader.ACCEPT.getValue()));
+		return isMobile(httpHeaders.getFirst(HttpHeader.USER_AGENT.getValue()),
+				httpHeaders.getFirst(HttpHeader.ACCEPT.getValue()));
 	}
 
 	/**

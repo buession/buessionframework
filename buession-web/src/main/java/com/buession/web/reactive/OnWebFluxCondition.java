@@ -27,6 +27,7 @@ package com.buession.web.reactive;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -38,10 +39,17 @@ public class OnWebFluxCondition implements Condition {
 	private static Boolean result = null;
 
 	@Override
-	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata){
+	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata){
 		if(result == null){
-			result = ClassUtils.isPresent("org.springframework.web.reactive.config.WebFluxConfigurationSupport",
-					context.getClassLoader());
+			synchronized(OnWebFluxCondition.class){
+				if(result == null){
+					ClassLoader classLoader =
+							context == null || context.getClassLoader() ==
+									null ? OnWebFluxCondition.class.getClassLoader() : context.getClassLoader();
+					result = ClassUtils.isPresent("org.springframework.web.reactive.config.WebFluxConfigurationSupport",
+							classLoader);
+				}
+			}
 		}
 
 		return result;

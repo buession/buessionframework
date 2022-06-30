@@ -56,7 +56,8 @@ public abstract class RequestUtils {
 			/* */
 			"WL-Proxy-Client-IP",
 			/* */
-			"Real-ClientIP"};
+			"Real-ClientIP"
+	};
 
 	public final static String[] MOBILE_MAPS = new String[]{
 			/* Android*/
@@ -166,7 +167,8 @@ public abstract class RequestUtils {
 			/* 中兴 */
 			"ZTE",
 			/* 小米 */
-			"Xiaomi"};
+			"Xiaomi"
+	};
 
 	/**
 	 * 遍历获取指定请求头值
@@ -182,7 +184,8 @@ public abstract class RequestUtils {
 	 *
 	 * @return 请求头值
 	 */
-	protected static <T> T iteratorRequestHeader(final Function<String, T> function, final Function<T, Boolean> validator, final String... headerNames){
+	protected static <T> T iteratorRequestHeader(final Function<String, T> function,
+												 final Function<T, Boolean> validator, final String... headerNames){
 		T result;
 
 		for(String headerName : headerNames){
@@ -204,7 +207,8 @@ public abstract class RequestUtils {
 	 * @return 请求的真实 Scheme
 	 */
 	protected static String getScheme(final Function<String, String> function){
-		return iteratorRequestHeader(function, Validate::hasText, HttpHeader.X_FORWARDED_PROTOCOL.getValue(), HttpHeader.X_FORWARDED_PROTO.getValue());
+		return iteratorRequestHeader(function, Validate::hasText, HttpHeader.X_FORWARDED_PROTOCOL.getValue(),
+				HttpHeader.X_FORWARDED_PROTO.getValue());
 	}
 
 	/**
@@ -216,7 +220,8 @@ public abstract class RequestUtils {
 	 * @return 请求的真实主机地址
 	 */
 	protected static String getHost(final Function<String, String> function){
-		return iteratorRequestHeader(function, Validate::hasText, HttpHeader.X_FORWARDED_HOST.getValue(), HttpHeader.HOST.getValue());
+		return iteratorRequestHeader(function, Validate::hasText, HttpHeader.X_FORWARDED_HOST.getValue(),
+				HttpHeader.HOST.getValue());
 	}
 
 	/**
@@ -230,7 +235,8 @@ public abstract class RequestUtils {
 	 * @return 客户端真实 IP 地址
 	 */
 	protected static String getClientIp(final Function<String, String> function, final String remoteAddr){
-		String ip = iteratorRequestHeader(function, (value)->Validate.hasText(value) && "unknown".equalsIgnoreCase(value) == false, CLIENT_IP_HEADERS);
+		String ip = iteratorRequestHeader(function,
+				(value)->Validate.hasText(value) && "unknown".equalsIgnoreCase(value) == false, CLIENT_IP_HEADERS);
 
 		if(ip != null){
 			return ip;
