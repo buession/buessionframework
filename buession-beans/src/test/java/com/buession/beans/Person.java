@@ -19,79 +19,44 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
 
-import org.junit.Test;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class BeanUtilsTest {
+public class Person {
 
-	@Test
-	public void populate(){
-		Map<String, Object> data = new HashMap<>();
-		data.put("age", null);
-		data.put("username", "username");
-		data.put("height", 3L);
-		data.put("enable", "on");
-		data.put("last_login_time", new Date());
+	private long id;
 
-		User user = new User();
-		BeanUtils.populate(user, data);
+	private String username;
 
-		System.out.println(user);
+	public long getId(){
+		return id;
 	}
 
-	@Test
-	public void copy(){
-		Map<String, Object> data = new HashMap<>();
-		data.put("age", null);
-		data.put("username", "username");
-		data.put("height", 3L);
-		data.put("enable", "on");
-		data.put("last_login_time", new Date());
-
-		User user = new User();
-		BeanUtils.copyProperties(user, data);
-
-		System.out.println(user);
+	public void setId(long id){
+		this.id = id;
 	}
 
-	@Test
-	public void copy1(){
-		Map<String, Object> data = new HashMap<>();
-
-		User user = new User();
-
-		user.setAge(100);
-		user.setUsername("username");
-
-		BeanUtils.copyProperties(data, user);
-		data.forEach((key, value)->{
-			System.out.println(key + ": " + value);
-		});
+	public String getUsername(){
+		return username;
 	}
 
-	@Test
-	public void copy2(){
-		User user = new User();
-
-		user.setId(100);
-		user.setUsername("username");
-
-		Person person = new Person();
-		BeanUtils.copyProperties(person, user);
-		System.out.println(person);
+	public void setUsername(String username){
+		this.username = username;
 	}
 
+	@Override
+	public String toString(){
+		return new StringJoiner(", ", Person.class.getSimpleName() + "[", "]")
+				.add("id=" + id)
+				.add("username='" + username + "'")
+				.toString();
+	}
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -32,95 +32,212 @@ import java.util.List;
  */
 public class Response {
 
-    private ProtocolVersion protocolVersion;
+	/**
+	 * 协议及其版本
+	 */
+	private ProtocolVersion protocolVersion;
 
-    private int statusCode;
+	/**
+	 * 状态码
+	 */
+	private int statusCode;
 
-    private String statusText;
+	/**
+	 * 状态信息
+	 */
+	private String statusText;
 
-    private StatusLine statusLine;
+	/**
+	 * 响应状态
+	 */
+	private StatusLine statusLine;
 
-    private List<Header> headers;
+	/**
+	 * 响应头
+	 */
+	private List<Header> headers;
 
-    private InputStream inputStream;
+	/**
+	 * 响应体，以流的形式返回
+	 */
+	private InputStream inputStream;
 
-    private String body;
+	/**
+	 * 响应头，以文本的形式返回
+	 */
+	private String body;
 
-    private long contentLength;
+	/**
+	 * 响应内容大小
+	 */
+	private long contentLength;
 
-    public ProtocolVersion getProtocolVersion(){
-        return protocolVersion;
-    }
+	/**
+	 * 返回协议及其版本
+	 *
+	 * @return 协议及其版本
+	 */
+	public ProtocolVersion getProtocolVersion(){
+		return protocolVersion;
+	}
 
-    public void setProtocolVersion(ProtocolVersion protocolVersion){
-        this.protocolVersion = protocolVersion;
-    }
+	/**
+	 * 设置协议及其版本
+	 *
+	 * @param protocolVersion
+	 * 		协议及其版本
+	 */
+	public void setProtocolVersion(ProtocolVersion protocolVersion){
+		this.protocolVersion = protocolVersion;
+	}
 
-    public int getStatusCode(){
-        return statusCode;
-    }
+	/**
+	 * 返回状态码
+	 *
+	 * @return 状态码
+	 */
+	public int getStatusCode(){
+		return statusCode;
+	}
 
-    public void setStatusCode(final int statusCode){
-        this.statusCode = statusCode;
-    }
+	/**
+	 * 设置状态码
+	 *
+	 * @param statusCode
+	 * 		状态码
+	 */
+	public void setStatusCode(final int statusCode){
+		this.statusCode = statusCode;
+	}
 
-    public String getStatusText(){
-        return statusText;
-    }
+	/**
+	 * 返回状态信息
+	 *
+	 * @return 状态信息
+	 */
+	public String getStatusText(){
+		return statusText;
+	}
 
-    public void setStatusText(final String statusText){
-        this.statusText = statusText;
-    }
+	/**
+	 * 设置状态信息
+	 *
+	 * @param statusText
+	 * 		状态信息
+	 */
+	public void setStatusText(final String statusText){
+		this.statusText = statusText;
+	}
 
-    public StatusLine getStatusLine(){
-        return statusLine;
-    }
+	/**
+	 * 返回响应状态
+	 *
+	 * @return 响应状态
+	 */
+	public StatusLine getStatusLine(){
+		return statusLine;
+	}
 
-    public void setStatusLine(final StatusLine statusLine){
-        this.statusLine = statusLine;
-    }
+	/**
+	 * 设置响应状态
+	 *
+	 * @param statusLine
+	 * 		响应状态
+	 */
+	public void setStatusLine(final StatusLine statusLine){
+		this.statusLine = statusLine;
+	}
 
-    public List<Header> getHeaders(){
-        return headers;
-    }
+	/**
+	 * 返回响应头
+	 *
+	 * @return 响应头
+	 */
+	public List<Header> getHeaders(){
+		return headers;
+	}
 
-    public void setHeaders(final List<Header> headers){
-        this.headers = headers;
-    }
+	/**
+	 * 设置响应头
+	 *
+	 * @param headers
+	 * 		响应头
+	 */
+	public void setHeaders(final List<Header> headers){
+		this.headers = headers;
+	}
 
-    public InputStream getInputStream(){
-        return inputStream;
-    }
+	/**
+	 * 返回响应体，以流的形式返回
+	 *
+	 * @return 响应体，以流的形式返回
+	 */
+	public InputStream getInputStream(){
+		return inputStream;
+	}
 
-    public void setInputStream(final InputStream inputStream){
-        this.inputStream = inputStream;
-    }
+	/**
+	 * 设置响应体，以流的形式返回
+	 *
+	 * @param inputStream
+	 * 		响应体，以流的形式返回
+	 */
+	public void setInputStream(final InputStream inputStream){
+		this.inputStream = inputStream;
+	}
 
-    public String getBody(){
-        return body;
-    }
+	/**
+	 * 返回响应头，以文本的形式返回
+	 *
+	 * @return 响应头，以文本的形式返回
+	 */
+	public String getBody(){
+		return body;
+	}
 
-    public void setBody(final String body){
-        this.body = body;
-    }
+	/**
+	 * 设置响应头，以文本的形式返回
+	 *
+	 * @param body
+	 * 		响应头，以文本的形式返回
+	 */
+	public void setBody(final String body){
+		this.body = body;
+	}
 
-    public long getContentLength(){
-        return contentLength;
-    }
+	/**
+	 * 返回响应内容大小
+	 *
+	 * @return 响应内容大小
+	 */
+	public long getContentLength(){
+		return contentLength;
+	}
 
-    public void setContentLength(long contentLength){
-        this.contentLength = contentLength;
-    }
+	/**
+	 * 设置响应内容大小
+	 *
+	 * @param contentLength
+	 * 		响应内容大小
+	 */
+	public void setContentLength(long contentLength){
+		this.contentLength = contentLength;
+	}
 
-    public boolean isSuccessful(){
-        return statusCode >= 200 && statusCode < 300;
-    }
+	/**
+	 * 返回是否为成功状态，即：状态码大于等于 200 且小于 300 为成功状态
+	 *
+	 * @return 是否为成功状态
+	 */
+	public boolean isSuccessful(){
+		return statusCode >= 200 && statusCode < 300;
+	}
 
-    @Override
-    public String toString(){
-        return "Response{" + "protocolVersion=" + protocolVersion + ", statusCode=" + statusCode + ", statusText='" +
-                statusText + '\'' + ", statusLine=" + statusLine + ", headers=" + headers + ", inputStream=" +
-                inputStream + ", body='" + body + '\'' + ", contentLength=" + contentLength + '}';
-    }
+	@Override
+	public String toString(){
+		return "Response{" + "protocolVersion=" + protocolVersion + ", statusCode=" + statusCode + ", statusText='" +
+				statusText + '\'' + ", statusLine=" + statusLine + ", headers=" + headers + ", inputStream=" +
+				inputStream + ", body='" + body + '\'' + ", contentLength=" + contentLength + '}';
+	}
 
 }
