@@ -24,14 +24,10 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.AbstractResponseHeaderParse;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import okhttp3.Headers;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * OKHTTP 响应头解析器
@@ -42,20 +38,16 @@ import java.util.List;
 class OkHttpResponseHeaderParse extends AbstractResponseHeaderParse<Headers> {
 
 	@Override
-	public List<Header> parse(final okhttp3.Headers headers){
-		if(headers == null){
-			return null;
-		}else if(headers.size() == 0){
-			return Collections.emptyList();
-		}
-
+	protected Multimap<String, String> doParse(final Headers headers){
 		final Multimap<String, String> headerMaps = HashMultimap.create();
 
-		for(String name : headers.names()){
-			headerMaps.put(name, headers.get(name));
+		if(headers.size() > 0){
+			for(String name : headers.names()){
+				headerMaps.put(name, headers.get(name));
+			}
 		}
 
-		return convertList(headerMaps);
+		return headerMaps;
 	}
 
 }

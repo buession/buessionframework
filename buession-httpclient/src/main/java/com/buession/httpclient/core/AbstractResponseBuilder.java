@@ -24,68 +24,15 @@
  */
 package com.buession.httpclient.core;
 
-import java.io.InputStream;
-import java.util.List;
-
 /**
  * 响应构建器抽象类
+ *
+ * @param <T>
+ * 		原始响应
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractResponseBuilder implements ResponseBuilder {
-
-	/**
-	 * 响应
-	 */
-	protected Response response = new Response();
-
-	@Override
-	public ResponseBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-		response.setProtocolVersion(protocolVersion);
-		return this;
-	}
-
-	@Override
-	public ResponseBuilder setStatusCode(int statusCode){
-		response.setStatusCode(statusCode);
-		return this;
-	}
-
-	@Override
-	public ResponseBuilder setStatusText(String statusText){
-		response.setStatusText(statusText);
-		return this;
-	}
-
-	@Override
-	public ResponseBuilder setHeaders(List<Header> headers){
-		response.setHeaders(headers);
-		return this;
-	}
-
-	@Override
-	public ResponseBuilder setInputStream(InputStream inputStream){
-		response.setInputStream(inputStream);
-		return this;
-	}
-
-	@Override
-	public ResponseBuilder setBody(String body){
-		response.setBody(body);
-		return this;
-	}
-
-	@Override
-	public ResponseBuilder setContentLength(long contentLength){
-		response.setContentLength(contentLength);
-		return this;
-	}
-
-	@Override
-	public Response build(){
-		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
-		return response;
-	}
+public abstract class AbstractResponseBuilder<T> implements ResponseBuilder<T> {
 
 }

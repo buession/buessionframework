@@ -25,7 +25,8 @@
 package com.buession.httpclient.okhttp;
 
 import com.buession.httpclient.core.AbstractResponseBuilder;
-import com.buession.httpclient.core.ResponseBuilder;
+import com.buession.httpclient.core.Response;
+import com.buession.httpclient.core.StatusLine;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import org.slf4j.Logger;
@@ -34,29 +35,32 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
+ * OkHttp Http Client 响应构建器
+ *
  * @author Yong.Teng
  */
-public class OkHttpResponseBuilder extends AbstractResponseBuilder {
+public class OkHttpResponseBuilder extends AbstractResponseBuilder<okhttp3.Response> {
 
 	private final static Logger logger = LoggerFactory.getLogger(OkHttpResponseBuilder.class);
 
-	public static ResponseBuilder create(){
-		return new OkHttpResponseBuilder();
-	}
-
-	public static ResponseBuilder create(okhttp3.Response httpResponse){
-		final ResponseBuilder responseBuilder = new OkHttpResponseBuilder().setStatusCode(httpResponse.code()).setStatusText(httpResponse.message());
-
+	@Override
+	public Response build(okhttp3.Response httpResponse){
+		final Response response = new Response();
 		final ProtocolConverter protocolConverter = new ProtocolConverter();
-		responseBuilder.setProtocolVersion(protocolConverter.convert(httpResponse.protocol()));
+		final OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse();
 
-		OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse();
-		responseBuilder.setHeaders(okHttpResponseHeaderParse.parse(httpResponse.headers()));
+		response.setProtocolVersion(protocolConverter.convert(httpResponse.protocol()));
+
+		response.setStatusCode(httpResponse.code());
+		response.setStatusText(httpResponse.message());
+		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
+
+		response.setHeaders(okHttpResponseHeaderParse.parse(httpResponse.headers()));
 
 		final ResponseBody responseBody = httpResponse.body();
 
 		if(responseBody != null){
-			responseBuilder.setContentLength(responseBody.contentLength());
+			response.setContentLength(responseBody.contentLength());
 
 			try{
 				BufferedSource source = responseBody.source();
@@ -68,8 +72,8 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 
 				sourceBuffer.copyTo(targetBuffer, 0, sourceBuffer.size());
 
-				responseBuilder.setBody(responseBody.string());
-				responseBuilder.setInputStream(targetBuffer.inputStream());
+				response.setBody(responseBody.string());
+				response.setInputStream(targetBuffer.inputStream());
 
 				sourceBuffer.close();
 			}catch(IOException e){
@@ -81,7 +85,7 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 
 		httpResponse.close();
 
-		return responseBuilder;
+		return response;
 	}
 
 }

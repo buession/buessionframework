@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -31,93 +31,98 @@ import com.buession.httpclient.core.Configuration;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractConnectionManager<O> implements ConnectionManager<O> {
+public abstract class AbstractConnectionManager<O> implements ConnectionManager {
 
-    private Configuration configuration = new Configuration();
+	private Configuration configuration = new Configuration();
 
-    private O clientConnectionManager;
+	private O clientConnectionManager;
 
-    /**
-     * 构造函数，创建驱动默认连接管理器
-     */
-    public AbstractConnectionManager(){
-        clientConnectionManager = createDefaultClientConnectionManager();
-    }
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 */
+	public AbstractConnectionManager(){
+		clientConnectionManager = createDefaultClientConnectionManager();
+	}
 
-    /**
-     * 构造函数，创建驱动默认连接管理器
-     *
-     * @param configuration
-     *         连接对象
-     */
-    public AbstractConnectionManager(Configuration configuration){
-        this.configuration = configuration;
-        clientConnectionManager = createDefaultClientConnectionManager();
-    }
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 */
+	public AbstractConnectionManager(Configuration configuration){
+		this.configuration = configuration;
+		clientConnectionManager = createDefaultClientConnectionManager();
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param clientConnectionManager
-     *         驱动连接管理器
-     */
-    public AbstractConnectionManager(O clientConnectionManager){
-        this.clientConnectionManager = clientConnectionManager;
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public AbstractConnectionManager(O clientConnectionManager){
+		this.clientConnectionManager = clientConnectionManager;
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param configuration
-     *         连接对象
-     * @param clientConnectionManager
-     *         驱动连接管理器
-     */
-    public AbstractConnectionManager(Configuration configuration, O clientConnectionManager){
-        this.configuration = configuration;
-        this.clientConnectionManager = clientConnectionManager;
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public AbstractConnectionManager(Configuration configuration, O clientConnectionManager){
+		this.configuration = configuration;
+		this.clientConnectionManager = clientConnectionManager;
+	}
 
-    /**
-     * 获取连接对象
-     *
-     * @return 连接对象
-     */
-    @Override
-    public Configuration getConfiguration(){
-        return configuration;
-    }
+	/**
+	 * 获取连接对象
+	 *
+	 * @return 连接对象
+	 */
+	@Override
+	public Configuration getConfiguration(){
+		return configuration;
+	}
 
-    /**
-     * 设置连接对象
-     *
-     * @param configuration
-     *         连接对象
-     */
-    @Override
-    public void setConfiguration(Configuration configuration){
-        this.configuration = configuration;
-    }
+	/**
+	 * 设置连接对象
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 */
+	@Override
+	public void setConfiguration(Configuration configuration){
+		this.configuration = configuration;
+	}
 
-    /**
-     * 获取驱动连接管理器
-     *
-     * @return 连接管理器
-     */
-    @Override
-    public O getClientConnectionManager(){
-        return clientConnectionManager;
-    }
+	/**
+	 * 获取驱动连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	public O getClientConnectionManager(){
+		return clientConnectionManager;
+	}
 
-    /**
-     * 设置连接管理器
-     *
-     * @param clientConnectionManager
-     *         连接管理器
-     */
-    @Override
-    public void setClientConnectionManager(O clientConnectionManager){
-        this.clientConnectionManager = clientConnectionManager;
-    }
+	/**
+	 * 设置连接管理器
+	 *
+	 * @param clientConnectionManager
+	 * 		连接管理器
+	 */
+	public void setClientConnectionManager(O clientConnectionManager){
+		this.clientConnectionManager = clientConnectionManager;
+	}
+
+	/**
+	 * 创建驱动默认连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	protected abstract O createDefaultClientConnectionManager();
 
 }

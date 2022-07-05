@@ -17,9 +17,9 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -81,7 +81,7 @@ public class ApacheClientConnectionManager extends AbstractConnectionManager<Htt
 	 * @return 连接管理器
 	 */
 	@Override
-	public HttpClientConnectionManager createDefaultClientConnectionManager(){
+	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
 		PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
 		//最大连接数

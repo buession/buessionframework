@@ -19,97 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
-import java.io.InputStream;
-import java.util.List;
-
 /**
  * 响应构建器
+ *
+ * @param <T>
+ * 		原始响应
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ResponseBuilder {
-
-	/**
-	 * 设置协议及版本
-	 *
-	 * @param protocolVersion
-	 * 		协议及版本
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setProtocolVersion(ProtocolVersion protocolVersion);
-
-	/**
-	 * 设置状态码
-	 *
-	 * @param statusCode
-	 * 		状态码
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setStatusCode(int statusCode);
-
-	/**
-	 * 设置状态码文本描述
-	 *
-	 * @param statusText
-	 * 		状态码文本描述
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setStatusText(String statusText);
-
-	/**
-	 * 设置响应头
-	 *
-	 * @param headers
-	 * 		响应头
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setHeaders(List<Header> headers);
-
-	/**
-	 * 设置响应流
-	 *
-	 * @param inputStream
-	 * 		响应流
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setInputStream(InputStream inputStream);
-
-	/**
-	 * 设置响应体
-	 *
-	 * @param body
-	 * 		响应体
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setBody(String body);
-
-	/**
-	 * 设置响应内容长度
-	 *
-	 * @param contentLength
-	 * 		响应内容长度
-	 *
-	 * @return 响应构建器
-	 */
-	ResponseBuilder setContentLength(long contentLength);
+public interface ResponseBuilder<T> {
 
 	/**
 	 * 构建响应 {@link Response}
 	 *
+	 * @param httpResponse
+	 * 		原始响应
+	 *
 	 * @return 响应 {@link Response}
 	 */
-	Response build();
+	Response build(T httpResponse);
 
 }

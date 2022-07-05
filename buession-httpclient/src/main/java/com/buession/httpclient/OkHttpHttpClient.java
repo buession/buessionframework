@@ -24,23 +24,18 @@
  */
 package com.buession.httpclient;
 
-import com.buession.httpclient.conn.ApacheClientConnectionManager;
+import com.buession.core.validator.Validate;
+import com.buession.httpclient.conn.OkHttpClientConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.ConnectTimeoutException;
-import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
-import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
-import com.buession.httpclient.apache.ApacheRequestBuilder;
-import com.buession.httpclient.apache.ApacheResponseBuilder;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.HttpClientBuilder;
+import com.buession.httpclient.okhttp.HttpClientBuilder;
+import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
+import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,24 +46,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Apache HttpClient
+ * OkHttp(3) HttpClient
  *
  * @author Yong.Teng
  */
-public class ApacheHttpClient extends AbstractHttpClient {
+public class OkHttpHttpClient extends AbstractHttpClient {
 
-	private RequestConfig requestConfig;
+	private okhttp3.OkHttpClient httpClient;
 
-	private org.apache.http.client.HttpClient httpClient;
-
-	private final static Logger logger = LoggerFactory.getLogger(ApacheHttpClient.class);
+	private final static Logger logger = LoggerFactory.getLogger(OkHttpHttpClient.class);
 
 	/**
 	 * 构造函数
 	 */
-	public ApacheHttpClient(){
+	public OkHttpHttpClient(){
 		super();
-		setConnectionManager(new ApacheClientConnectionManager());
+		setConnectionManager(new OkHttpClientConnectionManager());
 	}
 
 	/**
@@ -77,7 +70,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public ApacheHttpClient(ApacheClientConnectionManager connectionManager){
+	public OkHttpHttpClient(OkHttpClientConnectionManager connectionManager){
 		super(connectionManager);
 	}
 
@@ -85,234 +78,201 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * 构造函数
 	 *
 	 * @param httpClient
-	 * 		Apache Http Client
+	 * 		OkHttp Client
 	 */
-	public ApacheHttpClient(HttpClient httpClient){
+	public OkHttpHttpClient(okhttp3.OkHttpClient httpClient){
 		this.httpClient = httpClient;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param httpClient
-	 * 		Apache Http Client
-	 * @param requestConfig
-	 * 		请求配置
-	 */
-	public ApacheHttpClient(HttpClient httpClient, RequestConfig requestConfig){
-		this.httpClient = httpClient;
-		this.requestConfig = requestConfig;
-	}
-
-	public RequestConfig getRequestConfig(){
-		if(requestConfig == null){
+	public okhttp3.OkHttpClient getHttpClient(){
+		if(httpClient == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
 
-			RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(configuration.getConnectTimeout())
-					.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
-					.setSocketTimeout(configuration.getReadTimeout())
-					.setAuthenticationEnabled(configuration.isAuthenticationEnabled())
-					.setContentCompressionEnabled(configuration.isContentCompressionEnabled())
-					.setNormalizeUri(configuration.isNormalizeUri());
+			HttpClientBuilder builder = HttpClientBuilder.create()
+					.setConnectionManager(
+							((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager())
+					.setConnectTimeout(configuration.getConnectTimeout())
+					.setReadTimeout(configuration.getReadTimeout());
 
 			if(configuration.isAllowRedirects() != null){
-				builder.setRedirectsEnabled(configuration.isAllowRedirects());
+				builder.setFollowRedirects(configuration.isAllowRedirects());
 			}
 
-			if(configuration.getMaxRedirects() != null){
-				builder.setMaxRedirects(configuration.getMaxRedirects());
-			}
-
-			if(configuration.isCircularRedirectsAllowed() != null){
-				builder.setCircularRedirectsAllowed(configuration.isCircularRedirectsAllowed());
-			}
-
-			if(configuration.isRelativeRedirectsAllowed() != null){
-				builder.setRelativeRedirectsAllowed(configuration.isRelativeRedirectsAllowed());
-			}
-
-			requestConfig = builder.build();
-		}
-
-		return requestConfig;
-	}
-
-	public void setRequestConfig(RequestConfig requestConfig){
-		this.requestConfig = requestConfig;
-	}
-
-	public org.apache.http.client.HttpClient getHttpClient(){
-		if(httpClient == null){
-			httpClient = HttpClientBuilder.create()
-					.setConnectionManager(
-							((ApacheClientConnectionManager) getConnectionManager()).getClientConnectionManager())
-					.build();
+			httpClient = builder.build();
 		}
 
 		return httpClient;
 	}
 
-	public void setHttpClient(org.apache.http.client.HttpClient httpClient){
+	public void setHttpClient(okhttp3.OkHttpClient httpClient){
 		this.httpClient = httpClient;
 	}
 
 	@Override
 	public Response get(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).get());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).get());
 	}
 
 	@Override
 	public Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).post(data));
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).post(data));
 	}
 
 	@Override
 	public Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).patch(data));
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).patch(data));
 	}
 
 	@Override
 	public Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).put(data));
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).put(data));
 	}
 
 	@Override
 	public Response delete(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).delete());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).delete());
 	}
 
 	@Override
 	public Response connect(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).connect());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).connect());
 	}
 
 	@Override
 	public Response trace(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).trace());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).trace());
 	}
 
 	@Override
 	public Response copy(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).copy());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).copy());
 	}
 
 	@Override
 	public Response move(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).move());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).move());
 	}
 
 	@Override
 	public Response head(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).head());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).head());
 	}
 
 	@Override
 	public Response options(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).options());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).options());
 	}
 
 	@Override
 	public Response link(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).link());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).link());
 	}
 
 	@Override
 	public Response unlink(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).unlink());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).unlink());
 	}
 
 	@Override
 	public Response purge(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).purge());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).purge());
 	}
 
 	@Override
 	public Response lock(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).lock());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).lock());
 	}
 
 	@Override
 	public Response unlock(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).unlock());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).unlock());
 	}
 
 	@Override
 	public Response propfind(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).propfind());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).propfind());
 	}
 
 	@Override
 	public Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).proppatch(data));
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).proppatch(data));
 	}
 
 	@Override
 	public Response report(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).report(data));
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).report(data));
 	}
 
 	@Override
 	public Response view(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).view());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).view());
 	}
 
 	@Override
 	public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).wrapped());
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).wrapped());
 	}
 
-	protected Response doRequest(final ApacheRequestBuilder builder)
+	protected Response doRequest(final OkHttpRequestBuilder builder)
 			throws IOException, RequestException{
-		final ApacheRequestBuilder.HttpComponentsRequest request = builder.setRequestConfig(getRequestConfig())
-				.setProtocolVersion(getHttpVersion()).build();
-		final ApacheResponseBuilder apacheResponseBuilder = new ApacheResponseBuilder();
+		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+
+		okhttp3.Request okHttpRequest = request.getRequestBuilder().build();
+		okhttp3.Response httpResponse = null;
+		final OkHttpResponseBuilder httpResponseBuilder = new OkHttpResponseBuilder();
 
 		try{
-			HttpResponse httpResponse = getHttpClient().execute(request.getHttpRequest());
-			return apacheResponseBuilder.build(httpResponse);
+			httpResponse = getHttpClient().newCall(okHttpRequest).execute();
+			return httpResponseBuilder.build(httpResponse);
 		}catch(IOException e){
 			if(logger.isErrorEnabled()){
 				logger.error("Request({}) url: {} error.", request.getMethod(), request.getUrl(), e);
 			}
 
-			if(e instanceof org.apache.http.conn.ConnectionPoolTimeoutException){
-				throw new ConnectionPoolTimeoutException(e.getMessage());
-			}else if(e instanceof org.apache.http.conn.ConnectTimeoutException){
-				throw new ConnectTimeoutException(e.getMessage());
-			}else if(e instanceof SocketTimeoutException){
-				throw new ReadTimeoutException(e.getMessage());
-			}else if(e instanceof org.apache.http.impl.execchain.RequestAbortedException){
-				throw new RequestAbortedException(e.getMessage());
-			}else if(e instanceof ClientProtocolException){
-				throw new RequestException(e.getMessage(), e);
+			if(e instanceof SocketTimeoutException){
+				String message = e.getMessage();
+
+				if(Validate.hasText(message)){
+					message = message.toLowerCase();
+				}
+
+				if(message.contains("connect timed out")){
+					throw new ConnectTimeoutException(e.getMessage());
+				}else if(message.contains("read timed out")){
+					throw new ReadTimeoutException(e.getMessage());
+				}else{
+					throw new RequestException(e.getMessage(), e);
+				}
 			}else if(e instanceof UnknownHostException){
 				throw e;
 			}else{
 				throw new RequestException(e.getMessage(), e);
 			}
 		}finally{
-			request.getHttpRequest().releaseConnection();
+			if(httpResponse != null){
+				httpResponse.close();
+			}
 		}
 	}
 

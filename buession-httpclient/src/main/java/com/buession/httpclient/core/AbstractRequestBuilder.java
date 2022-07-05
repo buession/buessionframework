@@ -46,11 +46,7 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 
 	protected R request;
 
-	protected ProtocolVersion protocolVersion;
-
 	protected String url;
-
-	protected List<Header> headers;
 
 	protected Map<String, Object> parameters;
 
@@ -66,11 +62,13 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 
 	@Override
 	public RequestBuilder<R> setHeaders(List<Header> headers){
+		request.setHeaders(headers);
 		return this;
 	}
 
 	@Override
 	public RequestBuilder<R> setParameters(Map<String, Object> parameters){
+		this.parameters = parameters;
 		return this;
 	}
 
@@ -81,8 +79,6 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 		}else{
 			request.setUrl(url);
 		}
-
-		request.setHeaders(headers);
 
 		return request;
 	}

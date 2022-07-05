@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -28,9 +28,9 @@ import java.lang.reflect.Field;
 
 /**
  * 枚举工具类
- * More {@link org.apache.commons.lang3.EnumUtils}
  *
  * @author Yong.Teng
+ * @see org.apache.commons.lang3.EnumUtils
  */
 public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
 

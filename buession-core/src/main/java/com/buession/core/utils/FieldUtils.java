@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -30,9 +30,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * 类属性工具类 More {@link org.apache.commons.lang3.reflect.FieldUtils}
+ * 类属性工具类
  *
  * @author Yong.Teng
+ * @see org.apache.commons.lang3.reflect.FieldUtils
  * @since 1.2.0
  */
 public class FieldUtils extends org.apache.commons.lang3.reflect.FieldUtils {
@@ -59,7 +60,9 @@ public class FieldUtils extends org.apache.commons.lang3.reflect.FieldUtils {
 	public static void setAccessible(Field field){
 		Assert.isNull(field, "The field cloud not be null.");
 
-		if((Modifier.isPublic(field.getModifiers()) == false || Modifier.isPublic(field.getDeclaringClass().getModifiers()) == false || Modifier.isFinal(field.getModifiers())) && field.isAccessible() == false){
+		if((Modifier.isPublic(field.getModifiers()) == false ||
+				Modifier.isPublic(field.getDeclaringClass().getModifiers()) == false ||
+				Modifier.isFinal(field.getModifiers())) && field.isAccessible() == false){
 			field.setAccessible(true);
 		}
 	}

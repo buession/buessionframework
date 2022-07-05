@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
@@ -49,7 +49,7 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 	@JacksonStdImpl
 	public static class DateUnixTimestampDeserializer extends DateDeserializer {
 
-		private static final long serialVersionUID = -6750692952981588777L;
+		private final static long serialVersionUID = -6750692952981588777L;
 
 		public DateUnixTimestampDeserializer(){
 			super();
@@ -74,13 +74,14 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 	@JacksonStdImpl
 	public static class SqlDateUnixTimestampDeserializer extends SqlDateDeserializer {
 
-		private static final long serialVersionUID = 4255599559201979615L;
+		private final static long serialVersionUID = 4255599559201979615L;
 
 		public SqlDateUnixTimestampDeserializer(){
 			super();
 		}
 
-		public SqlDateUnixTimestampDeserializer(SqlDateUnixTimestampDeserializer base, DateFormat df, String formatString){
+		public SqlDateUnixTimestampDeserializer(SqlDateUnixTimestampDeserializer base, DateFormat df,
+												String formatString){
 			super(base, df, formatString);
 		}
 
@@ -99,7 +100,7 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 	@JacksonStdImpl
 	public static class CalendarUnixTimestampDeserializer extends CalendarDeserializer {
 
-		private static final long serialVersionUID = 4711172144147773042L;
+		private final static long serialVersionUID = 4711172144147773042L;
 
 		public CalendarUnixTimestampDeserializer(){
 			super();
@@ -128,13 +129,14 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 	@JacksonStdImpl
 	public static class TimestampUnixTimestampDeserializer extends TimestampDeserializer {
 
-		private static final long serialVersionUID = 5780827423514223079L;
+		private final static long serialVersionUID = 5780827423514223079L;
 
 		public TimestampUnixTimestampDeserializer(){
 			super();
 		}
 
-		public TimestampUnixTimestampDeserializer(TimestampUnixTimestampDeserializer src, DateFormat df, String formatString){
+		public TimestampUnixTimestampDeserializer(TimestampUnixTimestampDeserializer src, DateFormat df,
+												  String formatString){
 			super(src, df, formatString);
 		}
 

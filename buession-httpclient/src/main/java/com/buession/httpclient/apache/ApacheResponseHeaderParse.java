@@ -24,13 +24,9 @@
  */
 package com.buession.httpclient.apache;
 
-import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.AbstractResponseHeaderParse;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Apache HttpClient 响应头解析器
@@ -41,22 +37,18 @@ import java.util.List;
 class ApacheResponseHeaderParse extends AbstractResponseHeaderParse<org.apache.http.Header[]> {
 
 	@Override
-	public List<Header> parse(final org.apache.http.Header[] headers){
-		if(headers == null){
-			return null;
-		}else if(headers.length == 0){
-			return Collections.emptyList();
-		}
-
+	protected Multimap<String, String> doParse(final org.apache.http.Header[] headers){
 		final Multimap<String, String> headerMaps = HashMultimap.create();
 
-		for(org.apache.http.Header header : headers){
-			if(header.getElements() != null){
-				headerMaps.put(header.getName(), header.getValue());
+		if(headers.length > 0){
+			for(org.apache.http.Header header : headers){
+				if(header.getElements() != null){
+					headerMaps.put(header.getName(), header.getValue());
+				}
 			}
 		}
 
-		return convertList(headerMaps);
+		return headerMaps;
 	}
 
 }

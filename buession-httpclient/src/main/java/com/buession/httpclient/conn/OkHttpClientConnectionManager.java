@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -83,7 +83,7 @@ public class OkHttpClientConnectionManager extends AbstractConnectionManager<Htt
 	 * @return 连接管理器
 	 */
 	@Override
-	public HttpClientConnectionManager createDefaultClientConnectionManager(){
+	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
 		HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
 		connectionManager.setConnectionPool(new ConnectionPool(getConfiguration().getMaxConnections(),

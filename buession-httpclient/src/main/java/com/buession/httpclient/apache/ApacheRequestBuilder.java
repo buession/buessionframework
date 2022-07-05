@@ -24,7 +24,6 @@
  */
 package com.buession.httpclient.apache;
 
-import com.buession.core.utils.EnumUtils;
 import com.buession.httpclient.apache.convert.ChunkedInputStreamRequestBodyConverter;
 import com.buession.httpclient.apache.convert.InputStreamRequestBodyConvert;
 import com.buession.httpclient.apache.convert.MultipartFormRequestBodyConverter;
@@ -69,9 +68,11 @@ import java.util.Map;
  */
 public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBuilder.HttpComponentsRequest> {
 
-	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(), StandardCharsets.ISO_8859_1);
+	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
+			StandardCharsets.ISO_8859_1);
 
-	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(16, 0.8F);
+	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(
+			16, 0.8F);
 
 	static{
 		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
@@ -81,18 +82,18 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class, new RepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
+				new RepeatableInputStreamRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
 	}
 
 	private ApacheRequestBuilder(){
+		request = new HttpComponentsRequest();
 	}
 
 	public static ApacheRequestBuilder create(){
-		final ApacheRequestBuilder builder = new ApacheRequestBuilder();
-		builder.request = new HttpComponentsRequest();
-		return builder;
+		return new ApacheRequestBuilder();
 	}
 
 	public static ApacheRequestBuilder create(String url){
@@ -115,7 +116,12 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 
 	@Override
 	public ApacheRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-		this.protocolVersion = protocolVersion;
+		if(protocolVersion != null){
+			request.getHttpRequest().setProtocolVersion(
+					new org.apache.http.ProtocolVersion(protocolVersion.getProtocol(), protocolVersion.getMajor(),
+							protocolVersion.getMinor()));
+		}
+
 		return this;
 	}
 
@@ -127,7 +133,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 
 	@Override
 	public ApacheRequestBuilder setHeaders(List<Header> headers){
-		this.headers = headers;
+		request.setHeaders(headers);
 		return this;
 	}
 
@@ -144,172 +150,112 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 
 	@Override
 	public ApacheRequestBuilder get(){
-		request.setHttpRequest(url == null ? new HttpGet() : new HttpGet(url));
-		return this;
+		return setRequest(new HttpGet(), RequestMethod.GET);
 	}
 
 	@Override
-	public ApacheRequestBuilder post(RequestBody body){
-		HttpPost httpPost = url == null ? new HttpPost() : new HttpPost(url);
-
-		if(body != null){
-			httpPost.setEntity(parseEntity(body));
-		}
-
-		request.setHttpRequest(httpPost);
-
-		return this;
+	public ApacheRequestBuilder post(RequestBody<?> body){
+		return setRequest(new HttpPost(), RequestMethod.POST, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder patch(RequestBody body){
-		HttpPatch httpPatch = url == null ? new HttpPatch() : new HttpPatch(url);
-
-		if(body != null){
-			httpPatch.setEntity(parseEntity(body));
-		}
-
-		request.setHttpRequest(httpPatch);
-
-		return this;
+	public ApacheRequestBuilder patch(RequestBody<?> body){
+		return setRequest(new HttpPatch(), RequestMethod.PATCH, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder put(RequestBody body){
-		HttpPut httpPut = url == null ? new HttpPut() : new HttpPut(url);
-
-		if(body != null){
-			httpPut.setEntity(parseEntity(body));
-		}
-
-		request.setHttpRequest(httpPut);
-
-		return this;
+	public ApacheRequestBuilder put(RequestBody<?> body){
+		return setRequest(new HttpPut(), RequestMethod.PUT, body);
 	}
 
 	@Override
 	public ApacheRequestBuilder delete(){
-		request.setHttpRequest(url == null ? new HttpDelete() : new HttpDelete(url));
-		return this;
+		return setRequest(new HttpDelete(), RequestMethod.DELETE);
 	}
 
 	@Override
 	public ApacheRequestBuilder connect(){
-		request.setHttpRequest(url == null ? new HttpConnect() : new HttpConnect(url));
-		return this;
+		return setRequest(new HttpConnect(), RequestMethod.CONNECT);
 	}
 
 	@Override
 	public ApacheRequestBuilder trace(){
-		request.setHttpRequest(url == null ? new HttpTrace() : new HttpTrace(url));
-		return this;
+		return setRequest(new HttpTrace(), RequestMethod.TRACE);
 	}
 
 	@Override
 	public ApacheRequestBuilder copy(){
-		request.setHttpRequest(url == null ? new HttpCopy() : new HttpCopy(url));
-		return this;
+		return setRequest(new HttpCopy(), RequestMethod.COPY);
 	}
 
 	@Override
 	public ApacheRequestBuilder move(){
-		request.setHttpRequest(url == null ? new HttpMove() : new HttpMove(url));
-		return this;
+		return setRequest(new HttpMove(), RequestMethod.MOVE);
 	}
 
 	@Override
 	public ApacheRequestBuilder head(){
-		request.setHttpRequest(url == null ? new HttpHead() : new HttpHead(url));
-		return this;
+		return setRequest(new HttpHead(), RequestMethod.HEAD);
 	}
 
 	@Override
 	public ApacheRequestBuilder options(){
-		request.setHttpRequest(url == null ? new HttpOptions() : new HttpOptions(url));
-		return this;
+		return setRequest(new HttpOptions(), RequestMethod.OPTIONS);
 	}
 
 	@Override
 	public ApacheRequestBuilder link(){
-		request.setHttpRequest(url == null ? new HttpLink() : new HttpLink(url));
-		return this;
+		return setRequest(new HttpLink(), RequestMethod.LINK);
 	}
 
 	@Override
 	public ApacheRequestBuilder unlink(){
-		request.setHttpRequest(url == null ? new HttpUnlink() : new HttpUnlink(url));
-		return this;
+		return setRequest(new HttpUnlink(), RequestMethod.UNLINK);
 	}
 
 	@Override
 	public ApacheRequestBuilder purge(){
-		request.setHttpRequest(url == null ? new HttpPurge() : new HttpPurge(url));
-		return this;
+		return setRequest(new HttpPurge(), RequestMethod.PURGE);
 	}
 
 	@Override
 	public ApacheRequestBuilder lock(){
-		request.setHttpRequest(url == null ? new HttpLock() : new HttpLock(url));
-		return this;
+		return setRequest(new HttpLock(), RequestMethod.LOCK);
 	}
 
 	@Override
 	public ApacheRequestBuilder unlock(){
-		request.setHttpRequest(url == null ? new HttpUnlock() : new HttpUnlock(url));
-		return this;
+		return setRequest(new HttpUnlock(), RequestMethod.UNLOCK);
 	}
 
 	@Override
 	public ApacheRequestBuilder propfind(){
-		request.setHttpRequest(url == null ? new HttpPropfind() : new HttpPropfind(url));
-		return this;
+		return setRequest(new HttpPropfind(), RequestMethod.PROPFIND);
 	}
 
 	@Override
 	public ApacheRequestBuilder proppatch(RequestBody<?> body){
-		HttpPropPatch httpPropPatch = url == null ? new HttpPropPatch() : new HttpPropPatch(url);
-
-		if(body != null){
-			httpPropPatch.setEntity(parseEntity(body));
-		}
-
-		request.setHttpRequest(httpPropPatch);
-
-		return this;
+		return setRequest(new HttpPropPatch(), RequestMethod.PROPPATCH, body);
 	}
 
 	@Override
 	public ApacheRequestBuilder report(RequestBody<?> body){
-		HttpReport httpReport = url == null ? new HttpReport() : new HttpReport(url);
-
-		if(body != null){
-			httpReport.setEntity(parseEntity(body));
-		}
-
-		request.setHttpRequest(httpReport);
-
-		return this;
+		return setRequest(new HttpReport(), RequestMethod.REPORT, body);
 	}
 
 	@Override
 	public ApacheRequestBuilder view(){
-		request.setHttpRequest(url == null ? new HttpView() : new HttpView(url));
-		return this;
+		return setRequest(new HttpView(), RequestMethod.VIEW);
 	}
 
 	@Override
 	public ApacheRequestBuilder wrapped(){
-		request.setHttpRequest(url == null ? new HttpWrapped() : new HttpWrapped(url));
-		return this;
+		return setRequest(new HttpWrapped(), RequestMethod.WRAPPED);
 	}
 
 	@Override
 	public HttpComponentsRequest build(){
 		HttpComponentsRequest request = super.build();
-
-		if(protocolVersion != null){
-			request.getHttpRequest().setProtocolVersion(new org.apache.http.ProtocolVersion(protocolVersion.getProtocol(), protocolVersion.getMajor(), protocolVersion.getMinor()));
-		}
 
 		if(request.getHeaders() != null){
 			for(Header header : request.getHeaders()){
@@ -317,19 +263,28 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 			}
 		}
 
-		request.setMethod(EnumUtils.valueOf(RequestMethod.class, request.getHttpRequest().getMethod()));
 		request.getHttpRequest().setURI(URI.create(request.getUrl()));
 
 		return request;
 	}
 
-	private HttpEntity parseEntity(RequestBody<?> data){
-		if(data == null){
-			return null;
+	protected ApacheRequestBuilder setRequest(final HttpRequestBase httpRequest, final RequestMethod method){
+		request.setHttpRequest(httpRequest);
+		request.setMethod(method);
+		return this;
+	}
+
+	protected ApacheRequestBuilder setRequest(final HttpEntityEnclosingRequestBase httpRequest,
+											  final RequestMethod method,
+											  final RequestBody<?> body){
+		setRequest(httpRequest, method);
+
+		if(body != null){
+			ApacheRequestBodyConverter<RequestBody<?>> converter = REQUEST_BODY_CONVERTS.get(body.getClass());
+			httpRequest.setEntity(converter == null ? DEFAULT_HTTP_ENTITY : converter.convert(body));
 		}
 
-		ApacheRequestBodyConverter<RequestBody<?>> convert = REQUEST_BODY_CONVERTS.get(data.getClass());
-		return convert == null ? DEFAULT_HTTP_ENTITY : convert.convert(data);
+		return this;
 	}
 
 	public final static class HttpComponentsRequest extends Request {

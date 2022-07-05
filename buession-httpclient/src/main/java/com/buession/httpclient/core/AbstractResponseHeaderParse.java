@@ -42,14 +42,18 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderParse<T> {
 
-	protected static List<Header> convertList(final Multimap<String, String> headersMap){
-		if(headersMap == null){
+	@Override
+	public List<Header> parse(final T headers){
+		if(headers == null){
 			return null;
 		}
 
+		Multimap<String, String> headersMap = doParse(headers);
 		return Collections.unmodifiableList(
 				headersMap.keySet().stream().map((name)->new Header(name, StringUtils.join(headersMap.get(name), ", ")))
 						.collect(Collectors.toList()));
 	}
+
+	protected abstract Multimap<String, String> doParse(final T headers);
 
 }

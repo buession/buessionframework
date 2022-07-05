@@ -24,7 +24,6 @@
  */
 package com.buession.core.utils;
 
-import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 
 import java.lang.annotation.Annotation;
@@ -34,6 +33,7 @@ import java.lang.reflect.Method;
  * 注解工具类
  *
  * @author Yong.Teng
+ * @see org.springframework.core.annotation.AnnotationUtils
  * @since 2.0.0
  */
 public class AnnotationUtils extends org.springframework.core.annotation.AnnotationUtils {

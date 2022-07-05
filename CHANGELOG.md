@@ -39,14 +39,16 @@
 - **buession-httpclient：** 移除 ObjectRequestBodyConverter
 - **buession-httpclient：** okhttp 连接管理器 com.buession.httpclient.okhttp.OkHttpClientConnectionManager 类，使用 okhttp3.HttpClientConnectionManager，API okhttp 保持一致
 - **buession-httpclient：** okhttp 连接管理器 com.buession.httpclient.okhttp.RequestBuilder 类，使用 okhttp3.RequestBuilder，API okhttp 保持一致
+- **buession-httpclient：** 废弃 OkHttpClient ，使用统一风格的命名 OkHttpHttpClient
 - **buession-io：** 移除 FilePermission 字符串值字段
 - **buession-jdbc：** 时间配置由 int/long ，变更为 java.time.Duration
+- **buession-json：** 脱敏注解 @Sensitive replacement 默认值由空字符串替换为 ***
 - **buession-redis：** 新增 RedisTemplate 通过 DataSource 初始化，不再通过 RedisConnection 初始化
 - **buession-redis：** 移除 jedis shared redis API
 - **buession-redis：** 优化内部 API
 - **buession-web：** 移除 com.buession.web.reponse 包中的 response 注解，改由 com.buession.web.reponse.annotation 包中 response 注解替代
 - **buession-web：** AOP 注解重构
-- **buession-web：** @Cors 注解
+- **buession-web：** @Cors 注解及 CorsFilter
 
 
 ### 🐞 Bug 修复

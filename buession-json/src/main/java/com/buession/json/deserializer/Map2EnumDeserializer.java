@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
@@ -48,7 +48,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 
 	private final static Map<String, Enum<?>> cache = new ConcurrentHashMap<>(32);
 
-	private final Logger logger = LoggerFactory.getLogger(Map2EnumDeserializer.class);
+	private final static Logger logger = LoggerFactory.getLogger(Map2EnumDeserializer.class);
 
 	@SuppressWarnings({"unchecked"})
 	@Override
@@ -169,13 +169,17 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		if(node.isBigDecimal()){
 			return value.equals(node.decimalValue());
 		}else if(node.isBigInteger()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) ||
+					value.equals(node.bigIntegerValue());
 		}else if(node.isLong()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) ||
+					value.equals(node.bigIntegerValue());
 		}else if(node.isInt()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) ||
+					value.equals(node.bigIntegerValue());
 		}else if(node.isShort()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) ||
+					value.equals(node.bigIntegerValue());
 		}else if(node.isDouble()){
 			return value.equals(node.floatValue()) || value.equals(node.doubleValue());
 		}else if(node.isFloat()){

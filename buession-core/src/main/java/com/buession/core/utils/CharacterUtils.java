@@ -32,6 +32,7 @@ import java.nio.charset.StandardCharsets;
  * {@link Character}、{@link char} 工具类
  *
  * @author Yong.Teng
+ * @see org.apache.commons.lang3.CharUtils
  * @since 2.0.0
  */
 public class CharacterUtils extends org.apache.commons.lang3.CharUtils {

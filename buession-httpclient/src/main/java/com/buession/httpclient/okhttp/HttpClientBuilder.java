@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -34,13 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class HttpClientBuilder {
 
-	private HttpClientConnectionManager connectionManager;
-
-	private long connectTimeout = -1;
-
-	private long readTimeout = -1;
-
-	private Boolean followRedirects;
+	private final OkHttpClient.Builder builder = new okhttp3.OkHttpClient.Builder();
 
 	private HttpClientBuilder(){
 	}
@@ -50,43 +44,36 @@ public class HttpClientBuilder {
 	}
 
 	public HttpClientBuilder setConnectionManager(HttpClientConnectionManager connectionManager){
-		this.connectionManager = connectionManager;
+		builder.connectionPool(connectionManager.getConnectionPool());
 		return this;
 	}
 
 	public HttpClientBuilder setConnectTimeout(long connectTimeout){
-		this.connectTimeout = connectTimeout;
+		if(connectTimeout > -1){
+			builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
+		}
+
 		return this;
 	}
 
 	public HttpClientBuilder setReadTimeout(long readTimeout){
-		this.readTimeout = readTimeout;
+		if(readTimeout > -1){
+			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		}
+
 		return this;
 	}
 
 	public HttpClientBuilder setFollowRedirects(Boolean followRedirects){
-		this.followRedirects = followRedirects;
+		if(followRedirects != null){
+			builder.followRedirects(followRedirects);
+		}
+
 		return this;
 	}
 
 	public OkHttpClient build(){
-		OkHttpClient.Builder okHttpClientBuilder = new okhttp3.OkHttpClient.Builder();
-
-		if(connectTimeout > -1){
-			okHttpClientBuilder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
-		}
-
-		if(readTimeout > -1){
-			okHttpClientBuilder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
-		}
-
-		if(followRedirects != null){
-			okHttpClientBuilder.followRedirects(followRedirects);
-		}
-
-		okHttpClientBuilder.connectionPool(connectionManager.getConnectionPool());
-
-		return okHttpClientBuilder.build();
+		return builder.build();
 	}
 
 }

@@ -24,8 +24,6 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.core.utils.FieldUtils;
-import com.buession.core.utils.EnumUtils;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
@@ -67,7 +65,8 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
-	private final static Map<Class<? extends RequestBody>, OkHttpRequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(16, 0.8F);
+	private final static Map<Class<? extends RequestBody>, OkHttpRequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(
+			16, 0.8F);
 
 	static{
 		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
@@ -77,18 +76,18 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class, new RepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
+				new RepeatableInputStreamRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
 	}
 
 	private OkHttpRequestBuilder(){
+		request = new OkHttpRequest();
 	}
 
 	public static OkHttpRequestBuilder create(){
-		final OkHttpRequestBuilder builder = new OkHttpRequestBuilder();
-		builder.request = new OkHttpRequest();
-		return builder;
+		return new OkHttpRequestBuilder();
 	}
 
 	public static OkHttpRequestBuilder create(String url){
@@ -109,7 +108,6 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	@Override
 	public OkHttpRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-		this.protocolVersion = protocolVersion;
 		return this;
 	}
 
@@ -121,7 +119,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	@Override
 	public OkHttpRequestBuilder setHeaders(List<Header> headers){
-		this.headers = headers;
+		request.setHeaders(headers);
 		return this;
 	}
 
@@ -133,148 +131,114 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	@Override
 	public OkHttpRequestBuilder get(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().get());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().get(), RequestMethod.GET);
 	}
 
 	@Override
 	public OkHttpRequestBuilder post(RequestBody<?> body){
-		final okhttp3.RequestBuilder requestBuilder = new okhttp3.RequestBuilder();
-		final okhttp3.Request.Builder builder = body == null ? requestBuilder.post() : requestBuilder.post(buildRequestBody(body));
-
-		request.setRequestBuilder(builder);
-
-		return this;
+		return setRequest(body == null ? new okhttp3.RequestBuilder().post() : new okhttp3.RequestBuilder().post(
+				buildRequestBody(body)), RequestMethod.POST);
 	}
 
 	@Override
 	public OkHttpRequestBuilder patch(RequestBody<?> body){
-		final okhttp3.RequestBuilder requestBuilder = new okhttp3.RequestBuilder();
-		final okhttp3.Request.Builder builder = body == null ? requestBuilder.patch() : requestBuilder.patch(buildRequestBody(body));
-
-		request.setRequestBuilder(builder);
-
-		return this;
+		return setRequest(body == null ? new okhttp3.RequestBuilder().patch() : new okhttp3.RequestBuilder().patch(
+				buildRequestBody(body)), RequestMethod.PATCH);
 	}
 
 	@Override
 	public OkHttpRequestBuilder put(RequestBody<?> body){
-		final okhttp3.RequestBuilder requestBuilder = new okhttp3.RequestBuilder();
-		final okhttp3.Request.Builder builder = body == null ? requestBuilder.put() : requestBuilder.put(buildRequestBody(body));
-
-		request.setRequestBuilder(builder);
-
-		return this;
+		return setRequest(body == null ? new okhttp3.RequestBuilder().put() : new okhttp3.RequestBuilder().put(
+				buildRequestBody(body)), RequestMethod.PUT);
 	}
 
 	@Override
 	public OkHttpRequestBuilder delete(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().delete());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().delete(), RequestMethod.DELETE);
 	}
 
 	@Override
 	public OkHttpRequestBuilder connect(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().connect());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().connect(), RequestMethod.CONNECT);
 	}
 
 	@Override
 	public OkHttpRequestBuilder trace(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().trace());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().trace(), RequestMethod.TRACE);
 	}
 
 	@Override
 	public OkHttpRequestBuilder copy(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().copy());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().copy(), RequestMethod.COPY);
 	}
 
 	@Override
 	public OkHttpRequestBuilder move(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().move());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().move(), RequestMethod.MOVE);
 	}
 
 	@Override
 	public OkHttpRequestBuilder head(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().head());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().head(), RequestMethod.HEAD);
 	}
 
 	@Override
 	public OkHttpRequestBuilder options(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().options());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().options(), RequestMethod.OPTIONS);
 	}
 
 	@Override
 	public OkHttpRequestBuilder link(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().link());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().link(), RequestMethod.LINK);
 	}
 
 	@Override
 	public OkHttpRequestBuilder unlink(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().unlink());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().unlink(), RequestMethod.UNLINK);
 	}
 
 	@Override
 	public OkHttpRequestBuilder purge(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().purge());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().purge(), RequestMethod.PURGE);
 	}
 
 	@Override
 	public OkHttpRequestBuilder lock(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().lock());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().lock(), RequestMethod.LOCK);
 	}
 
 	@Override
 	public OkHttpRequestBuilder unlock(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().unlock());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().unlock(), RequestMethod.UNLOCK);
 	}
 
 	@Override
 	public OkHttpRequestBuilder propfind(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().propfind());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().propfind(), RequestMethod.PROPFIND);
 	}
 
 	@Override
 	public OkHttpRequestBuilder proppatch(RequestBody<?> body){
-		final okhttp3.RequestBuilder requestBuilder = new okhttp3.RequestBuilder();
-		final okhttp3.Request.Builder builder = body == null ? requestBuilder.proppatch() : requestBuilder.proppatch(buildRequestBody(body));
-
-		request.setRequestBuilder(builder);
-
-		return this;
+		return setRequest(
+				body == null ? new okhttp3.RequestBuilder().proppatch() : new okhttp3.RequestBuilder().proppatch(
+						buildRequestBody(body)), RequestMethod.PROPPATCH);
 	}
 
 	@Override
 	public OkHttpRequestBuilder report(RequestBody<?> body){
-		final okhttp3.RequestBuilder requestBuilder = new okhttp3.RequestBuilder();
-		final okhttp3.Request.Builder builder = body == null ? requestBuilder.report() : requestBuilder.report(buildRequestBody(body));
-
-		request.setRequestBuilder(builder);
-
-		return this;
+		return setRequest(
+				body == null ? new okhttp3.RequestBuilder().report() : new okhttp3.RequestBuilder().report(
+						buildRequestBody(body)), RequestMethod.REPORT);
 	}
 
 	@Override
 	public OkHttpRequestBuilder view(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().view());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().view(), RequestMethod.VIEW);
 	}
 
 	@Override
 	public OkHttpRequestBuilder wrapped(){
-		request.setRequestBuilder(new okhttp3.RequestBuilder().wrapped());
-		return this;
+		return setRequest(new okhttp3.RequestBuilder().wrapped(), RequestMethod.WRAPPED);
 	}
 
 	@Override
@@ -289,16 +253,16 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 			}
 		}
 
-		try{
-			String methodName = String.valueOf(FieldUtils.readDeclaredField(request.getRequestBuilder(), "method", true));
-			request.setMethod(EnumUtils.valueOf(RequestMethod.class, methodName.toUpperCase()));
-		}catch(Exception e){
-		}
-
-		request.getRequestBuilder().url(request.getUrl());
-		request.getRequestBuilder().headers(headersBuilder.build());
+		request.getRequestBuilder().url(request.getUrl()).headers(headersBuilder.build());
 
 		return request;
+	}
+
+	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder okhttp3RequestBuilder,
+											  final RequestMethod method){
+		request.setRequestBuilder(okhttp3RequestBuilder);
+		request.setMethod(method);
+		return this;
 	}
 
 	@SuppressWarnings({"unchecked"})

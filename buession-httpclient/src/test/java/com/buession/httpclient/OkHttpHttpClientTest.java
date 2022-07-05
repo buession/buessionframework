@@ -47,7 +47,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class OkHttpHttpClientTest {
 
-	private static OkHttpClient httpClient = new OkHttpClient();
+	private static OkHttpHttpClient httpClient = new OkHttpHttpClient();
 
 	@Test
 	public void responseHeaders() throws IOException, RequestException{

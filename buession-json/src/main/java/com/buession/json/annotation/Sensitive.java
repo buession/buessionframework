@@ -65,6 +65,6 @@ public @interface Sensitive {
 	 *
 	 * @return 自定义脱敏替换内容
 	 */
-	String replacement() default "";
+	String replacement() default "***";
 
 }
