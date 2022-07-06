@@ -2,11 +2,11 @@
 ===========================
 
 
-## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-02-21)
+## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-07-06)
 
 ### 🔨依赖升级
 
--
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.0)
 
 
 ### ⭐ 新特性
