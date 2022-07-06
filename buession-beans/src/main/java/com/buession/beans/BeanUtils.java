@@ -162,25 +162,18 @@ public class BeanUtils {
 	 *
 	 * @return Map
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({"unchecked"})
 	public static Map<String, Object> toMap(final Object bean){
 		Assert.isNull(bean, "No source bean specified.");
 
-		if(bean instanceof Map){
-			final Map<?, ?> beanMap = (Map<?, ?>) bean;
-			final Map<String, Object> result = new HashMap<>(beanMap.size());
+		BeanMap beanMap = BeanMap.create(bean);
+		Map<String, Object> result = new HashMap<>(beanMap.size());
 
-			beanMap.forEach((key, value)->{
-				if(key != null){
-					result.put(key.toString(), value);
-				}
-			});
+		beanMap.forEach((key, value)->{
+			result.put(key.toString(), value);
+		});
 
-			return result;
-		}else{
-			BeanMap beanMap = BeanMap.create(bean);
-			return new HashMap<>(beanMap);
-		}
+		return result;
 	}
 
 	private final static class HumpBeanUtilsBean extends BeanUtilsBean {
@@ -200,7 +193,8 @@ public class BeanUtils {
 		}
 
 		@Override
-		public void populate(Object bean, Map<String, ? extends Object> properties) throws IllegalAccessException, InvocationTargetException{
+		public void populate(Object bean, Map<String, ? extends Object> properties)
+				throws IllegalAccessException, InvocationTargetException{
 			if(bean != null && properties != null){
 				if(logger.isDebugEnabled()){
 					logger.debug("BeanUtils.populate(" + bean + ", " + properties + ")");

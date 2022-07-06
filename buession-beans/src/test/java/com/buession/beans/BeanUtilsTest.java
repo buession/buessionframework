@@ -25,6 +25,7 @@
 package com.buession.beans;
 
 import org.junit.Test;
+import org.springframework.cglib.core.Converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
@@ -91,6 +92,33 @@ public class BeanUtilsTest {
 
 		Person person = new Person();
 		BeanUtils.copyProperties(person, user);
+		System.out.println(person);
+	}
+
+	@Test
+	public void copy3(){
+		User user = new User();
+
+		user.setId(100);
+		user.setUsername("username");
+
+		Person person = new Person();
+		BeanUtils.copyProperties(person, user, new Converter() {
+
+			@Override
+			public Object convert(Object sourceFieldValue, Class targetFieldType, Object targetSetter){
+				if(sourceFieldValue instanceof Short || sourceFieldValue instanceof Integer){
+					if(targetFieldType.isAssignableFrom(Long.class) || targetFieldType.isAssignableFrom(long.class)){
+						return sourceFieldValue;
+					}
+				}else if(sourceFieldValue.getClass().isAssignableFrom(targetFieldType)){
+					return sourceFieldValue;
+				}
+
+				return null;
+			}
+
+		});
 		System.out.println(person);
 	}
 
