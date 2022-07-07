@@ -187,7 +187,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_REPLICAS)
-				.general((cmd)->cmd.clusterReplicas(nodeId), ClusterReplicasConverter.INSTANCE)
+				.general((cmd)->cmd.clusterReplicas(nodeId), ClusterReplicasConverter.LIST_CONVERTER)
 				.run(args);
 	}
 

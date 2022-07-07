@@ -44,7 +44,7 @@ public class StreamFull implements Serializable {
 
 	private final long radixTreeNodes;
 
-	private final List<StreamGroupFull> groups;
+	private final List<Group> groups;
 
 	private final StreamEntryId lastGeneratedId;
 
@@ -53,7 +53,7 @@ public class StreamFull implements Serializable {
 	private final Map<String, Object> infos;
 
 	public StreamFull(final long length, final long radixTreeKeys, final long radixTreeNodes,
-					  final List<StreamGroupFull> groups, final StreamEntryId lastGeneratedId,
+					  final List<Group> groups, final StreamEntryId lastGeneratedId,
 					  final List<StreamEntry> entries, final Map<String, Object> infos){
 		this.length = length;
 		this.radixTreeKeys = radixTreeKeys;
@@ -76,7 +76,7 @@ public class StreamFull implements Serializable {
 		return radixTreeNodes;
 	}
 
-	public List<StreamGroupFull> getGroups(){
+	public List<Group> getGroups(){
 		return groups;
 	}
 
@@ -103,6 +103,74 @@ public class StreamFull implements Serializable {
 				.add("entries", entries)
 				.add("infos", infos)
 				.build();
+	}
+
+	/**
+	 * @since 2.0.1
+	 */
+	public final static class Group implements Serializable {
+
+		private static final long serialVersionUID = 560117056010590768L;
+
+		private final String name;
+
+		private final List<StreamConsumerFull> consumers;
+
+		private final List<List<Object>> pending;
+
+		private final Long pelCount;
+
+		private final StreamEntryId lastDeliveredId;
+
+		private final Map<String, Object> infos;
+
+		public Group(final String name, final List<StreamConsumerFull> consumers, final List<List<Object>> pending,
+					 final Long pelCount, final StreamEntryId lastDeliveredId,
+					 final Map<String, Object> infos){
+			this.name = name;
+			this.consumers = consumers;
+			this.pending = pending;
+			this.pelCount = pelCount;
+			this.lastDeliveredId = lastDeliveredId;
+			this.infos = infos;
+		}
+
+		public String getName(){
+			return name;
+		}
+
+		public List<StreamConsumerFull> getConsumers(){
+			return consumers;
+		}
+
+		public List<List<Object>> getPending(){
+			return pending;
+		}
+
+		public Long getPelCount(){
+			return pelCount;
+		}
+
+		public StreamEntryId getLastDeliveredId(){
+			return lastDeliveredId;
+		}
+
+		public Map<String, Object> getInfos(){
+			return infos;
+		}
+
+		@Override
+		public String toString(){
+			return ObjectStringBuilder.create()
+					.add("name", name)
+					.add("consumers", consumers)
+					.add("pending", pending)
+					.add("pelCount", pelCount)
+					.add("lastDeliveredId", lastDeliveredId)
+					.add("infos", infos)
+					.build();
+		}
+
 	}
 
 }

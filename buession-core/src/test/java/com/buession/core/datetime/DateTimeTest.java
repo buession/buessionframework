@@ -22,78 +22,19 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.core.datetime;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import org.junit.Test;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.0.1
  */
-public class StreamGroupFull implements Serializable {
+public class DateTimeTest {
 
-	private final static long serialVersionUID = -4336316668706617743L;
-
-	private final String name;
-
-	private final List<StreamConsumerFull> consumers;
-
-	private final List<String> pending;
-
-	private final Long pelCount;
-
-	private final StreamEntryId lastDeliveredId;
-
-	private final Map<String, Object> infos;
-
-	public StreamGroupFull(final String name, final List<StreamConsumerFull> consumers, final List<String> pending,
-						   final Long pelCount, final StreamEntryId lastDeliveredId, final Map<String, Object> infos){
-		this.name = name;
-		this.consumers = consumers;
-		this.pending = pending;
-		this.pelCount = pelCount;
-		this.lastDeliveredId = lastDeliveredId;
-		this.infos = infos;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public List<StreamConsumerFull> getConsumers(){
-		return consumers;
-	}
-
-	public List<String> getPending(){
-		return pending;
-	}
-
-	public Long getPelCount(){
-		return pelCount;
-	}
-
-	public StreamEntryId getLastDeliveredId(){
-		return lastDeliveredId;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
-
-	@Override
-	public String toString(){
-		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("consumers", consumers)
-				.add("pending", pending)
-				.add("pelCount", pelCount)
-				.add("lastDeliveredId", lastDeliveredId)
-				.add("infos", infos)
-				.build();
+	@Test
+	public void test(){
+		System.out.println(DateTime.microtime());
 	}
 
 }
