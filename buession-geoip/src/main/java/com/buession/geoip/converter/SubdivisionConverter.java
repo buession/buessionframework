@@ -33,6 +33,8 @@ import com.maxmind.geoip2.record.Subdivision;
 import java.util.Locale;
 
 /**
+ * 城市数据转换器
+ *
  * @author Yong.Teng
  */
 public class SubdivisionConverter extends AbstractConverter<District, com.maxmind.geoip2.record.Subdivision,
@@ -58,7 +60,7 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
 	}
 
 	private static District converter(Subdivision subdivision, CityResponse response, Locale locale,
-			boolean isPrivate){
+									  boolean isPrivate){
 		if(subdivision == null){
 			return null;
 		}

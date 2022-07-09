@@ -4,6 +4,10 @@
 
 ## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) ()
 
+### 🔨依赖升级
+
+- [maxmind geoip2](https://dev.maxmind.com/geoip?lang=en) 版本升级至 3.0.1
+
 
 ### 🐞 Bug 修复
 

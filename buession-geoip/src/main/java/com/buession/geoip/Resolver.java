@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -29,6 +29,7 @@ package com.buession.geoip;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Country;
 import com.buession.geoip.model.Location;
+import com.buession.net.utils.InetAddressUtils;
 import com.maxmind.db.Metadata;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 
@@ -37,34 +38,38 @@ import java.net.InetAddress;
 import java.util.Locale;
 
 /**
+ * Maxmind Geoip 解析器接口
+ *
  * @author Yong.Teng
  */
 public interface Resolver {
 
 	/**
-	 * Return a Country model for ip
+	 * 根据 IP 地址返回国家数据
 	 *
 	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * 		IP 地址
 	 *
-	 * @return A Country model for the requested IP address.
+	 * @return 根据 IP 地址获取的国家数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Country country(String ipAddress) throws IOException, GeoIp2Exception;
+	default Country country(String ipAddress) throws IOException, GeoIp2Exception{
+		return country(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a Country model for ip
+	 * 根据 IP 地址返回国家数据
 	 *
 	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * 		IP 地址
 	 * @param locale
 	 * 		The locale for which to retrieve the display country name.
 	 *
-	 * @return A Country model for the requested IP address.
+	 * @return 根据 IP 地址获取的国家数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
@@ -74,61 +79,67 @@ public interface Resolver {
 	Country country(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
 	/**
-	 * Return a Country model for ip
+	 * 根据数字型 IP 地址返回国家数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address in long format.
+	 * 		数字型 IP 地址
 	 *
-	 * @return A Country model for the requested IP address.
+	 * @return 根据 IP 地址获取的国家数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Country country(long ipAddress) throws IOException, GeoIp2Exception;
+	default Country country(long ipAddress) throws IOException, GeoIp2Exception{
+		return country(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a Country model for ip
+	 * 根据数字型 IP 地址返回国家数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address in long format.
+	 * 		数字型 IP 地址
 	 * @param locale
 	 * 		The locale for which to retrieve the display country name.
 	 *
-	 * @return A Country model for the requested IP address.
+	 * @return 根据 IP 地址获取的国家数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	default Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+		return country(InetAddressUtils.long2InetAddress(ipAddress), locale);
+	}
 
 	/**
-	 * Return a Country model for ip
+	 * 根据 {@link InetAddress} 返回国家数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address as InetAddress or Inet6Address.
+	 *        {@link InetAddress} 实例
 	 *
-	 * @return A Country model for the requested IP address.
+	 * @return 根据 {@link InetAddress} 获取的国家数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception;
+	default Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception{
+		return country(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a Country model for ip
+	 * 根据 {@link InetAddress} 返回国家数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address as InetAddress or Inet6Address.
+	 *        {@link InetAddress} 实例
 	 * @param locale
 	 * 		The locale for which to retrieve the display country name.
 	 *
-	 * @return A Country model for the requested IP address.
+	 * @return 根据 {@link InetAddress} 获取的国家数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
@@ -138,29 +149,31 @@ public interface Resolver {
 	Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
 	/**
-	 * Return a District model for ip
+	 * 根据 IP 地址返回地区数据
 	 *
 	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * 		IP 地址
 	 *
-	 * @return A District model for the requested IP address.
+	 * @return 根据 IP 地址获取的地区数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	District district(String ipAddress) throws IOException, GeoIp2Exception;
+	default District district(String ipAddress) throws IOException, GeoIp2Exception{
+		return district(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a District model for ip
+	 * 根据 IP 地址返回地区数据
 	 *
 	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * 		IP 地址
 	 * @param locale
 	 * 		The locale for which to retrieve the display city name.
 	 *
-	 * @return A District model for the requested IP address.
+	 * @return 根据 IP 地址获取的地区数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
@@ -170,61 +183,67 @@ public interface Resolver {
 	District district(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
 	/**
-	 * Return a District model for ip
+	 * 根据数字型 IP 地址返回地区数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address in long format.
+	 * 		数字型 IP 地址
 	 *
-	 * @return A District model for the requested IP address.
+	 * @return 根据 IP 地址获取的地区数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	District district(long ipAddress) throws IOException, GeoIp2Exception;
+	default District district(long ipAddress) throws IOException, GeoIp2Exception{
+		return district(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a District model for ip
+	 * 根据数字型 IP 地址返回地区数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address in long format.
+	 * 		数字型 IP 地址
 	 * @param locale
 	 * 		The locale for which to retrieve the display city name.
 	 *
-	 * @return A District model for the requested IP address.
+	 * @return 根据 IP 地址获取的地区数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	default District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+		return district(InetAddressUtils.long2InetAddress(ipAddress), locale);
+	}
 
 	/**
-	 * Return a District model for ip
+	 * 根据 {@link InetAddress} 返回地区数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
+	 *        {@link InetAddress} 实例
 	 *
-	 * @return A District model for the requested IP address.
+	 * @return 根据 {@link InetAddress} 获取的地区数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	District district(InetAddress ipAddress) throws IOException, GeoIp2Exception;
+	default District district(InetAddress ipAddress) throws IOException, GeoIp2Exception{
+		return district(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a District model for ip
+	 * 根据 {@link InetAddress} 返回地区数据
 	 *
 	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
+	 *        {@link InetAddress} 实例
 	 * @param locale
 	 * 		The locale for which to retrieve the display city name.
 	 *
-	 * @return A District model for the requested IP address.
+	 * @return 根据 {@link InetAddress} 获取的地区数据
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
@@ -234,29 +253,31 @@ public interface Resolver {
 	District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
 	/**
-	 * Return a Location model for ip
+	 * 根据 IP 地址返回位置数据，包括：国家、城市、所属机构等等
 	 *
 	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * 		IP 地址
 	 *
-	 * @return A Location model for the requested IP address.
+	 * @return 根据 IP 地址获取的位置数据，包括：国家、城市、所属机构等
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Location location(String ipAddress) throws IOException, GeoIp2Exception;
+	default Location location(String ipAddress) throws IOException, GeoIp2Exception{
+		return location(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a Location model for ip
+	 * 根据 IP 地址返回位置数据，包括：国家、城市、所属机构等等
 	 *
 	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * 		IP 地址
 	 * @param locale
 	 * 		The locale for which to retrieve the display name.
 	 *
-	 * @return A Location model for the requested IP address.
+	 * @return 根据 IP 地址获取的位置数据，包括：国家、城市、所属机构等
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
@@ -266,61 +287,67 @@ public interface Resolver {
 	Location location(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
 	/**
-	 * Return a Location model for ip
+	 * 根据数值型 IP 地址返回位置数据，包括：国家、城市、所属机构等等
 	 *
 	 * @param ipAddress
-	 * 		the IP address in long format.
+	 * 		数值型 IP 地址
 	 *
-	 * @return A Location model for the requested IP address.
+	 * @return 根据 IP 地址获取的位置数据，包括：国家、城市、所属机构等
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Location location(long ipAddress) throws IOException, GeoIp2Exception;
+	default Location location(long ipAddress) throws IOException, GeoIp2Exception{
+		return location(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a Location model for ip
+	 * 根据数值型 IP 地址返回位置数据，包括：国家、城市、所属机构等等
 	 *
 	 * @param ipAddress
-	 * 		the IP address in long format.
+	 * 		数值型 IP 地址
 	 * @param locale
 	 * 		The locale for which to retrieve the display name.
 	 *
-	 * @return A Location model for the requested IP address.
+	 * @return 根据 IP 地址获取的位置数据，包括：国家、城市、所属机构等
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	default Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+		return location(InetAddressUtils.long2InetAddress(ipAddress), locale);
+	}
 
 	/**
-	 * Return a Location model for ip
+	 * 根据 {@link InetAddress} 返回位置数据，包括：国家、城市、所属机构等等
 	 *
 	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
+	 *        {@link InetAddress} 实例
 	 *
-	 * @return A Location model for the requested IP address.
+	 * @return 根据 {@link InetAddress} 获取的位置数据，包括：国家、城市、所属机构等
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception;
+	default Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception{
+		return location(ipAddress, Locale.getDefault());
+	}
 
 	/**
-	 * Return a Location model for ip
+	 * 根据 {@link InetAddress} 返回位置数据，包括：国家、城市、所属机构等等
 	 *
 	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
+	 *        {@link InetAddress} 实例
 	 * @param locale
 	 * 		The locale for which to retrieve the display name.
 	 *
-	 * @return A Location model for the requested IP address.
+	 * @return 根据 {@link InetAddress} 获取的位置数据，包括：国家、城市、所属机构等
 	 *
 	 * @throws IOException
 	 * 		if there is an IO error

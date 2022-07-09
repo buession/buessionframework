@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -31,24 +31,60 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 /**
+ * IP 地理位置信息
+ *
  * @author Yong.Teng
  */
 public final class Location implements Serializable {
 
 	private final static long serialVersionUID = 4865138617078561823L;
 
+	/**
+	 * IP 地址关联的洲
+	 */
 	private final Continent continent;
 
+	/**
+	 * IP 地址关联的国家
+	 */
 	private final Country country;
 
+	/**
+	 * IP 地址关联的城市
+	 */
 	private final District district;
 
+	/**
+	 * IP 地址关联的特征记录
+	 */
 	private final Traits traits;
 
+	/**
+	 * IP 地址关联的经纬度
+	 */
 	private final Geo geo;
 
+	/**
+	 * IP 地址关联的时区
+	 */
 	private final TimeZone timeZone;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param continent
+	 * 		IP 地址关联的洲
+	 * @param country
+	 * 		IP 地址关联的国家
+	 * @param district
+	 * 		IP 地址关联的城市
+	 * @param traits
+	 * 		IP 地址关联的特征记录
+	 * @param geo
+	 * 		IP 地址关联的经纬度
+	 * @param timeZone
+	 * 		IP 地址关联的时区
+	 */
 	public Location(final Continent continent, final Country country, final District district, final Traits traits,
 					final Geo geo, final TimeZone timeZone){
 		this.continent = continent;
@@ -59,26 +95,56 @@ public final class Location implements Serializable {
 		this.timeZone = timeZone;
 	}
 
+	/**
+	 * 返回 IP 地址关联的洲
+	 *
+	 * @return IP 地址关联的洲
+	 */
 	public Continent getContinent(){
 		return continent;
 	}
 
+	/**
+	 * 返回 IP 地址关联的国家
+	 *
+	 * @return IP 地址关联的国家
+	 */
 	public Country getCountry(){
 		return country;
 	}
 
+	/**
+	 * 返回 IP 地址关联的城市
+	 *
+	 * @return IP 地址关联的城市
+	 */
 	public District getDistrict(){
 		return district;
 	}
 
+	/**
+	 * 返回 IP 地址关联的特征记录
+	 *
+	 * @return IP 地址关联的特征记录
+	 */
 	public Traits getTraits(){
 		return traits;
 	}
 
+	/**
+	 * 返回 IP 地址关联的经纬度
+	 *
+	 * @return IP 地址关联的经纬度
+	 */
 	public Geo getGeo(){
 		return geo;
 	}
 
+	/**
+	 * 返回 IP 地址关联的时区
+	 *
+	 * @return IP 地址关联的时区
+	 */
 	public TimeZone getTimeZone(){
 		return timeZone;
 	}
@@ -96,7 +162,9 @@ public final class Location implements Serializable {
 
 		if(obj instanceof Location){
 			Location that = (Location) obj;
-			return Objects.equals(continent, that.continent) && Objects.equals(country, that.country) && Objects.equals(district, that.district) && Objects.equals(traits, that.traits) && Objects.equals(geo, that.geo) && Objects.equals(timeZone, that.timeZone);
+			return Objects.equals(continent, that.continent) && Objects.equals(country, that.country) &&
+					Objects.equals(district, that.district) && Objects.equals(traits, that.traits) &&
+					Objects.equals(geo, that.geo) && Objects.equals(timeZone, that.timeZone);
 		}
 
 		return false;

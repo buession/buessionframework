@@ -32,14 +32,73 @@ import com.maxmind.geoip2.record.AbstractRecord;
 import java.util.Locale;
 
 /**
+ * 将 maxmind geoip Record 转换为模型实体类接口
+ *
+ * @param <M>
+ * 		模型实体类
+ * @param <S>
+ * 		maxmind geoip Record {@link AbstractRecord}
+ * @param <R>
+ * 		maxmind Response {@link AbstractResponse}
+ *
  * @author Yong.Teng
  */
+@FunctionalInterface
 public interface Converter<M, S extends AbstractRecord, R extends AbstractResponse> {
 
-	M converter(S s, Locale locale);
+	/**
+	 * 将 maxmind geoip Record 转换为模型实体类
+	 *
+	 * @param s
+	 * 		maxmind geoip Record {@link AbstractRecord}
+	 *
+	 * @return 模型实体类
+	 */
+	default M converter(S s){
+		return converter(s, null, null);
+	}
 
-	M converter(S s, R response);
+	/**
+	 * 将 maxmind geoip Record 转换为模型实体类
+	 *
+	 * @param s
+	 * 		maxmind geoip Record {@link AbstractRecord}
+	 * @param locale
+	 *        {@link Locale} 实例
+	 *
+	 * @return 模型实体类
+	 */
+	default M converter(S s, Locale locale){
+		return converter(s, null, locale);
+	}
 
+	/**
+	 * 将 maxmind geoip Record 转换为模型实体类
+	 *
+	 * @param s
+	 * 		maxmind geoip Record {@link AbstractRecord}
+	 * @param response
+	 * 		maxmind Response  {@link AbstractResponse}
+	 *
+	 * @return 模型实体类
+	 */
+	@Deprecated
+	default M converter(S s, R response){
+		return converter(s, response, null);
+	}
+
+	/**
+	 * 将 maxmind geoip Record 转换为模型实体类
+	 *
+	 * @param s
+	 * 		maxmind geoip Record {@link AbstractRecord}
+	 * @param response
+	 * 		maxmind Response  {@link AbstractResponse}
+	 * @param locale
+	 *        {@link Locale} 实例
+	 *
+	 * @return 模型实体类
+	 */
 	M converter(S s, R response, Locale locale);
 
 }

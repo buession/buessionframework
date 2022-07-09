@@ -26,6 +26,7 @@ package com.buession.geoip.model;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 /**
@@ -70,6 +71,26 @@ public final class Network implements Serializable {
 	}
 
 	/**
+	 * 构造函数
+	 *
+	 * @param ipAddress
+	 * 		IP 地址
+	 * @param prefixLength
+	 * 		掩码位
+	 * @param networkAddress
+	 * 		CDIR 网络地址
+	 *
+	 * @throws UnknownHostException
+	 * 		IP 的字符串形式转换为 {@link InetAddress} 出错时抛出
+	 */
+	public Network(final String ipAddress, final int prefixLength, final InetAddress networkAddress)
+			throws UnknownHostException{
+		this.ipAddress = InetAddress.getByName(ipAddress);
+		this.prefixLength = prefixLength;
+		this.networkAddress = networkAddress;
+	}
+
+	/**
 	 * 返回 IP 地址
 	 *
 	 * @return IP 地址
@@ -109,7 +130,8 @@ public final class Network implements Serializable {
 
 		if(obj instanceof Network){
 			Network that = (Network) obj;
-			return prefixLength == that.prefixLength && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(networkAddress, that.networkAddress);
+			return prefixLength == that.prefixLength && Objects.equals(ipAddress, that.ipAddress) &&
+					Objects.equals(networkAddress, that.networkAddress);
 		}
 
 		return false;

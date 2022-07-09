@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -33,6 +33,8 @@ import com.maxmind.geoip2.model.CountryResponse;
 import java.util.Locale;
 
 /**
+ * 国家数据转换器
+ *
  * @author Yong.Teng
  */
 public class CountryConverter extends AbstractConverter<Country, com.maxmind.geoip2.record.Country, CountryResponse> {

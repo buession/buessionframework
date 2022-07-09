@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -50,82 +50,264 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
+ * 默认 Maxmind Geoip 解析器
+ *
  * @author Yong.Teng
  */
 public class DatabaseResolver extends AbstractResolver {
 
 	private final DatabaseReader reader;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final String database) throws IOException{
 		this(database == null ? null : new File(database));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final String database, final NodeCache cache) throws IOException{
 		this(database == null ? null : new File(database), cache);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final String database, final Reader.FileMode fileMode) throws IOException{
 		this(database == null ? null : new File(database), fileMode);
 	}
 
-	public DatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
+	public DatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache)
+			throws IOException{
 		this(database == null ? null : new File(database), fileMode, cache);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件文件
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final File database) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
-		this.reader = databaseReaderBuilder(database).build();
+		this.reader = new DatabaseReader.Builder(database).build();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final File database, final NodeCache cache) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
-		this.reader = databaseReaderBuilder(database).withCache(cache).build();
+		this.reader = new DatabaseReader.Builder(database).withCache(cache).build();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
-		this.reader = databaseReaderBuilder(database).fileMode(fileMode).build();
+		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).build();
 	}
 
-	public DatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
+	public DatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache)
+			throws IOException{
 		Assert.isNull(database, "Database could not be null.");
-		this.reader = databaseReaderBuilder(database).fileMode(fileMode).withCache(cache).build();
+		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).withCache(cache).build();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final Path database) throws IOException{
 		this(database == null ? null : database.toFile());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final Path database, final NodeCache cache) throws IOException{
 		this(database == null ? null : database.toFile(), cache);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final Path database, final Reader.FileMode fileMode) throws IOException{
 		this(database == null ? null : database.toFile(), fileMode);
 	}
 
-	public DatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
+	public DatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache)
+			throws IOException{
 		this(database == null ? null : database.toFile(), fileMode, cache);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final InputStream source) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
-		this.reader = databaseReaderBuilder(source).build();
+		this.reader = new DatabaseReader.Builder(source).build();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final InputStream source, final NodeCache cache) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
-		this.reader = databaseReaderBuilder(source).withCache(cache).build();
+		this.reader = new DatabaseReader.Builder(source).withCache(cache).build();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
-		this.reader = databaseReaderBuilder(source).fileMode(fileMode).build();
+		this.reader = new DatabaseReader.Builder(source).fileMode(fileMode).build();
 	}
 
-	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
+	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache)
+			throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
-		this.reader = databaseReaderBuilder(source).fileMode(fileMode).withCache(cache).build();
+		this.reader = new DatabaseReader.Builder(source).fileMode(fileMode).withCache(cache).build();
 	}
 
 	@Override
@@ -165,14 +347,6 @@ public class DatabaseResolver extends AbstractResolver {
 		if(reader != null){
 			reader.close();
 		}
-	}
-
-	private static DatabaseReader.Builder databaseReaderBuilder(final File database){
-		return new DatabaseReader.Builder(database);
-	}
-
-	private static DatabaseReader.Builder databaseReaderBuilder(final InputStream source){
-		return new DatabaseReader.Builder(source);
 	}
 
 }
