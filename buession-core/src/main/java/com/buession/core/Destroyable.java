@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
@@ -27,11 +27,19 @@ package com.buession.core;
 import java.io.IOException;
 
 /**
+ * 销毁
+ *
  * @author Yong.Teng
  * @since 1.3.0
  */
 public interface Destroyable {
 
+	/**
+	 * 销毁相关资源
+	 *
+	 * @throws IOException
+	 * 		IO 错误时抛出
+	 */
 	void destroy() throws IOException;
 
 }

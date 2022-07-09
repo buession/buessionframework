@@ -103,42 +103,16 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		this.slaveSqlSessionTemplates = slaveSqlSessionTemplates;
 	}
 
-	/**
-	 * 插入数据
-	 *
-	 * @param e
-	 * 		实体类
-	 *
-	 * @return 主键值
-	 */
 	@Override
 	public int insert(E e){
 		return getMasterSqlSessionTemplate().insert(getStatement(DML.INSERT), e);
 	}
 
-	/**
-	 * 替换数据
-	 *
-	 * @param e
-	 * 		实体类
-	 *
-	 * @return 主键值
-	 */
 	@Override
 	public int replace(E e){
 		return getMasterSqlSessionTemplate().insert(getStatement(DML.REPLACE), e);
 	}
 
-	/**
-	 * 更新数据
-	 *
-	 * @param e
-	 * 		更新数据
-	 * @param conditions
-	 * 		更新条件
-	 *
-	 * @return 更新条数
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public int update(E e, Map<String, Object> conditions){

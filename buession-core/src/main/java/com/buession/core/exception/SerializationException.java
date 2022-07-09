@@ -25,28 +25,68 @@
 package com.buession.core.exception;
 
 /**
+ * 序列化异常
+ *
  * @author Yong.Teng
  */
 public class SerializationException extends Exception {
 
-    public SerializationException(){
-        super();
-    }
+	private final static long serialVersionUID = 2239405339676007130L;
 
-    public SerializationException(String message){
-        super(message);
-    }
+	/**
+	 * 构造函数
+	 */
+	public SerializationException(){
+		super();
+	}
 
-    public SerializationException(String message, Throwable cause){
-        super(message, cause);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 */
+	public SerializationException(String message){
+		super(message);
+	}
 
-    public SerializationException(Throwable cause){
-        super(cause);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
+	public SerializationException(String message, Throwable cause){
+		super(message, cause);
+	}
 
-    public SerializationException(String message, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
+	public SerializationException(Throwable cause){
+		super(cause);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 */
+	public SerializationException(String message, Throwable cause, boolean enableSuppression, boolean
+			writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
 }

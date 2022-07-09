@@ -2,6 +2,16 @@
 ===========================
 
 
+## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) ()
+
+
+### 🐞 Bug 修复
+
+- **buession-core：** Math 连续两个数之间连续相加之和计算错误的 BUG
+- **buession-core：** @Isbn、@MimeType 的使用了错误的校验器的问题
+
+
+
 ## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-07-06)
 
 ### 🔨依赖升级

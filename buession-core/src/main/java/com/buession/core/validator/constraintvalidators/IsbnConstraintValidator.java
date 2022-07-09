@@ -40,21 +40,14 @@ public class IsbnConstraintValidator implements ConstraintValidator<Isbn, CharSe
 
 	protected char separator;
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(Isbn isbn){
 		this.type = isbn.type();
 		this.separator = isbn.separator();
-		this.validWhenNull = isbn.whenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		if(validWhenNull == false){
-			return true;
-		}
-
 		if(type == ISBNType.ISBN_TYPE_10){
 			return Validate.isIsbn10(value, separator);
 		}else if(type == ISBNType.ISBN_TYPE_13){

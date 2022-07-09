@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -39,14 +39,13 @@ public abstract class XdigitConstraintValidator<T> implements ConstraintValidato
 
 	@Override
 	public void initialize(Xdigit xdigit){
-		this.validWhenNull = xdigit.whenNull();
 	}
 
 	public final static class CharSequenceXdigitConstraintValidator extends XdigitConstraintValidator<CharSequence> {
 
 		@Override
 		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-			return validWhenNull == false || Validate.isXdigit(value);
+			return Validate.isXdigit(value);
 		}
 
 	}
@@ -55,7 +54,7 @@ public abstract class XdigitConstraintValidator<T> implements ConstraintValidato
 
 		@Override
 		public boolean isValid(Character value, ConstraintValidatorContext context){
-			return validWhenNull == false || Validate.isXdigit(value);
+			return Validate.isXdigit(value);
 		}
 
 	}

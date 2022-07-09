@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
@@ -40,35 +40,102 @@ public class ConversionException extends RuntimeException {
 
 	private Object value;
 
+	/**
+	 * 构造函数
+	 */
 	public ConversionException(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 */
 	public ConversionException(String message){
 		super(message);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public ConversionException(String message, Throwable cause){
 		super(message, cause);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 */
 	public ConversionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		待转换的类
+	 * @param value
+	 * 		待转换的值
+	 */
 	public ConversionException(Class<?> type, Object value){
 		super(typeConvertMessage(type, value));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		待转换的类
+	 * @param value
+	 * 		待转换的值
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public ConversionException(Class<?> type, Object value, Throwable cause){
 		super(typeConvertMessage(type, value), cause);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		待转换的类
+	 * @param value
+	 * 		待转换的值
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 */
 	public ConversionException(Class<?> type, Object value, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace){
+							   boolean writableStackTrace){
 		super(typeConvertMessage(type, value), cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public ConversionException(Throwable cause){
 		super(cause);
 	}

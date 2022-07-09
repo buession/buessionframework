@@ -205,7 +205,7 @@ public class Pagination<E> {
 	 * 		总页码
 	 */
 	public void setTotalPages(int totalPages){
-		this.totalPages = totalPages < 1 ? 1 : totalPages;
+		this.totalPages = Math.max(totalPages, 1);
 	}
 
 	/**

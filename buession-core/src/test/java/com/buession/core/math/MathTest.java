@@ -22,21 +22,20 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.core.math;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- * 原始的，约定实现该接口的类，必须返回原始字节数组
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.0.1
  */
-public interface Rawable {
+public class MathTest {
 
-	/**
-	 * 返回原始的字节数组
-	 *
-	 * @return 原始的字节数组
-	 */
-	byte[] getRaw();
+	@Test
+	public void continuousSum(){
+		Assert.assertEquals(5050, Math.continuousSum(1, 100));
+	}
 
 }

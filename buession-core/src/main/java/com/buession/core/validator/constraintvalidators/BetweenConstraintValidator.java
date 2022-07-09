@@ -41,19 +41,16 @@ public class BetweenConstraintValidator implements ConstraintValidator<Between, 
 
 	protected boolean isContain;
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(Between between){
 		this.minValue = between.min();
 		this.maxValue = between.max();
 		this.isContain = between.contain();
-		this.validWhenNull = between.whenNull();
 	}
 
 	@Override
 	public boolean isValid(Double value, ConstraintValidatorContext context){
-		return validWhenNull == false || Validate.isBetween(value, minValue, maxValue, isContain);
+		return Validate.isBetween(value, minValue, maxValue, isContain);
 	}
 
 }

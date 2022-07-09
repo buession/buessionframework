@@ -32,7 +32,7 @@
 
 - 参考文档 [https://www.buession.com/](https://www.buession.com/)
 - Wiki [https://github.com/buession/buessionframework/wiki](https://github.com/buession/buessionframework/wiki)
-- API Reference [https://www.buession.com/doc/](https://www.buession.com/doc/)
+- API Reference [https://www.buession.com/doc/](https://www.buession.com/manual/)
 
 ## License
 

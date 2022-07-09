@@ -36,16 +36,13 @@ import javax.validation.ConstraintValidatorContext;
  */
 public abstract class PortConstraintValidator implements ConstraintValidator<Port, Integer> {
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(Port port){
-		this.validWhenNull = port.whenNull();
 	}
 
 	@Override
 	public boolean isValid(Integer value, ConstraintValidatorContext context){
-		return validWhenNull == false || value != null && Validate.isPort(value);
+		return value != null && Validate.isPort(value);
 	}
 
 }

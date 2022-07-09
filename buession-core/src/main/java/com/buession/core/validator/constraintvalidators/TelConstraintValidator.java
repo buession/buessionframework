@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -38,17 +38,14 @@ public class TelConstraintValidator implements ConstraintValidator<Tel, CharSequ
 
 	protected TelValidator.AreaCodeType areaCodeType;
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(Tel tel){
 		this.areaCodeType = tel.areaCodeType();
-		this.validWhenNull = tel.whenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		return validWhenNull == false || Validate.isTel(value, areaCodeType);
+		return Validate.isTel(value, areaCodeType);
 	}
 
 }

@@ -33,7 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * 默认 Enum 型 Set {@link TypeHandler} 基类，将值直接转换为枚举字段作为 Set 的元素
+ * 默认 Enum 型 Set {@link TypeHandler} 处理器，将值直接转换为枚举字段作为 Set 的元素
  *
  * @param <E>
  * 		枚举类型

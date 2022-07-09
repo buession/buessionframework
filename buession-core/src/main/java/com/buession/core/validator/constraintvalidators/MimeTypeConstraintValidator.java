@@ -36,16 +36,13 @@ import javax.validation.ConstraintValidatorContext;
  */
 public abstract class MimeTypeConstraintValidator implements ConstraintValidator<MimeType, CharSequence> {
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(MimeType mimeType){
-		this.validWhenNull = mimeType.whenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		return validWhenNull == false || Validate.isMimeType(value);
+		return Validate.isMimeType(value);
 	}
 
 }

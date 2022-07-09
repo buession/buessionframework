@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
@@ -48,41 +48,109 @@ public class InsteadException extends RuntimeException {
 
 	private String className;
 
-	private String methodName;
-
-	public InsteadException(Method method, String groupId, String artifactId, String version, String className,
-			String methodName){
-		super(method + " is deprecated, instead of " + className + "." + methodName + "() with dependency: " + groupId + ":" + artifactId + ":" + version + ".");
+	/**
+	 * 构造函数
+	 *
+	 * @param method
+	 * 		废弃的方法
+	 * @param groupId
+	 * 		构件 groupId
+	 * @param artifactId
+	 * 		构件 artifactId
+	 * @param version
+	 * 		从哪个版本开始废弃
+	 * @param className
+	 * 		所属类名
+	 */
+	public InsteadException(Method method, String groupId, String artifactId, String version, String className){
+		super(method + " is deprecated, instead of " + className + "." + method.getName() + "() with dependency: " +
+				groupId + ":" + artifactId + ":" + version + ".");
 		this.method = method;
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
 		this.className = className;
-		this.methodName = methodName;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param method
+	 * 		废弃的方法
+	 * @param groupId
+	 * 		构件 groupId
+	 * @param artifactId
+	 * 		构件 artifactId
+	 * @param version
+	 * 		从哪个版本开始废弃
+	 * @param className
+	 * 		所属类名
+	 * @param methodName
+	 * 		方法名
+	 */
+	public InsteadException(Method method, String groupId, String artifactId, String version, String className,
+							String methodName){
+		super(method + " is deprecated, instead of " + className + "." + methodName + "() with dependency: " + groupId +
+				":" + artifactId + ":" + version + ".");
+		this.method = method;
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+		this.className = className;
+	}
+
+	/**
+	 * 返回废弃的方法
+	 *
+	 * @return 废弃的方法
+	 */
 	public Method getMethod(){
 		return method;
 	}
 
+	/**
+	 * 返回构件 groupId
+	 *
+	 * @return 构件 groupId
+	 */
 	public String getGroupId(){
 		return groupId;
 	}
 
+	/**
+	 * 返回构件 artifactId
+	 *
+	 * @return 构件 artifactId
+	 */
 	public String getArtifactId(){
 		return artifactId;
 	}
 
+	/**
+	 * 返回从哪个版本开始废弃
+	 *
+	 * @return 开始废弃的版本
+	 */
 	public String getVersion(){
 		return version;
 	}
 
+	/**
+	 * 返回所属类名
+	 *
+	 * @return 所属类名
+	 */
 	public String getClassName(){
 		return className;
 	}
 
+	/**
+	 * 返回废弃的方法名
+	 *
+	 * @return 废弃的方法名
+	 */
 	public String getMethodName(){
-		return methodName;
+		return method.getName();
 	}
 
 }

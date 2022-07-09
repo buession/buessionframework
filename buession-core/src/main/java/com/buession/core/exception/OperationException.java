@@ -21,72 +21,109 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
 
 /**
+ * 运算异常
+ *
  * @author Yong.Teng
  */
 public class OperationException extends Exception {
 
-    private static final long serialVersionUID = -3968930023220286656L;
+	private final static long serialVersionUID = -3968930023220286656L;
 
-    /**
-     * The error code;
-     */
-    private int code = 0;
+	/**
+	 * The error code;
+	 */
+	private int code = 0;
 
-    public OperationException(){
-        super(null, null);
-    }
+	/**
+	 * 构造函数
+	 */
+	public OperationException(){
+		super(null, null);
+	}
 
-    public OperationException(final int code){
-        this();
-        this.code = code;
-    }
+	public OperationException(final int code){
+		this();
+		this.code = code;
+	}
 
-    public OperationException(final String message){
-        super(message, null);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 */
+	public OperationException(final String message){
+		super(message, null);
+	}
 
-    public OperationException(final int code, final String message){
-        this(code, message, null);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param code
+	 * 		错误码
+	 * @param message
+	 * 		异常信息
+	 */
+	public OperationException(final int code, final String message){
+		this(code, message, null);
+	}
 
-    public OperationException(final String message, Throwable cause){
-        super(message, cause);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
+	public OperationException(final String message, Throwable cause){
+		super(message, cause);
+	}
 
-    public OperationException(final int code, final String message, Throwable cause){
-        super(message, cause);
-        this.code = code;
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param code
+	 * 		错误码
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
+	public OperationException(final int code, final String message, Throwable cause){
+		super(message, cause);
+		this.code = code;
+	}
 
-    /**
-     * Return the error code for exception
-     *
-     * @return the error code for exception
-     */
-    public int getCode(){
-        return code;
-    }
+	/**
+	 * Return the error code for exception
+	 *
+	 * @return the error code for exception
+	 */
+	public int getCode(){
+		return code;
+	}
 
-    /**
-     * Return the error code for exception
-     *
-     * @return the error code for exception
-     */
-    public int errorCode(){
-        return getCode();
-    }
+	/**
+	 * Return the error code for exception
+	 *
+	 * @return the error code for exception
+	 */
+	public int errorCode(){
+		return getCode();
+	}
 
-    @Override
-    public String toString(){
-        String s = getClass().getName();
-        String message = getLocalizedMessage();
-        return (message != null ? s + ": " + message : s) + "(code: " + getCode() + ")";
-    }
+	@Override
+	public String toString(){
+		String s = getClass().getName();
+		String message = getLocalizedMessage();
+		return (message != null ? s + ": " + message : s) + "(code: " + getCode() + ")";
+	}
 
 }

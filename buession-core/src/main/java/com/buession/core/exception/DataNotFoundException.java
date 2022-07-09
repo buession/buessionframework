@@ -21,30 +21,57 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
 
 /**
+ * 数据不存在或未找到异常
+ *
  * @author Yong.Teng
  */
 public class DataNotFoundException extends Exception {
 
-    public DataNotFoundException(){
-        super();
-    }
+	private final static long serialVersionUID = 1502262731252182471L;
 
-    public DataNotFoundException(String message){
-        super(message);
-    }
+	/**
+	 * 构造函数
+	 */
+	public DataNotFoundException(){
+		super();
+	}
 
-    public DataNotFoundException(String message, Throwable cause){
-        super(message, cause);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 */
+	public DataNotFoundException(String message){
+		super(message);
+	}
 
-    public DataNotFoundException(Throwable cause){
-        super(cause);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
+	public DataNotFoundException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
+	public DataNotFoundException(Throwable cause){
+		super(cause);
+	}
 
 }
