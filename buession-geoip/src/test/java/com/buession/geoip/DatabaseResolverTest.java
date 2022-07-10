@@ -24,8 +24,9 @@
  */
 package com.buession.geoip;
 
-import com.buession.geoip.spring.GeoIPResolverFactoryBean;
-import org.junit.Assert;
+import com.buession.geoip.model.Country;
+import com.buession.geoip.model.District;
+import com.buession.geoip.model.Location;
 import org.junit.Test;
 
 /**
@@ -34,13 +35,52 @@ import org.junit.Test;
  */
 public class DatabaseResolverTest {
 
-	private final static GeoIPResolverFactoryBean resolver = new GeoIPResolverFactoryBean();
+	@Test
+	public void country() throws Exception{
+		DatabaseResolver resolver = new DatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		Country country = resolver.country("114.114.114.114");
+		System.out.println(country);
+	}
+
+	@Test
+	public void country1() throws Exception{
+		DatabaseResolver resolver = new DatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		Country country = resolver.country(3739974408L);
+		System.out.println(country);
+	}
+
+	@Test
+	public void district() throws Exception{
+		DatabaseResolver resolver = new DatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		District district = resolver.district("114.114.114.114");
+		System.out.println(district);
+	}
+
+	@Test
+	public void district1() throws Exception{
+		DatabaseResolver resolver = new DatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		District district = resolver.district(3739974408L);
+		System.out.println(district);
+	}
 
 	@Test
 	public void location() throws Exception{
-		resolver.afterPropertiesSet();
-		DatabaseResolver databaseResolver = resolver.getObject();
-		Assert.assertEquals("CN", databaseResolver.location("106.11.253.83").getCountry().getCode());
+		DatabaseResolver resolver = new DatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		Location location = resolver.location("114.114.114.114");
+		System.out.println(location);
+	}
+
+	@Test
+	public void location1() throws Exception{
+		DatabaseResolver resolver = new DatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		Location location = resolver.location(3739974408L);
+		System.out.println(location);
 	}
 
 }
