@@ -36,7 +36,7 @@ public class InetAddressUtilsTest {
 
 	@Test
 	public void ip2long(){
-		System.out.println(InetAddressUtils.ip2long("222.235.123.8"));
+		System.out.println(InetAddressUtils.ip2long("127.0.0.1"));
 	}
 
 	@Test

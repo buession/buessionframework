@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
 
 /**
  * 枚举和 {@link java.util.Map} 序列化和反序列化；
- * 通过该注解，可以将枚举序列化为 {@link java.util.Map} 时间戳；
+ * 通过该注解，可以将枚举序列化为 {@link java.util.Map}；
  * 将 {@link java.util.Map} 反序列化为枚举
  *
  * @author Yong.Teng
