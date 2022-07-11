@@ -28,6 +28,8 @@ import com.buession.httpclient.core.Configuration;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Apache HttpComponents 连接管理器
  *
@@ -88,6 +90,8 @@ public class ApacheClientConnectionManager extends AbstractConnectionManager<Htt
 		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
 		//并发数
 		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
+		// 空闲连接存活时长
+		connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
 
 		return connectionManager;
 	}

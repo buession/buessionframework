@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
@@ -35,8 +36,21 @@ public class HttpClientConnectionManager implements Closeable {
 
 	private ConnectionPool connectionPool;
 
+	/**
+	 * 最大连接数
+	 *
+	 * @since 2.0.1
+	 */
+	private int maxConnections = 5;
+
+	/**
+	 * 闲连接存活时长，单位：毫秒
+	 *
+	 * @since 2.0.1
+	 */
+	private int idleConnectionTime = 5 * 60 * 1000;
+
 	public HttpClientConnectionManager(){
-		connectionPool = new ConnectionPool();
 	}
 
 	public HttpClientConnectionManager(ConnectionPool connectionPool){
@@ -44,11 +58,37 @@ public class HttpClientConnectionManager implements Closeable {
 	}
 
 	public ConnectionPool getConnectionPool(){
+		if(connectionPool == null){
+			connectionPool = new ConnectionPool(maxConnections, idleConnectionTime, TimeUnit.MILLISECONDS);
+		}
+
 		return connectionPool;
 	}
 
 	public void setConnectionPool(ConnectionPool connectionPool){
 		this.connectionPool = connectionPool;
+	}
+
+	/**
+	 * 设置最大链接数
+	 *
+	 * @param maxConnections
+	 * 		最大链接数
+	 *
+	 * @since 2.0.1
+	 */
+	public void setMaxConnections(int maxConnections){
+		this.maxConnections = maxConnections;
+	}
+
+	/**
+	 * 设置闲连接存活时长，单位：毫秒
+	 *
+	 * @param idleConnectionTime
+	 * 		闲连接存活时长
+	 */
+	public void setIdleConnectionTime(int idleConnectionTime){
+		this.idleConnectionTime = idleConnectionTime;
 	}
 
 	@Override

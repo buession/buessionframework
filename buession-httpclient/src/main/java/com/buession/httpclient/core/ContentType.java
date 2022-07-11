@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -55,15 +55,15 @@ public final class ContentType {
 	public final static ContentType MULTIPART_FORM_DATA = new ContentType("multipart/form-data",
 			StandardCharsets.ISO_8859_1);
 
-	private String mimeType;
+	private final String mimeType;
 
 	private Charset charset;
 
-	public ContentType(String mimeType){
+	public ContentType(final String mimeType){
 		this.mimeType = mimeType;
 	}
 
-	public ContentType(String mimeType, Charset charset){
+	public ContentType(final String mimeType, final Charset charset){
 		this.mimeType = mimeType;
 		this.charset = charset;
 	}
