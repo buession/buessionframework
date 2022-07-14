@@ -9,6 +9,12 @@
 - [maxmind geoip2](https://dev.maxmind.com/geoip?lang=en) 版本升级至 3.0.1
 
 
+### 🔔 变化
+
+- **buession-jdbc：** 连接池属性废弃 JDBC url、用户名、密码属性配置
+- **buession-jdbc：** 连接池基础类型的原始类型改为包装类型，为 null 使用原生数据源的默认配置值
+
+
 ### 🐞 Bug 修复
 
 - **buession-core：** Math 连续两个数之间连续相加之和计算错误的 BUG

@@ -24,9 +24,13 @@
  */
 package com.buession.jdbc.datasource;
 
+import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.TomcatPoolConfiguration;
 import org.apache.tomcat.jdbc.pool.DataSource;
 
+import java.time.Duration;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,107 +69,67 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 
 	@Override
 	protected void applyPoolConfiguration(final DataSource dataSource, final TomcatPoolConfiguration poolConfiguration){
-		if(poolConfiguration.getName() != null){
-			dataSource.setName(poolConfiguration.getName());
-		}
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
-		if(poolConfiguration.getDefaultCatalog() != null){
-			dataSource.setDefaultCatalog(poolConfiguration.getDefaultCatalog());
-		}
+		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
+		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);
+		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
+		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
+		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
+		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
+		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+				.to(dataSource::setMaxWait);
+		propertyMapper.from(poolConfiguration::getMaxAge).to(dataSource::setMaxAge);
+		propertyMapper.from(poolConfiguration::getInitSQL).to(dataSource::setInitSQL);
+		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
+		propertyMapper.from(poolConfiguration::getValidationInterval).as(
+				Duration::toMillis).to(dataSource::setValidationInterval);
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout)
+				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getValidatorClassName).to(dataSource::setValidatorClassName);
+		propertyMapper.from(poolConfiguration::getLogValidationErrors).to(dataSource::setLogValidationErrors);
+		propertyMapper.from(poolConfiguration::getTestOnConnect).to(dataSource::setTestOnConnect);
+		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
+		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
+		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns)
+				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+				.to(dataSource::setTimeBetweenEvictionRunsMillis);
+		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
+		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime)
+				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+				.to(dataSource::setMinEvictableIdleTimeMillis);
+		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
+				.to(dataSource::setDefaultTransactionIsolation);
+		propertyMapper.from(poolConfiguration::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		propertyMapper.from(poolConfiguration::getCommitOnReturn).to(dataSource::setCommitOnReturn);
+		propertyMapper.from(poolConfiguration::getRollbackOnReturn).to(dataSource::setRollbackOnReturn);
+		propertyMapper.from(poolConfiguration::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(poolConfiguration::getRemoveAbandoned).to(dataSource::setRemoveAbandoned);
+		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout)
+				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+				.to(dataSource::setRemoveAbandonedTimeout);
+		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
+		propertyMapper.from(poolConfiguration::getAbandonWhenPercentageFull)
+				.to(dataSource::setAbandonWhenPercentageFull);
+		propertyMapper.from(poolConfiguration::getSuspectTimeout)
+				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setSuspectTimeout);
+		propertyMapper.from(poolConfiguration::getAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
+		propertyMapper.from(poolConfiguration::getJdbcInterceptors).to(dataSource::setJdbcInterceptors);
+		propertyMapper.from(poolConfiguration::getIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
+		propertyMapper.from(poolConfiguration::getUseEquals).to(dataSource::setUseEquals);
+		propertyMapper.from(poolConfiguration::getUseLock).to(dataSource::setUseLock);
+		propertyMapper.from(poolConfiguration::getFairQueue).to(dataSource::setFairQueue);
+		propertyMapper.from(poolConfiguration::getUseDisposableConnectionFacade)
+				.to(dataSource::setUseDisposableConnectionFacade);
+		propertyMapper.from(poolConfiguration::getPropagateInterruptState).to(dataSource::setPropagateInterruptState);
+		propertyMapper.from(poolConfiguration::getUseStatementFacade).to(dataSource::setUseStatementFacade);
+		propertyMapper.from(poolConfiguration::getAccessToUnderlyingConnectionAllowed)
+				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
+		propertyMapper.from(poolConfiguration::getJmxEnabled).to(dataSource::setJmxEnabled);
 
-		dataSource.setInitialSize(poolConfiguration.getInitialSize());
-		dataSource.setMaxActive(poolConfiguration.getMaxActive());
-		dataSource.setMinIdle(poolConfiguration.getMinIdle());
-		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
-
-		if(poolConfiguration.getMaxWait() != null){
-			dataSource.setMaxWait((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getMaxWait().toMillis()));
-		}
-
-		dataSource.setMaxAge(poolConfiguration.getMaxAge());
-
-		if(poolConfiguration.getInitSQL() != null){
-			dataSource.setInitSQL(poolConfiguration.getInitSQL());
-		}
-
-		if(poolConfiguration.getValidationQuery() != null){
-			dataSource.setValidationQuery(poolConfiguration.getValidationQuery());
-		}
-
-		if(poolConfiguration.getValidationInterval() != null){
-			dataSource.setValidationInterval(poolConfiguration.getValidationInterval().toMillis());
-		}
-
-		if(poolConfiguration.getValidationQueryTimeout() != null){
-			dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
-		}
-
-		if(poolConfiguration.getValidatorClassName() != null){
-			dataSource.setValidatorClassName(poolConfiguration.getValidatorClassName());
-		}
-
-		dataSource.setLogValidationErrors(poolConfiguration.isLogValidationErrors());
-
-		dataSource.setTestOnConnect(poolConfiguration.isTestOnConnect());
-		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
-		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
-		dataSource.setTestWhileIdle(poolConfiguration.isTestWhileIdle());
-
-		if(poolConfiguration.getTimeBetweenEvictionRuns() != null){
-			dataSource.setTimeBetweenEvictionRunsMillis((int) poolConfiguration.getTimeBetweenEvictionRuns().toMillis());
-		}
-
-		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
-
-		if(poolConfiguration.getMinEvictableIdleTime() != null){
-			dataSource.setMinEvictableIdleTimeMillis((int) poolConfiguration.getMinEvictableIdleTime().toMillis());
-		}
-
-		if(poolConfiguration.getDefaultTransactionIsolation() != null){
-			dataSource.setDefaultTransactionIsolation(poolConfiguration.getDefaultTransactionIsolation().getValue());
-		}
-
-		if(poolConfiguration.isDefaultAutoCommit() != null){
-			dataSource.setDefaultAutoCommit(poolConfiguration.isDefaultAutoCommit());
-		}
-
-		dataSource.setCommitOnReturn(poolConfiguration.isCommitOnReturn());
-		dataSource.setRollbackOnReturn(poolConfiguration.isRollbackOnReturn());
-
-		if(poolConfiguration.isDefaultReadOnly() != null){
-			dataSource.setDefaultReadOnly(poolConfiguration.isDefaultReadOnly());
-		}
-
-		dataSource.setRemoveAbandoned(poolConfiguration.isRemoveAbandoned());
-
-		if(poolConfiguration.getRemoveAbandonedTimeout() != null){
-			dataSource.setRemoveAbandonedTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getRemoveAbandonedTimeout().toMillis()));
-		}
-
-		dataSource.setLogAbandoned(poolConfiguration.isLogAbandoned());
-		dataSource.setAbandonWhenPercentageFull(poolConfiguration.getAbandonWhenPercentageFull());
-
-		if(poolConfiguration.getSuspectTimeout() != null){
-			dataSource.setSuspectTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getSuspectTimeout().toMillis()));
-		}
-
-		dataSource.setAlternateUsernameAllowed(poolConfiguration.isAlternateUsernameAllowed());
-
-		if(poolConfiguration.getJdbcInterceptors() != null){
-			dataSource.setJdbcInterceptors(poolConfiguration.getJdbcInterceptors());
-		}
-
-		dataSource.setIgnoreExceptionOnPreLoad(poolConfiguration.isIgnoreExceptionOnPreLoad());
-		dataSource.setUseEquals(poolConfiguration.isUseEquals());
-		dataSource.setUseLock(poolConfiguration.isUseLock());
-		dataSource.setFairQueue(poolConfiguration.isFairQueue());
-		dataSource.setUseDisposableConnectionFacade(poolConfiguration.isUseDisposableConnectionFacade());
-		dataSource.setPropagateInterruptState(poolConfiguration.isPropagateInterruptState());
-		dataSource.setUseStatementFacade(poolConfiguration.isUseStatementFacade());
-		dataSource.setAccessToUnderlyingConnectionAllowed(poolConfiguration.isAccessToUnderlyingConnectionAllowed());
-		dataSource.setJmxEnabled(poolConfiguration.isJmxEnabled());
-
-		if(poolConfiguration.isFairQueue() && "Linux".equalsIgnoreCase(System.getProperties().getProperty("os.name"))){
+		if(Objects.equals(poolConfiguration.getFairQueue(), Boolean.TRUE) &&
+				"Linux".equalsIgnoreCase(System.getProperties().getProperty("os.name"))){
 			dataSource.getDbProperties().setProperty("org.apache.tomcat.jdbc.pool.FairBlockingQueue.ignoreOS", "true");
 		}
 	}

@@ -25,12 +25,15 @@
 package com.buession.jdbc.datasource;
 
 import com.buession.core.collect.Arrays;
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
+import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.DruidPoolConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -73,67 +76,33 @@ public class DruidDataSource
 	@Override
 	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
 										  final DruidPoolConfiguration poolConfiguration){
-		if(poolConfiguration.getDriverClassName() != null){
-			dataSource.setDriverClassName(poolConfiguration.getDriverClassName());
-		}
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
-		if(poolConfiguration.getUrl() != null){
-			dataSource.setUrl(poolConfiguration.getUrl());
-		}
-
-		if(poolConfiguration.getUsername() != null){
-			dataSource.setUsername(poolConfiguration.getUsername());
-		}
-
-		if(poolConfiguration.getPassword() != null){
-			dataSource.setPassword(poolConfiguration.getPassword());
-		}
-
-		if(poolConfiguration.getName() != null){
-			dataSource.setName(poolConfiguration.getName());
-		}
-
-		if(poolConfiguration.getDefaultCatalog() != null){
-			dataSource.setDefaultCatalog(poolConfiguration.getDefaultCatalog());
-		}
-
-		if(poolConfiguration.getDbTypeName() != null){
-			dataSource.setDbType(poolConfiguration.getDbTypeName());
-		}
-
-		if(poolConfiguration.getCreateScheduler() != null){
-			dataSource.setCreateScheduler(poolConfiguration.getCreateScheduler());
-		}
-
-		if(poolConfiguration.getDestroyScheduler() != null){
-			dataSource.setDestroyScheduler(poolConfiguration.getDestroyScheduler());
-		}
-
-		dataSource.setInitExceptionThrow(poolConfiguration.isInitExceptionThrow());
-		dataSource.setMaxCreateTaskCount(poolConfiguration.getMaxCreateTaskCount());
-		dataSource.setMaxWaitThreadCount(poolConfiguration.getMaxWaitThreadCount());
-		dataSource.setInitialSize(poolConfiguration.getInitialSize());
-		dataSource.setMaxActive(poolConfiguration.getMaxActive());
-		dataSource.setMinIdle(poolConfiguration.getMinIdle());
-		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
-
-		if(poolConfiguration.getMaxWait() != null){
-			dataSource.setMaxWait(poolConfiguration.getMaxWait().toMillis());
-		}
-
-		dataSource.setTimeBetweenConnectErrorMillis(poolConfiguration.getTimeBetweenConnectError());
-		dataSource.setConnectionErrorRetryAttempts(poolConfiguration.getConnectionErrorRetryAttempts());
-
-		if(poolConfiguration.getConnectionInitSqls() != null){
-			dataSource.setConnectionInitSqls(poolConfiguration.getConnectionInitSqls());
-		}
-
-		dataSource.setAsyncCloseConnectionEnable(poolConfiguration.isAsyncCloseConnectionEnable());
-		dataSource.setAccessToUnderlyingConnectionAllowed(poolConfiguration.isAccessToUnderlyingConnectionAllowed());
-
-		if(poolConfiguration.getValidationQuery() != null){
-			dataSource.setValidationQuery(poolConfiguration.getValidationQuery());
-		}
+		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
+		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);
+		propertyMapper.from(poolConfiguration::getDbTypeName).to(dataSource::setDbType);
+		propertyMapper.from(poolConfiguration::getCreateScheduler).to(dataSource::setCreateScheduler);
+		propertyMapper.from(poolConfiguration::getCreateScheduler).to(dataSource::setCreateScheduler);
+		propertyMapper.from(poolConfiguration::getDestroyScheduler).to(dataSource::setDestroyScheduler);
+		propertyMapper.from(poolConfiguration::getInitExceptionThrow).to(dataSource::setInitExceptionThrow);
+		propertyMapper.from(poolConfiguration::getMaxCreateTaskCount).to(dataSource::setMaxCreateTaskCount);
+		propertyMapper.from(poolConfiguration::getMaxWaitThreadCount).to(dataSource::setMaxWaitThreadCount);
+		propertyMapper.from(poolConfiguration::getMaxWaitThreadCount).to(dataSource::setMaxWaitThreadCount);
+		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
+		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
+		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
+		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
+		propertyMapper.from(poolConfiguration::getMaxWait).as(Duration::toMillis).to(dataSource::setMaxWait);
+		propertyMapper.from(poolConfiguration::getTimeBetweenConnectError)
+				.to(dataSource::setTimeBetweenConnectErrorMillis);
+		propertyMapper.from(poolConfiguration::getConnectionErrorRetryAttempts)
+				.to(dataSource::setConnectionErrorRetryAttempts);
+		propertyMapper.from(poolConfiguration::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
+		propertyMapper.from(poolConfiguration::getAsyncCloseConnectionEnable)
+				.to(dataSource::setAsyncCloseConnectionEnable);
+		propertyMapper.from(poolConfiguration::getAccessToUnderlyingConnectionAllowed)
+				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
+		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
 
 		if(poolConfiguration.getValidConnectionCheckerClassName() != null){
 			try{
@@ -145,63 +114,41 @@ public class DruidDataSource
 			}
 		}
 
-		if(poolConfiguration.getValidationQueryTimeout() != null){
-			dataSource.setValidationQueryTimeout(
-					(int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
-		}
-
-		if(poolConfiguration.getQueryTimeout() != null){
-			dataSource.setQueryTimeout(
-					(int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getQueryTimeout().toMillis()));
-		}
-
-		dataSource.setNotFullTimeoutRetryCount(poolConfiguration.getNotFullTimeoutRetryCount());
-		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
-		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
-		dataSource.setTestWhileIdle(poolConfiguration.isTestWhileIdle());
-
-		if(poolConfiguration.getTimeBetweenEvictionRuns() != null){
-			dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns().toMillis());
-		}
-
-		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
-
-		if(poolConfiguration.getMinEvictableIdleTime() != null){
-			dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime().toMillis());
-		}
-
-		if(poolConfiguration.getMaxEvictableIdleTime() != null){
-			dataSource.setMaxEvictableIdleTimeMillis(poolConfiguration.getMaxEvictableIdleTime().toMillis());
-		}
-
-		if(poolConfiguration.getKeepAliveBetweenTime() != null){
-			dataSource.setKeepAliveBetweenTimeMillis(poolConfiguration.getKeepAliveBetweenTime().toMillis());
-		}
-
-		if(poolConfiguration.getPhyTimeout() != null){
-			dataSource.setPhyTimeoutMillis(poolConfiguration.getPhyTimeout().toMillis());
-		}
-
-		dataSource.setPhyMaxUseCount(poolConfiguration.getPhyMaxUseCount());
-
-		if(poolConfiguration.getDefaultTransactionIsolation() != null){
-			dataSource.setDefaultTransactionIsolation(poolConfiguration.getDefaultTransactionIsolation().getValue());
-		}
-
-		dataSource.setTransactionThresholdMillis(poolConfiguration.getTransactionThreshold());
-
-		if(poolConfiguration.getTransactionQueryTimeout() != null){
-			dataSource.setTransactionQueryTimeout(
-					(int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getTransactionQueryTimeout().toMillis()));
-		}
-
-		dataSource.setDefaultAutoCommit(poolConfiguration.isDefaultAutoCommit());
-		dataSource.setDefaultReadOnly(poolConfiguration.isDefaultReadOnly());
-		dataSource.setPoolPreparedStatements(poolConfiguration.isPoolPreparedStatements());
-		dataSource.setMaxOpenPreparedStatements(poolConfiguration.getMaxOpenPreparedStatements());
-		dataSource.setSharePreparedStatements(poolConfiguration.isSharePreparedStatements());
-		dataSource.setMaxPoolPreparedStatementPerConnectionSize(
-				poolConfiguration.getMaxPoolPreparedStatementPerConnectionSize());
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(
+				v.toMillis())).to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getQueryTimeout).as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(
+				v.toMillis())).to(dataSource::setQueryTimeout);
+		propertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount).to(dataSource::setNotFullTimeoutRetryCount);
+		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
+		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
+		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(Duration::toMillis)
+				.to(dataSource::setTimeBetweenEvictionRunsMillis);
+		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
+		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime).as(Duration::toMillis)
+				.to(dataSource::setMinEvictableIdleTimeMillis);
+		propertyMapper.from(poolConfiguration::getMaxEvictableIdleTime).as(Duration::toMillis)
+				.to(dataSource::setMaxEvictableIdleTimeMillis);
+		propertyMapper.from(poolConfiguration::getKeepAliveBetweenTime).as(Duration::toMillis)
+				.to(dataSource::setKeepAliveBetweenTimeMillis);
+		propertyMapper.from(poolConfiguration::getPhyTimeout).as(Duration::toMillis)
+				.to(dataSource::setPhyTimeoutMillis);
+		propertyMapper.from(poolConfiguration::getPhyMaxUseCount).to(dataSource::setPhyMaxUseCount);
+		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
+				.to(dataSource::setDefaultTransactionIsolation);
+		propertyMapper.from(poolConfiguration::getTransactionThreshold).to(dataSource::setTransactionThresholdMillis);
+		propertyMapper.from(poolConfiguration::getTransactionQueryTimeout)
+				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+				.to(dataSource::setTransactionQueryTimeout);
+		propertyMapper.from(poolConfiguration::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		propertyMapper.from(poolConfiguration::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(poolConfiguration::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(poolConfiguration::getPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
+		propertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
+				.to(dataSource::setMaxOpenPreparedStatements);
+		propertyMapper.from(poolConfiguration::getSharePreparedStatements).to(dataSource::setSharePreparedStatements);
+		propertyMapper.from(poolConfiguration::getMaxPoolPreparedStatementPerConnectionSize)
+				.to(dataSource::setMaxPoolPreparedStatementPerConnectionSize);
 
 		if(Validate.isNotEmpty(poolConfiguration.getFilters())){
 			try{
@@ -214,7 +161,7 @@ public class DruidDataSource
 			}
 		}
 
-		dataSource.setClearFiltersEnable(poolConfiguration.isClearFiltersEnable());
+		propertyMapper.from(poolConfiguration::getClearFiltersEnable).to(dataSource::setClearFiltersEnable);
 
 		try{
 			dataSource.setExceptionSorterClassName(poolConfiguration.getExceptionSorterClassName());
@@ -224,34 +171,23 @@ public class DruidDataSource
 			}
 		}
 
-		if(poolConfiguration.getStatLogger() != null){
-			dataSource.setStatLogger(poolConfiguration.getStatLogger());
-		}
-
-		dataSource.setTimeBetweenLogStatsMillis(poolConfiguration.getTimeBetweenLogStats());
-
-		dataSource.setRemoveAbandoned(poolConfiguration.isRemoveAbandoned());
-
-		if(poolConfiguration.getRemoveAbandonedTimeout() != null){
-			dataSource.setRemoveAbandonedTimeoutMillis(poolConfiguration.getRemoveAbandonedTimeout().toMillis());
-		}
-
-		dataSource.setLogAbandoned(poolConfiguration.isLogAbandoned());
-		dataSource.setUseOracleImplicitCache(poolConfiguration.isUseOracleImplicitCache());
-		dataSource.setInitVariants(poolConfiguration.isInitVariants());
-		dataSource.setInitGlobalVariants(poolConfiguration.isInitGlobalVariants());
-		dataSource.setFailFast(poolConfiguration.isFailFast());
-		dataSource.setOnFatalErrorMaxActive(poolConfiguration.getOnFatalErrorMaxActive());
-		dataSource.setBreakAfterAcquireFailure(poolConfiguration.isBreakAfterAcquireFailure());
-		dataSource.setDupCloseLogEnable(poolConfiguration.isDupCloseLogEnable());
-
-		if(poolConfiguration.getUseUnfairLock() != null){
-			dataSource.setUseUnfairLock(poolConfiguration.getUseUnfairLock());
-		}
-
-		dataSource.setUseLocalSessionState(poolConfiguration.isUseLocalSessionState());
-
-		dataSource.setObjectName(poolConfiguration.getObjectName());
+		propertyMapper.from(poolConfiguration::getStatLogger).to(dataSource::setStatLogger);
+		propertyMapper.from(poolConfiguration::getTimeBetweenLogStats).as(Duration::toMillis)
+				.to(dataSource::setTimeBetweenLogStatsMillis);
+		propertyMapper.from(poolConfiguration::getRemoveAbandoned).to(dataSource::setRemoveAbandoned);
+		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as(Duration::toMillis)
+				.to(dataSource::setRemoveAbandonedTimeoutMillis);
+		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
+		propertyMapper.from(poolConfiguration::getUseOracleImplicitCache).to(dataSource::setUseOracleImplicitCache);
+		propertyMapper.from(poolConfiguration::getInitVariants).to(dataSource::setInitVariants);
+		propertyMapper.from(poolConfiguration::getInitGlobalVariants).to(dataSource::setInitGlobalVariants);
+		propertyMapper.from(poolConfiguration::getFailFast).to(dataSource::setFailFast);
+		propertyMapper.from(poolConfiguration::getOnFatalErrorMaxActive).to(dataSource::setOnFatalErrorMaxActive);
+		propertyMapper.from(poolConfiguration::getBreakAfterAcquireFailure).to(dataSource::setBreakAfterAcquireFailure);
+		propertyMapper.from(poolConfiguration::getDupCloseLogEnable).to(dataSource::setDupCloseLogEnable);
+		propertyMapper.from(poolConfiguration::getUseUnfairLock).to(dataSource::setUseUnfairLock);
+		propertyMapper.from(poolConfiguration::getUseLocalSessionState).to(dataSource::setUseLocalSessionState);
+		propertyMapper.from(poolConfiguration::getObjectName).to(dataSource::setObjectName);
 	}
 
 }

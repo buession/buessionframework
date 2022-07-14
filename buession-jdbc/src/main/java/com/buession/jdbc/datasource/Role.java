@@ -87,4 +87,5 @@ public enum Role {
 	public String toString(){
 		return "name: " + name + '\'' + ", isReadOnly: " + isReadOnly;
 	}
+
 }

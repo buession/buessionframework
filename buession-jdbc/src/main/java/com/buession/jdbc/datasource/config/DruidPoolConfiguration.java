@@ -61,31 +61,31 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 
 	private ScheduledExecutorService destroyScheduler;
 
-	private boolean initExceptionThrow = true;
+	private Boolean initExceptionThrow;
 
-	private int maxCreateTaskCount = 3;
+	private Integer maxCreateTaskCount;
 
-	private volatile int maxWaitThreadCount = -1;
+	private volatile Integer maxWaitThreadCount;
 
 	/**
 	 * 初始化时建立连接的个数
 	 */
-	private int initialSize = DruidAbstractDataSource.DEFAULT_INITIAL_SIZE;
+	private Integer initialSize = DruidAbstractDataSource.DEFAULT_INITIAL_SIZE;
 
 	/**
 	 * 最大连接池数量
 	 */
-	private int maxActive = DruidAbstractDataSource.DEFAULT_MAX_ACTIVE_SIZE;
+	private Integer maxActive = DruidAbstractDataSource.DEFAULT_MAX_ACTIVE_SIZE;
 
 	/**
 	 * 最小空闲连接数
 	 */
-	private int minIdle = DruidAbstractDataSource.DEFAULT_MIN_IDLE;
+	private Integer minIdle = DruidAbstractDataSource.DEFAULT_MIN_IDLE;
 
 	/**
 	 * 最大空闲连接数
 	 */
-	private int maxIdle = DruidAbstractDataSource.DEFAULT_MAX_IDLE;
+	private Integer maxIdle = DruidAbstractDataSource.DEFAULT_MAX_IDLE;
 
 	/**
 	 * 获取连接时最大等待时间
@@ -93,21 +93,21 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	private Duration maxWait = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MAX_WAIT);
 
-	private long timeBetweenConnectError = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_CONNECT_ERROR_MILLIS;
+	private Long timeBetweenConnectError = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_CONNECT_ERROR_MILLIS;
 
 	/**
 	 * 连接出错重试次数
 	 */
-	private int connectionErrorRetryAttempts = 1;
+	private Integer connectionErrorRetryAttempts;
 
 	/**
 	 * 在第一次创建时用来初始化物理连接的SQL语句集合，只在配置的连接工厂创建连接时被执行一次
 	 */
 	private Collection<String> connectionInitSqls;
 
-	private boolean asyncCloseConnectionEnable = false;
+	private Boolean asyncCloseConnectionEnable;
 
-	private boolean accessToUnderlyingConnectionAllowed = true;
+	private Boolean accessToUnderlyingConnectionAllowed;
 
 	/**
 	 * 验证连接使用的 SQL
@@ -119,65 +119,69 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 */
-	private Duration validationQueryTimeout = Duration.ofMillis(-1L);
+	private Duration validationQueryTimeout;
 
 	private Duration queryTimeout;
 
-	private int notFullTimeoutRetryCount = 0;
+	private Integer notFullTimeoutRetryCount;
 
 	/**
 	 * 从连接池获取一个连接时，验证有效性；
 	 * 指明在从池中租借对象时是否要进行验证有效，如果对象验证失败，则对象将从池子释放，然后我们将尝试租借另一个
 	 */
-	private boolean testOnBorrow = DruidAbstractDataSource.DEFAULT_TEST_ON_BORROW;
+	private Boolean testOnBorrow = DruidAbstractDataSource.DEFAULT_TEST_ON_BORROW;
 
 	/**
 	 * 连接被归还到连接池时，验证有效性
 	 */
-	private boolean testOnReturn = DruidAbstractDataSource.DEFAULT_TEST_ON_RETURN;
+	private Boolean testOnReturn = DruidAbstractDataSource.DEFAULT_TEST_ON_RETURN;
 
 	/**
 	 * 连接空闲时，验证有效性；
 	 * 指明对象是否需要通过对象驱逐者进行校验（如果有的话），假如一个对象验证失败，则对象将被从池中释放
 	 */
-	private boolean testWhileIdle = DruidAbstractDataSource.DEFAULT_WHILE_IDLE;
+	private Boolean testWhileIdle = DruidAbstractDataSource.DEFAULT_WHILE_IDLE;
 
 	/**
 	 * 空闲对象驱逐线程运行时的休眠时间
 	 */
-	private Duration timeBetweenEvictionRuns = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+	private Duration timeBetweenEvictionRuns = Duration.ofMillis(
+			DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
 
 	/**
 	 * 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
 	 */
-	private int numTestsPerEvictionRun = DruidAbstractDataSource.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+	private Integer numTestsPerEvictionRun = DruidAbstractDataSource.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
 	/**
 	 * 空闲的连接被释放最低要待时间
 	 */
-	private Duration minEvictableIdleTime = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
+	private Duration minEvictableIdleTime = Duration.ofMillis(
+			DruidAbstractDataSource.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
 
-	private Duration maxEvictableIdleTime = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MAX_EVICTABLE_IDLE_TIME_MILLIS);
+	private Duration maxEvictableIdleTime = Duration.ofMillis(
+			DruidAbstractDataSource.DEFAULT_MAX_EVICTABLE_IDLE_TIME_MILLIS);
 
-	private Duration keepAliveBetweenTime = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS * 2L);
+	private Duration keepAliveBetweenTime = Duration.ofMillis(
+			DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
 
 	private Duration phyTimeout = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_PHY_TIMEOUT_MILLIS);
 
-	private long phyMaxUseCount = -1;
+	private Long phyMaxUseCount;
 
 	/**
 	 * 默认事务隔离级别
 	 */
 	private TransactionIsolation defaultTransactionIsolation;
 
-	private long transactionThreshold = 0L;
+	private Long transactionThreshold;
 
 	private Duration transactionQueryTimeout;
 
 	/**
 	 * 默认是否自动提交事务
 	 */
-	private boolean defaultAutoCommit = true;
+	private Boolean defaultAutoCommit;
 
 	/**
 	 * 默认连接是否是只读模式
@@ -188,23 +192,23 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * 是否缓存 preparedStatement，也就是PSCache；
 	 * PSCache 对支持游标的数据库性能提升巨大，比如说 oracle，在mysql下建议关闭
 	 */
-	private boolean poolPreparedStatements = false;
+	private Boolean poolPreparedStatements;
 
 	/**
 	 * 最大打开 PSCache 数，在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些
 	 */
-	private int maxOpenPreparedStatements = -1;
+	private Integer maxOpenPreparedStatements;
 
-	private boolean sharePreparedStatements = false;
+	private Boolean sharePreparedStatements;
 
-	private int maxPoolPreparedStatementPerConnectionSize = 10;
+	private Integer maxPoolPreparedStatementPerConnectionSize;
 
 	/**
 	 * 插件配置
 	 */
 	private Set<String> filters;
 
-	private boolean clearFiltersEnable = true;
+	private Boolean clearFiltersEnable;
 
 	/**
 	 * {@link com.alibaba.druid.pool.ExceptionSorter} 实例名称
@@ -213,42 +217,42 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 
 	private DruidDataSourceStatLogger statLogger;
 
-	private long timeBetweenLogStats;
+	private Duration timeBetweenLogStats;
 
 	/**
 	 * 是否移除抛弃的（abandoned）连接，一个连接使用超过了 removeAbandonedTimeout 上限就被视为抛弃的，
 	 * 开启该开关可以恢复那些应用没有关闭的连接
 	 */
-	private boolean removeAbandoned;
+	private Boolean removeAbandoned;
 
 	/**
 	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	private Duration removeAbandonedTimeout = Duration.ofMillis(300 * 1000L);
+	private Duration removeAbandonedTimeout;
 
 	/**
 	 * 记录抛弃连接的应用的堆栈信息；
 	 * 会增加系统开销，因为为了能够在可能发生的连接被抛弃时记录堆栈 ，应用每次获取连接时都需要生成堆栈信息
 	 */
-	private boolean logAbandoned;
+	private Boolean logAbandoned;
 
-	private boolean useOracleImplicitCache = true;
+	private Boolean useOracleImplicitCache;
 
-	private boolean initVariants = false;
+	private Boolean initVariants;
 
-	private boolean initGlobalVariants = false;
+	private Boolean initGlobalVariants;
 
-	private boolean failFast = false;
+	private Boolean failFast;
 
-	private int onFatalErrorMaxActive = 0;
+	private Integer onFatalErrorMaxActive;
 
-	private boolean breakAfterAcquireFailure = false;
+	private Boolean breakAfterAcquireFailure;
 
-	private boolean dupCloseLogEnable = false;
+	private Boolean dupCloseLogEnable;
 
-	private Boolean useUnfairLock = null;
+	private Boolean useUnfairLock;
 
-	private boolean useLocalSessionState = true;
+	private Boolean useLocalSessionState;
 
 	private ObjectName objectName;
 
@@ -325,31 +329,32 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.destroyScheduler = destroyScheduler;
 	}
 
-	public boolean isInitExceptionThrow(){
+	@Deprecated
+	public Boolean isInitExceptionThrow(){
 		return getInitExceptionThrow();
 	}
 
-	public boolean getInitExceptionThrow(){
+	public Boolean getInitExceptionThrow(){
 		return initExceptionThrow;
 	}
 
-	public void setInitExceptionThrow(boolean initExceptionThrow){
+	public void setInitExceptionThrow(Boolean initExceptionThrow){
 		this.initExceptionThrow = initExceptionThrow;
 	}
 
-	public int getMaxCreateTaskCount(){
+	public Integer getMaxCreateTaskCount(){
 		return maxCreateTaskCount;
 	}
 
-	public void setMaxCreateTaskCount(int maxCreateTaskCount){
+	public void setMaxCreateTaskCount(Integer maxCreateTaskCount){
 		this.maxCreateTaskCount = maxCreateTaskCount;
 	}
 
-	public int getMaxWaitThreadCount(){
+	public Integer getMaxWaitThreadCount(){
 		return maxWaitThreadCount;
 	}
 
-	public void setMaxWaitThreadCount(int maxWaitThreadCount){
+	public void setMaxWaitThreadCount(Integer maxWaitThreadCount){
 		this.maxWaitThreadCount = maxWaitThreadCount;
 	}
 
@@ -358,7 +363,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 初始化时建立连接的个数
 	 */
-	public int getInitialSize(){
+	public Integer getInitialSize(){
 		return initialSize;
 	}
 
@@ -368,7 +373,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param initialSize
 	 * 		初始化时建立连接的个数
 	 */
-	public void setInitialSize(int initialSize){
+	public void setInitialSize(Integer initialSize){
 		this.initialSize = initialSize;
 	}
 
@@ -377,7 +382,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大连接池数量
 	 */
-	public int getMaxActive(){
+	public Integer getMaxActive(){
 		return maxActive;
 	}
 
@@ -387,7 +392,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxActive
 	 * 		最大连接池数量
 	 */
-	public void setMaxActive(int maxActive){
+	public void setMaxActive(Integer maxActive){
 		this.maxActive = maxActive;
 	}
 
@@ -396,7 +401,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最小空闲连接数
 	 */
-	public int getMinIdle(){
+	public Integer getMinIdle(){
 		return minIdle;
 	}
 
@@ -406,7 +411,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param minIdle
 	 * 		最小空闲连接数
 	 */
-	public void setMinIdle(int minIdle){
+	public void setMinIdle(Integer minIdle){
 		this.minIdle = minIdle;
 	}
 
@@ -415,7 +420,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大空闲连接数
 	 */
-	public int getMaxIdle(){
+	public Integer getMaxIdle(){
 		return maxIdle;
 	}
 
@@ -425,7 +430,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxIdle
 	 * 		最大空闲连接数
 	 */
-	public void setMaxIdle(int maxIdle){
+	public void setMaxIdle(Integer maxIdle){
 		this.maxIdle = maxIdle;
 	}
 
@@ -448,11 +453,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.maxWait = maxWait;
 	}
 
-	public long getTimeBetweenConnectError(){
+	public Long getTimeBetweenConnectError(){
 		return timeBetweenConnectError;
 	}
 
-	public void setTimeBetweenConnectError(long timeBetweenConnectError){
+	public void setTimeBetweenConnectError(Long timeBetweenConnectError){
 		this.timeBetweenConnectError = timeBetweenConnectError;
 	}
 
@@ -461,7 +466,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接出错重试次数
 	 */
-	public int getConnectionErrorRetryAttempts(){
+	public Integer getConnectionErrorRetryAttempts(){
 		return connectionErrorRetryAttempts;
 	}
 
@@ -471,7 +476,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param connectionErrorRetryAttempts
 	 * 		连接出错重试次数
 	 */
-	public void setConnectionErrorRetryAttempts(int connectionErrorRetryAttempts){
+	public void setConnectionErrorRetryAttempts(Integer connectionErrorRetryAttempts){
 		this.connectionErrorRetryAttempts = connectionErrorRetryAttempts;
 	}
 
@@ -494,27 +499,29 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.connectionInitSqls = connectionInitSqls;
 	}
 
-	public boolean isAsyncCloseConnectionEnable(){
+	@Deprecated
+	public Boolean isAsyncCloseConnectionEnable(){
 		return getAsyncCloseConnectionEnable();
 	}
 
-	public boolean getAsyncCloseConnectionEnable(){
+	public Boolean getAsyncCloseConnectionEnable(){
 		return asyncCloseConnectionEnable;
 	}
 
-	public void setAsyncCloseConnectionEnable(boolean asyncCloseConnectionEnable){
+	public void setAsyncCloseConnectionEnable(Boolean asyncCloseConnectionEnable){
 		this.asyncCloseConnectionEnable = asyncCloseConnectionEnable;
 	}
 
-	public boolean isAccessToUnderlyingConnectionAllowed(){
+	@Deprecated
+	public Boolean isAccessToUnderlyingConnectionAllowed(){
 		return getAccessToUnderlyingConnectionAllowed();
 	}
 
-	public boolean getAccessToUnderlyingConnectionAllowed(){
+	public Boolean getAccessToUnderlyingConnectionAllowed(){
 		return accessToUnderlyingConnectionAllowed;
 	}
 
-	public void setAccessToUnderlyingConnectionAllowed(boolean accessToUnderlyingConnectionAllowed){
+	public void setAccessToUnderlyingConnectionAllowed(Boolean accessToUnderlyingConnectionAllowed){
 		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
 	}
 
@@ -572,11 +579,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.queryTimeout = queryTimeout;
 	}
 
-	public int getNotFullTimeoutRetryCount(){
+	public Integer getNotFullTimeoutRetryCount(){
 		return notFullTimeoutRetryCount;
 	}
 
-	public void setNotFullTimeoutRetryCount(int notFullTimeoutRetryCount){
+	public void setNotFullTimeoutRetryCount(Integer notFullTimeoutRetryCount){
 		this.notFullTimeoutRetryCount = notFullTimeoutRetryCount;
 	}
 
@@ -585,7 +592,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
-	public boolean isTestOnBorrow(){
+	@Deprecated
+	public Boolean isTestOnBorrow(){
 		return getTestOnBorrow();
 	}
 
@@ -594,7 +602,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
-	public boolean getTestOnBorrow(){
+	public Boolean getTestOnBorrow(){
 		return testOnBorrow;
 	}
 
@@ -604,7 +612,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnBorrow
 	 * 		从连接池获取一个连接时，是否验证有效性
 	 */
-	public void setTestOnBorrow(boolean testOnBorrow){
+	public void setTestOnBorrow(Boolean testOnBorrow){
 		this.testOnBorrow = testOnBorrow;
 	}
 
@@ -613,7 +621,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接被归还到连接池时，是否验证有效性
 	 */
-	public boolean isTestOnReturn(){
+	@Deprecated
+	public Boolean isTestOnReturn(){
 		return getTestOnReturn();
 	}
 
@@ -622,7 +631,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接被归还到连接池时，是否验证有效性
 	 */
-	public boolean getTestOnReturn(){
+	public Boolean getTestOnReturn(){
 		return testOnReturn;
 	}
 
@@ -632,7 +641,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnReturn
 	 * 		连接被归还到连接池时，是否验证有效性
 	 */
-	public void setTestOnReturn(boolean testOnReturn){
+	public void setTestOnReturn(Boolean testOnReturn){
 		this.testOnReturn = testOnReturn;
 	}
 
@@ -641,7 +650,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接空闲时，是否验证有效性
 	 */
-	public boolean isTestWhileIdle(){
+	@Deprecated
+	public Boolean isTestWhileIdle(){
 		return getTestWhileIdle();
 	}
 
@@ -650,7 +660,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接空闲时，是否验证有效性
 	 */
-	public boolean getTestWhileIdle(){
+	public Boolean getTestWhileIdle(){
 		return testWhileIdle;
 	}
 
@@ -660,7 +670,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testWhileIdle
 	 * 		连接空闲时，是否验证有效性
 	 */
-	public void setTestWhileIdle(boolean testWhileIdle){
+	public void setTestWhileIdle(Boolean testWhileIdle){
 		this.testWhileIdle = testWhileIdle;
 	}
 
@@ -688,7 +698,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
 	 */
-	public int getNumTestsPerEvictionRun(){
+	public Integer getNumTestsPerEvictionRun(){
 		return numTestsPerEvictionRun;
 	}
 
@@ -698,7 +708,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param numTestsPerEvictionRun
 	 * 		在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
 	 */
-	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun){
+	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun){
 		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
 	}
 
@@ -745,11 +755,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.phyTimeout = phyTimeout;
 	}
 
-	public long getPhyMaxUseCount(){
+	public Long getPhyMaxUseCount(){
 		return phyMaxUseCount;
 	}
 
-	public void setPhyMaxUseCount(long phyMaxUseCount){
+	public void setPhyMaxUseCount(Long phyMaxUseCount){
 		this.phyMaxUseCount = phyMaxUseCount;
 	}
 
@@ -772,11 +782,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.defaultTransactionIsolation = defaultTransactionIsolation;
 	}
 
-	public long getTransactionThreshold(){
+	public Long getTransactionThreshold(){
 		return transactionThreshold;
 	}
 
-	public void setTransactionThreshold(long transactionThreshold){
+	public void setTransactionThreshold(Long transactionThreshold){
 		this.transactionThreshold = transactionThreshold;
 	}
 
@@ -793,7 +803,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动提交事务
 	 */
-	public boolean isDefaultAutoCommit(){
+	@Deprecated
+	public Boolean isDefaultAutoCommit(){
 		return getDefaultAutoCommit();
 	}
 
@@ -802,7 +813,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动提交事务
 	 */
-	public boolean getDefaultAutoCommit(){
+	public Boolean getDefaultAutoCommit(){
 		return defaultAutoCommit;
 	}
 
@@ -812,7 +823,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param defaultAutoCommit
 	 * 		是否自动提交事务
 	 */
-	public void setDefaultAutoCommit(boolean defaultAutoCommit){
+	public void setDefaultAutoCommit(Boolean defaultAutoCommit){
 		this.defaultAutoCommit = defaultAutoCommit;
 	}
 
@@ -821,6 +832,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接是否是只读模式
 	 */
+	@Deprecated
 	public Boolean isDefaultReadOnly(){
 		return getDefaultReadOnly();
 	}
@@ -849,7 +861,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否缓存 preparedStatement
 	 */
-	public boolean isPoolPreparedStatements(){
+	@Deprecated
+	public Boolean isPoolPreparedStatements(){
 		return getPoolPreparedStatements();
 	}
 
@@ -858,7 +871,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否缓存 preparedStatement
 	 */
-	public boolean getPoolPreparedStatements(){
+	public Boolean getPoolPreparedStatements(){
 		return poolPreparedStatements;
 	}
 
@@ -868,7 +881,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param poolPreparedStatements
 	 * 		是否缓存 preparedStatement
 	 */
-	public void setPoolPreparedStatements(boolean poolPreparedStatements){
+	public void setPoolPreparedStatements(Boolean poolPreparedStatements){
 		this.poolPreparedStatements = poolPreparedStatements;
 	}
 
@@ -877,7 +890,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大打开 PSCache 数
 	 */
-	public int getMaxOpenPreparedStatements(){
+	public Integer getMaxOpenPreparedStatements(){
 		return maxOpenPreparedStatements;
 	}
 
@@ -887,27 +900,28 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxOpenPreparedStatements
 	 * 		最大打开 PSCache 数
 	 */
-	public void setMaxOpenPreparedStatements(int maxOpenPreparedStatements){
+	public void setMaxOpenPreparedStatements(Integer maxOpenPreparedStatements){
 		this.maxOpenPreparedStatements = maxOpenPreparedStatements;
 	}
 
-	public boolean isSharePreparedStatements(){
+	@Deprecated
+	public Boolean isSharePreparedStatements(){
 		return getSharePreparedStatements();
 	}
 
-	public boolean getSharePreparedStatements(){
+	public Boolean getSharePreparedStatements(){
 		return sharePreparedStatements;
 	}
 
-	public void setSharePreparedStatements(boolean sharePreparedStatements){
+	public void setSharePreparedStatements(Boolean sharePreparedStatements){
 		this.sharePreparedStatements = sharePreparedStatements;
 	}
 
-	public int getMaxPoolPreparedStatementPerConnectionSize(){
+	public Integer getMaxPoolPreparedStatementPerConnectionSize(){
 		return maxPoolPreparedStatementPerConnectionSize;
 	}
 
-	public void setMaxPoolPreparedStatementPerConnectionSize(int maxPoolPreparedStatementPerConnectionSize){
+	public void setMaxPoolPreparedStatementPerConnectionSize(Integer maxPoolPreparedStatementPerConnectionSize){
 		this.maxPoolPreparedStatementPerConnectionSize = maxPoolPreparedStatementPerConnectionSize;
 	}
 
@@ -930,15 +944,16 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.filters = filters;
 	}
 
-	public boolean isClearFiltersEnable(){
+	@Deprecated
+	public Boolean isClearFiltersEnable(){
 		return getClearFiltersEnable();
 	}
 
-	public boolean getClearFiltersEnable(){
+	public Boolean getClearFiltersEnable(){
 		return clearFiltersEnable;
 	}
 
-	public void setClearFiltersEnable(boolean clearFiltersEnable){
+	public void setClearFiltersEnable(Boolean clearFiltersEnable){
 		this.clearFiltersEnable = clearFiltersEnable;
 	}
 
@@ -969,11 +984,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.statLogger = statLogger;
 	}
 
-	public long getTimeBetweenLogStats(){
+	public Duration getTimeBetweenLogStats(){
 		return timeBetweenLogStats;
 	}
 
-	public void setTimeBetweenLogStats(long timeBetweenLogStats){
+	public void setTimeBetweenLogStats(Duration timeBetweenLogStats){
 		this.timeBetweenLogStats = timeBetweenLogStats;
 	}
 
@@ -982,7 +997,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否移除抛弃的（abandoned）连接
 	 */
-	public boolean isRemoveAbandoned(){
+	@Deprecated
+	public Boolean isRemoveAbandoned(){
 		return getRemoveAbandoned();
 	}
 
@@ -991,7 +1007,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否移除抛弃的（abandoned）连接
 	 */
-	public boolean getRemoveAbandoned(){
+	public Boolean getRemoveAbandoned(){
 		return removeAbandoned;
 	}
 
@@ -1001,7 +1017,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param removeAbandoned
 	 * 		是否移除抛弃的（abandoned）连接
 	 */
-	public void setRemoveAbandoned(boolean removeAbandoned){
+	public void setRemoveAbandoned(Boolean removeAbandoned){
 		this.removeAbandoned = removeAbandoned;
 	}
 
@@ -1029,7 +1045,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否记录抛弃连接的应用的堆栈信息
 	 */
-	public boolean isLogAbandoned(){
+	@Deprecated
+	public Boolean isLogAbandoned(){
 		return getLogAbandoned();
 	}
 
@@ -1038,7 +1055,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否记录抛弃连接的应用的堆栈信息
 	 */
-	public boolean getLogAbandoned(){
+	public Boolean getLogAbandoned(){
 		return logAbandoned;
 	}
 
@@ -1048,87 +1065,93 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param logAbandoned
 	 * 		是否记录抛弃连接的应用的堆栈信息
 	 */
-	public void setLogAbandoned(boolean logAbandoned){
+	public void setLogAbandoned(Boolean logAbandoned){
 		this.logAbandoned = logAbandoned;
 	}
 
-	public boolean isUseOracleImplicitCache(){
+	@Deprecated
+	public Boolean isUseOracleImplicitCache(){
 		return getUseOracleImplicitCache();
 	}
 
-	public boolean getUseOracleImplicitCache(){
+	public Boolean getUseOracleImplicitCache(){
 		return useOracleImplicitCache;
 	}
 
-	public void setUseOracleImplicitCache(boolean useOracleImplicitCache){
+	public void setUseOracleImplicitCache(Boolean useOracleImplicitCache){
 		this.useOracleImplicitCache = useOracleImplicitCache;
 	}
 
-	public boolean isInitVariants(){
+	@Deprecated
+	public Boolean isInitVariants(){
 		return getInitVariants();
 	}
 
-	public boolean getInitVariants(){
+	public Boolean getInitVariants(){
 		return initVariants;
 	}
 
-	public void setInitVariants(boolean initVariants){
+	public void setInitVariants(Boolean initVariants){
 		this.initVariants = initVariants;
 	}
 
-	public boolean isInitGlobalVariants(){
+	@Deprecated
+	public Boolean isInitGlobalVariants(){
 		return getInitGlobalVariants();
 	}
 
-	public boolean getInitGlobalVariants(){
+	public Boolean getInitGlobalVariants(){
 		return initGlobalVariants;
 	}
 
-	public void setInitGlobalVariants(boolean initGlobalVariants){
+	public void setInitGlobalVariants(Boolean initGlobalVariants){
 		this.initGlobalVariants = initGlobalVariants;
 	}
 
-	public boolean isFailFast(){
+	@Deprecated
+	public Boolean isFailFast(){
 		return getFailFast();
 	}
 
-	public boolean getFailFast(){
+	public Boolean getFailFast(){
 		return failFast;
 	}
 
-	public void setFailFast(boolean failFast){
+	public void setFailFast(Boolean failFast){
 		this.failFast = failFast;
 	}
 
-	public int getOnFatalErrorMaxActive(){
+	public Integer getOnFatalErrorMaxActive(){
 		return onFatalErrorMaxActive;
 	}
 
-	public void setOnFatalErrorMaxActive(int onFatalErrorMaxActive){
+	public void setOnFatalErrorMaxActive(Integer onFatalErrorMaxActive){
 		this.onFatalErrorMaxActive = onFatalErrorMaxActive;
 	}
 
-	public boolean isBreakAfterAcquireFailure(){
+	@Deprecated
+	public Boolean isBreakAfterAcquireFailure(){
 		return getBreakAfterAcquireFailure();
 	}
 
-	public boolean getBreakAfterAcquireFailure(){
+	public Boolean getBreakAfterAcquireFailure(){
 		return breakAfterAcquireFailure;
 	}
 
-	public void setBreakAfterAcquireFailure(boolean breakAfterAcquireFailure){
+	public void setBreakAfterAcquireFailure(Boolean breakAfterAcquireFailure){
 		this.breakAfterAcquireFailure = breakAfterAcquireFailure;
 	}
 
-	public boolean isDupCloseLogEnable(){
+	@Deprecated
+	public Boolean isDupCloseLogEnable(){
 		return getDupCloseLogEnable();
 	}
 
-	public boolean getDupCloseLogEnable(){
+	public Boolean getDupCloseLogEnable(){
 		return dupCloseLogEnable;
 	}
 
-	public void setDupCloseLogEnable(boolean dupCloseLogEnable){
+	public void setDupCloseLogEnable(Boolean dupCloseLogEnable){
 		this.dupCloseLogEnable = dupCloseLogEnable;
 	}
 
@@ -1140,15 +1163,16 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.useUnfairLock = useUnfairLock;
 	}
 
-	public boolean isUseLocalSessionState(){
+	@Deprecated
+	public Boolean isUseLocalSessionState(){
 		return getUseLocalSessionState();
 	}
 
-	public boolean getUseLocalSessionState(){
+	public Boolean getUseLocalSessionState(){
 		return useLocalSessionState;
 	}
 
-	public void setUseLocalSessionState(boolean useLocalSessionState){
+	public void setUseLocalSessionState(Boolean useLocalSessionState){
 		this.useLocalSessionState = useLocalSessionState;
 	}
 
@@ -1159,4 +1183,5 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	public void setObjectName(ObjectName objectName){
 		this.objectName = objectName;
 	}
+
 }

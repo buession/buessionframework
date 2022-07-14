@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
@@ -37,15 +37,19 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	/**
 	 * 驱动名
 	 */
+	@Deprecated
 	private String driverClassName;
 
 	/**
 	 * 连接 URL
 	 */
+	@Deprecated
 	private String url;
 
+	@Deprecated
 	private String username;
 
+	@Deprecated
 	private String password;
 
 	private Properties properties;
@@ -55,6 +59,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 *
 	 * @return 驱动名
 	 */
+	@Deprecated
 	public String getDriverClassName(){
 		return driverClassName;
 	}
@@ -65,6 +70,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 * @param driverClassName
 	 * 		驱动名
 	 */
+	@Deprecated
 	public void setDriverClassName(String driverClassName){
 		this.driverClassName = driverClassName;
 	}
@@ -74,6 +80,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 *
 	 * @return 连接 URL
 	 */
+	@Deprecated
 	public String getUrl(){
 		return url;
 	}
@@ -84,6 +91,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 * @param url
 	 * 		连接 URL
 	 */
+	@Deprecated
 	public void setUrl(String url){
 		this.url = url;
 	}
@@ -93,6 +101,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 *
 	 * @return 用户名
 	 */
+	@Deprecated
 	public String getUsername(){
 		return username;
 	}
@@ -103,6 +112,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 * @param username
 	 * 		用户名
 	 */
+	@Deprecated
 	public void setUsername(String username){
 		this.username = username;
 	}
@@ -112,6 +122,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 *
 	 * @return 密码
 	 */
+	@Deprecated
 	public String getPassword(){
 		return password;
 	}
@@ -122,6 +133,7 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 * @param password
 	 * 		密码
 	 */
+	@Deprecated
 	public void setPassword(String password){
 		this.password = password;
 	}

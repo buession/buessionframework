@@ -24,7 +24,10 @@
  */
 package com.buession.jdbc.datasource;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.jdbc.datasource.config.HikariPoolConfiguration;
+
+import java.time.Duration;
 
 /**
  * Hikari DataSource 抽象类
@@ -61,110 +64,41 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	}
 
 	@Override
-	protected void applyPoolConfiguration(final com.zaxxer.hikari.HikariDataSource dataSource, final HikariPoolConfiguration poolConfiguration){
-		if(poolConfiguration.getDriverClassName() != null){
-			dataSource.setDriverClassName(poolConfiguration.getDriverClassName());
-		}
+	protected void applyPoolConfiguration(final com.zaxxer.hikari.HikariDataSource dataSource,
+										  final HikariPoolConfiguration poolConfiguration){
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
-		if(poolConfiguration.getUrl() != null){
-			dataSource.setJdbcUrl(poolConfiguration.getUrl());
-		}
-
-		if(poolConfiguration.getUsername() != null){
-			dataSource.setUsername(poolConfiguration.getUsername());
-		}
-
-		if(poolConfiguration.getPassword() != null){
-			dataSource.setPassword(poolConfiguration.getPassword());
-		}
-
-		if(poolConfiguration.getCatalog() != null){
-			dataSource.setCatalog(poolConfiguration.getCatalog());
-		}
-
-		if(poolConfiguration.getConnectionTimeout() != null){
-			dataSource.setConnectionTimeout(poolConfiguration.getConnectionTimeout().toMillis());
-		}
-
-		if(poolConfiguration.getIdleTimeout() != null){
-			dataSource.setIdleTimeout(poolConfiguration.getIdleTimeout().toMillis());
-		}
-
-		dataSource.setLeakDetectionThreshold(poolConfiguration.getLeakDetectionThreshold());
-
-		if(poolConfiguration.getMaxLifetime() != null){
-			dataSource.setMaxLifetime(poolConfiguration.getMaxLifetime().toMillis());
-		}
-
-		if(poolConfiguration.getKeepaliveTime() != null){
-			dataSource.setKeepaliveTime(poolConfiguration.getKeepaliveTime().toMillis());
-		}
-
-		if(poolConfiguration.getMinIdle() >= 0){
-			dataSource.setMinimumIdle(poolConfiguration.getMinIdle());
-		}
-
-		if(poolConfiguration.getMaxPoolSize() >= 1){
-			dataSource.setMaximumPoolSize(poolConfiguration.getMaxPoolSize());
-		}
-
-		if(poolConfiguration.getInitializationFailTimeout() != null){
-			dataSource.setInitializationFailTimeout(poolConfiguration.getInitializationFailTimeout().toMillis());
-		}
-
-		if(poolConfiguration.getConnectionInitSql() != null){
-			dataSource.setConnectionInitSql(poolConfiguration.getConnectionInitSql());
-		}
-
-		if(poolConfiguration.getConnectionTestQuery() != null){
-			dataSource.setConnectionTestQuery(poolConfiguration.getConnectionTestQuery());
-		}
-
-		if(poolConfiguration.getValidationTimeout() != null){
-			dataSource.setValidationTimeout(poolConfiguration.getValidationTimeout().toMillis());
-		}
-
-		if(poolConfiguration.getPoolName() != null){
-			dataSource.setPoolName(poolConfiguration.getPoolName());
-		}
-
-		if(poolConfiguration.getTransactionIsolation() != null){
-			dataSource.setTransactionIsolation("TRANSACTION_" + poolConfiguration.getTransactionIsolation().name());
-		}
-
-		dataSource.setAutoCommit(poolConfiguration.isAutoCommit());
-		dataSource.setReadOnly(poolConfiguration.isReadOnly());
-		dataSource.setIsolateInternalQueries(poolConfiguration.isIsolateInternalQueries());
-		dataSource.setRegisterMbeans(poolConfiguration.isRegisterMbeans());
-		dataSource.setAllowPoolSuspension(poolConfiguration.isAllowPoolSuspension());
-
-		if(poolConfiguration.getThreadFactory() != null){
-			dataSource.setThreadFactory(poolConfiguration.getThreadFactory());
-		}
-
-		if(poolConfiguration.getScheduledExecutor() != null){
-			dataSource.setScheduledExecutor(poolConfiguration.getScheduledExecutor());
-		}
-
-		if(poolConfiguration.getMetricsTrackerFactory() != null){
-			dataSource.setMetricsTrackerFactory(poolConfiguration.getMetricsTrackerFactory());
-		}
-
-		if(poolConfiguration.getMetricRegistry() != null){
-			dataSource.setMetricRegistry(poolConfiguration.getMetricRegistry());
-		}
-
-		if(poolConfiguration.getHealthCheckRegistry() != null){
-			dataSource.setHealthCheckRegistry(poolConfiguration.getHealthCheckRegistry());
-		}
-
-		if(poolConfiguration.getHealthCheckProperties() != null){
-			dataSource.setHealthCheckProperties(poolConfiguration.getHealthCheckProperties());
-		}
-
-		if(poolConfiguration.getProperties() != null){
-			dataSource.setDataSourceProperties(poolConfiguration.getProperties());
-		}
+		propertyMapper.from(poolConfiguration::getCatalog).to(dataSource::setCatalog);
+		propertyMapper.from(poolConfiguration::getConnectionTimeout).as(
+				Duration::toMillis).to(dataSource::setConnectionTimeout);
+		propertyMapper.from(poolConfiguration::getIdleTimeout).as(Duration::toMillis).to(dataSource::setIdleTimeout);
+		propertyMapper.from(poolConfiguration::getLeakDetectionThreshold).to(dataSource::setLeakDetectionThreshold);
+		propertyMapper.from(poolConfiguration::getMaxLifetime).as(Duration::toMillis).to(dataSource::setMaxLifetime);
+		propertyMapper.from(poolConfiguration::getKeepaliveTime).as(Duration::toMillis)
+				.to(dataSource::setKeepaliveTime);
+		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinimumIdle);
+		propertyMapper.from(poolConfiguration::getMaxPoolSize).to(dataSource::setMaximumPoolSize);
+		propertyMapper.from(poolConfiguration::getInitializationFailTimeout).as(Duration::toMillis)
+				.to(dataSource::setInitializationFailTimeout);
+		propertyMapper.from(poolConfiguration::getConnectionInitSql).to(dataSource::setConnectionInitSql);
+		propertyMapper.from(poolConfiguration::getConnectionTestQuery).to(dataSource::setConnectionTestQuery);
+		propertyMapper.from(poolConfiguration::getValidationTimeout).as(Duration::toMillis)
+				.to(dataSource::setValidationTimeout);
+		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setPoolName);
+		propertyMapper.from(poolConfiguration::getTransactionIsolation).as((v)->"TRANSACTION_" + v.name())
+				.to(dataSource::setTransactionIsolation);
+		propertyMapper.from(poolConfiguration::getAutoCommit).to(dataSource::setAutoCommit);
+		propertyMapper.from(poolConfiguration::getReadOnly).to(dataSource::setReadOnly);
+		propertyMapper.from(poolConfiguration::getIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
+		propertyMapper.from(poolConfiguration::getRegisterMbeans).to(dataSource::setRegisterMbeans);
+		propertyMapper.from(poolConfiguration::getAllowPoolSuspension).to(dataSource::setAllowPoolSuspension);
+		propertyMapper.from(poolConfiguration::getThreadFactory).to(dataSource::setThreadFactory);
+		propertyMapper.from(poolConfiguration::getScheduledExecutor).to(dataSource::setScheduledExecutor);
+		propertyMapper.from(poolConfiguration::getMetricsTrackerFactory).to(dataSource::setMetricsTrackerFactory);
+		propertyMapper.from(poolConfiguration::getMetricRegistry).to(dataSource::setMetricRegistry);
+		propertyMapper.from(poolConfiguration::getHealthCheckRegistry).to(dataSource::setHealthCheckRegistry);
+		propertyMapper.from(poolConfiguration::getHealthCheckProperties).to(dataSource::setHealthCheckProperties);
+		propertyMapper.from(poolConfiguration::getProperties).to(dataSource::setDataSourceProperties);
 	}
 
 }
