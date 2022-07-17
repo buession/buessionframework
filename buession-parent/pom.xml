@@ -83,13 +83,6 @@
 					<include>**/*.*</include>
 				</includes>
 			</resource>
-			<resource>
-				<directory>${project.basedir}</directory>
-				<filtering>false</filtering>
-				<includes>
-					<include>changelog.txt</include>
-				</includes>
-			</resource>
 		</resources>
 		<plugins>
 			<plugin>

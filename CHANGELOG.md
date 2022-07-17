@@ -2,11 +2,17 @@
 ===========================
 
 
-## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) ()
+## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) (2022-07-17)
 
 ### 🔨依赖升级
 
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.1)
 - [maxmind geoip2](https://dev.maxmind.com/geoip?lang=en) 版本升级至 3.0.1
+
+
+### ⭐ 新特性
+
+- **buession-core：** 新增 PropertyMapper 用于将值从提供的源映射到目标
 
 
 ### 🔔 变化
