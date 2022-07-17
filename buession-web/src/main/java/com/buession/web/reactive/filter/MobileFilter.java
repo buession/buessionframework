@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
@@ -32,6 +32,8 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 /**
+ * 移动设备过滤器，通过 {@link RequestUtils#isMobile(ServerHttpRequest)} 获取到的值设置到 ServerHttpRequest attribute 中
+ *
  * @author Yong.Teng
  */
 public class MobileFilter implements WebFilter {

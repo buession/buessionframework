@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 包含与IP地址关联的国家记录的数据。
+ * 包含与 IP 地址关联的国家记录的数据。
  *
  * @author Yong.Teng
  */
@@ -38,16 +38,34 @@ public final class Country implements Serializable {
 
 	private final static long serialVersionUID = -7665239490542479833L;
 
+	/**
+	 * 国家名称 ID
+	 */
 	private final Integer geoNameId;
 
+	/**
+	 * The confidence for Country
+	 */
 	private final Integer confidence;
 
+	/**
+	 * 国家编码
+	 */
 	private final String code;
 
+	/**
+	 * 国家原始名称
+	 */
 	private final String originalName;
 
+	/**
+	 * 国家名称
+	 */
 	private final String name;
 
+	/**
+	 * 国家名称全称
+	 */
 	private final String fullName;
 
 	/**
@@ -57,6 +75,24 @@ public final class Country implements Serializable {
 	 */
 	private final boolean isInEuropeanUnion;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param geoNameId
+	 * 		国家名称 ID
+	 * @param confidence
+	 * 		The confidence for Country
+	 * @param code
+	 * 		国家编码
+	 * @param originalName
+	 * 		国家原始名称
+	 * @param name
+	 * 		国家名称
+	 * @param fullName
+	 * 		国家名称全称
+	 * @param isInEuropeanUnion
+	 * 		IP 地址是否在欧盟
+	 */
 	public Country(final Integer geoNameId, final Integer confidence, final String code, final String originalName,
 				   final String name, final String fullName, final boolean isInEuropeanUnion){
 		this.geoNameId = geoNameId;
@@ -68,26 +104,56 @@ public final class Country implements Serializable {
 		this.isInEuropeanUnion = isInEuropeanUnion;
 	}
 
+	/**
+	 * 返回国家名称 ID
+	 *
+	 * @return 国家名称 ID
+	 */
 	public Integer getGeoNameId(){
 		return geoNameId;
 	}
 
+	/**
+	 * Return the confidence for Country
+	 *
+	 * @return The confidence for Country
+	 */
 	public Integer getConfidence(){
 		return confidence;
 	}
 
+	/**
+	 * 返回国家编码
+	 *
+	 * @return 国家编码
+	 */
 	public String getCode(){
 		return code;
 	}
 
+	/**
+	 * 返回国家原始名称
+	 *
+	 * @return 国家原始名称
+	 */
 	public String getOriginalName(){
 		return originalName;
 	}
 
+	/**
+	 * 返回国家名称
+	 *
+	 * @return 国家名称
+	 */
 	public String getName(){
 		return name;
 	}
 
+	/**
+	 * 返回国家名称全称
+	 *
+	 * @return 国家名称全称
+	 */
 	public String getFullName(){
 		return fullName;
 	}
@@ -116,7 +182,9 @@ public final class Country implements Serializable {
 
 		if(obj instanceof Country){
 			Country that = (Country) obj;
-			return Objects.equals(geoNameId, that.geoNameId) && Objects.equals(confidence, that.confidence) && Objects.equals(code, that.code) && Objects.equals(originalName, that.originalName) && Objects.equals(name, that.name);
+			return Objects.equals(geoNameId, that.geoNameId) && Objects.equals(confidence, that.confidence) &&
+					Objects.equals(code, that.code) && Objects.equals(originalName, that.originalName) &&
+					Objects.equals(name, that.name);
 		}
 
 		return false;
@@ -124,7 +192,9 @@ public final class Country implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code='" + code + '\'' + ", " + "originalName='" + originalName + '\'' + ", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", isInEuropeanUnion=" + isInEuropeanUnion + '}';
+		return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code='" + code + '\'' + ", " +
+				"originalName='" + originalName + '\'' + ", name='" + name + '\'' + ", fullName='" + fullName + '\'' +
+				", isInEuropeanUnion=" + isInEuropeanUnion + '}';
 	}
 
 }

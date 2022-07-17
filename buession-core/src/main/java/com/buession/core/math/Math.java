@@ -77,7 +77,7 @@ public class Math {
 		}
 
 		long count = end - start + 1;
-		return count * start + count * ((count - 1) >> 1);
+		return (start + end) * count >> 1;
 	}
 
 	/**

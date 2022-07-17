@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
@@ -32,24 +32,59 @@ package com.buession.core.exception;
  */
 public class PresentException extends RuntimeException {
 
-	private static final long serialVersionUID = -1610503662713551445L;
+	private final static long serialVersionUID = -1610503662713551445L;
 
+	/**
+	 * 构造函数
+	 */
 	public PresentException(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 */
 	public PresentException(String message){
 		super(message);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public PresentException(String message, Throwable cause){
 		super(message, cause);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public PresentException(Throwable cause){
 		super(cause);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 */
 	public PresentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
@@ -63,7 +98,7 @@ public class PresentException extends RuntimeException {
 	}
 
 	public PresentException(String delegate, String original, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace){
+							boolean writableStackTrace){
 		super(delegateExceptionMessage(delegate, original), cause, enableSuppression, writableStackTrace);
 	}
 

@@ -28,12 +28,15 @@ package com.buession.geoip.spring;
 
 import com.buession.geoip.CacheDatabaseResolver;
 import com.buession.geoip.DatabaseResolver;
+import com.buession.geoip.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
+ * GeoIP {@link Resolver} 工厂 Bean
+ *
  * @author Yong.Teng
  */
 public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements FactoryBean<DatabaseResolver>,

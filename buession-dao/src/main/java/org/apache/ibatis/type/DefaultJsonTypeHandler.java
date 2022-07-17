@@ -31,6 +31,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * JSON 处理器，将 JSON 格式的字符串值和类型 &lt;E&gt; 进行转换
+ *
  * @author Yong.Teng
  * @since 1.3.2
  */

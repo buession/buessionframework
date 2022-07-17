@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -37,15 +37,17 @@ import com.buession.web.servlet.http.request.RequestUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
+ * 移动设备过滤器，通过 {@link RequestUtils#isMobile(HttpServletRequest)} 获取到的值设置到 HttpServletRequest attribute 中
+ *
  * @author Yong.Teng
  */
 public class MobileFilter extends OncePerRequestFilter {
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
-            filterChain) throws ServletException, IOException{
-        request.setAttribute("isMobile", RequestUtils.isMobile(request));
-        filterChain.doFilter(request, response);
-    }
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
+			filterChain) throws ServletException, IOException{
+		request.setAttribute("isMobile", RequestUtils.isMobile(request));
+		filterChain.doFilter(request, response);
+	}
 
 }

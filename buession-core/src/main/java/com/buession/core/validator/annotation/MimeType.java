@@ -24,7 +24,7 @@
  */
 package com.buession.core.validator.annotation;
 
-import com.buession.core.validator.constraintvalidators.IpConstraintValidator;
+import com.buession.core.validator.constraintvalidators.MimeTypeConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {IpConstraintValidator.class})
+@Constraint(validatedBy = {MimeTypeConstraintValidator.class})
 @Repeatable(MimeType.List.class)
 public @interface MimeType {
 

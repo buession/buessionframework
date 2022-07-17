@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -38,12 +38,26 @@ public final class Organization implements Serializable {
 
 	private final static long serialVersionUID = 1780458868407500203L;
 
-	private String name;
+	/**
+	 * 组织名称
+	 */
+	private final String name;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		组织名称
+	 */
 	public Organization(final String name){
 		this.name = name;
 	}
 
+	/**
+	 * 返回组织名称
+	 *
+	 * @return 组织名称
+	 */
 	public String getName(){
 		return name;
 	}

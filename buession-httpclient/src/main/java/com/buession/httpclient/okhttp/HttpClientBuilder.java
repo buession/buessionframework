@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class HttpClientBuilder {
 
-	private final OkHttpClient.Builder builder = new okhttp3.OkHttpClient.Builder();
+	private final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
 	private HttpClientBuilder(){
 	}

@@ -24,7 +24,7 @@
  */
 package com.buession.core.validator.annotation;
 
-import com.buession.core.validator.constraintvalidators.IDCardConstraintValidator;
+import com.buession.core.validator.constraintvalidators.IsbnConstraintValidator;
 import com.buession.lang.ISBNType;
 
 import javax.validation.Constraint;
@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
 		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = {IDCardConstraintValidator.class})
+@Constraint(validatedBy = {IsbnConstraintValidator.class})
 @Repeatable(Isbn.List.class)
 public @interface Isbn {
 

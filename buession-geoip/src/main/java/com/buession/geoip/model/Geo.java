@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -38,26 +38,60 @@ public final class Geo implements Serializable {
 
 	private final static long serialVersionUID = 3166412069316195061L;
 
+	/**
+	 * 维度
+	 */
 	private final Double latitude;
 
+	/**
+	 * 经度
+	 */
 	private final Double longitude;
 
+	/**
+	 * 精确度
+	 */
 	private final Integer accuracyRadius;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param latitude
+	 * 		维度
+	 * @param longitude
+	 * 		经度
+	 * @param accuracyRadius
+	 * 		精确度
+	 */
 	public Geo(final Double latitude, final Double longitude, final Integer accuracyRadius){
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.accuracyRadius = accuracyRadius;
 	}
 
+	/**
+	 * 返回维度
+	 *
+	 * @return 维度
+	 */
 	public Double getLatitude(){
 		return latitude;
 	}
 
+	/**
+	 * 返回经度
+	 *
+	 * @return 经度
+	 */
 	public Double getLongitude(){
 		return longitude;
 	}
 
+	/**
+	 * 返回精确度
+	 *
+	 * @return 精确度
+	 */
 	public Integer getAccuracyRadius(){
 		return accuracyRadius;
 	}
@@ -83,7 +117,8 @@ public final class Geo implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Geo{" + "latitude=" + latitude + ", longitude=" + longitude + ", accuracyRadius=" + accuracyRadius + '}';
+		return "Geo{" + "latitude=" + latitude + ", longitude=" + longitude + ", accuracyRadius=" + accuracyRadius +
+				'}';
 	}
 
 }

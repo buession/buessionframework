@@ -43,7 +43,7 @@ public interface Executor<C, R> {
 	 * @param context
 	 * 		命令执行器上下文
 	 *
-	 * @return R 对象实例
+	 * @return 命令执行返回值，R 类型的实例
 	 */
 	R execute(C context);
 

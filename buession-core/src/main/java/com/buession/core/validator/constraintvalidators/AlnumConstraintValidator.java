@@ -35,18 +35,15 @@ import javax.validation.ConstraintValidatorContext;
  */
 public abstract class AlnumConstraintValidator<T> implements ConstraintValidator<Alnum, T> {
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(Alnum alnum){
-		this.validWhenNull = alnum.whenNull();
 	}
 
 	public final static class CharSequenceAlnumConstraintValidator extends AlnumConstraintValidator<CharSequence> {
 
 		@Override
 		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-			return validWhenNull == false || Validate.isAlnum(value);
+			return Validate.isAlnum(value);
 		}
 
 	}
@@ -55,7 +52,7 @@ public abstract class AlnumConstraintValidator<T> implements ConstraintValidator
 
 		@Override
 		public boolean isValid(Character value, ConstraintValidatorContext context){
-			return validWhenNull == false || Validate.isAlnum(value);
+			return Validate.isAlnum(value);
 		}
 
 	}

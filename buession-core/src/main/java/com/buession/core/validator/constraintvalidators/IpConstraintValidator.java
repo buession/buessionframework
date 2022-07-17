@@ -39,20 +39,13 @@ public abstract class IpConstraintValidator implements ConstraintValidator<Ip, C
 
 	protected IpType type;
 
-	protected boolean validWhenNull;
-
 	@Override
 	public void initialize(Ip ip){
 		this.type = ip.type();
-		this.validWhenNull = ip.whenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		if(validWhenNull == false){
-			return true;
-		}
-
 		if(type == IpType.IP_V4){
 			return Validate.isIpV4(value);
 		}else if(type == IpType.IP_V6){

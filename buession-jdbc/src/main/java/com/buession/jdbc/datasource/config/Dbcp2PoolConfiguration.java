@@ -26,8 +26,6 @@ package com.buession.jdbc.datasource.config;
 
 import com.buession.jdbc.core.TransactionIsolation;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -50,7 +48,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * 连接的最大存活时间；
 	 * 如果超过这个时间，则连接在下次激活、钝化、校验时都将会失败。如果设置为0或小于0的值，则连接的存活时间是无限的
 	 */
-	private Duration maxConnLifetime = Duration.ofMillis(-1L);
+	private Duration maxConnLifetime;
 
 	/**
 	 * 查询超时时间
@@ -60,50 +58,50 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 初始连接数，池被启动时初始化的创建的连接个数
 	 */
-	private int initialSize;
+	private Integer initialSize;
 
 	/**
 	 * 最小空闲连接数，可以在池中保持空闲的最小连接数，低于设置值时，空闲连接将被创建，以努力保持最小空闲连接数 &gt;= minIdle
 	 */
-	private int minIdle = GenericObjectPoolConfig.DEFAULT_MIN_IDLE;
+	private Integer minIdle;
 
 	/**
 	 * 最大空闲连接数，在池中，可以保持空闲状态的最大连接数，超出设置值之外的空闲连接在归还到连接池时将被释放，如设置为负数，则不限制
 	 */
-	private int maxIdle = GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
+	private Integer maxIdle;
 
 	/**
 	 * 最大活动连接数，可以在这个池中同一时刻被分配的有效连接数的最大值，如设置为负数，则不限制
 	 */
-	private int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
+	private Integer maxTotal;
 
 	/**
 	 * 从连接池获取一个连接时，最大的等待时间，设置为-1时，如果没有可用连接，连接池会一直无限期等待，直到获取到连接为止
 	 */
-	private Duration maxWait = GenericObjectPoolConfig.DEFAULT_MAX_WAIT;
+	private Duration maxWait;
 
 	/**
 	 * 连接创建后，马上验证有效性；
 	 * 指明对象在创建后是否需要验证是否有效，如果对象验证失败，则触发对象创建的租借尝试将失败
 	 */
-	private boolean testOnCreate;
+	private Boolean testOnCreate;
 
 	/**
 	 * 从连接池获取一个连接时，验证有效性；
 	 * 指明在从池中租借对象时是否要进行验证有效，如果对象验证失败，则对象将从池子释放，然后我们将尝试租借另一个
 	 */
-	private boolean testOnBorrow = true;
+	private Boolean testOnBorrow;
 
 	/**
 	 * 连接被归还到连接池时，验证有效性
 	 */
-	private boolean testOnReturn;
+	private Boolean testOnReturn;
 
 	/**
 	 * 连接空闲时，验证有效性；
 	 * 指明对象是否需要通过对象驱逐者进行校验（如果有的话），假如一个对象验证失败，则对象将被从池中释放
 	 */
-	private boolean testWhileIdle;
+	private Boolean testWhileIdle;
 
 	/**
 	 * 实现 {@link org.apache.commons.dbcp2.ConnectionFactory} 接口，连接工厂实现类
@@ -123,7 +121,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 连接有效SQL的执行查询超时时间
 	 */
-	private Duration validationQueryTimeout = Duration.ofMillis(-1L);
+	private Duration validationQueryTimeout;
 
 	/**
 	 * 设置的默认模式为支持模式的概念数据库
@@ -143,12 +141,12 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 连接归还到池时，设置为自动提交
 	 */
-	private boolean autoCommitOnReturn = true;
+	private Boolean autoCommitOnReturn;
 
 	/**
 	 * 连接归还到池时，是否回滚所有操作
 	 */
-	private boolean rollbackOnReturn = true;
+	private Boolean rollbackOnReturn;
 
 	/**
 	 * 默认连接是否是只读模式
@@ -159,12 +157,12 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * 一个过期的连接被连接池关闭时，写日志标识；
 	 * 如果连接存货时间超过 maxConnLifetimeMillis，连接将被连接池会抽，此时默认输出日志
 	 */
-	private boolean logExpiredConnections = true;
+	private Boolean logExpiredConnections = true;
 
 	/**
 	 * PoolGuard 是否可以访问底层连接
 	 */
-	private boolean accessToUnderlyingConnectionAllowed;
+	private Boolean accessToUnderlyingConnectionAllowed;
 
 	/**
 	 * 缓存状态，如果设置为true，
@@ -172,39 +170,39 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * 这样就省去了对 getter 的任何进一步的调用时对数据库的额外查询。
 	 * 如果直接访问底层连接，只读状态和/或自动提交设置改变缓存值将不会被反映到当前的状态，在这种情况下，应该将该属性设置为false以禁用缓存
 	 */
-	private boolean cacheState = true;
+	private Boolean cacheState = true;
 
 	/**
 	 * 该连接池的预处理语句池是否生效
 	 */
-	private boolean poolPreparedStatements;
+	private Boolean poolPreparedStatements;
 
 	/**
 	 * 可以在语句池中同时分配的最大语句数
 	 */
-	private int maxOpenPreparedStatements = GenericKeyedObjectPoolConfig.DEFAULT_MAX_TOTAL;
+	private Integer maxOpenPreparedStatements;
 
-	private boolean clearStatementPoolOnReturn;
+	private Boolean clearStatementPoolOnReturn;
 
 	/**
 	 * 空闲对象驱逐策略名称
 	 */
-	private String evictionPolicyClassName = GenericObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
+	private String evictionPolicyClassName;
 
 	/**
 	 * 空闲对象驱逐线程运行时的休眠时间
 	 */
-	private Duration timeBetweenEvictionRuns = GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS;
+	private Duration timeBetweenEvictionRuns;
 
 	/**
 	 * 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
 	 */
-	private int numTestsPerEvictionRun = GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
+	private Integer numTestsPerEvictionRun;
 
 	/**
 	 * 空闲的连接被释放最低要待时间
 	 */
-	private Duration minEvictableIdleTime = GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME;
+	private Duration minEvictableIdleTime;
 
 	/**
 	 * 空闲的连接被释放最低要待时间，但有额外条件
@@ -213,18 +211,18 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * 当空闲连接被驱逐者访问时，首先与 miniEvictableIdleTime 所指定的值进行比较（而不考虑当前池中的空闲连接数），
 	 * 然后比较 softMinEvictableIdleTime 所指定的连接数，包括 minIdle 条件
 	 */
-	private Duration softMinEvictableIdleTime = GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME;
+	private Duration softMinEvictableIdleTime;
 
 	/**
 	 * 后进先出，设置为true表明连接池（如果池中有可用的空闲连接时）将返回最后一次使用的租借对象（最后进入），
 	 * 设置为false则表明池将表现为FIFO队列（先进先出）—将会按照它们被归还的顺序从空闲连接实例池中获取连接
 	 */
-	private boolean lifo = GenericObjectPoolConfig.DEFAULT_LIFO;
+	private Boolean lifo;
 
 	/**
 	 * 验证快速失败
 	 */
-	private boolean fastFailValidation;
+	private Boolean fastFailValidation;
 
 	private Set<String> disconnectionSqlCodes;
 
@@ -292,7 +290,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 初始连接数
 	 */
-	public int getInitialSize(){
+	public Integer getInitialSize(){
 		return initialSize;
 	}
 
@@ -302,7 +300,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param initialSize
 	 * 		初始连接数
 	 */
-	public void setInitialSize(int initialSize){
+	public void setInitialSize(Integer initialSize){
 		this.initialSize = initialSize;
 	}
 
@@ -311,7 +309,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最小空闲连接数
 	 */
-	public int getMinIdle(){
+	public Integer getMinIdle(){
 		return minIdle;
 	}
 
@@ -321,7 +319,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param minIdle
 	 * 		最小空闲连接数
 	 */
-	public void setMinIdle(int minIdle){
+	public void setMinIdle(Integer minIdle){
 		this.minIdle = minIdle;
 	}
 
@@ -330,7 +328,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大空闲连接数
 	 */
-	public int getMaxIdle(){
+	public Integer getMaxIdle(){
 		return maxIdle;
 	}
 
@@ -340,7 +338,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxIdle
 	 * 		最大空闲连接数
 	 */
-	public void setMaxIdle(int maxIdle){
+	public void setMaxIdle(Integer maxIdle){
 		this.maxIdle = maxIdle;
 	}
 
@@ -349,7 +347,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大活动连接数
 	 */
-	public int getMaxTotal(){
+	public Integer getMaxTotal(){
 		return maxTotal;
 	}
 
@@ -359,7 +357,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxTotal
 	 * 		最大活动连接数
 	 */
-	public void setMaxTotal(int maxTotal){
+	public void setMaxTotal(Integer maxTotal){
 		this.maxTotal = maxTotal;
 	}
 
@@ -387,7 +385,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接创建后，是否马上验证有效性
 	 */
-	public boolean isTestOnCreate(){
+	@Deprecated
+	public Boolean isTestOnCreate(){
 		return getTestOnCreate();
 	}
 
@@ -396,7 +395,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接创建后，是否马上验证有效性
 	 */
-	public boolean getTestOnCreate(){
+	public Boolean getTestOnCreate(){
 		return testOnCreate;
 	}
 
@@ -406,7 +405,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnCreate
 	 * 		连接创建后，是否马上验证有效性
 	 */
-	public void setTestOnCreate(boolean testOnCreate){
+	public void setTestOnCreate(Boolean testOnCreate){
 		this.testOnCreate = testOnCreate;
 	}
 
@@ -415,7 +414,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
-	public boolean isTestOnBorrow(){
+	@Deprecated
+	public Boolean isTestOnBorrow(){
 		return getTestOnBorrow();
 	}
 
@@ -424,7 +424,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
-	public boolean getTestOnBorrow(){
+	public Boolean getTestOnBorrow(){
 		return testOnBorrow;
 	}
 
@@ -434,7 +434,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnBorrow
 	 * 		从连接池获取一个连接时，是否验证有效性
 	 */
-	public void setTestOnBorrow(boolean testOnBorrow){
+	public void setTestOnBorrow(Boolean testOnBorrow){
 		this.testOnBorrow = testOnBorrow;
 	}
 
@@ -443,7 +443,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接被归还到连接池时，是否验证有效性
 	 */
-	public boolean isTestOnReturn(){
+	@Deprecated
+	public Boolean isTestOnReturn(){
 		return getTestOnReturn();
 	}
 
@@ -452,7 +453,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接被归还到连接池时，是否验证有效性
 	 */
-	public boolean getTestOnReturn(){
+	public Boolean getTestOnReturn(){
 		return testOnReturn;
 	}
 
@@ -462,7 +463,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnReturn
 	 * 		连接被归还到连接池时，是否验证有效性
 	 */
-	public void setTestOnReturn(boolean testOnReturn){
+	public void setTestOnReturn(Boolean testOnReturn){
 		this.testOnReturn = testOnReturn;
 	}
 
@@ -471,7 +472,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接空闲时，是否验证有效性
 	 */
-	public boolean isTestWhileIdle(){
+	@Deprecated
+	public Boolean isTestWhileIdle(){
 		return getTestWhileIdle();
 	}
 
@@ -480,7 +482,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接空闲时，是否验证有效性
 	 */
-	public boolean getTestWhileIdle(){
+	public Boolean getTestWhileIdle(){
 		return testWhileIdle;
 	}
 
@@ -490,7 +492,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testWhileIdle
 	 * 		连接空闲时，是否验证有效性
 	 */
-	public void setTestWhileIdle(boolean testWhileIdle){
+	public void setTestWhileIdle(Boolean testWhileIdle){
 		this.testWhileIdle = testWhileIdle;
 	}
 
@@ -613,6 +615,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动提交事务
 	 */
+	@Deprecated
 	public Boolean isDefaultAutoCommit(){
 		return getDefaultAutoCommit();
 	}
@@ -641,7 +644,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，设置为自动提交
 	 */
-	public boolean isAutoCommitOnReturn(){
+	@Deprecated
+	public Boolean isAutoCommitOnReturn(){
 		return getAutoCommitOnReturn();
 	}
 
@@ -650,7 +654,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，设置为自动提交
 	 */
-	public boolean getAutoCommitOnReturn(){
+	public Boolean getAutoCommitOnReturn(){
 		return autoCommitOnReturn;
 	}
 
@@ -660,7 +664,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param autoCommitOnReturn
 	 * 		连接归还到池时，是否自动提交
 	 */
-	public void setAutoCommitOnReturn(boolean autoCommitOnReturn){
+	public void setAutoCommitOnReturn(Boolean autoCommitOnReturn){
 		this.autoCommitOnReturn = autoCommitOnReturn;
 	}
 
@@ -669,7 +673,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，是否回滚所有操作
 	 */
-	public boolean isRollbackOnReturn(){
+	@Deprecated
+	public Boolean isRollbackOnReturn(){
 		return getRollbackOnReturn();
 	}
 
@@ -678,7 +683,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，是否回滚所有操作
 	 */
-	public boolean getRollbackOnReturn(){
+	public Boolean getRollbackOnReturn(){
 		return rollbackOnReturn;
 	}
 
@@ -688,7 +693,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param rollbackOnReturn
 	 * 		连接归还到池时，是否回滚所有操作
 	 */
-	public void setRollbackOnReturn(boolean rollbackOnReturn){
+	public void setRollbackOnReturn(Boolean rollbackOnReturn){
 		this.rollbackOnReturn = rollbackOnReturn;
 	}
 
@@ -697,6 +702,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接是否是只读模式
 	 */
+	@Deprecated
 	public Boolean isDefaultReadOnly(){
 		return getDefaultReadOnly();
 	}
@@ -725,7 +731,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 一个过期的连接被连接池关闭时，写日志标识
 	 */
-	public boolean isLogExpiredConnections(){
+	@Deprecated
+	public Boolean isLogExpiredConnections(){
 		return getLogExpiredConnections();
 	}
 
@@ -734,7 +741,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 一个过期的连接被连接池关闭时，写日志标识
 	 */
-	public boolean getLogExpiredConnections(){
+	public Boolean getLogExpiredConnections(){
 		return logExpiredConnections;
 	}
 
@@ -744,7 +751,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param logExpiredConnections
 	 * 		一个过期的连接被连接池关闭时，写日志标识
 	 */
-	public void setLogExpiredConnections(boolean logExpiredConnections){
+	public void setLogExpiredConnections(Boolean logExpiredConnections){
 		this.logExpiredConnections = logExpiredConnections;
 	}
 
@@ -753,7 +760,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return PoolGuard 是否可以访问底层连接
 	 */
-	public boolean isAccessToUnderlyingConnectionAllowed(){
+	@Deprecated
+	public Boolean isAccessToUnderlyingConnectionAllowed(){
 		return getAccessToUnderlyingConnectionAllowed();
 	}
 
@@ -762,7 +770,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return PoolGuard 是否可以访问底层连接
 	 */
-	public boolean getAccessToUnderlyingConnectionAllowed(){
+	public Boolean getAccessToUnderlyingConnectionAllowed(){
 		return accessToUnderlyingConnectionAllowed;
 	}
 
@@ -772,7 +780,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param accessToUnderlyingConnectionAllowed
 	 * 		PoolGuard 是否可以访问底层连接
 	 */
-	public void setAccessToUnderlyingConnectionAllowed(boolean accessToUnderlyingConnectionAllowed){
+	public void setAccessToUnderlyingConnectionAllowed(Boolean accessToUnderlyingConnectionAllowed){
 		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
 	}
 
@@ -781,7 +789,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 缓存状态
 	 */
-	public boolean isCacheState(){
+	@Deprecated
+	public Boolean isCacheState(){
 		return getCacheState();
 	}
 
@@ -790,7 +799,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 缓存状态
 	 */
-	public boolean getCacheState(){
+	public Boolean getCacheState(){
 		return cacheState;
 	}
 
@@ -800,7 +809,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param cacheState
 	 * 		缓存状态
 	 */
-	public void setCacheState(boolean cacheState){
+	public void setCacheState(Boolean cacheState){
 		this.cacheState = cacheState;
 	}
 
@@ -809,7 +818,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 该连接池的预处理语句池是否生效
 	 */
-	public boolean isPoolPreparedStatements(){
+	@Deprecated
+	public Boolean isPoolPreparedStatements(){
 		return getPoolPreparedStatements();
 	}
 
@@ -818,7 +828,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 该连接池的预处理语句池是否生效
 	 */
-	public boolean getPoolPreparedStatements(){
+	public Boolean getPoolPreparedStatements(){
 		return poolPreparedStatements;
 	}
 
@@ -828,7 +838,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param poolPreparedStatements
 	 * 		该连接池的预处理语句池是否生效
 	 */
-	public void setPoolPreparedStatements(boolean poolPreparedStatements){
+	public void setPoolPreparedStatements(Boolean poolPreparedStatements){
 		this.poolPreparedStatements = poolPreparedStatements;
 	}
 
@@ -837,7 +847,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 可以在语句池中同时分配的最大语句数
 	 */
-	public int getMaxOpenPreparedStatements(){
+	public Integer getMaxOpenPreparedStatements(){
 		return maxOpenPreparedStatements;
 	}
 
@@ -847,7 +857,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxOpenPreparedStatements
 	 * 		可以在语句池中同时分配的最大语句数
 	 */
-	public void setMaxOpenPreparedStatements(int maxOpenPreparedStatements){
+	public void setMaxOpenPreparedStatements(Integer maxOpenPreparedStatements){
 		this.maxOpenPreparedStatements = maxOpenPreparedStatements;
 	}
 
@@ -870,15 +880,16 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 		this.evictionPolicyClassName = evictionPolicyClassName;
 	}
 
-	public boolean isClearStatementPoolOnReturn(){
+	@Deprecated
+	public Boolean isClearStatementPoolOnReturn(){
 		return getClearStatementPoolOnReturn();
 	}
 
-	public boolean getClearStatementPoolOnReturn(){
+	public Boolean getClearStatementPoolOnReturn(){
 		return clearStatementPoolOnReturn;
 	}
 
-	public void setClearStatementPoolOnReturn(boolean clearStatementPoolOnReturn){
+	public void setClearStatementPoolOnReturn(Boolean clearStatementPoolOnReturn){
 		this.clearStatementPoolOnReturn = clearStatementPoolOnReturn;
 	}
 
@@ -906,7 +917,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
 	 */
-	public int getNumTestsPerEvictionRun(){
+	public Integer getNumTestsPerEvictionRun(){
 		return numTestsPerEvictionRun;
 	}
 
@@ -916,7 +927,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param numTestsPerEvictionRun
 	 * 		在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
 	 */
-	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun){
+	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun){
 		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
 	}
 
@@ -963,7 +974,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 后进先出
 	 */
-	public boolean isLifo(){
+	@Deprecated
+	public Boolean isLifo(){
 		return getLifo();
 	}
 
@@ -972,7 +984,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 后进先出
 	 */
-	public boolean getLifo(){
+	public Boolean getLifo(){
 		return lifo;
 	}
 
@@ -982,7 +994,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param lifo
 	 * 		后进先出
 	 */
-	public void setLifo(boolean lifo){
+	public void setLifo(Boolean lifo){
 		this.lifo = lifo;
 	}
 
@@ -991,7 +1003,8 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 验证快速失败
 	 */
-	public boolean isFastFailValidation(){
+	@Deprecated
+	public Boolean isFastFailValidation(){
 		return getFastFailValidation();
 	}
 
@@ -1000,7 +1013,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 验证快速失败
 	 */
-	public boolean getFastFailValidation(){
+	public Boolean getFastFailValidation(){
 		return fastFailValidation;
 	}
 
@@ -1010,7 +1023,7 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @param fastFailValidation
 	 * 		验证快速失败
 	 */
-	public void setFastFailValidation(boolean fastFailValidation){
+	public void setFastFailValidation(Boolean fastFailValidation){
 		this.fastFailValidation = fastFailValidation;
 	}
 
@@ -1029,4 +1042,5 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	public void setJmxName(String jmxName){
 		this.jmxName = jmxName;
 	}
+
 }

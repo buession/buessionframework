@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 文件上传表单表单请求体
+ * 文件上传表单请求体
  *
  * @author Yong.Teng
  */

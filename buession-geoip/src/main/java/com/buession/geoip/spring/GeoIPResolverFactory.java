@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
 
 import com.buession.core.utils.Assert;
+import com.buession.geoip.Resolver;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -33,22 +34,50 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
+ * GeoIP {@link Resolver} 工厂
+ *
  * @author Yong.Teng
  */
 public class GeoIPResolverFactory {
 
+	/**
+	 * IP 库文件路径
+	 */
 	private File dbPath;
 
+	/**
+	 * IP 库文件流
+	 */
 	private InputStream stream;
 
+	/**
+	 * IP 库加载模式
+	 */
 	private LoadMode loadMode = LoadMode.STREAM;
 
+	/**
+	 * 是否开启缓存
+	 */
 	private boolean enableCache = true;
 
+	/**
+	 * 返回 IP 库文件路径
+	 *
+	 * @return IP 库文件路径
+	 */
 	public File getDbPath(){
 		return dbPath;
 	}
 
+	/**
+	 * 设置 IP 库文件路径
+	 *
+	 * @param dbPath
+	 * 		IP 库文件 {@link Resource}
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public void setDbPath(Resource dbPath) throws IOException{
 		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 
@@ -56,6 +85,15 @@ public class GeoIPResolverFactory {
 		this.loadMode = LoadMode.FILE;
 	}
 
+	/**
+	 * 设置 IP 库文件路径
+	 *
+	 * @param dbPath
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public void setDbPath(File dbPath) throws IOException{
 		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 
@@ -63,6 +101,15 @@ public class GeoIPResolverFactory {
 		this.loadMode = LoadMode.FILE;
 	}
 
+	/**
+	 * 设置 IP 库文件路径
+	 *
+	 * @param dbPath
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public void setDbPath(Path dbPath) throws IOException{
 		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 
@@ -70,12 +117,26 @@ public class GeoIPResolverFactory {
 		this.loadMode = LoadMode.FILE;
 	}
 
+	/**
+	 * 设置 IP 库文件路径
+	 *
+	 * @param dbPath
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public void setDbPath(String dbPath) throws IOException{
 		Assert.isBlank(dbPath, "Ip database path cloud not be null or empty.");
 
 		setDbPath(new File(dbPath));
 	}
 
+	/**
+	 * 返回 IP 库文件流
+	 *
+	 * @return IP 库文件流
+	 */
 	public InputStream getStream(){
 		if(stream == null){
 			stream = GeoIPResolverFactory.class.getResourceAsStream("/maxmind/City.mmdb");
@@ -84,6 +145,12 @@ public class GeoIPResolverFactory {
 		return stream;
 	}
 
+	/**
+	 * 设置 IP 库文件流
+	 *
+	 * @param stream
+	 * 		IP 库文件流
+	 */
 	public void setStream(InputStream stream){
 		Assert.isNull(stream, "Ip database stream cloud not be null.");
 
@@ -91,22 +158,47 @@ public class GeoIPResolverFactory {
 		this.loadMode = LoadMode.STREAM;
 	}
 
+	/**
+	 * 返回 IP 库加载模式
+	 *
+	 * @return IP 库加载模式
+	 */
 	public LoadMode getLoadMode(){
 		return loadMode;
 	}
 
+	/**
+	 * 返回是否开启缓存
+	 *
+	 * @return 是否开启缓存
+	 */
 	public boolean isEnableCache(){
 		return enableCache;
 	}
 
+	/**
+	 * 设置是否开启缓存
+	 *
+	 * @param enableCache
+	 * 		是否开启缓存
+	 */
 	public void setEnableCache(boolean enableCache){
 		this.enableCache = enableCache;
 	}
 
+	/**
+	 * 加载模式
+	 */
 	protected enum LoadMode {
 
+		/**
+		 * 流模式
+		 */
 		STREAM,
 
+		/**
+		 * 文件模式
+		 */
 		FILE
 
 	}

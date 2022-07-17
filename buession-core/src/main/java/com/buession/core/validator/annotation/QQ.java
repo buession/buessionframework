@@ -52,13 +52,6 @@ public @interface QQ {
 
 	Class<? extends Payload>[] payload() default {};
 
-	/**
-	 * 当值为 null ，是否验证；true：需验证，false：不验证
-	 *
-	 * @return 当值为 null ，是否验证
-	 */
-	boolean whenNull() default true;
-
 	@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
 			ElementType.PARAMETER, ElementType.TYPE_USE})
 	@Retention(RetentionPolicy.RUNTIME)

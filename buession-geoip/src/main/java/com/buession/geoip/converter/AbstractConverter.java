@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -34,19 +34,19 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * 将 maxmind geoip Record 转换为模型实体类抽象类
+ *
+ * @param <M>
+ * 		模型实体类
+ * @param <S>
+ * 		maxmind geoip Record {@link AbstractRecord}
+ * @param <R>
+ * 		maxmind Response {@link AbstractResponse}
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse> implements Converter<M, S, R> {
-
-	@Override
-	public M converter(S s, R response){
-		return converter(s, response, null);
-	}
-
-	@Override
-	public M converter(S s, Locale locale){
-		return converter(s, null, locale);
-	}
+public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse>
+		implements Converter<M, S, R> {
 
 	protected static String getName(final Map<String, String> names, Locale locale){
 		if(Validate.isEmpty(names)){

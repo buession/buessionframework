@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -33,68 +33,69 @@ package com.buession.dao;
  */
 public class Pagination<E> extends com.buession.core.Pagination<E> {
 
-    /**
-     * 偏移量
-     */
-    private Integer offset;
+	/**
+	 * 偏移量
+	 */
+	private Integer offset;
 
-    /**
-     * Constructs with default configuration.
-     */
-    public Pagination(){
-    }
+	/**
+	 * Constructs with default configuration.
+	 */
+	public Pagination(){
+		super();
+	}
 
-    /**
-     * Constructs with page and pagesize.
-     *
-     * @param page
-     *         当前页码
-     * @param pagesize
-     *         每页大小
-     */
-    public Pagination(int page, int pagesize){
-        super(page, pagesize);
-    }
+	/**
+	 * Constructs with page and pagesize.
+	 *
+	 * @param page
+	 * 		当前页码
+	 * @param pagesize
+	 * 		每页大小
+	 */
+	public Pagination(int page, int pagesize){
+		super(page, pagesize);
+	}
 
-    /**
-     * Constructs with page, pagesize and totalRecords.
-     *
-     * @param page
-     *         当前页码
-     * @param pagesize
-     *         每页大小
-     * @param totalRecords
-     *         总记录数
-     */
-    public Pagination(int page, int pagesize, long totalRecords){
-        super(page, pagesize, totalRecords);
-    }
+	/**
+	 * Constructs with page, pagesize and totalRecords.
+	 *
+	 * @param page
+	 * 		当前页码
+	 * @param pagesize
+	 * 		每页大小
+	 * @param totalRecords
+	 * 		总记录数
+	 */
+	public Pagination(int page, int pagesize, long totalRecords){
+		super(page, pagesize, totalRecords);
+	}
 
-    /**
-     * 返回查询偏移量
-     *
-     * @return 查询偏移量
-     */
-    public int getOffset(){
-        if(offset == null){
-            if(getPage() > 1){
-                setOffset((getPage() - 1) * getPagesize());
-            }else{
-                offset = 0;
-            }
-        }
+	/**
+	 * 返回查询偏移量
+	 *
+	 * @return 查询偏移量
+	 */
+	public int getOffset(){
+		if(offset == null){
+			if(getPage() > 1){
+				setOffset((getPage() - 1) * getPagesize());
+			}else{
+				offset = 0;
+			}
+		}
 
-        return offset;
-    }
+		return offset;
+	}
 
-    /**
-     * 设置查询偏移量
-     *
-     * @param offset
-     *         查询偏移量
-     */
-    public void setOffset(int offset){
-        this.offset = offset < 0 ? 0 : offset;
-    }
+	/**
+	 * 设置查询偏移量
+	 *
+	 * @param offset
+	 * 		查询偏移量
+	 */
+	public void setOffset(int offset){
+		this.offset = Math.max(offset, 0);
+	}
 
 }

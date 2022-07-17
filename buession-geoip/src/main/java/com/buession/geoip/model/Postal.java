@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -30,25 +30,51 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * 包含与 IP 地址关联的邮政信息数据。
+ *
  * @author Yong.Teng
  */
 public class Postal implements Serializable {
 
 	private final static long serialVersionUID = -570124317632308660L;
 
+	/**
+	 * 邮政编码
+	 */
 	private final String code;
 
+	/**
+	 * The confidence for Postal Code
+	 */
 	private final Integer confidence;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param code
+	 * 		邮政编码
+	 * @param confidence
+	 * 		The confidence for Postal Code
+	 */
 	public Postal(final String code, final Integer confidence){
 		this.code = code;
 		this.confidence = confidence;
 	}
 
+	/**
+	 * 返回邮政编码
+	 *
+	 * @return 邮政编码
+	 */
 	public String getCode(){
 		return code;
 	}
 
+	/**
+	 * Return the confidence for Postal Code
+	 *
+	 * @return The confidence for Postal Code
+	 */
 	public Integer getConfidence(){
 		return confidence;
 	}

@@ -49,40 +49,40 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 从连接池获取连接时最大等待时间
 	 */
-	private Duration connectionTimeout = Duration.ofMillis(30000L);
+	private Duration connectionTimeout;
 
 	/**
 	 * 连接允许在池中闲置的最长时间，仅适用于 minimumIdle 定义为小于 maximumPoolSize，值为 0 时空闲连接永远不会从池中删除
 	 */
-	private Duration idleTimeout = Duration.ofMillis(10000L);
+	private Duration idleTimeout;
 
 	/**
 	 * 控制在记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
 	 */
-	private long leakDetectionThreshold;
+	private Long leakDetectionThreshold;
 
 	/**
 	 * 池中连接的最大生存期，值为 0 时表示无限寿命, 推荐设置的比数据库的 wait_timeout 小几秒到几分钟
 	 */
-	private Duration maxLifetime = Duration.ofMillis(10000L);
+	private Duration maxLifetime;
 
 	/**
 	 * 连接存活时间，值必须小于 maxLifetime 值
 	 * 只会发生在空闲的连接上，当对一个给定的连接进行 "keepalive "的时间到了，该连接将从池中移除
 	 */
-	private Duration keepaliveTime = Duration.ofMillis(0L);
+	private Duration keepaliveTime;
 
 	/**
 	 * 最小空闲连接数量
 	 */
-	private int minIdle = -1;
+	private Integer minIdle;
 
 	/**
 	 * 连接池中可以保留连接的最大数
 	 */
-	private int maxPoolSize = -1;
+	private Integer maxPoolSize;
 
-	private Duration initializationFailTimeout = Duration.ofMillis(1000L);
+	private Duration initializationFailTimeout;
 
 	/**
 	 * 设置一个SQL语句，在将每个新连接创建后，将其添加到池中之前执行该语句
@@ -98,7 +98,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 检测连接是否有效的超时时间
 	 */
-	private Duration validationTimeout = Duration.ofMillis(5000L);
+	private Duration validationTimeout;
 
 	/**
 	 * 用户定义连接池的名称，主要出现在日志记录和 JMX 管理控制台中以识别池和池配置
@@ -118,24 +118,24 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 是否自动提交事务
 	 */
-	private boolean isAutoCommit = true;
+	private Boolean autoCommit;
 
 	/**
 	 * 连接是否是只读模式
 	 */
-	private boolean isReadOnly;
+	private Boolean readOnly;
 
-	private boolean isIsolateInternalQueries;
+	private Boolean isolateInternalQueries;
 
 	/**
 	 * 是否自动注册 JMX 相关的 bean
 	 */
-	private boolean isRegisterMbeans;
+	private Boolean registerMbeans;
 
 	/**
 	 * 是否允许JMX 将连接池挂起
 	 */
-	private boolean isAllowPoolSuspension;
+	private Boolean allowPoolSuspension;
 
 	/**
 	 * 线程工厂
@@ -219,7 +219,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 记录消息之前连接可能离开池的时间量
 	 */
-	public long getLeakDetectionThreshold(){
+	public Long getLeakDetectionThreshold(){
 		return leakDetectionThreshold;
 	}
 
@@ -229,7 +229,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param leakDetectionThreshold
 	 * 		记录消息之前连接可能离开池的时间量
 	 */
-	public void setLeakDetectionThreshold(long leakDetectionThreshold){
+	public void setLeakDetectionThreshold(Long leakDetectionThreshold){
 		this.leakDetectionThreshold = leakDetectionThreshold;
 	}
 
@@ -276,7 +276,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最小空闲连接数量
 	 */
-	public int getMinIdle(){
+	public Integer getMinIdle(){
 		return minIdle;
 	}
 
@@ -286,7 +286,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param minIdle
 	 * 		最小空闲连接数量
 	 */
-	public void setMinIdle(int minIdle){
+	public void setMinIdle(Integer minIdle){
 		this.minIdle = minIdle;
 	}
 
@@ -295,7 +295,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接池中可以保留连接的最大数
 	 */
-	public int getMaxPoolSize(){
+	public Integer getMaxPoolSize(){
 		return maxPoolSize;
 	}
 
@@ -305,7 +305,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxPoolSize
 	 * 		连接池中可以保留连接的最大数
 	 */
-	public void setMaxPoolSize(int maxPoolSize){
+	public void setMaxPoolSize(Integer maxPoolSize){
 		this.maxPoolSize = maxPoolSize;
 	}
 
@@ -365,7 +365,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 设置检测连接是否有效的超时时间，不能大于 {@link connectionTimeout}
+	 * 设置检测连接是否有效的超时时间，不能大于 {@link #connectionTimeout}
 	 *
 	 * @param validationTimeout
 	 * 		检测连接是否有效的超时时间
@@ -436,7 +436,8 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动提交事务
 	 */
-	public boolean isAutoCommit(){
+	@Deprecated
+	public Boolean isAutoCommit(){
 		return getAutoCommit();
 	}
 
@@ -445,18 +446,18 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动提交事务
 	 */
-	public boolean getAutoCommit(){
-		return isAutoCommit;
+	public Boolean getAutoCommit(){
+		return autoCommit;
 	}
 
 	/**
 	 * 设置是否自动提交事务
 	 *
-	 * @param isAutoCommit
+	 * @param autoCommit
 	 * 		是否自动提交事务
 	 */
-	public void setAutoCommit(boolean isAutoCommit){
-		this.isAutoCommit = isAutoCommit;
+	public void setAutoCommit(Boolean autoCommit){
+		this.autoCommit = autoCommit;
 	}
 
 	/**
@@ -464,7 +465,8 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接是否是只读模式
 	 */
-	public boolean isReadOnly(){
+	@Deprecated
+	public Boolean isReadOnly(){
 		return getReadOnly();
 	}
 
@@ -473,26 +475,31 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接是否是只读模式
 	 */
-	public boolean getReadOnly(){
-		return isReadOnly;
+	public Boolean getReadOnly(){
+		return readOnly;
 	}
 
 	/**
 	 * 设置连接是否是只读模式
 	 *
-	 * @param isReadOnly
+	 * @param readOnly
 	 * 		连接是否是只读模式
 	 */
-	public void setReadOnly(boolean isReadOnly){
-		this.isReadOnly = isReadOnly;
+	public void setReadOnly(Boolean readOnly){
+		this.readOnly = readOnly;
 	}
 
-	public boolean isIsolateInternalQueries(){
-		return isIsolateInternalQueries;
+	@Deprecated
+	public Boolean isIsolateInternalQueries(){
+		return getIsolateInternalQueries();
 	}
 
-	public void setIsolateInternalQueries(boolean isIsolateInternalQueries){
-		this.isIsolateInternalQueries = isIsolateInternalQueries;
+	public Boolean getIsolateInternalQueries(){
+		return isolateInternalQueries;
+	}
+
+	public void setIsolateInternalQueries(Boolean isolateInternalQueries){
+		this.isolateInternalQueries = isolateInternalQueries;
 	}
 
 	/**
@@ -500,18 +507,28 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动注册 JMX 相关的 bean
 	 */
-	public boolean isRegisterMbeans(){
-		return isRegisterMbeans;
+	@Deprecated
+	public Boolean isRegisterMbeans(){
+		return getRegisterMbeans();
+	}
+
+	/**
+	 * 返回是否自动注册 JMX 相关的 bean
+	 *
+	 * @return 是否自动注册 JMX 相关的 bean
+	 */
+	public Boolean getRegisterMbeans(){
+		return registerMbeans;
 	}
 
 	/**
 	 * 设置是否自动注册 JMX 相关的 bean
 	 *
-	 * @param isRegisterMbeans
+	 * @param registerMbeans
 	 * 		是否自动注册 JMX 相关的 bean
 	 */
-	public void setRegisterMbeans(boolean isRegisterMbeans){
-		this.isRegisterMbeans = isRegisterMbeans;
+	public void setRegisterMbeans(Boolean registerMbeans){
+		this.registerMbeans = registerMbeans;
 	}
 
 	/**
@@ -519,18 +536,28 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否允许JMX 将连接池挂起
 	 */
-	public boolean isAllowPoolSuspension(){
-		return isAllowPoolSuspension;
+	@Deprecated
+	public Boolean isAllowPoolSuspension(){
+		return getAllowPoolSuspension();
+	}
+
+	/**
+	 * 返回是否允许JMX 将连接池挂起
+	 *
+	 * @return 是否允许JMX 将连接池挂起
+	 */
+	public Boolean getAllowPoolSuspension(){
+		return allowPoolSuspension;
 	}
 
 	/**
 	 * 设置是否允许JMX 将连接池挂起
 	 *
-	 * @param isAllowPoolSuspension
+	 * @param allowPoolSuspension
 	 * 		是否允许JMX 将连接池挂起
 	 */
-	public void setAllowPoolSuspension(boolean isAllowPoolSuspension){
-		this.isAllowPoolSuspension = isAllowPoolSuspension;
+	public void setAllowPoolSuspension(Boolean allowPoolSuspension){
+		this.allowPoolSuspension = allowPoolSuspension;
 	}
 
 	/**
@@ -602,4 +629,5 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	public void setHealthCheckProperties(Properties healthCheckProperties){
 		this.healthCheckProperties = healthCheckProperties;
 	}
+
 }

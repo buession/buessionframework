@@ -22,37 +22,19 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.core.datetime;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.StreamConsumerFull;
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.StreamGroupFull;
-import redis.clients.jedis.resps.StreamGroupFullInfo;
-
-import java.util.List;
+import org.junit.Test;
 
 /**
- * jedis {@link StreamGroupFullInfo} 转换为 {@link StreamGroupFull}
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.0.1
  */
-public class StreamGroupFullInfoConverter implements Converter<StreamGroupFullInfo, StreamGroupFull> {
+public class DateTimeTest {
 
-	public final static StreamGroupFullInfoConverter INSTANCE = new StreamGroupFullInfoConverter();
-
-	public final static ListConverter<StreamGroupFullInfo, StreamGroupFull> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
-
-	@Override
-	public StreamGroupFull convert(final StreamGroupFullInfo source){
-		final List<StreamConsumerFull> consumers = StreamConsumerFullInfoConverter.LIST_CONVERTER.convert(
-				source.getConsumers());
-		final StreamEntryId lastDeliveredId = StreamEntryIDConverter.INSTANCE.convert(source.getLastDeliveredId());
-		return new StreamGroupFull(source.getName(), consumers, source.getPending(), source.getPelCount(),
-				lastDeliveredId, source.getGroupFullInfo());
+	@Test
+	public void test(){
+		System.out.println(DateTime.microtime());
 	}
 
 }

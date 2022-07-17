@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -41,6 +41,9 @@ public class Configuration {
 	 */
 	private int maxPerRoute = 500;
 
+	/**
+	 * 空闲连接存活时长，单位：毫秒
+	 */
 	private int idleConnectionTime = 60 * 1000;
 
 	/**
@@ -63,8 +66,14 @@ public class Configuration {
 	 */
 	private Boolean allowRedirects;
 
+	/**
+	 * 是否应拒绝相对重定向
+	 */
 	private Boolean relativeRedirectsAllowed;
 
+	/**
+	 * 是否允许循环重定向
+	 */
 	private Boolean circularRedirectsAllowed;
 
 	/**
@@ -82,6 +91,9 @@ public class Configuration {
 	 */
 	private boolean contentCompressionEnabled;
 
+	/**
+	 * 是否标准化 URI
+	 */
 	private boolean normalizeUri;
 
 	/**
@@ -123,19 +135,19 @@ public class Configuration {
 	}
 
 	/**
-	 * 获取 IDLE 连接超时，单位：毫秒
+	 * 获取空闲连接存活时长，单位：毫秒
 	 *
-	 * @return IDLE 连接超时
+	 * @return 空闲连接存活时长
 	 */
 	public int getIdleConnectionTime(){
 		return idleConnectionTime;
 	}
 
 	/**
-	 * 设置 IDLE 连接超时
+	 * 设置空闲连接存活时长
 	 *
 	 * @param idleConnectionTime
-	 * 		IDLE 连接超时，单位：毫秒
+	 * 		空闲连接存活时长，单位：毫秒
 	 */
 	public void setIdleConnectionTime(int idleConnectionTime){
 		this.idleConnectionTime = idleConnectionTime;
@@ -226,26 +238,58 @@ public class Configuration {
 		this.allowRedirects = allowRedirects;
 	}
 
+	/**
+	 * 返回是否应拒绝相对重定向
+	 *
+	 * @return 是否应拒绝相对重定向
+	 */
 	public Boolean isRelativeRedirectsAllowed(){
 		return getRelativeRedirectsAllowed();
 	}
 
+	/**
+	 * 返回是否应拒绝相对重定向
+	 *
+	 * @return 是否应拒绝相对重定向
+	 */
 	public Boolean getRelativeRedirectsAllowed(){
 		return relativeRedirectsAllowed;
 	}
 
+	/**
+	 * 设置是否应拒绝相对重定向
+	 *
+	 * @param relativeRedirectsAllowed
+	 * 		是否应拒绝相对重定向
+	 */
 	public void setRelativeRedirectsAllowed(Boolean relativeRedirectsAllowed){
 		this.relativeRedirectsAllowed = relativeRedirectsAllowed;
 	}
 
+	/**
+	 * 返回是否允许循环重定向
+	 *
+	 * @return 是否允许循环重定向
+	 */
 	public Boolean isCircularRedirectsAllowed(){
 		return getCircularRedirectsAllowed();
 	}
 
+	/**
+	 * 返回是否允许循环重定向
+	 *
+	 * @return 是否允许循环重定向
+	 */
 	public Boolean getCircularRedirectsAllowed(){
 		return circularRedirectsAllowed;
 	}
 
+	/**
+	 * 设置是否允许循环重定向
+	 *
+	 * @param circularRedirectsAllowed
+	 * 		是否允许循环重定向
+	 */
 	public void setCircularRedirectsAllowed(Boolean circularRedirectsAllowed){
 		this.circularRedirectsAllowed = circularRedirectsAllowed;
 	}
@@ -325,15 +369,32 @@ public class Configuration {
 		this.contentCompressionEnabled = contentCompressionEnabled;
 	}
 
+	/**
+	 * 返回是否标准化 URI
+	 *
+	 * @return 是否标准化 URI
+	 */
 	public boolean isNormalizeUri(){
 		return getNormalizeUri();
 	}
 
+	/**
+	 * 返回是否标准化 URI
+	 *
+	 * @return 是否标准化 URI
+	 */
 	public boolean getNormalizeUri(){
 		return normalizeUri;
 	}
 
+	/**
+	 * 设置是否标准化 URI
+	 *
+	 * @param normalizeUri
+	 * 		是否标准化 URI
+	 */
 	public void setNormalizeUri(boolean normalizeUri){
 		this.normalizeUri = normalizeUri;
 	}
+
 }

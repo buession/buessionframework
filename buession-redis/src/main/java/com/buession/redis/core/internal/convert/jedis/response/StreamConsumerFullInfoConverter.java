@@ -29,6 +29,9 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamConsumerFull;
 import redis.clients.jedis.resps.StreamConsumerFullInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * jedis {@link StreamConsumerFullInfo} 转换为 {@link StreamConsumerFull}
  *
@@ -44,7 +47,17 @@ public class StreamConsumerFullInfoConverter implements Converter<StreamConsumer
 
 	@Override
 	public StreamConsumerFull convert(final StreamConsumerFullInfo source){
-		return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), source.getPending(),
+		final List<Long> pendings = new ArrayList<>();
+
+		if(source.getPending() != null){
+			for(List<Object> pending : source.getPending()){
+				for(Object item : pending){
+					pendings.add((Long) item);
+				}
+			}
+		}
+
+		return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), pendings,
 				source.getConsumerInfo());
 	}
 

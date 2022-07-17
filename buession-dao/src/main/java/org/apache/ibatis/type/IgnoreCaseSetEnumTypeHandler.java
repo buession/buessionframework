@@ -33,7 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * 忽略大小写 Enum 型 Set {@link TypeHandler} 基类，将值忽略大小写转换为枚举字段作为 Set 的元素
+ * 忽略大小写 Enum 型 Set {@link TypeHandler}，将值忽略大小写转换为枚举字段作为 Set 的元素
  *
  * @param <E>
  * 		枚举类型

@@ -33,38 +33,120 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
+ * 缓存 Maxmind Geoip 解析器
+ *
  * @author Yong.Teng
  */
 public class CacheDatabaseResolver extends DatabaseResolver {
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final String database) throws IOException{
 		super(database, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final String database, final Reader.FileMode fileMode) throws IOException{
 		super(database, fileMode, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final File database) throws IOException{
 		super(database, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
 		super(database, fileMode, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final Path database) throws IOException{
 		super(database, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final Path database, final Reader.FileMode fileMode) throws IOException{
 		super(database, fileMode, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final InputStream source) throws IOException{
 		super(source, new CHMCache());
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 */
 	public CacheDatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
 		super(source, fileMode, new CHMCache());
 	}

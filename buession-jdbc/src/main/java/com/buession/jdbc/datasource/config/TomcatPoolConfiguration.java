@@ -50,27 +50,27 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 初始化时建立连接的个数
 	 */
-	private int initialSize = 10;
+	private Integer initialSize;
 
 	/**
 	 * 最大连接池数量
 	 */
-	private int maxActive = PoolProperties.DEFAULT_MAX_ACTIVE;
+	private Integer maxActive;
 
 	/**
 	 * 最小空闲连接数
 	 */
-	private int minIdle = initialSize;
+	private Integer minIdle;
 
 	/**
 	 * 最大空闲连接数
 	 */
-	private int maxIdle = maxActive;
+	private Integer maxIdle;
 
 	/**
 	 * 获取连接时最大等待时间，-1 表示不限制
 	 */
-	private Duration maxWait = Duration.ofMillis(30000L);
+	private Duration maxWait;
 
 	/**
 	 * 以毫秒为单位的时间，以重新建立连接。
@@ -81,7 +81,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * 设置 maxAge 为小于该值 timeBetweenEvictionRunsMillis 将覆盖它（因此，空闲连接验证/清除将更频繁地运行）。
 	 * 默认值为0，这意味着连接将保持打开状态，并且从池中借用，将连接返回到池中或检查空闲连接时都不会进行年龄检查
 	 */
-	private long maxAge = 0L;
+	private Long maxAge;
 
 	/**
 	 * 设置一个SQL语句，在将每个新连接创建后，将其添加到池中之前执行该语句
@@ -96,12 +96,12 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 验证连接时间间隔
 	 */
-	private Duration validationInterval = Duration.ofMillis(3000L);
+	private Duration validationInterval;
 
 	/**
 	 * 验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 */
-	private Duration validationQueryTimeout = Duration.ofMillis(-1L);
+	private Duration validationQueryTimeout;
 
 	/**
 	 * 实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证
@@ -111,41 +111,41 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 将此属性设置为true可以在验证阶段将错误记录到日志文件中
 	 */
-	private boolean logValidationErrors = false;
+	private Boolean logValidationErrors;
 
 	/**
 	 * 创建连接时测试连接的有效性
 	 */
-	private boolean testOnConnect = false;
+	private Boolean testOnConnect;
 
 	/**
 	 * 从连接池获取一个连接时，验证有效性；
 	 * 指明在从池中租借对象时是否要进行验证有效，如果对象验证失败，则对象将从池子释放，然后我们将尝试租借另一个
 	 */
-	private boolean testOnBorrow = false;
+	private Boolean testOnBorrow;
 
 	/**
 	 * 连接被归还到连接池时，验证有效性
 	 */
-	private boolean testOnReturn = false;
+	private Boolean testOnReturn;
 
 	/**
 	 * 连接空闲时，验证有效性；
 	 * 指明对象是否需要通过对象驱逐者进行校验（如果有的话），假如一个对象验证失败，则对象将被从池中释放
 	 */
-	private boolean testWhileIdle = false;
+	private Boolean testWhileIdle;
 
 	/**
 	 * 空闲连接验证/清除线程的运行之间休眠时间
 	 */
-	private Duration timeBetweenEvictionRuns = Duration.ofMillis(5000L);
+	private Duration timeBetweenEvictionRuns;
 
-	private int numTestsPerEvictionRun;
+	private Integer numTestsPerEvictionRun;
 
 	/**
 	 * 个对象在有资格被驱逐之前可以在池中空闲的最短时间
 	 */
-	private Duration minEvictableIdleTime = Duration.ofMillis(60000L);
+	private Duration minEvictableIdleTime;
 
 	/**
 	 * 默认事务隔离级别
@@ -160,12 +160,12 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 连接归还到池时，设置为自动提交
 	 */
-	private boolean commitOnReturn = true;
+	private Boolean commitOnReturn;
 
 	/**
 	 * 连接归还到池时，是否回滚所有操作
 	 */
-	private boolean rollbackOnReturn = true;
+	private Boolean rollbackOnReturn;
 
 	/**
 	 * 默认连接是否是只读模式
@@ -176,25 +176,25 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * 是否移除抛弃的（abandoned）连接，一个连接使用超过了 removeAbandonedTimeout 上限就被视为抛弃的，
 	 * 开启该开关可以恢复那些应用没有关闭的连接
 	 */
-	private boolean removeAbandoned = false;
+	private Boolean removeAbandoned;
 
 	/**
 	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	private Duration removeAbandonedTimeout = Duration.ofMillis(6000L);
+	private Duration removeAbandonedTimeout;
 
 	/**
 	 * 记录抛弃连接的应用的堆栈信息；
 	 * 会增加系统开销，因为为了能够在可能发生的连接被抛弃时记录堆栈 ，应用每次获取连接时都需要生成堆栈信息
 	 */
-	private boolean logAbandoned = false;
+	private Boolean logAbandoned;
 
 	/**
 	 * 除非正在使用的连接数超过定义的百分比，
 	 * 否则已放弃（超时）的连接不会关闭并报告 abandonWhenPercentageFull；
 	 * 该值应介于0到100之间。默认值为0，这表示一旦 removeAbandonedTimeout 达到连接就可以关闭连接
 	 */
-	private int abandonWhenPercentageFull = 0;
+	private Integer abandonWhenPercentageFull;
 
 	/**
 	 * 与 removeAbandonedTimeout 值类似，但是不是将连接视为已放弃并可能关，而是将警告（如果 logAbandoned 设置为 true）记录下来。
@@ -203,7 +203,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	private Duration suspectTimeout = Duration.ofMillis(0L);
 
-	private boolean alternateUsernameAllowed = false;
+	private Boolean alternateUsernameAllowed;
 
 	/**
 	 * JDBC 拦截器，{@link org.apache.tomcat.jdbc.pool.JdbcInterceptor} 的实现
@@ -213,11 +213,11 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 标记初始化池时是否忽略连接创建错误；如果要在初始化池时忽略连接创建错误，请设置为true
 	 */
-	private boolean ignoreExceptionOnPreLoad = false;
+	private Boolean ignoreExceptionOnPreLoad;
 
-	private boolean useEquals = true;
+	private Boolean useEquals;
 
-	private boolean useLock = false;
+	private Boolean useLock;
 
 	/**
 	 * 如果希望以真正的 FIFO 方式公平对待对 getConnection 的调用，则设置为true。
@@ -228,30 +228,30 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * 如果系统在 Linux 上运行（属性 os.name=Linux）要禁用此Linux特定行为并仍使用公平队列，只需 org.apache.tomcat
 	 * .jdbc.pool.FairBlockingQueue.ignoreOS=true 在加载连接池类之前将该属性添加到系统属性中即可
 	 */
-	private boolean fairQueue = true;
+	private Boolean fairQueue;
 
 	/**
 	 * 如果希望在连接上放置外观，则将其设置为true；
 	 * 以使其在关闭后无法重复使用；这样可以防止线程保留已调用的已关闭连接的引用，以对其执行查询
 	 */
-	private boolean useDisposableConnectionFacade = true;
+	private Boolean useDisposableConnectionFacade;
 
 	/**
 	 * 将此值设置为true可以传播已被中断的线程的中断状态（不清除中断状态）
 	 */
-	private boolean propagateInterruptState = false;
+	private Boolean propagateInterruptState;
 
 	/**
 	 * 如果希望包装语句以便启用，equals()并且hashCode()在设置了任何语句代理的情况下在关闭的语句上调用方法，请将其设置为true
 	 */
-	private boolean useStatementFacade = true;
+	private Boolean useStatementFacade;
 
-	private boolean accessToUnderlyingConnectionAllowed = true;
+	private Boolean accessToUnderlyingConnectionAllowed;
 
 	/**
 	 * 是否启用 JMX
 	 */
-	private boolean jmxEnabled = true;
+	private Boolean jmxEnabled;
 
 	/**
 	 * 返回连接池名称
@@ -296,7 +296,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 初始连接数
 	 */
-	public int getInitialSize(){
+	public Integer getInitialSize(){
 		return initialSize;
 	}
 
@@ -306,7 +306,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param initialSize
 	 * 		初始连接数
 	 */
-	public void setInitialSize(int initialSize){
+	public void setInitialSize(Integer initialSize){
 		this.initialSize = initialSize;
 	}
 
@@ -315,7 +315,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大连接池数量
 	 */
-	public int getMaxActive(){
+	public Integer getMaxActive(){
 		return maxActive;
 	}
 
@@ -325,7 +325,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxActive
 	 * 		最大连接池数量
 	 */
-	public void setMaxActive(int maxActive){
+	public void setMaxActive(Integer maxActive){
 		this.maxActive = maxActive;
 	}
 
@@ -334,7 +334,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最小空闲连接数
 	 */
-	public int getMinIdle(){
+	public Integer getMinIdle(){
 		return minIdle;
 	}
 
@@ -344,7 +344,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param minIdle
 	 * 		最小空闲连接数
 	 */
-	public void setMinIdle(int minIdle){
+	public void setMinIdle(Integer minIdle){
 		this.minIdle = minIdle;
 	}
 
@@ -353,7 +353,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大空闲连接数
 	 */
-	public int getMaxIdle(){
+	public Integer getMaxIdle(){
 		return maxIdle;
 	}
 
@@ -363,7 +363,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxIdle
 	 * 		最大空闲连接数
 	 */
-	public void setMaxIdle(int maxIdle){
+	public void setMaxIdle(Integer maxIdle){
 		this.maxIdle = maxIdle;
 	}
 
@@ -386,11 +386,11 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 		this.maxWait = maxWait;
 	}
 
-	public long getMaxAge(){
+	public Long getMaxAge(){
 		return maxAge;
 	}
 
-	public void setMaxAge(long maxAge){
+	public void setMaxAge(Long maxAge){
 		this.maxAge = maxAge;
 	}
 
@@ -494,7 +494,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 验证阶段将错误记录到日志文件中
 	 */
-	public boolean isLogValidationErrors(){
+	@Deprecated
+	public Boolean isLogValidationErrors(){
 		return getLogValidationErrors();
 	}
 
@@ -503,7 +504,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 验证阶段将错误记录到日志文件中
 	 */
-	public boolean getLogValidationErrors(){
+	public Boolean getLogValidationErrors(){
 		return logValidationErrors;
 	}
 
@@ -513,7 +514,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param logValidationErrors
 	 * 		验证阶段将错误记录到日志文件中
 	 */
-	public void setLogValidationErrors(boolean logValidationErrors){
+	public void setLogValidationErrors(Boolean logValidationErrors){
 		this.logValidationErrors = logValidationErrors;
 	}
 
@@ -522,7 +523,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 创建连接时是否测试连接的有效性
 	 */
-	public boolean isTestOnConnect(){
+	@Deprecated
+	public Boolean isTestOnConnect(){
 		return getTestOnConnect();
 	}
 
@@ -531,7 +533,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 创建连接时是否测试连接的有效性
 	 */
-	public boolean getTestOnConnect(){
+	public Boolean getTestOnConnect(){
 		return testOnConnect;
 	}
 
@@ -541,7 +543,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnConnect
 	 * 		创建连接时是否测试连接的有效性
 	 */
-	public void setTestOnConnect(boolean testOnConnect){
+	public void setTestOnConnect(Boolean testOnConnect){
 		this.testOnConnect = testOnConnect;
 	}
 
@@ -550,7 +552,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
-	public boolean isTestOnBorrow(){
+	@Deprecated
+	public Boolean isTestOnBorrow(){
 		return getTestOnBorrow();
 	}
 
@@ -559,7 +562,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
-	public boolean getTestOnBorrow(){
+	public Boolean getTestOnBorrow(){
 		return testOnBorrow;
 	}
 
@@ -569,7 +572,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnBorrow
 	 * 		从连接池获取一个连接时，是否验证有效性
 	 */
-	public void setTestOnBorrow(boolean testOnBorrow){
+	public void setTestOnBorrow(Boolean testOnBorrow){
 		this.testOnBorrow = testOnBorrow;
 	}
 
@@ -578,7 +581,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接被归还到连接池时，是否验证有效性
 	 */
-	public boolean isTestOnReturn(){
+	@Deprecated
+	public Boolean isTestOnReturn(){
 		return getTestOnReturn();
 	}
 
@@ -587,7 +591,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接被归还到连接池时，是否验证有效性
 	 */
-	public boolean getTestOnReturn(){
+	public Boolean getTestOnReturn(){
 		return testOnReturn;
 	}
 
@@ -597,7 +601,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testOnReturn
 	 * 		连接被归还到连接池时，是否验证有效性
 	 */
-	public void setTestOnReturn(boolean testOnReturn){
+	@Deprecated
+	public void setTestOnReturn(Boolean testOnReturn){
 		this.testOnReturn = testOnReturn;
 	}
 
@@ -606,7 +611,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接空闲时，是否验证有效性
 	 */
-	public boolean isTestWhileIdle(){
+	@Deprecated
+	public Boolean isTestWhileIdle(){
 		return getTestWhileIdle();
 	}
 
@@ -615,7 +621,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接空闲时，是否验证有效性
 	 */
-	public boolean getTestWhileIdle(){
+	public Boolean getTestWhileIdle(){
 		return testWhileIdle;
 	}
 
@@ -625,7 +631,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param testWhileIdle
 	 * 		连接空闲时，是否验证有效性
 	 */
-	public void setTestWhileIdle(boolean testWhileIdle){
+	public void setTestWhileIdle(Boolean testWhileIdle){
 		this.testWhileIdle = testWhileIdle;
 	}
 
@@ -648,11 +654,11 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
-	public int getNumTestsPerEvictionRun(){
+	public Integer getNumTestsPerEvictionRun(){
 		return numTestsPerEvictionRun;
 	}
 
-	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun){
+	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun){
 		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
 	}
 
@@ -699,7 +705,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，设置为自动提交
 	 */
-	public boolean isCommitOnReturn(){
+	@Deprecated
+	public Boolean isCommitOnReturn(){
 		return getCommitOnReturn();
 	}
 
@@ -708,7 +715,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，设置为自动提交
 	 */
-	public boolean getCommitOnReturn(){
+	public Boolean getCommitOnReturn(){
 		return commitOnReturn;
 	}
 
@@ -718,7 +725,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param commitOnReturn
 	 * 		连接归还到池时，是否自动提交
 	 */
-	public void setCommitOnReturn(boolean commitOnReturn){
+	public void setCommitOnReturn(Boolean commitOnReturn){
 		this.commitOnReturn = commitOnReturn;
 	}
 
@@ -727,7 +734,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，是否回滚所有操作
 	 */
-	public boolean isRollbackOnReturn(){
+	@Deprecated
+	public Boolean isRollbackOnReturn(){
 		return getRollbackOnReturn();
 	}
 
@@ -736,7 +744,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接归还到池时，是否回滚所有操作
 	 */
-	public boolean getRollbackOnReturn(){
+	public Boolean getRollbackOnReturn(){
 		return rollbackOnReturn;
 	}
 
@@ -746,7 +754,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param rollbackOnReturn
 	 * 		连接归还到池时，是否回滚所有操作
 	 */
-	public void setRollbackOnReturn(boolean rollbackOnReturn){
+	public void setRollbackOnReturn(Boolean rollbackOnReturn){
 		this.rollbackOnReturn = rollbackOnReturn;
 	}
 
@@ -755,6 +763,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否自动提交事务
 	 */
+	@Deprecated
 	public Boolean isDefaultAutoCommit(){
 		return getDefaultAutoCommit();
 	}
@@ -783,6 +792,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接是否是只读模式
 	 */
+	@Deprecated
 	public Boolean isDefaultReadOnly(){
 		return getDefaultReadOnly();
 	}
@@ -811,7 +821,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否移除抛弃的（abandoned）连接
 	 */
-	public boolean isRemoveAbandoned(){
+	@Deprecated
+	public Boolean isRemoveAbandoned(){
 		return getRemoveAbandoned();
 	}
 
@@ -820,7 +831,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否移除抛弃的（abandoned）连接
 	 */
-	public boolean getRemoveAbandoned(){
+	public Boolean getRemoveAbandoned(){
 		return removeAbandoned;
 	}
 
@@ -830,7 +841,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param removeAbandoned
 	 * 		是否移除抛弃的（abandoned）连接
 	 */
-	public void setRemoveAbandoned(boolean removeAbandoned){
+	public void setRemoveAbandoned(Boolean removeAbandoned){
 		this.removeAbandoned = removeAbandoned;
 	}
 
@@ -858,7 +869,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否记录抛弃连接的应用的堆栈信息
 	 */
-	public boolean isLogAbandoned(){
+	@Deprecated
+	public Boolean isLogAbandoned(){
 		return getLogAbandoned();
 	}
 
@@ -867,7 +879,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否记录抛弃连接的应用的堆栈信息
 	 */
-	public boolean getLogAbandoned(){
+	public Boolean getLogAbandoned(){
 		return logAbandoned;
 	}
 
@@ -877,7 +889,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param logAbandoned
 	 * 		是否记录抛弃连接的应用的堆栈信息
 	 */
-	public void setLogAbandoned(boolean logAbandoned){
+	public void setLogAbandoned(Boolean logAbandoned){
 		this.logAbandoned = logAbandoned;
 	}
 
@@ -886,7 +898,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 正在使用的连接数超过定义的百分比
 	 */
-	public int getAbandonWhenPercentageFull(){
+	public Integer getAbandonWhenPercentageFull(){
 		return abandonWhenPercentageFull;
 	}
 
@@ -896,7 +908,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param abandonWhenPercentageFull
 	 * 		正在使用的连接数超过定义的百分比
 	 */
-	public void setAbandonWhenPercentageFull(int abandonWhenPercentageFull){
+	public void setAbandonWhenPercentageFull(Integer abandonWhenPercentageFull){
 		this.abandonWhenPercentageFull = abandonWhenPercentageFull;
 	}
 
@@ -919,15 +931,16 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 		this.suspectTimeout = suspectTimeout;
 	}
 
-	public boolean isAlternateUsernameAllowed(){
+	@Deprecated
+	public Boolean isAlternateUsernameAllowed(){
 		return getAlternateUsernameAllowed();
 	}
 
-	public boolean getAlternateUsernameAllowed(){
+	public Boolean getAlternateUsernameAllowed(){
 		return alternateUsernameAllowed;
 	}
 
-	public void setAlternateUsernameAllowed(boolean alternateUsernameAllowed){
+	public void setAlternateUsernameAllowed(Boolean alternateUsernameAllowed){
 		this.alternateUsernameAllowed = alternateUsernameAllowed;
 	}
 
@@ -955,7 +968,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 初始化池时是否忽略连接创建错误
 	 */
-	public boolean isIgnoreExceptionOnPreLoad(){
+	@Deprecated
+	public Boolean isIgnoreExceptionOnPreLoad(){
 		return getIgnoreExceptionOnPreLoad();
 	}
 
@@ -964,7 +978,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 初始化池时是否忽略连接创建错误
 	 */
-	public boolean getIgnoreExceptionOnPreLoad(){
+	public Boolean getIgnoreExceptionOnPreLoad(){
 		return ignoreExceptionOnPreLoad;
 	}
 
@@ -974,31 +988,33 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param ignoreExceptionOnPreLoad
 	 * 		初始化池时是否忽略连接创建错误
 	 */
-	public void setIgnoreExceptionOnPreLoad(boolean ignoreExceptionOnPreLoad){
+	public void setIgnoreExceptionOnPreLoad(Boolean ignoreExceptionOnPreLoad){
 		this.ignoreExceptionOnPreLoad = ignoreExceptionOnPreLoad;
 	}
 
-	public boolean isUseEquals(){
+	@Deprecated
+	public Boolean isUseEquals(){
 		return getUseEquals();
 	}
 
-	public boolean getUseEquals(){
+	public Boolean getUseEquals(){
 		return useEquals;
 	}
 
-	public void setUseEquals(boolean useEquals){
+	public void setUseEquals(Boolean useEquals){
 		this.useEquals = useEquals;
 	}
 
-	public boolean isUseLock(){
+	@Deprecated
+	public Boolean isUseLock(){
 		return getUseLock();
 	}
 
-	public boolean getUseLock(){
+	public Boolean getUseLock(){
 		return useLock;
 	}
 
-	public void setUseLock(boolean useLock){
+	public void setUseLock(Boolean useLock){
 		this.useLock = useLock;
 	}
 
@@ -1007,7 +1023,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否以真正的 FIFO 方式公平对待对 getConnection 的调用
 	 */
-	public boolean isFairQueue(){
+	@Deprecated
+	public Boolean isFairQueue(){
 		return getFairQueue();
 	}
 
@@ -1016,7 +1033,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否以真正的 FIFO 方式公平对待对 getConnection 的调用
 	 */
-	public boolean getFairQueue(){
+	public Boolean getFairQueue(){
 		return fairQueue;
 	}
 
@@ -1026,7 +1043,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param fairQueue
 	 * 		是否以真正的 FIFO 方式公平对待对 getConnection 的调用
 	 */
-	public void setFairQueue(boolean fairQueue){
+	public void setFairQueue(Boolean fairQueue){
 		this.fairQueue = fairQueue;
 	}
 
@@ -1035,7 +1052,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 希望在连接上放置外观
 	 */
-	public boolean isUseDisposableConnectionFacade(){
+	@Deprecated
+	public Boolean isUseDisposableConnectionFacade(){
 		return getUseDisposableConnectionFacade();
 	}
 
@@ -1055,7 +1073,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param useDisposableConnectionFacade
 	 * 		希望在连接上放置外观
 	 */
-	public void setUseDisposableConnectionFacade(boolean useDisposableConnectionFacade){
+	public void setUseDisposableConnectionFacade(Boolean useDisposableConnectionFacade){
 		this.useDisposableConnectionFacade = useDisposableConnectionFacade;
 	}
 
@@ -1064,7 +1082,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否传播已被中断的线程的中断状态
 	 */
-	public boolean isPropagateInterruptState(){
+	@Deprecated
+	public Boolean isPropagateInterruptState(){
 		return getPropagateInterruptState();
 	}
 
@@ -1073,7 +1092,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否传播已被中断的线程的中断状态
 	 */
-	public boolean getPropagateInterruptState(){
+	public Boolean getPropagateInterruptState(){
 		return propagateInterruptState;
 	}
 
@@ -1083,7 +1102,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param propagateInterruptState
 	 * 		是否传播已被中断的线程的中断状态
 	 */
-	public void setPropagateInterruptState(boolean propagateInterruptState){
+	public void setPropagateInterruptState(Boolean propagateInterruptState){
 		this.propagateInterruptState = propagateInterruptState;
 	}
 
@@ -1092,7 +1111,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否希望包装语句以便启用，equals()
 	 */
-	public boolean isUseStatementFacade(){
+	@Deprecated
+	public Boolean isUseStatementFacade(){
 		return getUseStatementFacade();
 	}
 
@@ -1111,19 +1131,20 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param useStatementFacade
 	 * 		是否希望包装语句以便启用，equals()
 	 */
-	public void setUseStatementFacade(boolean useStatementFacade){
+	public void setUseStatementFacade(Boolean useStatementFacade){
 		this.useStatementFacade = useStatementFacade;
 	}
 
-	public boolean isAccessToUnderlyingConnectionAllowed(){
+	@Deprecated
+	public Boolean isAccessToUnderlyingConnectionAllowed(){
 		return getAccessToUnderlyingConnectionAllowed();
 	}
 
-	public boolean getAccessToUnderlyingConnectionAllowed(){
+	public Boolean getAccessToUnderlyingConnectionAllowed(){
 		return accessToUnderlyingConnectionAllowed;
 	}
 
-	public void setAccessToUnderlyingConnectionAllowed(boolean accessToUnderlyingConnectionAllowed){
+	public void setAccessToUnderlyingConnectionAllowed(Boolean accessToUnderlyingConnectionAllowed){
 		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
 	}
 
@@ -1132,7 +1153,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否启用 JMX
 	 */
-	public boolean isJmxEnabled(){
+	@Deprecated
+	public Boolean isJmxEnabled(){
 		return getJmxEnabled();
 	}
 
@@ -1141,7 +1163,7 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否启用 JMX
 	 */
-	public boolean getJmxEnabled(){
+	public Boolean getJmxEnabled(){
 		return jmxEnabled;
 	}
 
@@ -1151,7 +1173,8 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param jmxEnabled
 	 * 		是否启用 JMX
 	 */
-	public void setJmxEnabled(boolean jmxEnabled){
+	public void setJmxEnabled(Boolean jmxEnabled){
 		this.jmxEnabled = jmxEnabled;
 	}
+
 }

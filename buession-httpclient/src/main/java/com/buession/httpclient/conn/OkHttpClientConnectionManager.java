@@ -25,10 +25,7 @@
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
-import okhttp3.ConnectionPool;
 import okhttp3.HttpClientConnectionManager;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * okhttp 连接管理器
@@ -86,8 +83,10 @@ public class OkHttpClientConnectionManager extends AbstractConnectionManager<Htt
 	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
 		HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
-		connectionManager.setConnectionPool(new ConnectionPool(getConfiguration().getMaxConnections(),
-				getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS));
+		//最大连接数
+		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
+		// 空闲连接存活时长
+		connectionManager.setIdleConnectionTime(getConfiguration().getMaxConnections());
 
 		return connectionManager;
 	}

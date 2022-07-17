@@ -25,11 +25,18 @@
 package com.buession.core;
 
 /**
+ * 原始的，约定实现该接口的类，必须返回原始字节数组
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public interface Rawable {
 
+	/**
+	 * 返回原始的字节数组
+	 *
+	 * @return 原始的字节数组
+	 */
 	byte[] getRaw();
 
 }

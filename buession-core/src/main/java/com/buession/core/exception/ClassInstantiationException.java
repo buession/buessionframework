@@ -43,26 +43,64 @@ public class ClassInstantiationException extends NestedRuntimeException {
 	@Nullable
 	private final Constructor<?> constructor;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param clazz
+	 * 		实例化类
+	 * @param message
+	 * 		异常信息
+	 */
 	public ClassInstantiationException(Class<?> clazz, String message){
 		this(clazz, message, null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param clazz
+	 * 		实例化类
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public ClassInstantiationException(Class<?> clazz, String message, @Nullable Throwable cause){
 		super("Failed to instantiate [" + clazz.getName() + "]: " + message, cause);
 		this.clazz = clazz;
 		this.constructor = null;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param constructor
+	 * 		初始类时的构造函数
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 */
 	public ClassInstantiationException(Constructor<?> constructor, String message, @Nullable Throwable cause){
 		super("Failed to instantiate [" + constructor.getDeclaringClass().getName() + "]: " + message, cause);
 		this.clazz = constructor.getDeclaringClass();
 		this.constructor = constructor;
 	}
 
+	/**
+	 * 返回初始化的类
+	 *
+	 * @return 初始化的类
+	 */
 	public Class<?> getClazz(){
 		return clazz;
 	}
 
+	/**
+	 * 返回初始类时的构造函数
+	 *
+	 * @return 初始类时的构造函数
+	 */
 	@Nullable
 	public Constructor<?> getConstructor(){
 		return this.constructor;
