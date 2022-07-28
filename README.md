@@ -7,6 +7,7 @@
 [![GitHub release](https://img.shields.io/github/release/buession/buessionframework.svg)](https://github.com/buession/buessionframework/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Java support](https://img.shields.io/badge/Java-8+-green?logo=java&logoColor=white)](https://openjdk.java.net/)
+[![Javadocs](http://www.javadoc.io/badge/com.buession/buession-core.svg)](http://www.javadoc.io/doc/com.buession/buession-core)
 
 
 #### 它是基于各开源框架的日常工作中常见的通用技术需求二次封装
@@ -30,7 +31,7 @@
 
 
 <p align="center">
-	<img src="docs/images/logo.png" alt="Buession Spring Boot" title="Buession Spring Boot" width="280px" />
+	<img src="docs/images/logo.png" alt="BuessionFramework" title="BuessionFramework" width="280px" />
 </p>
 
 ## Requirements

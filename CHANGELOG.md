@@ -8,6 +8,19 @@
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.2)
 
 
+---
+
+
+## [2.0.2](https://github.com/buession/buessionframework/releases/tag/v2.0.2) (2022-07-28)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.2)
+
+
+---
+
+
 ## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) (2022-07-17)
 
 ### 🔨依赖升级
@@ -32,6 +45,8 @@
 - **buession-core：** Math 连续两个数之间连续相加之和计算错误的 BUG
 - **buession-core：** @Isbn、@MimeType 的使用了错误的校验器的问题
 
+
+---
 
 
 ## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-07-06)
