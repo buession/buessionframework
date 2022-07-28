@@ -19,12 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
 
 /**
+ * MongoDB Data Access Object 接口
+ *
+ * @param <P>
+ * 		注解类型
+ * @param <E>
+ * 		实体类
+ *
  * @author Yong.Teng
  */
 public interface MongoDBDao<P, E> extends Dao<P, E> {

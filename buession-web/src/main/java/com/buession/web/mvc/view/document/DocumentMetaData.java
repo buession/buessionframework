@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.view.document;
@@ -33,6 +33,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 页面文档元信息
+ *
  * @author Yong.Teng
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -40,55 +42,55 @@ import java.lang.annotation.Target;
 @Documented
 public @interface DocumentMetaData {
 
-    String DEFAULT_ATTR_NAME = "metadata";
+	String DEFAULT_ATTR_NAME = "metadata";
 
-    /**
-     * 返回注册 Model attribute 名字
-     *
-     * @return 注册 Model attribute 名字
-     */
-    String attrName() default DEFAULT_ATTR_NAME;
+	/**
+	 * 返回注册 Model attribute 名字
+	 *
+	 * @return 注册 Model attribute 名字
+	 */
+	String attrName() default DEFAULT_ATTR_NAME;
 
-    /**
-     * 返回页面标题
-     *
-     * @return 页面标题
-     */
-    String title() default "";
+	/**
+	 * 返回页面标题
+	 *
+	 * @return 页面标题
+	 */
+	String title() default "";
 
-    /**
-     * 返回页面编码
-     *
-     * @return 页面编码
-     */
-    String charset() default "";
+	/**
+	 * 返回页面编码
+	 *
+	 * @return 页面编码
+	 */
+	String charset() default "";
 
-    /**
-     * 返回页面关键字
-     *
-     * @return 页面关键字
-     */
-    String keywords() default "";
+	/**
+	 * 返回页面关键字
+	 *
+	 * @return 页面关键字
+	 */
+	String keywords() default "";
 
-    /**
-     * 返回页面描述信息
-     *
-     * @return 页面描述信息
-     */
-    String description() default "";
+	/**
+	 * 返回页面描述信息
+	 *
+	 * @return 页面描述信息
+	 */
+	String description() default "";
 
-    /**
-     * 返回页面作者
-     *
-     * @return 页面作者
-     */
-    String author() default "";
+	/**
+	 * 返回页面作者
+	 *
+	 * @return 页面作者
+	 */
+	String author() default "";
 
-    /**
-     * 返回页面版权
-     *
-     * @return 页面版权
-     */
-    String copyright() default "";
+	/**
+	 * 返回页面版权
+	 *
+	 * @return 页面版权
+	 */
+	String copyright() default "";
 
 }

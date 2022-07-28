@@ -29,6 +29,9 @@ package com.buession.dao;
 /**
  * 分页类
  *
+ * @param <E>
+ * 		数据类型
+ *
  * @author Yong.Teng
  */
 public class Pagination<E> extends com.buession.core.Pagination<E> {

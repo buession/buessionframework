@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2015 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -33,39 +33,39 @@ package com.buession.dao;
  */
 public enum DML {
 
-    INSERT("insert"),
+	INSERT("insert"),
 
-    REPLACE("replace"),
+	REPLACE("replace"),
 
-    UPDATE("update"),
+	UPDATE("update"),
 
-    UPDATE_BY_PRIMARY("updateByPrimary"),
+	UPDATE_BY_PRIMARY("updateByPrimary"),
 
-    SELECT("select"),
+	SELECT("select"),
 
-    SELECT_ONE("selectOne"),
+	SELECT_ONE("selectOne"),
 
-    GET_BY_PRIMARY("getByPrimary"),
+	GET_BY_PRIMARY("getByPrimary"),
 
-    GET_ALL("getAll"),
+	GET_ALL("getAll"),
 
-    DELETE("delete"),
+	DELETE("delete"),
 
-    DELETE_BY_PRIMARY("deleteByPrimary"),
+	DELETE_BY_PRIMARY("deleteByPrimary"),
 
-    CLEAR("clear"),
+	CLEAR("clear"),
 
-    TRUNCATE("truncate");
+	TRUNCATE("truncate");
 
-    private String method;
+	private final String method;
 
-    DML(final String method){
-        this.method = method;
-    }
+	DML(final String method){
+		this.method = method;
+	}
 
-    @Override
-    public String toString(){
-        return method;
-    }
+	@Override
+	public String toString(){
+		return method;
+	}
 
 }

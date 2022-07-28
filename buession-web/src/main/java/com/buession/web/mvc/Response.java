@@ -33,6 +33,9 @@ import java.util.StringJoiner;
 /**
  * Response 数据输出类
  *
+ * @param <E>
+ * 		输出数据
+ *
  * @author Yong.Teng
  */
 public class Response<E> {

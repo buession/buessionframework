@@ -53,13 +53,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * MongoDB Data Access Object 抽象类
+ *
+ * @param <P>
+ * 		注解类型
+ * @param <E>
+ * 		实体类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> implements MongoDBDao<P, E> {
 
+	private final static OrderToMongoDBSortDirectionConverter ORDER_TO_MONGO_DB_SORT_DIRECTION_CONVERTER = new OrderToMongoDBSortDirectionConverter();
+
+	/**
+	 * master MongoTemplate
+	 */
 	@Resource
 	private MongoTemplate masterMongoTemplate;
 
+	/**
+	 * slave MongoTemplate
+	 */
 	@Resource
 	private List<MongoTemplate> slaveMongoTemplates;
 
@@ -122,16 +137,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	/**
-	 * 更新数据
-	 *
-	 * @param e
-	 * 		更新数据
-	 * @param conditions
-	 * 		更新条件
-	 *
-	 * @return 更新条数
-	 */
 	@Override
 	public int update(E e, Map<String, Object> conditions){
 		final Query query = new Query();
@@ -154,16 +159,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return (int) writeResult.getModifiedCount();
 	}
 
-	/**
-	 * 根据主键更新数据
-	 *
-	 * @param primary
-	 * 		主键值
-	 * @param e
-	 * 		新数据
-	 *
-	 * @return 更新条数
-	 */
 	@Override
 	public int updateByPrimary(P primary, E e){
 		final Map<String, Object> conditions = new HashMap<>(1);
@@ -171,14 +166,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return update(e, conditions);
 	}
 
-	/**
-	 * 根据主键查询数据
-	 *
-	 * @param primary
-	 * 		主键值
-	 *
-	 * @return 数据结果
-	 */
 	@Override
 	public E getByPrimary(P primary){
 		final Map<String, Object> conditions = new HashMap<>(1);
@@ -186,18 +173,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return selectOne(conditions);
 	}
 
-	/**
-	 * 获取一条记录
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param offset
-	 * 		偏移量
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 查询结果
-	 */
 	@Override
 	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
 		final Query query = new Query();
@@ -220,16 +195,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据查询
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 结果集
-	 */
 	@Override
 	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
 		final Query query = new Query();
@@ -250,20 +215,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据查询
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param offset
-	 * 		偏移量
-	 * @param size
-	 * 		查询条数
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 结果集
-	 */
 	@Override
 	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
 		final Query query = new Query();
@@ -276,20 +227,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return select(query, offset, size, orders);
 	}
 
-	/**
-	 * 数据查询
-	 *
-	 * @param query
-	 * 		查询条件
-	 * @param offset
-	 * 		偏移量
-	 * @param size
-	 * 		查询条数
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 结果集
-	 */
 	public List<E> select(Query query, int offset, int size, Map<String, Order> orders){
 		Assert.isNull(query, "Query Argument could not be null");
 
@@ -305,20 +242,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据分页查询
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param page
-	 * 		页码
-	 * @param pagesize
-	 * 		每页大小
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return Pagination
-	 */
 	@Override
 	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
 		final Query query = new Query();
@@ -331,20 +254,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return paging(query, page, pagesize, orders);
 	}
 
-	/**
-	 * 数据分页查询
-	 *
-	 * @param query
-	 * 		查询条件
-	 * @param page
-	 * 		页码
-	 * @param pagesize
-	 * 		每页大小
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return Pagination
-	 */
 	public Pagination<E> paging(Query query, int page, int pagesize, Map<String, Order> orders){
 		Assert.isZeroNegative(page, "Page argument value must be positive integer");
 		Assert.isZeroNegative(pagesize, "Pagesize argument value must be positive integer");
@@ -361,11 +270,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return pagination;
 	}
 
-	/**
-	 * 查询所有数据
-	 *
-	 * @return 结果集
-	 */
 	@Override
 	public List<E> getAll(){
 		try{
@@ -377,24 +281,11 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据记录总数
-	 *
-	 * @return 记录总数
-	 */
 	@Override
 	public long count(){
 		return count(new Query());
 	}
 
-	/**
-	 * 数据记录总数
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 *
-	 * @return 记录总数
-	 */
 	@Override
 	public long count(Map<String, Object> conditions){
 		final Query query = new Query();
@@ -407,14 +298,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return count(query);
 	}
 
-	/**
-	 * 数据记录总数
-	 *
-	 * @param query
-	 * 		查询条件
-	 *
-	 * @return 记录总数
-	 */
 	public long count(Query query){
 		Assert.isNull(query, "Query Argument could not be null");
 
@@ -427,14 +310,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return 0L;
 	}
 
-	/**
-	 * 删除数据
-	 *
-	 * @param conditions
-	 * 		删除条件
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int delete(Map<String, Object> conditions){
 		final Query query = new Query();
@@ -448,14 +323,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return (int) writeResult.getDeletedCount();
 	}
 
-	/**
-	 * 根据主键删除数据
-	 *
-	 * @param primary
-	 * 		主键值
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int deleteByPrimary(P primary){
 		final Query query = new Query();
@@ -467,11 +334,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return (int) writeResult.getDeletedCount();
 	}
 
-	/**
-	 * 清空数据
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int clear(){
 		DeleteResult writeResult = getMasterMongoTemplate().remove(new Query(), getStatement());
@@ -529,11 +391,10 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	protected void buildSort(final Query query, final Map<String, Order> orders){
 		if(Validate.isNotEmpty(orders)){
-			final OrderToMongoDBSortDirectionConverter orderToMongoDBSortDirectionConverter = new OrderToMongoDBSortDirectionConverter();
 			final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
 
 			orders.forEach((field, order)->{
-				Sort.Direction direction = orderToMongoDBSortDirectionConverter.convert(order);
+				Sort.Direction direction = ORDER_TO_MONGO_DB_SORT_DIRECTION_CONVERTER.convert(order);
 
 				if(direction != null){
 					sortOrders.add(new Sort.Order(direction, field));

@@ -35,6 +35,11 @@ import com.buession.lang.Order;
 /**
  * Data Access Object 接口
  *
+ * @param <P>
+ * 		注解类型
+ * @param <E>
+ * 		实体类
+ *
  * @author Yong.Teng
  */
 public interface Dao<P, E> {
