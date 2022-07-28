@@ -1,11 +1,11 @@
  Buession Framework Changelog
 ===========================
 
-## [2.0.2](https://github.com/buession/buessionframework/releases/tag/v2.0.2) (2022-07-28)
+## [2.0.3](https://github.com/buession/buessionframework/releases/tag/v2.0.3) (2022-07-xx)
 
 ### 🔨依赖升级
 
-- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.2)
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.3)
 
 
 ---
