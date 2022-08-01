@@ -21,10 +21,31 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core;/**
- * 
+ */
+package com.buession.core;
+
+/**
+ * 数据解析接口
+ *
+ * @param <S>
+ * 		待解析对象类型
+ * @param <T>
+ * 		解析结果对象类型
  *
  * @author Yong.Teng
  * @since 2.0.3
- */public interface Resolve {
+ */
+@FunctionalInterface
+public interface Resolve<S, T> {
+
+	/**
+	 * 将 S 类型的对象 object 解析成 T 类型的对象
+	 *
+	 * @param source
+	 * 		待解析对象
+	 *
+	 * @return 解析结果
+	 */
+	T resolve(final S source);
+
 }
