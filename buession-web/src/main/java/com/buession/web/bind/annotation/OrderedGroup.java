@@ -19,46 +19,47 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.method;
+package com.buession.web.bind.annotation;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-
-import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 用于在给定请求的上下文中将方法参数解析为参数值抽象类
- *
- * @param <A>
- * 		注解
+ * 获取前端传递排序
  *
  * @author Yong.Teng
- * @since 1.2.2
+ * @since 2.0.3
  */
-public abstract class AbstractHandlerMethodArgumentResolver<A extends Annotation> implements HandlerMethodArgumentResolver {
-
-	private final Class<A> type;
+@Target({ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface OrderedGroup {
 
 	/**
-	 * 构造函数
+	 * 返回排序字段
 	 *
-	 * @param type
-	 * 		注解类型
+	 * @return 排序字段
 	 */
-	public AbstractHandlerMethodArgumentResolver(final Class<A> type){
-		this.type = type;
-	}
+	String field() default "orderBy";
 
-	@Override
-	public boolean supportsParameter(MethodParameter methodParameter){
-		return methodParameter.hasParameterAnnotation(type) && checkAloneSupportsParameter(methodParameter);
-	}
+	/**
+	 * 返回排序方式
+	 *
+	 * @return 排序方式
+	 */
+	String order() default "order";
 
-	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
-		return true;
-	}
+	/**
+	 * 返回是否是必须
+	 *
+	 * @return 是否必须
+	 */
+	boolean required() default false;
 
 }

@@ -19,39 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.method;
-
-import org.springframework.core.MethodParameter;
-import org.springframework.lang.Nullable;
-
-import java.util.Collection;
-import java.util.Optional;
-
 /**
  * @author Yong.Teng
- * @since 1.2.2
+ * @since 2.0.3
  */
-public class MethodParameterUtils {
-
-	public static Object adaptArgumentIfNecessary(MethodParameter methodParameter, @Nullable Object value){
-		if(methodParameter.getParameterType() == Optional.class){
-			return value == null || isEmpty(value) ? Optional.empty() : Optional.of(value);
-		}
-
-		return value;
-	}
-
-	private static boolean isEmpty(@Nullable Object value){
-		if(value instanceof Collection && ((Collection<?>) value).isEmpty()){
-			return true;
-		}else if(value instanceof Object[] && ((Object[]) value).length == 0){
-			return true;
-		}
-		
-		return false;
-	}
-
-}
+package com.buession.web.bind.annotation;

@@ -22,36 +22,94 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.config;
+package com.buession.web.bind;
 
-import com.buession.web.bind.converter.FormatterRegistryUtils;
-import com.buession.web.servlet.OnServletCondition;
-import com.buession.web.servlet.annotation.OrderedHandlerMethodArgumentResolver;
-import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.format.FormatterRegistry;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.buession.core.builder.MapBuilder;
 
-import java.util.List;
+import java.util.Map;
 
 /**
+ * 排序
+ *
  * @author Yong.Teng
+ * @since 2.0.3
  */
-@Configuration(proxyBeanMethods = false)
-@Conditional(OnServletCondition.class)
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class Order {
 
-	@Override
-	public void addFormatters(FormatterRegistry registry){
-		FormatterRegistryUtils.addConverters(registry);
+	/**
+	 * 排序字段
+	 */
+	private String field;
+
+	/**
+	 * 排序
+	 */
+	private com.buession.lang.Order order;
+
+	/**
+	 * 构造函数
+	 */
+	public Order(){
 	}
 
-	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
-		argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
-		argumentResolvers.add(new OrderedHandlerMethodArgumentResolver());
+	/**
+	 * 构造函数
+	 *
+	 * @param field
+	 * 		排序字段
+	 * @param order
+	 * 		排序
+	 */
+	public Order(final String field, final com.buession.lang.Order order){
+		this.field = field;
+		this.order = order;
+	}
+
+	/**
+	 * 返回排序字段
+	 *
+	 * @return 排序字段
+	 */
+	public String getField(){
+		return field;
+	}
+
+	/**
+	 * 设置排序字段
+	 *
+	 * @param field
+	 * 		排序字段
+	 */
+	public void setField(String field){
+		this.field = field;
+	}
+
+	/**
+	 * 返回排序
+	 *
+	 * @return 排序
+	 */
+	public com.buession.lang.Order getOrder(){
+		return order;
+	}
+
+	/**
+	 * 设置排序
+	 *
+	 * @param order
+	 * 		排序
+	 */
+	public void setOrder(com.buession.lang.Order order){
+		this.order = order;
+	}
+
+	/**
+	 * 转换为 Map
+	 *
+	 * @return Map
+	 */
+	public Map<String, com.buession.lang.Order> asMap(){
+		return MapBuilder.of(field, order);
 	}
 
 }

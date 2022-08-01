@@ -19,7 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.method;
+package com.buession.web.bind.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 获取前端传递排序
+ *
+ * @author Yong.Teng
+ * @since 2.0.3
+ */
+@Target({ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Ordered {
+
+	/**
+	 * 返回排序方式
+	 *
+	 * @return 排序方式
+	 */
+	OrderedGroup[] value() default {};
+
+	/**
+	 * 返回是否是必须
+	 *
+	 * @return 是否必须
+	 */
+	boolean required() default false;
+
+}

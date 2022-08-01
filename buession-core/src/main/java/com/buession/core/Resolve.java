@@ -19,46 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.web.reactive.method;
-
-import org.springframework.core.MethodParameter;
-import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
-
-import java.lang.annotation.Annotation;
-
-/**
- * 用于在给定请求的上下文中将方法参数解析为参数值抽象类
- *
- * @param <A>
- * 		注解
+ */package com.buession.core;/**
+ * 
  *
  * @author Yong.Teng
- * @since 1.2.2
- */
-public abstract class AbstractHandlerMethodArgumentResolver<A extends Annotation> implements HandlerMethodArgumentResolver {
-
-	private final Class<A> type;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		注解类型
-	 */
-	public AbstractHandlerMethodArgumentResolver(final Class<A> type){
-		this.type = type;
-	}
-
-	@Override
-	public boolean supportsParameter(MethodParameter methodParameter){
-		return methodParameter.hasParameterAnnotation(type) && checkAloneSupportsParameter(methodParameter);
-	}
-
-	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
-		return true;
-	}
-
+ * @since 2.0.3
+ */public interface Resolve {
 }
