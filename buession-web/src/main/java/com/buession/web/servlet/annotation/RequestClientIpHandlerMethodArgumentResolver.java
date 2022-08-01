@@ -29,52 +29,82 @@ package com.buession.web.servlet.annotation;
 import com.buession.core.utils.Assert;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
-import com.buession.web.servlet.method.AbstractHandlerMethodArgumentResolver;
 import com.buession.web.servlet.http.request.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
- * Resolves method arguments annotated with an {@link RequestClientIp}
+ * 方法参数注解 {@link RequestClientIp} 解析器
  *
  * @author Yong.Teng
  */
-public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandlerMethodArgumentResolver<RequestClientIp> {
+public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver {
 
-	/**
-	 * 构造函数
-	 *
-	 * @since 1.2.2
-	 */
+	private final static Logger logger = LoggerFactory.getLogger(RequestClientIpHandlerMethodArgumentResolver.class);
+
 	public RequestClientIpHandlerMethodArgumentResolver(){
-		super(RequestClientIp.class);
+		super();
+	}
+
+	public RequestClientIpHandlerMethodArgumentResolver(
+			@Nullable ConfigurableBeanFactory beanFactory){
+		super(beanFactory);
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer, NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception{
-		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-		Assert.isNull(servletRequest, "No HttpServletRequest");
+	public boolean supportsParameter(MethodParameter parameter){
+		if(parameter.hasParameterAnnotation(RequestClientIp.class) == false){
+			return false;
+		}
 
-		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+		return CharSequence.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz) ||
+				InetAddress.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		Assert.isNull(requestClientIp, "No RequestClientIp annotation");
+		return new RequestClientIpNamedValueInfo(requestClientIp);
+	}
+
+	@Override
+	@Nullable
+	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request){
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
 		if(Long.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(servletRequest);
+			final String ip = RequestUtils.getClientIp(request.getNativeRequest(HttpServletRequest.class));
 			return InetAddressUtils.ip2long(ip);
 		}else if(CharSequence.class.isAssignableFrom(clazz)){
-			return RequestUtils.getClientIp(servletRequest);
-		}else{
-			return null;
+			return RequestUtils.getClientIp(request.getNativeRequest(HttpServletRequest.class));
+		}else if(InetAddress.class.isAssignableFrom(clazz)){
+			final String ip = RequestUtils.getClientIp(request.getNativeRequest(HttpServletRequest.class));
+			try{
+				return InetAddress.getByName(ip);
+			}catch(UnknownHostException e){
+				logger.error("IP: <{}> convert to InetAddress error: {}", ip, e.getMessage());
+			}
 		}
+
+		return null;
 	}
 
-	@Override
-	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
-		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		return String.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz);
+	private final static class RequestClientIpNamedValueInfo extends NamedValueInfo {
+
+		private RequestClientIpNamedValueInfo(RequestClientIp annotation){
+			super(RequestClientIp.class.getName(), true, null);
+		}
+
 	}
 
 }
