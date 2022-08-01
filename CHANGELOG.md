@@ -8,6 +8,19 @@
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.3)
 
 
+### ⭐ 新特性
+
+- **buession-core：** 新增对象解析接口 Resolve
+- **buession-core：** PropertyMapper 增加 alwaysApplyingWhenHasText() 方法，用于判断源属性是否含有内容
+- **buession-web：** 注解 @RequestClientIp 增加支持返回 InetAddress
+- **buession-web：** 新增排序注解 @Ordered 支持接收前端传递的排序字段和排序方式
+
+
+### 🔔 变化
+
+- **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生 HandlerMethodArgumentResolver 实现抽象类
+
+
 ---
 
 
