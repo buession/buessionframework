@@ -36,6 +36,7 @@ import reactor.core.publisher.Mono;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public class MobileFilter implements WebFilter {
 
 	@Override
