@@ -1,11 +1,11 @@
  Buession Framework Changelog
 ===========================
 
-## [2.0.3](https://github.com/buession/buessionframework/releases/tag/v2.0.3) (2022-07-xx)
+## [2.1.0](https://github.com/buession/buessionframework/releases/tag/v2.1.0) (2022-07-xx)
 
 ### 🔨依赖升级
 
-- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.3)
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.0)
 
 
 ### ⭐ 新特性
@@ -18,7 +18,15 @@
 
 ### 🔔 变化
 
+- **buession-aop：** 调整 AnnotationResolver 及其实现泛型参数，由类泛型参数，调整为 getAnnotation 泛型
 - **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生 HandlerMethodArgumentResolver 实现抽象类
+- **buession-web：** 废弃 MobileFilter，根据需要直接使用 RequestUtils.isMobile(request) 判断
+- **buession-web：** 废弃 servlet HttpServlet、AopUtils、MethodUtils
+- **buession-velocity：** 配置属性 springMacro.resource.loader.class 替换为 resource.loader.springMacro.class，resource.loader 替换 resource.loaders
+
+
+### ⏪ 优化
+- **buession-web：** 优化 servlet 注解处理
 
 
 ---

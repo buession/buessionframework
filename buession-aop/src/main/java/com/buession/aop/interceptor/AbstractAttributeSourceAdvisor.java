@@ -21,14 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.aop.advice;
-
-/**
- * 通知/增强，通知是指拦截到Joinpoint之后所要做的事情就是通知.通知分为前置通知、后置通知,异常通知,最终通知,环绕通知
+ */package com.buession.aop.interceptor;/**
+ * 
  *
  * @author Yong.Teng
- */
-public interface Advice {
-
+ * @since 2.0.3
+ */public class AbstractAttributeSourceAdvisor {
 }
