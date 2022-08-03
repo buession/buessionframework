@@ -41,7 +41,7 @@ public class ServletContentTypeAnnotationMethodInterceptor extends AbstractConte
 		super(new ServletContentTypeAnnotationHandler());
 	}
 
-	public ServletContentTypeAnnotationMethodInterceptor(AnnotationResolver<ContentType> resolver){
+	public ServletContentTypeAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ServletContentTypeAnnotationHandler(), resolver);
 	}
 

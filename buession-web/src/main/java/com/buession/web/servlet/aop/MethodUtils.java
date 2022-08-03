@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Yong.Teng
  */
+@Deprecated
 public class MethodUtils {
 
 	private MethodUtils(){

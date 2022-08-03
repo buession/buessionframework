@@ -34,16 +34,13 @@ import java.lang.reflect.Method;
 /**
  * Spring 注解解析器
  *
- * @param <A>
- * 		注解类型
- *
  * @author Yong.Teng
  */
-public class SpringAnnotationResolver<A extends Annotation> extends AbstractAnnotationResolver<A> {
+public class SpringAnnotationResolver extends AbstractAnnotationResolver {
 
 	@Override
-	public A getAnnotation(MethodInvocation mi, Class<A> clazz){
-		Method method = mi.getMethod();
+	public <A extends Annotation> A getAnnotation(MethodInvocation mi, Class<A> clazz){
+		Method method = preGetAnnotation(mi, clazz);
 
 		A annotation = AnnotationUtils.findAnnotation(method, clazz);
 		if(annotation != null){

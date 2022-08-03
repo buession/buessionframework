@@ -32,6 +32,7 @@ import com.buession.aop.MethodInvocation;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@FunctionalInterface
 public interface MethodInterceptor extends Interceptor {
 
 	/**

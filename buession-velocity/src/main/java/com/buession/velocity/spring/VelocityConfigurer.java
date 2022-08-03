@@ -53,7 +53,7 @@ public class VelocityConfigurer extends VelocityEngineFactory implements Velocit
 	/**
 	 * the key for the class of Spring's bind macro resource loader
 	 */
-	private final static String SPRING_MACRO_RESOURCE_LOADER_CLASS = "springMacro.resource.loader.class";
+	private final static String SPRING_MACRO_RESOURCE_LOADER_CLASS = "resource.loader.springMacro.class";
 
 	/**
 	 * the name of Spring's default bind macro library
@@ -96,7 +96,7 @@ public class VelocityConfigurer extends VelocityEngineFactory implements Velocit
 		velocityEngine.setApplicationAttribute(ServletContext.class.getName(), servletContext);
 
 		velocityEngine.setProperty(SPRING_MACRO_RESOURCE_LOADER_CLASS, ClasspathResourceLoader.class.getName());
-		velocityEngine.addProperty(VelocityEngine.RESOURCE_LOADER, SPRING_MACRO_RESOURCE_LOADER_NAME);
+		velocityEngine.addProperty(VelocityEngine.RESOURCE_LOADERS, SPRING_MACRO_RESOURCE_LOADER_NAME);
 		velocityEngine.addProperty(VelocityEngine.VM_LIBRARY, SPRING_MACRO_LIBRARY);
 
 		logger.info("ClasspathResourceLoader with name '{}' added to configured VelocityEngine.",

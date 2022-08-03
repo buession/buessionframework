@@ -47,10 +47,6 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 	}
 
 	private static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
-		if(documentMetaData == null){
-			return null;
-		}
-
 		final MetaData metaData = new MetaData();
 
 		metaData.setTitle(documentMetaData.title());

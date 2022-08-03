@@ -29,7 +29,6 @@ import com.buession.aop.interceptor.AbstractMethodInterceptor;
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.core.validator.Validate;
 
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
@@ -38,24 +37,24 @@ import java.util.Collection;
  */
 public abstract class AbstractAnnotationsMethodInterceptor extends AbstractMethodInterceptor {
 
-	private Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors;
+	private Collection<AnnotationMethodInterceptor> methodInterceptors;
 
 	public AbstractAnnotationsMethodInterceptor(){
 	}
 
-	public Collection<AnnotationMethodInterceptor<? extends Annotation>> getMethodInterceptors(){
+	public Collection<AnnotationMethodInterceptor> getMethodInterceptors(){
 		return methodInterceptors;
 	}
 
-	public void setMethodInterceptors(Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors){
+	public void setMethodInterceptors(Collection<AnnotationMethodInterceptor> methodInterceptors){
 		this.methodInterceptors = methodInterceptors;
 	}
 
 	@Override
 	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		Collection<AnnotationMethodInterceptor<? extends Annotation>> amis = getMethodInterceptors();
+		Collection<AnnotationMethodInterceptor> amis = getMethodInterceptors();
 		if(Validate.isNotEmpty(amis)){
-			for(AnnotationMethodInterceptor<? extends Annotation> ami : amis){
+			for(AnnotationMethodInterceptor ami : amis){
 				if(ami.isSupport(mi)){
 					ami.invoke(mi);
 				}

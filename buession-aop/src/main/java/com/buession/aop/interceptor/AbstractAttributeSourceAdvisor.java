@@ -21,10 +21,74 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.aop.interceptor;/**
- * 
- *
+ */
+package com.buession.aop.interceptor;
+
+import com.buession.core.utils.Assert;
+import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
+import org.springframework.core.annotation.AnnotationUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+/**
  * @author Yong.Teng
  * @since 2.0.3
- */public class AbstractAttributeSourceAdvisor {
+ */
+public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcherPointcutAdvisor {
+
+	private final static long serialVersionUID = 66199570932815709L;
+
+	private final Class<? extends Annotation>[] annotations;
+
+	public AbstractAttributeSourceAdvisor(final AbstractMethodInterceptor methodInterceptor,
+										  final Class<? extends Annotation>[] annotations){
+		Assert.isNull(methodInterceptor, "AnnotationMethodInterceptor cloud not be null.");
+		Assert.isNull(annotations, "Annotations cloud not be null.");
+
+		setAdvice(methodInterceptor);
+		this.annotations = annotations;
+	}
+
+	@Override
+	public boolean matches(Method method, Class targetClass){
+		Method m = method;
+
+		if(isAnnotationPresent(m)){
+			return true;
+		}
+
+		if(targetClass != null){
+			try{
+				m = targetClass.getMethod(m.getName(), m.getParameterTypes());
+				return isAnnotationPresent(m) || isAnnotationPresent(targetClass);
+			}catch(NoSuchMethodException e){
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isAnnotationPresent(Class<?> targetClazz){
+		for(Class<? extends Annotation> annotationClass : annotations){
+			Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, annotationClass);
+			if(annotation != null){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isAnnotationPresent(Method method){
+		for(Class<? extends Annotation> annotationClass : annotations){
+			Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClass);
+			if(annotation != null){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }

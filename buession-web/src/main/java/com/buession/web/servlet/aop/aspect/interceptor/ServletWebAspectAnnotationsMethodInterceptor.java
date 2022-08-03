@@ -32,7 +32,6 @@ import com.buession.web.servlet.aop.interceptor.ServletHttpCacheAnnotationMethod
 import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.Collection;
 
@@ -45,7 +44,7 @@ public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspect
 	public ServletWebAspectAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(5);
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
 
 		methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor());

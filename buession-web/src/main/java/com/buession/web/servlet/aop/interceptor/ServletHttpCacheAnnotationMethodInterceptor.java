@@ -41,7 +41,7 @@ public class ServletHttpCacheAnnotationMethodInterceptor extends AbstractHttpCac
 		super(new ServletHttpCacheAnnotationHandler());
 	}
 
-	public ServletHttpCacheAnnotationMethodInterceptor(AnnotationResolver<HttpCache> resolver){
+	public ServletHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ServletHttpCacheAnnotationHandler(), resolver);
 	}
 

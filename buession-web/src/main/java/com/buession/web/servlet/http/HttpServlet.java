@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Yong.Teng
  */
+@Deprecated
 public class HttpServlet {
 
 	private HttpServletRequest request;

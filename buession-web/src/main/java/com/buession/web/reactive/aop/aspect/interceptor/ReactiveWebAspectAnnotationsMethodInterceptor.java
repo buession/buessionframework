@@ -32,7 +32,6 @@ import com.buession.web.reactive.aop.interceptor.ReactiveHttpCacheAnnotationMeth
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.Collection;
 
@@ -45,7 +44,7 @@ public class ReactiveWebAspectAnnotationsMethodInterceptor extends AbstractAspec
 	public ReactiveWebAspectAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(5);
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
 
 		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor());
 		methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor());

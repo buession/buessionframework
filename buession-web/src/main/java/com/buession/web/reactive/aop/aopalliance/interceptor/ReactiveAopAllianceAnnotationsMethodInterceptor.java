@@ -33,7 +33,6 @@ import com.buession.web.reactive.aop.interceptor.ReactiveHttpCacheAnnotationMeth
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.Collection;
 
@@ -46,15 +45,14 @@ public class ReactiveAopAllianceAnnotationsMethodInterceptor extends AbstractAop
 	public ReactiveAopAllianceAnnotationsMethodInterceptor(){
 		super();
 
-		final Collection<AnnotationMethodInterceptor<? extends Annotation>> methodInterceptors = new ArrayDeque<>(5);
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
+		final SpringAnnotationResolver springAnnotationResolver = new SpringAnnotationResolver();
 
-		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
-		methodInterceptors.add(
-				new ReactiveDocumentMetaDataAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
-		methodInterceptors.add(new ReactiveHttpCacheAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
-		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
-		methodInterceptors.add(
-				new ReactiveResponseHeadersAnnotationMethodInterceptor(new SpringAnnotationResolver<>()));
+		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(springAnnotationResolver));
+		methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor(springAnnotationResolver));
+		methodInterceptors.add(new ReactiveHttpCacheAnnotationMethodInterceptor(springAnnotationResolver));
+		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(springAnnotationResolver));
+		methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor(springAnnotationResolver));
 
 		setMethodInterceptors(methodInterceptors);
 	}

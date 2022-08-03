@@ -42,7 +42,7 @@ public class ReactiveDocumentMetaDataAnnotationMethodInterceptor
 		super(new ReactiveDocumentMetaDataAnnotationHandler());
 	}
 
-	public ReactiveDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver<DocumentMetaData> resolver){
+	public ReactiveDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ReactiveDocumentMetaDataAnnotationHandler(), resolver);
 	}
 

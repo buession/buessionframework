@@ -25,12 +25,12 @@
 package com.buession.web.servlet.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
-import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
@@ -45,13 +45,26 @@ public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMe
 
 	@Override
 	public Object execute(MethodInvocation mi, DocumentMetaData documentMetaData){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		if(httpServlet == null || httpServlet.getModel() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "Model");
-			return null;
+		if(Validate.isNotEmpty(mi.getArguments())){
+			Model model = null;
+
+			for(Object argument : mi.getArguments()){
+				if(argument instanceof Model){
+					model = (Model) argument;
+					break;
+				}
+			}
+
+			if(model == null){
+				if(logger.isWarnEnabled()){
+					logger.warn("Model is null");
+				}
+				return null;
+			}
+
+			addModelAttribute(model, documentMetaData);
 		}
 
-		addModelAttribute(httpServlet.getModel(), documentMetaData);
 		return null;
 	}
 

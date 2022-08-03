@@ -24,7 +24,7 @@
  */
 package com.buession.aop.interceptor;
 
-import com.buession.aop.advice.Advice;
+import org.aopalliance.aop.Advice;
 
 /**
  * 拦截器

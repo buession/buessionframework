@@ -25,11 +25,10 @@
 package com.buession.web.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.mvc.view.document.DocumentMetaData;
 
 /**
  * @author Yong.Teng
  */
-public interface DocumentMetaDataAnnotationMethodInterceptor extends AnnotationMethodInterceptor<DocumentMetaData> {
+public interface DocumentMetaDataAnnotationMethodInterceptor extends AnnotationMethodInterceptor {
 
 }

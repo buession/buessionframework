@@ -26,24 +26,22 @@
  */
 package com.buession.web.aop.aopalliance;
 
-import com.buession.core.utils.AnnotationUtils;
+import com.buession.aop.interceptor.AbstractAttributeSourceAdvisor;
+import com.buession.aop.interceptor.AbstractMethodInterceptor;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.http.response.annotation.DisableHttpCache;
 import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.mvc.view.document.DocumentMetaData;
-import org.aopalliance.aop.Advice;
-import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMethodMatcherPointcutAdvisor {
+public abstract class AbstractWebAttributeSourcePointcutAdvisor extends AbstractAttributeSourceAdvisor {
 
 	private final static long serialVersionUID = -25452444487918871L;
 
@@ -52,29 +50,8 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMe
 			ResponseHeaders.class, ContentType.class, HttpCache.class,
 			DisableHttpCache.class, DocumentMetaData.class};
 
-	public AbstractWebAttributeSourcePointcutAdvisor(){
-		super();
-	}
-
-	public AbstractWebAttributeSourcePointcutAdvisor(Advice advice){
-		super(advice);
-	}
-
-	@Override
-	public boolean matches(Method method, Class<?> targetClass){
-		Method m = method;
-
-		if(AnnotationUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES)){
-			return true;
-		}
-
-		try{
-			m = targetClass.getMethod(m.getName(), m.getParameterTypes());
-			return AnnotationUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES) ||
-					AnnotationUtils.hasClassAnnotationPresent(targetClass, WEB_ANNOTATION_CLASSES);
-		}catch(NoSuchMethodException e){
-			return false;
-		}
+	public AbstractWebAttributeSourcePointcutAdvisor(final AbstractMethodInterceptor methodInterceptor){
+		super(methodInterceptor, WEB_ANNOTATION_CLASSES);
 	}
 
 }

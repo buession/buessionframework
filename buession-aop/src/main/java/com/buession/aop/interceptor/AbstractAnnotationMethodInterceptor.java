@@ -29,6 +29,8 @@ import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.aop.resolver.DefaultAnnotationResolver;
 import com.buession.core.utils.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
@@ -42,7 +44,9 @@ import java.util.Optional;
  * @author Yong.Teng
  */
 public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
-		implements AnnotationMethodInterceptor<A> {
+		implements AnnotationMethodInterceptor {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * JSR-175 注解读取和处理器
@@ -52,7 +56,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	/**
 	 * 注解解析器
 	 */
-	private AnnotationResolver<A> resolver;
+	private AnnotationResolver resolver;
 
 	/**
 	 * 构造函数
@@ -61,7 +65,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	 * 		JSR-175 注解读取和处理器
 	 */
 	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
-		this(handler, new DefaultAnnotationResolver<>());
+		this(handler, new DefaultAnnotationResolver());
 	}
 
 	/**
@@ -72,10 +76,11 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	 * @param resolver
 	 * 		注解解析器
 	 */
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver<A> resolver){
-		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
+	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
+		Assert.isNull(handler, "AnnotationHandler cloud not be null.");
+
 		setHandler(handler);
-		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver<>()));
+		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver()));
 	}
 
 	public AnnotationHandler<A> getHandler(){
@@ -86,11 +91,11 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		this.handler = handler;
 	}
 
-	public AnnotationResolver<A> getResolver(){
+	public AnnotationResolver getResolver(){
 		return resolver;
 	}
 
-	public void setResolver(AnnotationResolver<A> resolver){
+	public void setResolver(AnnotationResolver resolver){
 		this.resolver = resolver;
 	}
 
@@ -104,9 +109,14 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked"})
 	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		getHandler().execute(mi, getAnnotation(mi));
+		AnnotationHandler<A> annotationHandler = getHandler();
+
+		if(logger.isDebugEnabled()){
+			logger.debug("{} MethodInvocation: {} do invoke.", getClass().getName(), mi.getClass().getName());
+		}
+
+		annotationHandler.execute(mi, getAnnotation(mi));
 	}
 
 }

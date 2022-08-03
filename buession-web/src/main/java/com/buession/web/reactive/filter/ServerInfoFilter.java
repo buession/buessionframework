@@ -30,7 +30,6 @@ import com.buession.web.http.response.IServerInfoFilter;
 import com.buession.web.utils.ServerUtils;
 
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Server 信息过滤器

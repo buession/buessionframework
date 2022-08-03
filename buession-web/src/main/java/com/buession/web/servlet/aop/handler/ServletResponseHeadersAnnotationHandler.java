@@ -30,8 +30,7 @@ import com.buession.web.aop.handler.AbstractResponseHeadersAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
-import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.http.HttpServlet;
+import com.buession.web.servlet.http.request.RequestUtils;
 import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,29 +50,31 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 
 	@Override
 	public Object execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		if(httpServlet == null || httpServlet.getResponse() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
+		ResponseHeader[] headers = responseHeaders.value();
+		if(Validate.isEmpty(headers)){
 			return null;
 		}
 
-		ResponseHeader[] headers = responseHeaders.value();
+		HttpServletResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("HttpServletResponse is null");
+			}
+			return null;
+		}
 
-		if(Validate.isNotEmpty(headers)){
-			HttpServletResponse response = httpServlet.getResponse();
-			for(ResponseHeader header : headers){
-				final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name());
+		for(ResponseHeader header : headers){
+			final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name());
 
-				for(String value : header.value()){
-					if(isExpires){
-						if(Validate.isNumeric(value)){
-							ResponseUtils.httpCache(response, Integer.parseInt(value));
-						}else{
-							ResponseUtils.httpCache(response, value);
-						}
+			for(String value : header.value()){
+				if(isExpires){
+					if(Validate.isNumeric(value)){
+						ResponseUtils.httpCache(response, Integer.parseInt(value));
 					}else{
-						response.setHeader(header.name(), value);
+						ResponseUtils.httpCache(response, value);
 					}
+				}else{
+					response.setHeader(header.name(), value);
 				}
 			}
 		}

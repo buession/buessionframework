@@ -30,6 +30,7 @@ import org.aspectj.lang.JoinPoint;
 /**
  * @author Yong.Teng
  */
+@Deprecated
 public class AopUtils {
 
 	private AopUtils(){

@@ -31,13 +31,10 @@ import java.lang.annotation.Annotation;
 /**
  * 方法注解拦截器
  *
- * @param <A>
- * 		注解类型
- *
  * @author Yong.Teng
  * @see MethodInterceptor
  */
-public interface AnnotationMethodInterceptor<A extends Annotation> extends MethodInterceptor {
+public interface AnnotationMethodInterceptor extends MethodInterceptor {
 
 	boolean isSupport(MethodInvocation mi);
 

@@ -44,7 +44,7 @@ public abstract class AbstractDocumentMetaDataAnnotationMethodInterceptor
 	}
 
 	public AbstractDocumentMetaDataAnnotationMethodInterceptor(AnnotationHandler<DocumentMetaData> handler,
-															   AnnotationResolver<DocumentMetaData> resolver){
+															   AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

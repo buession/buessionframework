@@ -42,7 +42,7 @@ public class ServletResponseHeaderAnnotationMethodInterceptor
 		super(new ServletResponseHeaderAnnotationHandler());
 	}
 
-	public ServletResponseHeaderAnnotationMethodInterceptor(AnnotationResolver<ResponseHeader> resolver){
+	public ServletResponseHeaderAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ServletResponseHeaderAnnotationHandler(), resolver);
 	}
 

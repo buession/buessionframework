@@ -44,7 +44,7 @@ public abstract class AbstractResponseHeaderAnnotationMethodInterceptor
 	}
 
 	public AbstractResponseHeaderAnnotationMethodInterceptor(AnnotationHandler<ResponseHeader> handler,
-															 AnnotationResolver<ResponseHeader> resolver){
+															 AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 
