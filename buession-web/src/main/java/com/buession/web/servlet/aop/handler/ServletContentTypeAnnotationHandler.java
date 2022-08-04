@@ -47,13 +47,12 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ContentType contentType){
+	public void execute(MethodInvocation mi, ContentType contentType){
 		HttpServletResponse response = RequestUtils.getResponse();
 		if(response == null){
 			if(logger.isWarnEnabled()){
 				logger.warn("HttpServletResponse is null");
 			}
-			return null;
 		}
 
 		StringBuilder sb = new StringBuilder(contentType.mime().length() + 24);
@@ -65,7 +64,6 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 		}
 
 		response.addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
-		return null;
 	}
 
 }

@@ -44,15 +44,14 @@ public class ReactiveDocumentMetaDataAnnotationHandler extends AbstractDocumentM
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
 		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 		if(serverHttp == null || serverHttp.getModel() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "Model");
-			return null;
+			return;
 		}
 
 		addModelAttribute(serverHttp.getModel(), documentMetaData);
-		return null;
 	}
 
 }

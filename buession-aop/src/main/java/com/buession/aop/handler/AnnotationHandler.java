@@ -60,9 +60,7 @@ public interface AnnotationHandler<A extends Annotation> {
 	 * 		方法调用的描述 {@link MethodInvocation}
 	 * @param annotation
 	 * 		注解实例
-	 *
-	 * @return 处理结果
 	 */
-	Object execute(MethodInvocation mi, A annotation);
+	void execute(MethodInvocation mi, A annotation);
 
 }

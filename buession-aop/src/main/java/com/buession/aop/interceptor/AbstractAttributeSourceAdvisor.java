@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
- * @since 2.0.3
+ * @since 2.1.0
  */
 public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
@@ -41,17 +41,17 @@ public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcher
 
 	private final Class<? extends Annotation>[] annotations;
 
-	public AbstractAttributeSourceAdvisor(final AbstractMethodInterceptor methodInterceptor,
+	public AbstractAttributeSourceAdvisor(final AnnotationsMethodInterceptor annotationsMethodInterceptor,
 										  final Class<? extends Annotation>[] annotations){
-		Assert.isNull(methodInterceptor, "AnnotationMethodInterceptor cloud not be null.");
+		Assert.isNull(annotationsMethodInterceptor, "AnnotationsMethodInterceptor cloud not be null.");
 		Assert.isNull(annotations, "Annotations cloud not be null.");
 
-		setAdvice(methodInterceptor);
+		setAdvice(annotationsMethodInterceptor);
 		this.annotations = annotations;
 	}
 
 	@Override
-	public boolean matches(Method method, Class targetClass){
+	public boolean matches(Method method, Class<?> targetClass){
 		Method m = method;
 
 		if(isAnnotationPresent(m)){

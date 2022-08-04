@@ -47,13 +47,13 @@ public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotati
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, HttpCache httpCache){
+	public void execute(MethodInvocation mi, HttpCache httpCache){
 		HttpServletResponse response = RequestUtils.getResponse();
 		if(response == null){
 			if(logger.isWarnEnabled()){
 				logger.warn("HttpServletResponse is null");
 			}
-			return null;
+			return;
 		}
 
 		boolean isSetCacheControl = false;
@@ -74,8 +74,6 @@ public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotati
 		if(Validate.hasText(httpCache.pragma())){
 			response.setHeader(HttpHeader.PRAGMA.getValue(), httpCache.pragma());
 		}
-
-		return null;
 	}
 
 }

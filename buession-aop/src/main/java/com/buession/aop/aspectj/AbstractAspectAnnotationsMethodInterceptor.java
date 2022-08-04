@@ -22,11 +22,9 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.interceptor;
+package com.buession.aop.aspectj;
 
-import com.buession.aop.aspectj.AfterAdviceMethodInvocationAdapter;
-import com.buession.aop.aspectj.AspectjAnnotationsMethodInterceptorLogUtils;
-import com.buession.aop.aspectj.BeforeAdviceMethodInvocationAdapter;
+import com.buession.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 import org.aspectj.lang.JoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

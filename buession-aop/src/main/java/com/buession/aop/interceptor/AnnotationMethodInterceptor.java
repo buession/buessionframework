@@ -36,6 +36,27 @@ import java.lang.annotation.Annotation;
  */
 public interface AnnotationMethodInterceptor extends MethodInterceptor {
 
+	/**
+	 * 判断 {@link MethodInvocation} 是否支持注解
+	 *
+	 * @param mi
+	 *        {@link MethodInvocation}
+	 *
+	 * @return {@link MethodInvocation} 支持注解返回 true；否则，返回 false
+	 */
 	boolean isSupport(MethodInvocation mi);
+
+	/**
+	 * 增强方法执行
+	 *
+	 * @param mi
+	 * 		方法调用的描述
+	 *
+	 * @return 目标方法的执行结果
+	 *
+	 * @throws Throwable
+	 * 		增强方法执行异常时抛出
+	 */
+	void execute(MethodInvocation mi) throws Throwable;
 
 }

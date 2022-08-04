@@ -25,7 +25,7 @@
 package com.buession.web.servlet.aop.aspect.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodInterceptor;
+import com.buession.aop.aspectj.AbstractAspectAnnotationsMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletHttpCacheAnnotationMethodInterceptor;

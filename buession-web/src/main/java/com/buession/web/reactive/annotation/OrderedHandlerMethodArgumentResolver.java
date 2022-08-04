@@ -46,7 +46,7 @@ import java.util.List;
  * 方法参数注解 {@link Ordered} 解析器
  *
  * @author Yong.Teng
- * @since 2.0.3
+ * @since 2.1.0
  */
 public class OrderedHandlerMethodArgumentResolver extends AbstractNamedValueSyncArgumentResolver {
 

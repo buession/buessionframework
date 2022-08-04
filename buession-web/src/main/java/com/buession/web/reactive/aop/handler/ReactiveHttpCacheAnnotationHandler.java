@@ -46,7 +46,7 @@ public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotat
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, HttpCache httpCache){
+	public void execute(MethodInvocation mi, HttpCache httpCache){
 		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			if(serverHttp == null){
@@ -54,7 +54,7 @@ public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotat
 			}else if(serverHttp.getResponse() == null){
 				logger.debug("ServerHttpResponse is null.");
 			}
-			return null;
+			return;
 		}
 
 		HttpHeaders httpHeaders = serverHttp.getResponse().getHeaders();
@@ -76,8 +76,6 @@ public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotat
 		if(Validate.hasText(httpCache.pragma())){
 			httpHeaders.setPragma(httpCache.pragma());
 		}
-
-		return null;
 	}
 
 }

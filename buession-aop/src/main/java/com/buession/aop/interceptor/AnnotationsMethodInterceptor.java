@@ -21,10 +21,15 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.aop.interceptor;/**
- * 
- *
+ */
+package com.buession.aop.interceptor;
+
+import org.aopalliance.intercept.MethodInterceptor;
+
+/**
  * @author Yong.Teng
  * @since 2.1.0
- */public interface AnnotationsMethodInterceptor {
+ */
+public interface AnnotationsMethodInterceptor extends MethodInterceptor {
+
 }

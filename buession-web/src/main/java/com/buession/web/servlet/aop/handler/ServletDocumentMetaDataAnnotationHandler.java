@@ -44,7 +44,7 @@ public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMe
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
 		if(Validate.isNotEmpty(mi.getArguments())){
 			Model model = null;
 
@@ -59,13 +59,11 @@ public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMe
 				if(logger.isWarnEnabled()){
 					logger.warn("Model is null");
 				}
-				return null;
+				return;
 			}
 
 			addModelAttribute(model, documentMetaData);
 		}
-
-		return null;
 	}
 
 }

@@ -50,8 +50,7 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	private final ReactiveAdapterRegistry registry;
 
-	public WebFluxConfiguration(@Nullable ConfigurableBeanFactory factory,
-								ReactiveAdapterRegistry registry){
+	public WebFluxConfiguration(@Nullable ConfigurableBeanFactory factory, ReactiveAdapterRegistry registry){
 		this.factory = factory;
 		this.registry = registry;
 	}

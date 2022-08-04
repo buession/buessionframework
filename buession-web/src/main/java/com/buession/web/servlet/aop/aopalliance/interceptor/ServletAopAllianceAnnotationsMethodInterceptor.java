@@ -26,12 +26,8 @@ package com.buession.web.servlet.aop.aopalliance.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.aop.resolver.SpringAnnotationResolver;
-import com.buession.web.aop.interceptor.AbstractAopAllianceAnnotationsMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletHttpCacheAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
+import com.buession.aop.aopalliance.AbstractAopAllianceAnnotationsMethodInterceptor;
+import com.buession.web.servlet.aop.interceptor.*;
 
 import java.util.ArrayDeque;
 import java.util.Collection;

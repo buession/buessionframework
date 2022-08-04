@@ -26,6 +26,7 @@
  */
 package com.buession.web.reactive.filter;
 
+import com.buession.core.utils.Assert;
 import com.buession.web.http.response.IServerInfoFilter;
 import com.buession.web.utils.ServerUtils;
 
@@ -41,14 +42,13 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	/**
 	 * 响应头名称
 	 */
-	private String headerName = SERVER_NAME_HEADER_NAME;
+	private String headerName;
 
 	/**
 	 * 构造函数
 	 */
 	public ServerInfoFilter(){
-		super();
-		setHeaders();
+		this(SERVER_NAME_HEADER_NAME);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	public ServerInfoFilter(final String headerName){
 		super();
 		this.headerName = headerName;
-		setHeaders();
+		setHeaders(Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName())));
 	}
 
 	@Override
@@ -70,15 +70,12 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 
 	@Override
 	public void setHeaderName(String headerName){
+		Assert.isBlank(headerName, "Server info response header name cloud not be null or empty");
 		this.headerName = headerName;
 	}
 
 	protected String format(final String computerName){
 		return computerName;
-	}
-
-	protected void setHeaders(){
-		setHeaders(Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName())));
 	}
 
 }

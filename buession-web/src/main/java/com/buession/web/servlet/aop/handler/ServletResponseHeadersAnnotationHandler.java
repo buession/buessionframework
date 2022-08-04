@@ -49,10 +49,10 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
 		ResponseHeader[] headers = responseHeaders.value();
 		if(Validate.isEmpty(headers)){
-			return null;
+			return;
 		}
 
 		HttpServletResponse response = RequestUtils.getResponse();
@@ -60,7 +60,6 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 			if(logger.isWarnEnabled()){
 				logger.warn("HttpServletResponse is null");
 			}
-			return null;
 		}
 
 		for(ResponseHeader header : headers){
@@ -78,8 +77,6 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 				}
 			}
 		}
-
-		return null;
 	}
 
 }

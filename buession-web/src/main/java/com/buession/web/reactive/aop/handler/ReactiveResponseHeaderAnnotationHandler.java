@@ -48,11 +48,11 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
+	public void execute(MethodInvocation mi, ResponseHeader responseHeader){
 		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return null;
+			return;
 		}
 
 		ServerHttpResponse response = serverHttp.getResponse();
@@ -69,8 +69,6 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 				response.getHeaders().set(responseHeader.name(), value);
 			}
 		}
-
-		return null;
 	}
 
 }

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.aspect;
+package com.buession.aop.aspectj;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -32,6 +32,7 @@ import java.util.Arrays;
 
 /**
  * @author Yong.Teng
+ * @since 2.1.0
  */
 public class AspectjAnnotationsMethodInterceptorLogUtils {
 

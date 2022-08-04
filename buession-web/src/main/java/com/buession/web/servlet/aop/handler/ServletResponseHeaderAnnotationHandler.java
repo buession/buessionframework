@@ -48,13 +48,13 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
+	public void execute(MethodInvocation mi, ResponseHeader responseHeader){
 		HttpServletResponse response = RequestUtils.getResponse();
 		if(response == null){
 			if(logger.isWarnEnabled()){
 				logger.warn("HttpServletResponse is null");
 			}
-			return null;
+			return;
 		}
 
 		final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name());
@@ -70,8 +70,6 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
 				response.setHeader(responseHeader.name(), value);
 			}
 		}
-
-		return null;
 	}
 
 }

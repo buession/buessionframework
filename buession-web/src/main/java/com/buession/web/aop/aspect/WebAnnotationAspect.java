@@ -32,9 +32,8 @@ import org.aspectj.lang.JoinPoint;
 public interface WebAnnotationAspect {
 
 	String EXPRESSIONS = "execution(@com.buession.web.http.response.annotation.ContentType * *(..)) || "
+			+ "execution(@com.buession.web.http.response.annotation.HttpCache * *(..)) || "
 			+ "execution(@com.buession.web.http.response.annotation.DisableHttpCache * *(..)) || "
-			+ "execution(@com.buession.web.http.response.annotation.EnableHttpCache * *(..)) || "
-			+ "execution(@com.buession.web.http.response.annotation.PrimitiveCrossOrigin * *(..)) || "
 			+ "execution(@com.buession.web.http.response.annotation.ResponseHeader * *(..)) || "
 			+ "execution(@com.buession.web.http.response.annotation.ResponseHeaders * *(..)) || "
 			+ "execution(@com.buession.web.mvc.view.document.DocumentMetaData * *(..))";

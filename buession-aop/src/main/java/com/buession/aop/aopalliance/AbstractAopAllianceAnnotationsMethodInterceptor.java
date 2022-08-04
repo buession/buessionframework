@@ -22,8 +22,10 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.interceptor;
+package com.buession.aop.aopalliance;
 
+import com.buession.aop.interceptor.AbstractAnnotationsMethodInterceptor;
+import com.buession.aop.interceptor.AnnotationsMethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.reflect.Method;
@@ -65,7 +67,6 @@ public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends Ab
 
 			@Override
 			public Object proceed() throws Throwable{
-				System.err.println("XXXX");
 				return mi.proceed();
 			}
 

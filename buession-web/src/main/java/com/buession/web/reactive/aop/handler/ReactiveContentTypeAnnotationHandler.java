@@ -47,11 +47,11 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ContentType contentType){
+	public void execute(MethodInvocation mi, ContentType contentType){
 		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return null;
+			return;
 		}
 
 		String mime = contentType.mime();
@@ -61,8 +61,6 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 		String subType = mime.substring(i);
 
 		serverHttp.getResponse().getHeaders().setContentType(new MediaType(type, subType, charset));
-
-		return null;
 	}
 
 }

@@ -29,8 +29,6 @@ import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.aop.resolver.DefaultAnnotationResolver;
 import com.buession.core.utils.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
@@ -45,8 +43,6 @@ import java.util.Optional;
  */
 public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
 		implements AnnotationMethodInterceptor {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * JSR-175 注解读取和处理器
@@ -104,19 +100,19 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		return getAnnotation(mi) != null;
 	}
 
-	protected A getAnnotation(MethodInvocation mi){
-		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
+	@Override
+	public Object invoke(MethodInvocation mi) throws Throwable{
+		execute(mi);
+		return mi.proceed();
 	}
 
 	@Override
-	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		AnnotationHandler<A> annotationHandler = getHandler();
+	public void execute(MethodInvocation mi) throws Throwable{
+		getHandler().execute(mi, getAnnotation(mi));
+	}
 
-		if(logger.isDebugEnabled()){
-			logger.debug("{} MethodInvocation: {} do invoke.", getClass().getName(), mi.getClass().getName());
-		}
-
-		annotationHandler.execute(mi, getAnnotation(mi));
+	protected A getAnnotation(MethodInvocation mi){
+		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
 	}
 
 }

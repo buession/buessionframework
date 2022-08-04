@@ -26,7 +26,14 @@
 
 
 ### ⏪ 优化
+- **buession-aop：** 优化注解处理程序
 - **buession-web：** 优化 servlet 注解处理
+
+
+### 🐞 Bug 修复
+
+- **buession-aop：** 修复注解在 cglib 代理模式下，连接点重复执行的 BUG
+- **buession-web：** 修复 ReactiveContentTypeAnnotationMethodInterceptor 使用成了 servlet 模式下的 ContentTypeAnnotationMethodInterceptor 的 BUG
 
 
 ---
