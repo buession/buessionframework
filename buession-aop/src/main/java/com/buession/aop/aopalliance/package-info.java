@@ -22,37 +22,9 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.aspect;
-
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-
-import java.util.Arrays;
-
 /**
+ * 
+ *
  * @author Yong.Teng
- */
-public class AspectjAnnotationsMethodInterceptorLogUtils {
-
-	private AspectjAnnotationsMethodInterceptorLogUtils(){
-
-	}
-
-	public static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
-		if(logger.isTraceEnabled()){
-			final StringBuilder message = new StringBuilder(255);
-
-			message.append("Invoking a method decorated with a Buession annotation").append("\n");
-			message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
-			message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
-			message.append("\tannotations: ")
-					.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
-					.append("\n");
-			message.append("\ttarget     : ").append(joinPoint.getTarget());
-
-			logger.trace(message.toString());
-		}
-	}
-
-}
+ * @since 2.1.0
+ */package com.buession.aop.aopalliance;

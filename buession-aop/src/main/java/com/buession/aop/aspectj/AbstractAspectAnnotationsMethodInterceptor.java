@@ -24,14 +24,45 @@
  */
 package com.buession.aop.interceptor;
 
-import org.aopalliance.aop.Advice;
+import com.buession.aop.aspectj.AfterAdviceMethodInvocationAdapter;
+import com.buession.aop.aspectj.AspectjAnnotationsMethodInterceptorLogUtils;
+import com.buession.aop.aspectj.BeforeAdviceMethodInvocationAdapter;
+import org.aspectj.lang.JoinPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * 拦截器
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.1.0
  */
-public interface Interceptor extends Advice {
+public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	public AbstractAspectAnnotationsMethodInterceptor(){
+		super();
+	}
+
+	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable{
+		if(logger.isDebugEnabled()){
+			AspectjAnnotationsMethodInterceptorLogUtils.performBeforeInterceptionDebug(logger, joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
+
+	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
+		if(logger.isDebugEnabled()){
+			AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		AfterAdviceMethodInvocationAdapter mi = AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
 
 }

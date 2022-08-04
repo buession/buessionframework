@@ -22,19 +22,18 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.interceptor;
+package com.buession.aop.interceptor;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.1.0
  */
 public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor
-		implements MethodInterceptor {
+		implements AnnotationsMethodInterceptor {
 
 	public AbstractAopAllianceAnnotationsMethodInterceptor(){
 		super();
@@ -66,6 +65,7 @@ public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends Ab
 
 			@Override
 			public Object proceed() throws Throwable{
+				System.err.println("XXXX");
 				return mi.proceed();
 			}
 
