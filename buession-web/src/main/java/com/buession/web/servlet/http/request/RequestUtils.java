@@ -29,8 +29,6 @@ package com.buession.web.servlet.http.request;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.web.http.HttpHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -44,8 +42,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
-	private final static Logger logger = LoggerFactory.getLogger(RequestUtils.class);
-
 	private RequestUtils(){
 	}
 
@@ -54,17 +50,10 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 当前请求 {@link HttpServletResponse} 实例
 	 *
-	 * @since 2.0.3
+	 * @since 2.1.0
 	 */
 	public static HttpServletResponse getResponse(){
-		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		if(attributes == null){
-			if(logger.isWarnEnabled()){
-				logger.warn("ServletRequestAttributes is null");
-			}
-			return null;
-		}
-
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attributes.getResponse();
 	}
 

@@ -34,7 +34,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 打印当前请求 URL 过滤器
@@ -70,11 +69,7 @@ public class PrintUrlFilter extends OncePerRequestFilter {
 			String queryString = request.getQueryString();
 
 			if(Validate.hasText(queryString)){
-				final StringBuilder sb = new StringBuilder(url);
-
-				sb.append('?').append(queryString);
-
-				return sb.toString();
+				url += "?" + queryString;
 			}
 		}
 

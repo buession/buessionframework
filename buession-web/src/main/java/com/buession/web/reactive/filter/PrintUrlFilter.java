@@ -47,7 +47,7 @@ public class PrintUrlFilter implements WebFilter {
 		ServerHttpRequest request = exchange.getRequest();
 
 		if(logger.isInfoEnabled()){
-			String url = parseFullUrl(request);
+			String url = parseUrl(request);
 
 			if(Validate.hasText(url)){
 				logger.info("Request URL: {}", url);
@@ -59,10 +59,6 @@ public class PrintUrlFilter implements WebFilter {
 
 	protected String parseUrl(final ServerHttpRequest request){
 		return request.getURI().toString();
-	}
-
-	protected String parseFullUrl(final ServerHttpRequest request){
-		return parseUrl(request);
 	}
 
 }
