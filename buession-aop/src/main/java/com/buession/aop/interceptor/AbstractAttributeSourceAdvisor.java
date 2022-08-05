@@ -63,13 +63,14 @@ public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcher
 				m = targetClass.getMethod(m.getName(), m.getParameterTypes());
 				return isAnnotationPresent(m) || isAnnotationPresent(targetClass);
 			}catch(NoSuchMethodException e){
+				//
 			}
 		}
 
 		return false;
 	}
 
-	private boolean isAnnotationPresent(Class<?> targetClazz){
+	private boolean isAnnotationPresent(final Class<?> targetClazz){
 		for(Class<? extends Annotation> annotationClass : annotations){
 			Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, annotationClass);
 			if(annotation != null){
@@ -80,7 +81,7 @@ public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcher
 		return false;
 	}
 
-	private boolean isAnnotationPresent(Method method){
+	private boolean isAnnotationPresent(final Method method){
 		for(Class<? extends Annotation> annotationClass : annotations){
 			Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClass);
 			if(annotation != null){

@@ -52,8 +52,6 @@ public interface AnnotationMethodInterceptor extends MethodInterceptor {
 	 * @param mi
 	 * 		方法调用的描述
 	 *
-	 * @return 目标方法的执行结果
-	 *
 	 * @throws Throwable
 	 * 		增强方法执行异常时抛出
 	 */

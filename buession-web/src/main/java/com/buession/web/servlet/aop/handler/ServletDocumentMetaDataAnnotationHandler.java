@@ -28,16 +28,12 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
  */
 public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
-
-	private final static Logger logger = LoggerFactory.getLogger(ServletDocumentMetaDataAnnotationHandler.class);
 
 	public ServletDocumentMetaDataAnnotationHandler(){
 		super();
@@ -46,23 +42,12 @@ public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMe
 	@Override
 	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
 		if(Validate.isNotEmpty(mi.getArguments())){
-			Model model = null;
-
 			for(Object argument : mi.getArguments()){
 				if(argument instanceof Model){
-					model = (Model) argument;
+					addModelAttribute((Model) argument, documentMetaData);
 					break;
 				}
 			}
-
-			if(model == null){
-				if(logger.isWarnEnabled()){
-					logger.warn("Model is null");
-				}
-				return;
-			}
-
-			addModelAttribute(model, documentMetaData);
 		}
 	}
 
