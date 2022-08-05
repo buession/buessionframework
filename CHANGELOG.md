@@ -19,9 +19,11 @@
 ### 🔔 变化
 
 - **buession-aop：** 调整 AnnotationResolver 及其实现泛型参数，由类泛型参数，调整为 getAnnotation 泛型
+- **buession-aop：** AnnotationHandler execute 方法不再返回值
 - **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生 HandlerMethodArgumentResolver 实现抽象类
 - **buession-web：** 废弃 MobileFilter，根据需要直接使用 RequestUtils.isMobile(request) 判断
-- **buession-web：** 废弃 servlet HttpServlet、AopUtils、MethodUtils
+- **buession-web：** 删除 servlet HttpServlet、AopUtils、MethodUtils
+- **buession-web：** MethodInterceptor 的抽象类移至 buession-aop
 - **buession-velocity：** 配置属性 springMacro.resource.loader.class 替换为 resource.loader.springMacro.class，resource.loader 替换 resource.loaders
 
 

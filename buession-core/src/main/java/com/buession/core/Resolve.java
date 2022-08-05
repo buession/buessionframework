@@ -33,7 +33,7 @@ package com.buession.core;
  * 		解析结果对象类型
  *
  * @author Yong.Teng
- * @since 2.0.3
+ * @since 2.1.0
  */
 @FunctionalInterface
 public interface Resolve<S, T> {
