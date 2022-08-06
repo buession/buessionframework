@@ -27,11 +27,11 @@ package com.buession.web.reactive.aop.handler;
 import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.response.annotation.ContentType;
-import com.buession.web.reactive.aop.AopUtils;
-import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 import java.nio.charset.Charset;
 
@@ -48,9 +48,11 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 
 	@Override
 	public void execute(MethodInvocation mi, ContentType contentType){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		if(serverHttp == null || serverHttp.getResponse() == null){
-			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
+		ServerHttpResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("ServerHttpResponse is null");
+			}
 			return;
 		}
 
@@ -60,7 +62,7 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 		String type = mime.substring(0, i - 1);
 		String subType = mime.substring(i);
 
-		serverHttp.getResponse().getHeaders().setContentType(new MediaType(type, subType, charset));
+		response.getHeaders().setContentType(new MediaType(type, subType, charset));
 	}
 
 }

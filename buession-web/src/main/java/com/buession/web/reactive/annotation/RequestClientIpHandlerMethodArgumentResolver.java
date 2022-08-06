@@ -27,6 +27,7 @@
 package com.buession.web.reactive.annotation;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
 import com.buession.web.reactive.http.request.RequestUtils;
@@ -35,7 +36,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ReactiveAdapterRegistry;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.ValueConstants;
 import org.springframework.web.reactive.result.method.annotation.AbstractNamedValueSyncArgumentResolver;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -79,12 +83,11 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 	protected Object resolveNamedValue(String name, MethodParameter parameter, ServerWebExchange exchange){
 		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
 		if(Long.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(exchange.getRequest());
-			return InetAddressUtils.ip2long(ip);
+			return InetAddressUtils.ip2long(getClientIp(exchange.getRequest(), parameter));
 		}else if(CharSequence.class.isAssignableFrom(clazz)){
-			return RequestUtils.getClientIp(exchange.getRequest());
+			return getClientIp(exchange.getRequest(), parameter);
 		}else if(InetAddress.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(exchange.getRequest());
+			final String ip = getClientIp(exchange.getRequest(), parameter);
 			try{
 				return InetAddress.getByName(ip);
 			}catch(UnknownHostException e){
@@ -93,6 +96,26 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 		}
 
 		return null;
+	}
+
+	private String getClientIp(final ServerHttpRequest request, final MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		String clientIp = null;
+
+		if(Validate.isNotEmpty(requestClientIp.headerName())){
+			HttpHeaders httpHeaders = request.getHeaders();
+
+			for(String headerName : requestClientIp.headerName()){
+				if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) != false){
+					clientIp = httpHeaders.getFirst(headerName);
+					if(Validate.hasText(clientIp)){
+						return clientIp;
+					}
+				}
+			}
+		}
+
+		return RequestUtils.getClientIp(request);
 	}
 
 	private final static class RequestClientIpNamedValueInfo extends NamedValueInfo {

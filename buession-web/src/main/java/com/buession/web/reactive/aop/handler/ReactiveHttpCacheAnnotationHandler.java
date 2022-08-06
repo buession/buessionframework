@@ -28,11 +28,11 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractHttpCacheAnnotationHandler;
 import com.buession.web.http.response.annotation.HttpCache;
-import com.buession.web.reactive.aop.AopUtils;
-import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
  * @author Yong.Teng
@@ -47,17 +47,15 @@ public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotat
 
 	@Override
 	public void execute(MethodInvocation mi, HttpCache httpCache){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		if(serverHttp == null || serverHttp.getResponse() == null){
-			if(serverHttp == null){
-				logger.debug("ServerHttp is null.");
-			}else if(serverHttp.getResponse() == null){
-				logger.debug("ServerHttpResponse is null.");
+		ServerHttpResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("ServerHttpResponse is null");
 			}
 			return;
 		}
 
-		HttpHeaders httpHeaders = serverHttp.getResponse().getHeaders();
+		HttpHeaders httpHeaders = response.getHeaders();
 		boolean isSetCacheControl = false;
 
 		if(Validate.hasText(httpCache.cacheControl())){

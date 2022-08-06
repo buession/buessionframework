@@ -28,7 +28,6 @@ package com.buession.web.reactive.config;
 
 import com.buession.web.bind.converter.FormatterRegistryUtils;
 import com.buession.web.reactive.OnWebFluxCondition;
-import com.buession.web.reactive.annotation.OrderedHandlerMethodArgumentResolver;
 import com.buession.web.reactive.annotation.RequestClientIpHandlerMethodArgumentResolver;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Conditional;
@@ -63,7 +62,6 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
 	@Override
 	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer){
 		configurer.addCustomResolver(new RequestClientIpHandlerMethodArgumentResolver(factory, registry));
-		configurer.addCustomResolver(new OrderedHandlerMethodArgumentResolver(factory, registry));
 	}
 
 }

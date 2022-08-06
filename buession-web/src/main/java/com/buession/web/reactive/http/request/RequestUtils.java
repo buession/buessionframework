@@ -29,8 +29,11 @@ package com.buession.web.reactive.http.request;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.web.http.HttpHeader;
+import com.buession.web.reactive.context.request.ReactiveRequestAttributes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
 
@@ -42,6 +45,18 @@ import java.util.List;
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
 	private RequestUtils(){
+	}
+
+	/**
+	 * 获取当前请求 {@link ServerHttpResponse} 实例
+	 *
+	 * @return 当前请求 {@link ServerHttpResponse} 实例
+	 *
+	 * @since 2.1.0
+	 */
+	public static ServerHttpResponse getResponse(){
+		ReactiveRequestAttributes requestAttributes = (ReactiveRequestAttributes) RequestContextHolder.getRequestAttributes();
+		return requestAttributes.getResponse();
 	}
 
 	/**

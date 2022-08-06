@@ -24,11 +24,7 @@
  */
 package com.buession.web.servlet.aop.handler;
 
-import com.buession.aop.MethodInvocation;
-import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
-import com.buession.web.mvc.view.document.DocumentMetaData;
-import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
@@ -37,18 +33,6 @@ public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMe
 
 	public ServletDocumentMetaDataAnnotationHandler(){
 		super();
-	}
-
-	@Override
-	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
-		if(Validate.isNotEmpty(mi.getArguments())){
-			for(Object argument : mi.getArguments()){
-				if(argument instanceof Model){
-					addModelAttribute((Model) argument, documentMetaData);
-					break;
-				}
-			}
-		}
 	}
 
 }

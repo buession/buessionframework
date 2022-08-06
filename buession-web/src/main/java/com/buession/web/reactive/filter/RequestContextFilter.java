@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
 
-import com.buession.web.reactive.context.request.RequestContextHolder;
-import org.springframework.http.server.reactive.ServerHttpRequest;
+import com.buession.web.reactive.context.request.ReactiveRequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -41,9 +41,10 @@ public class RequestContextFilter implements WebFilter {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-		ServerHttpRequest request = exchange.getRequest();
-		return chain.filter(exchange).subscriberContext(context->context.put(RequestContextHolder.CONTEXT_KEY,
-				request));
+		ReactiveRequestAttributes requestAttributes = new ReactiveRequestAttributes(exchange);
+		RequestContextHolder.setRequestAttributes(requestAttributes);
+
+		return chain.filter(exchange);
 	}
 
 }

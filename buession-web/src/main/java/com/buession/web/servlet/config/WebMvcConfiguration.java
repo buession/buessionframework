@@ -26,7 +26,6 @@ package com.buession.web.servlet.config;
 
 import com.buession.web.bind.converter.FormatterRegistryUtils;
 import com.buession.web.servlet.OnServletCondition;
-import com.buession.web.servlet.annotation.OrderedHandlerMethodArgumentResolver;
 import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +50,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
 		argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
-		argumentResolvers.add(new OrderedHandlerMethodArgumentResolver());
 	}
 
 }

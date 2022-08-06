@@ -13,7 +13,7 @@
 - **buession-core：** 新增对象解析接口 Resolve
 - **buession-core：** PropertyMapper 增加 alwaysApplyingWhenHasText() 方法，用于判断源属性是否含有内容
 - **buession-web：** 注解 @RequestClientIp 增加支持返回 InetAddress
-- **buession-web：** 新增排序注解 @Ordered 支持接收前端传递的排序字段和排序方式
+- **buession-web：** 注解 @RequestClientIp 支持指定获取真实 IP 的请求头名称
 
 
 ### 🔔 变化
@@ -22,7 +22,7 @@
 - **buession-aop：** AnnotationHandler execute 方法不再返回值
 - **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生 HandlerMethodArgumentResolver 实现抽象类
 - **buession-web：** 废弃 MobileFilter，根据需要直接使用 RequestUtils.isMobile(request) 判断
-- **buession-web：** 删除 servlet HttpServlet、AopUtils、MethodUtils
+- **buession-web：** 删除 AopUtils、MethodUtils，删除 servlet HttpServlet、webflux ServerHttp
 - **buession-web：** MethodInterceptor 的抽象类移至 buession-aop
 - **buession-velocity：** 配置属性 springMacro.resource.loader.class 替换为 resource.loader.springMacro.class，resource.loader 替换 resource.loaders
 

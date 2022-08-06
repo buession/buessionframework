@@ -27,6 +27,7 @@
 package com.buession.web.servlet.annotation;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
 import com.buession.web.servlet.http.request.RequestUtils;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.ValueConstants;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
 
@@ -83,12 +85,11 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request){
 		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
 		if(Long.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(request.getNativeRequest(HttpServletRequest.class));
-			return InetAddressUtils.ip2long(ip);
+			return InetAddressUtils.ip2long(getClientIp(request, parameter));
 		}else if(CharSequence.class.isAssignableFrom(clazz)){
-			return RequestUtils.getClientIp(request.getNativeRequest(HttpServletRequest.class));
+			return getClientIp(request, parameter);
 		}else if(InetAddress.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(request.getNativeRequest(HttpServletRequest.class));
+			final String ip = getClientIp(request, parameter);
 			try{
 				return InetAddress.getByName(ip);
 			}catch(UnknownHostException e){
@@ -97,6 +98,25 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 		}
 
 		return null;
+	}
+
+	private String getClientIp(final NativeWebRequest webRequest, final MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+		String clientIp = null;
+
+		if(Validate.isNotEmpty(requestClientIp.headerName())){
+			for(String headerName : requestClientIp.headerName()){
+				if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) != false){
+					clientIp = request.getHeader(headerName);
+					if(Validate.hasText(clientIp)){
+						return clientIp;
+					}
+				}
+			}
+		}
+
+		return RequestUtils.getClientIp(request);
 	}
 
 	private final static class RequestClientIpNamedValueInfo extends NamedValueInfo {
