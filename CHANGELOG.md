@@ -1,7 +1,7 @@
  Buession Framework Changelog
 ===========================
 
-## [2.1.0](https://github.com/buession/buessionframework/releases/tag/v2.1.0) (2022-07-xx)
+## [2.1.0](https://github.com/buession/buessionframework/releases/tag/v2.1.0) (2022-08-07)
 
 ### 🔨依赖升级
 
