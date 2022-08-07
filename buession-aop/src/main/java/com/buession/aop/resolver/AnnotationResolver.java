@@ -31,12 +31,10 @@ import java.lang.annotation.Annotation;
 /**
  * 注解解析器
  *
- * @param <A>
- * 		注解类型
- *
  * @author Yong.Teng
  */
-public interface AnnotationResolver<A extends Annotation> {
+@FunctionalInterface
+public interface AnnotationResolver {
 
 	/**
 	 * 返回注解实例基于给定的 {@link MethodInvocation MethodInvocation} 的参数
@@ -45,9 +43,11 @@ public interface AnnotationResolver<A extends Annotation> {
 	 * 		the intercepted method to be invoked
 	 * @param clazz
 	 * 		the annotation class of the annotation to find
+	 * @param <A>
+	 * 		注解类型
 	 *
 	 * @return 注解实例
 	 */
-	A getAnnotation(MethodInvocation mi, Class<A> clazz);
+	<A extends Annotation> A getAnnotation(MethodInvocation mi, Class<A> clazz);
 
 }

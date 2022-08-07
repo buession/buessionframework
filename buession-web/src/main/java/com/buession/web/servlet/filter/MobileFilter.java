@@ -41,6 +41,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public class MobileFilter extends OncePerRequestFilter {
 
 	@Override

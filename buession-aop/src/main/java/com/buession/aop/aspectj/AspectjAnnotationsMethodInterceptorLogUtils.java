@@ -22,33 +22,50 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.interceptor;
+package com.buession.aop.aspectj;
 
-import com.buession.aop.aspectj.BeforeAdviceMethodInvocationAdapter;
-import com.buession.web.aop.aspect.AspectjAnnotationsMethodInterceptorLogUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.1.0
  */
-public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
+public class AspectjAnnotationsMethodInterceptorLogUtils {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private AspectjAnnotationsMethodInterceptorLogUtils(){
 
-	public AbstractAspectAnnotationsMethodInterceptor(){
-		super();
 	}
 
-	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
-		AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
+	public static void performBeforeInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
+		final StringBuilder message = new StringBuilder(255);
 
-		// 1. Adapt the join point into a method invocation
-		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
-		// 2. Delegate the authorization of the method call to the super class
-		super.invoke(mi);
+		message.append("Invoking a method decorated with a annotation").append("\n");
+		message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
+		message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
+		message.append("\tannotations: ")
+				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
+				.append("\n");
+		message.append("\ttarget     : ").append(joinPoint.getTarget());
+
+		logger.debug(message.toString());
+	}
+
+	public static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
+		final StringBuilder message = new StringBuilder(255);
+
+		message.append("Invoking a method decorated with a annotation").append("\n");
+		message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
+		message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
+		message.append("\tannotations: ")
+				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
+				.append("\n");
+		message.append("\ttarget     : ").append(joinPoint.getTarget());
+
+		logger.debug(message.toString());
 	}
 
 }

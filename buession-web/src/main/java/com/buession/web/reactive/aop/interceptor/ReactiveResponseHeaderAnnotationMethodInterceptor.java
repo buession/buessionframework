@@ -42,7 +42,7 @@ public class ReactiveResponseHeaderAnnotationMethodInterceptor
 		super(new ReactiveResponseHeaderAnnotationHandler());
 	}
 
-	public ReactiveResponseHeaderAnnotationMethodInterceptor(AnnotationResolver<ResponseHeader> resolver){
+	public ReactiveResponseHeaderAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ReactiveResponseHeaderAnnotationHandler(), resolver);
 	}
 

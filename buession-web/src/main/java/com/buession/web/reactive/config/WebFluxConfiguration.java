@@ -29,9 +29,12 @@ package com.buession.web.reactive.config;
 import com.buession.web.bind.converter.FormatterRegistryUtils;
 import com.buession.web.reactive.OnWebFluxCondition;
 import com.buession.web.reactive.annotation.RequestClientIpHandlerMethodArgumentResolver;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.lang.Nullable;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
 
@@ -42,6 +45,15 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
 @Conditional(OnWebFluxCondition.class)
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
+	private final ConfigurableBeanFactory factory;
+
+	private final ReactiveAdapterRegistry registry;
+
+	public WebFluxConfiguration(@Nullable ConfigurableBeanFactory factory, ReactiveAdapterRegistry registry){
+		this.factory = factory;
+		this.registry = registry;
+	}
+
 	@Override
 	public void addFormatters(FormatterRegistry registry){
 		FormatterRegistryUtils.addConverters(registry);
@@ -49,7 +61,7 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	@Override
 	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer){
-		configurer.addCustomResolver(new RequestClientIpHandlerMethodArgumentResolver());
+		configurer.addCustomResolver(new RequestClientIpHandlerMethodArgumentResolver(factory, registry));
 	}
 
 }

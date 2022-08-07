@@ -29,10 +29,11 @@ import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.ContentType;
-import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.http.HttpServlet;
+import com.buession.web.servlet.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
@@ -46,11 +47,12 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ContentType contentType){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		if(httpServlet == null || httpServlet.getResponse() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
-			return null;
+	public void execute(MethodInvocation mi, ContentType contentType){
+		HttpServletResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("HttpServletResponse is null");
+			}
 		}
 
 		StringBuilder sb = new StringBuilder(contentType.mime().length() + 24);
@@ -61,8 +63,7 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 			sb.append("; charset=").append(contentType.encoding());
 		}
 
-		httpServlet.getResponse().addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
-		return null;
+		response.addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
 	}
 
 }

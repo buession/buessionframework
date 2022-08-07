@@ -27,7 +27,7 @@ package com.buession.web.reactive.aop.interceptor;
 import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractContentTypeAnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.ContentType;
-import com.buession.web.servlet.aop.handler.ServletContentTypeAnnotationHandler;
+import com.buession.web.reactive.aop.handler.ReactiveContentTypeAnnotationHandler;
 
 /**
  * {@link ContentType} 注解拦截器
@@ -38,11 +38,11 @@ import com.buession.web.servlet.aop.handler.ServletContentTypeAnnotationHandler;
 public class ReactiveContentTypeAnnotationMethodInterceptor extends AbstractContentTypeAnnotationMethodInterceptor {
 
 	public ReactiveContentTypeAnnotationMethodInterceptor(){
-		super(new ServletContentTypeAnnotationHandler());
+		super(new ReactiveContentTypeAnnotationHandler());
 	}
 
-	public ReactiveContentTypeAnnotationMethodInterceptor(AnnotationResolver<ContentType> resolver){
-		super(new ServletContentTypeAnnotationHandler(), resolver);
+	public ReactiveContentTypeAnnotationMethodInterceptor(AnnotationResolver resolver){
+		super(new ReactiveContentTypeAnnotationHandler(), resolver);
 	}
 
 }

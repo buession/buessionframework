@@ -7,13 +7,13 @@
 		<groupId>com.buession</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath/>
-		<version>2.0.2</version>
+		<version>2.1.0</version>
 	</parent>
 	<groupId>com.buession</groupId>
 	<artifactId>buession-parent</artifactId>
 	<url>https://github.com/buession/buessionframework</url>
 	<description>Buession Framework Parent</description>
-	<version>2.0.2</version>
+	<version>2.1.0</version>
 	<packaging>pom</packaging>
 
 	<organization>
@@ -48,6 +48,11 @@
 		<url>https://github.com/buession/buessionframework</url>
 	</scm>
 
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/buession/buessionframework/issues</url>
+	</issueManagement>
+
 	<modules>
 		<module>../buession-aop</module>
 		<module>../buession-beans</module>
@@ -75,15 +80,6 @@
 
 	<build>
 		<finalName>buession-parent</finalName>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<includes>
-					<include>**/*.*</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

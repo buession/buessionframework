@@ -24,23 +24,11 @@
  */
 package com.buession.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
-
 /**
  * 方法拦截器抽象类
  *
  * @author Yong.Teng
  */
 public abstract class AbstractMethodInterceptor implements MethodInterceptor {
-
-	@Override
-	public Object invoke(MethodInvocation mi) throws Throwable{
-		doInvoke(mi);
-		return mi.proceed();
-	}
-
-	protected void doInvoke(MethodInvocation mi) throws Throwable{
-		
-	}
 
 }

@@ -32,7 +32,8 @@ import com.buession.aop.MethodInvocation;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface MethodInterceptor extends Interceptor {
+@FunctionalInterface
+public interface MethodInterceptor {
 
 	/**
 	 * 拦截目标方法的执行，可以在这个方法内部实现需要增强的逻辑，以及主动调用目标方法

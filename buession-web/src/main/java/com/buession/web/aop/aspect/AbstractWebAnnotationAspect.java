@@ -25,7 +25,7 @@
 package com.buession.web.aop.aspect;
 
 import com.buession.core.utils.Assert;
-import com.buession.web.aop.interceptor.AbstractAspectAnnotationsMethodInterceptor;
+import com.buession.aop.aspectj.AbstractAspectAnnotationsMethodInterceptor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Pointcut;

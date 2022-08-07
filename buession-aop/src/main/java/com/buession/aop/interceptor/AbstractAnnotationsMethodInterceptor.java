@@ -22,8 +22,66 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.aop.interceptor;
+
+import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
+
+import java.util.Collection;
+
 /**
+ * 方法注解拦截器抽象类
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.1.0
  */
-package com.buession.aop.jdk;
+public abstract class AbstractAnnotationsMethodInterceptor extends AbstractMethodInterceptor {
+
+	/**
+	 * 注解方法拦截器
+	 */
+	private Collection<AnnotationMethodInterceptor> methodInterceptors;
+
+	/**
+	 * 构造函数
+	 */
+	public AbstractAnnotationsMethodInterceptor(){
+	}
+
+	/**
+	 * 返回注解方法拦截器
+	 *
+	 * @return 注解方法拦截器
+	 */
+	public Collection<AnnotationMethodInterceptor> getMethodInterceptors(){
+		return methodInterceptors;
+	}
+
+	/**
+	 * 设置注解方法拦截器
+	 *
+	 * @param methodInterceptors
+	 * 		注解方法拦截器
+	 */
+	public void setMethodInterceptors(Collection<AnnotationMethodInterceptor> methodInterceptors){
+		this.methodInterceptors = methodInterceptors;
+	}
+
+	@Override
+	public Object invoke(MethodInvocation mi) throws Throwable{
+		doInvoke(mi);
+		return mi.proceed();
+	}
+
+	protected void doInvoke(MethodInvocation mi) throws Throwable{
+		Collection<AnnotationMethodInterceptor> amis = getMethodInterceptors();
+		if(Validate.isNotEmpty(amis)){
+			for(AnnotationMethodInterceptor ami : amis){
+				if(ami.isSupport(mi)){
+					ami.execute(mi);
+				}
+			}
+		}
+	}
+
+}

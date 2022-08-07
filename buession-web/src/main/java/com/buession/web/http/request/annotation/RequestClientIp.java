@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.request.annotation;
@@ -37,5 +37,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface RequestClientIp {
+
+	/**
+	 * 真实 IP 请求头名称
+	 *
+	 * @return 获取真实 IP 的请求头名称
+	 *
+	 * @since 2.1.0
+	 */
+	String[] headerName() default "";
 
 }

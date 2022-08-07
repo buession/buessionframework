@@ -32,7 +32,7 @@ import com.buession.web.aop.aopalliance.AbstractWebAttributeSourcePointcutAdviso
  */
 public class ServletHttpAttributeSourcePointcutAdvisor extends AbstractWebAttributeSourcePointcutAdvisor {
 
-	private static final long serialVersionUID = 8267117305963633132L;
+	private final static long serialVersionUID = 8267117305963633132L;
 
 	public ServletHttpAttributeSourcePointcutAdvisor(){
 		super(new ServletAopAllianceAnnotationsMethodInterceptor());

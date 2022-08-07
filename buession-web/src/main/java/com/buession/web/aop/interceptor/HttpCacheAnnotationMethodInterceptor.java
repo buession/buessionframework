@@ -25,11 +25,10 @@
 package com.buession.web.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.HttpCache;
 
 /**
  * @author Yong.Teng
  */
-public interface HttpCacheAnnotationMethodInterceptor extends AnnotationMethodInterceptor<HttpCache> {
+public interface HttpCacheAnnotationMethodInterceptor extends AnnotationMethodInterceptor {
 
 }

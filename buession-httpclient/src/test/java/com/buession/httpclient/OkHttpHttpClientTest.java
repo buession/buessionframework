@@ -67,14 +67,6 @@ public class OkHttpHttpClientTest {
 	}
 
 	@Test
-	public void chunkedInputStreamRequestBody() throws IOException, RequestException{
-		File file = new File("/Users/tengyong/Downloads/source-map-viewer.html");
-		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/chunkedInputStream",
-				new ChunkedInputStreamRequestBody(new FileInputStream(file)));
-		System.out.println(response.getBody());
-	}
-
-	@Test
 	public void encodedFormRequestBody() throws IOException, RequestException{
 		EncodedFormRequestBody encodedFormRequestBody = new EncodedFormRequestBody();
 
@@ -82,34 +74,8 @@ public class OkHttpHttpClientTest {
 		encodedFormRequestBody.addRequestBodyElement("gender", Gender.FEMALE.name());
 		encodedFormRequestBody.addRequestBodyElement("age", "11");
 
-		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/encodedFormRequest",
+		Response response = httpClient.post("https://www.buession.com/upload/test/encodedFormRequest",
 				encodedFormRequestBody);
-		System.out.println(response.getBody());
-	}
-
-	@Test
-	public void multipartFormRequestBody() throws IOException, RequestException{
-		MultipartFormRequestBody multipartFormRequestBody = new MultipartFormRequestBody();
-
-		multipartFormRequestBody.addRequestBodyElement("username", "username");
-		multipartFormRequestBody.addRequestBodyElement("file",
-				new File("/Users/tengyong/Downloads/source-map-viewer.html"));
-
-		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/multipartFormRequest",
-				multipartFormRequestBody);
-		System.out.println(response.getBody());
-	}
-
-	@Test
-	public void htmlRawRequestBody() throws IOException, RequestException{
-		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/htmlRawRequest",
-				new HtmlRawRequestBody("html request"));
-		System.out.println(response.getBody());
-	}
-
-	@Test
-	public void unknowHost() throws IOException, RequestException{
-		Response response = httpClient.get("https://aaa.buession.cn/support.html");
 		System.out.println(response.getBody());
 	}
 

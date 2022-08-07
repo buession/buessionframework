@@ -25,11 +25,10 @@
 package com.buession.web.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.ContentType;
 
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationMethodInterceptor extends AnnotationMethodInterceptor<ContentType> {
+public interface ContentTypeAnnotationMethodInterceptor extends AnnotationMethodInterceptor {
 
 }

@@ -24,7 +24,6 @@
  */
 package com.buession.redis;
 
-import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
@@ -205,7 +204,7 @@ public abstract class RedisAccessor implements AutoCloseable {
 
 	@Override
 	public void close() throws Exception{
-		
+		// empty
 	}
 
 	protected RedisConnection fetchConnection(){
@@ -262,154 +261,6 @@ public abstract class RedisAccessor implements AutoCloseable {
 	protected void resetTransactionOrPipeline(){
 		index.remove();
 		txConverters.remove();
-	}
-
-	protected <V> Converter.SimpleStringConverter<V> stringObjectConverter(){
-		return new Converter.SimpleStringConverter<>(this);
-	}
-
-	protected <V> Converter.SimpleBinaryConverter<V> binaryObjectConverter(){
-		return new Converter.SimpleBinaryConverter<>(this);
-	}
-
-	protected <V> Converter.ClazzStringConverter<V> stringObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzStringConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.ClazzBinaryConverter<V> binaryObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzBinaryConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.TypeStringConverter<V> stringObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeStringConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.TypeBinaryConverter<V> binaryObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeBinaryConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.SimpleListStringConverter<V> listStringObjectConverter(){
-		return new Converter.SimpleListStringConverter<>(this);
-	}
-
-	protected <V> Converter.SimpleListBinaryConverter<V> listBinaryObjectConverter(){
-		return new Converter.SimpleListBinaryConverter<>(this);
-	}
-
-	protected <V> Converter.ClazzListStringConverter<V> listStringObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzListStringConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.ClazzListBinaryConverter<V> listBinaryObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzListBinaryConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.TypeListStringConverter<V> listStringObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeListStringConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.TypeListBinaryConverter<V> listBinaryObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeListBinaryConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.SimpleSetStringConverter<V> setStringObjectConverter(){
-		return new Converter.SimpleSetStringConverter<>(this);
-	}
-
-	protected <V> Converter.SimpleSetBinaryConverter<V> setBinaryObjectConverter(){
-		return new Converter.SimpleSetBinaryConverter<>(this);
-	}
-
-	protected <V> Converter.ClazzSetStringConverter<V> setStringObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzSetStringConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.ClazzSetBinaryConverter<V> setBinaryObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzSetBinaryConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.TypeSetStringConverter<V> setStringObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeSetStringConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.TypeSetBinaryConverter<V> setBinaryObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeSetBinaryConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.SimpleMapStringConverter<V> mapStringObjectConverter(){
-		return new Converter.SimpleMapStringConverter<>(this);
-	}
-
-	protected <V> Converter.SimpleMapBinaryConverter<V> mapBinaryObjectConverter(){
-		return new Converter.SimpleMapBinaryConverter<>(this);
-	}
-
-	protected <V> Converter.ClazzMapStringConverter<V> mapStringObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzMapStringConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.ClazzMapBinaryConverter<V> mapBinaryObjectConverter(final Class<V> clazz){
-		return new Converter.ClazzMapBinaryConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.TypeMapStringConverter<V> mapStringObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeMapStringConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.TypeMapBinaryConverter<V> mapBinaryObjectConverter(final TypeReference<V> typeReference){
-		return new Converter.TypeMapBinaryConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.SimpleScanResultListStringConverter<V> scanResultListStringConverter(){
-		return new Converter.SimpleScanResultListStringConverter<>(this);
-	}
-
-	protected <V> Converter.SimpleScanResultListBinaryConverter<V> scanResultListBinaryConverter(){
-		return new Converter.SimpleScanResultListBinaryConverter<>(this);
-	}
-
-	protected <V> Converter.ClazzScanResultListStringConverter<V> scanResultListStringConverter(final Class<V> clazz){
-		return new Converter.ClazzScanResultListStringConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.ClazzScanResultListBinaryConverter<V> scanResultListBinaryConverter(final Class<V> clazz){
-		return new Converter.ClazzScanResultListBinaryConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.TypeScanResultListStringConverter<V> scanResultListStringConverter(
-			final TypeReference<V> typeReference){
-		return new Converter.TypeScanResultListStringConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.TypeScanResultListBinaryConverter<V> scanResultListBinaryConverter(
-			final TypeReference<V> typeReference){
-		return new Converter.TypeScanResultListBinaryConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.SimpleScanResultMapStringConverter<V> scanResultMapStringConverter(){
-		return new Converter.SimpleScanResultMapStringConverter<>(this);
-	}
-
-	protected <V> Converter.SimpleScanResultMapBinaryConverter<V> scanResultMapBinaryConverter(){
-		return new Converter.SimpleScanResultMapBinaryConverter<>(this);
-	}
-
-	protected <V> Converter.ClazzScanResultMapStringConverter<V> scanResultMapStringConverter(final Class<V> clazz){
-		return new Converter.ClazzScanResultMapStringConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.ClazzScanResultMapBinaryConverter<V> scanResultMapBinaryConverter(final Class<V> clazz){
-		return new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz);
-	}
-
-	protected <V> Converter.TypeScanResultMapStringConverter<V> scanResultMapStringConverter(
-			final TypeReference<V> typeReference){
-		return new Converter.TypeScanResultMapStringConverter<>(this, typeReference);
-	}
-
-	protected <V> Converter.TypeScanResultMapBinaryConverter<V> scanResultMapBinaryConverter(
-			final TypeReference<V> typeReference){
-		return new Converter.TypeScanResultMapBinaryConverter<>(this, typeReference);
 	}
 
 }

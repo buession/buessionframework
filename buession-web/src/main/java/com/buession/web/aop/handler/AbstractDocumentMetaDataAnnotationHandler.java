@@ -24,6 +24,7 @@
  */
 package com.buession.web.aop.handler;
 
+import com.buession.aop.MethodInvocation;
 import com.buession.aop.handler.AbstractAnnotationHandler;
 import com.buession.core.validator.Validate;
 import com.buession.web.mvc.view.document.DocumentMetaData;
@@ -40,6 +41,18 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 		super(DocumentMetaData.class);
 	}
 
+	@Override
+	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+		if(Validate.isNotEmpty(mi.getArguments())){
+			for(Object argument : mi.getArguments()){
+				if(argument instanceof Model){
+					addModelAttribute((Model) argument, documentMetaData);
+					break;
+				}
+			}
+		}
+	}
+
 	protected static void addModelAttribute(final Model model, final DocumentMetaData metaData){
 		final String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() :
 				DocumentMetaData.DEFAULT_ATTR_NAME;
@@ -47,10 +60,6 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 	}
 
 	private static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
-		if(documentMetaData == null){
-			return null;
-		}
-
 		final MetaData metaData = new MetaData();
 
 		metaData.setTitle(documentMetaData.title());

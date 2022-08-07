@@ -42,7 +42,7 @@ public class ServletDocumentMetaDataAnnotationMethodInterceptor
 		super(new ServletDocumentMetaDataAnnotationHandler());
 	}
 
-	public ServletDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver<DocumentMetaData> resolver){
+	public ServletDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ServletDocumentMetaDataAnnotationHandler(), resolver);
 	}
 

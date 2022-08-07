@@ -27,54 +27,104 @@
 package com.buession.web.servlet.annotation;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
-import com.buession.web.servlet.method.AbstractHandlerMethodArgumentResolver;
 import com.buession.web.servlet.http.request.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.bind.annotation.ValueConstants;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
- * Resolves method arguments annotated with an {@link RequestClientIp}
+ * 方法参数注解 {@link RequestClientIp} 解析器
  *
  * @author Yong.Teng
  */
-public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandlerMethodArgumentResolver<RequestClientIp> {
+public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver {
 
-	/**
-	 * 构造函数
-	 *
-	 * @since 1.2.2
-	 */
+	private final static Logger logger = LoggerFactory.getLogger(RequestClientIpHandlerMethodArgumentResolver.class);
+
 	public RequestClientIpHandlerMethodArgumentResolver(){
-		super(RequestClientIp.class);
+		super();
+	}
+
+	public RequestClientIpHandlerMethodArgumentResolver(
+			@Nullable ConfigurableBeanFactory beanFactory){
+		super(beanFactory);
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer, NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception{
-		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-		Assert.isNull(servletRequest, "No HttpServletRequest");
-
-		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		if(Long.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(servletRequest);
-			return InetAddressUtils.ip2long(ip);
-		}else if(CharSequence.class.isAssignableFrom(clazz)){
-			return RequestUtils.getClientIp(servletRequest);
-		}else{
-			return null;
+	public boolean supportsParameter(MethodParameter parameter){
+		if(parameter.hasParameterAnnotation(RequestClientIp.class) == false){
+			return false;
 		}
+
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+		return CharSequence.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz) ||
+				InetAddress.class.isAssignableFrom(clazz);
 	}
 
 	@Override
-	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
-		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		return String.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz);
+	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		Assert.isNull(requestClientIp, "No RequestClientIp annotation");
+		return new RequestClientIpNamedValueInfo(requestClientIp);
+	}
+
+	@Override
+	@Nullable
+	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request){
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+		if(Long.class.isAssignableFrom(clazz)){
+			return InetAddressUtils.ip2long(getClientIp(request, parameter));
+		}else if(CharSequence.class.isAssignableFrom(clazz)){
+			return getClientIp(request, parameter);
+		}else if(InetAddress.class.isAssignableFrom(clazz)){
+			final String ip = getClientIp(request, parameter);
+			try{
+				return InetAddress.getByName(ip);
+			}catch(UnknownHostException e){
+				logger.error("IP: <{}> convert to InetAddress error: {}", ip, e.getMessage());
+			}
+		}
+
+		return null;
+	}
+
+	private String getClientIp(final NativeWebRequest webRequest, final MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+		String clientIp = null;
+
+		if(Validate.isNotEmpty(requestClientIp.headerName())){
+			for(String headerName : requestClientIp.headerName()){
+				if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) != false){
+					clientIp = request.getHeader(headerName);
+					if(Validate.hasText(clientIp)){
+						return clientIp;
+					}
+				}
+			}
+		}
+
+		return RequestUtils.getClientIp(request);
+	}
+
+	private final static class RequestClientIpNamedValueInfo extends NamedValueInfo {
+
+		private RequestClientIpNamedValueInfo(RequestClientIp annotation){
+			super(RequestClientIp.class.getName(), true, null);
+		}
+
 	}
 
 }

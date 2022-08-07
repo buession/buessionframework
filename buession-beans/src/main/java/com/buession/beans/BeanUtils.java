@@ -126,6 +126,7 @@ public class BeanUtils {
 	 * @param converter
 	 * 		转换器
 	 */
+	@SuppressWarnings({"unchecked"})
 	public static void copyProperties(final Object target, final Object source, final Converter converter){
 		Assert.isNull(target, "No destination bean specified.");
 

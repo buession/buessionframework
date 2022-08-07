@@ -36,7 +36,7 @@ import org.springframework.util.ClassUtils;
  */
 public class OnServletCondition implements Condition {
 
-	private static Boolean result = null;
+	private static volatile Boolean result = null;
 
 	@Override
 	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata){

@@ -42,12 +42,4 @@ public class FileTest {
 		System.out.println(mimeType + ": " + mimeType.getDescription());
 	}
 
-	@Test
-	public void write() throws IOException{
-		File readFile = new File("/Users/tengyong/Downloads/AndroidFileTransfer.dmg");
-		File writeFile = new File("/Users/tengyong/Downloads/AndroidFileTransfer1.dmg");
-		writeFile.write(readFile.read());
-	}
-
-
 }

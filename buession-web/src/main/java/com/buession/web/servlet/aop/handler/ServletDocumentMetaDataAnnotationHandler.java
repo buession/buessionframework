@@ -24,35 +24,15 @@
  */
 package com.buession.web.servlet.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
-import com.buession.web.mvc.view.document.DocumentMetaData;
-import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.http.HttpServlet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
 public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
 
-	private final static Logger logger = LoggerFactory.getLogger(ServletDocumentMetaDataAnnotationHandler.class);
-
 	public ServletDocumentMetaDataAnnotationHandler(){
 		super();
-	}
-
-	@Override
-	public Object execute(MethodInvocation mi, DocumentMetaData documentMetaData){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		if(httpServlet == null || httpServlet.getModel() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "Model");
-			return null;
-		}
-
-		addModelAttribute(httpServlet.getModel(), documentMetaData);
-		return null;
 	}
 
 }

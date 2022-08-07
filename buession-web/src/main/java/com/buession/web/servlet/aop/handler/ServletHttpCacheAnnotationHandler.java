@@ -29,8 +29,7 @@ import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractHttpCacheAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.HttpCache;
-import com.buession.web.servlet.aop.AopUtils;
-import com.buession.web.servlet.http.HttpServlet;
+import com.buession.web.servlet.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,14 +47,15 @@ public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotati
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, HttpCache httpCache){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		if(httpServlet == null || httpServlet.getResponse() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
-			return null;
+	public void execute(MethodInvocation mi, HttpCache httpCache){
+		HttpServletResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("HttpServletResponse is null");
+			}
+			return;
 		}
 
-		HttpServletResponse response = httpServlet.getResponse();
 		boolean isSetCacheControl = false;
 
 		if(Validate.hasText(httpCache.cacheControl())){
@@ -74,8 +74,6 @@ public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotati
 		if(Validate.hasText(httpCache.pragma())){
 			response.setHeader(HttpHeader.PRAGMA.getValue(), httpCache.pragma());
 		}
-
-		return null;
 	}
 
 }

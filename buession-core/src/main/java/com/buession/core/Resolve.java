@@ -22,22 +22,30 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis.cluster;
-
-import com.buession.redis.RedisTemplate;
-import com.buession.redis.jedis.AbstractJedisRedisTest;
-import org.junit.Test;
+package com.buession.core;
 
 /**
+ * 数据解析接口
+ *
+ * @param <S>
+ * 		待解析对象类型
+ * @param <T>
+ * 		解析结果对象类型
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.1.0
  */
-public class BitMapTest extends AbstractJedisRedisTest {
+@FunctionalInterface
+public interface Resolve<S, T> {
 
-	@Test
-	public void bitCount(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisClusterDataSource());
-		System.out.println(redisTemplate.bitCount("test_str"));
-	}
+	/**
+	 * 将 S 类型的对象 object 解析成 T 类型的对象
+	 *
+	 * @param source
+	 * 		待解析对象
+	 *
+	 * @return 解析结果
+	 */
+	T resolve(final S source);
 
 }

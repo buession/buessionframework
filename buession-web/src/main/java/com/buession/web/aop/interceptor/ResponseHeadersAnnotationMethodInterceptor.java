@@ -25,11 +25,10 @@
 package com.buession.web.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.web.http.response.annotation.ResponseHeaders;
 
 /**
  * @author Yong.Teng
  */
-public interface ResponseHeadersAnnotationMethodInterceptor extends AnnotationMethodInterceptor<ResponseHeaders> {
+public interface ResponseHeadersAnnotationMethodInterceptor extends AnnotationMethodInterceptor {
 
 }

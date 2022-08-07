@@ -27,53 +27,103 @@
 package com.buession.web.reactive.annotation;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
 import com.buession.web.reactive.http.request.RequestUtils;
-import com.buession.web.reactive.method.AbstractHandlerMethodArgumentResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.ReactiveAdapterRegistry;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.reactive.BindingContext;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.ValueConstants;
+import org.springframework.web.reactive.result.method.annotation.AbstractNamedValueSyncArgumentResolver;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
- * Resolves method arguments annotated with an {@link RequestClientIp}
+ * 方法参数注解 {@link RequestClientIp} 解析器
  *
  * @author Yong.Teng
  */
-public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandlerMethodArgumentResolver<RequestClientIp> {
+public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedValueSyncArgumentResolver {
 
-	/**
-	 * 构造函数
-	 *
-	 * @since 1.2.2
-	 */
-	public RequestClientIpHandlerMethodArgumentResolver(){
-		super(RequestClientIp.class);
+	private final static Logger logger = LoggerFactory.getLogger(RequestClientIpHandlerMethodArgumentResolver.class);
+
+	public RequestClientIpHandlerMethodArgumentResolver(@Nullable ConfigurableBeanFactory factory,
+														ReactiveAdapterRegistry registry){
+		super(factory, registry);
 	}
 
 	@Override
-	public Mono<Object> resolveArgument(MethodParameter methodParameter, BindingContext bindingContext, ServerWebExchange exchange){
-		ServerHttpRequest serverHttpRequest = exchange.getRequest();
-		Assert.isNull(serverHttpRequest, "No ServerHttpRequest");
-
-		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		if(Long.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(serverHttpRequest);
-			return Mono.justOrEmpty(InetAddressUtils.ip2long(ip));
-		}else if(CharSequence.class.isAssignableFrom(clazz)){
-			final String ip = RequestUtils.getClientIp(serverHttpRequest);
-			return Mono.justOrEmpty(ip);
-		}else{
-			return Mono.empty();
+	public boolean supportsParameter(MethodParameter parameter){
+		if(parameter.hasParameterAnnotation(RequestClientIp.class) == false){
+			return false;
 		}
+
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+		return CharSequence.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz) ||
+				InetAddress.class.isAssignableFrom(clazz);
 	}
 
 	@Override
-	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
-		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		return String.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz);
+	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		Assert.isNull(requestClientIp, "No RequestClientIp annotation");
+		return new RequestClientIpNamedValueInfo(requestClientIp);
+	}
+
+	@Nullable
+	@Override
+	protected Object resolveNamedValue(String name, MethodParameter parameter, ServerWebExchange exchange){
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+		if(Long.class.isAssignableFrom(clazz)){
+			return InetAddressUtils.ip2long(getClientIp(exchange.getRequest(), parameter));
+		}else if(CharSequence.class.isAssignableFrom(clazz)){
+			return getClientIp(exchange.getRequest(), parameter);
+		}else if(InetAddress.class.isAssignableFrom(clazz)){
+			final String ip = getClientIp(exchange.getRequest(), parameter);
+			try{
+				return InetAddress.getByName(ip);
+			}catch(UnknownHostException e){
+				logger.error("IP: <{}> convert to InetAddress error: {}", ip, e.getMessage());
+			}
+		}
+
+		return null;
+	}
+
+	private String getClientIp(final ServerHttpRequest request, final MethodParameter parameter){
+		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
+		String clientIp = null;
+
+		if(Validate.isNotEmpty(requestClientIp.headerName())){
+			HttpHeaders httpHeaders = request.getHeaders();
+
+			for(String headerName : requestClientIp.headerName()){
+				if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) != false){
+					clientIp = httpHeaders.getFirst(headerName);
+					if(Validate.hasText(clientIp)){
+						return clientIp;
+					}
+				}
+			}
+		}
+
+		return RequestUtils.getClientIp(request);
+	}
+
+	private final static class RequestClientIpNamedValueInfo extends NamedValueInfo {
+
+		private RequestClientIpNamedValueInfo(RequestClientIp annotation){
+			super(RequestClientIp.class.getName(), true, null);
+		}
+
 	}
 
 }

@@ -22,22 +22,45 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis.cluster;
+package com.buession.aop.aspectj;
 
-import com.buession.redis.RedisTemplate;
-import com.buession.redis.jedis.AbstractJedisRedisTest;
-import org.junit.Test;
+import com.buession.aop.interceptor.AbstractAnnotationsMethodInterceptor;
+import org.aspectj.lang.JoinPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.1.0
  */
-public class ServerTest extends AbstractJedisRedisTest {
+public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
 
-	@Test
-	public void info(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisClusterDataSource());
-		System.out.println(redisTemplate.info());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	public AbstractAspectAnnotationsMethodInterceptor(){
+		super();
+	}
+
+	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable{
+		if(logger.isDebugEnabled()){
+			AspectjAnnotationsMethodInterceptorLogUtils.performBeforeInterceptionDebug(logger, joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
+
+	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
+		if(logger.isDebugEnabled()){
+			AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		AfterAdviceMethodInvocationAdapter mi = AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
 	}
 
 }

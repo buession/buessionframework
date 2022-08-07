@@ -29,8 +29,11 @@ package com.buession.web.servlet.http.request;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.web.http.HttpHeader;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * HTTP 请求工具类 Servlet 的实现
@@ -40,6 +43,18 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
 	private RequestUtils(){
+	}
+
+	/**
+	 * 获取当前请求 {@link HttpServletResponse} 实例
+	 *
+	 * @return 当前请求 {@link HttpServletResponse} 实例
+	 *
+	 * @since 2.1.0
+	 */
+	public static HttpServletResponse getResponse(){
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		return attributes.getResponse();
 	}
 
 	/**
@@ -76,7 +91,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 是否为移动端请求
 	 */
 	public static boolean isMobile(final HttpServletRequest request){
-		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()), request.getHeader(HttpHeader.ACCEPT.getValue()));
+		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()),
+				request.getHeader(HttpHeader.ACCEPT.getValue()));
 	}
 
 	/**

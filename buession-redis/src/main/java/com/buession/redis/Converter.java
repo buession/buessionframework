@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@FunctionalInterface
 interface Converter<SV, TV> {
 
 	TV convert(final RedisConnection connection, final SV value);

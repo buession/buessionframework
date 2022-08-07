@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.spring;
@@ -131,7 +131,9 @@ public class VelocityEngineFactory {
 		Map<String, Object> properties = new HashMap<>(velocityProperties.size());
 
 		if(configLocation != null){
-			logger.info("Loading Velocity config from [{}]", configLocation);
+			if(logger.isInfoEnabled()){
+				logger.info("Loading Velocity config from [{}]", configLocation);
+			}
 			CollectionUtils.mergePropertiesIntoMap(PropertiesLoaderUtils.loadProperties(configLocation), properties);
 		}
 
@@ -169,10 +171,11 @@ public class VelocityEngineFactory {
 			for(int i = 0; i < paths.length; i++){
 				String path = paths[i];
 				Resource resource = getResourceLoader().getResource(path);
-				File file = resource.getFile();
-				String absolutePath = file.getAbsolutePath();
+				String absolutePath = resource.getFile().getAbsolutePath();
 
-				logger.debug("Resource loader path [{}] resolved to file [{}]", path, absolutePath);
+				if(logger.isDebugEnabled()){
+					logger.debug("Resource loader path [{}] resolved to file [{}]", path, absolutePath);
+				}
 
 				resolvedPath.append(absolutePath);
 				if(i < paths.length - 1){
@@ -194,7 +197,7 @@ public class VelocityEngineFactory {
 	}
 
 	protected void initSpringResourceLoader(VelocityEngine velocityEngine, String resourceLoaderPath){
-		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, SpringResourceLoader.NAME);
+		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADERS, SpringResourceLoader.NAME);
 		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CLASS,
 				SpringResourceLoader.class.getName());
 		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CACHE, isEnableCache());

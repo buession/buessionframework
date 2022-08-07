@@ -66,6 +66,16 @@ public class PropertyMapper {
 	}
 
 	/**
+	 * Return a new {@link PropertyMapper} instance that applies
+	 * {@link Source#whenHasText() whenHasText} to every source.
+	 *
+	 * @return a new property mapper instance
+	 */
+	public PropertyMapper alwaysApplyingWhenHasText(){
+		return alwaysApplying(this::whenHasText);
+	}
+
+	/**
 	 * Return a new {@link PropertyMapper} instance that applies the given
 	 * {@link SourceOperator} to every source.
 	 *
@@ -137,6 +147,10 @@ public class PropertyMapper {
 
 	private <T> Source<T> whenNonNull(Source<T> source){
 		return source.whenNonNull();
+	}
+
+	private <T> Source<T> whenHasText(Source<T> source){
+		return source.whenHasText();
 	}
 
 	/**

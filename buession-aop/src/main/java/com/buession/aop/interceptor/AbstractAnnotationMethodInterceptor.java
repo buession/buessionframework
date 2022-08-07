@@ -42,7 +42,7 @@ import java.util.Optional;
  * @author Yong.Teng
  */
 public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
-		implements AnnotationMethodInterceptor<A> {
+		implements AnnotationMethodInterceptor {
 
 	/**
 	 * JSR-175 注解读取和处理器
@@ -52,7 +52,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	/**
 	 * 注解解析器
 	 */
-	private AnnotationResolver<A> resolver;
+	private AnnotationResolver resolver;
 
 	/**
 	 * 构造函数
@@ -61,7 +61,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	 * 		JSR-175 注解读取和处理器
 	 */
 	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
-		this(handler, new DefaultAnnotationResolver<>());
+		this(handler, new DefaultAnnotationResolver());
 	}
 
 	/**
@@ -72,10 +72,11 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	 * @param resolver
 	 * 		注解解析器
 	 */
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver<A> resolver){
-		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
+	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
+		Assert.isNull(handler, "AnnotationHandler cloud not be null.");
+
 		setHandler(handler);
-		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver<>()));
+		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver()));
 	}
 
 	public AnnotationHandler<A> getHandler(){
@@ -86,11 +87,11 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		this.handler = handler;
 	}
 
-	public AnnotationResolver<A> getResolver(){
+	public AnnotationResolver getResolver(){
 		return resolver;
 	}
 
-	public void setResolver(AnnotationResolver<A> resolver){
+	public void setResolver(AnnotationResolver resolver){
 		this.resolver = resolver;
 	}
 
@@ -99,14 +100,19 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		return getAnnotation(mi) != null;
 	}
 
-	protected A getAnnotation(MethodInvocation mi){
-		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
+	@Override
+	public Object invoke(MethodInvocation mi) throws Throwable{
+		execute(mi);
+		return mi.proceed();
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked"})
-	protected void doInvoke(MethodInvocation mi) throws Throwable{
+	public void execute(MethodInvocation mi) throws Throwable{
 		getHandler().execute(mi, getAnnotation(mi));
+	}
+
+	protected A getAnnotation(MethodInvocation mi){
+		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
 	}
 
 }

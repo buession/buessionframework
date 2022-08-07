@@ -30,8 +30,7 @@ import com.buession.web.aop.handler.AbstractResponseHeadersAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
-import com.buession.web.reactive.aop.AopUtils;
-import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.http.request.RequestUtils;
 import com.buession.web.reactive.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,17 +49,18 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		if(serverHttp == null || serverHttp.getResponse() == null){
-			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return null;
+	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+		ServerHttpResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("ServerHttpResponse is null");
+			}
+			return;
 		}
 
 		ResponseHeader[] headers = responseHeaders.value();
 
 		if(Validate.isNotEmpty(headers)){
-			ServerHttpResponse response = serverHttp.getResponse();
 			HttpHeaders httpHeaders = response.getHeaders();
 
 			for(ResponseHeader header : headers){
@@ -79,8 +79,6 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 				}
 			}
 		}
-
-		return null;
 	}
 
 }

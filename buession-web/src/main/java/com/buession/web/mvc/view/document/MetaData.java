@@ -29,7 +29,7 @@ package com.buession.web.mvc.view.document;
 import java.io.Serializable;
 
 /**
- * 页面元数据
+ * 页面元信息
  *
  * @author Yong.Teng
  */

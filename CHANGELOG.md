@@ -1,11 +1,54 @@
  Buession Framework Changelog
 ===========================
 
+## [2.1.0](https://github.com/buession/buessionframework/releases/tag/v2.1.0) (2022-08-07)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.0)
+
+
+### ⭐ 新特性
+
+- **buession-core：** 新增对象解析接口 Resolve
+- **buession-core：** PropertyMapper 增加 alwaysApplyingWhenHasText() 方法，用于判断源属性是否含有内容
+- **buession-web：** 注解 @RequestClientIp 增加支持返回 InetAddress
+- **buession-web：** 注解 @RequestClientIp 支持指定获取真实 IP 的请求头名称
+
+
+### 🔔 变化
+
+- **buession-aop：** 调整 AnnotationResolver 及其实现泛型参数，由类泛型参数，调整为 getAnnotation 泛型
+- **buession-aop：** AnnotationHandler execute 方法不再返回值
+- **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生 HandlerMethodArgumentResolver 实现抽象类
+- **buession-web：** 废弃 MobileFilter，根据需要直接使用 RequestUtils.isMobile(request) 判断
+- **buession-web：** 删除 AopUtils、MethodUtils，删除 servlet HttpServlet、webflux ServerHttp
+- **buession-web：** MethodInterceptor 的抽象类移至 buession-aop
+- **buession-velocity：** 配置属性 springMacro.resource.loader.class 替换为 resource.loader.springMacro.class，resource.loader 替换 resource.loaders
+
+
+### ⏪ 优化
+- **buession-aop：** 优化注解处理程序
+- **buession-web：** 优化 servlet 注解处理
+
+
+### 🐞 Bug 修复
+
+- **buession-aop：** 修复注解在 cglib 代理模式下，连接点重复执行的 BUG
+- **buession-web：** 修复 ReactiveContentTypeAnnotationMethodInterceptor 使用成了 servlet 模式下的 ContentTypeAnnotationMethodInterceptor 的 BUG
+
+
+---
+
+
 ## [2.0.2](https://github.com/buession/buessionframework/releases/tag/v2.0.2) (2022-07-28)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.2)
+
+
+---
 
 
 ## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) (2022-07-17)
@@ -32,6 +75,8 @@
 - **buession-core：** Math 连续两个数之间连续相加之和计算错误的 BUG
 - **buession-core：** @Isbn、@MimeType 的使用了错误的校验器的问题
 
+
+---
 
 
 ## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-07-06)

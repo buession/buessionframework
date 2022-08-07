@@ -29,8 +29,7 @@ import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.annotation.ResponseHeader;
-import com.buession.web.reactive.aop.AopUtils;
-import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.http.request.RequestUtils;
 import com.buession.web.reactive.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +47,15 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 	}
 
 	@Override
-	public Object execute(MethodInvocation mi, ResponseHeader responseHeader){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		if(serverHttp == null || serverHttp.getResponse() == null){
-			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-			return null;
+	public void execute(MethodInvocation mi, ResponseHeader responseHeader){
+		ServerHttpResponse response = RequestUtils.getResponse();
+		if(response == null){
+			if(logger.isWarnEnabled()){
+				logger.warn("ServerHttpResponse is null");
+			}
+			return;
 		}
 
-		ServerHttpResponse response = serverHttp.getResponse();
 		final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name());
 
 		for(String value : responseHeader.value()){
@@ -69,8 +69,6 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 				response.getHeaders().set(responseHeader.name(), value);
 			}
 		}
-
-		return null;
 	}
 
 }

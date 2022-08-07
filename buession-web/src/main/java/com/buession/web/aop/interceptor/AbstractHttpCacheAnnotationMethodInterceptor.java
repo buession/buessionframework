@@ -44,7 +44,7 @@ public abstract class AbstractHttpCacheAnnotationMethodInterceptor
 	}
 
 	public AbstractHttpCacheAnnotationMethodInterceptor(AnnotationHandler<HttpCache> handler,
-														AnnotationResolver<HttpCache> resolver){
+														AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

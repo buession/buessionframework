@@ -27,4 +27,7 @@
 /**
  * @author Yong.Teng
  */
+@NonNullApi
 package com.buession.web.servlet.annotation;
+
+import org.springframework.lang.NonNullApi;

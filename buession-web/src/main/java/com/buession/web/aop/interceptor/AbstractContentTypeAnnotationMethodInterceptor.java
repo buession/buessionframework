@@ -43,7 +43,7 @@ public abstract class AbstractContentTypeAnnotationMethodInterceptor
 	}
 
 	public AbstractContentTypeAnnotationMethodInterceptor(AnnotationHandler<ContentType> handler,
-														  AnnotationResolver<ContentType> resolver){
+														  AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

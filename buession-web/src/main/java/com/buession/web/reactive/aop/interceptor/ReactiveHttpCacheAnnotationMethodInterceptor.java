@@ -41,7 +41,7 @@ public class ReactiveHttpCacheAnnotationMethodInterceptor extends AbstractHttpCa
 		super(new ReactiveHttpCacheAnnotationHandler());
 	}
 
-	public ReactiveHttpCacheAnnotationMethodInterceptor(AnnotationResolver<HttpCache> resolver){
+	public ReactiveHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver){
 		super(new ReactiveHttpCacheAnnotationHandler(), resolver);
 	}
 

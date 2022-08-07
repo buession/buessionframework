@@ -21,12 +21,14 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.datetime;
 
 /**
+ * 日期时间
+ *
  * @author Yong.Teng
  */
 public class DateTime {
@@ -39,7 +41,7 @@ public class DateTime {
 	public static String microtime(){
 		long timestamp = System.currentTimeMillis();
 
-		StringBuilder sb = new StringBuilder(24);
+		final StringBuilder sb = new StringBuilder(24);
 
 		sb.append(timestamp / 1000L).append(" ").append(timestamp % 1000L * 1000L);
 

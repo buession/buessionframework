@@ -51,15 +51,26 @@ import com.buession.core.Pagination;
 import com.buession.core.exception.OperationException;
 
 /**
- * Data Access Object 抽象类
+ * MyBatis Data Access Object 抽象类
+ *
+ * @param <P>
+ * 		注解类型
+ * @param <E>
+ * 		实体类
  *
  * @author Yong.Teng
  */
 public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> implements MyBatisDao<P, E> {
 
+	/**
+	 * master SqlSessionTemplate
+	 */
 	@Resource
 	protected SqlSessionTemplate masterSqlSessionTemplate;
 
+	/**
+	 * slave SqlSessionTemplate
+	 */
 	@Resource
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
 
@@ -138,30 +149,12 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
 	}
 
-	/**
-	 * 根据主键更新数据
-	 *
-	 * @param primary
-	 * 		主键值
-	 * @param e
-	 * 		新数据
-	 *
-	 * @return 更新条数
-	 */
 	@Override
 	public int updateByPrimary(P primary, E e){
 		updatePrimary(e, primary);
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE_BY_PRIMARY), e);
 	}
 
-	/**
-	 * 根据主键查询数据
-	 *
-	 * @param primary
-	 * 		主键值
-	 *
-	 * @return 数据结果
-	 */
 	@Override
 	public E getByPrimary(P primary){
 		try{
@@ -173,18 +166,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 获取一条记录
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param offset
-	 * 		偏移量
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 查询结果
-	 */
 	@Override
 	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
 		final Map<String, Object> parameters = buildParameters(conditions);
@@ -202,16 +183,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据查询
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 结果集
-	 */
 	@Override
 	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
 		final Map<String, Object> parameters = buildParameters(conditions);
@@ -229,20 +200,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据查询
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param offset
-	 * 		偏移量
-	 * @param size
-	 * 		查询条数
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return 结果集
-	 */
 	@Override
 	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
 		Assert.isNegative(offset, "Offset argument value could not be negative integer");
@@ -264,20 +221,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据分页查询
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 * @param page
-	 * 		页码
-	 * @param pagesize
-	 * 		每页大小
-	 * @param orders
-	 * 		排序
-	 *
-	 * @return Pagination
-	 */
 	@Override
 	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
 		Assert.isZeroNegative(page, "Page argument value must be positive integer");
@@ -295,11 +238,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return pagination;
 	}
 
-	/**
-	 * 查询所有数据
-	 *
-	 * @return 结果集
-	 */
 	@Override
 	public List<E> getAll(){
 		try{
@@ -311,11 +249,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return null;
 	}
 
-	/**
-	 * 数据记录总数
-	 *
-	 * @return 记录总数
-	 */
 	@Override
 	public long count(){
 		try{
@@ -327,14 +260,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return 0L;
 	}
 
-	/**
-	 * 数据记录总数
-	 *
-	 * @param conditions
-	 * 		查询条件
-	 *
-	 * @return 记录总数
-	 */
 	@Override
 	public long count(Map<String, Object> conditions){
 		try{
@@ -346,47 +271,21 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		return 0L;
 	}
 
-	/**
-	 * 删除数据
-	 *
-	 * @param conditions
-	 * 		删除条件
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int delete(Map<String, Object> conditions){
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), conditions);
 	}
 
-	/**
-	 * 根据主键删除数据
-	 *
-	 * @param primary
-	 * 		主键值
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int deleteByPrimary(P primary){
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
 	}
 
-	/**
-	 * 清空数据
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int clear(){
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.CLEAR));
 	}
 
-	/**
-	 * 清空数据
-	 *
-	 * @return 影响条数
-	 */
 	@Override
 	public int truncate(){
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));

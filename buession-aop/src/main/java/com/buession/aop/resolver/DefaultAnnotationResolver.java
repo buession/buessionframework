@@ -25,7 +25,6 @@
 package com.buession.aop.resolver;
 
 import com.buession.aop.MethodInvocation;
-import com.buession.core.utils.Assert;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -33,20 +32,13 @@ import java.lang.reflect.Method;
 /**
  * 默认注解解析器
  *
- * @param <A>
- * 		注解类型
- *
  * @author Yong.Teng
  */
-public class DefaultAnnotationResolver<A extends Annotation> extends AbstractAnnotationResolver<A> {
+public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
 
 	@Override
-	public A getAnnotation(MethodInvocation mi, Class<A> clazz){
-		Assert.isNull(mi, "method arguments cloud not be null");
-
-		Method method = mi.getMethod();
-		Assert.isNull(method,
-				mi.getClass().getName() + " parameter incorrectly constructed.getMethod() returned null.");
+	public <A extends Annotation> A getAnnotation(MethodInvocation mi, Class<A> clazz){
+		Method method = preGetAnnotation(mi, clazz);
 
 		A annotation = method.getAnnotation(clazz);
 		if(annotation == null){

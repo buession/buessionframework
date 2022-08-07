@@ -22,39 +22,74 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.resolver;
+package com.buession.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
+import com.buession.core.utils.Assert;
+import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * Spring 注解解析器
- *
  * @author Yong.Teng
+ * @since 2.1.0
  */
-public class SpringAnnotationResolver extends AbstractAnnotationResolver {
+public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcherPointcutAdvisor {
+
+	private final static long serialVersionUID = 66199570932815709L;
+
+	private final Class<? extends Annotation>[] annotations;
+
+	public AbstractAttributeSourceAdvisor(final AnnotationsMethodInterceptor annotationsMethodInterceptor,
+										  final Class<? extends Annotation>[] annotations){
+		Assert.isNull(annotationsMethodInterceptor, "AnnotationsMethodInterceptor cloud not be null.");
+		Assert.isNull(annotations, "Annotations cloud not be null.");
+
+		setAdvice(annotationsMethodInterceptor);
+		this.annotations = annotations;
+	}
 
 	@Override
-	public <A extends Annotation> A getAnnotation(MethodInvocation mi, Class<A> clazz){
-		Method method = preGetAnnotation(mi, clazz);
+	public boolean matches(Method method, Class<?> targetClass){
+		Method m = method;
 
-		A annotation = AnnotationUtils.findAnnotation(method, clazz);
-		if(annotation != null){
-			return annotation;
+		if(isAnnotationPresent(m)){
+			return true;
 		}
 
-		Class<?> targetClass = mi.getThis().getClass();
-		method = ClassUtils.getMostSpecificMethod(method, targetClass);
-		annotation = AnnotationUtils.findAnnotation(method, clazz);
-		if(annotation != null){
-			return annotation;
+		if(targetClass != null){
+			try{
+				m = targetClass.getMethod(m.getName(), m.getParameterTypes());
+				return isAnnotationPresent(m) || isAnnotationPresent(targetClass);
+			}catch(NoSuchMethodException e){
+				//
+			}
 		}
 
-		return AnnotationUtils.findAnnotation(targetClass, clazz);
+		return false;
+	}
+
+	private boolean isAnnotationPresent(final Class<?> targetClazz){
+		for(Class<? extends Annotation> annotationClass : annotations){
+			Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, annotationClass);
+			if(annotation != null){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isAnnotationPresent(final Method method){
+		for(Class<? extends Annotation> annotationClass : annotations){
+			Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClass);
+			if(annotation != null){
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
