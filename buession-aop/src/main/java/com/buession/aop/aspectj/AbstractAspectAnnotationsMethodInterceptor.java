@@ -24,43 +24,17 @@
  */
 package com.buession.aop.aspectj;
 
-import com.buession.aop.interceptor.AbstractAnnotationsMethodInterceptor;
-import org.aspectj.lang.JoinPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
+ * Aspectj 方法注解拦截器抽象类
+ *
  * @author Yong.Teng
  * @since 2.1.0
  */
-public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+@Deprecated
+public abstract class AbstractAspectAnnotationsMethodInterceptor extends AbstractAspectjAnnotationsMethodInterceptor {
 
 	public AbstractAspectAnnotationsMethodInterceptor(){
 		super();
-	}
-
-	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable{
-		if(logger.isDebugEnabled()){
-			AspectjAnnotationsMethodInterceptorLogUtils.performBeforeInterceptionDebug(logger, joinPoint);
-		}
-
-		// 1. Adapt the join point into a method invocation
-		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
-		// 2. Delegate the authorization of the method call to the super class
-		super.invoke(mi);
-	}
-
-	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
-		if(logger.isDebugEnabled()){
-			AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
-		}
-
-		// 1. Adapt the join point into a method invocation
-		AfterAdviceMethodInvocationAdapter mi = AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
-		// 2. Delegate the authorization of the method call to the super class
-		super.invoke(mi);
 	}
 
 }

@@ -31,12 +31,17 @@ import org.aopalliance.intercept.MethodInvocation;
 import java.lang.reflect.Method;
 
 /**
+ * Aop Alliance 方法注解拦截器抽象类
+ *
  * @author Yong.Teng
  * @since 2.1.0
  */
 public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor
 		implements AnnotationsMethodInterceptor {
 
+	/**
+	 * 构造函数
+	 */
 	public AbstractAopAllianceAnnotationsMethodInterceptor(){
 		super();
 	}
@@ -47,6 +52,14 @@ public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends Ab
 		return super.invoke(mi);
 	}
 
+	/**
+	 * Create instance for {@link com.buession.aop.MethodInvocation}.
+	 *
+	 * @param mi
+	 * 		The method invocation joinpoint
+	 *
+	 * @return The instance of {@link com.buession.aop.MethodInvocation}
+	 */
 	protected com.buession.aop.MethodInvocation createMethodInvocation(final MethodInvocation mi){
 		return new com.buession.aop.MethodInvocation() {
 

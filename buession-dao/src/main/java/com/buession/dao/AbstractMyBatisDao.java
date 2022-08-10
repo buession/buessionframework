@@ -142,9 +142,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			BeanUtils.copyProperties(eMap, e);
 		}
 
-		eMap.forEach((key, value)->{
-			data.put(key.toString(), value);
-		});
+		eMap.forEach((key, value)->data.put(key.toString(), value));
 
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
 	}

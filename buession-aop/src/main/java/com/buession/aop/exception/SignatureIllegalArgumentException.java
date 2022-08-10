@@ -27,29 +27,63 @@ package com.buession.aop.exception;
 import org.aspectj.lang.Signature;
 
 /**
+ * 签名错误异常
+ *
  * @author Yong.Teng
  */
 public class SignatureIllegalArgumentException extends IllegalArgumentException {
 
 	private final static long serialVersionUID = 6148632731869242050L;
 
+	/**
+	 * 签名
+	 */
 	private final Signature signature;
 
+	/**
+	 * 构造函数，定义了默认异常信息
+	 *
+	 * @param signature
+	 * 		签名
+	 */
 	public SignatureIllegalArgumentException(Signature signature){
 		this(signature,
 				"The join point signature is invalid: expected a MethodSignature or an AdviceSignature but was ");
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param signature
+	 * 		签名
+	 * @param message
+	 * 		异常信息
+	 */
 	public SignatureIllegalArgumentException(Signature signature, String message){
 		super(message + signature);
 		this.signature = signature;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param signature
+	 * 		签名
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 *        {@link Throwable}
+	 */
 	public SignatureIllegalArgumentException(Signature signature, String message, Throwable cause){
 		super(message + signature, cause);
 		this.signature = signature;
 	}
 
+	/**
+	 * 返回签名
+	 *
+	 * @return 签名
+	 */
 	public Signature getSignature(){
 		return signature;
 	}

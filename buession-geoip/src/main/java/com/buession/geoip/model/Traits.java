@@ -179,6 +179,8 @@ public final class Traits implements Serializable {
 	 * 		Autonomous 系统号码
 	 * @param mobileCountryCode
 	 * 		移动国家代码
+	 * @param mobileNetworkCode
+	 * 		移动网络代码
 	 * @param isAnonymous
 	 * 		是否是 Autonomous
 	 * @param isAnonymousProxy
