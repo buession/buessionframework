@@ -39,18 +39,54 @@ import java.lang.reflect.Method;
  */
 public class PropertyDescriptorUtils {
 
+	/**
+	 * 返回 {@link PropertyDescriptor} 的 getter 方法
+	 *
+	 * @param descriptor
+	 *        {@link PropertyDescriptor}
+	 *
+	 * @return {@link PropertyDescriptor} 的 getter 方法
+	 */
 	public static Method getReadMethod(final PropertyDescriptor descriptor){
 		return MethodUtils.getAccessibleMethod(descriptor.getReadMethod());
 	}
 
+	/**
+	 * 返回类 clazz {@link PropertyDescriptor} 的 getter 方法
+	 *
+	 * @param clazz
+	 * 		类
+	 * @param descriptor
+	 *        {@link PropertyDescriptor}
+	 *
+	 * @return 类 clazz {@link PropertyDescriptor} 的 getter 方法
+	 */
 	public static Method getReadMethod(final Class<?> clazz, final PropertyDescriptor descriptor){
 		return MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod());
 	}
 
+	/**
+	 * 返回 {@link PropertyDescriptor} 的 setter 方法
+	 *
+	 * @param descriptor
+	 *        {@link PropertyDescriptor}
+	 *
+	 * @return {@link PropertyDescriptor} 的 setter 方法
+	 */
 	public static Method getWriteMethod(final PropertyDescriptor descriptor){
 		return MethodUtils.getAccessibleMethod(descriptor.getWriteMethod());
 	}
 
+	/**
+	 * 返回类 clazz {@link PropertyDescriptor} 的 setter 方法
+	 *
+	 * @param clazz
+	 * 		类
+	 * @param descriptor
+	 *        {@link PropertyDescriptor}
+	 *
+	 * @return 类 clazz {@link PropertyDescriptor} 的 setter 方法
+	 */
 	public static Method getWriteMethod(final Class<?> clazz, final PropertyDescriptor descriptor){
 		return MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod());
 	}

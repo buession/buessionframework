@@ -147,4 +147,5 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	public void setProperties(Properties properties){
 		this.properties = properties;
 	}
+
 }

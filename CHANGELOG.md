@@ -1,6 +1,22 @@
  Buession Framework Changelog
 ===========================
 
+
+## [2.1.1](https://github.com/buession/buession-parent/releases/tag/v2.1.1) (2022-08-18)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.1)
+
+
+### ⭐ 新特性
+
+- **buession-core：** DateTime 增加统计年、月天数
+
+
+---
+
+
 ## [2.1.0](https://github.com/buession/buessionframework/releases/tag/v2.1.0) (2022-08-07)
 
 ### 🔨依赖升级

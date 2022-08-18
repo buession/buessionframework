@@ -34,7 +34,7 @@ import java.util.Arrays;
  * @author Yong.Teng
  * @since 2.1.0
  */
-public class AspectjAnnotationsMethodInterceptorLogUtils {
+class AspectjAnnotationsMethodInterceptorLogUtils {
 
 	private AspectjAnnotationsMethodInterceptorLogUtils(){
 

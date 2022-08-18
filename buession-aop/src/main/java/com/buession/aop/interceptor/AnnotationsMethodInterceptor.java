@@ -27,9 +27,12 @@ package com.buession.aop.interceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 
 /**
+ * 注解方法拦截器
+ *
  * @author Yong.Teng
  * @since 2.1.0
  */
+@FunctionalInterface
 public interface AnnotationsMethodInterceptor extends MethodInterceptor {
 
 }
