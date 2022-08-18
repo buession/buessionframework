@@ -59,4 +59,90 @@ public class DateTime {
 		return System.currentTimeMillis() / 1000L;
 	}
 
+	/**
+	 * 获取指定年的天数
+	 *
+	 * @param year
+	 * 		年份
+	 *
+	 * @return 指定年月份的天数；如果不是一个合法的年份，则返回 -1
+	 *
+	 * @since 2.1.1
+	 */
+	public static int getDays(final int year){
+		if(year <= 0){
+			return -1;
+		}
+
+		int days = 0;
+
+		for(int i = 1; i <= 12; i++){
+			days += getDays(year, i);
+		}
+
+		return days;
+	}
+
+	/**
+	 * 获取指定年月份的天数
+	 *
+	 * @param year
+	 * 		年份
+	 * @param month
+	 * 		月份
+	 *
+	 * @return 指定年月份的天数；如果不是一个合法的年份或月份，则返回 -1
+	 *
+	 * @since 2.1.1
+	 */
+	public static int getDays(final int year, final int month){
+		if(year <= 0){
+			return -1;
+		}
+
+		switch(month){
+			case 1:
+			case 3:
+			case 5:
+			case 7:
+			case 8:
+			case 10:
+			case 12:
+				return 31;
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+				return 30;
+			case 2:
+				return isLeapYear(year) ? 29 : 28;
+			default:
+				return -1;
+		}
+	}
+
+	/**
+	 * 判断指定年份是否为闰年
+	 *
+	 * @param year
+	 * 		年份
+	 *
+	 * @return 指定年份为闰年，返回 true；否则，返回 false
+	 *
+	 * @since 2.1.1
+	 */
+	public static boolean isLeapYear(final int year){
+		if(year <= 0){
+			return false;
+		}
+
+		if(year % 4 == 0){
+			if(year % 100 == 0){
+				return year % 400 == 0;
+			}
+		}
+
+		return false;
+	}
+
 }
