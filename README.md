@@ -31,7 +31,7 @@
 
 
 <p align="center">
-	<img src="docs/images/logo.png" alt="BuessionFramework" title="BuessionFramework" width="280px" />
+	<img src="logo.png" alt="BuessionFramework" title="BuessionFramework" width="280px" />
 </p>
 
 ## Requirements
