@@ -36,6 +36,7 @@ import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
+import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.JedisRedisExceptionUtils;
@@ -72,12 +73,12 @@ import java.util.Set;
 public class JedisSentinelConnection extends AbstractJedisRedisConnection implements RedisSentinelConnection {
 
 	/**
-	 * 哨兵节点连接超时（单位：秒）
+	 * 哨兵节点连接超时（单位：毫秒）
 	 */
 	private int sentinelConnectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
 	/**
-	 * 哨兵节点读取超时（单位：秒）
+	 * 哨兵节点读取超时（单位：毫秒）
 	 */
 	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
@@ -116,9 +117,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
@@ -130,11 +131,11 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 *
 	 * @since 2.0.0
 	 */
@@ -161,9 +162,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -178,11 +179,11 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 *
@@ -214,9 +215,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
 								   int soTimeout){
@@ -232,11 +233,11 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
 								   int soTimeout, int infiniteSoTimeout){
@@ -268,9 +269,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -288,11 +289,11 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -308,13 +309,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
 								   int sentinelConnectTimeout, int sentinelSoTimeout){
@@ -329,15 +330,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
 								   int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
@@ -352,13 +353,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -376,15 +377,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -404,13 +405,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
 								   int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
@@ -427,15 +428,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
 								   int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
@@ -453,13 +454,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -479,15 +480,15 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * @param pool
 	 * 		连接池
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -500,9 +501,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	/**
-	 * 返回哨兵节点连接超时（单位：秒）
+	 * 返回哨兵节点连接超时
 	 *
-	 * @return 哨兵节点连接超时
+	 * @return 哨兵节点连接超时（单位：毫秒）
 	 */
 	public int getSentinelConnectTimeout(){
 		return sentinelConnectTimeout;
@@ -512,16 +513,16 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * 设置哨兵节点连接超时
 	 *
 	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：秒）
+	 * 		哨兵节点连接超时（单位：毫秒）
 	 */
 	public void setSentinelConnectTimeout(int sentinelConnectTimeout){
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 	}
 
 	/**
-	 * 返回哨兵节点读取超时（单位：秒）
+	 * 返回哨兵节点读取超时
 	 *
-	 * @return 哨兵节点读取超时
+	 * @return 哨兵节点读取超时（单位：毫秒）
 	 */
 	public int getSentinelSoTimeout(){
 		return sentinelSoTimeout;
@@ -531,7 +532,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	 * 设置哨兵节点读取超时
 	 *
 	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：秒）
+	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public void setSentinelSoTimeout(int sentinelSoTimeout){
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -718,8 +719,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource){
 		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
-		final JedisClientConfig clientConfig = createJedisClientConfigBuilder(dataSource, getSentinelConnectTimeout(),
-				getSentinelSoTimeout(), getInfiniteSoTimeout()).build();
+		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
+		final JedisClientConfig clientConfig = builder.build();
 
 		for(HostAndPort sentinel : sentinels){
 			try(Jedis jedis = new Jedis(sentinel, clientConfig)){
@@ -771,15 +772,10 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 					continue;
 				}
 
-				final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder(dataSource,
-						getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout()).database(dataSource.getDatabase());
+				final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource,
+						getSslConfiguration());
 
-				if(Validate.hasText(dataSource.getPassword())){
-					if(Validate.hasText(dataSource.getUsername())){
-						builder.user(dataSource.getUsername());
-					}
-					builder.password(dataSource.getPassword());
-				}
+				builder.database(dataSource.getDatabase());
 
 				return new Jedis(new HostAndPort(masterAddr.get(0), Integer.parseInt(masterAddr.get(1))),
 						builder.build());
@@ -811,6 +807,9 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 				throw JedisRedisExceptionUtils.convert(e);
 			}
+		}else{
+			final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
+			jedis = createJedis(dataSource);
 		}
 	}
 

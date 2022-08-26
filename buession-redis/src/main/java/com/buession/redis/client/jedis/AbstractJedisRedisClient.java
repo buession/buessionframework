@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.core.FutureResult;
 import redis.clients.jedis.Response;
 
@@ -33,17 +33,28 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
+ * Jedis Redis 客户端 抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisClient extends AbstractRedisClient implements JedisRedisClient {
 
 	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
 
+	/**
+	 * 构造函数
+	 */
 	public AbstractJedisRedisClient(){
 		super();
 	}
 
-	public AbstractJedisRedisClient(final RedisConnection connection){
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
+	 */
+	public AbstractJedisRedisClient(final JedisRedisConnection connection){
 		super(connection);
 	}
 

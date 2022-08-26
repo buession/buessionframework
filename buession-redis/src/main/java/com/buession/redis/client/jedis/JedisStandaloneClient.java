@@ -53,10 +53,19 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 
 	private JedisConnection connection;
 
+	/**
+	 * 构造函数
+	 */
 	public JedisStandaloneClient(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Jedis Redis 单机连接对象 {@link JedisConnection}
+	 */
 	public JedisStandaloneClient(final JedisConnection connection){
 		super(connection);
 	}

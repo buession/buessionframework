@@ -27,7 +27,7 @@ package com.buession.redis.client.operations;
 import com.buession.redis.core.command.ServerCommands;
 
 /**
- * 服务端操作接口
+ * 服务端操作命令接口
  *
  * @author Yong.Teng
  */
