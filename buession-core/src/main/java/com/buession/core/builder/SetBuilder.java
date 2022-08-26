@@ -47,6 +47,56 @@ public class SetBuilder<V> {
 	}
 
 	/**
+	 * 创建默认为 {@link HashSet} 类型的 {@link SetBuilder} 实例
+	 *
+	 * @param initialCapacity
+	 * 		the initial capacity of the hash table
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link SetBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <V> SetBuilder<V> create(final int initialCapacity){
+		return new SetBuilder<>(new HashSet<>(initialCapacity));
+	}
+
+	/**
+	 * 创建默认为 {@link HashSet} 类型的 {@link SetBuilder} 实例
+	 *
+	 * @param initialCapacity
+	 * 		the initial capacity of the hash map
+	 * @param loadFactor
+	 * 		the load factor of the hash map
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link SetBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <V> SetBuilder<V> create(final int initialCapacity, final float loadFactor){
+		return new SetBuilder<>(new HashSet<>(initialCapacity, loadFactor));
+	}
+
+	/**
+	 * 创建默认为 {@link HashSet} 类型的 {@link SetBuilder} 实例
+	 *
+	 * @param c
+	 * 		the collection whose elements are to be placed into this set
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link SetBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <V> SetBuilder<V> create(final Collection<? extends V> c){
+		return new SetBuilder<>(new HashSet<>(c));
+	}
+
+	/**
 	 * 创建实例
 	 *
 	 * @param clazz
@@ -64,10 +114,7 @@ public class SetBuilder<V> {
 		Set<V> data;
 		try{
 			data = clazz.newInstance();
-		}catch(InstantiationException e){
-			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
-			data = new HashSet<>(16);
-		}catch(IllegalAccessException e){
+		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new HashSet<>(16);
 		}
@@ -185,7 +232,7 @@ public class SetBuilder<V> {
 	 * @return 单一元素 Set
 	 */
 	public static <V> Set<V> of(final V value){
-		return SetBuilder.<V>create().add(value).build();
+		return SetBuilder.<V>create(1).add(value).build();
 	}
 
 }
