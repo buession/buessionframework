@@ -21,33 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.httpclient.okhttp;
-
-import com.buession.httpclient.core.AbstractResponseHeaderParse;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import okhttp3.Headers;
-
-/**
- * OKHTTP 响应头解析器
+ */package com.buession.redis.core.internal.jedis;/**
+ * 
  *
  * @author Yong.Teng
- * @since 1.2.1
- */
-class OkHttpResponseHeaderParse extends AbstractResponseHeaderParse<Headers> {
-
-	@Override
-	protected Multimap<String, String> doParse(final Headers headers){
-		final Multimap<String, String> headerMaps = HashMultimap.create();
-
-		if(headers.size() > 0){
-			for(String name : headers.names()){
-				headerMaps.put(name, headers.get(name));
-			}
-		}
-
-		return headerMaps;
-	}
-
+ * @since 2.1.2
+ */public class JedisClientConfigBuilder {
 }

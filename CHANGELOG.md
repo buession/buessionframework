@@ -2,7 +2,36 @@
 ===========================
 
 
-## [2.1.1](https://github.com/buession/buession-parent/releases/tag/v2.1.1) (2022-08-18)
+## [2.1.2](https://github.com/buession/buessionframework/releases/tag/v2.1.2) (2022-08-xx)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.2)
+
+
+### ⭐ 新特性
+
+- **buession-core：** ListBuilder、MapBuilder、QueueBuilder、SetBuilder 增加可以指定 initialCapacity 和 Collection / Map 的 create 方法
+
+
+### ⏪ 优化
+- **buession-http：** 优化 Response，使 statusCode、statusText 与 statusLine 的值始终保持一致
+- 其它优化
+
+
+### 🐞 Bug 修复
+
+- **buession-redis：** 修复 jedis 单例模式、哨兵模式下，不使用连接池的情况下，未创建 jedis 实例的 BUG
+
+
+### 📔 文档
+- **buession-redis：** 修正错误的注释
+
+
+---
+
+
+## [2.1.1](https://github.com/buession/buessionframework/releases/tag/v2.1.1) (2022-08-18)
 
 ### 🔨依赖升级
 
