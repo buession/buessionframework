@@ -21,10 +21,76 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
- *
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.core.validator.Validate;
+import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
+import redis.clients.jedis.DefaultJedisClientConfig;
+
+/**
  * @author Yong.Teng
  * @since 2.1.2
- */public class JedisClientConfigBuilder {
+ */
+public class JedisClientConfigBuilder {
+
+	private final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
+
+	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource,
+									 final SslConfiguration sslConfiguration){
+		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder()
+				.connectionTimeoutMillis(dataSource.getConnectTimeout())
+				.socketTimeoutMillis(dataSource.getSoTimeout())
+				.blockingSocketTimeoutMillis(dataSource.getInfiniteSoTimeout())
+				.ssl(sslConfiguration != null);
+
+		if(Validate.hasText(dataSource.getClientName())){
+			builder.clientName(dataSource.getClientName());
+		}
+
+		if(Validate.hasText(dataSource.getPassword())){
+			if(Validate.hasText(dataSource.getUsername())){
+				builder.user(dataSource.getUsername());
+			}
+
+			builder.password(dataSource.getPassword());
+		}
+
+		if(sslConfiguration != null){
+			builder.sslSocketFactory(sslConfiguration.getSslSocketFactory())
+					.sslParameters(sslConfiguration.getSslParameters())
+					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
+		}
+	}
+
+	public static JedisClientConfigBuilder create(final JedisRedisDataSource dataSource,
+												  final SslConfiguration sslConfiguration){
+		return new JedisClientConfigBuilder(dataSource, sslConfiguration);
+	}
+
+	public JedisClientConfigBuilder user(final String user){
+		builder.user(user);
+		return this;
+	}
+
+	public JedisClientConfigBuilder password(final String password){
+		builder.password(password);
+		return this;
+	}
+
+	public JedisClientConfigBuilder database(final int database){
+		builder.database(database);
+		return this;
+	}
+
+	public JedisClientConfigBuilder clientName(final String clientName){
+		builder.clientName(clientName);
+		return this;
+	}
+
+	public DefaultJedisClientConfig build(){
+		return builder.build();
+	}
+
 }

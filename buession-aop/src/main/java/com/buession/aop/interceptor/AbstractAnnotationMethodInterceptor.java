@@ -76,7 +76,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		Assert.isNull(handler, "AnnotationHandler cloud not be null.");
 
 		setHandler(handler);
-		setResolver(Optional.ofNullable(resolver).orElse(new DefaultAnnotationResolver()));
+		setResolver(Optional.of(resolver).orElse(new DefaultAnnotationResolver()));
 	}
 
 	public AnnotationHandler<A> getHandler(){

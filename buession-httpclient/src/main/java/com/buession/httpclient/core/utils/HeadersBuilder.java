@@ -206,7 +206,10 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final List<Header> headers){
-		builder.addAll(headers);
+		if(headers != null){
+			builder.addAll(headers);
+		}
+		
 		return this;
 	}
 

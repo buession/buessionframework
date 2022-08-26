@@ -24,6 +24,8 @@
  */
 package com.buession.httpclient.core;
 
+import java.util.StringJoiner;
+
 /**
  * HTTP 连接配置
  *
@@ -395,6 +397,25 @@ public class Configuration {
 	 */
 	public void setNormalizeUri(boolean normalizeUri){
 		this.normalizeUri = normalizeUri;
+	}
+
+	@Override
+	public String toString(){
+		return new StringJoiner(", ")
+				.add("maxConnections: " + maxConnections)
+				.add("maxPerRoute: " + maxPerRoute)
+				.add("idleConnectionTime: " + idleConnectionTime)
+				.add("connectTimeout: " + connectTimeout)
+				.add("connectionRequestTimeout: " + connectionRequestTimeout)
+				.add("readTimeout: " + readTimeout)
+				.add("allowRedirects: " + allowRedirects)
+				.add("relativeRedirectsAllowed: " + relativeRedirectsAllowed)
+				.add("circularRedirectsAllowed: " + circularRedirectsAllowed)
+				.add("maxRedirects: " + maxRedirects)
+				.add("authenticationEnabled: " + authenticationEnabled)
+				.add("contentCompressionEnabled: " + contentCompressionEnabled)
+				.add("normalizeUri: " + normalizeUri)
+				.toString();
 	}
 
 }

@@ -25,8 +25,11 @@
 package com.buession.httpclient.okhttp;
 
 import com.buession.httpclient.core.AbstractResponseBuilder;
+import com.buession.httpclient.core.AbstractResponseHeaderParse;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.StatusLine;
+import com.google.common.collect.Multimap;
+import okhttp3.Headers;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import org.slf4j.Logger;
@@ -50,11 +53,7 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder<okhttp3.Respo
 		final OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse();
 
 		response.setProtocolVersion(protocolConverter.convert(httpResponse.protocol()));
-
-		response.setStatusCode(httpResponse.code());
-		response.setStatusText(httpResponse.message());
 		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
-
 		response.setHeaders(okHttpResponseHeaderParse.parse(httpResponse.headers()));
 
 		final ResponseBody responseBody = httpResponse.body();
@@ -86,6 +85,25 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder<okhttp3.Respo
 		httpResponse.close();
 
 		return response;
+	}
+
+	/**
+	 * OKHTTP 响应头解析器
+	 *
+	 * @author Yong.Teng
+	 * @since 2.1.2
+	 */
+	private static class OkHttpResponseHeaderParse extends AbstractResponseHeaderParse<Headers> {
+
+		@Override
+		protected void doParse(final Headers headers, final Multimap<String, String> headersMap){
+			if(headers.size() > 0){
+				for(String name : headers.names()){
+					headersMap.put(name, headers.get(name));
+				}
+			}
+		}
+
 	}
 
 }

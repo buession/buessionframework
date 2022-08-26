@@ -170,9 +170,7 @@ public class BeanUtils {
 		BeanMap beanMap = BeanMap.create(bean);
 		Map<String, Object> result = new HashMap<>(beanMap.size());
 
-		beanMap.forEach((key, value)->{
-			result.put(key.toString(), value);
-		});
+		beanMap.forEach((key, value)->result.put(key.toString(), value));
 
 		return result;
 	}
