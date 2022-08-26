@@ -24,14 +24,13 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.utils.PoolConfigUtils;
 import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
 
@@ -117,19 +116,7 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 		}
 
 		int maxRedirects = getMaxRedirects() < 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
-		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder();
-
-		if(Validate.hasText(getPassword())){
-			if(Validate.hasText(getUsername())){
-				builder.user(getUsername());
-			}
-
-			builder.password(getPassword());
-		}
-
-		if(Validate.hasText(getClientName())){
-			builder.clientName(getClientName());
-		}
+		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
 
 		if(isUsePool()){
 			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();

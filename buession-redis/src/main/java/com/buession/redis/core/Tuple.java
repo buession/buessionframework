@@ -72,7 +72,7 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 
 		result = prime * result;
 
-		if(null != element){
+		if(element != null){
 			for(byte b : element){
 				result = prime * result + b;
 			}
