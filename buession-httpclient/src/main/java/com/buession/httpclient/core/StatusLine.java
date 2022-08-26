@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -36,31 +36,73 @@ import java.util.Objects;
  */
 public class StatusLine {
 
+	/**
+	 * 状态码
+	 */
 	private int statusCode;
 
+	/**
+	 * 状态信息
+	 */
 	private String statusText;
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public StatusLine(){
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param statusCode
+	 * 		状态码
+	 * @param statusText
+	 * 		状态信息
+	 */
 	public StatusLine(int statusCode, String statusText){
-		this.statusCode = statusCode;
+		setStatusCode(statusCode);
 		this.statusText = statusText;
 	}
 
+	/**
+	 * 返回状态码
+	 *
+	 * @return 状态码
+	 */
 	public int getStatusCode(){
 		return statusCode;
 	}
 
+	/**
+	 * 设置状态码
+	 *
+	 * @param statusCode
+	 * 		状态码
+	 */
 	public void setStatusCode(final int statusCode){
-		Assert.isNegative(statusCode, "HTTP response status code cloud not be negative.");
+		if(statusCode != 0 && (statusCode < 100 || statusCode > 599)){
+			throw new IllegalArgumentException("Illegal HTTP response status code: " + statusCode);
+		}
 		this.statusCode = statusCode;
 	}
 
+	/**
+	 * 返回状态信息
+	 *
+	 * @return 状态信息
+	 */
 	public String getStatusText(){
 		return statusText;
 	}
 
+	/**
+	 * 设置状态信息
+	 *
+	 * @param statusText
+	 * 		状态信息
+	 */
 	public void setStatusText(final String statusText){
 		Assert.isBlank(statusText, "HTTP response status text cloud not be null or empty.");
 		this.statusText = statusText;

@@ -21,10 +21,22 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient;/**
- * 
- *
+ */
+package com.buession.httpclient;
+
+import com.buession.httpclient.core.ProtocolVersion;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 2.1.2
- */public class ProtocolVersionTest {
+ */
+public class ProtocolVersionTest {
+
+	@Test
+	public void createInstance(){
+		ProtocolVersion protocolVersion = ProtocolVersion.createInstance("http", 1, 1);
+		System.out.println(protocolVersion);
+	}
+
 }
