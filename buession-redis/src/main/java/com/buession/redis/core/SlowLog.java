@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class SlowLog implements Serializable {
 
-	private static final long serialVersionUID = 4948377124212583969L;
+	private final static long serialVersionUID = 4948377124212583969L;
 
 	/**
 	 * 每个慢查询条目的唯一的递增标识符

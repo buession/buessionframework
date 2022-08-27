@@ -39,7 +39,7 @@ public class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final long minIdleTime){
-		super();
+		this();
 		idle(minIdleTime);
 	}
 
@@ -72,7 +72,7 @@ public class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final String consumer){
-		super();
+		this();
 		consumer(consumer);
 	}
 

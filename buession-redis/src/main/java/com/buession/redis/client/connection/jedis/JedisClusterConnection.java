@@ -48,7 +48,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	private int maxRedirects;
 
 	/**
-	 * 最大重数时长（单位：秒）
+	 * 最大重数时长（单位：毫秒）
 	 */
 	private int maxTotalRetriesDuration;
 
@@ -82,9 +82,9 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
@@ -96,11 +96,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
 								  int infiniteSoTimeout){
@@ -113,11 +113,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 */
@@ -133,15 +133,15 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：秒）
+	 * 		最大重试时长（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
 								  int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration){
@@ -167,9 +167,9 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -184,11 +184,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -218,9 +218,9 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
 								  int soTimeout){
@@ -236,11 +236,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
 								  int soTimeout, int infiniteSoTimeout){
@@ -272,9 +272,9 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -292,11 +292,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -376,13 +376,13 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param maxRedirects
-	 * 		最大重定向次数
+	 * 		最大重定向次数（单位：毫秒）
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：秒）
+	 * 		最大重试时长（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
 								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration){
@@ -399,13 +399,13 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：秒）
+	 * 		最大重试时长（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -425,15 +425,15 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：秒）
+	 * 		最大重试时长（单位：毫秒）
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
 								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration){
@@ -450,15 +450,15 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：秒）
+	 * 		最大重试时长（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */

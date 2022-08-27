@@ -39,8 +39,7 @@ public class JedisClientConfigBuilder {
 
 	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource,
 									 final SslConfiguration sslConfiguration){
-		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder()
-				.connectionTimeoutMillis(dataSource.getConnectTimeout())
+		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
 				.blockingSocketTimeoutMillis(dataSource.getInfiniteSoTimeout())
 				.ssl(sslConfiguration != null);

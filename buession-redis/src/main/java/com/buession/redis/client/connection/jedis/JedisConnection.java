@@ -338,14 +338,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		return pool != null;
 	}
 
-	protected Jedis createJedis(final JedisDataSource dataSource){
-		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
-
-		builder.database(dataSource.getDatabase());
-
-		return new Jedis(dataSource.getHost(), dataSource.getPort(), builder.build());
-	}
-
 	@Override
 	protected void doConnect() throws RedisConnectionFailureException{
 		if(isUsePool()){
@@ -364,7 +356,11 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 			}
 		}else{
 			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-			jedis = createJedis(dataSource);
+			final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
+
+			builder.database(dataSource.getDatabase());
+
+			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), builder.build());
 		}
 	}
 

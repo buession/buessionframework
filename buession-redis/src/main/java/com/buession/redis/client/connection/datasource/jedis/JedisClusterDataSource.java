@@ -108,13 +108,6 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	}
 
 	protected JedisCluster createJedisCluster(){
-		Set<HostAndPort> hostAndPorts = new HashSet<>();
-
-		for(RedisNode node : getNodes()){
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			hostAndPorts.add(new HostAndPort(node.getHost(), port));
-		}
-
 		int maxRedirects = getMaxRedirects() < 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
 		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
 
@@ -123,26 +116,33 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 
 			PoolConfigUtils.convert(getPoolConfig(), connectionPoolConfig);
 
-			if(maxTotalRetriesDuration > 0){
-				cluster = new JedisCluster(hostAndPorts, builder.build(), maxRedirects,
-						createMaxTotalRetriesDuration(), connectionPoolConfig);
+			if(getMaxTotalRetriesDuration() > 0){
+				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects,
+						Duration.ofMillis(getMaxTotalRetriesDuration()), connectionPoolConfig);
 			}else{
-				cluster = new JedisCluster(hostAndPorts, builder.build(), maxRedirects, connectionPoolConfig);
+				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects, connectionPoolConfig);
 			}
 		}else{
-			if(maxTotalRetriesDuration > 0){
-				cluster = new JedisCluster(hostAndPorts, builder.build(), maxRedirects,
-						createMaxTotalRetriesDuration());
+			if(getMaxTotalRetriesDuration() > 0){
+				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects,
+						Duration.ofMillis(getMaxTotalRetriesDuration()));
 			}else{
-				cluster = new JedisCluster(hostAndPorts, builder.build(), maxRedirects);
+				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects);
 			}
 		}
 
 		return cluster;
 	}
 
-	private Duration createMaxTotalRetriesDuration(){
-		return Duration.ofMillis(maxTotalRetriesDuration * 1000L);
+	private Set<HostAndPort> createHostAndPorts(){
+		final Set<HostAndPort> hostAndPorts = new HashSet<>(getNodes().size());
+
+		for(RedisNode node : getNodes()){
+			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
+			hostAndPorts.add(new HostAndPort(node.getHost(), port));
+		}
+
+		return hostAndPorts;
 	}
 
 }

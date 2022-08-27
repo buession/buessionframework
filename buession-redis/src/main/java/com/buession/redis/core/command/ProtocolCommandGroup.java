@@ -25,6 +25,8 @@
 package com.buession.redis.core.command;
 
 /**
+ * Redis 协议命令分组
+ *
  * @author Yong.Teng
  */
 public enum ProtocolCommandGroup {
