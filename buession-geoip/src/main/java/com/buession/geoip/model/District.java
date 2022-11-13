@@ -190,8 +190,8 @@ public final class District implements Serializable {
 
 	@Override
 	public String toString(){
-		return "District{" + "geoNameId=" + geoNameId + ", code=" + code + ", originalName='" + originalName + '\'' +
-				", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", postal=" + postal + ", parent=" +
+		return "District{" + "geoNameId=" + geoNameId + ", code=" + code + ", originalName=" + originalName +
+				", name=" + name +  ", fullName=" + fullName + ", postal=" + postal + ", parent=" +
 				parent + '}';
 	}
 

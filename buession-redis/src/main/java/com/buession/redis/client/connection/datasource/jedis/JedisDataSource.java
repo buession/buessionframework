@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.lang.Constants;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
@@ -97,13 +98,10 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 			if(pool == null){
 				pool = createPool();
 			}
-			
-			return new JedisConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSslConfiguration());
-		}else{
-			return new JedisConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSslConfiguration());
 		}
+
+		return new JedisConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+				getSslConfiguration());
 	}
 
 	protected JedisPool createPool(){
@@ -112,14 +110,15 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 
 		PoolConfigUtils.convert(getPoolConfig(), jedisPoolConfig);
 
+		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
 		if(sslConfiguration == null){
 			logger.debug("Create jedis pool.");
 			return new JedisPool(jedisPoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
-					getUsername(), redisPassword(getPassword()), getDatabase(), getClientName(), isUseSsl());
+					getUsername(), password, getDatabase(), getClientName(), isUseSsl());
 		}else{
 			logger.debug("Create jedis pool with ssl.");
 			return new JedisPool(jedisPoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
-					getUsername(), redisPassword(getPassword()), getDatabase(), getClientName(), isUseSsl(),
+					getUsername(), password, getDatabase(), getClientName(), isUseSsl(),
 					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
 					sslConfiguration.getHostnameVerifier());
 		}

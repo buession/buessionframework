@@ -186,14 +186,14 @@ public final class Country implements Serializable {
 					Objects.equals(code, that.code) && Objects.equals(originalName, that.originalName) &&
 					Objects.equals(name, that.name);
 		}
-
+		
 		return false;
 	}
 
 	@Override
 	public String toString(){
-		return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code='" + code + '\'' + ", " +
-				"originalName='" + originalName + '\'' + ", name='" + name + '\'' + ", fullName='" + fullName + '\'' +
+		return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code=" + code +
+				", originalName=" + originalName + ", name=" + name + ", fullName=" + fullName +
 				", isInEuropeanUnion=" + isInEuropeanUnion + '}';
 	}
 

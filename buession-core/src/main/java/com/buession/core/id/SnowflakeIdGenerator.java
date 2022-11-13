@@ -126,7 +126,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 * @param sequenceBits
 	 * 		序列id中占的位数
 	 */
-	public SnowflakeIdGenerator(final int timeBits, final int datacenterBits, final int workerBits, final int sequenceBits){
+	public SnowflakeIdGenerator(final int timeBits, final int datacenterBits, final int workerBits,
+								final int sequenceBits){
 		if(timeBits > 0){
 			this.timeBits = timeBits;
 		}
@@ -191,7 +192,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 * @param sequenceBits
 	 * 		序列id中占的位数
 	 */
-	public SnowflakeIdGenerator(final long datacenterId, final long workerId, final int timeBits, final int datacenterBits, final int workerBits, final int sequenceBits){
+	public SnowflakeIdGenerator(final long datacenterId, final long workerId, final int timeBits,
+								final int datacenterBits, final int workerBits, final int sequenceBits){
 		if(timeBits > 0){
 			this.timeBits = timeBits;
 		}
@@ -219,7 +221,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 
 		//如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
 		if(currentTimestamp < lastTimestamp){
-			throw new IdGenerateException(String.format("Clock moved backwards. Refusing for %d seconds", lastTimestamp - currentTimestamp));
+			throw new IdGenerateException(
+					String.format("Clock moved backwards. Refusing for %d seconds", lastTimestamp - currentTimestamp));
 		}
 
 		//如果是同一时间生成的，则进行毫秒内序列
@@ -247,7 +250,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		long currentTimestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 
 		if(currentTimestamp - START_TIMESTAMP > bitsAllocator.getMaxDeltaSeconds()){
-			throw new IdGenerateException("Timestamp bits is exhausted. Refusing ID generate. Now: " + currentTimestamp);
+			throw new IdGenerateException(
+					"Timestamp bits is exhausted. Refusing ID generate. Now: " + currentTimestamp);
 		}
 
 		return currentTimestamp;
@@ -302,10 +306,12 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 
 		private final int workerIdShift;
 
-		public BitsAllocator(final int timestampBits, final int datacenterIdBits, final int workerIdBits, final int sequenceBits){
+		public BitsAllocator(final int timestampBits, final int datacenterIdBits, final int workerIdBits,
+							 final int sequenceBits){
 			// make sure allocated 64 bits
 			int allocateTotalBits = signBits + timestampBits + datacenterIdBits + workerIdBits + sequenceBits;
-			Assert.isFalse(allocateTotalBits == TOTAL_BITS, "allocate not enough " + TOTAL_BITS + " bits, now: " + allocateTotalBits + " bits.");
+			Assert.isFalse(allocateTotalBits == TOTAL_BITS,
+					"allocate not enough " + TOTAL_BITS + " bits, now: " + allocateTotalBits + " bits.");
 
 			// initialize bits
 			this.timestampBits = timestampBits;
@@ -325,8 +331,10 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 			this.workerIdShift = sequenceBits;
 		}
 
-		public long allocate(final long deltaSeconds, final long datacenterId, final long workerId, final long sequence){
-			return (deltaSeconds << timestampShift) | (datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
+		public long allocate(final long deltaSeconds, final long datacenterId, final long workerId,
+							 final long sequence){
+			return (deltaSeconds << timestampShift) | (datacenterId << datacenterIdShift) |
+					(workerId << workerIdShift) | sequence;
 		}
 
 		public int getSignBits(){

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.annotation;
@@ -46,6 +46,8 @@ import java.lang.annotation.Target;
 @JsonSerialize(using = SensitiveSerializer.class)
 public @interface Sensitive {
 
+	String DEFAULT_REPLACEMENT = "***";
+
 	/**
 	 * 脱敏策略
 	 *
@@ -65,6 +67,6 @@ public @interface Sensitive {
 	 *
 	 * @return 自定义脱敏替换内容
 	 */
-	String replacement() default "***";
+	String replacement() default DEFAULT_REPLACEMENT;
 
 }

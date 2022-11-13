@@ -22,33 +22,21 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache;
+package com.buession.httpclient;
 
-import com.buession.httpclient.core.AbstractResponseHeaderParse;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.buession.httpclient.core.ProtocolVersion;
+import org.junit.Test;
 
 /**
- * Apache HttpClient 响应头解析器
- *
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 2.1.2
  */
-class ApacheResponseHeaderParse extends AbstractResponseHeaderParse<org.apache.http.Header[]> {
+public class ProtocolVersionTest {
 
-	@Override
-	protected Multimap<String, String> doParse(final org.apache.http.Header[] headers){
-		final Multimap<String, String> headerMaps = HashMultimap.create();
-
-		if(headers.length > 0){
-			for(org.apache.http.Header header : headers){
-				if(header.getElements() != null){
-					headerMaps.put(header.getName(), header.getValue());
-				}
-			}
-		}
-
-		return headerMaps;
+	@Test
+	public void createInstance(){
+		ProtocolVersion protocolVersion = ProtocolVersion.createInstance("http", 1, 1);
+		System.out.println(protocolVersion);
 	}
 
 }

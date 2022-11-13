@@ -47,6 +47,22 @@ public class QueueBuilder<V> {
 	}
 
 	/**
+	 * 创建默认为 {@link LinkedList} 类型的 {@link QueueBuilder} 实例
+	 *
+	 * @param c
+	 * 		the collection whose elements are to be placed into this list
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link QueueBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <V> QueueBuilder<V> create(final Collection<? extends V> c){
+		return new QueueBuilder<>(new LinkedList<>(c));
+	}
+
+	/**
 	 * 创建实例
 	 *
 	 * @param clazz
@@ -64,10 +80,7 @@ public class QueueBuilder<V> {
 		Queue<V> data;
 		try{
 			data = clazz.newInstance();
-		}catch(InstantiationException e){
-			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
-			data = new LinkedList<>();
-		}catch(IllegalAccessException e){
+		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new LinkedList<>();
 		}

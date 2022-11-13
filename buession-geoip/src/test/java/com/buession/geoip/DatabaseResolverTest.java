@@ -71,7 +71,7 @@ public class DatabaseResolverTest {
 	public void location() throws Exception{
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
-		Location location = resolver.location("114.114.114.114");
+		Location location = resolver.location("60.246.49.9");
 		System.out.println(location);
 	}
 

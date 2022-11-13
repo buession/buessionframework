@@ -34,16 +34,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Redis 客户端抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractRedisClient implements RedisClient {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * 构造函数
+	 */
 	public AbstractRedisClient(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Redis 连接对象 {@link RedisConnection}
+	 */
 	public AbstractRedisClient(final RedisConnection connection){
 		setConnection(connection);
 	}
@@ -60,12 +71,9 @@ public abstract class AbstractRedisClient implements RedisClient {
 			startTime = System.nanoTime();
 		}
 
-		String argumentsString = logger.isDebugEnabled() || logger.isErrorEnabled() && arguments != null ?
-				arguments.toString() : null;
-
 		if(logger.isDebugEnabled()){
 			if(arguments != null){
-				logger.debug("Execute command '{}' with arguments: {}", command, argumentsString);
+				logger.debug("Execute command '{}' with arguments: {}", command, arguments);
 			}else{
 				logger.debug("Execute command '{}'", command);
 			}
@@ -77,7 +85,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
 					logger.error("Execute command '{}' with arguments: {}, failure: {}", command,
-							argumentsString, e.getMessage(), e);
+							arguments, e.getMessage(), e);
 				}else{
 					logger.error("Execute command '{}', failure: {}", command, e.getMessage(), e);
 				}

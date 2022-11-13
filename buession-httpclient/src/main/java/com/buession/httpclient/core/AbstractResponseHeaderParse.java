@@ -25,6 +25,7 @@
 package com.buession.httpclient.core;
 
 import com.buession.core.utils.StringUtils;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import java.util.Collections;
@@ -48,12 +49,15 @@ public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderPa
 			return null;
 		}
 
-		Multimap<String, String> headersMap = doParse(headers);
+		final Multimap<String, String> headersMap = HashMultimap.create();
+
+		doParse(headers, headersMap);
+
 		return Collections.unmodifiableList(
 				headersMap.keySet().stream().map((name)->new Header(name, StringUtils.join(headersMap.get(name), ", ")))
 						.collect(Collectors.toList()));
 	}
 
-	protected abstract Multimap<String, String> doParse(final T headers);
+	protected abstract void doParse(final T headers, final Multimap<String, String> headersMap);
 
 }

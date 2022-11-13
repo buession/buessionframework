@@ -149,8 +149,6 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 *
 	 * @param nxXx
 	 * 		更新成员方式
-	 *
-	 * @return JedisZAddParams
 	 */
 	private void nxXx(final NxXx nxXx){
 		switch(nxXx){
@@ -170,8 +168,6 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 *
 	 * @param gtLt
 	 * 		更新新的分值方式
-	 *
-	 * @return JedisZAddParams
 	 */
 	private void gtLt(final GtLt gtLt){
 		switch(gtLt){

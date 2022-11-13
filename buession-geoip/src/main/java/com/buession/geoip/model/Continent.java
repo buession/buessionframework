@@ -134,8 +134,8 @@ public final class Continent implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Continent{" + "geoNameId=" + geoNameId + ", code='" + code + '\'' + ", originalName='" + originalName +
-				'\'' + ", name='" + name + '\'' + '}';
+		return "Continent{" + "geoNameId=" + geoNameId + ", code=" + code + ", originalName=" + originalName +
+				", name=" + name + '}';
 	}
 
 }

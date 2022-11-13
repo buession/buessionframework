@@ -172,8 +172,8 @@ public final class Location implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Location{" + "continent=" + continent + ", country=" + country + ", district=" + district + ", " +
-				"traits=" + traits + ", geo=" + geo + ", timeZone=" + timeZone + '}';
+		return "Location{" + "continent=" + continent + ", country=" + country + ", district=" + district +
+				", traits=" + traits + ", geo=" + geo + ", timeZone=" + timeZone + '}';
 	}
 
 }

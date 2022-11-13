@@ -54,10 +54,19 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 
 	private JedisClusterConnection connection;
 
+	/**
+	 * 构造函数
+	 */
 	public JedisClusterClient(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Jedis Redis 集群连接对象 {@link JedisClusterConnection}
+	 */
 	public JedisClusterClient(final JedisClusterConnection connection){
 		super(connection);
 	}
