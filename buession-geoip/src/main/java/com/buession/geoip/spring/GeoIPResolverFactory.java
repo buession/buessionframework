@@ -17,7 +17,7 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
@@ -26,6 +26,7 @@ package com.buession.geoip.spring;
 
 import com.buession.core.utils.Assert;
 import com.buession.geoip.Resolver;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -39,6 +40,8 @@ import java.nio.file.Path;
  * @author Yong.Teng
  */
 public class GeoIPResolverFactory {
+
+	protected final static String DEFAULT_CITY_DB = "maxmind/City.mmdb";
 
 	/**
 	 * IP 库文件路径
@@ -65,7 +68,12 @@ public class GeoIPResolverFactory {
 	 *
 	 * @return IP 库文件路径
 	 */
-	public File getDbPath(){
+	public File getDbPath() throws IOException{
+		if(dbPath == null){
+			ClassPathResource resource = new ClassPathResource(DEFAULT_CITY_DB);
+			dbPath = resource.getFile();
+		}
+
 		return dbPath;
 	}
 
@@ -128,7 +136,6 @@ public class GeoIPResolverFactory {
 	 */
 	public void setDbPath(String dbPath) throws IOException{
 		Assert.isBlank(dbPath, "Ip database path cloud not be null or empty.");
-
 		setDbPath(new File(dbPath));
 	}
 
@@ -137,9 +144,10 @@ public class GeoIPResolverFactory {
 	 *
 	 * @return IP 库文件流
 	 */
-	public InputStream getStream(){
+	public InputStream getStream() throws IOException{
 		if(stream == null){
-			stream = GeoIPResolverFactory.class.getResourceAsStream("/maxmind/City.mmdb");
+			ClassPathResource resource = new ClassPathResource(DEFAULT_CITY_DB);
+			stream = resource.getInputStream();
 		}
 
 		return stream;

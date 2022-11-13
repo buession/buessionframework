@@ -483,14 +483,14 @@ public final class Traits implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Traits{" + "ipAddress='" + ipAddress + '\'' + ", domain='" + domain + '\'' + ", isp='" + isp + '\'' +
+		return "Traits{" + "ipAddress=" + ipAddress + ", domain=" + domain + ", isp=" + isp +
 				", network=" + network + ", connectionType=" + connectionType + ", organization=" + organization + ", "
-				+ "autonomousSystemOrganization" + "=" + autonomousSystemOrganization + ", autonomousSystemNumber=" +
-				autonomousSystemNumber + ", " + "isAnonymous=" + isAnonymous + ", " + "isAnonymousProxy=" +
-				isAnonymousProxy + ", isAnonymousVpn=" + isAnonymousVpn + ", " + "isHostingProvider=" +
-				isHostingProvider + ", isLegitimateProxy=" + isLegitimateProxy + ", " + "isPublicProxy=" +
-				isPublicProxy + ", isSatelliteProvider=" + isSatelliteProvider + ", " + "isTorExitNode=" +
-				isTorExitNode + ", userType='" + isTorExitNode + '\'' + ", userCount=" + userCount +
+				+ "autonomousSystemOrganization=" + autonomousSystemOrganization + ", autonomousSystemNumber=" +
+				autonomousSystemNumber + ", isAnonymous=" + isAnonymous + ", isAnonymousProxy=" +
+				isAnonymousProxy + ", isAnonymousVpn=" + isAnonymousVpn + ", isHostingProvider=" +
+				isHostingProvider + ", isLegitimateProxy=" + isLegitimateProxy + ", isPublicProxy=" +
+				isPublicProxy + ", isSatelliteProvider=" + isSatelliteProvider + ", isTorExitNode=" +
+				isTorExitNode + ", userType=" + isTorExitNode + ", userCount=" + userCount +
 				", staticIpScore=" + staticIpScore + '}';
 	}
 

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -100,8 +100,9 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
 					"toolboxConfigLocation.");
 			setViewClass(VelocityToolboxView.class);
 		}else if(VelocityToolboxView.class.isAssignableFrom(getViewClass()) == false){
-			String message = String.format("Given view class [%s] is not of type [%s], which it needs to be in case of" +
-					" a specified toolboxConfigLocation.", getViewClass().getName(),
+			String message = String.format(
+					"Given view class [%s] is not of type [%s], which it needs to be in case of" +
+							" a specified toolboxConfigLocation.", getViewClass().getName(),
 					VelocityToolboxView.class.getName());
 			throw new IllegalArgumentException(message);
 		}

@@ -29,10 +29,6 @@ package com.buession.geoip;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Country;
 import com.buession.geoip.model.Location;
-import com.buession.geoip.converter.CityConverter;
-import com.buession.geoip.converter.ContinentConverter;
-import com.buession.geoip.converter.CountryConverter;
-import com.buession.geoip.converter.TraitsConverter;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +44,6 @@ import java.util.Locale;
  * @author Yong.Teng
  */
 public abstract class AbstractResolver implements Resolver {
-
-	protected final static ContinentConverter continentConverter = new ContinentConverter();
-
-	protected final static CountryConverter countryConverter = new CountryConverter();
-
-	protected final static CityConverter cityConverter = new CityConverter();
-
-	protected final static TraitsConverter traitsConverter = new TraitsConverter();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractResolver.class);
 

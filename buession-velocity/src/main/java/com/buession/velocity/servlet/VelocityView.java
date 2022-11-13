@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -155,7 +155,9 @@ public class VelocityView extends AbstractTemplateView {
 			template = getTemplate(getUrl());
 			return true;
 		}catch(ResourceNotFoundException ex){
-			logger.debug("No Velocity view found for URL: {}", getUrl());
+			if(logger.isDebugEnabled()){
+				logger.debug("No Velocity view found for URL: {}", getUrl());
+			}
 			return false;
 		}catch(Exception ex){
 			throw new NestedIOException("Could not load Velocity template for URL [" + getUrl() + "]", ex);
@@ -164,7 +166,7 @@ public class VelocityView extends AbstractTemplateView {
 
 	@Override
 	protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
-			HttpServletResponse response) throws Exception{
+											 HttpServletResponse response) throws Exception{
 		exposeHelpers(model, request);
 
 		Context velocityContext = createVelocityContext(model, request, response);
@@ -177,7 +179,8 @@ public class VelocityView extends AbstractTemplateView {
 	protected void exposeHelpers(Map<String, Object> model, HttpServletRequest request) throws Exception{
 	}
 
-	protected void exposeHelpers(Context velocityContext, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	protected void exposeHelpers(Context velocityContext, HttpServletRequest request, HttpServletResponse response)
+			throws Exception{
 		exposeHelpers(velocityContext, request);
 	}
 
@@ -185,7 +188,7 @@ public class VelocityView extends AbstractTemplateView {
 	}
 
 	protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
-			HttpServletResponse response) throws Exception{
+											HttpServletResponse response) throws Exception{
 		return createVelocityContext(model);
 	}
 
@@ -224,7 +227,10 @@ public class VelocityView extends AbstractTemplateView {
 	}
 
 	protected void doRender(Context context, HttpServletResponse response) throws Exception{
-		logger.debug("Rendering Velocity template [{}] in VelocityView '{}'", getUrl(), getBeanName());
+		if(logger.isDebugEnabled()){
+			logger.debug("Rendering Velocity template [{}] in VelocityView '{}'", getUrl(), getBeanName());
+		}
+
 		mergeTemplate(getTemplate(), context, response);
 	}
 
@@ -242,9 +248,9 @@ public class VelocityView extends AbstractTemplateView {
 			template.merge(context, response.getWriter());
 		}catch(MethodInvocationException ex){
 			Throwable cause = ex.getCause();
-			String message = String.format("Method invocation failed during rendering of Velocity view with name " +
-					"'{}': {}; reference [{}], method: '{}'", getBeanName(), ex.getMessage(), ex.getReferenceName(),
-					ex.getMethodName());
+			String message = String.format(
+					"Method invocation failed during rendering of Velocity view with name '%s': %s; reference [%s], " +
+							"method: '%s'", getBeanName(), ex.getMessage(), ex.getReferenceName(), ex.getMethodName());
 
 			throw new NestedServletException(message, cause == null ? ex : cause);
 		}
