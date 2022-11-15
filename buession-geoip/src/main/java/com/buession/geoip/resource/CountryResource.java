@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.resource;
@@ -32,43 +32,47 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Yong.Teng
  */
 public class CountryResource {
 
-	private final static Map<String, String> data = new HashMap<>(255);
+	private final static Map<String, String> DATA = new ConcurrentHashMap<>(255);
 
 	private final static Logger logger = LoggerFactory.getLogger(CountryResource.class);
 
 	public Map<String, String> getData(){
-		if(data.size() == 0){
-			InputStream stream = CountryResource.class.getResourceAsStream("/country.db");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		if(DATA.size() == 0){
+			synchronized(this){
+				if(DATA.size() == 0){
+					InputStream stream = CountryResource.class.getResourceAsStream("/country.db");
+					BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
-			try{
-				KeyValueParser keyValueParser;
+					try{
+						KeyValueParser keyValueParser;
 
-				while(reader.ready()){
-					keyValueParser = new KeyValueParser(reader.readLine(), ':');
-					data.put(keyValueParser.getKey(), keyValueParser.getValue());
+						while(reader.ready()){
+							keyValueParser = new KeyValueParser(reader.readLine(), ':');
+							DATA.put(keyValueParser.getKey(), keyValueParser.getValue());
+						}
+					}catch(IOException e){
+						logger.error("Load dict error.", e);
+					}
+
+					try{
+						stream.close();
+						reader.close();
+					}catch(IOException e){
+						//
+					}
 				}
-			}catch(IOException e){
-				logger.error("Load dict error.", e);
-			}
-
-			try{
-				stream.close();
-				reader.close();
-			}catch(IOException e){
-
 			}
 		}
 
-		return data;
+		return DATA;
 	}
 
 }

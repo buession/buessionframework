@@ -24,10 +24,13 @@
  */
 package com.buession.httpclient.apache;
 
+import com.buession.httpclient.core.AbstractResponseHeaderParse;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.AbstractResponseBuilder;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.StatusLine;
+import com.google.common.collect.Multimap;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.BufferedHttpEntity;
@@ -55,11 +58,7 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder<org.apache.ht
 
 		response.setProtocolVersion(ProtocolVersion.createInstance(responseProtocolVersion.getProtocol(),
 				responseProtocolVersion.getMajor(), responseProtocolVersion.getMinor()));
-
-		response.setStatusCode(responseStatusLine.getStatusCode());
-		response.setStatusText(responseStatusLine.getReasonPhrase());
 		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
-
 		response.setHeaders(responseHeaderParse.parse(httpResponse.getAllHeaders()));
 
 		if(httpResponse.getEntity() != null){
@@ -88,6 +87,28 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder<org.apache.ht
 		}
 
 		return response;
+	}
+
+	/**
+	 * Apache HttpClient 响应头解析器
+	 *
+	 * @author Yong.Teng
+	 * @since 2.1.2
+	 */
+	private static class ApacheResponseHeaderParse extends AbstractResponseHeaderParse<Header[]> {
+
+		@Override
+		protected void doParse(final org.apache.http.Header[] headers,
+							   final Multimap<String, String> headersMap){
+			if(headers.length > 0){
+				for(org.apache.http.Header header : headers){
+					if(header.getElements() != null){
+						headersMap.put(header.getName(), header.getValue());
+					}
+				}
+			}
+		}
+
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.serializer;
@@ -62,7 +62,7 @@ public class SensitiveSerializer extends JsonSerializer<CharSequence> implements
 			String str;
 			if(Validate.hasText(format)){
 				str = value.toString()
-						.replaceAll(format, Optional.ofNullable(replacement).orElse(Constants.EMPTY_STRING));
+						.replaceAll(format, Optional.ofNullable(replacement).orElse(Sensitive.DEFAULT_REPLACEMENT));
 			}else{
 				str = strategy.getFunction().apply(value.toString());
 			}

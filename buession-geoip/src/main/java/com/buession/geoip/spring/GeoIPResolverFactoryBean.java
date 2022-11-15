@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
@@ -60,10 +60,10 @@ public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements Fa
 	public void afterPropertiesSet() throws Exception{
 		if(getLoadMode() == LoadMode.STREAM){
 			resolver = isEnableCache() ? new CacheDatabaseResolver(getStream()) : new DatabaseResolver(getStream());
-			logger.info("Read db path from stream");
+			logger.info("Read db from stream");
 		}else{
 			resolver = isEnableCache() ? new CacheDatabaseResolver(getDbPath()) : new DatabaseResolver(getDbPath());
-			logger.info("Read db path from file {}", getDbPath());
+			logger.info("Read db from file: {}", getDbPath());
 		}
 	}
 

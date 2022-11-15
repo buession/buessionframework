@@ -51,17 +51,17 @@ public abstract class AbstractDataSource implements DataSource {
 	private String clientName;
 
 	/**
-	 * 连接超时（单位：秒）
+	 * 连接超时（单位：毫秒）
 	 */
 	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
 	/**
-	 * 读取超时（单位：秒）
+	 * 读取超时（单位：毫秒）
 	 */
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
-	 * Infinite 读取超时
+	 * Infinite 读取超时（单位：毫秒）
 	 *
 	 * @since 2.0.0
 	 */
@@ -192,10 +192,6 @@ public abstract class AbstractDataSource implements DataSource {
 	@Override
 	public void setSslConfiguration(SslConfiguration sslConfiguration){
 		this.sslConfiguration = sslConfiguration;
-	}
-
-	protected static String redisPassword(final String password){
-		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
 	}
 
 	protected boolean isUseSsl(){

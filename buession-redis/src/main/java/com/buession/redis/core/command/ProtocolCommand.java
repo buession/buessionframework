@@ -27,6 +27,8 @@ package com.buession.redis.core.command;
 import com.buession.core.utils.StringUtils;
 
 /**
+ * Redis 协议命令
+ *
  * @author Yong.Teng
  */
 public enum ProtocolCommand {

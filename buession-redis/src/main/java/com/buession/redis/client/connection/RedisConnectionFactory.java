@@ -27,16 +27,32 @@ package com.buession.redis.client.connection;
 import com.buession.redis.client.connection.datasource.DataSource;
 
 /**
+ * Redis 连接工厂
+ *
  * @author Yong.Teng
  */
 public class RedisConnectionFactory {
 
+	/**
+	 * Redis 数据源
+	 */
 	private final DataSource dataSource;
 
+	/**
+	 * 返回 Redis 数据源
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	public RedisConnectionFactory(final DataSource dataSource){
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * 返回 Redis 连接对象
+	 *
+	 * @return Redis 连接对象
+	 */
 	public RedisConnection getConnection(){
 		return dataSource.getConnection();
 	}

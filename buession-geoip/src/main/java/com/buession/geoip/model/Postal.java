@@ -100,7 +100,7 @@ public class Postal implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Postal{" + "code='" + code + '\'' + ", confidence=" + confidence + '}';
+		return "Postal{" + "code=" + code + ", confidence=" + confidence + '}';
 	}
 
 }

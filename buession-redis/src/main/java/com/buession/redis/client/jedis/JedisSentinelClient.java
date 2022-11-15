@@ -54,10 +54,19 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 
 	private JedisSentinelConnection connection;
 
+	/**
+	 * 构造函数
+	 */
 	public JedisSentinelClient(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Jedis Redis 哨兵连接对象 {@link JedisSentinelConnection}
+	 */
 	public JedisSentinelClient(final JedisSentinelConnection connection){
 		super(connection);
 	}

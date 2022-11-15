@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -31,56 +31,56 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  */
 public class VelocityLayoutViewResolver extends VelocityViewResolver {
 
-    private String layoutUrl;
+	private String layoutUrl;
 
-    private String layoutKey;
+	private String layoutKey;
 
-    private String screenContentKey;
+	private String screenContentKey;
 
-    public String getLayoutUrl(){
-        return layoutUrl;
-    }
+	public String getLayoutUrl(){
+		return layoutUrl;
+	}
 
-    public void setLayoutUrl(String layoutUrl){
-        this.layoutUrl = layoutUrl;
-    }
+	public void setLayoutUrl(String layoutUrl){
+		this.layoutUrl = layoutUrl;
+	}
 
-    public String getLayoutKey(){
-        return layoutKey;
-    }
+	public String getLayoutKey(){
+		return layoutKey;
+	}
 
-    public void setLayoutKey(String layoutKey){
-        this.layoutKey = layoutKey;
-    }
+	public void setLayoutKey(String layoutKey){
+		this.layoutKey = layoutKey;
+	}
 
-    public String getScreenContentKey(){
-        return screenContentKey;
-    }
+	public String getScreenContentKey(){
+		return screenContentKey;
+	}
 
-    public void setScreenContentKey(String screenContentKey){
-        this.screenContentKey = screenContentKey;
-    }
+	public void setScreenContentKey(String screenContentKey){
+		this.screenContentKey = screenContentKey;
+	}
 
-    @Override
-    protected Class<?> requiredViewClass(){
-        return VelocityLayoutView.class;
-    }
+	@Override
+	protected Class<?> requiredViewClass(){
+		return VelocityLayoutView.class;
+	}
 
-    @Override
-    protected AbstractUrlBasedView buildView(String viewName) throws Exception{
-        VelocityLayoutView view = (VelocityLayoutView) super.buildView(viewName);
+	@Override
+	protected AbstractUrlBasedView buildView(String viewName) throws Exception{
+		VelocityLayoutView view = (VelocityLayoutView) super.buildView(viewName);
 
-        if(layoutUrl != null){
-            view.setLayoutUrl(layoutUrl);
-        }
-        if(layoutKey != null){
-            view.setLayoutKey(layoutKey);
-        }
-        if(screenContentKey != null){
-            view.setScreenContentKey(screenContentKey);
-        }
+		if(layoutUrl != null){
+			view.setLayoutUrl(layoutUrl);
+		}
+		if(layoutKey != null){
+			view.setLayoutKey(layoutKey);
+		}
+		if(screenContentKey != null){
+			view.setScreenContentKey(screenContentKey);
+		}
 
-        return view;
-    }
+		return view;
+	}
 
 }

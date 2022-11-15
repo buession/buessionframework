@@ -27,12 +27,11 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
-import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.utils.PoolConfigUtils;
-import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
@@ -57,12 +56,12 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	private int database = RedisNode.DEFAULT_DATABASE;
 
 	/**
-	 * 哨兵节点连接超时（单位：秒）
+	 * 哨兵节点连接超时（单位：毫秒）
 	 */
 	private int sentinelConnectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
 	/**
-	 * 哨兵节点读取超时（单位：秒）
+	 * 哨兵节点读取超时（单位：毫秒）
 	 */
 	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
@@ -149,28 +148,22 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 			if(pool == null){
 				pool = createPool();
 			}
-			return new JedisSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-		}else{
-			return new JedisSentinelConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 		}
+
+		return new JedisSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
+				getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 	}
 
 	protected JedisSentinelPool createPool(){
 		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(getSentinels());
-		final DefaultJedisClientConfig.Builder builder = createJedisClientConfigBuilder().database(getDatabase());
-		final DefaultJedisClientConfig.Builder sentinelBuilder = createJedisClientConfigBuilder();
+		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
+		final JedisClientConfigBuilder sentinelBuilder = JedisClientConfigBuilder.create(this,
+				getSslConfiguration());
 		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 
-		PoolConfigUtils.convert(getPoolConfig(), jedisPoolConfig);
+		builder.database(getDatabase());
 
-		if(Validate.hasText(getPassword())){
-			if(Validate.hasText(getUsername())){
-				builder.user(getUsername());
-			}
-			builder.password(getPassword());
-		}
+		PoolConfigUtils.convert(getPoolConfig(), jedisPoolConfig);
 
 		return new JedisSentinelPool(getMasterName(), sentinels, jedisPoolConfig, builder.build(),
 				sentinelBuilder.build());

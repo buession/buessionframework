@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
@@ -75,9 +76,9 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
@@ -89,11 +90,11 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 *
 	 * @since 2.0.0
 	 */
@@ -120,9 +121,9 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
@@ -137,11 +138,11 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 *
@@ -170,9 +171,11 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 				.connectionTimeoutMillis(connectTimeout)
 				.socketTimeoutMillis(soTimeout)
 				.blockingSocketTimeoutMillis(infiniteSoTimeout)
-				.clientName(dataSource.getClientName())
 				.ssl(isUseSsl());
 
+		if(Validate.hasText(dataSource.getClientName())){
+			builder.clientName(dataSource.getClientName());
+		}
 
 		if(getSslConfiguration() != null){
 			builder.sslSocketFactory(getSslConfiguration().getSslSocketFactory())

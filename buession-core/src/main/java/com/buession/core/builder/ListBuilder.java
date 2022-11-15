@@ -67,7 +67,39 @@ public class ListBuilder<V> {
 	 * @return {@link ListBuilder} 实例
 	 */
 	public static <V> ListBuilder<V> create(){
-		return new ListBuilder<>(new ArrayList<>(16));
+		return create(16);
+	}
+
+	/**
+	 * 创建默认为 {@link ArrayList} 类型的 {@link ListBuilder} 实例
+	 *
+	 * @param initialCapacity
+	 * 		the initial capacity of the list
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link ListBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <V> ListBuilder<V> create(final int initialCapacity){
+		return new ListBuilder<>(new ArrayList<>(initialCapacity));
+	}
+
+	/**
+	 * 创建默认为 {@link ArrayList} 类型的 {@link ListBuilder} 实例
+	 *
+	 * @param c
+	 * 		the collection whose elements are to be placed into this list
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link ListBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <V> ListBuilder<V> create(final Collection<? extends V> c){
+		return new ListBuilder<>(new ArrayList<>(c));
 	}
 
 	/**
@@ -88,10 +120,7 @@ public class ListBuilder<V> {
 		List<V> data;
 		try{
 			data = clazz.newInstance();
-		}catch(InstantiationException e){
-			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
-			data = new ArrayList<>(16);
-		}catch(IllegalAccessException e){
+		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new ArrayList<>(16);
 		}
@@ -211,7 +240,7 @@ public class ListBuilder<V> {
 	 * @return 单一元素 List
 	 */
 	public static <V> List<V> of(final V value){
-		return ListBuilder.<V>create().add(value).build();
+		return ListBuilder.<V>create(1).add(value).build();
 	}
 
 }

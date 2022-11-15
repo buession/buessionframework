@@ -63,7 +63,7 @@ public interface RedisConnection extends Destroyable, Closeable {
 	/**
 	 * 获取连接超时
 	 *
-	 * @return 连接超时（单位：秒）
+	 * @return 连接超时（单位：毫秒）
 	 */
 	int getConnectTimeout();
 
@@ -71,14 +71,14 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * 设置连接超时
 	 *
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 */
 	void setConnectTimeout(int connectTimeout);
 
 	/**
 	 * 设置读取超时
 	 *
-	 * @return 读取超时（单位：秒）
+	 * @return 读取超时（单位：毫秒）
 	 */
 	int getSoTimeout();
 
@@ -86,14 +86,14 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * 设置读取超时
 	 *
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 */
 	void setSoTimeout(int soTimeout);
 
 	/**
-	 * 返回 Infinite 读取超时（单位：秒）
+	 * 返回 Infinite 读取超时
 	 *
-	 * @return Infinite 读取超时
+	 * @return Infinite 读取超时（单位：毫秒）
 	 */
 	int getInfiniteSoTimeout();
 
@@ -101,7 +101,7 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * 设置 Infinite 读取超时
 	 *
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：秒）
+	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	void setInfiniteSoTimeout(int infiniteSoTimeout);
 

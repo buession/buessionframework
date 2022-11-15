@@ -50,17 +50,17 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	private DataSource dataSource;
 
 	/**
-	 * 连接超时（单位：秒）
+	 * 连接超时（单位：毫秒）
 	 */
 	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
 	/**
-	 * 读取超时（单位：秒）
+	 * 读取超时（单位：毫秒）
 	 */
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
-	 * Infinite 读取超时
+	 * Infinite 读取超时（单位：毫秒）
 	 *
 	 * @since 2.0.0
 	 */
@@ -113,11 +113,11 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时
+	 * 		Infinite 读取超时（单位：毫秒）
 	 *
 	 * @since 2.0.0
 	 */
@@ -145,9 +145,9 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param connectTimeout
+	 * @param connectTimeout（单位：毫秒）
 	 * 		连接超时
-	 * @param soTimeout
+	 * @param soTimeout（单位：毫秒）
 	 * 		读取超时
 	 * @param sslConfiguration
 	 * 		SSL 配置
@@ -164,10 +164,10 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时（单位：秒）
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时（单位：秒）
-	 * @param infiniteSoTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout（单位：毫秒）
 	 * 		Infinite 读取超时
 	 * @param sslConfiguration
 	 * 		SSL 配置

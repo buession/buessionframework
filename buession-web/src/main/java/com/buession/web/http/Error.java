@@ -154,7 +154,7 @@ public class Error implements Serializable {
 	 * @return Map
 	 */
 	public Map<String, Object> toMap(){
-		return MapBuilder.<String, Object>create().put("state", false).put("code", getCode())
+		return MapBuilder.<String, Object>create(4).put("state", false).put("code", getCode())
 				.put("message", getMessage())
 				.put("status", getHttpStatus()).build();
 	}

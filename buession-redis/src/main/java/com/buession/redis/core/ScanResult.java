@@ -29,30 +29,70 @@ import com.buession.redis.utils.SafeEncoder;
 import java.util.Arrays;
 
 /**
+ * 迭代结果
+ *
+ * @param <V>
+ * 		结果数据类型
+ *
  * @author Yong.Teng
  */
 public class ScanResult<V> {
 
+	/**
+	 * 游标
+	 */
 	private final byte[] cursor;
 
+	/**
+	 * 游标的字符串形式
+	 */
 	private String cursorAsString;
 
+	/**
+	 * 结果集
+	 */
 	private final V results;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param results
+	 * 		结果集
+	 */
 	public ScanResult(final byte[] cursor, final V results){
 		this.cursor = cursor;
 		this.results = results;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param results
+	 * 		结果集
+	 */
 	public ScanResult(final String cursor, final V results){
 		this(SafeEncoder.encode(cursor), results);
 		this.cursorAsString = cursor;
 	}
 
+	/**
+	 * 返回游标
+	 *
+	 * @return 游标
+	 */
 	public byte[] getCursor(){
 		return cursor;
 	}
 
+	/**
+	 * 返回游标的字符串形式
+	 *
+	 * @return 游标字符串形式
+	 */
 	public String getCursorAsString(){
 		if(cursorAsString == null){
 			cursorAsString = SafeEncoder.encode(cursor);
@@ -61,10 +101,20 @@ public class ScanResult<V> {
 		return cursorAsString;
 	}
 
+	/**
+	 * 返回结果集
+	 *
+	 * @return 结果集
+	 */
 	public V getResults(){
 		return results;
 	}
 
+	/**
+	 * 是否完成迭代
+	 *
+	 * @return 完成迭代返回 true；否则，返回 false
+	 */
 	public boolean isCompleteIteration(){
 		return Arrays.equals(Constants.SCAN_POINTER_START_BINARY, getCursor());
 	}

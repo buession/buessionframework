@@ -46,7 +46,63 @@ public class MapBuilder<K, V> {
 	 * @return {@link MapBuilder} 实例
 	 */
 	public static <K, V> MapBuilder<K, V> create(){
-		return new MapBuilder<>(new HashMap<>(16));
+		return create(16);
+	}
+
+	/**
+	 * 创建默认为 {@link HashMap} 类型的 {@link MapBuilder} 实例
+	 *
+	 * @param initialCapacity
+	 * 		the initial capacity
+	 * @param <K>
+	 * 		Key 类型
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link MapBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <K, V> MapBuilder<K, V> create(final int initialCapacity){
+		return new MapBuilder<>(new HashMap<>(initialCapacity));
+	}
+
+	/**
+	 * 创建默认为 {@link HashMap} 类型的 {@link MapBuilder} 实例
+	 *
+	 * @param initialCapacity
+	 * 		the initial capacity
+	 * @param loadFactor
+	 * 		the load factor
+	 * @param <K>
+	 * 		Key 类型
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link MapBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <K, V> MapBuilder<K, V> create(final int initialCapacity, final float loadFactor){
+		return new MapBuilder<>(new HashMap<>(initialCapacity, loadFactor));
+	}
+
+	/**
+	 * 创建默认为 {@link HashMap} 类型的 {@link MapBuilder} 实例
+	 *
+	 * @param m
+	 * 		the map whose mappings are to be placed in this map
+	 * @param <K>
+	 * 		Key 类型
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link MapBuilder} 实例
+	 *
+	 * @since 2.1.2
+	 */
+	public static <K, V> MapBuilder<K, V> create(final Map<? extends K, ? extends V> m){
+		return new MapBuilder<>(new HashMap<>(m));
 	}
 
 	/**
@@ -69,10 +125,7 @@ public class MapBuilder<K, V> {
 		Map<K, V> data;
 		try{
 			data = clazz.newInstance();
-		}catch(InstantiationException e){
-			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
-			data = new HashMap<>(16);
-		}catch(IllegalAccessException e){
+		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new HashMap<>(16);
 		}
@@ -185,7 +238,7 @@ public class MapBuilder<K, V> {
 	 * @return 单一元素 Map
 	 */
 	public static <K, V> Map<K, V> of(final K key, final V value){
-		return MapBuilder.<K, V>create().put(key, value).build();
+		return MapBuilder.<K, V>create(1).put(key, value).build();
 	}
 
 }

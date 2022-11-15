@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.AbstractDataSource;
-import redis.clients.jedis.DefaultJedisClientConfig;
 
 /**
  * Jedis 数据源抽象类
@@ -33,21 +32,5 @@ import redis.clients.jedis.DefaultJedisClientConfig;
  * @author Yong.Teng
  */
 public abstract class AbstractJedisDataSource extends AbstractDataSource implements JedisRedisDataSource {
-
-	protected DefaultJedisClientConfig.Builder createJedisClientConfigBuilder(){
-		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder()
-				.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
-				.blockingSocketTimeoutMillis(getInfiniteSoTimeout()).clientName(getClientName())
-				.ssl(isUseSsl());
-
-
-		if(getSslConfiguration() != null){
-			builder.sslSocketFactory(getSslConfiguration().getSslSocketFactory())
-					.sslParameters(getSslConfiguration().getSslParameters())
-					.hostnameVerifier(getSslConfiguration().getHostnameVerifier());
-		}
-
-		return builder;
-	}
 
 }

@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
+ * HTTP 响应信息
+ *
  * @author Yong.Teng
  */
 public class Response {
@@ -108,6 +110,8 @@ public class Response {
 	 */
 	public void setStatusCode(final int statusCode){
 		this.statusCode = statusCode;
+		ensureNotNull();
+		statusLine.setStatusCode(statusCode);
 	}
 
 	/**
@@ -127,6 +131,8 @@ public class Response {
 	 */
 	public void setStatusText(final String statusText){
 		this.statusText = statusText;
+		ensureNotNull();
+		statusLine.setStatusText(statusText);
 	}
 
 	/**
@@ -146,6 +152,10 @@ public class Response {
 	 */
 	public void setStatusLine(final StatusLine statusLine){
 		this.statusLine = statusLine;
+		if(statusLine != null){
+			statusCode = statusLine.getStatusCode();
+			statusText = statusLine.getStatusText();
+		}
 	}
 
 	/**
@@ -238,6 +248,12 @@ public class Response {
 		return "Response{" + "protocolVersion=" + protocolVersion + ", statusCode=" + statusCode + ", statusText='" +
 				statusText + '\'' + ", statusLine=" + statusLine + ", headers=" + headers + ", inputStream=" +
 				inputStream + ", body='" + body + '\'' + ", contentLength=" + contentLength + '}';
+	}
+
+	private void ensureNotNull(){
+		if(statusLine == null){
+			statusLine = new StatusLine(0, null);
+		}
 	}
 
 }

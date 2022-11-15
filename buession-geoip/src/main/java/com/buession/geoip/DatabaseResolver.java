@@ -27,6 +27,10 @@
 package com.buession.geoip;
 
 import com.buession.core.utils.Assert;
+import com.buession.geoip.converter.CityConverter;
+import com.buession.geoip.converter.ContinentConverter;
+import com.buession.geoip.converter.CountryConverter;
+import com.buession.geoip.converter.TraitsConverter;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Continent;
 import com.buession.geoip.model.Country;
@@ -312,20 +316,29 @@ public class DatabaseResolver extends AbstractResolver {
 
 	@Override
 	public Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-		CountryResponse response = reader.country(ipAddress);
+		final CountryConverter countryConverter = new CountryConverter();
+		final CountryResponse response = reader.country(ipAddress);
+
 		return countryConverter.converter(response.getCountry(), response, locale);
 	}
 
 	@Override
 	public District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-		CityResponse response = reader.city(ipAddress);
+		final CityConverter cityConverter = new CityConverter();
+		final CityResponse response = reader.city(ipAddress);
+
 		return cityConverter.converter(response.getCity(), response, locale);
 	}
 
 	@Override
 	public Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-		CityResponse response = reader.city(ipAddress);
-		com.maxmind.geoip2.record.Location location = response.getLocation();
+		final CountryConverter countryConverter = new CountryConverter();
+		final CityConverter cityConverter = new CityConverter();
+		final ContinentConverter continentConverter = new ContinentConverter();
+		final TraitsConverter traitsConverter = new TraitsConverter();
+		
+		final CityResponse response = reader.city(ipAddress);
+		final com.maxmind.geoip2.record.Location location = response.getLocation();
 
 		final Continent continent = continentConverter.converter(response.getContinent(), locale);
 		final Country country = countryConverter.converter(response.getCountry(), locale);

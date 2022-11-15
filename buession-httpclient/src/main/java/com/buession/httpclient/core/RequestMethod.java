@@ -25,6 +25,8 @@
 package com.buession.httpclient.core;
 
 /**
+ * HTTP 请求方式
+ *
  * @author Yong.Teng
  */
 public enum RequestMethod {
