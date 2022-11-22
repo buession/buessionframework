@@ -52,11 +52,6 @@ public class ValidateTest {
 	}
 
 	@Test
-	public void isIDCard(){
-		Assert.assertEquals(true, Validate.isIDCard("511323201609010077"));
-	}
-
-	@Test
 	public void isMimeType(){
 		Assert.assertEquals(true, Validate.isMimeType("application/rtf"));
 		Assert.assertEquals(true, Validate.isMimeType("application/vnd.wap.wmlc"));
