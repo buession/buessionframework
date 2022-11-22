@@ -44,9 +44,7 @@ public abstract class AbstractWebAnnotationAspect<T extends AbstractAspectAnnota
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public AbstractWebAnnotationAspect(final T methodInterceptor){
-		Assert.isNull(methodInterceptor,
-				"The instance for " + AbstractAspectAnnotationsMethodInterceptor.class.getName() +
-						" cloud not be null.");
+		Assert.isNull(methodInterceptor, "The instance for " + getClass().getName() + " cloud not be null.");
 		this.methodInterceptor = methodInterceptor;
 	}
 

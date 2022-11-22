@@ -79,7 +79,9 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 			}
 
 			if(field.getType().isAssignableFrom(MessageObject.class) == false){
-				throw new BeanCreationException("The field " + field.getName() + " is not subclass of " + MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
+				throw new BeanCreationException(
+						"The field " + field.getName() + " is not subclass of " + MessageObject.class.getName() +
+								", on: " + beanName + "(" + bean.getClass().getName() + ").");
 			}
 
 			handleMessageInjected(clazz, bean, beanName, field, message);
@@ -88,22 +90,29 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
-	private void handleMessageInjected(final Class<?> clazz, final Object bean, final String beanName, final Field field, final Message message) throws BeansException{
+	private void handleMessageInjected(final Class<?> clazz, final Object bean, final String beanName,
+									   final Field field, final Message message) throws BeansException{
 		final String key = message.value();
 		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 
 		if(message.required() && text == null){
-			throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key + "}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
+			throw new IllegalArgumentException(
+					"Could not resolve placeholder '" + key + "' in value \"${" + key + "}\", on: " + beanName + "(" +
+							bean.getClass().getName() + ").");
 		}
 
-		final int code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
+		final Integer code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
 
-		try{
-			final Object beanObject = AopUtils.isCglibProxy(bean) ? getCglibProxyTargetObject(bean) : bean;
+		if(code != null){
+			try{
+				final Object beanObject = AopUtils.isCglibProxy(bean) ? getCglibProxyTargetObject(bean) : bean;
 
-			FieldUtils.writeField(field, beanObject, new MessageObject(code, text), true);
-		}catch(Exception e){
-			throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName + "(" + clazz.getName() + ")", e);
+				FieldUtils.writeField(field, beanObject, new MessageObject(code, text), true);
+			}catch(Exception e){
+				throw new BeanCreationException(
+						"Exception thrown when handleMessageInjected, on: " + beanName + "(" + clazz.getName() + ")",
+						e);
+			}
 		}
 		logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
 	}

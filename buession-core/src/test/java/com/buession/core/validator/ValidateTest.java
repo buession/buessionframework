@@ -52,11 +52,17 @@ public class ValidateTest {
 	}
 
 	@Test
+	public void isIDCard(){
+		Assert.assertEquals(true, Validate.isIDCard("511323201609010077"));
+	}
+
+	@Test
 	public void isMimeType(){
 		Assert.assertEquals(true, Validate.isMimeType("application/rtf"));
 		Assert.assertEquals(true, Validate.isMimeType("application/vnd.wap.wmlc"));
 		Assert.assertEquals(true, Validate.isMimeType("application/x-rar-compressed"));
-		Assert.assertEquals(true, Validate.isMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
+		Assert.assertEquals(true,
+				Validate.isMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
 		Assert.assertEquals(true, Validate.isMimeType("video/3gpp"));
 		Assert.assertEquals(false, Validate.isMimeType("video/-3gpp"));
 		Assert.assertEquals(false, Validate.isMimeType("video/3gpp-"));
