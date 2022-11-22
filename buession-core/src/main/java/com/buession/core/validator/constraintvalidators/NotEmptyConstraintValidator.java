@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -39,7 +39,8 @@ import java.util.Map;
  */
 public abstract class NotEmptyConstraintValidator<T> implements ConstraintValidator<NotEmpty, T> {
 
-	public final static class CharSequenceNotEmptyConstraintValidator extends NotEmptyConstraintValidator<CharSequence> {
+	public final static class CharSequenceNotEmptyConstraintValidator
+			extends NotEmptyConstraintValidator<CharSequence> {
 
 		@Override
 		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
@@ -57,37 +58,38 @@ public abstract class NotEmptyConstraintValidator<T> implements ConstraintValida
 
 	}
 
-	public final static class MapNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Map> {
+	public final static class MapNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Map<?, ?>> {
 
 		@Override
-		public boolean isValid(Map value, ConstraintValidatorContext context){
+		public boolean isValid(Map<?, ?> value, ConstraintValidatorContext context){
 			return Validate.isNotEmpty(value);
 		}
 
 	}
 
-	public final static class CollectionNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Collection> {
+	public final static class CollectionNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Collection<?>> {
 
 		@Override
-		public boolean isValid(Collection value, ConstraintValidatorContext context){
+		public boolean isValid(Collection<?> value, ConstraintValidatorContext context){
 			return Validate.isNotEmpty(value);
 		}
 
 	}
 
-	public final static class IteratorNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Iterator> {
+	public final static class IteratorNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Iterator<?>> {
 
 		@Override
-		public boolean isValid(Iterator value, ConstraintValidatorContext context){
+		public boolean isValid(Iterator<?> value, ConstraintValidatorContext context){
 			return Validate.isNotEmpty(value);
 		}
 
 	}
 
-	public final static class EnumerationNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Enumeration> {
+	public final static class EnumerationNotEmptyConstraintValidator
+			extends NotEmptyConstraintValidator<Enumeration<?>> {
 
 		@Override
-		public boolean isValid(Enumeration value, ConstraintValidatorContext context){
+		public boolean isValid(Enumeration<?> value, ConstraintValidatorContext context){
 			return Validate.isNotEmpty(value);
 		}
 
