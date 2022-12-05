@@ -49,8 +49,24 @@ public class QueueBuilder<V> {
 	/**
 	 * 创建默认为 {@link LinkedList} 类型的 {@link QueueBuilder} 实例
 	 *
+	 * @param queue
+	 * 		the queue whose elements are to be placed into this queue
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link QueueBuilder} 实例
+	 *
+	 * @since 2.2.0
+	 */
+	public static <V> QueueBuilder<V> create(final Queue<V> queue){
+		return new QueueBuilder<>(queue);
+	}
+
+	/**
+	 * 创建默认为 {@link LinkedList} 类型的 {@link QueueBuilder} 实例
+	 *
 	 * @param c
-	 * 		the collection whose elements are to be placed into this list
+	 * 		the collection whose elements are to be placed into this queue
 	 * @param <V>
 	 * 		Value 类型
 	 *
@@ -74,7 +90,7 @@ public class QueueBuilder<V> {
 	 *
 	 * @return {@link QueueBuilder} 实例
 	 */
-	public static <V, S extends Queue<V>> QueueBuilder<V> create(Class<S> clazz){
+	public static <V, S extends Queue<V>> QueueBuilder<V> create(final Class<S> clazz){
 		Assert.isNull(clazz, "java.util.Queue class cloud not be null.");
 
 		Queue<V> data;

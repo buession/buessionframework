@@ -67,7 +67,7 @@ public class ListBuilder<V> {
 	 * @return {@link ListBuilder} 实例
 	 */
 	public static <V> ListBuilder<V> create(){
-		return create(16);
+		return new ListBuilder<>(new ArrayList<>());
 	}
 
 	/**
@@ -84,6 +84,22 @@ public class ListBuilder<V> {
 	 */
 	public static <V> ListBuilder<V> create(final int initialCapacity){
 		return new ListBuilder<>(new ArrayList<>(initialCapacity));
+	}
+
+	/**
+	 * 创建默认为 {@link ArrayList} 类型的 {@link ListBuilder} 实例
+	 *
+	 * @param list
+	 * 		the list whose elements are to be placed into this list
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link ListBuilder} 实例
+	 *
+	 * @since 2.2.0
+	 */
+	public static <V> ListBuilder<V> create(final List<V> list){
+		return new ListBuilder<>(list);
 	}
 
 	/**
@@ -114,7 +130,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public static <V, S extends List<V>> ListBuilder<V> create(Class<S> clazz){
+	public static <V, S extends List<V>> ListBuilder<V> create(final Class<S> clazz){
 		Assert.isNull(clazz, "java.util.List class cloud not be null.");
 
 		List<V> data;
