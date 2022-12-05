@@ -9,6 +9,15 @@
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.2.0)
 
 
+### ⭐ 新特性
+
+- **buession-core：** ListBuilder、MapBuilder、QueueBuilder、SetBuilder 增加可以直接传递 List、Map、Queue、Set 实例的 create 方法
+
+
+### ⏪ 优化
+- 其它优化
+
+
 ---
 
 
