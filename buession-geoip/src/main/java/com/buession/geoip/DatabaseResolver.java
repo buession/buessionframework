@@ -42,6 +42,7 @@ import com.maxmind.db.Metadata;
 import com.maxmind.db.NodeCache;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.AsnResponse;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.model.CountryResponse;
 
@@ -61,6 +62,8 @@ import java.util.TimeZone;
 public class DatabaseResolver extends AbstractResolver {
 
 	private final DatabaseReader reader;
+
+	private DatabaseReader asnReader;
 
 	/**
 	 * 构造函数
@@ -135,6 +138,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final File database) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).build();
+		this.asnReader = new DatabaseReader.Builder(database).build();
 	}
 
 	/**
@@ -151,6 +155,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final File database, final NodeCache cache) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).withCache(cache).build();
+		this.asnReader = new DatabaseReader.Builder(database).withCache(cache).build();
 	}
 
 	/**
@@ -167,6 +172,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).build();
+		this.asnReader = new DatabaseReader.Builder(database).fileMode(fileMode).build();
 	}
 
 	/**
@@ -186,6 +192,7 @@ public class DatabaseResolver extends AbstractResolver {
 			throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).withCache(cache).build();
+		this.asnReader = new DatabaseReader.Builder(database).fileMode(fileMode).withCache(cache).build();
 	}
 
 	/**
@@ -261,6 +268,8 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final InputStream source) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).build();
+		this.asnReader =
+				new DatabaseReader.Builder(DatabaseResolver.class.getResourceAsStream("/maxmind/ASN.mmdb")).build();
 	}
 
 	/**
@@ -277,6 +286,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final InputStream source, final NodeCache cache) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).withCache(cache).build();
+		this.asnReader = new DatabaseReader.Builder(source).withCache(cache).build();
 	}
 
 	/**
@@ -293,6 +303,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).fileMode(fileMode).build();
+		this.asnReader = new DatabaseReader.Builder(source).fileMode(fileMode).build();
 	}
 
 	/**
@@ -312,6 +323,328 @@ public class DatabaseResolver extends AbstractResolver {
 			throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).fileMode(fileMode).withCache(cache).build();
+		this.asnReader = new DatabaseReader.Builder(source).fileMode(fileMode).withCache(cache).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final String database, final String asnDatabase) throws IOException{
+		this(database == null ? null : new File(database), asnDatabase == null ? null : new File(asnDatabase));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final String database, final String asnDatabase, final NodeCache cache) throws IOException{
+		this(database == null ? null : new File(database), asnDatabase == null ? null : new File(asnDatabase), cache);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final String database, final String asnDatabase, final Reader.FileMode fileMode)
+			throws IOException{
+		this(database == null ? null : new File(database), asnDatabase == null ? null : new File(asnDatabase),
+				fileMode);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final String database, final String asnDatabase, final Reader.FileMode fileMode,
+							final NodeCache cache)
+			throws IOException{
+		this(database == null ? null : new File(database), asnDatabase == null ? null : new File(asnDatabase),
+				fileMode, cache);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件文件
+	 * @param asnDatabase
+	 * 		ASN 库文件
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final File database, final File asnDatabase) throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		this.reader = new DatabaseReader.Builder(database).build();
+		this.asnReader = new DatabaseReader.Builder(asnDatabase).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param asnDatabase
+	 * 		ASN 库文件
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final File database, final File asnDatabase, final NodeCache cache) throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		Assert.isNull(asnDatabase, "ASN database could not be null.");
+		this.reader = new DatabaseReader.Builder(database).withCache(cache).build();
+		this.asnReader = new DatabaseReader.Builder(asnDatabase).withCache(cache).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param asnDatabase
+	 * 		ASN 库文件
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final File database, final File asnDatabase, final Reader.FileMode fileMode)
+			throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		Assert.isNull(asnDatabase, "ASN database could not be null.");
+		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).build();
+		this.asnReader = new DatabaseReader.Builder(asnDatabase).fileMode(fileMode).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param asnDatabase
+	 * 		ASN 库文件
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final File database, final File asnDatabase, final Reader.FileMode fileMode,
+							final NodeCache cache)
+			throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		Assert.isNull(asnDatabase, "ASN database could not be null.");
+		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).withCache(cache).build();
+		this.asnReader = new DatabaseReader.Builder(asnDatabase).fileMode(fileMode).withCache(cache).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final Path database, final Path asnDatabase) throws IOException{
+		this(database == null ? null : database.toFile(), asnDatabase == null ? null : asnDatabase.toFile());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final Path database, final Path asnDatabase, final NodeCache cache) throws IOException{
+		this(database == null ? null : database.toFile(), asnDatabase == null ? null : asnDatabase.toFile(), cache);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final Path database, final Path asnDatabase, final Reader.FileMode fileMode)
+			throws IOException{
+		this(database == null ? null : database.toFile(), asnDatabase == null ? null : asnDatabase.toFile(), fileMode);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final Path database, final Path asnDatabase, final Reader.FileMode fileMode,
+							final NodeCache cache)
+			throws IOException{
+		this(database == null ? null : database.toFile(), asnDatabase == null ? null : asnDatabase.toFile(), fileMode,
+				cache);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param asnSource
+	 * 		ASN 库文件流
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final InputStream source, final InputStream asnSource) throws IOException{
+		this(source);
+		Assert.isNull(asnSource, "ASN database stream could not be null.");
+		this.asnReader = new DatabaseReader.Builder(asnSource).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param asnSource
+	 * 		ASN 库文件流
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final InputStream source, final InputStream asnSource, final NodeCache cache)
+			throws IOException{
+		this(source, cache);
+		Assert.isNull(asnSource, "ASN database stream could not be null.");
+		this.asnReader = new DatabaseReader.Builder(asnSource).withCache(cache).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param asnSource
+	 * 		ASN 库文件流
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final InputStream source, final InputStream asnSource, final Reader.FileMode fileMode)
+			throws IOException{
+		this(source, fileMode);
+		Assert.isNull(asnSource, "ASN database stream could not be null.");
+		this.asnReader = new DatabaseReader.Builder(asnSource).fileMode(fileMode).build();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param asnSource
+	 * 		ASN 库文件流
+	 * @param fileMode
+	 * 		文件模式
+	 * @param cache
+	 * 		缓存模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public DatabaseResolver(final InputStream source, final InputStream asnSource, final Reader.FileMode fileMode,
+							final NodeCache cache)
+			throws IOException{
+		this(source, fileMode, cache);
+		Assert.isNull(asnSource, "ASN database stream could not be null.");
+		this.asnReader = new DatabaseReader.Builder(asnSource).fileMode(fileMode).withCache(cache).build();
 	}
 
 	@Override
@@ -336,9 +669,12 @@ public class DatabaseResolver extends AbstractResolver {
 		final CityConverter cityConverter = new CityConverter();
 		final ContinentConverter continentConverter = new ContinentConverter();
 		final TraitsConverter traitsConverter = new TraitsConverter();
-		
+
 		final CityResponse response = reader.city(ipAddress);
+		final AsnResponse asnResponse = asnReader == null ? null : asnReader.asn(ipAddress);
 		final com.maxmind.geoip2.record.Location location = response.getLocation();
+
+		traitsConverter.setAsnResponse(asnResponse);
 
 		final Continent continent = continentConverter.converter(response.getContinent(), locale);
 		final Country country = countryConverter.converter(response.getCountry(), locale);

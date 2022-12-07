@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -149,6 +149,146 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	 */
 	public CacheDatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
 		super(source, fileMode, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final String database, final String asnDatabase) throws IOException{
+		super(database, asnDatabase, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final String database, final String asnDatabase, final Reader.FileMode fileMode)
+			throws IOException{
+		super(database, asnDatabase, fileMode, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param asnDatabase
+	 * 		ASN 库文件
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final File database, final File asnDatabase) throws IOException{
+		super(database, asnDatabase, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件
+	 * @param asnDatabase
+	 * 		ASN 库文件
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final File database, final File asnDatabase, final Reader.FileMode fileMode)
+			throws IOException{
+		super(database, asnDatabase, fileMode, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final Path database, final Path asnDatabase) throws IOException{
+		super(database, asnDatabase, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param database
+	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final Path database, final Path asnDatabase, final Reader.FileMode fileMode)
+			throws IOException{
+		super(database, asnDatabase, fileMode, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param asnSource
+	 * 		ASN 库文件流
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final InputStream source, final InputStream asnSource) throws IOException{
+		super(source, asnSource, new CHMCache());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param source
+	 * 		IP 库文件流
+	 * @param asnSource
+	 * 		ASN 库文件流
+	 * @param fileMode
+	 * 		文件模式
+	 *
+	 * @throws IOException
+	 * 		IO 错误
+	 * @since 2.2.0
+	 */
+	public CacheDatabaseResolver(final InputStream source, final InputStream asnSource, final Reader.FileMode fileMode)
+			throws IOException{
+		super(source, asnSource, fileMode, new CHMCache());
 	}
 
 }
