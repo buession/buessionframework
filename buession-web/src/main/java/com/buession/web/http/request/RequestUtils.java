@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.request;
@@ -44,7 +44,8 @@ public abstract class RequestUtils {
 			/* 阿里云 */
 			"Ali-Cdn-Real-Ip",
 			/* 网宿 */
-			"Cdn-Src-Ip", "X-Cdn-Src-Ip",
+			"Cdn-Src-Ip",
+			"X-Cdn-Src-Ip",
 			/* 天翼云 */
 			"X-Original-Forwarded-For",
 			/* */
@@ -67,9 +68,31 @@ public abstract class RequestUtils {
 			/* IPod */
 			"ipod",
 			/* Windows Phone */
-			"windows phone", "windowsce", "mobile", "coolpad", "mmp", "smartphone", "midp", "wap", "xoom",
+			"windows phone",
+			/* */
+			"windowsce",
+			/* */
+			"mobile",
+			/* */
+			"coolpad",
+			/* */
+			"mmp",
+			/* */
+			"smartphone",
+			/* */
+			"midp",
+			/* */
+			"wap",
+			/* */
+			"xoom",
 			/* Symbian */
-			"symbian", "j2me", "ucweb", "operamini", "operamobi",
+			"symbian",
+			/* */
+			"j2me",
+			/* */
+			"ucweb",
+			/* Opera */
+			"operamini", "operamobi",
 			/* 微信 */
 			"MicroMessenger",
 			/* QQ 浏览器 */
@@ -285,7 +308,7 @@ public abstract class RequestUtils {
 			}
 		}
 
-		if(accept == null){
+		if(Validate.isBlank(accept)){
 			return false;
 		}
 
