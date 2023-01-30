@@ -24,25 +24,57 @@
  */
 package com.buession.web.bind.converter;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * 忽略大小写将字符串转换为枚举值
+ *
  * @author Yong.Teng
  * @since 2.2.0
  */
-public class IgnoreCaseEnumConverter implements Converter<String, Enum<?>> {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class IgnoreCaseEnumConverterFactory implements ConverterFactory<String, Enum> {
 
 	@Override
-	@Nullable
-	public Enum<?> convert(@Nullable String source){
-		if(Validate.isEmpty(source)){
-			return null;
+	public <T extends Enum> Converter<String, T> getConverter(Class<T> targetType){
+		return new StringToEnum(getEnumType(targetType));
+	}
+
+	private static Class<?> getEnumType(Class<?> targetType){
+		Class<?> enumType = targetType;
+
+		while(enumType != null && !enumType.isEnum()){
+			enumType = enumType.getSuperclass();
 		}
 
-		return EnumUtils.getEnumIgnoreCase(enumType, source);
+		Assert.isNull(enumType, "The target type " + targetType.getName() + " does not refer to an enum");
+
+		return enumType;
+	}
+
+
+	private static class StringToEnum<T extends Enum> implements Converter<String, T> {
+
+		private final Class<T> enumType;
+
+		public StringToEnum(Class<T> enumType){
+			this.enumType = enumType;
+		}
+
+		@Override
+		@Nullable
+		public T convert(String source){
+			if(Validate.isEmpty(source)){
+				return null;
+			}
+
+			return (T) EnumUtils.getEnumIgnoreCase(enumType, source.trim());
+		}
 	}
 
 }

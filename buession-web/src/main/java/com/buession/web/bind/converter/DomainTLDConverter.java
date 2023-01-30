@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.bind.converter;
@@ -32,6 +32,7 @@ import com.buession.lang.DomainTLD;
  * @author Yong.Teng
  * @since 1.2.2
  */
+@Deprecated
 public class DomainTLDConverter extends AbstractIgnoreCaseEnumConverter<DomainTLD> {
 
 	/**

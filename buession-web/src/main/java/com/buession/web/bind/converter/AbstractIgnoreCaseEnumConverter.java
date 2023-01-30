@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.bind.converter;
@@ -38,6 +38,7 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 1.2.2
  */
+@Deprecated
 public abstract class AbstractIgnoreCaseEnumConverter<E extends Enum<E>> implements Converter<String, E> {
 
 	/**

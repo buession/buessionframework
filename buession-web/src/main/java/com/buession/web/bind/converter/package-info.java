@@ -22,4 +22,7 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+@NonNullApi
 package com.buession.web.bind.converter;
+
+import org.springframework.lang.NonNullApi;
