@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<name>Buession Parent</name>
+	<name>Buession Git</name>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.buession</groupId>
-		<artifactId>parent</artifactId>
-		<relativePath/>
+		<artifactId>buession-parent</artifactId>
+		<relativePath>../buession-parent</relativePath>
 		<version>2.2.0</version>
 	</parent>
-	<groupId>com.buession</groupId>
-	<artifactId>buession-parent</artifactId>
+	<artifactId>buession-git</artifactId>
 	<url>https://github.com/buession/buessionframework</url>
-	<description>Buession Framework Parent</description>
-	<version>2.2.0</version>
-	<packaging>pom</packaging>
+	<description>Buession Framework Git Library</description>
+	<packaging>jar</packaging>
 
 	<organization>
 		<name>buession.com Inc.</name>
@@ -53,38 +51,59 @@
 		<url>https://github.com/buession/buessionframework/issues</url>
 	</issueManagement>
 
-	<modules>
-		<module>../buession-aop</module>
-		<module>../buession-beans</module>
-		<module>../buession-core</module>
-		<module>../buession-cron</module>
-		<module>../buession-dao</module>
-		<module>../buession-geoip</module>
-		<module>../buession-git</module>
-		<module>../buession-httpclient</module>
-		<module>../buession-io</module>
-		<module>../buession-jdbc</module>
-		<module>../buession-json</module>
-		<module>../buession-lang</module>
-		<module>../buession-net</module>
-		<module>../buession-redis</module>
-		<module>../buession-session</module>
-		<module>../buession-thesaurus</module>
-		<module>../buession-velocity</module>
-		<module>../buession-web</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>com.buession</groupId>
+			<artifactId>buession-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.buession</groupId>
+			<artifactId>buession-json</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>
-	</dependencyManagement>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
 
 	<build>
-		<finalName>buession-parent</finalName>
+		<finalName>buession-git</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -100,15 +119,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
 </project>
