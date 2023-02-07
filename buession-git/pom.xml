@@ -61,6 +61,7 @@
 			<groupId>com.buession</groupId>
 			<artifactId>buession-json</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

@@ -24,6 +24,8 @@
  */
 package com.buession.git;
 
+import com.buession.lang.Constants;
+
 import java.time.ZonedDateTime;
 import java.util.Set;
 
@@ -70,7 +72,7 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final int value){
+	public GitInfoBuilder append(final String name, final Integer value){
 		ensure();
 		ensurePrefix();
 
@@ -80,12 +82,12 @@ class GitInfoBuilder {
 			endDotReplaceToEqualsSign();
 		}
 
-		sb.append(value);
+		sb.append(value == null ? Constants.EMPTY_STRING : value.toString());
 
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final boolean value){
+	public GitInfoBuilder append(final String name, final Boolean value){
 		ensure();
 		ensurePrefix();
 
@@ -95,7 +97,7 @@ class GitInfoBuilder {
 			endDotReplaceToEqualsSign();
 		}
 
-		sb.append(value);
+		sb.append(value == null ? Constants.EMPTY_STRING : value.toString());
 
 		return this;
 	}
@@ -111,7 +113,11 @@ class GitInfoBuilder {
 				endDotReplaceToEqualsSign();
 			}
 
-			sb.append(String.join(",", value));
+			if(value == null){
+				sb.append(Constants.EMPTY_STRING);
+			}else{
+				sb.append(String.join(",", value));
+			}
 		}
 
 		return this;

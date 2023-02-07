@@ -77,9 +77,9 @@ class GitInfoParser {
 	public Remote remote(){
 		final Remote remote = new Remote();
 
-		final Remote.Origin remoteOrigin = new Remote.Origin(getValue("remote.origin.url"));
+		final Remote.Origin origin = new Remote.Origin(getValue("remote.origin.url"));
 
-		remote.setOrigin(remoteOrigin);
+		remote.setOrigin(origin);
 
 		return remote;
 	}
@@ -87,10 +87,10 @@ class GitInfoParser {
 	public Local local(){
 		final Local local = new Local();
 
-		final Local.Branch localBranch = new Local.Branch(getValue("local.branch.ahead"),
+		final Local.Branch branch = new Local.Branch(getValue("local.branch.ahead"),
 				getValue("local.branch.behind"));
 
-		local.setBranch(localBranch);
+		local.setBranch(branch);
 
 		return local;
 	}
@@ -100,32 +100,32 @@ class GitInfoParser {
 
 		commit.setTime(coercePropertyToZonedDateTime(getValue("commit.time")));
 
-		final Commit.Id commitId = new Commit.Id();
-		commitId.setValue(getValue("commit.id"));
-		commitId.setAbbrev(getValue("commit.id.abbrev"));
-		commitId.setDescribe(getValue("commit.id.describe"));
-		commitId.setDescribeShort(getValue("commit.id.describe-short"));
+		final Commit.Id id = new Commit.Id();
+		id.setValue(getValue("commit.id"));
+		id.setAbbrev(getValue("commit.id.abbrev"));
+		id.setDescribe(getValue("commit.id.describe"));
+		id.setDescribeShort(getValue("commit.id.describe-short"));
 
-		commit.setId(commitId);
+		commit.setId(id);
 
-		final Commit.User commitUser = new Commit.User(getValue("commit.user.name"), getValue("commit.user.email"));
+		final Commit.User uer = new Commit.User(getValue("commit.user.name"), getValue("commit.user.email"));
 
-		commit.setUser(commitUser);
+		commit.setUser(uer);
 
-		final Commit.Author commitAuthor = new Commit.Author(
+		final Commit.Author author = new Commit.Author(
 				coercePropertyToZonedDateTime("commit.author.time"));
 
-		commit.setAuthor(commitAuthor);
+		commit.setAuthor(author);
 
-		final Commit.Committer commitCommitter = new Commit.Committer(
+		final Commit.Committer committer = new Commit.Committer(
 				coercePropertyToZonedDateTime("commit.committer.time"));
 
-		commit.setCommitter(commitCommitter);
+		commit.setCommitter(committer);
 
-		final Commit.Message commitMessage = new Commit.Message(getValue("commit.message.full"),
+		final Commit.Message message = new Commit.Message(getValue("commit.message.full"),
 				getValue("commit.message.short"));
 
-		commit.setMessage(commitMessage);
+		commit.setMessage(message);
 
 		return commit;
 	}
@@ -133,21 +133,21 @@ class GitInfoParser {
 	public Closest closest(){
 		final Closest closest = new Closest();
 
-		final Closest.Tag closestTag = new Closest.Tag();
-		closestTag.setName(getValue("closest.tag.name"));
+		final Closest.Tag tag = new Closest.Tag();
+		tag.setName(getValue("closest.tag.name"));
 
-		final Closest.Tag.Commit closestTagCommit = new Closest.Tag.Commit();
+		final Closest.Tag.Commit tagCommit = new Closest.Tag.Commit();
 		final String s = getValue("closest.tag.commit.count");
 
 		try{
-			closestTagCommit.setCount(Integer.parseInt(s));
+			tagCommit.setCount(Integer.parseInt(s));
 		}catch(NumberFormatException e){
 			logger.warn("git.closest.tag.commit.count value: {} cloud not convert to int.", s);
 		}
 
-		closestTag.setCommit(closestTagCommit);
+		tag.setCommit(tagCommit);
 
-		closest.setTag(closestTag);
+		closest.setTag(tag);
 
 		return closest;
 	}
@@ -156,7 +156,7 @@ class GitInfoParser {
 		final String tags = getValue("tags");
 
 		if(Validate.hasText(tags)){
-			return Arrays.toSet(StringUtils.split(tags, ","));
+			return Arrays.toSet(StringUtils.split(tags, ','));
 		}else{
 			return null;
 		}
@@ -165,16 +165,16 @@ class GitInfoParser {
 	public Total total(){
 		final Total total = new Total();
 
-		final Total.Commit totalCommit = new Total.Commit();
+		final Total.Commit commit = new Total.Commit();
 		final String s = getValue("total.commit.count");
 
 		try{
-			totalCommit.setCount(Integer.parseInt(s));
+			commit.setCount(Integer.parseInt(s));
 		}catch(NumberFormatException e){
 			logger.warn("git.total.commit.count value: {} cloud not convert to int.", s);
 		}
 
-		total.setCommit(totalCommit);
+		total.setCommit(commit);
 
 		return total;
 	}
