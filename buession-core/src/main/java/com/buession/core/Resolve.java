@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
@@ -45,7 +45,10 @@ public interface Resolve<S, T> {
 	 * 		待解析对象
 	 *
 	 * @return 解析结果
+	 *
+	 * @throws Exception
+	 * 		异常
 	 */
-	T resolve(final S source);
+	T resolve(final S source) throws Exception;
 
 }
