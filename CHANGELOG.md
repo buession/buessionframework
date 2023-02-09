@@ -13,12 +13,19 @@
 ### ⭐ 新特性
 
 - **buession-core：** ListBuilder、MapBuilder、QueueBuilder、SetBuilder 增加可以直接传递 List、Map、Queue、Set 实例的 create 方法
+- **buession-core：** Assert isEmpty 和 notEmpty 增加基础类型数组判断
+- **buession-core：** StringUtils 增加 random 增加支持字符串
 - **buession-geoip：** 增加返回 autonomous system number、autonomous system organization
 - **buession-web：** 增加 web binder 转换器工厂 IgnoreCaseEnumConverterFactory 忽略大小写将字符串转换为枚举值
 
 
 ### 🔔 变化
 - **buession-web：** 废弃 web binder 转换器 CaseTypeConverter、DomainTLDConverter、DomainTLDTypeConverter、GenderConverter、IpTypeConverter、ISBNTypeConverter、OrderConverter、StatusConverter，统一使用 web binder 转换器工厂 IgnoreCaseEnumConverterFactory
+
+
+### 🐞 Bug 修复
+
+- **buession-core：** 修复 RandomDigitIdGenerator 最大值大于最小值时报错的问题
 
 
 ### ⏪ 优化
