@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -42,7 +42,7 @@ public final class MongoOperation {
 	private Object value;
 
 	/**
-	 * 构造函数，默认以 {@link Operator.EQUAL} 方式运算
+	 * 构造函数，默认以 Operator.EQUAL 方式运算
 	 *
 	 * @param value
 	 * 		运算值

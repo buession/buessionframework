@@ -53,7 +53,7 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder<okhttp3.Respo
 		final OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse();
 
 		response.setProtocolVersion(protocolConverter.convert(httpResponse.protocol()));
-		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
+		response.setStatusLine(new StatusLine(httpResponse.code(), httpResponse.message()));
 		response.setHeaders(okHttpResponseHeaderParse.parse(httpResponse.headers()));
 
 		final ResponseBody responseBody = httpResponse.body();

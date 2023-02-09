@@ -99,7 +99,7 @@ public interface Command<R> {
 		 * @throws RedisException
 		 * 		Redis 命令运行异常
 		 */
-		<R> R run() throws RedisException;
+		<R> R run() throws Exception;
 
 	}
 

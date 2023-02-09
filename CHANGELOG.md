@@ -21,11 +21,13 @@
 
 ### 🔔 变化
 - **buession-web：** 废弃 web binder 转换器 CaseTypeConverter、DomainTLDConverter、DomainTLDTypeConverter、GenderConverter、IpTypeConverter、ISBNTypeConverter、OrderConverter、StatusConverter，统一使用 web binder 转换器工厂 IgnoreCaseEnumConverterFactory
+- **buession-core：** Executor、Resolve 增加异常支持
 
 
 ### 🐞 Bug 修复
 
 - **buession-core：** 修复 RandomDigitIdGenerator 最大值大于最小值时报错的问题
+- **buession-httpclient：** 修复 Response 返回错误的 statusCode 和 statusText
 
 
 ### ⏪ 优化

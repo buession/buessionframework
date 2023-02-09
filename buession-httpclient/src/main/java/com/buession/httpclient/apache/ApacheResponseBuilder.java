@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
@@ -58,7 +58,8 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder<org.apache.ht
 
 		response.setProtocolVersion(ProtocolVersion.createInstance(responseProtocolVersion.getProtocol(),
 				responseProtocolVersion.getMajor(), responseProtocolVersion.getMinor()));
-		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
+		response.setStatusLine(
+				new StatusLine(responseStatusLine.getStatusCode(), responseStatusLine.getReasonPhrase()));
 		response.setHeaders(responseHeaderParse.parse(httpResponse.getAllHeaders()));
 
 		if(httpResponse.getEntity() != null){

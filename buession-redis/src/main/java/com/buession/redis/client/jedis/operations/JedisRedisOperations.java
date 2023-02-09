@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -43,6 +43,8 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.Pipeline;
@@ -64,6 +66,8 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		protected Runner transactionRunner;
 
+		private final Logger logger = LoggerFactory.getLogger(getClass());
+
 		protected AbstractJedisCommand(final C client, final ProtocolCommand command){
 			super(client, command);
 		}
@@ -76,20 +80,31 @@ public interface JedisRedisOperations extends RedisOperations {
 				if(pipelineRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
 				}else{
-					client.getTxResults().add(pipelineRunner.run());
+					try{
+						client.getTxResults().add(pipelineRunner.run());
+					}catch(Exception e){
+						logger.error(e.getMessage());
+					}
 				}
 			}else if(connection.isTransaction()){
 				if(transactionRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
 				}else{
-					FutureResult<Response<Object>, Object, Object> a = transactionRunner.run();
-					client.getTxResults().add(a);
+					try{
+						client.getTxResults().add(transactionRunner.run());
+					}catch(Exception e){
+						logger.error(e.getMessage());
+					}
 				}
 			}else{
 				if(runner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.NORMAL);
 				}else{
-					return runner.run();
+					try{
+						return runner.run();
+					}catch(Exception e){
+						logger.error(e.getMessage());
+					}
 				}
 			}
 			return null;
@@ -99,7 +114,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			return new Runner() {
 
 				@Override
-				public JedisResult<R, R> run() throws RedisException{
+				public JedisResult<R, R> run() throws Exception{
 					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline));
 				}
@@ -112,7 +127,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			return new Runner() {
 
 				@Override
-				public JedisResult<SR, R> run() throws RedisException{
+				public JedisResult<SR, R> run() throws Exception{
 					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline), converter);
 				}
@@ -124,7 +139,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			return new Runner() {
 
 				@Override
-				public JedisResult<R, R> run() throws RedisException{
+				public JedisResult<R, R> run() throws Exception{
 					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
 					return newJedisResult(executor.execute(transaction));
 				}
@@ -137,7 +152,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			return new Runner() {
 
 				@Override
-				public JedisResult<SR, R> run() throws RedisException{
+				public JedisResult<SR, R> run() throws Exception{
 					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
 					return newJedisResult(executor.execute(transaction), converter);
 				}
@@ -169,7 +184,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			this.runner = new Runner() {
 
 				@Override
-				public R run() throws RedisException{
+				public R run() throws Exception{
 					return executor.execute(connection.getJedis());
 				}
 
@@ -182,7 +197,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			this.runner = new Runner() {
 
 				@Override
-				public R run() throws RedisException{
+				public R run() throws Exception{
 					return converter.convert(executor.execute(connection.getJedis()));
 				}
 
@@ -228,7 +243,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			this.runner = new Runner() {
 
 				@Override
-				public R run() throws RedisException{
+				public R run() throws Exception{
 					return executor.execute(connection.getJedis());
 				}
 
@@ -242,7 +257,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			this.runner = new Runner() {
 
 				@Override
-				public R run() throws RedisException{
+				public R run() throws Exception{
 					return converter.convert(executor.execute(connection.getJedis()));
 				}
 
@@ -288,7 +303,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			this.runner = new Runner() {
 
 				@Override
-				public R run() throws RedisException{
+				public R run() throws Exception{
 					return executor.execute(connection.getCluster());
 				}
 
@@ -302,7 +317,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			this.runner = new Runner() {
 
 				@Override
-				public R run() throws RedisException{
+				public R run() throws Exception{
 					return converter.convert(executor.execute(connection.getCluster()));
 				}
 
