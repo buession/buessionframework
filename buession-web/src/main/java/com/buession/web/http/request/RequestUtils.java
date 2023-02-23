@@ -57,7 +57,9 @@ public abstract class RequestUtils {
 			/* */
 			"WL-Proxy-Client-IP",
 			/* */
-			"Real-ClientIP"
+			"Real-ClientIP",
+			/* */
+			"Client-IP"
 	};
 
 	public final static String[] MOBILE_MAPS = new String[]{
