@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -37,6 +37,7 @@ import com.buession.geoip.model.Country;
 import com.buession.geoip.model.Geo;
 import com.buession.geoip.model.Location;
 import com.buession.geoip.model.Traits;
+import com.maxmind.db.CHMCache;
 import com.maxmind.db.Reader;
 import com.maxmind.db.Metadata;
 import com.maxmind.db.NodeCache;
@@ -138,7 +139,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final File database) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).build();
-		this.asnReader = new DatabaseReader.Builder(database).build();
+		this.asnReader = getDefaultAsnReaderBuilder().build();
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final File database, final NodeCache cache) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).withCache(cache).build();
-		this.asnReader = new DatabaseReader.Builder(database).withCache(cache).build();
+		this.asnReader = getDefaultAsnReaderBuilder().withCache(cache).build();
 	}
 
 	/**
@@ -172,7 +173,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).build();
-		this.asnReader = new DatabaseReader.Builder(database).fileMode(fileMode).build();
+		this.asnReader = getDefaultAsnReaderBuilder().fileMode(fileMode).build();
 	}
 
 	/**
@@ -192,7 +193,8 @@ public class DatabaseResolver extends AbstractResolver {
 			throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = new DatabaseReader.Builder(database).fileMode(fileMode).withCache(cache).build();
-		this.asnReader = new DatabaseReader.Builder(database).fileMode(fileMode).withCache(cache).build();
+		this.asnReader = getDefaultAsnReaderBuilder().fileMode(fileMode).withCache(cache)
+				.build();
 	}
 
 	/**
@@ -268,8 +270,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final InputStream source) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).build();
-		this.asnReader =
-				new DatabaseReader.Builder(DatabaseResolver.class.getResourceAsStream("/maxmind/ASN.mmdb")).build();
+		this.asnReader = getDefaultAsnReaderBuilder().build();
 	}
 
 	/**
@@ -286,7 +287,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final InputStream source, final NodeCache cache) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).withCache(cache).build();
-		this.asnReader = new DatabaseReader.Builder(source).withCache(cache).build();
+		this.asnReader = getDefaultAsnReaderBuilder().withCache(cache).build();
 	}
 
 	/**
@@ -303,7 +304,7 @@ public class DatabaseResolver extends AbstractResolver {
 	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).fileMode(fileMode).build();
-		this.asnReader = new DatabaseReader.Builder(source).fileMode(fileMode).build();
+		this.asnReader = getDefaultAsnReaderBuilder().fileMode(fileMode).build();
 	}
 
 	/**
@@ -323,7 +324,7 @@ public class DatabaseResolver extends AbstractResolver {
 			throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = new DatabaseReader.Builder(source).fileMode(fileMode).withCache(cache).build();
-		this.asnReader = new DatabaseReader.Builder(source).fileMode(fileMode).withCache(cache).build();
+		this.asnReader = getDefaultAsnReaderBuilder().fileMode(fileMode).withCache(cache).build();
 	}
 
 	/**
@@ -331,6 +332,8 @@ public class DatabaseResolver extends AbstractResolver {
 	 *
 	 * @param database
 	 * 		IP 库文件路径
+	 * @param asnDatabase
+	 * 		ASN 库文件路径
 	 *
 	 * @throws IOException
 	 * 		IO 错误
@@ -696,6 +699,10 @@ public class DatabaseResolver extends AbstractResolver {
 		if(reader != null){
 			reader.close();
 		}
+	}
+
+	protected static DatabaseReader.Builder getDefaultAsnReaderBuilder(){
+		return new DatabaseReader.Builder(DatabaseResolver.class.getResourceAsStream(DEFAULT_ASN_DB));
 	}
 
 }

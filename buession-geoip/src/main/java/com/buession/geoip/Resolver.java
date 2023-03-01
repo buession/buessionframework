@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -33,6 +33,7 @@ import com.buession.net.utils.InetAddressUtils;
 import com.maxmind.db.Metadata;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Locale;
@@ -42,7 +43,7 @@ import java.util.Locale;
  *
  * @author Yong.Teng
  */
-public interface Resolver {
+public interface Resolver extends Closeable {
 
 	/**
 	 * 根据 IP 地址返回国家数据
@@ -357,7 +358,5 @@ public interface Resolver {
 	Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
 	Metadata getMetadata();
-
-	void close() throws IOException;
 
 }

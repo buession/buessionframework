@@ -16,6 +16,7 @@
 - **buession-core：** Assert isEmpty 和 notEmpty 增加基础类型数组判断
 - **buession-core：** StringUtils 增加 random 增加支持字符串
 - **buession-geoip：** 增加返回 autonomous system number、autonomous system organization
+- **buession-geoip：** 增加可支持设置 asn 库地址或流
 - **buession-web：** 增加 web binder 转换器工厂 IgnoreCaseEnumConverterFactory 忽略大小写将字符串转换为枚举值
 - **buession-web：** 获取客户端真实 IP，增加标头 Client-IP 的支持
 
