@@ -19,15 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.json.serializer;
 
 import com.buession.io.MimeType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 
 import java.io.IOException;
 
@@ -37,10 +42,14 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class MimeTypeStringSerializer extends JsonSerializer<MimeType> {
+public class MimeTypeStringSerializer extends StdScalarSerializer<MimeType> implements ContextualSerializer {
 
 	public MimeTypeStringSerializer(){
-		super();
+		super(MimeType.class, false);
+	}
+
+	public MimeTypeStringSerializer(Class<? extends MimeType> clazz){
+		super(clazz, false);
 	}
 
 	@Override
@@ -52,5 +61,18 @@ public class MimeTypeStringSerializer extends JsonSerializer<MimeType> {
 			jsonGenerator.writeString(value.toString());
 		}
 	}
-	
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
+			throws JsonMappingException{
+		JsonFormat.Value format = findFormatOverrides(provider, property, handledType());
+
+		if(format != null){
+			return new MimeTypeStringSerializer((Class<MimeType>) property.getType().getRawClass());
+		}
+
+		return this;
+	}
+
 }

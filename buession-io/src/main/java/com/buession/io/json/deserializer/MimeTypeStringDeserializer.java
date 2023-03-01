@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.json.deserializer;
@@ -28,8 +28,12 @@ import com.buession.io.MimeType;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 
 import java.io.IOException;
 
@@ -39,10 +43,14 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class MimeTypeStringDeserializer extends JsonDeserializer<MimeType> {
+public class MimeTypeStringDeserializer extends StdScalarDeserializer<MimeType> implements ContextualDeserializer {
 
 	public MimeTypeStringDeserializer(){
-		super();
+		super(MimeType.class);
+	}
+
+	public MimeTypeStringDeserializer(Class<? extends MimeType> clazz){
+		super(clazz);
 	}
 
 	@Override
@@ -62,6 +70,13 @@ public class MimeTypeStringDeserializer extends JsonDeserializer<MimeType> {
 		throw new JsonParseException(jsonParser,
 				clazz.getName() + " cloud not deserialize to: " + MimeType.class.getName(),
 				jsonParser.getCurrentLocation());
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public JsonDeserializer<?> createContextual(DeserializationContext context, BeanProperty property)
+			throws JsonMappingException{
+		return new MimeTypeStringDeserializer((Class<MimeType>) property.getType().getRawClass());
 	}
 
 }
