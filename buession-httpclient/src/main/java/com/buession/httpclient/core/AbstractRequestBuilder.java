@@ -21,13 +21,14 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.httpclient.apache.convert.ApacheRequestBodyConverter;
 import com.buession.net.HttpURI;
 
 import java.util.List;
@@ -103,6 +104,24 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 		}
 
 		return sb.toString();
+	}
+
+	protected static <S, T> RequestBodyConverter<S, T> findBodyConverter(
+			final Map<Class<? extends RequestBody>, RequestBodyConverter> converters,
+			final RequestBody<?> body){
+		RequestBodyConverter<S, T> converter;
+		Class<?> clazz = body.getClass();
+
+		while(clazz != null){
+			converter = converters.get(clazz);
+			if(converter != null){
+				return converter;
+			}
+
+			clazz = clazz.getSuperclass();
+		}
+
+		return null;
 	}
 
 }

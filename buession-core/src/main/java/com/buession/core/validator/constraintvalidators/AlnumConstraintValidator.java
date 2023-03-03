@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -34,10 +34,6 @@ import javax.validation.ConstraintValidatorContext;
  * @author Yong.Teng
  */
 public abstract class AlnumConstraintValidator<T> implements ConstraintValidator<Alnum, T> {
-
-	@Override
-	public void initialize(Alnum alnum){
-	}
 
 	public final static class CharSequenceAlnumConstraintValidator extends AlnumConstraintValidator<CharSequence> {
 

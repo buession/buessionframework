@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -36,6 +36,7 @@ import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
+import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
@@ -47,7 +48,6 @@ import com.buession.httpclient.okhttp.convert.InputStreamRequestBodyConvert;
 import com.buession.httpclient.okhttp.convert.JavaScriptRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.JsonRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.MultipartFormRequestBodyConverter;
-import com.buession.httpclient.okhttp.convert.OkHttpRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
 import com.buession.httpclient.okhttp.convert.TextRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.XmlRawRequestBodyConverter;
@@ -65,7 +65,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
-	private final static Map<Class<? extends RequestBody>, OkHttpRequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(
+	private final static Map<Class<? extends RequestBody>, RequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(
 			16, 0.8F);
 
 	static{
@@ -266,12 +266,13 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private okhttp3.RequestBody buildRequestBody(RequestBody<?> data){
+	private okhttp3.RequestBody buildRequestBody(final RequestBody<?> data){
 		if(data == null){
 			return DEFAULT_REQUEST_BODY;
 		}
 
-		OkHttpRequestBodyConverter<RequestBody<?>> convert = REQUEST_BODY_CONVERTS.get(data.getClass());
+		final RequestBodyConverter<RequestBody<?>, okhttp3.RequestBody> convert = REQUEST_BODY_CONVERTS.get(
+				data.getClass());
 		return convert == null ? DEFAULT_REQUEST_BODY : convert.convert(data);
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.constraintvalidators;
@@ -34,10 +34,6 @@ import javax.validation.ConstraintValidatorContext;
  * @author Yong.Teng
  */
 public class MobileConstraintValidator implements ConstraintValidator<Mobile, CharSequence> {
-
-	@Override
-	public void initialize(Mobile mobile){
-	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
