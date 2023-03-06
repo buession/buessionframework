@@ -31,6 +31,7 @@
 
 - **buession-core：** 修复 RandomDigitIdGenerator 最大值大于最小值时报错的问题
 - **buession-httpclient：** 修复 Response 返回错误的 statusCode 和 statusText
+- **buession-dao：** 修复 DefaultJsonTypeHandler 为 null 或空字符串反序列化出错的 BUG
 
 
 ### ⏪ 优化
