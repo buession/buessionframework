@@ -57,6 +57,7 @@
 - **buession-http：** 优化 Response，使 statusCode、statusText 与 statusLine 的值始终保持一致
 - **buession-geoip：** 优化国家和地区词典解析，GeoIPResolverFactory 支持从默认词典返回文件对象或流对象，以及支持从 classpath 家长词典文件
 - 其它优化
+- **buession-velocity：** 配置属性 resource.loader 替换 resource.loaders
 
 
 ### 🐞 Bug 修复
