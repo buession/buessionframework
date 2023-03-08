@@ -45,6 +45,12 @@ import java.util.Locale;
  */
 public interface Resolver extends Closeable {
 
+	String DEFAULT_COUNTRY_DB = "/maxmind/Country.mmdb";
+
+	String DEFAULT_CITY_DB = "/maxmind/City.mmdb";
+
+	String DEFAULT_ASN_DB = "/maxmind/ASN.mmdb";
+
 	/**
 	 * 根据 IP 地址返回国家数据
 	 *

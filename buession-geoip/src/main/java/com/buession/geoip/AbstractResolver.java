@@ -45,10 +45,6 @@ import java.util.Locale;
  */
 public abstract class AbstractResolver implements Resolver {
 
-	public final static String DEFAULT_CITY_DB = "/maxmind/City.mmdb";
-
-	public final static String DEFAULT_ASN_DB = "/maxmind/ASN.mmdb";
-
 	private final static Logger logger = LoggerFactory.getLogger(AbstractResolver.class);
 
 	@Override
