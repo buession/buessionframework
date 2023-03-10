@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
@@ -40,13 +40,13 @@ import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
+import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.core.AbstractRequestBuilder;
 import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConverter;
 import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.ApacheRequestBodyConverter;
 import com.buession.httpclient.apache.convert.JavaScriptRawRequestBodyConverter;
 import com.buession.httpclient.apache.convert.JsonRawRequestBodyConverter;
 import com.buession.httpclient.apache.convert.TextRawRequestBodyConverter;
@@ -71,8 +71,8 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
 			StandardCharsets.ISO_8859_1);
 
-	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(
-			16, 0.8F);
+	private final static Map<Class<? extends RequestBody>, RequestBodyConverter> REQUEST_BODY_CONVERTS =
+			new HashMap<>(16, 0.8F);
 
 	static{
 		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
@@ -275,12 +275,12 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	}
 
 	protected ApacheRequestBuilder setRequest(final HttpEntityEnclosingRequestBase httpRequest,
-											  final RequestMethod method,
-											  final RequestBody<?> body){
+											  final RequestMethod method, final RequestBody<?> body){
 		setRequest(httpRequest, method);
 
 		if(body != null){
-			ApacheRequestBodyConverter<RequestBody<?>> converter = REQUEST_BODY_CONVERTS.get(body.getClass());
+			final RequestBodyConverter<RequestBody<?>, HttpEntity> converter = findBodyConverter(REQUEST_BODY_CONVERTS,
+					body);
 			httpRequest.setEntity(converter == null ? DEFAULT_HTTP_ENTITY : converter.convert(body));
 		}
 

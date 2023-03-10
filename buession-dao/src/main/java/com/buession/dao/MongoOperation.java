@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -31,15 +31,35 @@ package com.buession.dao;
  */
 public final class MongoOperation {
 
+	/**
+	 * 运算符
+	 */
 	private Operator operator;
 
+	/**
+	 * 运算值
+	 */
 	private Object value;
 
-	public MongoOperation(Object value){
+	/**
+	 * 构造函数，默认以 Operator.EQUAL 方式运算
+	 *
+	 * @param value
+	 * 		运算值
+	 */
+	public MongoOperation(final Object value){
 		this(Operator.EQUAL, value);
 	}
 
-	public MongoOperation(Operator operator, Object value){
+	/**
+	 * 构造函数
+	 *
+	 * @param operator
+	 * 		运算符 {@link Operator}
+	 * @param value
+	 * 		运算值
+	 */
+	public MongoOperation(final Operator operator, final Object value){
 		this.operator = operator;
 		this.value = value;
 	}
@@ -54,7 +74,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation eq(Object value){
+	public static MongoOperation eq(final Object value){
 		return new MongoOperation(Operator.EQUAL, value);
 	}
 
@@ -68,7 +88,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation neq(Object value){
+	public static MongoOperation neq(final Object value){
 		return new MongoOperation(Operator.NOT_EQUAL, value);
 	}
 
@@ -82,7 +102,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation lt(Object value){
+	public static MongoOperation lt(final Object value){
 		return new MongoOperation(Operator.LT, value);
 	}
 
@@ -96,7 +116,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation lte(Object value){
+	public static MongoOperation lte(final Object value){
 		return new MongoOperation(Operator.LTE, value);
 	}
 
@@ -110,7 +130,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation gt(Object value){
+	public static MongoOperation gt(final Object value){
 		return new MongoOperation(Operator.GT, value);
 	}
 
@@ -124,7 +144,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation in(Object value){
+	public static MongoOperation in(final Object value){
 		return new MongoOperation(Operator.IN, value);
 	}
 
@@ -138,7 +158,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation nin(Object value){
+	public static MongoOperation nin(final Object value){
 		return new MongoOperation(Operator.NIN, value);
 	}
 
@@ -152,7 +172,7 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation like(Object value){
+	public static MongoOperation like(final Object value){
 		return new MongoOperation(Operator.LIKE, value);
 	}
 
@@ -166,44 +186,96 @@ public final class MongoOperation {
 	 *
 	 * @since 1.3.1
 	 */
-	public static MongoOperation gte(Object value){
+	public static MongoOperation gte(final Object value){
 		return new MongoOperation(Operator.GTE, value);
 	}
 
+	/**
+	 * 返回运算符 {@link Operator}
+	 *
+	 * @return 运算符
+	 */
 	public Operator getOperator(){
 		return operator;
 	}
 
+	/**
+	 * 设置运算符 {@link Operator}
+	 *
+	 * @param operator
+	 * 		运算符
+	 */
 	public void setOperator(Operator operator){
 		this.operator = operator;
 	}
 
+	/**
+	 * 返回运算值
+	 *
+	 * @return 运算值
+	 */
 	public Object getValue(){
 		return value;
 	}
 
+	/**
+	 * 设置运算值
+	 *
+	 * @param value
+	 * 		运算值
+	 */
 	public void setValue(Object value){
 		this.value = value;
 	}
 
+	/**
+	 * 运算符
+	 */
 	public enum Operator {
 
+		/**
+		 * 等于
+		 */
 		EQUAL,
 
+		/**
+		 * 不等于
+		 */
 		NOT_EQUAL,
 
+		/**
+		 * 小于
+		 */
 		LT,
 
+		/**
+		 * 小于等于
+		 */
 		LTE,
 
+		/**
+		 * 大于
+		 */
 		GT,
 
+		/**
+		 * 单元等于
+		 */
 		GTE,
 
+		/**
+		 * IN
+		 */
 		IN,
 
+		/**
+		 * Not IN
+		 */
 		NIN,
 
+		/**
+		 * Like
+		 */
 		LIKE
 
 	}

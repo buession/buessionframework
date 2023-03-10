@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
@@ -28,9 +28,14 @@ import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.EnumUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
+import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,11 +49,20 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Yong.Teng
  */
-public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
+@JacksonStdImpl
+public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> implements ContextualDeserializer {
 
 	private final static Map<String, Enum<?>> cache = new ConcurrentHashMap<>(32);
 
 	private final static Logger logger = LoggerFactory.getLogger(Map2EnumDeserializer.class);
+
+	public Map2EnumDeserializer(){
+		super(Enum.class);
+	}
+
+	public Map2EnumDeserializer(Class<Enum<?>> v){
+		super(v);
+	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
@@ -121,6 +135,13 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		}
 
 		return null;
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public JsonDeserializer<?> createContextual(DeserializationContext context, BeanProperty property)
+			throws JsonMappingException{
+		return new Map2EnumDeserializer((Class<Enum<?>>) property.getType().getRawClass());
 	}
 
 	private static String parseCacheKey(final Class<?> clazz, final Field field, final JsonNode node){

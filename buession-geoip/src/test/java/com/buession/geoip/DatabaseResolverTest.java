@@ -27,6 +27,7 @@ package com.buession.geoip;
 import com.buession.geoip.model.Country;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Location;
+import com.buession.geoip.spring.GeoIPResolverFactoryBean;
 import org.junit.Test;
 
 /**
@@ -52,6 +53,25 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
+	public void country2() throws Exception{
+		GeoIPResolverFactoryBean factoryBean = new GeoIPResolverFactoryBean();
+
+		factoryBean.afterPropertiesSet();
+
+		DatabaseResolver resolver = factoryBean.getObject();
+		Country country = resolver.country(3739974408L);
+		System.out.println(country);
+	}
+
+	@Test
+	public void country3() throws Exception{
+		DatabaseResolver resolver = new CacheDatabaseResolver(
+				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
+		Country country = resolver.country(3739974408L);
+		System.out.println(country);
+	}
+
+	@Test
 	public void district() throws Exception{
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
@@ -71,7 +91,7 @@ public class DatabaseResolverTest {
 	public void location() throws Exception{
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
-		Location location = resolver.location("60.246.49.9");
+		Location location = resolver.location("1.11.64.11");
 		System.out.println(location);
 	}
 

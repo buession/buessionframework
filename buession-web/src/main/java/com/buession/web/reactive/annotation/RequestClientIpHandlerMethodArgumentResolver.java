@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.annotation;
@@ -100,10 +100,10 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 
 	private String getClientIp(final ServerHttpRequest request, final MethodParameter parameter){
 		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
-		String clientIp = null;
 
 		if(Validate.isNotEmpty(requestClientIp.headerName())){
 			HttpHeaders httpHeaders = request.getHeaders();
+			String clientIp;
 
 			for(String headerName : requestClientIp.headerName()){
 				if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) != false){

@@ -114,7 +114,24 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @return 生成的随机字符串
 	 */
 	public static String random(final int length){
+		return random(length, Constants.ALNUM);
+	}
+
+	/**
+	 * 生成随机字符串
+	 *
+	 * @param length
+	 * 		随机字符串长度
+	 * @param chars
+	 * 		原字符
+	 *
+	 * @return 生成的随机字符串
+	 *
+	 * @since 2.2.0
+	 */
+	public static String random(final int length, final char[] chars){
 		Assert.isNegative(length, "Length could not be negative.");
+		Assert.isEmpty(chars, "chars could not be negative.");
 
 		if(length == 0){
 			return EMPTY;
@@ -122,8 +139,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			StringBuilder sb = new StringBuilder(length);
 
 			for(int i = 0; i < length; i++){
-				int j = RandomUtils.nextInt(Constants.ALNUM.length);
-				sb.append(Constants.ALNUM[j]);
+				int j = RandomUtils.nextInt(chars.length);
+				sb.append(chars[j]);
 			}
 
 			return sb.toString();
@@ -497,7 +514,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			}
 
 			// The same check as in String.regionMatches():
-			if(Character.toUpperCase(c1) != Character.toUpperCase(c2) && Character.toLowerCase(c1) != Character.toLowerCase(c2)){
+			if(Character.toUpperCase(c1) != Character.toUpperCase(c2) &&
+					Character.toLowerCase(c1) != Character.toLowerCase(c2)){
 				return false;
 			}
 		}

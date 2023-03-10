@@ -99,8 +99,8 @@ public class VelocityLayoutView extends VelocityToolboxView {
 			getTemplate(layoutUrl);
 			return true;
 		}catch(ResourceNotFoundException e){
-			throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: Did you specify " +
-					"the correct resource loader path?", e);
+			throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: " +
+					"Did you specify the correct resource loader path?", e);
 		}catch(Exception e){
 			throw new NestedIOException("Cannot load Velocity template for URL [" + layoutUrl + "]", e);
 		}

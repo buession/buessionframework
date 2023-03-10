@@ -46,7 +46,7 @@ public class MapBuilder<K, V> {
 	 * @return {@link MapBuilder} 实例
 	 */
 	public static <K, V> MapBuilder<K, V> create(){
-		return create(16);
+		return new MapBuilder<>(new HashMap<>());
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class MapBuilder<K, V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <K, V> MapBuilder<K, V> create(final Map<? extends K, ? extends V> m){
-		return new MapBuilder<>(new HashMap<>(m));
+	public static <K, V> MapBuilder<K, V> create(final Map<K, V> m){
+		return new MapBuilder<>(m);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public static <K, V, M extends Map<K, V>> MapBuilder<K, V> create(Class<M> clazz){
+	public static <K, V, M extends Map<K, V>> MapBuilder<K, V> create(final Class<M> clazz){
 		Assert.isNull(clazz, "java.util.Map class cloud not be null.");
 
 		Map<K, V> data;

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.bind.converter;
@@ -33,14 +33,7 @@ import org.springframework.format.FormatterRegistry;
 public class FormatterRegistryUtils {
 
 	public static void addConverters(final FormatterRegistry registry){
-		registry.addConverter(new CaseTypeConverter());
-		registry.addConverter(new DomainTLDConverter());
-		registry.addConverter(new DomainTLDTypeConverter());
-		registry.addConverter(new GenderConverter());
-		registry.addConverter(new IpTypeConverter());
-		registry.addConverter(new ISBNTypeConverter());
-		registry.addConverter(new OrderConverter());
-		registry.addConverter(new StatusConverter());
+		registry.addConverterFactory(new IgnoreCaseEnumConverterFactory());
 	}
 
 }

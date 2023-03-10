@@ -43,7 +43,7 @@ public class SetBuilder<V> {
 	 * @return {@link SetBuilder} 实例
 	 */
 	public static <V> SetBuilder<V> create(){
-		return new SetBuilder<>(new HashSet<>(16));
+		return new SetBuilder<>(new HashSet<>());
 	}
 
 	/**
@@ -83,6 +83,22 @@ public class SetBuilder<V> {
 	/**
 	 * 创建默认为 {@link HashSet} 类型的 {@link SetBuilder} 实例
 	 *
+	 * @param set
+	 * 		the set whose elements are to be placed into this set
+	 * @param <V>
+	 * 		Value 类型
+	 *
+	 * @return {@link SetBuilder} 实例
+	 *
+	 * @since 2.2.0
+	 */
+	public static <V> SetBuilder<V> create(final Set<V> set){
+		return new SetBuilder<>(set);
+	}
+
+	/**
+	 * 创建默认为 {@link HashSet} 类型的 {@link SetBuilder} 实例
+	 *
 	 * @param c
 	 * 		the collection whose elements are to be placed into this set
 	 * @param <V>
@@ -108,7 +124,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public static <V, S extends Set<V>> SetBuilder<V> create(Class<S> clazz){
+	public static <V, S extends Set<V>> SetBuilder<V> create(final Class<S> clazz){
 		Assert.isNull(clazz, "java.util.Set class cloud not be null.");
 
 		Set<V> data;

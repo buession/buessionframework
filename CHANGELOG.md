@@ -2,6 +2,45 @@
 ===========================
 
 
+## [2.2.0](https://github.com/buession/buession-security/releases/tag/v2.2.0) (2023-03-10)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.2.0)
+- **buession-geoip：** 升级 IP 库
+
+
+### ⭐ 新特性
+
+- **buession-core：** ListBuilder、MapBuilder、QueueBuilder、SetBuilder 增加可以直接传递 List、Map、Queue、Set 实例的 create 方法
+- **buession-core：** Assert isEmpty 和 notEmpty 增加基础类型数组判断
+- **buession-core：** StringUtils 增加 random 增加支持字符串
+- **buession-geoip：** 增加返回 autonomous system number、autonomous system organization
+- **buession-geoip：** 增加可支持设置 asn 库地址或流
+- **buession-httpclient：** 支持原生 RequestBody 子类转换
+- **buession-web：** 增加 web binder 转换器工厂 IgnoreCaseEnumConverterFactory 忽略大小写将字符串转换为枚举值
+- **buession-web：** 获取客户端真实 IP，增加标头 Client-IP 的支持
+
+
+### 🔔 变化
+- **buession-web：** 废弃 web binder 转换器 CaseTypeConverter、DomainTLDConverter、DomainTLDTypeConverter、GenderConverter、IpTypeConverter、ISBNTypeConverter、OrderConverter、StatusConverter，统一使用 web binder 转换器工厂 IgnoreCaseEnumConverterFactory
+- **buession-core：** Executor、Resolve 增加异常支持
+
+
+### 🐞 Bug 修复
+
+- **buession-core：** 修复 RandomDigitIdGenerator 最大值大于最小值时报错的问题
+- **buession-httpclient：** 修复 Response 返回错误的 statusCode 和 statusText
+- **buession-dao：** 修复 DefaultJsonTypeHandler 为 null 或空字符串反序列化出错的 BUG
+
+
+### ⏪ 优化
+- 其它优化
+
+
+---
+
+
 ## [2.1.2](https://github.com/buession/buessionframework/releases/tag/v2.1.2) (2022-11-13)
 
 ### 🔨依赖升级
@@ -18,6 +57,7 @@
 - **buession-http：** 优化 Response，使 statusCode、statusText 与 statusLine 的值始终保持一致
 - **buession-geoip：** 优化国家和地区词典解析，GeoIPResolverFactory 支持从默认词典返回文件对象或流对象，以及支持从 classpath 家长词典文件
 - 其它优化
+- **buession-velocity：** 配置属性 resource.loader 替换 resource.loaders
 
 
 ### 🐞 Bug 修复

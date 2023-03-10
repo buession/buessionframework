@@ -49,7 +49,6 @@
 - [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
 
 ## Documentation
----
 
 - 参考文档 [https://www.buession.com/](https://www.buession.com/)
 - Wiki [https://github.com/buession/buessionframework/wiki](https://github.com/buession/buessionframework/wiki)

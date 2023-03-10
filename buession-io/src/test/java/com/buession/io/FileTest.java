@@ -25,6 +25,7 @@
 package com.buession.io;
 
 import com.buession.io.file.File;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -40,6 +41,14 @@ public class FileTest {
 		File file = new File("tmp.jpeg");
 		MimeType mimeType = file.getMimeType();
 		System.out.println(mimeType + ": " + mimeType.getDescription());
+	}
+
+	@Test
+	public void jsonEncode() throws IOException{
+		File file = new File("tmp.jpeg");
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		System.out.println(objectMapper.writeValueAsString(file));
 	}
 
 }

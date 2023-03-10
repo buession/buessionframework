@@ -36,39 +36,41 @@ import com.buession.core.utils.StringUtils;
  */
 public class RandomDigitIdGenerator implements IdGenerator<Long> {
 
-    /**
-     * 最小值
-     */
-    private long min = 1L;
+	/**
+	 * 最小值
+	 */
+	private long min = 1L;
 
-    /**
-     * 最大值
-     */
-    private long max = Long.MAX_VALUE;
+	/**
+	 * 最大值
+	 */
+	private long max = Long.MAX_VALUE;
 
-    /**
-     * 构造函数，生成 1 到 Long.MAX_VALUE 间的随机 ID
-     */
-    public RandomDigitIdGenerator() {
-    }
+	/**
+	 * 构造函数，生成 1 到 Long.MAX_VALUE 间的随机 ID
+	 */
+	public RandomDigitIdGenerator(){
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param min 最小值
-     * @param max 最大值
-     */
-    public RandomDigitIdGenerator(final long min, final long max) {
-        Assert.isFalse(min >= 1 && min <= Long.MAX_VALUE, "Id min value must between 1 and " + Long.MAX_VALUE + ".");
-        Assert.isFalse(max >= 1 && max <= Long.MAX_VALUE, "Id max value must between 1 and " + Long.MAX_VALUE + ".");
-        Assert.isFalse(min > max, "Id max value has to be greater than or equal to id min value.");
-        this.min = min;
-        this.max = max;
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 */
+	public RandomDigitIdGenerator(final long min, final long max){
+		Assert.isFalse(min >= 1 && min <= Long.MAX_VALUE, "Id min value must between 1 and " + Long.MAX_VALUE + ".");
+		Assert.isFalse(max >= 1 && max <= Long.MAX_VALUE, "Id max value must between 1 and " + Long.MAX_VALUE + ".");
+		Assert.isTrue(min > max, "Id max value has to be greater than or equal to id min value.");
+		this.min = min;
+		this.max = max;
+	}
 
-    @Override
-    public Long nextId() {
-        return RandomUtils.nextLong(min, max);
-    }
+	@Override
+	public Long nextId(){
+		return RandomUtils.nextLong(min, max);
+	}
 
 }

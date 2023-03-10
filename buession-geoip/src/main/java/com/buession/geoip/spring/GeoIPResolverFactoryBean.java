@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
@@ -29,10 +29,11 @@ package com.buession.geoip.spring;
 import com.buession.geoip.CacheDatabaseResolver;
 import com.buession.geoip.DatabaseResolver;
 import com.buession.geoip.Resolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+
+import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * GeoIP {@link Resolver} 工厂 Bean
@@ -40,11 +41,9 @@ import org.springframework.beans.factory.InitializingBean;
  * @author Yong.Teng
  */
 public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements FactoryBean<DatabaseResolver>,
-		InitializingBean {
+		InitializingBean, Closeable {
 
 	private DatabaseResolver resolver;
-
-	private final static Logger logger = LoggerFactory.getLogger(GeoIPResolverFactoryBean.class);
 
 	@Override
 	public DatabaseResolver getObject() throws Exception{
@@ -58,13 +57,13 @@ public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements Fa
 
 	@Override
 	public void afterPropertiesSet() throws Exception{
-		if(getLoadMode() == LoadMode.STREAM){
-			resolver = isEnableCache() ? new CacheDatabaseResolver(getStream()) : new DatabaseResolver(getStream());
-			logger.info("Read db from stream");
-		}else{
-			resolver = isEnableCache() ? new CacheDatabaseResolver(getDbPath()) : new DatabaseResolver(getDbPath());
-			logger.info("Read db from file: {}", getDbPath());
-		}
+		resolver = isEnableCache() ? new CacheDatabaseResolver(getStream(), getAsnStream()) : new DatabaseResolver(
+				getStream(), getAsnStream());
+	}
+
+	@Override
+	public void close() throws IOException{
+		resolver.close();
 	}
 
 }

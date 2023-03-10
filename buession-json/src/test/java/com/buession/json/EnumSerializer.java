@@ -24,97 +24,129 @@
  */
 package com.buession.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.buession.json.annotation.JsonEnum2Map;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
  */
 public class EnumSerializer {
 
-    @Test
-    public void test(){
-        User user = new User();
+	@Test
+	public void test(){
+		User user = new User();
 
-        user.setId(100);
-        user.setUsername("admin");
-        user.setType(Type.ACTIVE);
+		user.setId(100);
+		user.setUsername("admin");
+		user.setType(Type.ACTIVE);
+		user.setTypes(new Type[]{Type.ACTIVE, Type.REGISTER});
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectMapper objectMapper1 = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        try{
-            String str = objectMapper.writeValueAsString(user);
-            System.out.println(str);
-            objectMapper1.readValue(str, User.class);
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
+		try{
+			String str = objectMapper.writeValueAsString(user);
+			System.out.println(str);
 
-    public final static class User {
+			User u2 = objectMapper.readValue(str, User.class);
+			System.out.println(u2);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 
-        private int id;
+	public final static class User {
 
-        private String username;
+		private int id;
 
-        private Type type;
+		private String username;
 
-        public int getId(){
-            return id;
-        }
+		@JsonEnum2Map
+		private Type type;
+		
+		private Type[] types;
 
-        public void setId(final int id){
-            this.id = id;
-        }
+		private int[] ivs;
 
-        public String getUsername(){
-            return username;
-        }
+		public int getId(){
+			return id;
+		}
 
-        public void setUsername(final String username){
-            this.username = username;
-        }
+		public void setId(final int id){
+			this.id = id;
+		}
 
-        public Type getType(){
-            return type;
-        }
+		public String getUsername(){
+			return username;
+		}
 
-        public void setType(final Type type){
-            this.type = type;
-        }
-    }
+		public void setUsername(final String username){
+			this.username = username;
+		}
 
-    public enum Type {
+		public Type getType(){
+			return type;
+		}
 
-        REGISTER("register", "注册模板"),
+		public void setType(final Type type){
+			this.type = type;
+		}
 
-        FIND_PASSWORD("find_password", "找回密码"),
+		public Type[] getTypes(){
+			return types;
+		}
 
-        ACTIVE("active", "激活账号");
+		public void setTypes(Type[] types){
+			this.types = types;
+		}
 
-        private String value;
+		public int[] getIvs(){
+			return ivs;
+		}
 
-        private String description;
+		public void setIvs(int[] ivs){
+			this.ivs = ivs;
+		}
 
-        Type(String value, String description){
-            this.value = value;
-            this.description = description;
-        }
+		@Override
+		public String toString(){
+			return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+					.add("id=" + id)
+					.add("username='" + username + "'")
+					.add("type=" + type)
+					.toString();
+		}
+	}
 
-        public String getValue(){
-            return value;
-        }
+	public enum Type {
 
-        public String getDescription(){
-            return description;
-        }
+		REGISTER("register", "注册模板"),
 
-    }
+		FIND_PASSWORD("find_password", "找回密码"),
+
+		ACTIVE("active", "激活账号");
+
+		private String value;
+
+		private String description;
+
+		Type(String value, String description){
+			this.value = value;
+			this.description = description;
+		}
+
+		public String getValue(){
+			return value;
+		}
+
+		public String getDescription(){
+			return description;
+		}
+
+	}
 
 }

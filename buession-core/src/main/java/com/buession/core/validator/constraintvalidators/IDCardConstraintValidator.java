@@ -48,6 +48,7 @@ public class IDCardConstraintValidator implements ConstraintValidator<IDCard, Ch
 		try{
 			this.birthday = idCard.birthday() == null ? null : (new SimpleDateFormat()).parse(idCard.birthday());
 		}catch(ParseException e){
+			//
 		}
 	}
 

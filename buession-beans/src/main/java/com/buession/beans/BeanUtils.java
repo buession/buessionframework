@@ -86,9 +86,7 @@ public class BeanUtils {
 
 			try{
 				humpBeanUtilsBean.populate(target, (Map<String, ? extends Object>) source);
-			}catch(IllegalAccessException e){
-				logger.error("Copy Map to {} error: {}.", target.getClass().getName(), e.getMessage());
-			}catch(InvocationTargetException e){
+			}catch(Exception e){
 				logger.error("Copy Map to {} error: {}.", target.getClass().getName(), e.getMessage());
 			}
 			return;
@@ -137,9 +135,7 @@ public class BeanUtils {
 		if(source instanceof Map){
 			try{
 				org.apache.commons.beanutils.BeanUtils.populate(target, (Map<String, ?>) source);
-			}catch(IllegalAccessException e){
-				logger.error("Copy Map to {} error: {}.", target.getClass().getName(), e.getMessage());
-			}catch(InvocationTargetException e){
+			}catch(Exception e){
 				logger.error("Copy Map to {} error: {}.", target.getClass().getName(), e.getMessage());
 			}
 			return;

@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
 
 import com.buession.core.serializer.JacksonJsonSerializer;
 import com.buession.core.serializer.SerializerException;
+import com.buession.core.validator.Validate;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -59,11 +60,16 @@ public class DefaultJsonTypeHandler<E> extends AbstractJsonTypeHandler<E> {
 
 	@Override
 	protected E parseResult(final String str) throws SQLException{
-		JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
-		try{
-			return jsonSerializer.deserialize(str, type);
-		}catch(SerializerException e){
-			throw new SQLException(str + " cloud not be deserialize to " + type.getName() + ": " + e.getMessage());
+		if(Validate.hasText(str)){
+			JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
+			try{
+				return jsonSerializer.deserialize(str, type);
+			}catch(SerializerException e){
+				throw new SQLException(str + " cloud not be deserialize to " + type.getName() + ": " + e.getMessage());
+			}
 		}
+
+		return null;
 	}
+
 }

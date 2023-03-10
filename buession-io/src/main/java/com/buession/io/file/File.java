@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -346,7 +346,8 @@ public class File extends java.io.File {
 				extension = "tar.gz";
 			}else{
 				int i = fileName.lastIndexOf('.');
-				extension = i == fileName.length() - 1 ? Constants.EMPTY_STRING : fileName.substring(i + 1).toLowerCase();
+				extension =
+						i == fileName.length() - 1 ? Constants.EMPTY_STRING : fileName.substring(i + 1).toLowerCase();
 			}
 		}
 

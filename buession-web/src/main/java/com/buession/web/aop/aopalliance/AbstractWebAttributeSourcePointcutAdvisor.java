@@ -45,11 +45,9 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends Abstract
 	private final static long serialVersionUID = -25452444487918871L;
 
 	@SuppressWarnings({"unchecked"})
-	private final static Class<? extends Annotation>[] WEB_ANNOTATION_CLASSES = new Class[]{ResponseHeader.class,
-			ResponseHeaders.class, ContentType.class, HttpCache.class, DocumentMetaData.class};
-
 	public AbstractWebAttributeSourcePointcutAdvisor(final AnnotationsMethodInterceptor annotationsMethodInterceptor){
-		super(annotationsMethodInterceptor, WEB_ANNOTATION_CLASSES);
+		super(annotationsMethodInterceptor, new Class[]{ResponseHeader.class,
+				ResponseHeaders.class, ContentType.class, HttpCache.class, DocumentMetaData.class});
 	}
 
 }

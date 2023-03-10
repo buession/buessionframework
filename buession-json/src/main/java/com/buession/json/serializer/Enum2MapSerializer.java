@@ -17,18 +17,24 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.serializer;
 
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.EnumUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +44,21 @@ import java.lang.reflect.Field;
 /**
  * @author Yong.Teng
  */
-public class Enum2MapSerializer extends JsonSerializer<Enum<?>> {
+@JacksonStdImpl
+public class Enum2MapSerializer extends StdScalarSerializer<Enum<?>> implements ContextualSerializer {
 
 	private final static Logger logger = LoggerFactory.getLogger(Enum2MapSerializer.class);
 
+	public Enum2MapSerializer(){
+		super(Enum.class, false);
+	}
+
+	public Enum2MapSerializer(Class<Enum<?>> v){
+		super(v, false);
+	}
+
 	@Override
-	public void serialize(Enum<?> en, JsonGenerator generator, SerializerProvider provider) throws IOException{
+	public void serialize(Enum en, JsonGenerator generator, SerializerProvider provider) throws IOException{
 		Field[] fields = en.getClass().getDeclaredFields();
 		generator.writeStartObject();
 
@@ -56,7 +71,21 @@ public class Enum2MapSerializer extends JsonSerializer<Enum<?>> {
 		generator.writeEndObject();
 	}
 
-	private static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field) throws IOException{
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
+			throws JsonMappingException{
+		JsonFormat.Value format = findFormatOverrides(provider, property, handledType());
+
+		if(format != null){
+			return new Enum2MapSerializer((Class<Enum<?>>) property.getType().getRawClass());
+		}
+
+		return this;
+	}
+
+	private static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field)
+			throws IOException{
 		FieldUtils.setAccessible(field);
 
 		try{

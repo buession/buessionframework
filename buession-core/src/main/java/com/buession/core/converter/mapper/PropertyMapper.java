@@ -247,12 +247,7 @@ public class PropertyMapper {
 
 			Supplier<Boolean> test = ()->predicate.test(supplier.get());
 			Predicate<R> predicate = (t)->test.get();
-			Supplier<R> supplier = ()->{
-				if(test.get()){
-					return adapter.apply(this.supplier.get());
-				}
-				return null;
-			};
+			Supplier<R> supplier = ()->test.get() ? adapter.apply(this.supplier.get()) : null;
 
 			return new Source<>(supplier, predicate);
 		}
@@ -381,11 +376,11 @@ public class PropertyMapper {
 			Assert.isNull(factory, "Factory cloud not be null");
 
 			T value = supplier.get();
-			if(predicate.test(value) == false){
-				throw new NoSuchElementException("No value present");
+			if(predicate.test(value)){
+				return factory.apply(value);
 			}
 
-			return factory.apply(value);
+			throw new NoSuchElementException("No value present");
 		}
 
 	}

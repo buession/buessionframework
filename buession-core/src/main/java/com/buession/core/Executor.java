@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
@@ -44,7 +44,10 @@ public interface Executor<C, R> {
 	 * 		命令执行器上下文
 	 *
 	 * @return 命令执行返回值，R 类型的实例
+	 *
+	 * @throws Exception
+	 * 		异常
 	 */
-	R execute(C context);
+	R execute(C context) throws Exception;
 
 }

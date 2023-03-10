@@ -31,6 +31,7 @@ import com.buession.geoip.model.Network;
 import com.buession.geoip.model.Organization;
 import com.buession.geoip.model.Traits;
 import com.maxmind.geoip2.model.AbstractResponse;
+import com.maxmind.geoip2.model.AsnResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,16 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 	private final static ConnectionTypeConverter connectionTypeConverter = new ConnectionTypeConverter();
 
 	private final static Logger logger = LoggerFactory.getLogger(TraitsConverter.class);
+
+	private AsnResponse asnResponse;
+
+	public AsnResponse getAsnResponse(){
+		return asnResponse;
+	}
+
+	public void setAsnResponse(AsnResponse asnResponse){
+		this.asnResponse = asnResponse;
+	}
 
 	@Override
 	public Traits converter(com.maxmind.geoip2.record.Traits traits){
@@ -70,11 +81,11 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 		final ConnectionType connectionType = connectionTypeConverter.convert(traits.getConnectionType());
 		final Organization organization =
 				traits.getOrganization() == null ? null : new Organization(traits.getOrganization());
-		final Organization autonomousSystemOrganization = traits.getAutonomousSystemOrganization() == null ? null :
-				new Organization(traits.getAutonomousSystemOrganization());
+		final Organization autonomousSystemOrganization = parseAutonomousSystemOrganization(traits);
+		final Integer autonomousSystemNumber = parseAutonomousSystemNumber(traits);
 
 		return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), network, connectionType,
-				organization, autonomousSystemOrganization, traits.getAutonomousSystemNumber(),
+				organization, autonomousSystemOrganization, autonomousSystemNumber,
 				traits.getMobileCountryCode(), traits.getMobileNetworkCode(), traits.isAnonymous(),
 				traits.isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(),
 				traits.isLegitimateProxy(), traits.isPublicProxy(), traits.isPublicProxy(),
@@ -85,6 +96,22 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 	@Override
 	public Traits converter(com.maxmind.geoip2.record.Traits traits, AbstractResponse response, Locale locale){
 		return converter(traits);
+	}
+
+	private Integer parseAutonomousSystemNumber(com.maxmind.geoip2.record.Traits traits){
+		if(traits.getAutonomousSystemNumber() == null){
+			return asnResponse == null ? null : asnResponse.getAutonomousSystemNumber();
+		}else{
+			return traits.getAutonomousSystemNumber();
+		}
+	}
+
+	private Organization parseAutonomousSystemOrganization(com.maxmind.geoip2.record.Traits traits){
+		if(traits.getAutonomousSystemOrganization() == null){
+			return asnResponse == null ? null : new Organization(asnResponse.getAutonomousSystemOrganization());
+		}else{
+			return new Organization(traits.getAutonomousSystemOrganization());
+		}
 	}
 
 }

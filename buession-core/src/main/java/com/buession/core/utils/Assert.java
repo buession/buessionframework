@@ -99,6 +99,134 @@ public class Assert {
 	}
 
 	/**
+	 * 如果 shor 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final short[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 int 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final int[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 long 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final long[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 float 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final float[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 double 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final double[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 boolean 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final boolean[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 byte 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final byte[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 char 数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.2.0
+	 */
+	public static void isEmpty(final char[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
 	 * 如果数组对象 objects 为 null 或为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
 	 *
 	 * @param objects
@@ -164,6 +292,118 @@ public class Assert {
 	 */
 	public static void isEmpty(final Enumeration<?> enumeration, final String message){
 		if(Validate.isEmpty(enumeration)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 short 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final short[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 int 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final int[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 long 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final long[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 float 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final float[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 double 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final double[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 boolean 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final boolean[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 byte 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final byte[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
+	 * 如果 char 数组对象 objects 不为 null 且不为空，抛出信息为 message 的 {@link IllegalArgumentException} 异常
+	 *
+	 * @param objects
+	 * 		数组对象
+	 * @param message
+	 * 		异常信息
+	 */
+	public static void notEmpty(final char[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
 			throw new IllegalArgumentException(message);
 		}
 	}
