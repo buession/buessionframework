@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
@@ -65,8 +65,14 @@ public abstract class AbstractHandlerExceptionResolver
 		extends org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver
 		implements ServletExceptionHandlerResolver {
 
+	/**
+	 * 异常属性名称
+	 */
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
+	/**
+	 * 默认错误视图
+	 */
 	private String defaultErrorView = DEFAULT_ERROR_VIEW;
 
 	private String cacheControl = CACHE_CONTROL;
@@ -75,9 +81,55 @@ public abstract class AbstractHandlerExceptionResolver
 
 	private Map<Exception, String> exceptionViews;
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractHandlerExceptionResolver.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
+
+	/**
+	 * 返回异常属性名称
+	 *
+	 * @return 异常属性名称
+	 *
+	 * @since 2.2.1
+	 */
+	public String getExceptionAttribute(){
+		return exceptionAttribute;
+	}
+
+	/**
+	 * 设置异常属性名称
+	 *
+	 * @param exceptionAttribute
+	 * 		异常属性名称
+	 *
+	 * @since 2.2.1
+	 */
+	public void setExceptionAttribute(String exceptionAttribute){
+		this.exceptionAttribute = exceptionAttribute;
+	}
+
+	/**
+	 * 返回默认错误视图
+	 *
+	 * @return 默认错误视图
+	 *
+	 * @since 2.2.1
+	 */
+	public String getDefaultErrorView(){
+		return defaultErrorView;
+	}
+
+	/**
+	 * 设置默认错误视图
+	 *
+	 * @param defaultErrorView
+	 * 		默认错误视图
+	 *
+	 * @since 2.2.1
+	 */
+	public void setDefaultErrorView(String defaultErrorView){
+		this.defaultErrorView = defaultErrorView;
+	}
 
 	public String getCacheControl(){
 		return cacheControl;
@@ -108,6 +160,9 @@ public abstract class AbstractHandlerExceptionResolver
 	@Override
 	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response,
 											  @Nullable Object handler, Exception ex){
+		if(logger.isErrorEnabled()){
+			logger.error("Application error: {}", ex.getMessage(), ex);
+		}
 		ModelAndView mv = doSpecialResolveException(request, response, handler, ex);
 
 		if(mv != null){
@@ -624,7 +679,7 @@ public abstract class AbstractHandlerExceptionResolver
 		mv.addObject("message", httpStatus.getReasonPhrase());
 		mv.addObject("status", httpStatus);
 		mv.addObject("timestamp", new Date());
-		mv.addObject(exceptionAttribute, ex);
+		mv.addObject(getExceptionAttribute(), ex);
 
 		applyStatusCodeIfPossible(request, response, httpStatus);
 
@@ -647,13 +702,13 @@ public abstract class AbstractHandlerExceptionResolver
 			viewName = SERIES_VIEWS.get(httpStatus.series());
 		}
 
-		if(viewName == null && defaultErrorView != null){
+		if(viewName == null && getDefaultErrorView() != null){
 			if(logger.isDebugEnabled()){
-				logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView,
+				logger.debug("Resolving to default view '{}' for exception of type [{}]", getDefaultErrorView(),
 						ex.getClass().getName());
 			}
 
-			viewName = defaultErrorView;
+			viewName = getDefaultErrorView();
 		}
 
 		return viewName;

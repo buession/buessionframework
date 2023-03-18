@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 消息
@@ -63,6 +64,25 @@ public class MessageObject implements Serializable {
 
 	public void setText(String text){
 		this.text = text;
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(code, text);
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
+		}
+
+		if((o instanceof MessageObject)){
+			MessageObject that = (MessageObject) o;
+			return code == that.code;
+		}
+
+		return false;
 	}
 
 }
