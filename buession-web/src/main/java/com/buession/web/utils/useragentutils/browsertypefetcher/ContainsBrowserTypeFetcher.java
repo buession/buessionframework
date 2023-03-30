@@ -22,25 +22,40 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils.browsertypefetcher;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.buession.core.utils.StringUtils;
+import com.buession.web.utils.useragentutils.BrowserType;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class ContainsBrowserTypeFetcher implements BrowserTypeFetcher {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private final String str;
+
+	private final boolean ignoreCase;
+
+	private final BrowserType browserType;
+
+	public ContainsBrowserTypeFetcher(final String str, final BrowserType browserType){
+		this(str, true, browserType);
+	}
+
+	public ContainsBrowserTypeFetcher(final String str, final boolean ignoreCase, final BrowserType browserType){
+		this.str = str;
+		this.ignoreCase = ignoreCase;
+		this.browserType = browserType;
+	}
+
+	@Override
+	public BrowserType fetch(final String userAgent){
+		if(ignoreCase){
+			return StringUtils.containsIgnoreCase(userAgent, str) ? browserType : null;
+		}else{
+			return StringUtils.contains(userAgent, str) ? browserType : null;
+		}
+	}
 
 }

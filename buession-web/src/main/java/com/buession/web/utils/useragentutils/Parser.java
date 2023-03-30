@@ -22,25 +22,37 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils;
 
-import com.buession.web.http.Error;
+import com.buession.core.validator.Validate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.function.Function;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+class Parser<E extends Enum<E>> {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private final E[] enumElements;
+
+	public Parser(final E[] enumElements){
+		this.enumElements = enumElements;
+	}
+
+	public E parse(final String userAgent, final Function<E, E> function){
+		if(Validate.hasText(userAgent)){
+			E result;
+
+			for(E element : enumElements){
+				result = function.apply(element);
+				if(result != null){
+					return result;
+				}
+			}
+		}
+
+		return null;
+	}
 
 }

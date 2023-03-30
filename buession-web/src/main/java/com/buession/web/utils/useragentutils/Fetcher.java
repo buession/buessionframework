@@ -22,25 +22,15 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
-
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.buession.web.utils.useragentutils;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+@FunctionalInterface
+public interface Fetcher<T> {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	T fetch(final String str);
 
 }

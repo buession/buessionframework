@@ -123,12 +123,10 @@ public class File extends java.io.File {
 	 *
 	 * @return 文件内容
 	 *
-	 * @throws FileNotFoundException
-	 * 		当文件不存在
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public byte[] read() throws FileNotFoundException, IOException{
+	public byte[] read() throws IOException{
 		int size = 4096;
 		BufferedInputStream bis = new FileBufferedInputStream(this);
 		byte[] tempChars = new byte[size];

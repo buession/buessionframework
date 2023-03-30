@@ -14,6 +14,11 @@
 - **buession-web：** Servlet AbstractHandlerExceptionResolver doResolve 方法支持接收 handler
 
 
+### ⭐ 新特性
+
+- **buession-web：** 新增实验性 User-Agent 解析工具
+
+
 ---
 
 

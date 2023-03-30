@@ -22,25 +22,29 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
-
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.buession.web.utils.useragentutils;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+class VersionMapping {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private String[] patterns;
+
+	private String version;
+
+	VersionMapping(final String[] patterns, final String version){
+		this.patterns = patterns;
+		this.version = version;
+	}
+
+	public String[] getPatterns(){
+		return patterns;
+	}
+
+	public String getVersion(){
+		return version;
+	}
 
 }

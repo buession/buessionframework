@@ -22,25 +22,16 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils.browsertypefetcher;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.buession.web.utils.useragentutils.BrowserType;
+import com.buession.web.utils.useragentutils.Fetcher;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
-
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+@FunctionalInterface
+public interface BrowserTypeFetcher extends Fetcher<BrowserType> {
 
 }

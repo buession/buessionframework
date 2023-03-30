@@ -22,25 +22,35 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils.versionfetcher;
 
-import com.buession.web.http.Error;
+import com.buession.web.utils.useragentutils.Version;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class MapVersionFetcher extends PatternVersionFetcher {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private final Map<String, Version> versions;
+
+	public MapVersionFetcher(final String regex, final Map<String, Version> versions){
+		this(Pattern.compile(regex), versions);
+	}
+
+	public MapVersionFetcher(final Pattern pattern, final Map<String, Version> versions){
+		super(pattern);
+		this.versions = Collections.unmodifiableMap(versions);
+	}
+
+	@Override
+	protected Version createVersion(Matcher matcher){
+		return versions.get(matcher.group(1));
+	}
 
 }

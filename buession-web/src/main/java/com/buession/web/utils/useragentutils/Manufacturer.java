@@ -22,25 +22,72 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
-
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.buession.web.utils.useragentutils;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
+ * 浏览器厂商
  *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public enum Manufacturer {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	MICROSOFT("Microsoft Corporation"),
+
+	APPLE("Apple Inc."),
+
+	SUN("Sun Microsystems, Inc."),
+
+	SYMBIAN("Symbian Ltd."),
+
+	NOKIA("Nokia Corporation"),
+
+	BLACKBERRY("Research In Motion Limited"),
+
+	HP("Hewlett Packard"),
+
+	SONY_ERICSSON("Sony Ericsson Mobile Communications AB"),
+
+	SAMSUNG("Samsung Electronics"),
+
+	SONY("Sony Computer Entertainment, Inc."),
+
+	NINTENDO("Nintendo"),
+
+	OPERA("Opera Software ASA"),
+
+	MOZILLA("Mozilla Foundation"),
+
+	GOOGLE("Google Inc."),
+
+	COMPUSERVE("CompuServe Interactive Services, Inc."),
+
+	YAHOO("Yahoo Inc."),
+
+	AOL("AOL LLC."),
+
+	MMC("Mail.com Media Corporation"),
+
+	AMAZON("Amazon.com, Inc."),
+
+	ROKU("Roku, Inc."),
+
+	ADOBE("Adobe Systems Inc."),
+
+	CONONICAL("Canonical Ltd."),
+
+	LINUX_FOUNDATION("Linux Foundation"),
+
+	OTHER("Other");
+
+	private final String name;
+
+	Manufacturer(final String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return name;
+	}
 
 }

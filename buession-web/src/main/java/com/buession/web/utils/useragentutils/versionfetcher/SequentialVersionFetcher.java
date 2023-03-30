@@ -22,25 +22,38 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils.versionfetcher;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.buession.web.utils.useragentutils.Version;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class SequentialVersionFetcher implements VersionFetcher {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private final VersionFetcher[] fetchers;
+
+	public SequentialVersionFetcher(VersionFetcher first, VersionFetcher... others){
+		fetchers = new VersionFetcher[others.length + 1];
+		fetchers[0] = first;
+		for(int i = 0; i < others.length; i++){
+			fetchers[i + 1] = others[i];
+		}
+	}
+
+	@Override
+	public Version fetch(final String str){
+		Version version;
+
+		for(VersionFetcher fetcher : fetchers){
+			version = fetcher.fetch(str);
+			if(version != null){
+				return version;
+			}
+		}
+
+		return null;
+	}
 
 }

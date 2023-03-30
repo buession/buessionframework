@@ -22,25 +22,53 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
-
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.buession.web.utils.useragentutils;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
+ * 设备类型
  *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public enum DeviceType {
+	/**
+	 * 电脑
+	 */
+	COMPUTER("Computer"),
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	/**
+	 * 手机
+	 */
+	MOBILE("Mobile"),
+
+	/**
+	 * 平板
+	 */
+	TABLET("Tablet"),
+
+	/**
+	 * Digital media receiver like the Google TV.
+	 */
+	DMR("Digital media receiver"),
+
+	/**
+	 * Game console
+	 */
+	GAME_CONSOLE("Game console"),
+
+	/**
+	 * 未知
+	 */
+	UNKNOWN("Unknown");
+
+	private final String name;
+
+	DeviceType(final String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return name;
+	}
 
 }

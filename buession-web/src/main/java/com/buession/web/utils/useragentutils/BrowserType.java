@@ -22,25 +22,56 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
-
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.buession.web.utils.useragentutils;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
+ * 浏览器类型
  *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public enum BrowserType {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	/**
+	 * Standard web-browser
+	 */
+	WEB_BROWSER("Browser"),
+
+	/**
+	 * Special web-browser for mobile devices
+	 */
+	MOBILE_BROWSER("Browser (mobile)"),
+
+	/**
+	 * Text only browser like the good old Lynx
+	 */
+	TEXT_BROWSER("Browser (text only)"),
+
+	/**
+	 * Email client like Thunderbird
+	 */
+	EMAIL_CLIENT("Email Client"),
+
+	/**
+	 * Search robot, spider, crawler,...
+	 */
+	ROBOT("Robot"),
+
+	/**
+	 * Application
+	 */
+	APPLICATION("Application"),
+
+	UNKNOWN("unknown");
+
+	private final String name;
+
+	BrowserType(final String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return name;
+	}
 
 }

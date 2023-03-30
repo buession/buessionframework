@@ -22,25 +22,40 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils.devicetypefetcher;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.buession.core.utils.StringUtils;
+import com.buession.web.utils.useragentutils.DeviceType;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class ContainsDeviceTypeFetcher implements DeviceTypeFetcher {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private final String str;
+
+	private final boolean ignoreCase;
+
+	private final DeviceType deviceType;
+
+	public ContainsDeviceTypeFetcher(final String str, final DeviceType deviceType){
+		this(str, true, deviceType);
+	}
+
+	public ContainsDeviceTypeFetcher(final String str, final boolean ignoreCase, final DeviceType deviceType){
+		this.str = str;
+		this.ignoreCase = ignoreCase;
+		this.deviceType = deviceType;
+	}
+
+	@Override
+	public DeviceType fetch(final String userAgent){
+		if(ignoreCase){
+			return StringUtils.containsIgnoreCase(userAgent, str) ? deviceType : null;
+		}else{
+			return StringUtils.contains(userAgent, str) ? deviceType : null;
+		}
+	}
 
 }

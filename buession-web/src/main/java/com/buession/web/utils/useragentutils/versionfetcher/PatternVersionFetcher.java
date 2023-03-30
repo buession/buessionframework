@@ -22,25 +22,45 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils.versionfetcher;
 
-import com.buession.web.http.Error;
+import com.buession.web.utils.useragentutils.Version;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class PatternVersionFetcher implements VersionFetcher {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	private final Pattern pattern;
+
+	public PatternVersionFetcher(final String regex){
+		this(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+	}
+
+	public PatternVersionFetcher(final Pattern pattern){
+		this.pattern = pattern;
+	}
+
+	@Override
+	public final Version fetch(String userAgent){
+		Matcher matcher = pattern.matcher(userAgent);
+		return matcher.find() ? createVersion(matcher) : null;
+	}
+
+	protected Version createVersion(Matcher matcher){
+		String fullVersionString = matcher.group(1);
+		String majorVersion = matcher.group(2);
+		String minorVersion = "0";
+
+		if(matcher.groupCount() > 2){ // usually but not always there is a minor version
+			minorVersion = matcher.group(3);
+		}
+
+		return new Version(fullVersionString, majorVersion, minorVersion);
+	}
 
 }

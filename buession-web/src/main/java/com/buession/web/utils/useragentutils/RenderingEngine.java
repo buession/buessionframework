@@ -22,25 +22,78 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
-
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.buession.web.utils.useragentutils;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
+ * 渲染引擎
  *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public enum RenderingEngine {
+	/**
+	 * EdgeHTML is a proprietary layout engine developed for the Microsoft Edge web browser, developed by Microsoft.
+	 */
+	EDGE_HTML("EdgeHTML"),
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	/**
+	 * Trident is the the Microsoft layout engine, mainly used by Internet Explorer.
+	 */
+	TRIDENT("Trident"),
+
+	/**
+	 * HTML parsing and rendering engine of Microsoft Office Word, used by some other products of the Office suite instead of Trident.
+	 */
+	WORD("Microsoft Office Word"),
+
+	/**
+	 * Open source and cross platform layout engine, used by Firefox and many other browsers.
+	 */
+	GECKO("Gecko"),
+
+	/**
+	 * Layout engine based on KHTML, used by Safari, Chrome and some other browsers.
+	 */
+	WEBKIT("WebKit"),
+
+	/**
+	 * Proprietary layout engine by Opera Software ASA
+	 */
+	PRESTO("Presto"),
+
+	/**
+	 * Original layout engine of the Mozilla browser and related products. Predecessor of Gecko.
+	 */
+	MOZILLA("Mozilla"),
+
+	/**
+	 * Layout engine of the KDE project
+	 */
+	KHTML("KHTML"),
+
+	/**
+	 * Other or unknown layout engine.
+	 */
+	BLINK("Blink"),
+
+	/**
+	 * Layout engine developed as part ofthe Chromium project. Fored from WebKit.
+	 */
+	OTHER("Other");
+
+	private final String name;
+
+	RenderingEngine(String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	@Override
+	public String toString(){
+		return name;
+	}
 
 }

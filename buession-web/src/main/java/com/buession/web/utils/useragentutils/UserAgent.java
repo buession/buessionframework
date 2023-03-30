@@ -22,25 +22,66 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.buession.core.validator.Validate;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
+ * User-Agent 解析操作系统和浏览器信息
  *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class UserAgent {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	/**
+	 * 操作系统信息
+	 */
+	private final OperatingSystem operatingSystem;
+
+	/**
+	 * 浏览器信息
+	 */
+	private final Browser browser;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param userAgent
+	 * 		User-Agent
+	 */
+	public UserAgent(final String userAgent){
+		if(Validate.hasText(userAgent)){
+			this.browser = Browser.parse(userAgent);
+			this.operatingSystem = this.browser == Browser.BOT ? OperatingSystem.UNKNOWN :
+					OperatingSystem.parse(userAgent);
+		}else{
+			this.operatingSystem = OperatingSystem.UNKNOWN;
+			this.browser = Browser.UNKNOWN;
+		}
+	}
+
+	/**
+	 * 返回操作系统信息
+	 *
+	 * @return 操作系统信息
+	 */
+	public OperatingSystem getOperatingSystem(){
+		return operatingSystem;
+	}
+
+	/**
+	 * 返回浏览器信息
+	 *
+	 * @return 浏览器信息
+	 */
+	public Browser getBrowser(){
+		return browser;
+	}
+
+	@Override
+	public String toString(){
+		return operatingSystem.toString() + '-' + browser.toString();
+	}
 
 }

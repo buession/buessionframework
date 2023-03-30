@@ -22,25 +22,21 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.core.utils;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+class MemberUtils {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	public static boolean isNotAccessible(final Member member){
+		return (Modifier.isPublic(member.getModifiers()) == false ||
+				Modifier.isPublic(member.getDeclaringClass().getModifiers()) == false ||
+				Modifier.isFinal(member.getModifiers()));
+	}
 
 }

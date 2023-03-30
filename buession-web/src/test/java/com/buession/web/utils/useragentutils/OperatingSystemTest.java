@@ -22,25 +22,21 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.junit.Test;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class OperatingSystemTest {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	@Test
+	public void parse(){
+		OperatingSystem operatingSystem = OperatingSystem.parse(
+				"Mozilla/5.0 (Linux; Android 12; DBY-W09 Build/HUAWEIDBY-W09; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4435 MMWEBSDK/20221206 Safari/537.36 MMWEBID/8494 MicroMessenger/8.0.32.2300(0x2800205D) WeChat/arm64 Weixin Android Tablet NetType/WIFI Language/zh_CN ABI/arm64");
+		System.out.println(operatingSystem + " " + operatingSystem.getDeviceType());
+	}
 
 }

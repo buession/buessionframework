@@ -22,25 +22,21 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.utils.useragentutils;
 
-import com.buession.web.http.Error;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.junit.Test;
 
 /**
- * 异常错误处理器
- *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
  * @since 2.2.1
  */
-public interface ErrorHandler<EX extends Throwable> {
+public class BrowserTest {
 
-	Error apply(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-				final EX ex);
+	@Test
+	public void parse(){
+		Browser browser = Browser.parse(
+				"Mozilla/5.0 (Linux; Android 11; V2054A Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/107.0.5304.141 Mobile Safari/537.36 XWEB/5023 MMWEBSDK/20230202 MMWEBID/2072 MicroMessenger/8.0.33.2320(0x28002151) WeChat/arm64 Weixin NetType/5G Language/zh_CN ABI/arm64");
+		System.out.println(browser + " " + browser.getBrowserType());
+	}
 
 }
