@@ -82,9 +82,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.MICROSOFT,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Windows CE"}, null)
-			},
+			null,
 			null
 	),
 
@@ -95,9 +93,7 @@ public enum OperatingSystem {
 			DeviceType.GAME_CONSOLE,
 			null,
 			Manufacturer.MICROSOFT,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"xbox"}, null)
-			},
+			null,
 			null
 	),
 
@@ -119,17 +115,14 @@ public enum OperatingSystem {
 
 	IOS(
 			"iOS",
-			new String[]{"iPhone", "iOS"},
+			new String[]{"iPhone", "iPad", "iPod", "iOS"},
 			null,
 			DeviceType.MOBILE,
 			new DeviceTypeFetcher[]{
 					new ContainsDeviceTypeFetcher("iPad", DeviceType.TABLET)
 			},
 			Manufacturer.APPLE,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"iPhone OS", "iPad"}, null),
-					new VersionMapping(new String[]{"iPhone", "iPad", "iPod"}, null)
-			},
+			null,
 			new PatternVersionFetcher("OS ((\\d+)_(\\d+)_(\\d+))")
 	),
 
@@ -140,9 +133,7 @@ public enum OperatingSystem {
 			DeviceType.COMPUTER,
 			null,
 			Manufacturer.GOOGLE,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"CrOS"}, null)
-			},
+			null,
 			null
 	),
 
@@ -153,10 +144,8 @@ public enum OperatingSystem {
 			DeviceType.COMPUTER,
 			null,
 			Manufacturer.APPLE,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Mac OS X", "CFNetwork"}, null)
-			},
-			new PatternVersionFetcher("OS X ((\\d+)_(\\d+)_(\\d+))")
+			null,
+			new PatternVersionFetcher("Mac OS X ((\\d+)[_\\.]?(\\d+)?([_\\.]\\d+)?)")
 	),
 
 	MAC_OS(
@@ -166,10 +155,8 @@ public enum OperatingSystem {
 			DeviceType.COMPUTER,
 			null,
 			Manufacturer.APPLE,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Mac"}, null)
-			},
-			new PatternVersionFetcher("OS ((\\d+)_(\\d+)_(\\d+))")
+			null,
+			new PatternVersionFetcher("Mac OS ((\\d+)[_\\.]?(\\d+)?([_\\.]\\d+)?)")
 	),
 
 	WEBOS(
@@ -179,9 +166,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.HP,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"webOS"}, null)
-			},
+			null,
 			null
 	),
 
@@ -192,9 +177,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.HP,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Palm"}, null)
-			},
+			null,
 			null
 	),
 
@@ -205,9 +188,7 @@ public enum OperatingSystem {
 			DeviceType.COMPUTER,
 			null,
 			Manufacturer.NOKIA,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"MeeGo"}, null)
-			},
+			null,
 			null
 	),
 
@@ -218,9 +199,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.NOKIA,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Maemo"}, null)
-			},
+			null,
 			null
 	),
 
@@ -231,9 +210,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.SAMSUNG,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Bada"}, null)
-			},
+			null,
 			null
 	),
 
@@ -248,9 +225,7 @@ public enum OperatingSystem {
 					new ContainsDeviceTypeFetcher("TV ", DeviceType.DMR)
 			},
 			Manufacturer.LINUX_FOUNDATION,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Tizen"}, null)
-			},
+			null,
 			new PatternVersionFetcher("Tizen \\/((\\d+))\\.")
 	),
 
@@ -300,9 +275,7 @@ public enum OperatingSystem {
 			DeviceType.COMPUTER,
 			null,
 			Manufacturer.SUN,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"SunOS"}, null)
-			},
+			null,
 			null
 	),
 
@@ -315,9 +288,7 @@ public enum OperatingSystem {
 					new ContainsDeviceTypeFetcher("RIM Tablet OS", DeviceType.TABLET)
 			},
 			Manufacturer.BLACKBERRY,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Version"}, null)
-			},
+			null,
 			new PatternVersionFetcher("Version\\/((\\d+))")
 	),
 
@@ -334,8 +305,7 @@ public enum OperatingSystem {
 			Manufacturer.SYMBIAN,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Series60/3"}, "9"),
-					new VersionMapping(new String[]{"Series60/2.6", "Series60/2.8"}, "8"),
-					new VersionMapping(new String[]{"Symbian", "Series60"}, null)
+					new VersionMapping(new String[]{"Series60/2.6", "Series60/2.8"}, "8")
 			},
 			new PatternVersionFetcher("Symbian\\/((\\d+))")
 	),
@@ -347,9 +317,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.NOKIA,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Nokia6300"}, null)
-			},
+			null,
 			null
 	),
 
@@ -360,9 +328,7 @@ public enum OperatingSystem {
 			DeviceType.MOBILE,
 			null,
 			Manufacturer.SONY_ERICSSON,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"SonyEricsson"}, null)
-			},
+			null,
 			null
 	),
 
@@ -373,9 +339,7 @@ public enum OperatingSystem {
 			DeviceType.GAME_CONSOLE,
 			null,
 			Manufacturer.SONY,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Playstation"}, null)
-			},
+			null,
 			null
 	),
 
@@ -386,9 +350,7 @@ public enum OperatingSystem {
 			DeviceType.GAME_CONSOLE,
 			null,
 			Manufacturer.NINTENDO,
-			new VersionMapping[]{
-					new VersionMapping(new String[]{"Wii"}, null)
-			},
+			null,
 			null
 	),
 

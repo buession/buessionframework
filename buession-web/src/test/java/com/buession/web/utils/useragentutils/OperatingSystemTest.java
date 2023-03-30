@@ -24,7 +24,10 @@
  */
 package com.buession.web.utils.useragentutils;
 
+import com.buession.core.utils.StringUtils;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
@@ -35,8 +38,22 @@ public class OperatingSystemTest {
 	@Test
 	public void parse(){
 		OperatingSystem operatingSystem = OperatingSystem.parse(
-				"Mozilla/5.0 (Linux; Android 12; DBY-W09 Build/HUAWEIDBY-W09; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4435 MMWEBSDK/20221206 Safari/537.36 MMWEBID/8494 MicroMessenger/8.0.32.2300(0x2800205D) WeChat/arm64 Weixin Android Tablet NetType/WIFI Language/zh_CN ABI/arm64");
+				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/111.0");
 		System.out.println(operatingSystem + " " + operatingSystem.getDeviceType());
+	}
+
+	@Test
+	public void toEnum(){
+		for(OperatingSystem operatingSystem : OperatingSystem.values()){
+			System.out.println(operatingSystem.name() + "(\"" + operatingSystem.getName() + "\"),");
+			System.out.println("");
+		}
+	}
+
+	@Test
+	public void join(){
+		System.out.println("'" +
+				StringUtils.join(Arrays.stream(OperatingSystem.values()).map(Enum::name).toArray(), "', '") + "'");
 	}
 
 }
