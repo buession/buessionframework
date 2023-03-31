@@ -351,9 +351,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	protected String getStatement(final String dml){
-		final String statement = getStatement();
-
-		return statement + '.' + dml;
+		return getStatement() + '.' + dml;
 	}
 
 }

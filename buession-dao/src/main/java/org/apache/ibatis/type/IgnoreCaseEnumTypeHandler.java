@@ -31,6 +31,9 @@ import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -48,6 +51,30 @@ public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTy
 
 	public IgnoreCaseEnumTypeHandler(Class<E> type){
 		super(type);
+	}
+
+	@Override
+	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
+		if(jdbcType == null){
+			ps.setString(i, parameter.name());
+		}else{
+			ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE);
+		}
+	}
+
+	@Override
+	public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
+		return parseResult(rs.getString(columnName));
+	}
+
+	@Override
+	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
+		return parseResult(rs.getString(columnIndex));
+	}
+
+	@Override
+	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
+		return parseResult(cs.getString(columnIndex));
 	}
 
 	@Override

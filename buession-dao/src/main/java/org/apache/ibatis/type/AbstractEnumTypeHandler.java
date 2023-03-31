@@ -40,6 +40,7 @@ import java.sql.SQLException;
  * @author Yong.Teng
  * @since 1.3.2
  */
+@Deprecated
 public abstract class AbstractEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
 	protected final Class<E> type;
