@@ -28,11 +28,9 @@ package com.buession.web.servlet.annotation;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
-import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
+import com.buession.web.http.request.annotation.RequestClientIpAnnotationUtils;
 import com.buession.web.servlet.http.request.RequestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
@@ -41,8 +39,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * 方法参数注解 {@link RequestClientIp} 解析器
@@ -51,26 +47,17 @@ import java.net.UnknownHostException;
  */
 public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver {
 
-	private final static Logger logger = LoggerFactory.getLogger(RequestClientIpHandlerMethodArgumentResolver.class);
-
 	public RequestClientIpHandlerMethodArgumentResolver(){
 		super();
 	}
 
-	public RequestClientIpHandlerMethodArgumentResolver(
-			@Nullable ConfigurableBeanFactory beanFactory){
+	public RequestClientIpHandlerMethodArgumentResolver(@Nullable ConfigurableBeanFactory beanFactory){
 		super(beanFactory);
 	}
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter){
-		if(parameter.hasParameterAnnotation(RequestClientIp.class) == false){
-			return false;
-		}
-
-		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
-		return CharSequence.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz) ||
-				InetAddress.class.isAssignableFrom(clazz);
+		return RequestClientIpAnnotationUtils.checkSupports(parameter);
 	}
 
 	@Override
@@ -83,21 +70,8 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 	@Override
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request){
-		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
-		if(Long.class.isAssignableFrom(clazz)){
-			return InetAddressUtils.ip2long(getClientIp(request, parameter));
-		}else if(CharSequence.class.isAssignableFrom(clazz)){
-			return getClientIp(request, parameter);
-		}else if(InetAddress.class.isAssignableFrom(clazz)){
-			final String ip = getClientIp(request, parameter);
-			try{
-				return InetAddress.getByName(ip);
-			}catch(UnknownHostException e){
-				logger.error("IP: <{}> convert to InetAddress error: {}", ip, e.getMessage());
-			}
-		}
-
-		return null;
+		return RequestClientIpAnnotationUtils.resolveNamedValue(parameter,
+				(methodParameter)->getClientIp(request, methodParameter));
 	}
 
 	private String getClientIp(final NativeWebRequest webRequest, final MethodParameter parameter){

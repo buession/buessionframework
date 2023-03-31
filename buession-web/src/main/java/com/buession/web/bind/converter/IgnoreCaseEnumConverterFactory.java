@@ -58,7 +58,7 @@ public class IgnoreCaseEnumConverterFactory implements ConverterFactory<String, 
 	}
 
 
-	private static class StringToEnum<T extends Enum> implements Converter<String, T> {
+	private static class StringToEnum<T extends Enum<T>> implements Converter<String, T> {
 
 		private final Class<T> enumType;
 

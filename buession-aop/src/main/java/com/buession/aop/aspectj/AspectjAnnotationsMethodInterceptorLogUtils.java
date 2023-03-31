@@ -43,12 +43,12 @@ class AspectjAnnotationsMethodInterceptorLogUtils {
 	public static void performBeforeInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
 		final StringBuilder message = new StringBuilder(255);
 
-		message.append("Invoking a method decorated with a annotation").append("\n");
-		message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
-		message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
+		message.append("Invoking a method decorated with a annotation").append(System.lineSeparator());
+		message.append("\tkind       : ").append(joinPoint.getKind()).append(System.lineSeparator());
+		message.append("\tjoinPoint  : ").append(joinPoint).append(System.lineSeparator());
 		message.append("\tannotations: ")
 				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
-				.append("\n");
+				.append(System.lineSeparator());
 		message.append("\ttarget     : ").append(joinPoint.getTarget());
 
 		logger.debug(message.toString());
@@ -57,12 +57,12 @@ class AspectjAnnotationsMethodInterceptorLogUtils {
 	public static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
 		final StringBuilder message = new StringBuilder(255);
 
-		message.append("Invoking a method decorated with a annotation").append("\n");
-		message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
-		message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
+		message.append("Invoking a method decorated with a annotation").append(System.lineSeparator());
+		message.append("\tkind       : ").append(joinPoint.getKind()).append(System.lineSeparator());
+		message.append("\tjoinPoint  : ").append(joinPoint).append(System.lineSeparator());
 		message.append("\tannotations: ")
 				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
-				.append("\n");
+				.append(System.lineSeparator());
 		message.append("\ttarget     : ").append(joinPoint.getTarget());
 
 		logger.debug(message.toString());

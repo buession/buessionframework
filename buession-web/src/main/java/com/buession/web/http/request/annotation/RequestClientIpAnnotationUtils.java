@@ -22,57 +22,56 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.aspect;
+package com.buession.web.http.request.annotation;
 
-import com.buession.aop.aspectj.AbstractAspectjAnnotationsMethodInterceptor;
-import com.buession.core.utils.Assert;
-import com.buession.aop.aspectj.AbstractAspectAnnotationsMethodInterceptor;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Pointcut;
+import com.buession.net.utils.InetAddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.MethodParameter;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.function.Function;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public abstract class AbstractWebAnnotationAspect<T extends AbstractAspectjAnnotationsMethodInterceptor>
-		implements WebAnnotationAspect {
+public class RequestClientIpAnnotationUtils {
 
-	private final T methodInterceptor;
+	private final static Logger logger = LoggerFactory.getLogger(RequestClientIpAnnotationUtils.class);
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private RequestClientIpAnnotationUtils(){
 
-	public AbstractWebAnnotationAspect(final T methodInterceptor){
-		Assert.isNull(methodInterceptor, "The instance for " + getClass().getName() + " cloud not be null.");
-		this.methodInterceptor = methodInterceptor;
 	}
 
-	@Pointcut(EXPRESSIONS)
-	@Override
-	public void anyAnnotatedMethod(){
-		annotatedMethodExecuteLog("anyAnnotatedMethod");
-	}
-
-	@Pointcut(EXPRESSIONS)
-	@Override
-	public void anyAnnotatedMethodCall(JoinPoint joinPoint){
-		annotatedMethodExecuteLog("anyAnnotatedMethodCall");
-	}
-
-	@After("anyAnnotatedMethodCall(joinPoint)")
-	@Override
-	public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
-		annotatedMethodExecuteLog("executeAnnotatedMethod");
-		methodInterceptor.performAfterInterception(joinPoint);
-	}
-
-	protected void annotatedMethodExecuteLog(final String method){
-		if(logger.isDebugEnabled()){
-			logger.debug("Call {}::{}()", getClass().getName(), method);
+	public static boolean checkSupports(final MethodParameter parameter){
+		if(parameter.hasParameterAnnotation(RequestClientIp.class) == false){
+			return false;
 		}
 
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+		return CharSequence.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz) ||
+				InetAddress.class.isAssignableFrom(clazz);
+	}
+
+	public static Object resolveNamedValue(final MethodParameter parameter, final Function<MethodParameter, String> fn){
+		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
+
+		if(Long.class.isAssignableFrom(clazz)){
+			return InetAddressUtils.ip2long(fn.apply(parameter));
+		}else if(CharSequence.class.isAssignableFrom(clazz)){
+			return fn.apply(parameter);
+		}else if(InetAddress.class.isAssignableFrom(clazz)){
+			final String ip = fn.apply(parameter);
+			try{
+				return InetAddress.getByName(ip);
+			}catch(UnknownHostException e){
+				logger.error("IP: <{}> convert to InetAddress error: {}", ip, e.getMessage());
+			}
+		}
+
+		return null;
 	}
 
 }
