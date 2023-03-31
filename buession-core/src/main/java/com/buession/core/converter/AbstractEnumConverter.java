@@ -25,17 +25,17 @@
 package com.buession.core.converter;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
 
 /**
- * 枚举转换器，将字符串转换为枚举
- *
- * @param <E>
- * 		枚举类型
+ * 枚举转换器基类
  *
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 2.3.0
  */
-public class EnumConverter<E extends Enum<E>> extends AbstractEnumConverter<String, E> {
+public abstract class AbstractEnumConverter<T, E extends Enum<E>> implements Converter<T, E> {
+
+	protected final Class<E> enumType;
 
 	/**
 	 * 构造函数
@@ -43,14 +43,22 @@ public class EnumConverter<E extends Enum<E>> extends AbstractEnumConverter<Stri
 	 * @param enumType
 	 * 		枚举类型
 	 */
-	public EnumConverter(final Class<E> enumType){
-		super(enumType);
+	public AbstractEnumConverter(final Class<E> enumType){
+		this.enumType = enumType;
 	}
 
-	@Override
-	public E convert(final String source){
-		Assert.isNull(source, "String cloud not be null.");
-		return doConvert(source);
+	protected E doConvert(final String source){
+		E result = EnumUtils.valueOf(enumType, source);
+
+		if(result == null){
+			result = EnumUtils.valueOf(enumType, source.toUpperCase());
+		}
+
+		if(result == null){
+			result = EnumUtils.valueOf(enumType, source.toLowerCase());
+		}
+
+		return result;
 	}
 
 }

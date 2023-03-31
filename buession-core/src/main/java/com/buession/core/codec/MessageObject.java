@@ -72,13 +72,13 @@ public class MessageObject implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o){
-		if(this == o){
+	public boolean equals(Object obj){
+		if(this == obj){
 			return true;
 		}
 
-		if((o instanceof MessageObject)){
-			MessageObject that = (MessageObject) o;
+		if(obj instanceof MessageObject){
+			MessageObject that = (MessageObject) obj;
 			return code == that.code;
 		}
 

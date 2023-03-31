@@ -25,7 +25,6 @@
 package com.buession.core.converter;
 
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.EnumUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -39,9 +38,7 @@ import java.nio.charset.StandardCharsets;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class BinaryEnumConverter<E extends Enum<E>> implements Converter<byte[], E> {
-
-	private final Class<E> enumType;
+public class BinaryEnumConverter<E extends Enum<E>> extends AbstractEnumConverter<byte[], E> {
 
 	private final Charset charset;
 
@@ -64,26 +61,14 @@ public class BinaryEnumConverter<E extends Enum<E>> implements Converter<byte[],
 	 * 		字符串
 	 */
 	public BinaryEnumConverter(final Class<E> enumType, final Charset charset){
-		this.enumType = enumType;
+		super(enumType);
 		this.charset = charset;
 	}
 
 	@Override
 	public E convert(final byte[] source){
 		Assert.isNull(source, "Source byte cloud not be null.");
-		final String str = new String(source, charset);
-
-		E result = EnumUtils.valueOf(enumType, str);
-
-		if(result == null){
-			result = EnumUtils.valueOf(enumType, str.toUpperCase());
-		}
-
-		if(result == null){
-			result = EnumUtils.valueOf(enumType, str.toLowerCase());
-		}
-
-		return result;
+		return doConvert(new String(source, charset));
 	}
 
 }
