@@ -11,10 +11,12 @@
 
 ### 🔔 变化
 - **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler
+- **buession-web：** AbstractRestController 添加主键类型、数据传输对象类型、数据输出对象类型
 
 ### 🐞 Bug 修复
 
 - **buession-jdbc：** 修复 DataSource 未设置 PoolConfiguration 创建原生 DataSource 空指针 BUG
+- **buession-web：** AbstractBasicRestController 无法调用重写 pageNotFound(final String uri) 方法 BUG
 
 
 ---

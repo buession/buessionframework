@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.mvc.controller;
@@ -34,36 +34,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Reactive 控制器基类
+ * Reactive RESTful 控制器基类
+ *
+ * @param <P>
+ * 		主键类型
+ * @param <DTO>
+ * 		数据传输对象模型
+ * @param <VO>
+ * 		数据输出对象模型
  *
  * @author Yong.Teng
  */
-public abstract class AbstractBasicRestController<P, E, V> extends AbstractRestController {
+public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRestController<P, DTO, VO> {
 
 	@RequestMapping(path = "", method = RequestMethod.POST)
-	public Response<V> add(ServerHttpRequest request, ServerHttpResponse response, @RequestBody E e){
+	public Response<VO> add(ServerHttpRequest request, ServerHttpResponse response, @RequestBody DTO e){
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-	public Response<V> edit(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id,
-							@RequestBody E e){
+	public Response<VO> edit(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id,
+							 @RequestBody DTO e){
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public Response<V> detail(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id){
+	public Response<VO> detail(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id){
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-	public Response<V> delete(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id){
+	public Response<VO> delete(ServerHttpRequest request, ServerHttpResponse response, @PathVariable(name = "id") P id){
 		return pageNotFound(request);
 	}
 
-	@SuppressWarnings({"unchecked"})
-	protected Response<V> pageNotFound(final ServerHttpRequest request){
-		return (Response<V>) super.pageNotFound(request.getPath().toString());
+	protected Response<VO> pageNotFound(final ServerHttpRequest request){
+		return pageNotFound(request.getPath().toString());
 	}
 
 }
