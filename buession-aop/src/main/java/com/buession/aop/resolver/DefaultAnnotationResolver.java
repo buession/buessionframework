@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.resolver;
@@ -43,7 +43,7 @@ public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
 		A annotation = method.getAnnotation(clazz);
 		if(annotation == null){
 			Object miThis = mi.getThis();
-			annotation = miThis != null ? miThis.getClass().getAnnotation(clazz) : null;
+			annotation = miThis == null ? null : miThis.getClass().getAnnotation(clazz);
 		}
 
 		return annotation;

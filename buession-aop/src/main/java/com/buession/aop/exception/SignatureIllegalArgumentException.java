@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.exception;
@@ -48,7 +48,7 @@ public class SignatureIllegalArgumentException extends IllegalArgumentException 
 	 */
 	public SignatureIllegalArgumentException(Signature signature){
 		this(signature,
-				"The join point signature is invalid: expected a MethodSignature or an AdviceSignature but was ");
+				"The join point signature is invalid: expected a MethodSignature or an AdviceSignature but was");
 	}
 
 	/**
