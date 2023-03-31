@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.aspect.interceptor;
 
+import com.buession.aop.aspectj.AbstractAspectjAnnotationsMethodInterceptor;
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.aop.aspectj.AbstractAspectAnnotationsMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletHttpCacheAnnotationMethodInterceptor;
@@ -39,7 +39,7 @@ import java.util.Collection;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspectAnnotationsMethodInterceptor {
+public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspectjAnnotationsMethodInterceptor {
 
 	public ServletWebAspectAnnotationsMethodInterceptor(){
 		super();
