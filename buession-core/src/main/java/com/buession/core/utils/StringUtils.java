@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
+import com.buession.core.collect.Arrays;
 import com.buession.lang.Constants;
 
 import java.util.Locale;
@@ -391,13 +392,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}else if(sources.length == 0){
 			return sources;
 		}else{
-			String[] result = new String[sources.length];
-
-			for(int i = 0; i < sources.length; i++){
-				result[i] = sources[i].toLowerCase();
-			}
-
-			return result;
+			return Arrays.map(sources, String.class, String::toLowerCase);
 		}
 	}
 
@@ -417,13 +412,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}else if(sources.length == 0){
 			return sources;
 		}else{
-			String[] result = new String[sources.length];
-
-			for(int i = 0; i < sources.length; i++){
-				result[i] = sources[i].toLowerCase(locale);
-			}
-
-			return result;
+			return Arrays.map(sources, String.class, (v)->v.toLowerCase(locale));
 		}
 	}
 
@@ -441,13 +430,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}else if(sources.length == 0){
 			return sources;
 		}else{
-			String[] result = new String[sources.length];
-
-			for(int i = 0; i < sources.length; i++){
-				result[i] = sources[i].toUpperCase();
-			}
-
-			return result;
+			return Arrays.map(sources, String.class, String::toUpperCase);
 		}
 	}
 
@@ -467,13 +450,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}else if(sources.length == 0){
 			return sources;
 		}else{
-			String[] result = new String[sources.length];
-
-			for(int i = 0; i < sources.length; i++){
-				result[i] = sources[i].toUpperCase(locale);
-			}
-
-			return result;
+			return Arrays.map(sources, String.class, (v)->v.toUpperCase(locale));
 		}
 	}
 

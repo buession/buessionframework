@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -146,7 +146,8 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 		Assert.isNull(object, "Object cloud not be null.");
 		Assert.isNull(method, "Object method cloud not be null.");
 
-		method.setAccessible(true);
+		MethodUtils.setAccessible(method);
+
 		return method.invoke(object);
 	}
 
@@ -172,7 +173,8 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 		Assert.isNull(object, "Object cloud not be null.");
 		Assert.isNull(method, "Object method cloud not be null.");
 
-		method.setAccessible(true);
+		MethodUtils.setAccessible(method);
+
 		return method.invoke(object, arguments);
 	}
 
