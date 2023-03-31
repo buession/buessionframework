@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
@@ -65,8 +65,14 @@ public abstract class AbstractHandlerExceptionResolver
 		extends org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver
 		implements ServletExceptionHandlerResolver {
 
+	/**
+	 * 异常属性名称
+	 */
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
+	/**
+	 * 默认错误视图
+	 */
 	private String defaultErrorView = DEFAULT_ERROR_VIEW;
 
 	private String cacheControl = CACHE_CONTROL;
@@ -75,9 +81,55 @@ public abstract class AbstractHandlerExceptionResolver
 
 	private Map<Exception, String> exceptionViews;
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractHandlerExceptionResolver.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
+	protected final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
+
+	/**
+	 * 返回异常属性名称
+	 *
+	 * @return 异常属性名称
+	 *
+	 * @since 2.2.1
+	 */
+	public String getExceptionAttribute(){
+		return exceptionAttribute;
+	}
+
+	/**
+	 * 设置异常属性名称
+	 *
+	 * @param exceptionAttribute
+	 * 		异常属性名称
+	 *
+	 * @since 2.2.1
+	 */
+	public void setExceptionAttribute(String exceptionAttribute){
+		this.exceptionAttribute = exceptionAttribute;
+	}
+
+	/**
+	 * 返回默认错误视图
+	 *
+	 * @return 默认错误视图
+	 *
+	 * @since 2.2.1
+	 */
+	public String getDefaultErrorView(){
+		return defaultErrorView;
+	}
+
+	/**
+	 * 设置默认错误视图
+	 *
+	 * @param defaultErrorView
+	 * 		默认错误视图
+	 *
+	 * @since 2.2.1
+	 */
+	public void setDefaultErrorView(String defaultErrorView){
+		this.defaultErrorView = defaultErrorView;
+	}
 
 	public String getCacheControl(){
 		return cacheControl;
@@ -108,6 +160,9 @@ public abstract class AbstractHandlerExceptionResolver
 	@Override
 	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response,
 											  @Nullable Object handler, Exception ex){
+		if(logger.isErrorEnabled()){
+			logger.error("Resolve Exception: {}", ex.getMessage(), ex);
+		}
 		ModelAndView mv = doSpecialResolveException(request, response, handler, ex);
 
 		if(mv != null){
@@ -203,7 +258,7 @@ public abstract class AbstractHandlerExceptionResolver
 																 final MethodArgumentNotValidException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -230,7 +285,7 @@ public abstract class AbstractHandlerExceptionResolver
 																	final MissingServletRequestPartException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -255,7 +310,7 @@ public abstract class AbstractHandlerExceptionResolver
 											   @Nullable final Object handler, final BindException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -282,7 +337,7 @@ public abstract class AbstractHandlerExceptionResolver
 																		 final MissingServletRequestParameterException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -309,7 +364,7 @@ public abstract class AbstractHandlerExceptionResolver
 																final ServletRequestBindingException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -335,7 +390,7 @@ public abstract class AbstractHandlerExceptionResolver
 													   @Nullable final Object handler, final TypeMismatchException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -362,7 +417,7 @@ public abstract class AbstractHandlerExceptionResolver
 																 final HttpMessageNotReadableException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -389,7 +444,7 @@ public abstract class AbstractHandlerExceptionResolver
 														 final NoHandlerFoundException ex) throws IOException{
 		pageNotFoundLogger.warn(ex.getMessage());
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -422,7 +477,7 @@ public abstract class AbstractHandlerExceptionResolver
 			response.setHeader("Allow", Arrays.toString(supportedMethods, ", "));
 		}
 
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -449,7 +504,7 @@ public abstract class AbstractHandlerExceptionResolver
 																	 final HttpMediaTypeNotAcceptableException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -482,7 +537,7 @@ public abstract class AbstractHandlerExceptionResolver
 			response.setHeader("Accept", MediaType.toString(mediaTypes));
 		}
 
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -508,7 +563,7 @@ public abstract class AbstractHandlerExceptionResolver
 															  @Nullable final Object handler,
 															  final MissingPathVariableException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -535,7 +590,7 @@ public abstract class AbstractHandlerExceptionResolver
 																 final ConversionNotSupportedException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -562,7 +617,7 @@ public abstract class AbstractHandlerExceptionResolver
 																 final HttpMessageNotWritableException ex)
 			throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -593,7 +648,7 @@ public abstract class AbstractHandlerExceptionResolver
 			logger.warn("Async request timed out");
 		}
 
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	protected boolean acceptTextHtml(final HttpServletRequest request){
@@ -611,8 +666,14 @@ public abstract class AbstractHandlerExceptionResolver
 				new ModelAndView(determineViewName(request, response, ex, httpStatus));
 	}
 
+	@Deprecated
 	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response,
 									 final Exception ex){
+		return doResolve(request, response, null, ex);
+	}
+
+	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response,
+									 @Nullable final Object handler, final Exception ex){
 		request.setAttribute("javax.servlet.error.exception", ex);
 
 		HttpStatus httpStatus = HttpStatus.resolve(response.getStatus());
@@ -624,7 +685,7 @@ public abstract class AbstractHandlerExceptionResolver
 		mv.addObject("message", httpStatus.getReasonPhrase());
 		mv.addObject("status", httpStatus);
 		mv.addObject("timestamp", new Date());
-		mv.addObject(exceptionAttribute, ex);
+		mv.addObject(getExceptionAttribute(), ex);
 
 		applyStatusCodeIfPossible(request, response, httpStatus);
 
@@ -647,13 +708,13 @@ public abstract class AbstractHandlerExceptionResolver
 			viewName = SERIES_VIEWS.get(httpStatus.series());
 		}
 
-		if(viewName == null && defaultErrorView != null){
+		if(viewName == null && getDefaultErrorView() != null){
 			if(logger.isDebugEnabled()){
-				logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView,
+				logger.debug("Resolving to default view '{}' for exception of type [{}]", getDefaultErrorView(),
 						ex.getClass().getName());
 			}
 
-			viewName = defaultErrorView;
+			viewName = getDefaultErrorView();
 		}
 
 		return viewName;

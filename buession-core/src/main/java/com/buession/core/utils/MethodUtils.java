@@ -59,9 +59,7 @@ public class MethodUtils extends org.apache.commons.lang3.reflect.MethodUtils {
 	public static void setAccessible(Method method){
 		Assert.isNull(method, "The method cloud not be null.");
 
-		if((Modifier.isPublic(method.getModifiers()) == false ||
-				Modifier.isPublic(method.getDeclaringClass().getModifiers()) == false ||
-				Modifier.isFinal(method.getModifiers())) && method.isAccessible() == false){
+		if(MemberUtils.isNotAccessible(method) == false && method.isAccessible() == false){
 			method.setAccessible(true);
 		}
 	}

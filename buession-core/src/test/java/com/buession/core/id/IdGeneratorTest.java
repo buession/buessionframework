@@ -40,7 +40,8 @@ public class IdGeneratorTest {
 
 	@Test
 	public void nanoId(){
-		NanoIDIdGenerator idGenerator = new NanoIDIdGenerator();
+		NanoIDIdGenerator idGenerator = new NanoIDIdGenerator(
+				"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray());
 		System.out.println(idGenerator.nextId());
 	}
 

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -74,7 +74,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	@Resource
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractMyBatisDao.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 返回 master SqlSessionTemplate
@@ -352,11 +352,8 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 
 	protected String getStatement(final String dml){
 		final String statement = getStatement();
-		final StringBuilder sb = new StringBuilder(statement.length() + dml.length() + 1);
 
-		sb.append(statement).append('.').append(dml);
-
-		return sb.toString();
+		return statement + '.' + dml;
 	}
 
 }

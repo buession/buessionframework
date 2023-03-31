@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -188,15 +188,15 @@ public class BeanUtils {
 		}
 
 		@Override
-		public void populate(Object bean, Map<String, ? extends Object> properties)
+		public void populate(Object bean, Map<String, ?> properties)
 				throws IllegalAccessException, InvocationTargetException{
 			if(bean != null && properties != null){
 				if(logger.isDebugEnabled()){
 					logger.debug("BeanUtils.populate(" + bean + ", " + properties + ")");
 				}
 
-				for(Map.Entry<String, ? extends Object> e : properties.entrySet()){
-					if(StringUtils.contains(e.getKey(), "_")){
+				for(Map.Entry<String, ?> e : properties.entrySet()){
+					if(StringUtils.contains(e.getKey(), '_')){
 						StringBuilder sb = new StringBuilder(e.getKey().length());
 
 						for(int i = 0; i < e.getKey().length(); i++){
