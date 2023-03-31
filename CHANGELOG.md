@@ -2,7 +2,7 @@
 ===========================
 
 
-## [2.2.1](https://github.com/buession/buession-security/releases/tag/v2.2.1) (2023-xx-xx)
+## [2.2.1](https://github.com/buession/buession-security/releases/tag/v2.2.1) (2023-03-31)
 
 ### 🔨依赖升级
 
