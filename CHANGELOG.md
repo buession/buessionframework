@@ -12,6 +12,10 @@
 ### 🔔 变化
 - **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler
 
+### 🐞 Bug 修复
+
+- **buession-jdbc：** 修复 DataSource 未设置 PoolConfiguration 创建原生 DataSource 空指针 BUG
+
 
 ---
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -37,7 +37,8 @@ import com.buession.jdbc.datasource.config.PoolConfiguration;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public abstract class AbstractDataSource<T extends javax.sql.DataSource, P extends PoolConfiguration> implements DataSource<T, P> {
+public abstract class AbstractDataSource<T extends javax.sql.DataSource, P extends PoolConfiguration>
+		implements DataSource<T, P> {
 
 	/**
 	 * 连接池配置
@@ -68,6 +69,14 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	@Override
 	public void setPoolConfiguration(P poolConfiguration){
 		this.poolConfiguration = poolConfiguration;
+	}
+
+	protected T doCreateDataSource(final T dataSource){
+		if(getPoolConfiguration() != null){
+			applyPoolConfiguration(dataSource, getPoolConfiguration());
+		}
+		
+		return dataSource;
 	}
 
 	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration){

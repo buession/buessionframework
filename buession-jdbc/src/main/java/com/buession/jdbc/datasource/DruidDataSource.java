@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -66,11 +66,7 @@ public class DruidDataSource
 
 	@Override
 	public com.alibaba.druid.pool.DruidDataSource createDataSource(){
-		com.alibaba.druid.pool.DruidDataSource dataSource = new com.alibaba.druid.pool.DruidDataSource();
-
-		applyPoolConfiguration(dataSource, getPoolConfiguration());
-
-		return dataSource;
+		return doCreateDataSource(new com.alibaba.druid.pool.DruidDataSource());
 	}
 
 	@Override

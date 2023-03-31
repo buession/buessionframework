@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -59,11 +59,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 
 	@Override
 	public BasicDataSource createDataSource(){
-		BasicDataSource dataSource = new BasicDataSource();
-
-		applyPoolConfiguration(dataSource, getPoolConfiguration());
-
-		return dataSource;
+		return doCreateDataSource(new BasicDataSource());
 	}
 
 	@Override

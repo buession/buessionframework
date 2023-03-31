@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -60,11 +60,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 
 	@Override
 	public DataSource createDataSource(){
-		DataSource dataSource = new DataSource();
-
-		applyPoolConfiguration(dataSource, getPoolConfiguration());
-
-		return dataSource;
+		return doCreateDataSource(new DataSource());
 	}
 
 	@Override
