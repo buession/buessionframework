@@ -92,26 +92,141 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 		request = new HttpComponentsRequest();
 	}
 
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 */
 	public static ApacheRequestBuilder create(){
 		return new ApacheRequestBuilder();
 	}
 
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static ApacheRequestBuilder create(String url){
 		final ApacheRequestBuilder builder = create();
 		builder.setUrl(url);
 		return builder;
 	}
 
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static ApacheRequestBuilder create(String url, Map<String, Object> parameters){
 		return create(url).setParameters(parameters);
 	}
 
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static ApacheRequestBuilder create(String url, List<Header> headers){
 		return create(url).setHeaders(headers);
 	}
 
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static ApacheRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
 		return create(url, parameters).setHeaders(headers);
+	}
+
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ApacheRequestBuilder create(URI uri){
+		final ApacheRequestBuilder builder = create();
+		builder.setUri(uri);
+		return builder;
+	}
+
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ApacheRequestBuilder create(URI uri, Map<String, Object> parameters){
+		return create(uri).setParameters(parameters);
+	}
+
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ApacheRequestBuilder create(URI uri, List<Header> headers){
+		return create(uri).setHeaders(headers);
+	}
+
+	/**
+	 * 创建 {@link ApacheRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link ApacheRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ApacheRequestBuilder create(URI uri, Map<String, Object> parameters, List<Header> headers){
+		return create(uri, parameters).setHeaders(headers);
 	}
 
 	@Override
@@ -122,12 +237,6 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 							protocolVersion.getMinor()));
 		}
 
-		return this;
-	}
-
-	@Override
-	public ApacheRequestBuilder setUrl(String url){
-		this.url = url;
 		return this;
 	}
 
@@ -263,7 +372,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 			}
 		}
 
-		request.getHttpRequest().setURI(URI.create(request.getUrl()));
+		request.getHttpRequest().setURI(request.getUri());
 
 		return request;
 	}

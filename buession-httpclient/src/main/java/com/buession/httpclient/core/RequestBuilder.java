@@ -19,11 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +59,30 @@ public interface RequestBuilder<R extends Request> {
 	 * @return 请求构建器
 	 */
 	RequestBuilder<R> setUrl(String url);
+
+	/**
+	 * 设置请求 URL
+	 *
+	 * @param url
+	 * 		请求 URL
+	 *
+	 * @return 请求构建器
+	 *
+	 * @since 2.3.0
+	 */
+	RequestBuilder<R> setUrl(URL url);
+
+	/**
+	 * 设置请求 URL
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 *
+	 * @return 请求构建器
+	 *
+	 * @since 2.3.0
+	 */
+	RequestBuilder<R> setUri(URI uri);
 
 	/**
 	 * 设置请求头

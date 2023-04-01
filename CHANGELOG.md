@@ -10,12 +10,21 @@
 
 
 ### 🔔 变化
-- **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler
+- **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler【3.0.0 版本删除】
+- **buession-httpclient：** 废弃 Request.setUrl(String url) 使用 Request.setUri(URI uri) 替代【3.0.0 版本删除】
 - **buession-web：** AbstractRestController 添加主键类型、数据传输对象类型、数据输出对象类型
+
+
+### ⭐ 新特性
+
+- **buession-httpclient：** 新增 HTTP 异步请求客户端
+- **buession-httpclient：** 请求方法支持传 URI
+
 
 ### 🐞 Bug 修复
 
 - **buession-jdbc：** 修复 DataSource 未设置 PoolConfiguration 创建原生 DataSource 空指针 BUG
+- **buession-httpclient：** HttpClient request 方法，无法发送 report、proppatch 请求
 - **buession-web：** AbstractBasicRestController 无法调用重写 pageNotFound(final String uri) 方法 BUG
 
 

@@ -22,74 +22,37 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.core.concurrent;
 
-import java.net.URI;
-import java.util.List;
+import com.buession.httpclient.core.Response;
 
 /**
+ * 用于异步 HTTP 请求响应处理
+ *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class Request {
+public interface FutureCallback {
 
-	private RequestMethod method;
+	/**
+	 * 当 HTTP 请求成功完成并且服务器返回响应时调用此方法
+	 *
+	 * @param response
+	 * 		HTTP 响应
+	 */
+	void completed(Response response);
 
-	@Deprecated
-	private String url;
+	/**
+	 * 当 HTTP 请求由于异常而失败时调用此方法
+	 *
+	 * @param ex
+	 * 		导致失败的异常。
+	 */
+	void failed(Exception ex);
 
-	private URI uri;
-
-	private List<Header> headers;
-
-	private RequestBody<?> requestBody;
-
-	public RequestMethod getMethod(){
-		return method;
-	}
-
-	public void setMethod(RequestMethod method){
-		this.method = method;
-	}
-
-	public String getUrl(){
-		return url;
-	}
-
-	@Deprecated
-	public void setUrl(String url){
-		this.url = url;
-		this.uri = URI.create(url);
-	}
-
-	public URI getUri(){
-		return uri;
-	}
-
-	public void setUri(URI uri){
-		this.uri = uri;
-		this.url = uri.toString();
-	}
-
-	public List<Header> getHeaders(){
-		return headers;
-	}
-
-	public void setHeaders(List<Header> headers){
-		this.headers = headers;
-	}
-
-	public RequestBody<?> getRequestBody(){
-		return requestBody;
-	}
-
-	public void setRequestBody(RequestBody<?> requestBody){
-		this.requestBody = requestBody;
-	}
-
-	@Override
-	public String toString(){
-		return "Request{" + "method=" + method + ", url='" + uri + '\'' + ", headers=" + headers + ", requestBody=" +
-				requestBody + '}';
-	}
+	/**
+	 * 当 HTTP 请求在完成之前被取消时调用此方法
+	 */
+	void cancelled();
 
 }

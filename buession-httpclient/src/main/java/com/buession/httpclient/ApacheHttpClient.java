@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
@@ -157,129 +158,129 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	}
 
 	@Override
-	public Response get(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response get(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).get());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).get());
 	}
 
 	@Override
-	public Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	public Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).post(data));
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).post(data));
 	}
 
 	@Override
-	public Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	public Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).patch(data));
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).patch(data));
 	}
 
 	@Override
-	public Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	public Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).put(data));
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).put(data));
 	}
 
 	@Override
-	public Response delete(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response delete(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).delete());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).delete());
 	}
 
 	@Override
-	public Response connect(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response connect(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).connect());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).connect());
 	}
 
 	@Override
-	public Response trace(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response trace(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).trace());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).trace());
 	}
 
 	@Override
-	public Response copy(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response copy(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).copy());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).copy());
 	}
 
 	@Override
-	public Response move(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response move(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).move());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).move());
 	}
 
 	@Override
-	public Response head(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response head(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).head());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).head());
 	}
 
 	@Override
-	public Response options(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response options(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).options());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).options());
 	}
 
 	@Override
-	public Response link(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response link(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).link());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).link());
 	}
 
 	@Override
-	public Response unlink(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response unlink(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).unlink());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlink());
 	}
 
 	@Override
-	public Response purge(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response purge(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).purge());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).purge());
 	}
 
 	@Override
-	public Response lock(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response lock(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).lock());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).lock());
 	}
 
 	@Override
-	public Response unlock(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response unlock(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).unlock());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlock());
 	}
 
 	@Override
-	public Response propfind(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response propfind(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).propfind());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).propfind());
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	public Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).proppatch(data));
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).proppatch(data));
 	}
 
 	@Override
-	public Response report(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	public Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).report(data));
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).report(data));
 	}
 
 	@Override
-	public Response view(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response view(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).view());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).view());
 	}
 
 	@Override
-	public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response wrapped(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(url, parameters, headers).wrapped());
+		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).wrapped());
 	}
 
 	protected Response doRequest(final ApacheRequestBuilder builder)

@@ -19,17 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
-import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
+import com.buession.httpclient.core.concurrent.FutureCallback;
 import com.buession.httpclient.exception.RequestException;
 
 import java.io.IOException;
@@ -38,49 +37,23 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
- * Http 客户端
+ * Http 异步客户端
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public interface HttpClient {
-
-	/**
-	 * 获取连接管理器
-	 *
-	 * @return 连接管理器
-	 */
-	ConnectionManager getConnectionManager();
-
-	/**
-	 * 设置连接管理器
-	 *
-	 * @param connectionManager
-	 * 		连接管理器
-	 */
-	void setConnectionManager(ConnectionManager connectionManager);
-
-	/**
-	 * 获取 HTTP 协议版本
-	 *
-	 * @return HTTP 协议版本
-	 */
-	ProtocolVersion getHttpVersion();
-
-	/**
-	 * 设置 HTTP 协议版本
-	 *
-	 * @param httpVersion
-	 * 		HTTP 协议版本
-	 */
-	void setHttpVersion(ProtocolVersion httpVersion);
+public interface HttpAsyncClient {
 
 	/**
 	 * GET 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -89,8 +62,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(String url) throws IOException, RequestException{
-		return get(URI.create(url));
+	default Future<Response> get(String url, FutureCallback callback) throws IOException, RequestException{
+		return get(URI.create(url), callback);
 	}
 
 	/**
@@ -98,6 +71,8 @@ public interface HttpClient {
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -105,15 +80,16 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response get(URI uri) throws IOException, RequestException;
+	Future<Response> get(URI uri, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -122,9 +98,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(URL url) throws IOException, RequestException{
+	default Future<Response> get(URL url, FutureCallback callback) throws IOException, RequestException{
 		try{
-			return get(url.toURI());
+			return get(url.toURI(), callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -137,6 +113,8 @@ public interface HttpClient {
 	 * 		请求 URL
 	 * @param parameters
 	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -145,894 +123,20 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return get(URI.create(url), parameters);
-	}
-
-	/**
-	 * GET 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response get(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * GET 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response get(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return get(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * GET 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response get(String url, List<Header> headers) throws IOException, RequestException{
-		return get(URI.create(url), headers);
-	}
-
-	/**
-	 * GET 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response get(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * GET 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response get(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return get(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * GET 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response get(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return get(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * GET 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response get(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * GET 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response get(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return get(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url) throws IOException, RequestException{
-		return post(URI.create(url));
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url) throws IOException, RequestException{
-		try{
-			return post(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return post(URI.create(url), parameters);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, List<Header> headers) throws IOException, RequestException{
-		return post(URI.create(url), headers);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return post(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return post(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, RequestBody<?> data) throws IOException, RequestException{
-		return post(URI.create(url), data);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		return post(URI.create(url), data, parameters);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return post(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return post(URI.create(url), data, headers);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		return post(URI.create(url), data, parameters, headers);
-	}
-
-	/**
-	 * POST 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
-
-	/**
-	 * POST 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return post(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url) throws IOException, RequestException{
-		return patch(URI.create(url));
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url) throws IOException, RequestException{
-		try{
-			return patch(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return patch(URI.create(url), parameters);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, List<Header> headers) throws IOException, RequestException{
-		return patch(URI.create(url), headers);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, Map<String, Object> parameters, List<Header> headers)
+	default Future<Response> get(String url, Map<String, Object> parameters, FutureCallback callback)
 			throws IOException, RequestException{
-		return patch(URI.create(url), parameters, headers);
+		return get(URI.create(url), parameters, callback);
 	}
 
 	/**
-	 * PATCH 请求
+	 * GET 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
 	 * @param parameters
 	 * 		请求参数
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -1040,19 +144,19 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response patch(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+	Future<Response> get(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * GET 请求
 	 *
 	 * @param url
 	 * 		请求 URL
 	 * @param parameters
 	 * 		请求参数
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -1061,4576 +165,24 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return patch(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data) throws IOException, RequestException{
-		return patch(URI.create(url), data);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		return patch(URI.create(url), data, parameters);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return patch(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return patch(URI.create(url), data, headers);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		return patch(URI.create(url), data, parameters, headers);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url) throws IOException, RequestException{
-		return put(URI.create(url));
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url) throws IOException, RequestException{
-		try{
-			return put(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return put(URI.create(url), parameters);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, List<Header> headers) throws IOException, RequestException{
-		return put(URI.create(url), headers);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return put(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return put(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, RequestBody<?> data) throws IOException, RequestException{
-		return put(URI.create(url), data);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		return put(URI.create(url), data, parameters);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return put(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return put(URI.create(url), data, headers);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		return put(URI.create(url), data, parameters, headers);
-	}
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
-
-	/**
-	 * PUT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return put(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(String url) throws IOException, RequestException{
-		return delete(URI.create(url));
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response delete(URI uri) throws IOException, RequestException;
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(URL url) throws IOException, RequestException{
-		try{
-			return delete(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return delete(URI.create(url), parameters);
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response delete(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(String url, List<Header> headers) throws IOException, RequestException{
-		return delete(URI.create(url), headers);
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response delete(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return delete(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response delete(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * DELETE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return delete(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(String url) throws IOException, RequestException{
-		return connect(URI.create(url));
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response connect(URI uri) throws IOException, RequestException;
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(URL url) throws IOException, RequestException{
-		try{
-			return connect(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return connect(URI.create(url), parameters);
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response connect(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(String url, List<Header> headers) throws IOException, RequestException{
-		return connect(URI.create(url), headers);
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response connect(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return connect(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response connect(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
-
-	/**
-	 * CONNECT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return connect(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(String url) throws IOException, RequestException{
-		return trace(URI.create(url));
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response trace(URI uri) throws IOException, RequestException;
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(URL url) throws IOException, RequestException{
-		try{
-			return trace(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return trace(URI.create(url), parameters);
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response trace(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(String url, List<Header> headers) throws IOException, RequestException{
-		return trace(URI.create(url), headers);
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response trace(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return trace(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response trace(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * TRACE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return trace(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(String url) throws IOException, RequestException{
-		return copy(URI.create(url));
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response copy(URI uri) throws IOException, RequestException;
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(URL url) throws IOException, RequestException{
-		try{
-			return copy(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return copy(URI.create(url), parameters);
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response copy(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(String url, List<Header> headers) throws IOException, RequestException{
-		return copy(URI.create(url), headers);
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response copy(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return copy(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response copy(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * COPY 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return copy(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(String url) throws IOException, RequestException{
-		return move(URI.create(url));
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response move(URI uri) throws IOException, RequestException;
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(URL url) throws IOException, RequestException{
-		try{
-			return move(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return move(URI.create(url), parameters);
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response move(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return move(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(String url, List<Header> headers) throws IOException, RequestException{
-		return move(URI.create(url), headers);
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response move(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return move(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return move(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response move(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * MOVE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return move(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(String url) throws IOException, RequestException{
-		return head(URI.create(url));
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response head(URI uri) throws IOException, RequestException;
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(URL url) throws IOException, RequestException{
-		try{
-			return head(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return head(URI.create(url), parameters);
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response head(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return head(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(String url, List<Header> headers) throws IOException, RequestException{
-		return head(URI.create(url), headers);
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response head(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return head(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return head(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response head(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * HEAD 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return head(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(String url) throws IOException, RequestException{
-		return options(URI.create(url));
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response options(URI uri) throws IOException, RequestException;
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(URL url) throws IOException, RequestException{
-		try{
-			return options(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return options(URI.create(url), parameters);
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response options(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return options(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(String url, List<Header> headers) throws IOException, RequestException{
-		return options(URI.create(url), headers);
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response options(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return options(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return options(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response options(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
-
-	/**
-	 * OPTIONS 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return options(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(String url) throws IOException, RequestException{
-		return link(URI.create(url));
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response link(URI uri) throws IOException, RequestException;
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(URL url) throws IOException, RequestException{
-		try{
-			return link(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return link(URI.create(url), parameters);
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response link(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return link(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(String url, List<Header> headers) throws IOException, RequestException{
-		return link(URI.create(url), headers);
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response link(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return link(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return link(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response link(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * LINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return link(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(String url) throws IOException, RequestException{
-		return unlink(URI.create(url));
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlink(URI uri) throws IOException, RequestException;
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(URL url) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return unlink(URI.create(url), parameters);
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlink(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(String url, List<Header> headers) throws IOException, RequestException{
-		return unlink(URI.create(url), headers);
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlink(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return unlink(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlink(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * UNLINK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return unlink(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(String url) throws IOException, RequestException{
-		return purge(URI.create(url));
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response purge(URI uri) throws IOException, RequestException;
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(URL url) throws IOException, RequestException{
-		try{
-			return purge(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return purge(URI.create(url), parameters);
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response purge(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(String url, List<Header> headers) throws IOException, RequestException{
-		return purge(URI.create(url), headers);
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response purge(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return purge(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response purge(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PURGE 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return purge(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(String url) throws IOException, RequestException{
-		return lock(URI.create(url));
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response lock(URI uri) throws IOException, RequestException;
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(URL url) throws IOException, RequestException{
-		try{
-			return lock(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return lock(URI.create(url), parameters);
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response lock(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(String url, List<Header> headers) throws IOException, RequestException{
-		return lock(URI.create(url), headers);
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response lock(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return lock(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response lock(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * LOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return lock(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(String url) throws IOException, RequestException{
-		return unlock(URI.create(url));
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlock(URI uri) throws IOException, RequestException;
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(URL url) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return unlock(URI.create(url), parameters);
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlock(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(String url, List<Header> headers) throws IOException, RequestException{
-		return unlock(URI.create(url), headers);
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlock(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return unlock(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response unlock(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * UNLOCK 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return unlock(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(String url) throws IOException, RequestException{
-		return propfind(URI.create(url));
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response propfind(URI uri) throws IOException, RequestException;
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(URL url) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return propfind(URI.create(url), parameters);
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response propfind(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(String url, List<Header> headers) throws IOException, RequestException{
-		return propfind(URI.create(url), headers);
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response propfind(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return propfind(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response propfind(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
-
-	/**
-	 * PROPFIND 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return propfind(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url) throws IOException, RequestException{
-		return proppatch(URI.create(url));
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri) throws IOException, RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return proppatch(URI.create(url), parameters);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, List<Header> headers) throws IOException, RequestException{
-		return proppatch(URI.create(url), headers);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return proppatch(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return proppatch(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, RequestBody<?> data) throws IOException, RequestException{
-		return proppatch(URI.create(url), data);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		return proppatch(URI.create(url), data, parameters);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return proppatch(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, RequestBody<?> data, List<Header> headers) throws IOException,
-			RequestException{
-		return proppatch(URI.create(url), data, headers);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return proppatch(URI.create(url), data, parameters, headers);
-	}
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
-
-	/**
-	 * PROPPATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	default Future<Response> get(URL url, Map<String, Object> parameters, FutureCallback callback)
 			throws IOException, RequestException{
 		try{
-			return proppatch(url.toURI(), data, parameters, headers);
+			return get(url.toURI(), parameters, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 	}
 
 	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url) throws IOException, RequestException{
-		return report(URI.create(url));
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response report(URI uri) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url) throws IOException, RequestException{
-		try{
-			return report(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return report(URI.create(url), parameters);
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response report(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
+	 * GET 请求
 	 *
 	 * @param url
 	 * 		请求 URL
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -5639,334 +191,6384 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, List<Header> headers) throws IOException, RequestException{
-		return report(URI.create(url), headers);
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response report(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return report(URI.create(url), parameters, headers);
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response report(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return report(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url, RequestBody<?> data) throws IOException, RequestException{
-		return report(URI.create(url), data);
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response report(URI uri, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		return report(URI.create(url), data, parameters);
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return report(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return report(URI.create(url), data, headers);
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response report(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * REPORT 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response report(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	default Future<Response> get(String url, List<Header> headers, FutureCallback callback)
 			throws IOException, RequestException{
-		return report(URI.create(url), data, parameters, headers);
+		return get(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> get(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return get(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(String url, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return get(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> get(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return get(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return post(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return post(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return post(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return post(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), data, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return post(url.toURI(), data, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, RequestBody<?> data, Map<String, Object> parameters,
+								  FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), data, parameters, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return post(url.toURI(), data, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), data, headers, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return post(url.toURI(), data, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), data, parameters, headers, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return post(url.toURI(), data, parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return patch(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), data, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), data, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, Map<String, Object> parameters,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), data, parameters, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters,
+								   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), data, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), data, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), data, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, Map<String, Object> parameters,
+								   List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), data, parameters, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return patch(url.toURI(), data, parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return put(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return put(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return put(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return put(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), data, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return put(url.toURI(), data, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, RequestBody<?> data, Map<String, Object> parameters,
+								 FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), data, parameters, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return put(url.toURI(), data, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), data, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return put(url.toURI(), data, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), data, parameters, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		try{
+			return put(url.toURI(), data, parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, FutureCallback callback) throws IOException, RequestException{
+		return delete(URI.create(url), callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return delete(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return delete(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return delete(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return delete(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return delete(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return delete(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(URL url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		try{
+			return delete(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, FutureCallback callback) throws IOException, RequestException{
+		return connect(URI.create(url), callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return connect(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return connect(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return connect(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return connect(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return connect(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return connect(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(URL url, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		try{
+			return connect(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, FutureCallback callback) throws IOException, RequestException{
+		return trace(URI.create(url), callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return trace(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return trace(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return trace(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return trace(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return trace(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return trace(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(URL url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return trace(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, FutureCallback callback) throws IOException, RequestException{
+		return copy(URI.create(url), callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return copy(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return copy(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return copy(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return copy(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return copy(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return copy(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return copy(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, FutureCallback callback) throws IOException, RequestException{
+		return move(URI.create(url), callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return move(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return move(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return move(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return move(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return move(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return move(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return move(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, FutureCallback callback) throws IOException, RequestException{
+		return head(URI.create(url), callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return head(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return head(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return head(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return head(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return head(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return head(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return head(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, FutureCallback callback) throws IOException, RequestException{
+		return options(URI.create(url), callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return options(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return options(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return options(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return options(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return options(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return options(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(URL url, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		try{
+			return options(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, FutureCallback callback) throws IOException, RequestException{
+		return link(URI.create(url), callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return link(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return link(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return link(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return link(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return link(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return link(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return link(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, FutureCallback callback) throws IOException, RequestException{
+		return unlink(URI.create(url), callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return unlink(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlink(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return unlink(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlink(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return unlink(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return unlink(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(URL url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		try{
+			return unlink(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, FutureCallback callback) throws IOException, RequestException{
+		return purge(URI.create(url), callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return purge(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return purge(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return purge(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return purge(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return purge(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return purge(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(URL url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return purge(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, FutureCallback callback) throws IOException, RequestException{
+		return lock(URI.create(url), callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return lock(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return lock(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return lock(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return lock(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return lock(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return lock(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return lock(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, FutureCallback callback) throws IOException, RequestException{
+		return unlock(URI.create(url), callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return unlock(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlock(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return unlock(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlock(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return unlock(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return unlock(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(URL url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		try{
+			return unlock(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, FutureCallback callback) throws IOException, RequestException{
+		return propfind(URI.create(url), callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return propfind(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return propfind(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return propfind(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return propfind(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return propfind(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, Map<String, Object> parameters, List<Header> headers,
+									  FutureCallback callback) throws IOException, RequestException{
+		return propfind(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(URL url, Map<String, Object> parameters, List<Header> headers,
+									  FutureCallback callback) throws IOException, RequestException{
+		try{
+			return propfind(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, FutureCallback callback) throws IOException, RequestException{
+		return proppatch(URI.create(url), callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return proppatch(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return proppatch(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return proppatch(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, Map<String, Object> parameters, List<Header> headers,
+									   FutureCallback callback) throws IOException, RequestException{
+		return proppatch(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, Map<String, Object> parameters, List<Header> headers,
+									   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return proppatch(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), data, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return proppatch(url.toURI(), data, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, RequestBody<?> data, Map<String, Object> parameters,
+									   FutureCallback callback) throws IOException, RequestException{
+		return proppatch(URI.create(url), data, parameters, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters,
+									   FutureCallback callback) throws IOException, RequestException{
+		try{
+			return proppatch(url.toURI(), data, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), data, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return proppatch(url.toURI(), data, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, RequestBody<?> data, Map<String, Object> parameters,
+									   List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		return proppatch(URI.create(url), data, parameters, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters,
+									   List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return proppatch(url.toURI(), data, parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, FutureCallback callback) throws IOException, RequestException{
+		try{
+			return report(url.toURI(), callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return report(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return report(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		try{
+			return report(url.toURI(), parameters, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), data, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return report(url.toURI(), data, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, RequestBody<?> data, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), data, parameters, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		try{
+			return report(url.toURI(), data, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), data, headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return report(url.toURI(), data, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, RequestBody<?> data, Map<String, Object> parameters,
+									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), data, parameters, headers, callback);
 	}
 
 	/**
@@ -5980,6 +6582,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -5987,10 +6591,9 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
+	Future<Response> report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6003,6 +6606,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6011,10 +6616,10 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
+	default Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
 		try{
-			return report(url.toURI(), data, parameters, headers);
+			return report(url.toURI(), data, parameters, headers, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -6025,6 +6630,8 @@ public interface HttpClient {
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6033,8 +6640,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(String url) throws IOException, RequestException{
-		return view(URI.create(url));
+	default Future<Response> view(String url, FutureCallback callback) throws IOException, RequestException{
+		return view(URI.create(url), callback);
 	}
 
 	/**
@@ -6042,6 +6649,8 @@ public interface HttpClient {
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6049,15 +6658,16 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response view(URI uri) throws IOException, RequestException;
+	Future<Response> view(URI uri, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6066,129 +6676,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url) throws IOException, RequestException{
+	default Future<Response> view(URL url, FutureCallback callback) throws IOException, RequestException{
 		try{
-			return view(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * VIEW 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response view(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return view(URI.create(url), parameters);
-	}
-
-	/**
-	 * VIEW 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response view(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * VIEW 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return view(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * VIEW 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response view(String url, List<Header> headers) throws IOException, RequestException{
-		return view(URI.create(url), headers);
-	}
-
-	/**
-	 * VIEW 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response view(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * VIEW 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response view(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return view(url.toURI(), headers);
+			return view(url.toURI(), callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -6201,8 +6691,8 @@ public interface HttpClient {
 	 * 		请求 URL
 	 * @param parameters
 	 * 		请求参数
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6211,9 +6701,146 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return view(URI.create(url), parameters, headers);
+	default Future<Response> view(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return view(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return view(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return view(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return view(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(String url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return view(URI.create(url), parameters, headers, callback);
 	}
 
 	/**
@@ -6225,6 +6852,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6232,9 +6861,9 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response view(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+	Future<Response> view(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -6245,6 +6874,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6253,10 +6884,10 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Future<Response> view(URL url, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
 		try{
-			return view(url.toURI(), parameters, headers);
+			return view(url.toURI(), parameters, headers, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -6267,6 +6898,8 @@ public interface HttpClient {
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6275,8 +6908,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(String url) throws IOException, RequestException{
-		return wrapped(URI.create(url));
+	default Future<Response> wrapped(String url, FutureCallback callback) throws IOException, RequestException{
+		return wrapped(URI.create(url), callback);
 	}
 
 	/**
@@ -6284,6 +6917,8 @@ public interface HttpClient {
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6291,15 +6926,16 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response wrapped(URI uri) throws IOException, RequestException;
+	Future<Response> wrapped(URI uri, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6308,129 +6944,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url) throws IOException, RequestException{
+	default Future<Response> wrapped(URL url, FutureCallback callback) throws IOException, RequestException{
 		try{
-			return wrapped(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * WRAPPED 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response wrapped(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return wrapped(URI.create(url), parameters);
-	}
-
-	/**
-	 * WRAPPED 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response wrapped(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * WRAPPED 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * WRAPPED 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response wrapped(String url, List<Header> headers) throws IOException, RequestException{
-		return wrapped(URI.create(url), headers);
-	}
-
-	/**
-	 * WRAPPED 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response wrapped(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * WRAPPED 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response wrapped(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), headers);
+			return wrapped(url.toURI(), callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -6443,8 +6959,8 @@ public interface HttpClient {
 	 * 		请求 URL
 	 * @param parameters
 	 * 		请求参数
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6453,9 +6969,147 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		return wrapped(URI.create(url), parameters, headers);
+	default Future<Response> wrapped(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return wrapped(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return wrapped(url.toURI(), parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return wrapped(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URI uri, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return wrapped(url.toURI(), headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(String url, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return wrapped(URI.create(url), parameters, headers, callback);
 	}
 
 	/**
@@ -6467,6 +7121,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6474,10 +7130,9 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response wrapped(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
+	Future<Response> wrapped(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -6488,6 +7143,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6496,139 +7153,10 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Future<Response> wrapped(URL url, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
 		try{
-			return wrapped(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(String url, RequestMethod requestMethod) throws IOException, RequestException{
-		return request(URI.create(url), requestMethod);
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod) throws IOException, RequestException;
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws
-			IOException, RequestException{
-		return request(URI.create(url), requestMethod, parameters);
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters) throws IOException,
-			RequestException;
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
-			IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, parameters);
+			return wrapped(url.toURI(), parameters, headers, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -6641,8 +7169,8 @@ public interface HttpClient {
 	 * 		请求 URL
 	 * @param requestMethod
 	 * 		请求方法
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6651,9 +7179,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(String url, RequestMethod requestMethod, List<Header> headers) throws IOException,
-			RequestException{
-		return request(URI.create(url), requestMethod, headers);
+	default Future<Response> request(String url, RequestMethod requestMethod, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, callback);
 	}
 
 	/**
@@ -6663,28 +7191,8 @@ public interface HttpClient {
 	 * 		请求 URL
 	 * @param requestMethod
 	 * 		请求方法
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6693,60 +7201,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return request(url.toURI(), requestMethod, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
-							 List<Header> headers) throws IOException, RequestException{
-		return request(URI.create(url), requestMethod, parameters, headers);
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
+	Future<Response> request(URI uri, RequestMethod requestMethod, FutureCallback callback)
 			throws IOException, RequestException;
 
 	/**
@@ -6756,10 +7211,186 @@ public interface HttpClient {
 	 * 		请求 URL
 	 * @param requestMethod
 	 * 		请求方法
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(URL url, RequestMethod requestMethod, FutureCallback callback)
+			throws IOException, RequestException{
+		try{
+			return request(url.toURI(), requestMethod, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
+									 FutureCallback callback) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, parameters, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
+									 FutureCallback callback) throws IOException, RequestException{
+		try{
+			return request(url.toURI(), requestMethod, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, headers, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(URL url, RequestMethod requestMethod, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		try{
+			return request(url.toURI(), requestMethod, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
 	 * @param parameters
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6768,10 +7399,62 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+	default Future<Response> request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
+									 List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
+		return request(URI.create(url), requestMethod, parameters, headers, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
+									 List<Header> headers, FutureCallback callback) throws IOException,
+			RequestException{
 		try{
-			return request(url.toURI(), requestMethod, parameters, headers);
+			return request(url.toURI(), requestMethod, parameters, headers, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -6786,6 +7469,8 @@ public interface HttpClient {
 	 * 		请求方法
 	 * @param data
 	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6794,9 +7479,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
-			RequestException{
-		return request(URI.create(url), requestMethod, data);
+	default Future<Response> request(String url, RequestMethod requestMethod, RequestBody<?> data,
+									 FutureCallback callback) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, data, callback);
 	}
 
 	/**
@@ -6808,26 +7493,8 @@ public interface HttpClient {
 	 * 		请求方法
 	 * @param data
 	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param data
-	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6836,60 +7503,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
-			RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
-							 Map<String, Object> parameters) throws IOException, RequestException{
-		return request(URI.create(url), requestMethod, data, parameters);
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
+	Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, FutureCallback callback)
 			throws IOException, RequestException;
 
 	/**
@@ -6901,8 +7515,8 @@ public interface HttpClient {
 	 * 		请求方法
 	 * @param data
 	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -6911,85 +7525,10 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
+	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, FutureCallback callback)
 			throws IOException, RequestException{
 		try{
-			return request(url.toURI(), requestMethod, data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
-		return request(URI.create(url), requestMethod, data, headers);
-	}
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException;
-
-	/**
-	 * HTTP 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param requestMethod
-	 * 		请求方法
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, headers);
+			return request(url.toURI(), requestMethod, data, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -7006,8 +7545,8 @@ public interface HttpClient {
 	 * 		请求数据
 	 * @param parameters
 	 * 		请求参数
-	 * @param headers
-	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -7016,9 +7555,174 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
-							 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
-		return request(URI.create(url), requestMethod, data, parameters, headers);
+	default Future<Response> request(String url, RequestMethod requestMethod, RequestBody<?> data,
+									 Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, data, parameters, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
+									 Map<String, Object> parameters, FutureCallback callback) throws IOException,
+			RequestException{
+		try{
+			return request(url.toURI(), requestMethod, data, parameters, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, data, headers, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		try{
+			return request(url.toURI(), requestMethod, data, headers, callback);
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, RequestBody<?> data,
+									 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, data, parameters, headers, callback);
 	}
 
 	/**
@@ -7034,6 +7738,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -7041,10 +7747,9 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @since 2.3.0
 	 */
-	Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-					 List<Header> headers) throws IOException, RequestException;
+	Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
+							 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7059,6 +7764,8 @@ public interface HttpClient {
 	 * 		请求参数
 	 * @param headers
 	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -7067,10 +7774,11 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-							 List<Header> headers) throws IOException, RequestException{
+	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
+									 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
 		try{
-			return request(url.toURI(), requestMethod, data, parameters, headers);
+			return request(url.toURI(), requestMethod, data, parameters, headers, callback);
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
