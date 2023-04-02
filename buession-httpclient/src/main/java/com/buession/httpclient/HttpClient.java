@@ -24,9 +24,7 @@
  */
 package com.buession.httpclient;
 
-import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
@@ -34,7 +32,6 @@ import com.buession.httpclient.exception.RequestException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -44,37 +41,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public interface HttpClient {
-
-	/**
-	 * 获取连接管理器
-	 *
-	 * @return 连接管理器
-	 */
-	ConnectionManager getConnectionManager();
-
-	/**
-	 * 设置连接管理器
-	 *
-	 * @param connectionManager
-	 * 		连接管理器
-	 */
-	void setConnectionManager(ConnectionManager connectionManager);
-
-	/**
-	 * 获取 HTTP 协议版本
-	 *
-	 * @return HTTP 协议版本
-	 */
-	ProtocolVersion getHttpVersion();
-
-	/**
-	 * 设置 HTTP 协议版本
-	 *
-	 * @param httpVersion
-	 * 		HTTP 协议版本
-	 */
-	void setHttpVersion(ProtocolVersion httpVersion);
+public interface HttpClient extends IBaseHttpClient {
 
 	/**
 	 * GET 请求
@@ -122,13 +89,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(URL url) throws IOException, RequestException{
-		try{
-			return get(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response get(URL url) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -182,13 +143,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return get(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response get(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -242,13 +197,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return get(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response get(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -267,8 +216,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response get(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return get(URI.create(url), parameters, headers);
 	}
 
@@ -309,14 +258,259 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return get(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response get(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response get(String url, int readTimeout) throws IOException, RequestException{
+		return get(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response get(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response get(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response get(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -364,13 +558,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url) throws IOException, RequestException{
-		try{
-			return post(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -424,13 +612,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -484,13 +666,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -509,8 +685,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response post(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return post(URI.create(url), parameters, headers);
 	}
 
@@ -551,14 +727,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return post(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -612,13 +781,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, RequestBody<?> data) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -637,8 +800,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
+	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return post(URI.create(url), data, parameters);
 	}
 
@@ -658,6 +821,7 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
+	 * @since 2.3.0
 	 */
 	Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
 
@@ -678,14 +842,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return post(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -745,13 +902,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -772,8 +923,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
+	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return post(URI.create(url), data, parameters, headers);
 	}
 
@@ -797,8 +948,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
+	Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -819,37 +970,16 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return post(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url) throws IOException, RequestException{
-		return patch(URI.create(url));
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 *
 	 * @return Response {@link Response}
 	 *
@@ -859,53 +989,53 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response patch(URI uri) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url) throws IOException, RequestException{
-		try{
-			return patch(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response post(String url, int readTimeout) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout);
 	}
 
 	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return patch(URI.create(url), parameters);
-	}
-
-	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param parameters
 	 * 		请求参数
 	 *
@@ -917,118 +1047,120 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response patch(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, List<Header> headers) throws IOException, RequestException{
-		return patch(URI.create(url), headers);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, Map<String, Object> parameters, List<Header> headers)
+	default Response post(String url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return patch(URI.create(url), parameters, headers);
+		return post(URI.create(url), readTimeout, parameters);
 	}
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response post(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param parameters
 	 * 		请求参数
 	 * @param headers
@@ -1042,258 +1174,18 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response patch(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return patch(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response post(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, parameters, headers);
 	}
 
 	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data) throws IOException, RequestException{
-		return patch(URI.create(url), data);
-	}
-
-	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, RequestBody<?> data) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		return patch(URI.create(url), data, parameters);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return patch(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return patch(URI.create(url), data, headers);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 * @since 2.3.0
-	 */
-	Response patch(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		return patch(URI.create(url), data, parameters, headers);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param parameters
 	 * 		请求参数
 	 * @param headers
@@ -1307,14 +1199,243 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
+	Response post(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response post(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data, parameters);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response post(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data, headers);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param data
 	 * 		请求数据
 	 * @param parameters
@@ -1328,15 +1449,62 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
+	 * @since 2.3.0
 	 */
-	default Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  List<Header> headers) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data, parameters, headers);
 	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+				  List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1384,13 +1552,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url) throws IOException, RequestException{
-		try{
-			return put(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1444,13 +1606,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1504,13 +1660,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1571,14 +1721,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return put(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1632,13 +1775,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url, RequestBody<?> data) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1657,8 +1794,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
+	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return put(URI.create(url), data, parameters);
 	}
 
@@ -1678,6 +1815,7 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
+	 * @since 2.3.0
 	 */
 	Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
 
@@ -1698,14 +1836,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return put(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1765,13 +1896,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1792,8 +1917,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
+	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return put(URI.create(url), data, parameters, headers);
 	}
 
@@ -1817,8 +1942,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
+	Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1839,14 +1964,1535 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return put(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, parameters);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, headers);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers) throws IOException,
+			RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 List<Header> headers) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, parameters, headers);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+				 List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url) throws IOException, RequestException{
+		return patch(URI.create(url));
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException{
+		return patch(URI.create(url), parameters);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, List<Header> headers) throws IOException, RequestException{
+		return patch(URI.create(url), headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(URI.create(url), parameters, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, RequestBody<?> data) throws IOException, RequestException{
+		return patch(URI.create(url), data);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return patch(URI.create(url), data, parameters);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return patch(URI.create(url), data, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(URI.create(url), data, parameters, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, parameters);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   List<Header> headers) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, parameters, headers);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+				   List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -1894,13 +3540,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(URL url) throws IOException, RequestException{
-		try{
-			return delete(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response delete(URL url) throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -1954,13 +3594,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response delete(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -2014,13 +3648,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response delete(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -2039,8 +3667,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response delete(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return delete(URI.create(url), parameters, headers);
 	}
 
@@ -2081,14 +3709,259 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return delete(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response delete(String url, int readTimeout) throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response delete(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response delete(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response delete(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2136,13 +4009,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(URL url) throws IOException, RequestException{
-		try{
-			return connect(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response connect(URL url) throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2196,13 +4063,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response connect(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2256,13 +4117,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response connect(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2281,8 +4136,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response connect(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return connect(URI.create(url), parameters, headers);
 	}
 
@@ -2304,8 +4159,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response connect(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
+	Response connect(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2324,14 +4179,260 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return connect(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response connect(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response connect(String url, int readTimeout) throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response connect(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response connect(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response connect(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2379,13 +4480,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(URL url) throws IOException, RequestException{
-		try{
-			return trace(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response trace(URL url) throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2439,13 +4534,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response trace(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2499,13 +4588,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response trace(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2524,8 +4607,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response trace(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return trace(URI.create(url), parameters, headers);
 	}
 
@@ -2566,14 +4649,256 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return trace(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response trace(String url, int readTimeout) throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(String url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response trace(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response trace(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -2621,13 +4946,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(URL url) throws IOException, RequestException{
-		try{
-			return copy(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response copy(URL url) throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -2681,13 +5000,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response copy(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -2741,13 +5054,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response copy(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -2766,8 +5073,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response copy(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return copy(URI.create(url), parameters, headers);
 	}
 
@@ -2808,14 +5115,259 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return copy(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response copy(String url, int readTimeout) throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response copy(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response copy(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response copy(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -2863,13 +5415,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(URL url) throws IOException, RequestException{
-		try{
-			return move(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response move(URL url) throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -2923,13 +5469,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return move(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response move(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -2983,13 +5523,7 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return move(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Response move(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -3008,8 +5542,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response move(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return move(URI.create(url), parameters, headers);
 	}
 
@@ -3050,14 +5584,259 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return move(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response move(String url, int readTimeout) throws IOException, RequestException{
+		return move(URI.create(url), readTimeout);
 	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URL url, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response move(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response move(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response move(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -3106,11 +5885,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response head(URL url) throws IOException, RequestException{
-		try{
-			return head(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->head(URL2URI(url)));
 	}
 
 	/**
@@ -3166,11 +5941,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return head(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->head(URL2URI(url), parameters));
 	}
 
 	/**
@@ -3226,11 +5997,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response head(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return head(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->head(URL2URI(url), headers));
 	}
 
 	/**
@@ -3250,8 +6017,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response head(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return head(URI.create(url), parameters, headers);
 	}
 
@@ -3292,13 +6059,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return head(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response head(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(String url, int readTimeout) throws IOException, RequestException{
+		return head(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response head(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response head(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response head(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -3348,11 +6372,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response options(URL url) throws IOException, RequestException{
-		try{
-			return options(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->options(URL2URI(url)));
 	}
 
 	/**
@@ -3408,11 +6428,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return options(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->options(URL2URI(url), parameters));
 	}
 
 	/**
@@ -3468,11 +6484,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response options(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return options(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->options(URL2URI(url), headers));
 	}
 
 	/**
@@ -3492,8 +6504,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response options(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return options(URI.create(url), parameters, headers);
 	}
 
@@ -3515,8 +6527,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response options(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
+	Response options(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -3535,13 +6547,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return options(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response options(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(String url, int readTimeout) throws IOException, RequestException{
+		return options(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response options(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response options(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response options(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -3591,11 +6860,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response link(URL url) throws IOException, RequestException{
-		try{
-			return link(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->link(URL2URI(url)));
 	}
 
 	/**
@@ -3651,11 +6916,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return link(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->link(URL2URI(url), parameters));
 	}
 
 	/**
@@ -3711,11 +6972,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response link(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return link(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->link(URL2URI(url), headers));
 	}
 
 	/**
@@ -3735,8 +6992,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response link(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return link(URI.create(url), parameters, headers);
 	}
 
@@ -3777,13 +7034,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return link(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response link(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(String url, int readTimeout) throws IOException, RequestException{
+		return link(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response link(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response link(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response link(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -3833,11 +7347,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response unlink(URL url) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->unlink(URL2URI(url)));
 	}
 
 	/**
@@ -3893,11 +7403,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->unlink(URL2URI(url), parameters));
 	}
 
 	/**
@@ -3953,11 +7459,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response unlink(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->unlink(URL2URI(url), headers));
 	}
 
 	/**
@@ -3977,8 +7479,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response unlink(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return unlink(URI.create(url), parameters, headers);
 	}
 
@@ -4019,13 +7521,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return unlink(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response unlink(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(String url, int readTimeout) throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlink(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlink(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlink(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -4075,11 +7834,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response purge(URL url) throws IOException, RequestException{
-		try{
-			return purge(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->purge(URL2URI(url)));
 	}
 
 	/**
@@ -4135,11 +7890,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->purge(URL2URI(url), parameters));
 	}
 
 	/**
@@ -4195,11 +7946,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response purge(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->purge(URL2URI(url), headers));
 	}
 
 	/**
@@ -4219,8 +7966,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response purge(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return purge(URI.create(url), parameters, headers);
 	}
 
@@ -4261,13 +8008,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return purge(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response purge(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(String url, int readTimeout) throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response purge(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response purge(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response purge(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -4317,11 +8321,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response lock(URL url) throws IOException, RequestException{
-		try{
-			return lock(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->lock(URL2URI(url)));
 	}
 
 	/**
@@ -4377,11 +8377,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->lock(URL2URI(url), parameters));
 	}
 
 	/**
@@ -4437,11 +8433,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response lock(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->lock(URL2URI(url), headers));
 	}
 
 	/**
@@ -4461,8 +8453,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response lock(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return lock(URI.create(url), parameters, headers);
 	}
 
@@ -4503,13 +8495,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return lock(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response lock(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(String url, int readTimeout) throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response lock(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response lock(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response lock(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -4559,11 +8808,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response unlock(URL url) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->unlock(URL2URI(url)));
 	}
 
 	/**
@@ -4619,11 +8864,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->unlock(URL2URI(url), parameters));
 	}
 
 	/**
@@ -4679,11 +8920,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response unlock(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->unlock(URL2URI(url), headers));
 	}
 
 	/**
@@ -4703,8 +8940,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response unlock(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return unlock(URI.create(url), parameters, headers);
 	}
 
@@ -4745,13 +8982,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return unlock(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response unlock(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(String url, int readTimeout) throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlock(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlock(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlock(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -4801,11 +9295,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response propfind(URL url) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->propfind(URL2URI(url)));
 	}
 
 	/**
@@ -4861,11 +9351,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->propfind(URL2URI(url), parameters));
 	}
 
 	/**
@@ -4921,11 +9407,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response propfind(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->propfind(URL2URI(url), headers));
 	}
 
 	/**
@@ -4945,8 +9427,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response propfind(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return propfind(URI.create(url), parameters, headers);
 	}
 
@@ -4968,8 +9450,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response propfind(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
+	Response propfind(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -4988,13 +9470,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return propfind(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response propfind(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(String url, int readTimeout) throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response propfind(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response propfind(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response propfind(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -5044,11 +9783,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(URL url) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->proppatch(URL2URI(url)));
 	}
 
 	/**
@@ -5104,11 +9839,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->proppatch(URL2URI(url), parameters));
 	}
 
 	/**
@@ -5164,11 +9895,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->proppatch(URL2URI(url), headers));
 	}
 
 	/**
@@ -5211,8 +9938,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response proppatch(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
+	Response proppatch(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5231,13 +9958,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return proppatch(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), parameters, headers));
 	}
 
 	/**
@@ -5293,11 +10016,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->proppatch(URL2URI(url), data));
 	}
 
 	/**
@@ -5317,8 +10036,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
+	default Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return proppatch(URI.create(url), data, parameters);
 	}
 
@@ -5338,9 +10057,10 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
+	 * @since 2.3.0
 	 */
-	Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException;
+	Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5359,13 +10079,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return proppatch(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), data, parameters));
 	}
 
 	/**
@@ -5385,8 +10101,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(String url, RequestBody<?> data, List<Header> headers) throws IOException,
-			RequestException{
+	default Response proppatch(String url, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
 		return proppatch(URI.create(url), data, headers);
 	}
 
@@ -5428,11 +10144,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->proppatch(URL2URI(url), data, headers));
 	}
 
 	/**
@@ -5479,8 +10191,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
+	Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5503,11 +10215,558 @@ public interface HttpClient {
 	 */
 	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->proppatch(URL2URI(url), data, parameters, headers));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		Disconnected from the target VM, address: '127.0.0.1:60884', transport: 'socket'
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, parameters);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, headers);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data, headers));
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							   List<Header> headers) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, parameters, headers);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+					   List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							   List<Header> headers) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers));
 	}
 
 	/**
@@ -5557,11 +10816,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response report(URL url) throws IOException, RequestException{
-		try{
-			return report(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->report(URL2URI(url)));
 	}
 
 	/**
@@ -5617,11 +10872,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->report(URL2URI(url), parameters));
 	}
 
 	/**
@@ -5677,11 +10928,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response report(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->report(URL2URI(url), headers));
 	}
 
 	/**
@@ -5701,8 +10948,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response report(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return report(URI.create(url), parameters, headers);
 	}
 
@@ -5743,13 +10990,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return report(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response report(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), parameters, headers));
 	}
 
 	/**
@@ -5805,11 +11048,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response report(URL url, RequestBody<?> data) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->report(URL2URI(url), data));
 	}
 
 	/**
@@ -5829,8 +11068,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
+	default Response report(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return report(URI.create(url), data, parameters);
 	}
 
@@ -5850,6 +11089,7 @@ public interface HttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
+	 * @since 2.3.0
 	 */
 	Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
 
@@ -5870,13 +11110,9 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException,
-			RequestException{
-		try{
-			return report(url.toURI(), data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), data, parameters));
 	}
 
 	/**
@@ -5938,11 +11174,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->report(URL2URI(url), data, headers));
 	}
 
 	/**
@@ -5989,8 +11221,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException;
+	Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6011,13 +11243,559 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers) throws
-			IOException, RequestException{
-		try{
-			return report(url.toURI(), data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), data, parameters, headers));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, parameters);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data, parameters));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, headers);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data, headers));
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							List<Header> headers) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, parameters, headers);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							List<Header> headers) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data, parameters, headers));
 	}
 
 	/**
@@ -6067,11 +11845,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response view(URL url) throws IOException, RequestException{
-		try{
-			return view(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->view(URL2URI(url)));
 	}
 
 	/**
@@ -6127,11 +11901,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return view(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->view(URL2URI(url), parameters));
 	}
 
 	/**
@@ -6187,11 +11957,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response view(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return view(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->view(URL2URI(url), headers));
 	}
 
 	/**
@@ -6211,8 +11977,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response view(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return view(URI.create(url), parameters, headers);
 	}
 
@@ -6253,13 +12019,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return view(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response view(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(String url, int readTimeout) throws IOException, RequestException{
+		return view(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response view(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response view(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response view(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -6309,11 +12332,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response wrapped(URL url) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI());
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->wrapped(URL2URI(url)));
 	}
 
 	/**
@@ -6369,11 +12388,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->wrapped(URL2URI(url), parameters));
 	}
 
 	/**
@@ -6429,11 +12444,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response wrapped(URL url, List<Header> headers) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->wrapped(URL2URI(url), headers));
 	}
 
 	/**
@@ -6453,8 +12464,8 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
+	default Response wrapped(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return wrapped(URI.create(url), parameters, headers);
 	}
 
@@ -6476,8 +12487,8 @@ public interface HttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response wrapped(URI uri, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException;
+	Response wrapped(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -6496,13 +12507,270 @@ public interface HttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
-			RequestException{
-		try{
-			return wrapped(url.toURI(), parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	default Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), parameters, headers));
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(String url, int readTimeout) throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response wrapped(URI uri, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout));
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, parameters);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response wrapped(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout, parameters));
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, headers);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response wrapped(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout, headers));
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, parameters, headers);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	/**
@@ -6558,11 +12826,7 @@ public interface HttpClient {
 	 * 		请求异常
 	 */
 	default Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod));
 	}
 
 	/**
@@ -6627,11 +12891,7 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
 			IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, parameters));
 	}
 
 	/**
@@ -6695,11 +12955,7 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws IOException,
 			RequestException{
-		try{
-			return request(url.toURI(), requestMethod, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, headers));
 	}
 
 	/**
@@ -6770,11 +13026,7 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, parameters, headers));
 	}
 
 	/**
@@ -6838,11 +13090,7 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
 			RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, data));
 	}
 
 	/**
@@ -6913,11 +13161,7 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, parameters);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, data, parameters));
 	}
 
 	/**
@@ -6988,11 +13232,7 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, data, headers));
 	}
 
 	/**
@@ -7069,11 +13309,599 @@ public interface HttpClient {
 	 */
 	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 							 List<Header> headers) throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, parameters, headers);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return execute(()->request(URL2URI(url), requestMethod, data, parameters, headers));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param requestMethod
+	 * 		请求方法
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param requestMethod
+	 * 		请求方法
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, parameters);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, headers);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, headers));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							 List<Header> headers) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, parameters, headers);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+					 List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							 List<Header> headers) throws IOException, RequestException{
+		return execute(
+				()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, parameters);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+					 Map<String, Object> parameters) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 List<Header> headers) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, headers);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 List<Header> headers) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers));
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, parameters, headers);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+					 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 * @since 2.3.0
+	 */
+	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
+		return execute(
+				()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers));
 	}
 
 }

@@ -45,7 +45,7 @@ import java.util.concurrent.Future;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface HttpAsyncClient {
+public interface HttpAsyncClient extends IBaseHttpClient {
 
 	/**
 	 * GET 请求
@@ -99,11 +99,7 @@ public interface HttpAsyncClient {
 	 * 		请求异常
 	 */
 	default Future<Response> get(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return get(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), callback));
 	}
 
 	/**
@@ -167,11 +163,7 @@ public interface HttpAsyncClient {
 	 */
 	default Future<Response> get(URL url, Map<String, Object> parameters, FutureCallback callback)
 			throws IOException, RequestException{
-		try{
-			return get(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), parameters, callback));
 	}
 
 	/**
@@ -234,11 +226,7 @@ public interface HttpAsyncClient {
 	 */
 	default Future<Response> get(URL url, List<Header> headers, FutureCallback callback)
 			throws IOException, RequestException{
-		try{
-			return get(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), headers, callback));
 	}
 
 	/**
@@ -308,11 +296,286 @@ public interface HttpAsyncClient {
 	 */
 	default Future<Response> get(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
 			throws IOException, RequestException{
-		try{
-			return get(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), parameters, headers, callback));
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, callback);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> get(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(URL url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, callback));
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> get(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, parameters, callback));
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> get(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, headers, callback));
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return get(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * GET 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * GET 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, parameters, headers, callback));
 	}
 
 	/**
