@@ -22,7 +22,20 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.httpclient.conn;
+
+import com.buession.httpclient.conn.nio.IOReactorConfig;
+
 /**
+ * 异步连接管理器
+ *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-package com.buession.httpclient.apache;
+public interface NioConnectionManager extends ConnectionManager {
+
+	IOReactorConfig getIoReactorConfig();
+
+	void setIoReactorConfig(IOReactorConfig ioReactorConfig);
+
+}

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -38,7 +38,6 @@ import com.buession.httpclient.apache.ApacheRequestBuilder;
 import com.buession.httpclient.apache.ApacheResponseBuilder;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Apache HttpClient
+ * Apache HttpComponents HttpClient
  *
  * @author Yong.Teng
  */
@@ -86,9 +85,9 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * 构造函数
 	 *
 	 * @param httpClient
-	 * 		Apache Http Client
+	 *        {@link org.apache.http.client.HttpClient} 实例
 	 */
-	public ApacheHttpClient(HttpClient httpClient){
+	public ApacheHttpClient(org.apache.http.client.HttpClient httpClient){
 		this.httpClient = httpClient;
 	}
 
@@ -96,11 +95,11 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * 构造函数
 	 *
 	 * @param httpClient
-	 * 		Apache Http Client
+	 *        {@link org.apache.http.client.HttpClient} 实例
 	 * @param requestConfig
 	 * 		请求配置
 	 */
-	public ApacheHttpClient(HttpClient httpClient, RequestConfig requestConfig){
+	public ApacheHttpClient(org.apache.http.client.HttpClient httpClient, RequestConfig requestConfig){
 		this.httpClient = httpClient;
 		this.requestConfig = requestConfig;
 	}

@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.httpclient.apache;
+package com.buession.httpclient.apache.nio.protocol;

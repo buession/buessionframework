@@ -60,22 +60,11 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		this.connectionManager = connectionManager;
 	}
 
-	/**
-	 * 获取连接管理器
-	 *
-	 * @return 连接管理器
-	 */
 	@Override
 	public ConnectionManager getConnectionManager(){
 		return connectionManager;
 	}
-
-	/**
-	 * 设置连接管理器
-	 *
-	 * @param connectionManager
-	 * 		连接管理器
-	 */
+	
 	@Override
 	public void setConnectionManager(ConnectionManager connectionManager){
 		this.connectionManager = connectionManager;

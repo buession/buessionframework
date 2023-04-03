@@ -13169,6 +13169,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求 URL
 	 * @param requestMethod
 	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param parameters
 	 * 		请求参数
 	 *

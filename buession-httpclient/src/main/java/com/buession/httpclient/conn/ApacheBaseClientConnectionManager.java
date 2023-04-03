@@ -22,7 +22,55 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.httpclient.conn;
+
+import com.buession.httpclient.core.Configuration;
+
 /**
+ * Apache HttpComponents 连接管理器基类
+ *
  * @author Yong.Teng
+ * @since 2.2.3
  */
-package com.buession.httpclient.apache;
+public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConnectionManager<O> {
+
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 */
+	public ApacheBaseClientConnectionManager(){
+		super();
+	}
+
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 */
+	public ApacheBaseClientConnectionManager(Configuration configuration){
+		super(configuration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public ApacheBaseClientConnectionManager(O clientConnectionManager){
+		super(clientConnectionManager);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public ApacheBaseClientConnectionManager(Configuration configuration, O clientConnectionManager){
+		super(configuration, clientConnectionManager);
+	}
+
+}
