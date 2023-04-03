@@ -38,7 +38,7 @@ import java.net.URL;
  * @author Yong.Teng
  * @since 2.3.0
  */
-abstract class AbstractBaseHttpClient {
+abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 
 	private ConnectionManager connectionManager;
 
@@ -65,6 +65,7 @@ abstract class AbstractBaseHttpClient {
 	 *
 	 * @return 连接管理器
 	 */
+	@Override
 	public ConnectionManager getConnectionManager(){
 		return connectionManager;
 	}
@@ -75,14 +76,17 @@ abstract class AbstractBaseHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
+	@Override
 	public void setConnectionManager(ConnectionManager connectionManager){
 		this.connectionManager = connectionManager;
 	}
 
+	@Override
 	public ProtocolVersion getHttpVersion(){
 		return httpVersion;
 	}
 
+	@Override
 	public void setHttpVersion(ProtocolVersion httpVersion){
 		this.httpVersion = httpVersion;
 	}

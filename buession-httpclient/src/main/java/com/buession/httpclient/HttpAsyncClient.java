@@ -33,7 +33,6 @@ import com.buession.httpclient.exception.RequestException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +52,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -72,9 +71,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -89,18 +88,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, FutureCallback callback) throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), callback));
-	}
+	Future<Response> get(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -110,9 +107,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -132,9 +129,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -152,19 +149,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), parameters, callback));
-	}
+	Future<Response> get(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -174,9 +169,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -196,9 +191,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -215,19 +210,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), headers, callback));
-	}
+	Future<Response> get(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -239,9 +231,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -263,9 +255,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -285,19 +277,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), parameters, headers, callback));
-	}
+	Future<Response> get(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -307,9 +297,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param readTimeout
 	 * 		读取超时时间
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -329,9 +319,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param readTimeout
 	 * 		读取超时时间
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -348,19 +338,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param readTimeout
 	 * 		读取超时时间
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, int readTimeout, FutureCallback callback)
-			throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, callback));
-	}
+	Future<Response> get(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -372,9 +359,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -396,9 +383,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -418,19 +405,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, parameters, callback));
-	}
+	Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -442,9 +427,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -466,9 +451,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -488,19 +473,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, headers, callback));
-	}
+	Future<Response> get(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * GET 请求
@@ -514,9 +497,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -540,9 +523,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -564,19 +547,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return HttpClientExecuteUtils.execute(()->get(url.toURI(), readTimeout, parameters, headers, callback));
-	}
+	Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -584,9 +565,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -603,9 +584,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -620,22 +601,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -645,9 +620,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -667,9 +642,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -687,23 +662,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return post(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -713,9 +682,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -735,9 +704,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -754,23 +723,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return post(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -782,9 +744,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -806,9 +768,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -828,23 +790,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -854,9 +810,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -876,9 +832,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -895,23 +851,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -923,9 +872,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -947,9 +896,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -969,23 +918,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -997,9 +940,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1021,9 +964,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1043,23 +986,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * POST 请求
@@ -1073,9 +1010,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1099,9 +1036,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1123,512 +1060,511 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+	Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return post(url.toURI(), data, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return post(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
 	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(String url, FutureCallback callback) throws IOException, RequestException{
-		return patch(URI.create(url), callback);
-	}
-
-	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Future<Response> patch(URI uri, FutureCallback callback) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param parameters
 	 * 		请求参数
+	 * @param headers
+	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> patch(String url, Map<String, Object> parameters, FutureCallback callback)
+	Future<Response> post(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, int readTimeout, RequestBody<?> data, FutureCallback callback)
 			throws IOException, RequestException{
-		return patch(URI.create(url), parameters, callback);
+		return post(URI.create(url), readTimeout, data, callback);
 	}
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	Future<Response> patch(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
 			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> patch(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(String url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return patch(URI.create(url), headers, callback);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Future<Response> patch(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(URL url, List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return patch(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(String url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return patch(URI.create(url), parameters, headers, callback);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Future<Response> patch(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	Future<Response> post(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
 			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
 	 * @param parameters
 	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+								  FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data, parameters, callback);
+	}
+
+	/**
+	 * POST 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * POST 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> patch(String url, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		return patch(URI.create(url), data, callback);
+	default Future<Response> post(String url, int readTimeout, RequestBody<?> data, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data, headers, callback);
 	}
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param data
 	 * 		请求数据
+	 * @param headers
+	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	Future<Response> patch(URI uri, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(URL url, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(String url, RequestBody<?> data, Map<String, Object> parameters,
-								   FutureCallback callback) throws IOException, RequestException{
-		return patch(URI.create(url), data, parameters, callback);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, FutureCallback callback)
 			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param parameters
-	 * 		请求参数
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters,
-								   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param data
 	 * 		请求数据
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return patch(URI.create(url), data, headers, callback);
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param uri
-	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	Future<Response> patch(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	Future<Response> post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, FutureCallback callback)
 			throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
-	 * @param data
-	 * 		请求数据
-	 * @param headers
-	 * 		请求头
-	 * @param callback
-	 * 		异步 HTTP 请求响应处理
-	 *
-	 * @return Response {@link Response}
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 * @throws RequestException
-	 * 		请求异常
-	 */
-	default Future<Response> patch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * PATCH 请求
-	 *
-	 * @param url
-	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param data
 	 * 		请求数据
 	 * @param parameters
@@ -1636,25 +1572,27 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> patch(String url, RequestBody<?> data, Map<String, Object> parameters,
-								   List<Header> headers, FutureCallback callback) throws IOException, RequestException{
-		return patch(URI.create(url), data, parameters, headers, callback);
+	default Future<Response> post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+								  List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return post(URI.create(url), readTimeout, data, parameters, headers, callback);
 	}
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param uri
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param data
 	 * 		请求数据
 	 * @param parameters
@@ -1662,23 +1600,25 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-						   FutureCallback callback) throws IOException, RequestException;
+	Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
-	 * PATCH 请求
+	 * POST 请求
 	 *
 	 * @param url
 	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
 	 * @param data
 	 * 		请求数据
 	 * @param parameters
@@ -1686,23 +1626,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return patch(url.toURI(), data, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1710,9 +1644,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1729,9 +1663,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1746,22 +1680,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1771,9 +1699,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1793,9 +1721,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1813,23 +1741,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return put(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1839,9 +1761,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1861,9 +1783,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1880,23 +1802,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return put(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1908,9 +1823,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1932,9 +1847,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -1954,23 +1869,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return put(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -1980,9 +1889,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2002,9 +1911,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2021,23 +1930,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -2049,9 +1951,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2073,9 +1975,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2095,23 +1997,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -2123,9 +2019,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2147,9 +2043,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2169,23 +2065,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> put(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PUT 请求
@@ -2199,9 +2089,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2225,9 +2115,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2249,23 +2139,1662 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return put(url.toURI(), data, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+								 FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, parameters, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, RequestBody<?> data, List<Header> headers,
+								 FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+								 List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return put(URI.create(url), readTimeout, data, parameters, headers, callback);
+	}
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PUT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), parameters, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), parameters, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), data, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, Map<String, Object> parameters,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), data, parameters, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), data, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, RequestBody<?> data, Map<String, Object> parameters,
+								   List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), data, parameters, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, parameters, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, RequestBody<?> data, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+								   List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return patch(URI.create(url), readTimeout, data, parameters, headers, callback);
+	}
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -2273,9 +3802,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2292,9 +3821,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2309,22 +3838,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> delete(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> delete(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -2334,9 +3857,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2356,9 +3879,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2376,23 +3899,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> delete(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> delete(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -2402,9 +3919,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2424,9 +3941,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2444,23 +3961,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> delete(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> delete(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * DELETE 请求
@@ -2472,9 +3983,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2496,9 +4007,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2518,23 +4029,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> delete(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		try{
-			return delete(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> delete(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, int readTimeout, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> delete(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return delete(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * DELETE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2542,9 +4317,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2561,9 +4336,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2578,22 +4353,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> connect(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> connect(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2603,9 +4372,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2625,9 +4394,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2645,23 +4414,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> connect(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> connect(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2671,9 +4434,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2693,9 +4456,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2713,23 +4476,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> connect(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> connect(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * CONNECT 请求
@@ -2741,9 +4498,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2765,9 +4522,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2787,23 +4544,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> connect(URL url, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return connect(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> connect(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, int readTimeout, Map<String, Object> parameters,
+									 FutureCallback callback) throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> connect(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return connect(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * CONNECT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2811,9 +4832,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2830,9 +4851,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2847,22 +4868,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> trace(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> trace(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2872,9 +4887,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2894,9 +4909,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2914,23 +4929,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> trace(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> trace(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -2940,9 +4949,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2962,9 +4971,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -2981,23 +4990,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> trace(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> trace(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * TRACE 请求
@@ -3009,9 +5011,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3033,9 +5035,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3055,23 +5057,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> trace(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return trace(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> trace(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> trace(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return trace(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * TRACE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -3079,9 +5345,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3098,9 +5364,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3115,22 +5381,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> copy(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> copy(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -3140,9 +5400,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3162,9 +5422,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3182,23 +5442,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> copy(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> copy(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -3208,9 +5462,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3230,9 +5484,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3249,23 +5503,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> copy(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> copy(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * COPY 请求
@@ -3277,9 +5524,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3301,9 +5548,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3323,23 +5570,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> copy(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return copy(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> copy(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> copy(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return copy(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * COPY 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -3347,9 +5858,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3366,9 +5877,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3383,22 +5894,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> move(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return move(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> move(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -3408,9 +5913,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3430,9 +5935,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3450,23 +5955,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> move(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return move(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> move(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -3476,9 +5975,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3498,9 +5997,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3517,23 +6016,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> move(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return move(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> move(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * MOVE 请求
@@ -3545,9 +6037,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3569,9 +6061,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3591,23 +6083,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> move(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return move(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> move(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> move(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return move(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * MOVE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -3615,9 +6371,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3634,9 +6390,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3651,22 +6407,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> head(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return head(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> head(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -3676,9 +6426,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3698,9 +6448,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3718,23 +6468,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> head(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return head(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> head(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -3744,9 +6488,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3766,9 +6510,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3785,23 +6529,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> head(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return head(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> head(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -3813,9 +6550,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3837,9 +6574,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3859,23 +6596,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> head(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return head(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> head(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> head(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return head(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HEAD 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -3883,9 +6884,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3902,9 +6903,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3919,22 +6920,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> options(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return options(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> options(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -3944,9 +6939,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3966,9 +6961,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -3986,23 +6981,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> options(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return options(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> options(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -4012,9 +7001,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4034,9 +7023,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4054,23 +7043,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> options(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return options(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> options(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -4082,9 +7065,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4106,9 +7089,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4128,23 +7111,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> options(URL url, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return options(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> options(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, int readTimeout, Map<String, Object> parameters,
+									 FutureCallback callback) throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> options(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return options(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * OPTIONS 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -4152,9 +7399,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4171,9 +7418,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4188,22 +7435,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> link(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return link(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> link(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -4213,9 +7454,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4235,9 +7476,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4255,23 +7496,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> link(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return link(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> link(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -4281,9 +7516,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4303,9 +7538,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4322,23 +7557,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> link(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return link(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> link(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -4350,9 +7578,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4374,9 +7602,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4396,23 +7624,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> link(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return link(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> link(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> link(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return link(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -4420,9 +7912,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4439,9 +7931,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4456,22 +7948,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlink(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> unlink(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -4481,9 +7967,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4503,9 +7989,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4523,23 +8009,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlink(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> unlink(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -4549,9 +8029,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4571,9 +8051,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4591,23 +8071,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlink(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> unlink(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -4619,9 +8093,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4643,9 +8117,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4665,23 +8139,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlink(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		try{
-			return unlink(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> unlink(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, int readTimeout, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlink(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return unlink(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLINK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -4689,9 +8427,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4708,9 +8446,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4725,22 +8463,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> purge(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> purge(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -4750,9 +8482,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4772,9 +8504,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4792,23 +8524,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> purge(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> purge(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -4818,9 +8544,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4840,9 +8566,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4859,23 +8585,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> purge(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> purge(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -4887,9 +8606,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4911,9 +8630,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4933,23 +8652,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> purge(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return purge(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> purge(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> purge(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								   FutureCallback callback) throws IOException, RequestException{
+		return purge(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PURGE 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						   FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -4957,9 +8940,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4976,9 +8959,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -4993,22 +8976,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> lock(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> lock(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -5018,9 +8995,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5040,9 +9017,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5060,23 +9037,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> lock(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> lock(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -5086,9 +9057,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5108,9 +9079,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5127,23 +9098,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> lock(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> lock(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -5155,9 +9119,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5179,9 +9143,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5201,23 +9165,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> lock(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return lock(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> lock(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> lock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return lock(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * LOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -5225,9 +9453,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5244,9 +9472,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5261,22 +9489,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlock(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> unlock(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -5286,9 +9508,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5308,9 +9530,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5328,23 +9550,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlock(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> unlock(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -5354,9 +9570,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5376,9 +9592,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5396,23 +9612,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlock(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> unlock(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -5424,9 +9634,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5448,9 +9658,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5470,23 +9680,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> unlock(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		try{
-			return unlock(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> unlock(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, int readTimeout, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> unlock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return unlock(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * UNLOCK 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -5494,9 +9968,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5513,9 +9987,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5530,22 +10004,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> propfind(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> propfind(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -5555,9 +10023,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5577,9 +10045,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5597,23 +10065,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> propfind(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> propfind(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -5623,9 +10085,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5645,9 +10107,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5665,23 +10127,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> propfind(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> propfind(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -5693,9 +10149,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5717,9 +10173,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5739,23 +10195,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> propfind(URL url, Map<String, Object> parameters, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return propfind(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> propfind(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, int readTimeout, Map<String, Object> parameters,
+									  FutureCallback callback) throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> propfind(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									  FutureCallback callback) throws IOException, RequestException{
+		return propfind(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPFIND 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5763,9 +10483,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5782,9 +10502,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5799,22 +10519,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5824,9 +10538,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5846,9 +10560,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5866,23 +10580,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5892,9 +10600,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5914,9 +10622,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5934,23 +10642,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return proppatch(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -5962,9 +10664,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -5986,9 +10688,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6008,23 +10710,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, Map<String, Object> parameters, List<Header> headers,
-									   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -6034,9 +10730,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6056,9 +10752,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6076,23 +10772,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -6104,9 +10794,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6128,9 +10818,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6150,23 +10840,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters,
-									   FutureCallback callback) throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -6178,9 +10862,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6202,9 +10886,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6224,23 +10908,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return proppatch(url.toURI(), data, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> proppatch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -6254,9 +10932,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6264,8 +10942,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Future<Response> proppatch(String url, RequestBody<?> data, Map<String, Object> parameters,
-									   List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
+									   List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
 		return proppatch(URI.create(url), data, parameters, headers, callback);
 	}
 
@@ -6281,9 +10959,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6305,24 +10983,585 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters,
-									   List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return proppatch(url.toURI(), data, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, Map<String, Object> parameters,
+									   FutureCallback callback) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, Map<String, Object> parameters,
+									   List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+									   FutureCallback callback) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, parameters, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, RequestBody<?> data, List<Header> headers,
+									   FutureCallback callback) throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
+							   FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+									   List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return proppatch(URI.create(url), readTimeout, data, parameters, headers, callback);
+	}
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							   List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * PROPPATCH 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							   List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6330,9 +11569,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6349,9 +11588,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6366,22 +11605,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6391,9 +11624,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6413,9 +11646,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6433,23 +11666,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return report(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6459,9 +11686,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6481,9 +11708,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6501,23 +11728,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return report(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6529,9 +11750,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6553,9 +11774,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6575,23 +11796,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6601,9 +11816,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6623,9 +11838,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6642,23 +11857,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param data
 	 * 		请求数据
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, RequestBody<?> data, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6670,9 +11878,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6694,9 +11902,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6716,23 +11924,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters,
-									FutureCallback callback) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6744,9 +11946,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6768,9 +11970,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6790,23 +11992,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> report(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -6820,9 +12016,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6846,9 +12042,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6870,23 +12066,583 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		try{
-			return report(url.toURI(), data, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+									FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, parameters, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, RequestBody<?> data, List<Header> headers,
+									FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
+							FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+		return report(URI.create(url), readTimeout, data, parameters, headers, callback);
+	}
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * REPORT 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -6894,9 +12650,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6913,9 +12669,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6930,22 +12686,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> view(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return view(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> view(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -6955,9 +12705,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6977,9 +12727,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -6997,23 +12747,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> view(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return view(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> view(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -7023,9 +12767,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7045,9 +12789,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7064,23 +12808,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> view(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return view(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> view(URL url, List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -7092,9 +12829,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7116,9 +12853,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7138,23 +12875,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> view(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		try{
-			return view(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> view(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(String url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> view(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+								  FutureCallback callback) throws IOException, RequestException{
+		return view(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * VIEW 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+						  FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -7162,9 +13163,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7181,9 +13182,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param uri
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7198,22 +13199,16 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param url
 	 * 		请求 URL
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> wrapped(URL url, FutureCallback callback) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> wrapped(URL url, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -7223,9 +13218,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7245,9 +13240,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7265,23 +13260,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param parameters
 	 * 		请求参数
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> wrapped(URL url, Map<String, Object> parameters, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> wrapped(URL url, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -7291,9 +13280,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7313,9 +13302,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7333,23 +13322,17 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> wrapped(URL url, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> wrapped(URL url, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -7361,9 +13344,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7385,9 +13368,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
@@ -7407,23 +13390,287 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @param headers
 	 * 		请求头
 	 * @param callback
-	 * 		异步 HTTP 请求响应处理
+	 * 		异步 HTTP 请求响应处理回调
 	 *
-	 * @return Response {@link Response}
+	 * @return Future&lt;Response&gt; {@link Response}
 	 *
 	 * @throws IOException
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> wrapped(URL url, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return wrapped(url.toURI(), parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+	Future<Response> wrapped(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(String url, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, callback);
 	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(String url, int readTimeout, Map<String, Object> parameters,
+									 FutureCallback callback) throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, parameters, callback);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(String url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, headers, callback);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> wrapped(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return wrapped(URI.create(url), readTimeout, parameters, headers, callback);
+	}
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * WRAPPED 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理回调
+	 *
+	 * @return Future&lt;Response&gt; {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7484,14 +13731,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7558,14 +13799,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
-									 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
+							 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7632,14 +13867,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7663,8 +13892,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Future<Response> request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
-									 List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
+									 List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
 		return request(URI.create(url), requestMethod, parameters, headers, callback);
 	}
 
@@ -7713,15 +13942,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
-									 List<Header> headers, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return request(url.toURI(), requestMethod, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
+							 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7788,14 +14010,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, FutureCallback callback)
-			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7869,15 +14085,9 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
-									 Map<String, Object> parameters, FutureCallback callback) throws IOException,
-			RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, parameters, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
+							 Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -7950,14 +14160,8 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
+	Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -8037,14 +14241,634 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
+	Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
+							 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout,
+									 Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, parameters, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
+									 FutureCallback callback) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, headers, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout,
 									 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
 			throws IOException, RequestException{
-		try{
-			return request(url.toURI(), requestMethod, data, parameters, headers, callback);
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
+		return request(URI.create(url), requestMethod, readTimeout, parameters, headers, callback);
 	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+									 FutureCallback callback) throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+									 Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, parameters, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+									 List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, headers, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 List<Header> headers, FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 List<Header> headers,
+							 FutureCallback callback) throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	default Future<Response> request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+									 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException{
+		return request(URI.create(url), requestMethod, readTimeout, data, parameters, headers, callback);
+	}
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
+
+	/**
+	 * HTTP 请求
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param requestMethod
+	 * 		请求方法
+	 * @param readTimeout
+	 * 		读取超时时间
+	 * @param data
+	 * 		请求数据
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 * @param callback
+	 * 		异步 HTTP 请求响应处理
+	 *
+	 * @return Response {@link Response}
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @throws RequestException
+	 * 		请求异常
+	 */
+	Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							 Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+			throws IOException, RequestException;
 
 }

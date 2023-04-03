@@ -4727,7 +4727,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 */
 	default Response trace(String url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return trace(URI.create(url), parameters, readTimeout);
+		return trace(URI.create(url), readTimeout, parameters);
 	}
 
 	/**
