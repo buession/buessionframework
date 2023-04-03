@@ -4725,7 +4725,10 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	Response trace(String url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
+	default Response trace(String url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return trace(URI.create(url), parameters, readTimeout);
+	}
 
 	/**
 	 * TRACE 请求
@@ -5884,9 +5887,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(URL url) throws IOException, RequestException{
-		return execute(()->head(URL2URI(url)));
-	}
+	Response head(URL url) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -5940,9 +5941,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), parameters));
-	}
+	Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -5996,9 +5995,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), headers));
-	}
+	Response head(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -6059,10 +6056,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), parameters, headers));
-	}
+	Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -6118,9 +6112,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response head(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), readTimeout));
-	}
+	Response head(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -6183,10 +6175,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response head(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), readTimeout, parameters));
-	}
+	Response head(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -6248,9 +6237,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response head(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), readTimeout, headers));
-	}
+	Response head(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * HEAD 请求
@@ -6320,10 +6307,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->head(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6371,9 +6356,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(URL url) throws IOException, RequestException{
-		return execute(()->options(URL2URI(url)));
-	}
+	Response options(URL url) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6427,9 +6410,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), parameters));
-	}
+	Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6483,9 +6464,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), headers));
-	}
+	Response options(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6547,10 +6526,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), parameters, headers));
-	}
+	Response options(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6606,9 +6583,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response options(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), readTimeout));
-	}
+	Response options(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6671,10 +6646,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response options(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), readTimeout, parameters));
-	}
+	Response options(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6736,9 +6708,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response options(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), readTimeout, headers));
-	}
+	Response options(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * OPTIONS 请求
@@ -6808,10 +6778,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->options(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -6859,9 +6827,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(URL url) throws IOException, RequestException{
-		return execute(()->link(URL2URI(url)));
-	}
+	Response link(URL url) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -6915,9 +6881,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), parameters));
-	}
+	Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -6971,9 +6935,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), headers));
-	}
+	Response link(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -7034,10 +6996,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), parameters, headers));
-	}
+	Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -7093,9 +7052,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response link(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), readTimeout));
-	}
+	Response link(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -7158,10 +7115,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response link(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), readTimeout, parameters));
-	}
+	Response link(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -7223,9 +7177,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response link(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), readTimeout, headers));
-	}
+	Response link(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * LINK 请求
@@ -7295,10 +7247,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->link(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7346,9 +7296,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(URL url) throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url)));
-	}
+	Response unlink(URL url) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7402,9 +7350,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), parameters));
-	}
+	Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7458,9 +7404,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), headers));
-	}
+	Response unlink(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7521,10 +7465,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), parameters, headers));
-	}
+	Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7580,9 +7521,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlink(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), readTimeout));
-	}
+	Response unlink(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7645,10 +7584,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlink(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), readTimeout, parameters));
-	}
+	Response unlink(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7710,9 +7646,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlink(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), readTimeout, headers));
-	}
+	Response unlink(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * UNLINK 请求
@@ -7782,10 +7716,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->unlink(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -7833,9 +7765,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(URL url) throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url)));
-	}
+	Response purge(URL url) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -7889,9 +7819,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), parameters));
-	}
+	Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -7945,9 +7873,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), headers));
-	}
+	Response purge(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -8008,10 +7934,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), parameters, headers));
-	}
+	Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -8067,9 +7990,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response purge(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), readTimeout));
-	}
+	Response purge(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -8132,10 +8053,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response purge(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), readTimeout, parameters));
-	}
+	Response purge(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -8197,9 +8115,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response purge(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), readTimeout, headers));
-	}
+	Response purge(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PURGE 请求
@@ -8269,10 +8185,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->purge(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8320,9 +8234,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(URL url) throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url)));
-	}
+	Response lock(URL url) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8376,9 +8288,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), parameters));
-	}
+	Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8432,9 +8342,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), headers));
-	}
+	Response lock(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8495,10 +8403,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), parameters, headers));
-	}
+	Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8554,9 +8459,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response lock(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), readTimeout));
-	}
+	Response lock(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8619,10 +8522,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response lock(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), readTimeout, parameters));
-	}
+	Response lock(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8684,9 +8584,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response lock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), readTimeout, headers));
-	}
+	Response lock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * LOCK 请求
@@ -8756,10 +8654,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->lock(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -8807,9 +8703,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(URL url) throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url)));
-	}
+	Response unlock(URL url) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -8863,9 +8757,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), parameters));
-	}
+	Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -8919,9 +8811,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), headers));
-	}
+	Response unlock(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -8982,10 +8872,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), parameters, headers));
-	}
+	Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -9041,9 +8928,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlock(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), readTimeout));
-	}
+	Response unlock(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -9106,10 +8991,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlock(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), readTimeout, parameters));
-	}
+	Response unlock(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -9171,9 +9053,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), readTimeout, headers));
-	}
+	Response unlock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * UNLOCK 请求
@@ -9243,10 +9123,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->unlock(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9294,9 +9172,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(URL url) throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url)));
-	}
+	Response propfind(URL url) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9350,9 +9226,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), parameters));
-	}
+	Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9406,9 +9280,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), headers));
-	}
+	Response propfind(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9470,10 +9342,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), parameters, headers));
-	}
+	Response propfind(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9529,9 +9399,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response propfind(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), readTimeout));
-	}
+	Response propfind(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9594,10 +9462,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response propfind(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), readTimeout, parameters));
-	}
+	Response propfind(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9659,9 +9524,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response propfind(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), readTimeout, headers));
-	}
+	Response propfind(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PROPFIND 请求
@@ -9731,10 +9594,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->propfind(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -9782,9 +9643,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url)));
-	}
+	Response proppatch(URL url) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -9838,9 +9697,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), parameters));
-	}
+	Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -9894,9 +9751,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), headers));
-	}
+	Response proppatch(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -9958,10 +9813,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), parameters, headers));
-	}
+	Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10015,9 +9868,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), data));
-	}
+	Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10079,10 +9930,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), data, parameters));
-	}
+	Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10143,9 +9992,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), data, headers));
-	}
+	Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10213,10 +10060,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), data, parameters, headers));
-	}
+	Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10272,9 +10117,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout));
-	}
+	Response proppatch(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10338,10 +10181,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, parameters));
-	}
+	Response proppatch(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10403,9 +10243,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, headers));
-	}
+	Response proppatch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10475,10 +10313,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10540,9 +10376,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, data));
-	}
+	Response proppatch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10612,10 +10446,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters));
-	}
+	Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10685,10 +10517,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, data, headers));
-	}
+	Response proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * PROPPATCH 请求
@@ -10764,10 +10594,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-							   List<Header> headers) throws IOException, RequestException{
-		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers));
-	}
+	Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+					   List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -10815,9 +10643,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url)));
-	}
+	Response report(URL url) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -10871,9 +10697,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), parameters));
-	}
+	Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -10927,9 +10751,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), headers));
-	}
+	Response report(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -10990,10 +10812,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), parameters, headers));
-	}
+	Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11047,9 +10866,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), data));
-	}
+	Response report(URL url, RequestBody<?> data) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11110,10 +10927,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), data, parameters));
-	}
+	Response report(URL url, RequestBody<?> data, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11173,9 +10987,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), data, headers));
-	}
+	Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11243,10 +11055,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), data, parameters, headers));
-	}
+	Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11302,9 +11112,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout));
-	}
+	Response report(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11367,10 +11175,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, parameters));
-	}
+	Response report(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11432,9 +11237,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, headers));
-	}
+	Response report(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11504,10 +11307,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11569,9 +11370,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, data));
-	}
+	Response report(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11641,10 +11440,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, data, parameters));
-	}
+	Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11714,10 +11511,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, data, headers));
-	}
+	Response report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * REPORT 请求
@@ -11793,10 +11588,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-							List<Header> headers) throws IOException, RequestException{
-		return execute(()->report(URL2URI(url), readTimeout, data, parameters, headers));
-	}
+	Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -11844,9 +11637,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url) throws IOException, RequestException{
-		return execute(()->view(URL2URI(url)));
-	}
+	Response view(URL url) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -11900,9 +11691,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), parameters));
-	}
+	Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -11956,9 +11745,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), headers));
-	}
+	Response view(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -12019,10 +11806,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), parameters, headers));
-	}
+	Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -12078,9 +11862,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response view(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), readTimeout));
-	}
+	Response view(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -12143,10 +11925,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response view(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), readTimeout, parameters));
-	}
+	Response view(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -12208,9 +11987,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response view(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), readTimeout, headers));
-	}
+	Response view(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * VIEW 请求
@@ -12280,10 +12057,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->view(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12331,9 +12106,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url) throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url)));
-	}
+	Response wrapped(URL url) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12387,9 +12160,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), parameters));
-	}
+	Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12443,9 +12214,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url, List<Header> headers) throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), headers));
-	}
+	Response wrapped(URL url, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12507,10 +12276,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), parameters, headers));
-	}
+	Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12566,9 +12333,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response wrapped(URL url, int readTimeout) throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), readTimeout));
-	}
+	Response wrapped(URL url, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12631,10 +12396,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response wrapped(URL url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), readTimeout, parameters));
-	}
+	Response wrapped(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12696,9 +12458,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response wrapped(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), readTimeout, headers));
-	}
+	Response wrapped(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * WRAPPED 请求
@@ -12768,10 +12528,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->wrapped(URL2URI(url), readTimeout, parameters, headers));
-	}
+	Response wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -12825,9 +12583,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod));
-	}
+	Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -12889,10 +12645,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
-			IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, parameters));
-	}
+	Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
+			IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -12953,10 +12707,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws IOException,
-			RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws IOException,
+			RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13024,10 +12776,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, parameters, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13088,10 +12838,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
-			RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, data));
-	}
+	Response request(URL url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
+			RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13159,10 +12907,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, data, parameters));
-	}
+	Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13230,10 +12976,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, data, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13307,10 +13051,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-							 List<Header> headers) throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, data, parameters, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
+					 List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13371,10 +13113,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13440,10 +13179,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13511,10 +13248,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13588,11 +13323,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-							 List<Header> headers) throws IOException, RequestException{
-		return execute(
-				()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+					 List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13660,10 +13392,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
-			throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
+			throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13737,10 +13467,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-							 Map<String, Object> parameters) throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+					 Map<String, Object> parameters) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13814,10 +13542,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-							 List<Header> headers) throws IOException, RequestException{
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+					 List<Header> headers) throws IOException, RequestException;
 
 	/**
 	 * HTTP 请求
@@ -13898,10 +13624,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-							 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
-		return execute(
-				()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers));
-	}
+	Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+					 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException;
 
 }
