@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -27,7 +27,7 @@ package com.buession.core.serializer;
 import java.nio.charset.Charset;
 
 /**
- * JSON 序列化和反序列化抽象类
+ * JSON 序列化抽象类
  *
  * @author Yong.Teng
  */
@@ -53,21 +53,25 @@ public abstract class AbstractJsonSerializer extends AbstractSerializer implemen
 		return serializeAsBytes(object);
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final String str, final String charsetName) throws SerializerException{
 		return deserialize(str);
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
 		return deserialize(str);
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
 		return deserialize(bytes);
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException{
 		return deserialize(bytes);

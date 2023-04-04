@@ -22,13 +22,58 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.deserializer;
+
+import com.alibaba.fastjson.JSON;
+import com.buession.core.type.TypeReference;
+import com.buession.core.utils.Assert;
 
 /**
- * 序列化抽象类
+ * FastJson JSON 反序列化
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractSerializer implements Serializer {
+public class FastJsonJsonDeserializer extends AbstractJsonDeserializer {
+
+	@Override
+	public <V> V deserialize(final String str) throws DeserializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
+
+		});
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, clazz);
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, type.getType());
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes) throws DeserializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
+
+		});
+	}
+
+	@Override
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return JSON.parseObject(bytes, clazz);
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return deserialize(new String(bytes), type);
+	}
 
 }

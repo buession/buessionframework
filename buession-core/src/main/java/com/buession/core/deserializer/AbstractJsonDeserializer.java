@@ -22,13 +22,36 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.deserializer;
+
+import java.nio.charset.Charset;
 
 /**
- * 序列化抽象类
+ * JSON 反序列化抽象类
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractSerializer implements Serializer {
+public abstract class AbstractJsonDeserializer extends AbstractDeserializer implements JsonDeserializer {
+
+	@Override
+	public <V> V deserialize(final String str, final String charsetName) throws DeserializerException{
+		return deserialize(str);
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final Charset charset) throws DeserializerException{
+		return deserialize(str);
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final String charsetName) throws DeserializerException{
+		return deserialize(bytes);
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final Charset charset) throws DeserializerException{
+		return deserialize(bytes);
+	}
 
 }

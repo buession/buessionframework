@@ -19,16 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.deserializer;
 
 /**
- * 序列化抽象类
+ * 反序列化异常
  *
  * @author Yong.Teng
  */
-public abstract class AbstractSerializer implements Serializer {
+public class DeserializerException extends Exception {
+
+	private static final long serialVersionUID = -2972164960660225243L;
+
+	public DeserializerException(){
+		super();
+	}
+
+	public DeserializerException(String message){
+		super(message);
+	}
+
+	public DeserializerException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	public DeserializerException(Throwable cause){
+		super(cause);
+	}
+
+	public DeserializerException(String message, Throwable cause, boolean enableSuppression,
+								 boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 
 }

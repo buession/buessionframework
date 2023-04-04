@@ -24,22 +24,20 @@
  */
 package com.buession.core.serializer;
 
+import com.buession.core.deserializer.DefaultByteArrayDeserializer;
+import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.utils.Assert;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 默认 byte 序列化和反序列化
+ * 默认 byte 序列化
  *
  * @author Yong.Teng
  */
@@ -95,34 +93,48 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 		return serializeAsBytes(object, charset.name());
 	}
 
+	@Deprecated
 	@Override
-	@SuppressWarnings("unchecked")
 	public <V> V deserialize(final String str, final String charsetName) throws SerializerException{
-		Assert.isNull(str, "String cloud not be null.");
-
+		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
 		try{
-			String s = URLDecoder.decode(str, charsetName);
-			return doDeserialize(s.getBytes(StandardCharsets.ISO_8859_1), "bytes");
-		}catch(UnsupportedEncodingException e){
-			throw new SerializerException("deserialize the string " + str + " failure.", e);
+			return deserializer.deserialize(str, charsetName);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
 		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
-		return deserialize(str, charset.name());
+		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
+		try{
+			return deserializer.deserialize(str, charset);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
-	@SuppressWarnings("unchecked")
 	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return doDeserialize(bytes, "bytes");
+		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
+		try{
+			return deserializer.deserialize(bytes, charsetName);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException{
-		return deserialize(bytes, charset.name());
+		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
+		try{
+			return deserializer.deserialize(bytes, charset);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
 	protected static <V> String baosWrite(final V value) throws IOException{
@@ -143,28 +155,6 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 		}finally{
 			closeStream(byteArrayOutputStream);
 			closeStream(objectOutputStream);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	protected static <V> V doDeserialize(final byte[] bytes, final String sourceType) throws SerializerException{
-		ByteArrayInputStream byteArrayInputStream = null;
-		ObjectInputStream objectInputStream = null;
-
-		try{
-			byteArrayInputStream = new ByteArrayInputStream(bytes);
-			objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-			return (V) objectInputStream.readObject();
-		}catch(UnsupportedEncodingException e){
-			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
-		}catch(ClassNotFoundException e){
-			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
-		}catch(IOException e){
-			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
-		}finally{
-			closeStream(byteArrayInputStream);
-			closeStream(objectInputStream);
 		}
 	}
 

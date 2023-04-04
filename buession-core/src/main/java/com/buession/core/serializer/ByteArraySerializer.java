@@ -19,58 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
-import java.nio.charset.Charset;
-
 /**
- * byte 序列化和反序列化
+ * byte 序列化
  *
  * @author Yong.Teng
  */
 public interface ByteArraySerializer extends Serializer {
-
-	/**
-	 * 字符串反序列化
-	 *
-	 * @param str
-	 * 		待反序列化字符串
-	 * @param charsetName
-	 * 		字符编码
-	 * @param <V>
-	 * 		待反序列化对象类型
-	 *
-	 * @return 反序列化后对象
-	 *
-	 * @throws SerializerException
-	 * 		反序列化异常
-	 */
-	@Override
-	default <V> V unserialize(final String str, final String charsetName) throws SerializerException{
-		return deserialize(str, charsetName);
-	}
-
-	/**
-	 * 字符串反序列化
-	 *
-	 * @param str
-	 * 		待反序列化字符串
-	 * @param charset
-	 * 		字符编码
-	 * @param <V>
-	 * 		待反序列化对象类型
-	 *
-	 * @return 反序列化后对象
-	 *
-	 * @throws SerializerException
-	 * 		反序列化异常
-	 */
-	@Override
-	default <V> V unserialize(final String str, final Charset charset) throws SerializerException{
-		return deserialize(str, charset);
-	}
 
 }

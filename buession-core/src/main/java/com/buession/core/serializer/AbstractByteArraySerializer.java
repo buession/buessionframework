@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * byte 序列化和反序列化抽象类
+ * byte 序列化抽象类
  *
  * @author Yong.Teng
  */
@@ -48,16 +48,6 @@ public abstract class AbstractByteArraySerializer extends AbstractSerializer imp
 	@Override
 	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
 		return serializeAsBytes(object, Charset.defaultCharset());
-	}
-
-	@Override
-	public <V> V deserialize(final String str) throws SerializerException{
-		return deserialize(str, Charset.defaultCharset().name());
-	}
-
-	@Override
-	public <V> V deserialize(final byte[] bytes) throws SerializerException{
-		return deserialize(bytes, Charset.defaultCharset().name());
 	}
 
 	protected static void closeStream(final Closeable closeable){

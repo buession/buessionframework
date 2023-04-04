@@ -19,38 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer.type;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 /**
  * @author Yong.Teng
  */
-public abstract class TypeReference<T> implements Comparable<TypeReference<T>> {
-
-	protected final Type type;
-
-	protected TypeReference(){
-		Type superClass = getClass().getGenericSuperclass();
-
-		if(superClass instanceof Class<?>){ // sanity check, should never happen
-			throw new IllegalArgumentException("TypeReference constructed without actual type information.");
-		}
-
-		type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
-	}
-
-	public Type getType(){
-		return type;
-	}
-
-	@Override
-	public int compareTo(TypeReference<T> o){
-		return 0;
-	}
+@Deprecated
+public abstract class TypeReference<T> extends com.buession.core.type.TypeReference<T> {
 
 }

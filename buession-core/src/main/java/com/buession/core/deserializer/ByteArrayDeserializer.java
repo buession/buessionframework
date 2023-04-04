@@ -22,13 +22,14 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.deserializer;
 
 /**
- * 序列化抽象类
+ * byte 反序列化
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractSerializer implements Serializer {
+public interface ByteArrayDeserializer {
 
 }

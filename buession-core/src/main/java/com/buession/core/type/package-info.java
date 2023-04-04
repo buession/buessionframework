@@ -24,4 +24,4 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.core.type;

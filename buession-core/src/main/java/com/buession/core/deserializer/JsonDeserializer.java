@@ -22,16 +22,17 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.deserializer;
 
 import com.buession.core.type.TypeReference;
 
 /**
- * JSON 序列化
+ * JSON 反序列化
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public interface JsonSerializer extends Serializer {
+public interface JsonDeserializer {
 
 	/**
 	 * 字符串反序列化
@@ -45,11 +46,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	<V> V deserialize(final String str, final Class<V> clazz) throws SerializerException;
+	<V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException;
 
 	/**
 	 * 字符串反序列化
@@ -63,11 +63,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	<V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException;
+	<V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException;
 
 	/**
 	 * 字节反序列化
@@ -81,11 +80,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	<V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException;
+	<V> V deserialize(final byte[] bytes, final Class<V> clazz) throws DeserializerException;
 
 	/**
 	 * 字节反序列化
@@ -99,11 +97,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	<V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException;
+	<V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException;
 
 	/**
 	 * 字符串反序列化
@@ -117,11 +114,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	default <V> V unserialize(final String str, final Class<V> clazz) throws SerializerException{
+	default <V> V unserialize(final String str, final Class<V> clazz) throws DeserializerException{
 		return deserialize(str, clazz);
 	}
 
@@ -137,11 +133,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	default <V> V unserialize(final String str, final TypeReference<V> type) throws SerializerException{
+	default <V> V unserialize(final String str, final TypeReference<V> type) throws DeserializerException{
 		return deserialize(str, type);
 	}
 
@@ -157,11 +152,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	default <V> V unserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes, final Class<V> clazz) throws DeserializerException{
 		return deserialize(bytes, clazz);
 	}
 
@@ -177,11 +171,10 @@ public interface JsonSerializer extends Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
 	 */
-	@Deprecated
-	default <V> V unserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException{
 		return deserialize(bytes, type);
 	}
 

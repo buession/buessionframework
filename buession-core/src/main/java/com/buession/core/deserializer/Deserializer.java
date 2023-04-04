@@ -22,116 +22,17 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
-
-import com.buession.core.deserializer.Deserializer;
+package com.buession.core.deserializer;
 
 import java.nio.charset.Charset;
 
 /**
- * 序列化和反序列化
+ * 反序列化
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public interface Serializer {
-
-	/**
-	 * 将对象序列化为字符串
-	 *
-	 * @param object
-	 * 		待序列化对象
-	 * @param <V>
-	 * 		待序列化对象类型
-	 *
-	 * @return 序列化后的字符串
-	 *
-	 * @throws SerializerException
-	 * 		序列化异常
-	 */
-	<V> String serialize(final V object) throws SerializerException;
-
-	/**
-	 * 将对象序列化为字符串
-	 *
-	 * @param object
-	 * 		待序列化对象
-	 * @param charsetName
-	 * 		字符集
-	 * @param <V>
-	 * 		待序列化对象类型
-	 *
-	 * @return 序列化后的字符串
-	 *
-	 * @throws SerializerException
-	 * 		序列化异常
-	 */
-	<V> String serialize(final V object, final String charsetName) throws SerializerException;
-
-	/**
-	 * 将对象序列化为字符串
-	 *
-	 * @param object
-	 * 		待序列化对象
-	 * @param charset
-	 * 		字符集
-	 * @param <V>
-	 * 		待序列化对象类型
-	 *
-	 * @return 序列化后的字符串
-	 *
-	 * @throws SerializerException
-	 * 		序列化异常
-	 */
-	<V> String serialize(final V object, final Charset charset) throws SerializerException;
-
-	/**
-	 * 将对象序列化为字节
-	 *
-	 * @param object
-	 * 		待序列化对象
-	 * @param <V>
-	 * 		待序列化对象类型
-	 *
-	 * @return 序列化后的字节
-	 *
-	 * @throws SerializerException
-	 * 		序列化异常
-	 */
-	<V> byte[] serializeAsBytes(final V object) throws SerializerException;
-
-	/**
-	 * 将对象序列化为字节
-	 *
-	 * @param object
-	 * 		待序列化对象
-	 * @param charsetName
-	 * 		字符集
-	 * @param <V>
-	 * 		待序列化对象类型
-	 *
-	 * @return 序列化后的字节
-	 *
-	 * @throws SerializerException
-	 * 		序列化异常
-	 */
-	<V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException;
-
-	/**
-	 * 将对象序列化为字节
-	 *
-	 * @param object
-	 * 		待序列化对象
-	 * @param charset
-	 * 		字符集
-	 * @param <V>
-	 * 		待序列化对象类型
-	 *
-	 * @return 序列化后的字节
-	 *
-	 * @throws SerializerException
-	 * 		序列化异常
-	 */
-	<V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException;
+public interface Deserializer {
 
 	/**
 	 * 字符串反序列化
@@ -143,14 +44,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V deserialize(final String str) throws SerializerException{
-		return deserialize(str, Charset.defaultCharset());
-	}
+	<V> V deserialize(final String str) throws DeserializerException;
 
 	/**
 	 * 字符串反序列化
@@ -164,12 +61,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	<V> V deserialize(final String str, final String charsetName) throws SerializerException;
+	<V> V deserialize(final String str, final String charsetName) throws DeserializerException;
 
 	/**
 	 * 字符串反序列化
@@ -183,12 +78,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	<V> V deserialize(final String str, final Charset charset) throws SerializerException;
+	<V> V deserialize(final String str, final Charset charset) throws DeserializerException;
 
 	/**
 	 * 字节反序列化
@@ -200,14 +93,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V deserialize(final byte[] bytes) throws SerializerException{
-		return deserialize(bytes, Charset.defaultCharset().name());
-	}
+	<V> V deserialize(final byte[] bytes) throws DeserializerException;
 
 	/**
 	 * 字节反序列化
@@ -221,12 +110,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	<V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException;
+	<V> V deserialize(final byte[] bytes, final String charsetName) throws DeserializerException;
 
 	/**
 	 * 字节反序列化
@@ -240,12 +127,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	<V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException;
+	<V> V deserialize(final byte[] bytes, final Charset charset) throws DeserializerException;
 
 	/**
 	 * 字符串反序列化
@@ -257,12 +142,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V unserialize(final String str) throws SerializerException{
+	default <V> V unserialize(final String str) throws DeserializerException{
 		return deserialize(str);
 	}
 
@@ -278,12 +161,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V unserialize(final String str, final String charsetName) throws SerializerException{
+	default <V> V unserialize(final String str, final String charsetName) throws DeserializerException{
 		return deserialize(str, charsetName);
 	}
 
@@ -299,12 +180,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V unserialize(final String str, final Charset charset) throws SerializerException{
+	default <V> V unserialize(final String str, final Charset charset) throws DeserializerException{
 		return deserialize(str, charset);
 	}
 
@@ -318,12 +197,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后的对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V unserialize(final byte[] bytes) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes) throws DeserializerException{
 		return deserialize(bytes);
 	}
 
@@ -339,12 +216,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V unserialize(final byte[] bytes, final String charsetName) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes, final String charsetName) throws DeserializerException{
 		return deserialize(bytes, charsetName);
 	}
 
@@ -360,12 +235,10 @@ public interface Serializer {
 	 *
 	 * @return 反序列化后对象
 	 *
-	 * @throws SerializerException
+	 * @throws DeserializerException
 	 * 		反序列化异常
-	 * @see Deserializer
 	 */
-	@Deprecated
-	default <V> V unserialize(final byte[] bytes, final Charset charset) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes, final Charset charset) throws DeserializerException{
 		return deserialize(bytes, charset);
 	}
 

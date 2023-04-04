@@ -22,13 +22,45 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.deserializer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
- * 序列化抽象类
+ * byte 反序列化抽象类
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractSerializer implements Serializer {
+public abstract class AbstractByteArrayDeserializer extends AbstractDeserializer implements ByteArrayDeserializer {
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractByteArrayDeserializer.class);
+
+	@Deprecated
+	@Override
+	public <V> V deserialize(final String str) throws DeserializerException{
+		return deserialize(str, Charset.defaultCharset().name());
+	}
+
+	@Deprecated
+	@Override
+	public <V> V deserialize(final byte[] bytes) throws DeserializerException{
+		return deserialize(bytes, Charset.defaultCharset().name());
+	}
+
+	protected static void closeStream(final Closeable closeable){
+		if(closeable != null){
+			try{
+				closeable.close();
+			}catch(IOException e){
+				logger.error("{} close error.", closeable.getClass().getName(), e);
+			}
+		}
+	}
 
 }

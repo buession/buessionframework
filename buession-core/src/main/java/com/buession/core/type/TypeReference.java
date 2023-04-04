@@ -22,13 +22,41 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
+package com.buession.core.type;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
- * 序列化抽象类
+ * 类型引用
+ *
+ * @param <T>
+ * 		类型
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractSerializer implements Serializer {
+public abstract class TypeReference<T> implements Comparable<TypeReference<T>> {
+
+	protected final Type type;
+
+	protected TypeReference(){
+		Type superClass = getClass().getGenericSuperclass();
+
+		if(superClass instanceof Class<?>){ // sanity check, should never happen
+			throw new IllegalArgumentException("TypeReference constructed without actual type information.");
+		}
+
+		type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
+	}
+
+	public Type getType(){
+		return type;
+	}
+
+	@Override
+	public int compareTo(TypeReference<T> o){
+		return 0;
+	}
 
 }
