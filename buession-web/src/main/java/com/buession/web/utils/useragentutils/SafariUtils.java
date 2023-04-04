@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.2.1
  */
-public class SafariUtils {
+class SafariUtils {
 
 	private final static String[][] webKitToSafariVersion = new String[][]{
 			{"48", "0.8"},

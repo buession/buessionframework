@@ -48,7 +48,7 @@ public class IgnoreCaseEnumConverterFactory implements ConverterFactory<String, 
 	private static Class<?> getEnumType(Class<?> targetType){
 		Class<?> enumType = targetType;
 
-		while(enumType != null && !enumType.isEnum()){
+		while(enumType != null && enumType.isEnum() == false){
 			enumType = enumType.getSuperclass();
 		}
 
@@ -73,7 +73,7 @@ public class IgnoreCaseEnumConverterFactory implements ConverterFactory<String, 
 				return null;
 			}
 
-			return (T) EnumUtils.getEnumIgnoreCase(enumType, source.trim());
+			return EnumUtils.getEnumIgnoreCase(enumType, source.trim());
 		}
 	}
 

@@ -429,10 +429,11 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 				request.getHttpRequest());
 
 		try{
-			return getHttpClient().execute(httpAsyncRequestProducer, new BasicAsyncResponseConsumer(),
+			return getHttpClient().execute(httpAsyncRequestProducer,
+					new BasicAsyncResponseConsumer(request.getHttpRequest()),
 					new DefaultCallback(callback));
 		}finally{
-			request.getHttpRequest().releaseConnection();
+			//request.getHttpRequest().releaseConnection();
 		}
 	}
 

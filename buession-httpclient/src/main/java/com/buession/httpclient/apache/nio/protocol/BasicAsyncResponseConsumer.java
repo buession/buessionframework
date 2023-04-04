@@ -29,6 +29,7 @@ import com.buession.httpclient.core.Response;
 import org.apache.http.ContentTooLongException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.ContentDecoder;
 import org.apache.http.nio.IOControl;
@@ -47,13 +48,16 @@ import java.io.IOException;
  */
 public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Response> {
 
-	private static final int MAX_INITIAL_BUFFER_SIZE = 262144;
+	private final static int MAX_INITIAL_BUFFER_SIZE = 262144;
+
+	private volatile HttpRequestBase request;
 
 	private volatile HttpResponse response;
 
 	private volatile SimpleInputBuffer buffer;
 
-	public BasicAsyncResponseConsumer(){
+	public BasicAsyncResponseConsumer(HttpRequestBase request){
+		this.request = request;
 	}
 
 	@Override
@@ -86,6 +90,9 @@ public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Re
 
 	@Override
 	protected void releaseResources(){
+		if(request != null){
+			request.releaseConnection();
+		}
 		response = null;
 		buffer = null;
 	}
@@ -93,7 +100,7 @@ public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Re
 	@Override
 	protected Response buildResult(HttpContext context){
 		final ApacheResponseBuilder apacheResponseBuilder = new ApacheResponseBuilder();
-		return apacheResponseBuilder.build(response);
+		return apacheResponseBuilder.build(this.response);
 	}
 
 }
