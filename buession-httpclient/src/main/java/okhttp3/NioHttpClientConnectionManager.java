@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Apache HttpComponents 异步连接管理器
+ * okhttp(3) 异步连接管理器
  *
  * @author Yong.Teng
  * @since 2.3.0
@@ -89,7 +89,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 
 	@Override
 	public void close() throws IOException{
-
+		
 	}
 
 }

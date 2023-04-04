@@ -38,11 +38,11 @@ import java.io.IOException;
  */
 public class DefaultCallback implements okhttp3.Callback {
 
-	private final Callback callback;
+	private final Callback delegate;
 
-	public DefaultCallback(final Callback callback){
-		Assert.isNull(callback, "'com.buession.httpclient.core.concurrent.FutureCallback' cloud not be null.");
-		this.callback = callback;
+	public DefaultCallback(final Callback delegate){
+		Assert.isNull(delegate, "'com.buession.httpclient.core.concurrent.Callback' cloud not be null.");
+		this.delegate = delegate;
 	}
 
 	@Override

@@ -10,6 +10,9 @@
 
 
 ### 🔔 变化
+
+- **buession-core：** 废弃 com.buession.core.serializer.type.TypeReference 使用 com.buession.core.type.TypeReference【3.0.0 版本删除】
+- **buession-core：** 将序列化类，拆分成序列化和反序列化
 - **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler【3.0.0 版本删除】
 - **buession-httpclient：** 废弃 Request.setUrl(String url) 使用 Request.setUri(URI uri) 替代【3.0.0 版本删除】
 - **buession-web：** AbstractRestController 添加主键类型、数据传输对象类型、数据输出对象类型
@@ -17,15 +20,19 @@
 
 ### ⭐ 新特性
 
+- **buession-core** 新增类型引用类 com.buession.core.type.TypeReference
 - **buession-httpclient：** 新增 HTTP 异步请求客户端
 - **buession-httpclient：** 请求方法支持传 URI
+- **buession-httpclient：** 支持为每次请求单独配置 readTimeout
 
 
 ### 🐞 Bug 修复
 
 - **buession-jdbc：** 修复 DataSource 未设置 PoolConfiguration 创建原生 DataSource 空指针 BUG
-- **buession-httpclient：** HttpClient request 方法，无法发送 report、proppatch 请求
-- **buession-web：** AbstractBasicRestController 无法调用重写 pageNotFound(final String uri) 方法 BUG
+- **buession-httpclient：** 修复 HttpClient request 方法，无法发送 report、proppatch 请求 BUG
+- **buession-web：** 修复 AbstractBasicRestController 无法调用重写 pageNotFound(final String uri) 方法 BUG
+- **buession-web：** 修复 ServerInfoFilter 通过 setHeaderName 方法设置响应头名称无效的 BUG
+- **buession-web：** 修复 ServerInfoFilter 通过构造函数设置响应头名称未进行有效性验证的 BUG
 
 
 ---

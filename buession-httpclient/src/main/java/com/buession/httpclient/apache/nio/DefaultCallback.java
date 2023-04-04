@@ -34,26 +34,26 @@ import com.buession.httpclient.core.concurrent.Callback;
  */
 public class DefaultCallback implements org.apache.http.concurrent.FutureCallback<Response> {
 
-	private final Callback callback;
+	private final Callback delegate;
 
-	public DefaultCallback(final Callback callback){
-		Assert.isNull(callback, "'com.buession.httpclient.core.concurrent.FutureCallback' cloud not be null.");
-		this.callback = callback;
+	public DefaultCallback(final Callback delegate){
+		Assert.isNull(delegate, "'com.buession.httpclient.core.concurrent.Callback' cloud not be null.");
+		this.delegate = delegate;
 	}
 
 	@Override
 	public void completed(Response response){
-		callback.completed(response);
+		delegate.completed(response);
 	}
 
 	@Override
 	public void failed(Exception ex){
-		callback.failed(ex);
+		delegate.failed(ex);
 	}
 
 	@Override
 	public void cancelled(){
-		callback.cancelled();
+		delegate.cancelled();
 	}
 
 }

@@ -27,7 +27,6 @@
 package com.buession.redis.serializer;
 
 import com.buession.core.deserializer.DeserializerException;
-import com.buession.core.serializer.SerializerException;
 import com.buession.core.type.TypeReference;
 
 /**
@@ -50,8 +49,8 @@ public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.
 	public <V> V deserialize(final String str, final Class<V> clazz){
 		if(str != null){
 			try{
-				return serializer.deserialize(str, clazz);
-			}catch(SerializerException e){
+				return deserializer.deserialize(str, clazz);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", str, clazz.getName(), e);
 			}
 		}
@@ -63,8 +62,8 @@ public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.
 	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
 		if(bytes != null){
 			try{
-				return serializer.deserialize(bytes, clazz);
-			}catch(SerializerException e){
+				return deserializer.deserialize(bytes, clazz);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", bytes, clazz.getName(), e);
 			}
 		}
