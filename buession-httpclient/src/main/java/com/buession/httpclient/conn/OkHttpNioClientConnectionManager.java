@@ -25,19 +25,21 @@
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
+import okhttp3.NioHttpClientConnectionManager;
 
 /**
- * Apache HttpComponents 连接管理器基类
+ * Apache HttpComponents 异步连接管理器
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConnectionManager<O> {
+public class OkHttpNioClientConnectionManager
+		extends OkHttpBaseClientConnectionManager<NioHttpClientConnectionManager> {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public ApacheBaseClientConnectionManager(){
+	public OkHttpNioClientConnectionManager(){
 		super();
 	}
 
@@ -47,7 +49,7 @@ public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConne
 	 * @param configuration
 	 * 		连接对象
 	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration){
+	public OkHttpNioClientConnectionManager(Configuration configuration){
 		super(configuration);
 	}
 
@@ -57,7 +59,7 @@ public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConne
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheBaseClientConnectionManager(O clientConnectionManager){
+	public OkHttpNioClientConnectionManager(NioHttpClientConnectionManager clientConnectionManager){
 		super(clientConnectionManager);
 	}
 
@@ -69,8 +71,26 @@ public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConne
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration, O clientConnectionManager){
+	public OkHttpNioClientConnectionManager(Configuration configuration,
+											NioHttpClientConnectionManager clientConnectionManager){
 		super(configuration, clientConnectionManager);
+	}
+
+	/**
+	 * 创建驱动默认连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	@Override
+	protected NioHttpClientConnectionManager createDefaultClientConnectionManager(){
+		final NioHttpClientConnectionManager connectionManager = new NioHttpClientConnectionManager();
+
+		//最大连接数
+		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
+		// 空闲连接存活时长
+		connectionManager.setIdleConnectionTime(getConfiguration().getMaxConnections());
+
+		return connectionManager;
 	}
 
 }

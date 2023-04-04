@@ -317,27 +317,34 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	}
 
 	protected ConnectingIOReactor createConnectingIOReactor(){
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final org.apache.http.impl.nio.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
-				org.apache.http.impl.nio.reactor.IOReactorConfig.custom();
+		org.apache.http.impl.nio.reactor.IOReactorConfig ioReactorConfig = null;
 
-		propertyMapper.from(getIoReactorConfig().getSelectInterval()).to(ioReactorConfigBuilder::setSelectInterval);
-		propertyMapper.from(getIoReactorConfig().getShutdownGracePeriod())
-				.to(ioReactorConfigBuilder::setShutdownGracePeriod);
-		propertyMapper.from(getIoReactorConfig().isInterestOpQueued()).to(ioReactorConfigBuilder::setInterestOpQueued);
-		propertyMapper.from(getIoReactorConfig().getIoThreadCount()).to(ioReactorConfigBuilder::setIoThreadCount);
-		propertyMapper.from(getIoReactorConfig().getSoTimeout()).to(ioReactorConfigBuilder::setSoTimeout);
-		propertyMapper.from(getIoReactorConfig().isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
-		propertyMapper.from(getIoReactorConfig().getSoLinger()).to(ioReactorConfigBuilder::setSoLinger);
-		propertyMapper.from(getIoReactorConfig().isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
-		propertyMapper.from(getIoReactorConfig().isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
-		propertyMapper.from(getIoReactorConfig().getConnectTimeout()).to(ioReactorConfigBuilder::setConnectTimeout);
-		propertyMapper.from(getIoReactorConfig().getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);
-		propertyMapper.from(getIoReactorConfig().getRcvBufSize()).to(ioReactorConfigBuilder::setRcvBufSize);
-		propertyMapper.from(getIoReactorConfig().getBacklogSize()).to(ioReactorConfigBuilder::setBacklogSize);
+		if(getIoReactorConfig() != null){
+			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+			final org.apache.http.impl.nio.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
+					org.apache.http.impl.nio.reactor.IOReactorConfig.custom();
+
+			propertyMapper.from(getIoReactorConfig().getSelectInterval()).to(ioReactorConfigBuilder::setSelectInterval);
+			propertyMapper.from(getIoReactorConfig().getShutdownGracePeriod())
+					.to(ioReactorConfigBuilder::setShutdownGracePeriod);
+			propertyMapper.from(getIoReactorConfig().isInterestOpQueued())
+					.to(ioReactorConfigBuilder::setInterestOpQueued);
+			propertyMapper.from(getIoReactorConfig().getIoThreadCount()).to(ioReactorConfigBuilder::setIoThreadCount);
+			propertyMapper.from(getIoReactorConfig().getSoTimeout()).to(ioReactorConfigBuilder::setSoTimeout);
+			propertyMapper.from(getIoReactorConfig().isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
+			propertyMapper.from(getIoReactorConfig().getSoLinger()).to(ioReactorConfigBuilder::setSoLinger);
+			propertyMapper.from(getIoReactorConfig().isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
+			propertyMapper.from(getIoReactorConfig().isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
+			propertyMapper.from(getIoReactorConfig().getConnectTimeout()).to(ioReactorConfigBuilder::setConnectTimeout);
+			propertyMapper.from(getIoReactorConfig().getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);
+			propertyMapper.from(getIoReactorConfig().getRcvBufSize()).to(ioReactorConfigBuilder::setRcvBufSize);
+			propertyMapper.from(getIoReactorConfig().getBacklogSize()).to(ioReactorConfigBuilder::setBacklogSize);
+
+			ioReactorConfig = ioReactorConfigBuilder.build();
+		}
 
 		try{
-			return new DefaultConnectingIOReactor(ioReactorConfigBuilder.build(), getThreadFactory());
+			return new DefaultConnectingIOReactor(ioReactorConfig, getThreadFactory());
 		}catch(IOReactorException e){
 			throw new IllegalStateException(e);
 		}

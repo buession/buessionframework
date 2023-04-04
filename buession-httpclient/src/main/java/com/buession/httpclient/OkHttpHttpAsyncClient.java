@@ -24,21 +24,18 @@
  */
 package com.buession.httpclient;
 
-import com.buession.httpclient.apache.ApacheRequestBuilder;
-import com.buession.httpclient.apache.nio.DefaultCallback;
-import com.buession.httpclient.apache.nio.protocol.BasicAsyncResponseConsumer;
-import com.buession.httpclient.conn.ApacheNioClientConnectionManager;
+import com.buession.httpclient.conn.OkHttpClientConnectionManager;
+import com.buession.httpclient.conn.OkHttpNioClientConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import org.apache.http.nio.client.methods.HttpAsyncMethods;
-import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
+import com.buession.httpclient.okhttp.HttpClientBuilder;
+import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
+import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
+import com.buession.httpclient.okhttp.nio.DefaultCallback;
 
 import java.io.IOException;
 import java.net.URI;
@@ -47,23 +44,21 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
- * Apache HttpComponents 异步 HttpClient
+ * OkHttp(3) 异步 HttpClient
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
+public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
-	private RequestConfig requestConfig;
-
-	private org.apache.http.nio.client.HttpAsyncClient httpAsyncClient;
+	private okhttp3.OkHttpClient httpClient;
 
 	/**
 	 * 构造函数
 	 */
-	public ApacheHttpAsyncClient(){
+	public OkHttpHttpAsyncClient(){
 		super();
-		setConnectionManager(new ApacheNioClientConnectionManager());
+		setConnectionManager(new OkHttpNioClientConnectionManager());
 	}
 
 	/**
@@ -72,368 +67,319 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public ApacheHttpAsyncClient(ApacheNioClientConnectionManager connectionManager){
+	public OkHttpHttpAsyncClient(OkHttpNioClientConnectionManager connectionManager){
 		super(connectionManager);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param httpAsyncClient
-	 *        {@link org.apache.http.nio.client.HttpAsyncClient} 实例
+	 * @param httpClient
+	 *        {@link okhttp3.OkHttpClient} 实例
 	 */
-	public ApacheHttpAsyncClient(org.apache.http.nio.client.HttpAsyncClient httpAsyncClient){
-		this.httpAsyncClient = httpAsyncClient;
+	public OkHttpHttpAsyncClient(okhttp3.OkHttpClient httpClient){
+		this.httpClient = httpClient;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param httpAsyncClient
-	 *        {@link org.apache.http.nio.client.HttpAsyncClient} 实例
-	 * @param requestConfig
-	 * 		请求配置
-	 */
-	public ApacheHttpAsyncClient(org.apache.http.nio.client.HttpAsyncClient httpAsyncClient,
-								 RequestConfig requestConfig){
-		this.httpAsyncClient = httpAsyncClient;
-		this.requestConfig = requestConfig;
-	}
-
-	public RequestConfig getRequestConfig(){
-		if(requestConfig == null){
+	public okhttp3.OkHttpClient getHttpClient(){
+		if(httpClient == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
 
-			RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(configuration.getConnectTimeout())
-					.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
-					.setSocketTimeout(configuration.getReadTimeout())
-					.setAuthenticationEnabled(configuration.isAuthenticationEnabled())
-					.setContentCompressionEnabled(configuration.isContentCompressionEnabled())
-					.setNormalizeUri(configuration.isNormalizeUri());
+			HttpClientBuilder builder = HttpClientBuilder.create()
+					.setConnectionManager(
+							((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager())
+					.setConnectTimeout(configuration.getConnectTimeout())
+					.setReadTimeout(configuration.getReadTimeout());
 
 			if(configuration.isAllowRedirects() != null){
-				builder.setRedirectsEnabled(configuration.isAllowRedirects());
+				builder.setFollowRedirects(configuration.isAllowRedirects());
 			}
 
-			if(configuration.getMaxRedirects() != null){
-				builder.setMaxRedirects(configuration.getMaxRedirects());
-			}
-
-			if(configuration.isCircularRedirectsAllowed() != null){
-				builder.setCircularRedirectsAllowed(configuration.isCircularRedirectsAllowed());
-			}
-
-			if(configuration.isRelativeRedirectsAllowed() != null){
-				builder.setRelativeRedirectsAllowed(configuration.isRelativeRedirectsAllowed());
-			}
-
-			requestConfig = builder.build();
+			httpClient = builder.build();
 		}
 
-		return requestConfig;
+		return httpClient;
 	}
 
-	public void setRequestConfig(RequestConfig requestConfig){
-		this.requestConfig = requestConfig;
-	}
-
-	public org.apache.http.nio.client.HttpAsyncClient getHttpClient(){
-		if(httpAsyncClient == null){
-			HttpAsyncClientBuilder httpClientBuilder = HttpAsyncClientBuilder.create()
-					.setConnectionManager(
-							((ApacheNioClientConnectionManager) getConnectionManager()).getClientConnectionManager());
-			CloseableHttpAsyncClient closeableHttpAsyncClient = httpClientBuilder.build();
-			closeableHttpAsyncClient.start();
-			httpAsyncClient = closeableHttpAsyncClient;
-		}
-
-		return httpAsyncClient;
-	}
-
-	public void setHttpClient(org.apache.http.nio.client.HttpAsyncClient httpAsyncClient){
-		this.httpAsyncClient = httpAsyncClient;
+	public void setHttpClient(okhttp3.OkHttpClient httpClient){
+		this.httpClient = httpClient;
 	}
 
 	@Override
 	public Future<Response> get(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).get(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).get(), callback);
 	}
 
 	@Override
 	public Future<Response> get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).get(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).get(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).post(data), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), callback);
 	}
 
 	@Override
 	public Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 								 List<Header> headers, Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).post(data), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 								Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).put(data), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), callback);
 	}
 
 	@Override
 	public Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 								List<Header> headers, Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).put(data), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 								  Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).patch(data), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), callback);
 	}
 
 	@Override
 	public Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 								  List<Header> headers, Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> delete(URI uri, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).delete(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).delete(), callback);
 	}
 
 	@Override
 	public Future<Response> delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).delete(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).delete(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> connect(URI uri, Map<String, Object> parameters, List<Header> headers,
 									Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).connect(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).connect(), callback);
 	}
 
 	@Override
 	public Future<Response> connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 									Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).connect(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).connect(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> trace(URI uri, Map<String, Object> parameters, List<Header> headers,
 								  Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).trace(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).trace(), callback);
 	}
 
 	@Override
 	public Future<Response> trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								  Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).trace(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).trace(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> copy(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).copy(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).copy(), callback);
 	}
 
 	@Override
 	public Future<Response> copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).copy(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).copy(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> move(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).move(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).move(), callback);
 	}
 
 	@Override
 	public Future<Response> move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).move(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).move(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> head(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).head(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).head(), callback);
 	}
 
 	@Override
 	public Future<Response> head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).head(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).head(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> options(URI uri, Map<String, Object> parameters, List<Header> headers,
 									Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).options(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).options(), callback);
 	}
 
 	@Override
 	public Future<Response> options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 									Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).options(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).options(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> link(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).link(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).link(), callback);
 	}
 
 	@Override
 	public Future<Response> link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).link(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).link(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> unlink(URI uri, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlink(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlink(), callback);
 	}
 
 	@Override
 	public Future<Response> unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlink(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlink(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> purge(URI uri, Map<String, Object> parameters, List<Header> headers,
 								  Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).purge(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).purge(), callback);
 	}
 
 	@Override
 	public Future<Response> purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								  Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).purge(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).purge(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> lock(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).lock(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).lock(), callback);
 	}
 
 	@Override
 	public Future<Response> lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).lock(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).lock(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> unlock(URI uri, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlock(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlock(), callback);
 	}
 
 	@Override
 	public Future<Response> unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlock(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlock(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> propfind(URI uri, Map<String, Object> parameters, List<Header> headers,
 									 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).propfind(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).propfind(), callback);
 	}
 
 	@Override
 	public Future<Response> propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 									 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).propfind(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).propfind(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters,
 									  List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).proppatch(data), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 									  List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 								   Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).report(data), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), callback);
 	}
 
 	@Override
 	public Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 								   List<Header> headers, Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).report(data), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> view(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).view(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).view(), callback);
 	}
 
 	@Override
 	public Future<Response> view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 								 Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).view(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).view(), readTimeout, callback);
 	}
 
 	@Override
 	public Future<Response> wrapped(URI uri, Map<String, Object> parameters, List<Header> headers,
 									Callback callback) throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).wrapped(), callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).wrapped(), callback);
 	}
 
 	@Override
 	public Future<Response> wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 									Callback callback)
 			throws IOException, RequestException{
-		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).wrapped(), readTimeout, callback);
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).wrapped(), readTimeout, callback);
 	}
 
-	protected Future<Response> doRequest(final ApacheRequestBuilder builder, final Callback callback)
+	protected Future<Response> doRequest(final OkHttpRequestBuilder builder, final Callback callback)
 			throws IOException, RequestException{
-		return doRequest(builder, getRequestConfig(), callback);
+		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+		return doRequest(request, callback);
 	}
 
-	protected Future<Response> doRequest(final ApacheRequestBuilder builder, final int readTimeout,
+	protected Future<Response> doRequest(final OkHttpRequestBuilder builder, final int readTimeout,
 										 final Callback callback) throws IOException, RequestException{
-		final RequestConfig.Builder requestConfigBuilder = RequestConfig.copy(getRequestConfig())
-				.setSocketTimeout(readTimeout);
-		return doRequest(builder, requestConfigBuilder.build(), callback);
+		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+		return doRequest(request, callback);
 	}
 
-	protected Future<Response> doRequest(final ApacheRequestBuilder builder, final RequestConfig requestConfig,
+	protected Future<Response> doRequest(final OkHttpRequestBuilder.OkHttpRequest request,
 										 final Callback callback) throws IOException, RequestException{
-		final ApacheRequestBuilder.HttpComponentsRequest request = builder.setRequestConfig(requestConfig)
-				.setProtocolVersion(getHttpVersion()).build();
-		final HttpAsyncRequestProducer httpAsyncRequestProducer = HttpAsyncMethods.create(
-				request.getHttpRequest());
+		okhttp3.Request okHttpRequest = request.getRequestBuilder().build();
+		okhttp3.Response httpResponse = null;
+		final OkHttpResponseBuilder httpResponseBuilder = new OkHttpResponseBuilder();
 
-		try{
-			return getHttpClient().execute(httpAsyncRequestProducer, new BasicAsyncResponseConsumer(),
-					new DefaultCallback(callback));
-		}finally{
-			request.getHttpRequest().releaseConnection();
-		}
+		getHttpClient().newCall(okHttpRequest).enqueue(new DefaultCallback(callback));
+		return null;//httpResponseBuilder.build(httpResponse);
 	}
 
 }

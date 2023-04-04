@@ -22,7 +22,37 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.httpclient.core.concurrent;
+
+import com.buession.httpclient.core.Response;
+
 /**
+ * 用于异步 HTTP 请求响应处理
+ *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-package com.buession.httpclient.okhttp;
+public interface Callback {
+
+	/**
+	 * 当 HTTP 请求成功完成并且服务器返回响应时调用此方法
+	 *
+	 * @param response
+	 * 		HTTP 响应
+	 */
+	void completed(Response response);
+
+	/**
+	 * 当 HTTP 请求由于异常而失败时调用此方法
+	 *
+	 * @param ex
+	 * 		导致失败的异常。
+	 */
+	void failed(Exception ex);
+
+	/**
+	 * 当 HTTP 请求在完成之前被取消时调用此方法
+	 */
+	void cancelled();
+
+}

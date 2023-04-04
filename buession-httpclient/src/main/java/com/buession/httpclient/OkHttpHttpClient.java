@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
@@ -364,17 +363,16 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	protected Response doRequest(final OkHttpRequestBuilder builder) throws IOException, RequestException{
 		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
-		return doRequest(builder, request);
+		return doRequest(request);
 	}
 
 	protected Response doRequest(final OkHttpRequestBuilder builder, final int readTimeout)
 			throws IOException, RequestException{
 		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
-		return doRequest(builder, request);
+		return doRequest(request);
 	}
 
-	protected Response doRequest(final OkHttpRequestBuilder builder, final OkHttpRequestBuilder.OkHttpRequest request)
-			throws IOException, RequestException{
+	protected Response doRequest(final OkHttpRequestBuilder.OkHttpRequest request) throws IOException, RequestException{
 		okhttp3.Request okHttpRequest = request.getRequestBuilder().build();
 		okhttp3.Response httpResponse = null;
 		final OkHttpResponseBuilder httpResponseBuilder = new OkHttpResponseBuilder();

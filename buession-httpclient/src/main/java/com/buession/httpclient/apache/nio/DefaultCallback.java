@@ -22,7 +22,38 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.httpclient.apache.nio;
+
+import com.buession.core.utils.Assert;
+import com.buession.httpclient.core.Response;
+import com.buession.httpclient.core.concurrent.Callback;
+
 /**
  * @author Yong.Teng
+ * @since 2.3.0
  */
-package com.buession.httpclient.okhttp;
+public class DefaultCallback implements org.apache.http.concurrent.FutureCallback<Response> {
+
+	private final Callback callback;
+
+	public DefaultCallback(final Callback callback){
+		Assert.isNull(callback, "'com.buession.httpclient.core.concurrent.FutureCallback' cloud not be null.");
+		this.callback = callback;
+	}
+
+	@Override
+	public void completed(Response response){
+		callback.completed(response);
+	}
+
+	@Override
+	public void failed(Exception ex){
+		callback.failed(ex);
+	}
+
+	@Override
+	public void cancelled(){
+		callback.cancelled();
+	}
+
+}

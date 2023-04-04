@@ -30,7 +30,7 @@ import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
-import com.buession.httpclient.core.concurrent.FutureCallback;
+import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
 
 import java.io.IOException;
@@ -66,2550 +66,2296 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	}
 
 	@Override
-	public Future<Response> get(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> get(URI uri, Callback callback) throws IOException, RequestException{
 		return get(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> get(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> get(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> get(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return get(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> get(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> get(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> get(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return get(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> get(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> get(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return get(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> get(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> get(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> get(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
 		return get(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> get(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> get(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> get(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return get(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> get(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return get(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> get(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> get(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
-		return get(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return execute(()->get(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> post(URI uri, Callback callback) throws IOException, RequestException{
 		return post(uri, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> post(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> post(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> post(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, null, parameters, headers, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> post(URI uri, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> post(URL url, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> post(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, data, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, data, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return post(uri, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> post(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> post(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> post(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> post(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> post(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> post(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return post(uri, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return post(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> post(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> post(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return post(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return post(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								 List<Header> headers, FutureCallback callback) throws IOException, RequestException{
-		return post(uri, readTimeout, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								 List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+								 List<Header> headers, Callback callback) throws IOException, RequestException{
 		return execute(()->post(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> put(URI uri, Callback callback) throws IOException, RequestException{
 		return put(uri, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> put(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> put(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> put(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, null, parameters, headers, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> put(URI uri, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> put(URL url, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> put(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, data, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, data, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
-		return put(uri, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, int readTimeout, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> put(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
 		return put(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, int readTimeout, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> put(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> put(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> put(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> put(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return put(uri, readTimeout, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return put(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> put(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> put(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return put(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return put(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
-								FutureCallback callback) throws IOException, RequestException{
+								Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								List<Header> headers, FutureCallback callback) throws IOException, RequestException{
-		return put(uri, readTimeout, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+								List<Header> headers, Callback callback) throws IOException, RequestException{
 		return execute(()->put(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> patch(URI uri, Callback callback) throws IOException, RequestException{
 		return patch(uri, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> patch(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> patch(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> patch(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> patch(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> patch(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> patch(URI uri, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return patch(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> patch(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> patch(URI uri, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> patch(URL url, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, data, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> patch(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, data, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> patch(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		return patch(uri, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> patch(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> patch(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> patch(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> patch(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> patch(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> patch(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> patch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return patch(uri, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return patch(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return patch(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return patch(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								  List<Header> headers, FutureCallback callback) throws IOException, RequestException{
-		return patch(uri, readTimeout, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								  List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+								  List<Header> headers, Callback callback) throws IOException, RequestException{
 		return execute(()->patch(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> delete(URI uri, Callback callback) throws IOException, RequestException{
 		return delete(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> delete(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> delete(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> delete(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return delete(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> delete(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> delete(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> delete(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return delete(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> delete(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> delete(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return delete(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> delete(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> delete(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return delete(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> delete(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> delete(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> delete(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return delete(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> delete(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> delete(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> delete(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return delete(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> delete(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> delete(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return delete(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->delete(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> connect(URI uri, Callback callback) throws IOException, RequestException{
 		return connect(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> connect(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> connect(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> connect(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return connect(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> connect(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> connect(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> connect(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return connect(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> connect(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> connect(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		return connect(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> connect(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> connect(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return connect(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> connect(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> connect(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> connect(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return connect(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> connect(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> connect(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> connect(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return connect(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> connect(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> connect(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		return connect(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->connect(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> trace(URI uri, Callback callback) throws IOException, RequestException{
 		return trace(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> trace(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> trace(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> trace(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return trace(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> trace(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> trace(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> trace(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return trace(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> trace(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> trace(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		return trace(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> trace(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> trace(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return trace(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> trace(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> trace(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> trace(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return trace(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> trace(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> trace(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> trace(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return trace(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> trace(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> trace(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		return trace(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->trace(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> copy(URI uri, Callback callback) throws IOException, RequestException{
 		return copy(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> copy(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> copy(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> copy(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return copy(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> copy(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> copy(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> copy(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return copy(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> copy(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> copy(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return copy(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> copy(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> copy(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> copy(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return copy(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> copy(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> copy(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> copy(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return copy(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> copy(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> copy(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> copy(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return copy(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> copy(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> copy(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return copy(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->copy(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> move(URI uri, Callback callback) throws IOException, RequestException{
 		return move(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> move(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> move(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> move(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return move(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> move(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> move(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> move(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return move(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> move(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> move(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return move(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> move(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> move(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> move(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return move(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> move(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> move(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> move(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return move(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> move(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> move(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> move(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return move(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> move(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> move(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return move(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->move(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> head(URI uri, Callback callback) throws IOException, RequestException{
 		return head(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> head(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> head(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> head(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return head(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> head(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> head(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> head(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return head(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> head(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> head(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return head(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> head(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> head(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> head(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return head(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> head(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> head(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> head(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return head(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> head(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> head(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> head(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return head(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> head(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> head(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return head(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->head(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> options(URI uri, Callback callback) throws IOException, RequestException{
 		return options(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> options(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> options(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> options(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return options(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> options(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> options(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> options(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return options(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> options(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> options(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		return options(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> options(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> options(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return options(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> options(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> options(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> options(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return options(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> options(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> options(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> options(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return options(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> options(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> options(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		return options(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->options(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> link(URI uri, Callback callback) throws IOException, RequestException{
 		return link(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> link(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> link(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> link(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return link(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> link(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> link(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> link(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return link(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> link(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> link(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return link(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> link(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> link(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> link(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return link(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> link(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> link(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> link(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return link(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> link(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> link(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> link(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return link(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> link(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> link(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return link(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->link(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> unlink(URI uri, Callback callback) throws IOException, RequestException{
 		return unlink(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlink(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> unlink(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlink(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return unlink(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlink(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlink(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlink(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return unlink(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> unlink(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlink(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return unlink(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> unlink(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> unlink(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return unlink(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlink(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> unlink(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlink(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return unlink(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlink(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlink(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlink(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return unlink(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> unlink(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlink(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return unlink(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->unlink(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> purge(URI uri, Callback callback) throws IOException, RequestException{
 		return purge(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> purge(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> purge(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> purge(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return purge(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> purge(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> purge(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> purge(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return purge(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> purge(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> purge(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		return purge(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> purge(URL url, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> purge(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return purge(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> purge(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> purge(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> purge(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return purge(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> purge(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> purge(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> purge(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return purge(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> purge(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> purge(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
-		return purge(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								  FutureCallback callback) throws IOException, RequestException{
+								  Callback callback) throws IOException, RequestException{
 		return execute(()->purge(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> lock(URI uri, Callback callback) throws IOException, RequestException{
 		return lock(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> lock(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> lock(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> lock(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return lock(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> lock(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> lock(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> lock(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return lock(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> lock(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> lock(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return lock(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> lock(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> lock(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> lock(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return lock(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> lock(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> lock(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> lock(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return lock(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> lock(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> lock(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> lock(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return lock(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> lock(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> lock(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return lock(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->lock(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> unlock(URI uri, Callback callback) throws IOException, RequestException{
 		return unlock(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlock(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> unlock(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlock(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return unlock(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlock(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlock(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlock(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return unlock(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> unlock(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlock(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return unlock(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> unlock(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> unlock(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return unlock(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlock(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> unlock(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlock(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return unlock(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> unlock(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> unlock(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlock(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return unlock(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> unlock(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> unlock(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return unlock(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->unlock(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> propfind(URI uri, Callback callback) throws IOException, RequestException{
 		return propfind(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> propfind(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> propfind(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> propfind(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return propfind(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> propfind(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> propfind(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> propfind(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return propfind(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> propfind(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> propfind(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		return propfind(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> propfind(URL url, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
+									 Callback callback) throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> propfind(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return propfind(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> propfind(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> propfind(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> propfind(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return propfind(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> propfind(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> propfind(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> propfind(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return propfind(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> propfind(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> propfind(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
-		return propfind(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									 FutureCallback callback) throws IOException, RequestException{
+									 Callback callback) throws IOException, RequestException{
 		return execute(()->propfind(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> proppatch(URI uri, Callback callback) throws IOException, RequestException{
 		return proppatch(uri, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> proppatch(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> proppatch(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> proppatch(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, Map<String, Object> parameters, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return proppatch(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URL url, Map<String, Object> parameters, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> proppatch(URL url, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return proppatch(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, data, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> proppatch(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters,
-									  List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return proppatch(uri, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters,
-									  List<Header> headers, FutureCallback callback)
+									  List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> proppatch(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> proppatch(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> proppatch(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return proppatch(uri, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return proppatch(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return proppatch(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return proppatch(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
-									  FutureCallback callback) throws IOException, RequestException{
+									  Callback callback) throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-									  List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return proppatch(uri, readTimeout, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-									  List<Header> headers, FutureCallback callback)
+									  List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> report(URI uri, Callback callback) throws IOException, RequestException{
 		return report(uri, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> report(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> report(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> report(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> report(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> report(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> report(URI uri, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return report(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> report(URL url, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> report(URI uri, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> report(URL url, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> report(URI uri, RequestBody<?> data, Map<String, Object> parameters,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return report(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> report(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, data, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, RequestBody<?> data, List<Header> headers, FutureCallback callback)
+	public Future<Response> report(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
-		return report(uri, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> report(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> report(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> report(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> report(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> report(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> report(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public Future<Response> report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return report(uri, readTimeout, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return report(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> report(URL url, int readTimeout, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> report(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return report(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return report(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers,
-								   FutureCallback callback) throws IOException, RequestException{
+								   Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								   List<Header> headers, FutureCallback callback) throws IOException, RequestException{
-		return report(uri, readTimeout, data, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-								   List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+								   List<Header> headers, Callback callback) throws IOException, RequestException{
 		return execute(()->report(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> view(URI uri, Callback callback) throws IOException, RequestException{
 		return view(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> view(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> view(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> view(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return view(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> view(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> view(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> view(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return view(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> view(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> view(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
-			throws IOException, RequestException{
-		return view(uri, parameters, headers, callback);
-	}
-
-	@Override
-	public Future<Response> view(URL url, Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+	public Future<Response> view(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> view(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return view(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> view(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> view(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> view(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return view(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> view(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> view(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> view(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return view(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> view(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> view(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
-		return view(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-								 FutureCallback callback) throws IOException, RequestException{
+								 Callback callback) throws IOException, RequestException{
 		return execute(()->view(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> wrapped(URI uri, Callback callback) throws IOException, RequestException{
 		return wrapped(uri, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> wrapped(URL url, FutureCallback callback) throws IOException, RequestException{
+	public Future<Response> wrapped(URL url, Callback callback) throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> wrapped(URI uri, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return wrapped(uri, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> wrapped(URL url, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> wrapped(URL url, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, List<Header> headers, FutureCallback callback)
+	public Future<Response> wrapped(URI uri, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return wrapped(uri, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> wrapped(URL url, List<Header> headers, FutureCallback callback)
+	public Future<Response> wrapped(URL url, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		return wrapped(uri, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> wrapped(URL url, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, int readTimeout, FutureCallback callback)
+	public Future<Response> wrapped(URI uri, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return wrapped(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> wrapped(URL url, int readTimeout, FutureCallback callback)
+	public Future<Response> wrapped(URL url, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> wrapped(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return wrapped(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
-	public Future<Response> wrapped(URL url, int readTimeout, Map<String, Object> parameters, FutureCallback callback)
+	public Future<Response> wrapped(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> wrapped(URI uri, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return wrapped(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> wrapped(URL url, int readTimeout, List<Header> headers, FutureCallback callback)
+	public Future<Response> wrapped(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
-	public Future<Response> wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
-		return wrapped(uri, readTimeout, parameters, headers, callback);
-	}
-
-	@Override
 	public Future<Response> wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->wrapped(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> request(URI uri, RequestMethod requestMethod, FutureCallback callback)
+	public Future<Response> request(URI uri, RequestMethod requestMethod, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> request(URL url, RequestMethod requestMethod, FutureCallback callback)
+	public Future<Response> request(URL url, RequestMethod requestMethod, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return request(uri, requestMethod, null, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, parameters, callback));
 	}
 
 	@Override
-	public Future<Response> request(URI uri, RequestMethod requestMethod, List<Header> headers, FutureCallback callback)
+	public Future<Response> request(URI uri, RequestMethod requestMethod, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, null, null, headers, callback);
 	}
 
 	@Override
-	public Future<Response> request(URL url, RequestMethod requestMethod, List<Header> headers, FutureCallback callback)
+	public Future<Response> request(URL url, RequestMethod requestMethod, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, headers, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters,
-									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+									List<Header> headers, Callback callback) throws IOException, RequestException{
 		return request(uri, requestMethod, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
-									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+									List<Header> headers, Callback callback) throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, data, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, FutureCallback callback)
+	public Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, data, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data,
-									Map<String, Object> parameters, FutureCallback callback)
+									Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
-									Map<String, Object> parameters, FutureCallback callback)
+									Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, data, parameters, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
-									FutureCallback callback)
+									Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
-									FutureCallback callback)
+									Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, data, headers, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, RequestBody<?> data,
-									Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+									Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		Assert.isNull(requestMethod, "Request method could not be null.");
 
@@ -2661,104 +2407,104 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, RequestBody<?> data,
-									Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+									Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, data, parameters, headers, callback));
 	}
 
 	@Override
-	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, FutureCallback callback)
+	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, FutureCallback callback)
+	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout,
-									Map<String, Object> parameters, FutureCallback callback)
+									Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout,
-									Map<String, Object> parameters, FutureCallback callback)
+									Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, headers, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout,
 									Map<String, Object> parameters,
-									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+									List<Header> headers, Callback callback) throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout,
-									Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+									Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									FutureCallback callback) throws IOException, RequestException{
+									Callback callback) throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									Map<String, Object> parameters, FutureCallback callback)
+									Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									Map<String, Object> parameters, FutureCallback callback)
+									Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+									List<Header> headers, Callback callback) throws IOException, RequestException{
 		return request(uri, requestMethod, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									List<Header> headers, FutureCallback callback) throws IOException, RequestException{
+									List<Header> headers, Callback callback) throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers, callback));
 	}
 
 	@Override
 	public Future<Response> request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+									Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		Assert.isNull(requestMethod, "Request method could not be null.");
 
@@ -2810,7 +2556,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public Future<Response> request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-									Map<String, Object> parameters, List<Header> headers, FutureCallback callback)
+									Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
 		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers, callback));
 	}

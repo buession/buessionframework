@@ -22,7 +22,37 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.httpclient.okhttp.nio;
+
+import com.buession.core.utils.Assert;
+import com.buession.httpclient.core.concurrent.Callback;
+import okhttp3.Call;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
 /**
  * @author Yong.Teng
+ * @since 2.3.0
  */
-package com.buession.httpclient.okhttp;
+public class DefaultCallback implements okhttp3.Callback {
+
+	private final Callback callback;
+
+	public DefaultCallback(final Callback callback){
+		Assert.isNull(callback, "'com.buession.httpclient.core.concurrent.FutureCallback' cloud not be null.");
+		this.callback = callback;
+	}
+
+	@Override
+	public void onFailure(@NotNull Call call, @NotNull IOException e){
+
+	}
+
+	@Override
+	public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException{
+
+	}
+
+}

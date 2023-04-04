@@ -32,7 +32,7 @@ import okhttp3.HttpClientConnectionManager;
  *
  * @author Yong.Teng
  */
-public class OkHttpClientConnectionManager extends AbstractConnectionManager<HttpClientConnectionManager> {
+public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionManager<HttpClientConnectionManager> {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
