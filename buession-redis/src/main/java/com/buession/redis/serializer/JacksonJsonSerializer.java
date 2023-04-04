@@ -26,21 +26,24 @@
  */
 package com.buession.redis.serializer;
 
+import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.serializer.SerializerException;
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 
 /**
  * Jackson2 序列化和反序列化
  *
  * @author Yong.Teng
  */
-public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.JacksonJsonSerializer> {
+public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.JacksonJsonSerializer,
+		com.buession.core.deserializer.JacksonJsonDeserializer> {
 
 	/**
 	 * 构造函数
 	 */
 	public JacksonJsonSerializer(){
-		super(new com.buession.core.serializer.JacksonJsonSerializer());
+		super(new com.buession.core.serializer.JacksonJsonSerializer(),
+				new com.buession.core.deserializer.JacksonJsonDeserializer());
 	}
 
 	@Override
@@ -73,8 +76,8 @@ public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.
 	public <V> V deserialize(final String str, final TypeReference<V> type){
 		if(str != null){
 			try{
-				return serializer.deserialize(str, type);
-			}catch(SerializerException e){
+				return deserializer.deserialize(str, type);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", str, type.getType().getTypeName(), e);
 			}
 		}
@@ -86,8 +89,8 @@ public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.
 	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
 		if(bytes != null){
 			try{
-				return serializer.deserialize(bytes, type);
-			}catch(SerializerException e){
+				return deserializer.deserialize(bytes, type);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", bytes, type.getType().getTypeName(), e);
 			}
 		}

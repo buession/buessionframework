@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -58,10 +58,16 @@ public abstract class RedisAccessor implements AutoCloseable {
 
 	protected final static Options DEFAULT_OPTIONS = new Options();
 
+	/**
+	 * 默认序列化
+	 */
 	protected final static Serializer DEFAULT_SERIALIZER = new JacksonJsonSerializer();
 
 	protected Options options = DEFAULT_OPTIONS;
 
+	/**
+	 * 序列化
+	 */
 	protected Serializer serializer;
 
 	protected DataSource dataSource;

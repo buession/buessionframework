@@ -19,22 +19,33 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.utils;
+package com.buession.redis.client.connection;
 
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.PoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public class PoolConfigUtils {
+public class PoolConfigConverter<T> implements Converter<PoolConfig, GenericObjectPoolConfig<T>> {
 
-	public static <T> GenericObjectPoolConfig<T> convert(final PoolConfig config,
-														 final GenericObjectPoolConfig<T> poolConfig){
+	private final GenericObjectPoolConfig<T> poolConfig;
+
+	public PoolConfigConverter(final GenericObjectPoolConfig<T> poolConfig){
+		Assert.isNull(poolConfig, "GenericObjectPoolConfig cloud not be null.");
+		this.poolConfig = poolConfig;
+	}
+
+	@Nullable
+	@Override
+	public GenericObjectPoolConfig<T> convert(PoolConfig config){
 		poolConfig.setLifo(config.getLifo());
 		poolConfig.setFairness(config.getFairness());
 		poolConfig.setMaxWait(config.getMaxWait());
@@ -55,7 +66,7 @@ public class PoolConfigUtils {
 		poolConfig.setMaxTotal(config.getMaxTotal());
 		poolConfig.setMinIdle(config.getMinIdle());
 		poolConfig.setMaxIdle(config.getMaxIdle());
-
+		
 		return poolConfig;
 	}
 

@@ -21,34 +21,36 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
-import com.buession.core.serializer.SerializerException;
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.deserializer.DeserializerException;
+import com.buession.core.type.TypeReference;
 
 /**
  * GSON 序列化和反序列化
  *
  * @author Yong.Teng
  */
-public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.GsonJsonSerializer> {
+public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.GsonJsonSerializer,
+		com.buession.core.deserializer.GsonJsonDeserializer> {
 
 	/**
 	 * 构造函数
 	 */
 	public GsonJsonSerializer(){
-		super(new com.buession.core.serializer.GsonJsonSerializer());
+		super(new com.buession.core.serializer.GsonJsonSerializer(),
+				new com.buession.core.deserializer.GsonJsonDeserializer());
 	}
 
 	@Override
 	public <V> V deserialize(final String str, final Class<V> clazz){
 		if(str != null){
 			try{
-				return serializer.deserialize(str, clazz);
-			}catch(SerializerException e){
+				return deserializer.deserialize(str, clazz);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", str, clazz.getName(), e);
 			}
 		}
@@ -60,8 +62,8 @@ public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.ser
 	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
 		if(bytes != null){
 			try{
-				return serializer.deserialize(bytes, clazz);
-			}catch(SerializerException e){
+				return deserializer.deserialize(bytes, clazz);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", bytes, clazz.getName(), e);
 			}
 		}
@@ -73,8 +75,8 @@ public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.ser
 	public <V> V deserialize(final String str, final TypeReference<V> type){
 		if(str != null){
 			try{
-				return serializer.deserialize(str, type);
-			}catch(SerializerException e){
+				return deserializer.deserialize(str, type);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", str, type.getType().getTypeName(), e);
 			}
 		}
@@ -86,8 +88,8 @@ public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.ser
 	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
 		if(bytes != null){
 			try{
-				return serializer.deserialize(bytes, type);
-			}catch(SerializerException e){
+				return deserializer.deserialize(bytes, type);
+			}catch(DeserializerException e){
 				logger.error("{} deserialize to {} error.", bytes, type.getType().getTypeName(), e);
 			}
 		}
