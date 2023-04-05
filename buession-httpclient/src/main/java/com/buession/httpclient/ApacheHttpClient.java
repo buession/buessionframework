@@ -39,6 +39,7 @@ import com.buession.httpclient.apache.ApacheResponseBuilder;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +109,8 @@ public class ApacheHttpClient extends AbstractHttpClient {
 		if(requestConfig == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
 
-			RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(configuration.getConnectTimeout())
+			RequestConfig.Builder builder = RequestConfig.custom()
+					.setConnectTimeout(configuration.getConnectTimeout())
 					.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
 					.setSocketTimeout(configuration.getReadTimeout())
 					.setAuthenticationEnabled(configuration.isAuthenticationEnabled())
@@ -143,9 +145,11 @@ public class ApacheHttpClient extends AbstractHttpClient {
 
 	public org.apache.http.client.HttpClient getHttpClient(){
 		if(httpClient == null){
-			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
-					.setConnectionManager(
-							((ApacheClientConnectionManager) getConnectionManager()).getClientConnectionManager());
+			final HttpClientConnectionManager connectionManager =
+					((ApacheClientConnectionManager) getConnectionManager()).getClientConnectionManager();
+			final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
+					.setConnectionManager(connectionManager);
+
 			httpClient = httpClientBuilder.build();
 		}
 

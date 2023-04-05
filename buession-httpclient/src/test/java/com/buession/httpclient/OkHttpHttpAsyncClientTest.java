@@ -22,35 +22,71 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.nio;
+package com.buession.httpclient;
 
+import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.Response;
-import com.buession.httpclient.core.concurrent.BaseCallback;
 import com.buession.httpclient.core.concurrent.Callback;
+import com.buession.httpclient.exception.RequestException;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class DefaultCallback extends BaseCallback implements org.apache.http.concurrent.FutureCallback<Response> {
+public class OkHttpHttpAsyncClientTest {
 
-	public DefaultCallback(final Callback delegate){
-		super(delegate);
+	private static OkHttpHttpAsyncClient httpClient = new OkHttpHttpAsyncClient();
+
+	@Test
+	public void responseHeaders() throws IOException, RequestException{
+		httpClient.get("https://www.baidu.com",
+				new Callback() {
+
+					@Override
+					public void completed(Response response){
+						for(Header header : response.getHeaders()){
+							System.out.println(header.toString());
+						}
+					}
+
+					@Override
+					public void failed(Exception ex){
+						System.out.println("failed");
+					}
+
+					@Override
+					public void cancelled(){
+						System.out.println("cancelled");
+					}
+				});
+		//response.get();
 	}
 
-	@Override
-	public void completed(Response response){
-		delegate.completed(response);
-	}
+	@Test
+	public void okhttp3Native(){
+		//  构建okHttpClient，相当于请求的客户端，Builder设计模式
+		okhttp3.OkHttpClient okHttpClient = new okhttp3.OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
+		// 构建一个请求体，同样也是Builder设计模式
+		okhttp3.Request request =
+				new okhttp3.Request.Builder().url("https://shirojs.buession.com/support.html").get().build();
+		//  生成一个Call对象，该对象是接口类型，后面会说
+		okhttp3.Call call = okHttpClient.newCall(request);
+		call.enqueue(new okhttp3.Callback() {
 
-	@Override
-	public void failed(Exception ex){
-		delegate.failed(ex);
-	}
+			@Override
+			public void onFailure(okhttp3.Call call, IOException e){
+				System.out.println(e);
+			}
 
-	@Override
-	public void cancelled(){
-		delegate.cancelled();
+			@Override
+			public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException{
+				System.out.println(response.body());
+			}
+		});
 	}
 
 }

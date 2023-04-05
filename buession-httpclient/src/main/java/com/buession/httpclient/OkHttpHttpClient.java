@@ -33,9 +33,10 @@ import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestException;
-import com.buession.httpclient.okhttp.HttpClientBuilder;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
+import okhttp3.HttpClientBuilder;
+import okhttp3.HttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,10 +89,10 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 	public okhttp3.OkHttpClient getHttpClient(){
 		if(httpClient == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
-
-			HttpClientBuilder builder = HttpClientBuilder.create()
-					.setConnectionManager(
-							((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager())
+			final HttpClientConnectionManager clientConnectionManager =
+					((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager();
+			final HttpClientBuilder builder = HttpClientBuilder.create()
+					.setConnectionManager(clientConnectionManager)
 					.setConnectTimeout(configuration.getConnectTimeout())
 					.setReadTimeout(configuration.getReadTimeout());
 

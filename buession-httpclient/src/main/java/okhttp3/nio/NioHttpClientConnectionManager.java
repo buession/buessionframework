@@ -22,7 +22,9 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package okhttp3;
+package okhttp3.nio;
+
+import okhttp3.ConnectionPool;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -48,6 +50,16 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 */
 	private int idleConnectionTime = 5 * 60 * 1000;
 
+	/**
+	 * 默认的最大并发请求数量
+	 */
+	private int maxRequests;
+
+	/**
+	 * 同时请求相同主机的请求数量最大值
+	 */
+	private int maxRequestsPerHost;
+
 	public NioHttpClientConnectionManager(){
 	}
 
@@ -68,6 +80,17 @@ public class NioHttpClientConnectionManager implements Closeable {
 	}
 
 	/**
+	 * 返回最大链接数
+	 *
+	 * @return 最大链接数
+	 *
+	 * @since 2.3.0
+	 */
+	public int getMaxConnections(){
+		return maxConnections;
+	}
+
+	/**
 	 * 设置最大链接数
 	 *
 	 * @param maxConnections
@@ -78,18 +101,65 @@ public class NioHttpClientConnectionManager implements Closeable {
 	}
 
 	/**
-	 * 设置闲连接存活时长，单位：毫秒
+	 * 返回空闲连接存活时长，单位：毫秒
+	 *
+	 * @return 空闲连接存活时长
+	 */
+	public int getIdleConnectionTime(){
+		return idleConnectionTime;
+	}
+
+	/**
+	 * 设置空闲连接存活时长，单位：毫秒
 	 *
 	 * @param idleConnectionTime
-	 * 		闲连接存活时长
+	 * 		空闲连接存活时长
 	 */
 	public void setIdleConnectionTime(int idleConnectionTime){
 		this.idleConnectionTime = idleConnectionTime;
 	}
 
+	/**
+	 * 返回默认的最大并发请求数量
+	 *
+	 * @return 默认的最大并发请求数量
+	 */
+	public int getMaxRequests(){
+		return maxRequests;
+	}
+
+	/**
+	 * 设置默认的最大并发请求数量
+	 *
+	 * @param maxRequests
+	 * 		默认的最大并发请求数量
+	 */
+	public void setMaxRequests(int maxRequests){
+		this.maxRequests = maxRequests;
+	}
+
+	/**
+	 * 返回同时请求相同主机的请求数量最大值
+	 *
+	 * @return 同时请求相同主机的请求数量最大值
+	 */
+	public int getMaxRequestsPerHost(){
+		return maxRequestsPerHost;
+	}
+
+	/**
+	 * 设置同时请求相同主机的请求数量最大值
+	 *
+	 * @param maxRequestsPerHost
+	 * 		同时请求相同主机的请求数量最大值
+	 */
+	public void setMaxRequestsPerHost(int maxRequestsPerHost){
+		this.maxRequestsPerHost = maxRequestsPerHost;
+	}
+
 	@Override
 	public void close() throws IOException{
-		
+
 	}
 
 }

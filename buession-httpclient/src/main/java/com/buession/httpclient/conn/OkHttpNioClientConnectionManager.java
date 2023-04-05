@@ -25,7 +25,7 @@
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
-import okhttp3.NioHttpClientConnectionManager;
+import okhttp3.nio.NioHttpClientConnectionManager;
 
 /**
  * Apache HttpComponents 异步连接管理器
@@ -87,8 +87,12 @@ public class OkHttpNioClientConnectionManager
 
 		//最大连接数
 		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
+		// 默认的最大并发请求数量
+		//connectionManager.setMaxRequests(getConfiguration().getMaxPerRoute());
+		// 同时请求相同主机的请求数量最大值
+		connectionManager.setMaxRequestsPerHost(getConfiguration().getMaxPerRoute());
 		// 空闲连接存活时长
-		connectionManager.setIdleConnectionTime(getConfiguration().getMaxConnections());
+		connectionManager.setIdleConnectionTime(getConfiguration().getIdleConnectionTime());
 
 		return connectionManager;
 	}

@@ -64,7 +64,7 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	public ConnectionManager getConnectionManager(){
 		return connectionManager;
 	}
-	
+
 	@Override
 	public void setConnectionManager(ConnectionManager connectionManager){
 		this.connectionManager = connectionManager;
@@ -89,9 +89,9 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		return requiredURL(url).toURI();
 	}
 
-	protected static <T> T execute(Execute<T> execute) throws IOException, RequestException{
+	protected static <T> void execute(Execute<T> execute) throws IOException, RequestException{
 		try{
-			return execute.exec();
+			execute.exec();
 		}catch(URISyntaxException e){
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
@@ -99,7 +99,7 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 
 	protected interface Execute<T> {
 
-		T exec() throws URISyntaxException, IOException, RequestException;
+		void exec() throws URISyntaxException, IOException, RequestException;
 
 	}
 

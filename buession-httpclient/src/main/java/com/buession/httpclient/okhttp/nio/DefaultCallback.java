@@ -24,10 +24,9 @@
  */
 package com.buession.httpclient.okhttp.nio;
 
-import com.buession.core.utils.Assert;
+import com.buession.httpclient.core.concurrent.BaseCallback;
 import com.buession.httpclient.core.concurrent.Callback;
-import okhttp3.Call;
-import okhttp3.Response;
+import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -36,23 +35,21 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class DefaultCallback implements okhttp3.Callback {
-
-	private final Callback delegate;
+public class DefaultCallback extends BaseCallback implements okhttp3.Callback {
 
 	public DefaultCallback(final Callback delegate){
-		Assert.isNull(delegate, "'com.buession.httpclient.core.concurrent.Callback' cloud not be null.");
-		this.delegate = delegate;
+		super(delegate);
 	}
 
 	@Override
-	public void onFailure(@NotNull Call call, @NotNull IOException e){
-
+	public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e){
+		delegate.failed(e);
 	}
 
 	@Override
-	public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException{
-
+	public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException{
+		final OkHttpResponseBuilder httpResponseBuilder = new OkHttpResponseBuilder();
+		delegate.completed(httpResponseBuilder.build(response));
 	}
 
 }

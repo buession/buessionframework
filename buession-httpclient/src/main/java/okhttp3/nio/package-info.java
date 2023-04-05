@@ -22,19 +22,4 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
-
-/**
- * @author Yong.Teng
- */
-@Deprecated
-public class HttpClientBuilder extends okhttp3.HttpClientBuilder {
-
-	private HttpClientBuilder(){
-	}
-
-	public static HttpClientBuilder create(){
-		return new HttpClientBuilder();
-	}
-
-}
+package okhttp3.nio;

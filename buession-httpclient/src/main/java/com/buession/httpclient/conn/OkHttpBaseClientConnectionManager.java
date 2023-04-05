@@ -69,8 +69,7 @@ public abstract class OkHttpBaseClientConnectionManager<O> extends AbstractConne
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration,
-											 O clientConnectionManager){
+	public OkHttpBaseClientConnectionManager(Configuration configuration, O clientConnectionManager){
 		super(configuration, clientConnectionManager);
 	}
 

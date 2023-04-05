@@ -31,8 +31,6 @@ import com.buession.httpclient.exception.RequestException;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * @author Yong.Teng
@@ -43,8 +41,8 @@ public class ApacheHttpAsyncClientTest {
 	private static ApacheHttpAsyncClient httpClient = new ApacheHttpAsyncClient();
 
 	@Test
-	public void responseHeaders() throws IOException, RequestException, ExecutionException, InterruptedException{
-		Future<Response> response = httpClient.get("https://shirojs.buession.com/manual/1.1/index.html",
+	public void responseHeaders() throws IOException, RequestException{
+		httpClient.get("https://www.baidu.com",
 				new Callback() {
 
 					@Override
@@ -64,7 +62,30 @@ public class ApacheHttpAsyncClientTest {
 
 					}
 				});
-		response.get();
+
+		System.out.println("============");
+
+		httpClient.get("https://shirojs.buession.com/manual/1.1/index.html",
+				new Callback() {
+
+					@Override
+					public void completed(Response response){
+						for(Header header : response.getHeaders()){
+							System.out.println(header.toString());
+						}
+					}
+
+					@Override
+					public void failed(Exception ex){
+
+					}
+
+					@Override
+					public void cancelled(){
+
+					}
+				});
+		//response.get();
 	}
 
 }

@@ -22,19 +22,21 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package com.buession.httpclient.core.concurrent;
+
+import com.buession.core.utils.Assert;
 
 /**
  * @author Yong.Teng
+ * @since 2.3.0
  */
-@Deprecated
-public class HttpClientBuilder extends okhttp3.HttpClientBuilder {
+public abstract class BaseCallback {
 
-	private HttpClientBuilder(){
-	}
+	protected final Callback delegate;
 
-	public static HttpClientBuilder create(){
-		return new HttpClientBuilder();
+	public BaseCallback(final Callback delegate){
+		Assert.isNull(delegate, "'" + Callback.class.getName() + "' cloud not be null.");
+		this.delegate = delegate;
 	}
 
 }

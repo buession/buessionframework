@@ -22,19 +22,71 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package okhttp3;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
+ * @since 2.3.0
  */
-@Deprecated
-public class HttpClientBuilder extends okhttp3.HttpClientBuilder {
+public class HttpClientBuilder {
 
-	private HttpClientBuilder(){
+	private final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+	private HttpClientConnectionManager connectionManager;
+
+	protected HttpClientBuilder(){
 	}
 
 	public static HttpClientBuilder create(){
 		return new HttpClientBuilder();
+	}
+
+	public HttpClientBuilder setConnectTimeout(long connectTimeout){
+		if(connectTimeout > -1){
+			builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setReadTimeout(long readTimeout){
+		if(readTimeout > -1){
+			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setFollowRedirects(Boolean followRedirects){
+		if(followRedirects != null){
+			builder.followRedirects(followRedirects);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setConnectionManager(HttpClientConnectionManager connectionManager){
+		this.connectionManager = connectionManager;
+		return this;
+	}
+
+	public OkHttpClient build(){
+		if(connectionManager != null){
+			builder.connectionPool(connectionManager.getConnectionPool());
+		}
+
+		OkHttpClient client = builder.build();
+
+		if(connectionManager != null){
+			if(connectionManager.getMaxRequests() > 0){
+				client.dispatcher().setMaxRequests(connectionManager.getMaxRequests());
+			}
+			client.dispatcher().setMaxRequestsPerHost(connectionManager.getMaxRequestsPerHost());
+		}
+
+		return client;
 	}
 
 }
