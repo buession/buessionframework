@@ -35,6 +35,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
+ * HttpClient 基类
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
@@ -80,13 +82,9 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		this.httpVersion = httpVersion;
 	}
 
-	protected static URL requiredURL(final URL url){
-		Assert.isNull(url, "Request URL cloud not be null.");
-		return url;
-	}
-
 	protected static URI URL2URI(final URL url) throws URISyntaxException{
-		return requiredURL(url).toURI();
+		Assert.isNull(url, "Request URL cloud not be null.");
+		return url.toURI();
 	}
 
 	protected static <T> T execute(Execute<T> execute) throws IOException, RequestException{

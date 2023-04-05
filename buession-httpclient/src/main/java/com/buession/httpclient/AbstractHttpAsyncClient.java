@@ -550,8 +550,8 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	}
 
 	@Override
-	public void patch(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+	public void patch(URL url, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
+			RequestException{
 		asyncExecute(()->patch(URL2URI(url), data, null, headers, callback));
 	}
 

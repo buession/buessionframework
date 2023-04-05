@@ -28,6 +28,8 @@ import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.ProtocolVersion;
 
 /**
+ * HttpClient 基接口
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
