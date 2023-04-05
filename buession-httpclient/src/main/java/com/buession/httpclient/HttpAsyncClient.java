@@ -27,7 +27,6 @@ package com.buession.httpclient;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
-import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
 
@@ -12286,7 +12285,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, Callback callback) throws IOException,
 			RequestException{
@@ -12307,7 +12305,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, Callback callback) throws IOException, RequestException;
 
@@ -12325,7 +12322,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, Callback callback) throws IOException, RequestException;
 
@@ -12345,7 +12341,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
@@ -12368,7 +12363,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException;
@@ -12389,7 +12383,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException;
@@ -12410,7 +12403,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
@@ -12433,7 +12425,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, List<Header> headers, Callback callback)
 			throws IOException, RequestException;
@@ -12454,7 +12445,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, List<Header> headers, Callback callback) throws IOException,
 			RequestException;
@@ -12477,7 +12467,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
 						 List<Header> headers, Callback callback) throws IOException, RequestException{
@@ -12502,7 +12491,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers,
 				 Callback callback) throws IOException, RequestException;
@@ -12525,7 +12513,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers,
 				 Callback callback) throws IOException, RequestException;
@@ -12546,7 +12533,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
@@ -12569,7 +12555,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException;
@@ -12590,7 +12575,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException;
@@ -12613,7 +12597,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 						 Callback callback) throws IOException, RequestException{
@@ -12638,7 +12621,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 				 Callback callback) throws IOException, RequestException;
@@ -12661,7 +12643,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 				 Callback callback) throws IOException, RequestException;
@@ -12684,7 +12665,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
 						 Callback callback) throws IOException, RequestException{
@@ -12709,7 +12689,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException;
@@ -12732,7 +12711,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException;
@@ -12757,7 +12735,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 						 List<Header> headers, Callback callback) throws IOException, RequestException{
@@ -12784,7 +12761,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 				 List<Header> headers, Callback callback) throws IOException, RequestException;
@@ -12809,7 +12785,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 				 List<Header> headers, Callback callback) throws IOException, RequestException;
@@ -12830,7 +12805,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, Callback callback)
 			throws IOException, RequestException{
@@ -12853,7 +12827,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, Callback callback) throws IOException,
 			RequestException;
@@ -12874,7 +12847,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, Callback callback) throws IOException,
 			RequestException;
@@ -12897,7 +12869,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 						 Callback callback) throws IOException, RequestException{
@@ -12922,7 +12893,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 				 Callback callback) throws IOException, RequestException;
@@ -12945,7 +12915,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 				 Callback callback) throws IOException, RequestException;
@@ -12968,7 +12937,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
 						 Callback callback) throws IOException, RequestException{
@@ -12993,7 +12961,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException;
@@ -13016,7 +12983,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException;
@@ -13041,7 +13007,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 						 List<Header> headers, Callback callback) throws IOException, RequestException{
@@ -13068,7 +13033,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 				 List<Header> headers, Callback callback) throws IOException, RequestException;
@@ -13093,7 +13057,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 				 List<Header> headers, Callback callback) throws IOException, RequestException;
@@ -13116,7 +13079,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						 Callback callback) throws IOException, RequestException{
@@ -13141,7 +13103,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException;
@@ -13164,7 +13125,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException;
@@ -13189,7 +13149,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						 Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
@@ -13216,7 +13175,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 				 Map<String, Object> parameters, Callback callback) throws IOException, RequestException;
@@ -13241,7 +13199,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 				 Map<String, Object> parameters, Callback callback) throws IOException, RequestException;
@@ -13266,7 +13223,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						 List<Header> headers, Callback callback) throws IOException, RequestException{
@@ -13293,7 +13249,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 				 List<Header> headers, Callback callback) throws IOException, RequestException;
@@ -13318,7 +13273,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 				 List<Header> headers, Callback callback) throws IOException, RequestException;
@@ -13345,7 +13299,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						 Map<String, Object> parameters, List<Header> headers, Callback callback)
@@ -13375,7 +13328,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 				 Map<String, Object> parameters, List<Header> headers, Callback callback)
@@ -13403,7 +13355,6 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		IO 异常
 	 * @throws RequestException
 	 * 		请求异常
-	 * @Response {@link Response}
 	 */
 	void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 				 Map<String, Object> parameters, List<Header> headers, Callback callback)

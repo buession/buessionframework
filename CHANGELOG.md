@@ -30,9 +30,15 @@
 
 - **buession-jdbc：** 修复 DataSource 未设置 PoolConfiguration 创建原生 DataSource 空指针 BUG
 - **buession-httpclient：** 修复 HttpClient request 方法，无法发送 report、proppatch 请求 BUG
+- **buession-httpclient：** 修复 OkHttpClientConnectionManager 中错误设置 IdleConnectionTime 的 BUG
 - **buession-web：** 修复 AbstractBasicRestController 无法调用重写 pageNotFound(final String uri) 方法 BUG
 - **buession-web：** 修复 ServerInfoFilter 通过 setHeaderName 方法设置响应头名称无效的 BUG
 - **buession-web：** 修复 ServerInfoFilter 通过构造函数设置响应头名称未进行有效性验证的 BUG
+
+
+### ⏪ 优化
+
+- 其它优化
 
 
 ---
@@ -91,7 +97,9 @@
 
 
 ### ⏪ 优化
-- 其它优化
+
+- 其它性能优化
+- 其它代码优化
 
 
 ---
