@@ -70,7 +70,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void get(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->get(URL2URI(url), null, null, callback));
+		asyncExecute(()->get(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void get(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->get(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->get(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -90,13 +90,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void get(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->get(URL2URI(url), null, headers, callback));
+		asyncExecute(()->get(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void get(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->get(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->get(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void get(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->get(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->get(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void get(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->get(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->get(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -130,13 +130,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void get(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->get(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->get(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					Callback callback) throws IOException, RequestException{
-		execute(()->get(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->get(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void post(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), null, null, null, callback));
+		asyncExecute(()->post(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void post(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), null, parameters, null, callback));
+		asyncExecute(()->post(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void post(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), null, null, headers, callback));
+		asyncExecute(()->post(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->post(URL2URI(url), null, parameters, headers, callback));
+		asyncExecute(()->post(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void post(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), data, null, null, callback));
+		asyncExecute(()->post(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->post(URL2URI(url), data, parameters, null, callback));
+		asyncExecute(()->post(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
@@ -212,13 +212,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->post(URL2URI(url), data, null, headers, callback));
+		asyncExecute(()->post(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), data, parameters, headers, callback));
+		asyncExecute(()->post(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void post(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, null, null, null, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
@@ -240,7 +240,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, null, parameters, null, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
@@ -252,7 +252,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, null, null, headers, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
@@ -264,7 +264,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, null, parameters, headers, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
 			RequestException{
-		execute(()->post(URL2URI(url), readTimeout, data, null, null, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
@@ -288,7 +288,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, data, parameters, null, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
@@ -300,13 +300,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, data, null, headers, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					 List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->post(URL2URI(url), readTimeout, data, parameters, headers, callback));
+		asyncExecute(()->post(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
@@ -316,7 +316,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void put(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), null, null, null, callback));
+		asyncExecute(()->put(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
@@ -326,7 +326,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void put(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), null, parameters, null, callback));
+		asyncExecute(()->put(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
@@ -336,7 +336,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void put(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), null, null, headers, callback));
+		asyncExecute(()->put(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
@@ -348,7 +348,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->put(URL2URI(url), null, parameters, headers, callback));
+		asyncExecute(()->put(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
@@ -358,7 +358,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void put(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), data, null, null, callback));
+		asyncExecute(()->put(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
@@ -370,7 +370,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->put(URL2URI(url), data, parameters, null, callback));
+		asyncExecute(()->put(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
@@ -382,13 +382,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->put(URL2URI(url), data, null, headers, callback));
+		asyncExecute(()->put(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 					Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), data, parameters, headers, callback));
+		asyncExecute(()->put(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
@@ -398,7 +398,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void put(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, null, null, null, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
@@ -410,7 +410,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, null, parameters, null, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
@@ -422,7 +422,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->put(URL2URI(url), readTimeout, null, null, headers, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
@@ -434,7 +434,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -446,7 +446,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, data, null, null, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
@@ -458,7 +458,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, data, parameters, null, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
@@ -470,13 +470,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, data, null, headers, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->put(URL2URI(url), readTimeout, data, parameters, headers, callback));
+		asyncExecute(()->put(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
@@ -486,7 +486,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void patch(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), null, null, null, callback));
+		asyncExecute(()->patch(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
@@ -496,7 +496,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void patch(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), null, parameters, null, callback));
+		asyncExecute(()->patch(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
@@ -506,7 +506,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void patch(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), null, null, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
@@ -518,7 +518,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), null, parameters, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
@@ -528,7 +528,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void patch(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), data, null, null, callback));
+		asyncExecute(()->patch(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
@@ -540,7 +540,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), data, parameters, null, callback));
+		asyncExecute(()->patch(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
@@ -552,13 +552,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), data, null, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 					  Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), data, parameters, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
@@ -568,7 +568,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void patch(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, null, null, null, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
@@ -580,7 +580,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, null, parameters, null, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
@@ -592,7 +592,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, null, null, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
@@ -604,7 +604,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					  Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, null, parameters, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
@@ -616,7 +616,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, data, null, null, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
@@ -628,7 +628,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					  Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, data, parameters, null, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
@@ -640,13 +640,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, data, null, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					  List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->patch(URL2URI(url), readTimeout, data, parameters, headers, callback));
+		asyncExecute(()->patch(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
@@ -656,7 +656,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void delete(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), null, null, callback));
+		asyncExecute(()->delete(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -666,7 +666,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void delete(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->delete(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -676,13 +676,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void delete(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), null, headers, callback));
+		asyncExecute(()->delete(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void delete(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->delete(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -692,7 +692,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void delete(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->delete(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -704,7 +704,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void delete(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->delete(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -716,13 +716,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void delete(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->delete(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->delete(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					   Callback callback) throws IOException, RequestException{
-		execute(()->delete(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->delete(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -732,7 +732,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void connect(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->connect(URL2URI(url), null, null, callback));
+		asyncExecute(()->connect(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -744,7 +744,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void connect(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
 			RequestException{
-		execute(()->connect(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->connect(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -754,13 +754,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void connect(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->connect(URL2URI(url), null, headers, callback));
+		asyncExecute(()->connect(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void connect(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->connect(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->connect(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -770,7 +770,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void connect(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->connect(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->connect(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -782,7 +782,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void connect(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->connect(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->connect(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -794,13 +794,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void connect(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->connect(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->connect(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->connect(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->connect(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -810,7 +810,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void trace(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), null, null, callback));
+		asyncExecute(()->trace(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -820,7 +820,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void trace(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->trace(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -830,13 +830,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void trace(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), null, headers, callback));
+		asyncExecute(()->trace(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void trace(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->trace(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -846,7 +846,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void trace(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->trace(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -858,7 +858,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void trace(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->trace(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -870,13 +870,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void trace(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->trace(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->trace(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					  Callback callback) throws IOException, RequestException{
-		execute(()->trace(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->trace(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -886,7 +886,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void copy(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), null, null, callback));
+		asyncExecute(()->copy(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -896,7 +896,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void copy(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->copy(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -906,13 +906,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void copy(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), null, headers, callback));
+		asyncExecute(()->copy(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void copy(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->copy(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -922,7 +922,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void copy(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->copy(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -934,7 +934,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void copy(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->copy(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -946,13 +946,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void copy(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->copy(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->copy(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->copy(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->copy(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -962,7 +962,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void move(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->move(URL2URI(url), null, null, callback));
+		asyncExecute(()->move(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -972,7 +972,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void move(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->move(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->move(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -982,13 +982,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void move(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->move(URL2URI(url), null, headers, callback));
+		asyncExecute(()->move(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void move(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->move(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->move(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -998,7 +998,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void move(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->move(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->move(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1010,7 +1010,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void move(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->move(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->move(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1022,13 +1022,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void move(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->move(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->move(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->move(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->move(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1038,7 +1038,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void head(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->head(URL2URI(url), null, null, callback));
+		asyncExecute(()->head(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1048,7 +1048,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void head(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->head(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->head(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1058,13 +1058,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void head(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->head(URL2URI(url), null, headers, callback));
+		asyncExecute(()->head(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void head(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->head(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->head(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1074,7 +1074,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void head(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->head(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->head(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1086,7 +1086,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void head(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->head(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->head(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1098,13 +1098,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void head(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->head(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->head(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->head(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->head(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1114,7 +1114,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void options(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->options(URL2URI(url), null, null, callback));
+		asyncExecute(()->options(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1126,7 +1126,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void options(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
 			RequestException{
-		execute(()->options(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->options(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1136,13 +1136,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void options(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->options(URL2URI(url), null, headers, callback));
+		asyncExecute(()->options(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void options(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->options(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->options(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1152,7 +1152,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void options(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->options(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->options(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1164,7 +1164,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void options(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->options(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->options(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1176,13 +1176,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void options(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->options(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->options(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->options(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->options(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1192,7 +1192,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void link(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->link(URL2URI(url), null, null, callback));
+		asyncExecute(()->link(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1202,7 +1202,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void link(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->link(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->link(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1212,13 +1212,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void link(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->link(URL2URI(url), null, headers, callback));
+		asyncExecute(()->link(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void link(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->link(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->link(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1228,7 +1228,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void link(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->link(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->link(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1240,7 +1240,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void link(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->link(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->link(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1252,13 +1252,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void link(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->link(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->link(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->link(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->link(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1268,7 +1268,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlink(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), null, null, callback));
+		asyncExecute(()->unlink(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1278,7 +1278,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlink(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->unlink(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1288,13 +1288,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlink(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), null, headers, callback));
+		asyncExecute(()->unlink(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void unlink(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->unlink(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1304,7 +1304,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlink(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->unlink(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1316,7 +1316,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void unlink(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->unlink(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1328,13 +1328,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void unlink(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->unlink(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->unlink(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					   Callback callback) throws IOException, RequestException{
-		execute(()->unlink(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->unlink(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1344,7 +1344,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void purge(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), null, null, callback));
+		asyncExecute(()->purge(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1354,7 +1354,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void purge(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->purge(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1364,13 +1364,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void purge(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), null, headers, callback));
+		asyncExecute(()->purge(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void purge(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->purge(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1380,7 +1380,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void purge(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->purge(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1392,7 +1392,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void purge(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->purge(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1404,13 +1404,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void purge(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->purge(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					  Callback callback) throws IOException, RequestException{
-		execute(()->purge(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->purge(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1420,7 +1420,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void lock(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), null, null, callback));
+		asyncExecute(()->lock(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1430,7 +1430,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void lock(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->lock(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1440,13 +1440,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void lock(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), null, headers, callback));
+		asyncExecute(()->lock(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void lock(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->lock(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1456,7 +1456,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void lock(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->lock(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1468,7 +1468,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void lock(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->lock(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1480,13 +1480,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void lock(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->lock(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->lock(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->lock(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->lock(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1496,7 +1496,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlock(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), null, null, callback));
+		asyncExecute(()->unlock(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1506,7 +1506,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlock(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->unlock(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1516,13 +1516,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlock(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), null, headers, callback));
+		asyncExecute(()->unlock(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void unlock(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->unlock(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1532,7 +1532,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void unlock(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->unlock(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1544,7 +1544,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void unlock(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->unlock(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1556,13 +1556,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void unlock(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->unlock(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->unlock(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					   Callback callback) throws IOException, RequestException{
-		execute(()->unlock(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->unlock(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1572,7 +1572,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void propfind(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->propfind(URL2URI(url), null, null, callback));
+		asyncExecute(()->propfind(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -1584,7 +1584,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void propfind(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
 			RequestException{
-		execute(()->propfind(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->propfind(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -1594,13 +1594,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void propfind(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->propfind(URL2URI(url), null, headers, callback));
+		asyncExecute(()->propfind(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void propfind(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->propfind(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->propfind(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -1610,7 +1610,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void propfind(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->propfind(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->propfind(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -1622,7 +1622,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void propfind(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->propfind(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->propfind(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -1634,13 +1634,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void propfind(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->propfind(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->propfind(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 						 Callback callback) throws IOException, RequestException{
-		execute(()->propfind(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->propfind(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1650,7 +1650,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void proppatch(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), null, null, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
@@ -1662,7 +1662,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
 			RequestException{
-		execute(()->proppatch(URL2URI(url), null, parameters, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
@@ -1672,7 +1672,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void proppatch(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), null, null, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
@@ -1684,7 +1684,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), null, parameters, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
@@ -1694,7 +1694,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), data, null, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
@@ -1706,7 +1706,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), data, parameters, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
@@ -1718,13 +1718,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), data, null, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 						  Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), data, parameters, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
@@ -1734,7 +1734,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void proppatch(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, null, null, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
@@ -1746,7 +1746,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, null, parameters, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
@@ -1758,7 +1758,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, null, null, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
@@ -1770,7 +1770,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 						  Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, null, parameters, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
@@ -1782,7 +1782,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
 			RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, data, null, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
@@ -1794,7 +1794,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 						  Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, null, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
@@ -1806,13 +1806,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, data, null, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 						  List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers, callback));
+		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
@@ -1822,7 +1822,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void report(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), null, null, null, callback));
+		asyncExecute(()->report(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
@@ -1832,7 +1832,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void report(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), null, parameters, null, callback));
+		asyncExecute(()->report(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
@@ -1842,7 +1842,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void report(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), null, null, headers, callback));
+		asyncExecute(()->report(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
@@ -1854,7 +1854,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->report(URL2URI(url), null, parameters, headers, callback));
+		asyncExecute(()->report(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
@@ -1864,7 +1864,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void report(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), data, null, null, callback));
+		asyncExecute(()->report(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
@@ -1876,7 +1876,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->report(URL2URI(url), data, parameters, null, callback));
+		asyncExecute(()->report(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
@@ -1888,13 +1888,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->report(URL2URI(url), data, null, headers, callback));
+		asyncExecute(()->report(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 					   Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), data, parameters, headers, callback));
+		asyncExecute(()->report(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
@@ -1904,7 +1904,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void report(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, null, null, null, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
@@ -1916,7 +1916,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, null, parameters, null, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
@@ -1928,7 +1928,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, int readTimeout, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, null, null, headers, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
@@ -1940,7 +1940,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					   Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -1952,7 +1952,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
 			RequestException{
-		execute(()->report(URL2URI(url), readTimeout, data, null, null, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
@@ -1964,7 +1964,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					   Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, data, parameters, null, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
@@ -1976,13 +1976,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, data, null, headers, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 					   List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->report(URL2URI(url), readTimeout, data, parameters, headers, callback));
+		asyncExecute(()->report(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
@@ -1992,7 +1992,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void view(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->view(URL2URI(url), null, null, callback));
+		asyncExecute(()->view(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -2002,7 +2002,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void view(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->view(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->view(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -2012,13 +2012,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void view(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->view(URL2URI(url), null, headers, callback));
+		asyncExecute(()->view(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void view(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->view(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->view(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -2028,7 +2028,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void view(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->view(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->view(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -2040,7 +2040,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void view(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->view(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->view(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -2052,13 +2052,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void view(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->view(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->view(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					 Callback callback) throws IOException, RequestException{
-		execute(()->view(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->view(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -2068,7 +2068,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void wrapped(URL url, Callback callback) throws IOException, RequestException{
-		execute(()->wrapped(URL2URI(url), null, null, callback));
+		asyncExecute(()->wrapped(URL2URI(url), null, null, callback));
 	}
 
 	@Override
@@ -2080,7 +2080,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void wrapped(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
 			RequestException{
-		execute(()->wrapped(URL2URI(url), parameters, null, callback));
+		asyncExecute(()->wrapped(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
@@ -2090,13 +2090,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void wrapped(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->wrapped(URL2URI(url), null, headers, callback));
+		asyncExecute(()->wrapped(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void wrapped(URL url, Map<String, Object> parameters, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->wrapped(URL2URI(url), parameters, headers, callback));
+		asyncExecute(()->wrapped(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
@@ -2106,7 +2106,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void wrapped(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
-		execute(()->wrapped(URL2URI(url), readTimeout, null, null, callback));
+		asyncExecute(()->wrapped(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
@@ -2118,7 +2118,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void wrapped(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->wrapped(URL2URI(url), readTimeout, parameters, null, callback));
+		asyncExecute(()->wrapped(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
@@ -2130,13 +2130,13 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void wrapped(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
 			RequestException{
-		execute(()->wrapped(URL2URI(url), readTimeout, null, headers, callback));
+		asyncExecute(()->wrapped(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->wrapped(URL2URI(url), readTimeout, parameters, headers, callback));
+		asyncExecute(()->wrapped(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -2146,7 +2146,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, callback));
 	}
 
 	@Override
@@ -2158,7 +2158,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
 			throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, parameters, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, parameters, callback));
 	}
 
 	@Override
@@ -2170,7 +2170,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, headers, callback));
 	}
 
 	@Override
@@ -2182,7 +2182,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, parameters, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, parameters, headers, callback));
 	}
 
 	@Override
@@ -2194,7 +2194,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
 			throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, data, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, data, callback));
 	}
 
 	@Override
@@ -2206,7 +2206,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 						Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, data, parameters, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, data, parameters, callback));
 	}
 
 	@Override
@@ -2218,7 +2218,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, data, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, data, headers, callback));
 	}
 
 	@Override
@@ -2275,7 +2275,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 						List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, data, parameters, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, data, parameters, headers, callback));
 	}
 
 	@Override
@@ -2287,7 +2287,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, Callback callback)
 			throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, callback));
 	}
 
 	@Override
@@ -2299,7 +2299,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 						Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, callback));
 	}
 
 	@Override
@@ -2311,7 +2311,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
 						Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, headers, callback));
 	}
 
 	@Override
@@ -2323,7 +2323,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 						List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers, callback));
 	}
 
 	@Override
@@ -2335,7 +2335,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, data, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, callback));
 	}
 
 	@Override
@@ -2347,7 +2347,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, callback));
 	}
 
 	@Override
@@ -2359,7 +2359,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						List<Header> headers, Callback callback) throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers, callback));
 	}
 
 	@Override
@@ -2418,7 +2418,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						Map<String, Object> parameters, List<Header> headers, Callback callback)
 			throws IOException, RequestException{
-		execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers, callback));
+		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers, callback));
 	}
 
 }
