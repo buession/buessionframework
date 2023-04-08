@@ -30,6 +30,6 @@ package com.buession.core.deserializer;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface ByteArrayDeserializer {
+public interface ByteArrayDeserializer extends Deserializer {
 
 }

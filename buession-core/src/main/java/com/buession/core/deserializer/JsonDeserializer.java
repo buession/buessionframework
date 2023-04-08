@@ -32,7 +32,7 @@ import com.buession.core.type.TypeReference;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface JsonDeserializer {
+public interface JsonDeserializer extends Deserializer {
 
 	/**
 	 * 字符串反序列化

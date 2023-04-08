@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
 
+import com.buession.core.utils.EnumUtils;
 import com.buession.lang.DomainTLD;
 
 import java.util.regex.Matcher;
@@ -42,8 +43,7 @@ public class DomainValidator {
 
 	private final static String TOP_LABEL_REGEX = "\\p{Alpha}{2,}";
 
-	private final static String DOMAIN_NAME_REGEX = "^(?:" + DOMAIN_LABEL_REGEX + "\\.)+" + "(" + TOP_LABEL_REGEX +
-			")$";
+	private final static String DOMAIN_NAME_REGEX = "^(?:" + DOMAIN_LABEL_REGEX + "\\.)+(" + TOP_LABEL_REGEX + ")$";
 
 	private final static String[] LOCAL_TLDS = new String[]{
 			// RFC2606 defined
@@ -71,8 +71,7 @@ public class DomainValidator {
 
 	private static boolean isValidTld(final String tld){
 		try{
-			Enum.valueOf(DomainTLD.class, chompLeadingDot(tld.toLowerCase()).toUpperCase());
-			return true;
+			return EnumUtils.getEnumIgnoreCase(DomainTLD.class, chompLeadingDot(tld.toLowerCase())) != null;
 		}catch(IllegalArgumentException e){
 			return false;
 		}
