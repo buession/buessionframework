@@ -25,6 +25,7 @@
 package com.buession.httpclient;
 
 import com.buession.httpclient.apache.ApacheHttpClientBuilder;
+import com.buession.httpclient.apache.ApacheRequest;
 import com.buession.httpclient.conn.ApacheClientConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
@@ -424,7 +425,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 
 	protected Response doRequest(final ApacheRequestBuilder builder, final RequestConfig requestConfig)
 			throws IOException, RequestException{
-		final ApacheRequestBuilder.HttpComponentsRequest request = builder.setRequestConfig(requestConfig)
+		final ApacheRequest request = builder.setRequestConfig(requestConfig)
 				.setProtocolVersion(getHttpVersion()).build();
 		final ApacheResponseBuilder apacheResponseBuilder = new ApacheResponseBuilder();
 

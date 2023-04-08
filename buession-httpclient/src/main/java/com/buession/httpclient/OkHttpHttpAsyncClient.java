@@ -30,6 +30,7 @@ import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
 import com.buession.httpclient.okhttp.OkHttpHttpAsyncClientBuilder;
+import com.buession.httpclient.okhttp.OkHttpRequest;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.nio.DefaultCallback;
 
@@ -346,18 +347,17 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	protected void doRequest(final OkHttpRequestBuilder builder, final Callback callback) throws IOException,
 			RequestException{
-		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+		final OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
 		doRequest(request, callback);
 	}
 
 	protected void doRequest(final OkHttpRequestBuilder builder, final int readTimeout, final Callback callback)
 			throws IOException, RequestException{
-		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+		final OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
 		doRequest(request, callback);
 	}
 
-	protected void doRequest(final OkHttpRequestBuilder.OkHttpRequest request, final Callback callback)
-			throws IOException, RequestException{
+	protected void doRequest(final OkHttpRequest request, final Callback callback) throws IOException, RequestException{
 		okhttp3.Request okHttpRequest = request.getRequestBuilder().build();
 		okhttp3.Call call = getHttpClient().newCall(okHttpRequest);
 

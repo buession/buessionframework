@@ -25,6 +25,7 @@
 package com.buession.httpclient;
 
 import com.buession.httpclient.apache.ApacheHttpAsyncClientBuilder;
+import com.buession.httpclient.apache.ApacheRequest;
 import com.buession.httpclient.apache.ApacheRequestBuilder;
 import com.buession.httpclient.apache.nio.DefaultCallback;
 import com.buession.httpclient.apache.nio.protocol.BasicAsyncResponseConsumer;
@@ -142,7 +143,7 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 		if(httpAsyncClient == null){
 			final ApacheHttpAsyncClientBuilder httpAsyncClientBuilder = new ApacheHttpAsyncClientBuilder(
 					(ApacheNioClientConnectionManager) getConnectionManager());
-			
+
 			httpAsyncClient = httpAsyncClientBuilder.build((builder)->{
 			});
 		}
@@ -422,7 +423,7 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	protected void doRequest(final ApacheRequestBuilder builder, final RequestConfig requestConfig,
 							 final Callback callback) throws IOException, RequestException{
-		final ApacheRequestBuilder.HttpComponentsRequest request = builder.setRequestConfig(requestConfig)
+		final ApacheRequest request = builder.setRequestConfig(requestConfig)
 				.setProtocolVersion(getHttpVersion()).build();
 		final HttpAsyncRequestProducer httpAsyncRequestProducer = HttpAsyncMethods.create(
 				request.getHttpRequest());

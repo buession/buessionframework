@@ -24,8 +24,6 @@
  */
 package okhttp3;
 
-import okhttp3.nio.HttpAsyncClientBuilder;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;

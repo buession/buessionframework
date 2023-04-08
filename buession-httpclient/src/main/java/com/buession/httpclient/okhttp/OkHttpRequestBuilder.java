@@ -61,7 +61,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBuilder.OkHttpRequest> {
+public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.httpclient.okhttp.OkHttpRequest> {
 
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
@@ -353,8 +353,8 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	}
 
 	@Override
-	public OkHttpRequest build(){
-		OkHttpRequest request = super.build();
+	public com.buession.httpclient.okhttp.OkHttpRequest build(){
+		com.buession.httpclient.okhttp.OkHttpRequest request = super.build();
 
 		final Headers.Builder headersBuilder = new Headers.Builder();
 

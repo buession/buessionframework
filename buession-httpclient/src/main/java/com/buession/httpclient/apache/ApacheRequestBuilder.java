@@ -65,7 +65,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBuilder.HttpComponentsRequest> {
+public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> {
 
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
 			StandardCharsets.ISO_8859_1);
@@ -88,7 +88,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	}
 
 	private ApacheRequestBuilder(){
-		request = new HttpComponentsRequest();
+		request = new ApacheRequest();
 	}
 
 	/**
@@ -362,8 +362,8 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	}
 
 	@Override
-	public HttpComponentsRequest build(){
-		HttpComponentsRequest request = super.build();
+	public ApacheRequest build(){
+		ApacheRequest request = super.build();
 
 		if(request.getHeaders() != null){
 			for(Header header : request.getHeaders()){
