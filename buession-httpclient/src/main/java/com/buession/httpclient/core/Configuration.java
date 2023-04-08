@@ -19,11 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import java.util.StringJoiner;
 
 /**
@@ -32,6 +35,18 @@ import java.util.StringJoiner;
  * @author Yong.Teng
  */
 public class Configuration {
+
+	/**
+	 * @since 2.3.0
+	 */
+	private Boolean connectionManagerShared;
+
+	/**
+	 * 连接失败是否重试
+	 *
+	 * @since 2.3.0
+	 */
+	private Boolean retryOnConnectionFailure;
 
 	/**
 	 * 最大连接数
@@ -62,6 +77,11 @@ public class Configuration {
 	 * 读取超时时间，单位：毫秒
 	 */
 	private int readTimeout = 5000;
+
+	/**
+	 * 写超时时间，单位：毫秒；小于等于 0 时，使用原生库默认写超时时间
+	 */
+	private int writeTimeout = -1;
 
 	/**
 	 * 是否允许重定向
@@ -97,6 +117,50 @@ public class Configuration {
 	 * 是否标准化 URI
 	 */
 	private boolean normalizeUri;
+
+	/**
+	 * SSL 配置
+	 *
+	 * @since 2.3.0
+	 */
+	private SSLConfiguration sslConfiguration;
+
+	/**
+	 * @since 2.3.0
+	 */
+	public Boolean getConnectionManagerShared(){
+		return connectionManagerShared;
+	}
+
+	/**
+	 * @since 2.3.0
+	 */
+	public void setConnectionManagerShared(Boolean connectionManagerShared){
+		this.connectionManagerShared = connectionManagerShared;
+	}
+
+	/**
+	 * 返回连接失败是否重试
+	 *
+	 * @return 连接失败是否重试
+	 *
+	 * @since 2.3.0
+	 */
+	public Boolean getRetryOnConnectionFailure(){
+		return retryOnConnectionFailure;
+	}
+
+	/**
+	 * 设置连接失败是否重试
+	 *
+	 * @param retryOnConnectionFailure
+	 * 		连接失败是否重试
+	 *
+	 * @since 2.3.0
+	 */
+	public void setRetryOnConnectionFailure(Boolean retryOnConnectionFailure){
+		this.retryOnConnectionFailure = retryOnConnectionFailure;
+	}
 
 	/**
 	 * 获取最大连接数
@@ -210,6 +274,29 @@ public class Configuration {
 	 */
 	public void setReadTimeout(int readTimeout){
 		this.readTimeout = readTimeout;
+	}
+
+	/**
+	 * 返回写超时时间，单位：毫秒；小于等于 0 时，使用原生库默认写超时时间
+	 *
+	 * @return 写超时时间，单位：毫秒
+	 *
+	 * @since 2.3.0
+	 */
+	public int getWriteTimeout(){
+		return writeTimeout;
+	}
+
+	/**
+	 * 设置写超时时间，单位：毫秒；小于等于 0 时，使用原生库默认写超时时间
+	 *
+	 * @param writeTimeout
+	 * 		写超时时间，单位：毫秒
+	 *
+	 * @since 2.3.0
+	 */
+	public void setWriteTimeout(int writeTimeout){
+		this.writeTimeout = writeTimeout;
 	}
 
 	/**
@@ -399,15 +486,37 @@ public class Configuration {
 		this.normalizeUri = normalizeUri;
 	}
 
+	/**
+	 * 返回 SSL 配置
+	 *
+	 * @return SSL 配置
+	 */
+	public SSLConfiguration getSslConfiguration(){
+		return sslConfiguration;
+	}
+
+	/**
+	 * 设置 SSL 配置
+	 *
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public void setSslConfiguration(SSLConfiguration sslConfiguration){
+		this.sslConfiguration = sslConfiguration;
+	}
+
 	@Override
 	public String toString(){
 		return new StringJoiner(", ")
+				.add("connectionManagerShared: " + connectionManagerShared)
+				.add("retryOnConnectionFailure: " + retryOnConnectionFailure)
 				.add("maxConnections: " + maxConnections)
 				.add("maxPerRoute: " + maxPerRoute)
 				.add("idleConnectionTime: " + idleConnectionTime)
 				.add("connectTimeout: " + connectTimeout)
 				.add("connectionRequestTimeout: " + connectionRequestTimeout)
 				.add("readTimeout: " + readTimeout)
+				.add("writeTimeout: " + writeTimeout)
 				.add("allowRedirects: " + allowRedirects)
 				.add("relativeRedirectsAllowed: " + relativeRedirectsAllowed)
 				.add("circularRedirectsAllowed: " + circularRedirectsAllowed)
@@ -415,7 +524,46 @@ public class Configuration {
 				.add("authenticationEnabled: " + authenticationEnabled)
 				.add("contentCompressionEnabled: " + contentCompressionEnabled)
 				.add("normalizeUri: " + normalizeUri)
+				.add("sslConfiguration: " + sslConfiguration)
 				.toString();
+	}
+
+	/**
+	 * SSL 配置
+	 *
+	 * @since 2.3.0
+	 */
+	public final static class SSLConfiguration {
+
+		private HostnameVerifier hostnameVerifier;
+
+		private SSLContext sslContext;
+
+		private SSLSocketFactory socketfactory;
+
+		public HostnameVerifier getHostnameVerifier(){
+			return hostnameVerifier;
+		}
+
+		public void setHostnameVerifier(HostnameVerifier hostnameVerifier){
+			this.hostnameVerifier = hostnameVerifier;
+		}
+
+		public SSLContext getSslContext(){
+			return sslContext;
+		}
+
+		public void setSslContext(SSLContext sslContext){
+			this.sslContext = sslContext;
+		}
+
+		public SSLSocketFactory getSocketfactory(){
+			return socketfactory;
+		}
+
+		public void setSocketfactory(SSLSocketFactory socketfactory){
+			this.socketfactory = socketfactory;
+		}
 	}
 
 }

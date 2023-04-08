@@ -22,58 +22,31 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.conn;
+package com.buession.httpclient.core;
 
-import com.buession.httpclient.core.Configuration;
+import java.util.function.Consumer;
 
 /**
- * okhttp 连接管理器基类
+ * Http Client Builder
  *
- * @param <CM>
- * 		原生连接管理器
+ * @param <B>
+ * 		原生 Http Client Builder
+ * @param <C>
+ * 		原生 Http Client
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
+public interface HttpClientBuilder<B, C> {
 
 	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(){
-		super();
-	}
-
-	/**
-	 * 构造函数，创建驱动默认连接管理器
+	 * 构建原生 Http Client
 	 *
-	 * @param configuration
-	 * 		连接对象
-	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration){
-		super(configuration);
-	}
-
-	/**
-	 * 构造函数
+	 * @param consumer
+	 * 		原生 Http Client Builder Consumer
 	 *
-	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * @return 原生 Http Client
 	 */
-	public OkHttpBaseClientConnectionManager(CM clientConnectionManager){
-		super(clientConnectionManager);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 * @param clientConnectionManager
-	 * 		驱动连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager){
-		super(configuration, clientConnectionManager);
-	}
+	C build(Consumer<B> consumer);
 
 }

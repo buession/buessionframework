@@ -29,10 +29,13 @@ import com.buession.httpclient.core.Configuration;
 /**
  * Apache HttpComponents 连接管理器基类
  *
+ * @param <CM>
+ * 		原生连接管理器
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConnectionManager<O> {
+public abstract class ApacheBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
@@ -57,7 +60,7 @@ public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConne
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheBaseClientConnectionManager(O clientConnectionManager){
+	public ApacheBaseClientConnectionManager(CM clientConnectionManager){
 		super(clientConnectionManager);
 	}
 
@@ -69,7 +72,7 @@ public abstract class ApacheBaseClientConnectionManager<O> extends AbstractConne
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration, O clientConnectionManager){
+	public ApacheBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager){
 		super(configuration, clientConnectionManager);
 	}
 

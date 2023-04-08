@@ -24,8 +24,12 @@
  */
 package okhttp3.nio;
 
+import okhttp3.HttpClientBuilder;
 import okhttp3.OkHttpClient;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,8 +58,16 @@ public class HttpAsyncClientBuilder {
 	}
 
 	public HttpAsyncClientBuilder setReadTimeout(long readTimeout){
-		if(readTimeout > -1){
+		if(readTimeout > 0){
 			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		}
+
+		return this;
+	}
+
+	public HttpAsyncClientBuilder setWriteTimeout(long writeTimeout){
+		if(writeTimeout > 0){
+			builder.writeTimeout(writeTimeout, TimeUnit.MILLISECONDS);
 		}
 
 		return this;
@@ -64,6 +76,29 @@ public class HttpAsyncClientBuilder {
 	public HttpAsyncClientBuilder setFollowRedirects(Boolean followRedirects){
 		if(followRedirects != null){
 			builder.followRedirects(followRedirects);
+		}
+
+		return this;
+	}
+
+	public HttpAsyncClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory){
+		if(sslSocketFactory != null){
+			builder.sslSocketFactory(sslSocketFactory);
+		}
+
+		return this;
+	}
+
+	public HttpAsyncClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier){
+		if(hostnameVerifier != null){
+			builder.hostnameVerifier(hostnameVerifier);
+		}
+
+		return this;
+	}
+
+	public HttpAsyncClientBuilder setSSLContext(SSLContext sslContext){
+		if(sslContext != null){
 		}
 
 		return this;

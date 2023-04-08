@@ -26,17 +26,15 @@ package com.buession.httpclient;
 
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.conn.OkHttpClientConnectionManager;
-import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestException;
+import com.buession.httpclient.okhttp.OkHttpHttpClientBuilder;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
-import okhttp3.HttpClientBuilder;
-import okhttp3.HttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,19 +86,11 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	public okhttp3.OkHttpClient getHttpClient(){
 		if(httpClient == null){
-			final Configuration configuration = getConnectionManager().getConfiguration();
-			final HttpClientConnectionManager clientConnectionManager =
-					((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager();
-			final HttpClientBuilder builder = HttpClientBuilder.create()
-					.setConnectionManager(clientConnectionManager)
-					.setConnectTimeout(configuration.getConnectTimeout())
-					.setReadTimeout(configuration.getReadTimeout());
+			final OkHttpHttpClientBuilder httpClientBuilder = new OkHttpHttpClientBuilder(
+					(OkHttpClientConnectionManager) getConnectionManager());
 
-			if(configuration.isAllowRedirects() != null){
-				builder.setFollowRedirects(configuration.isAllowRedirects());
-			}
-
-			httpClient = builder.build();
+			httpClient = httpClientBuilder.build((builder)->{
+			});
 		}
 
 		return httpClient;

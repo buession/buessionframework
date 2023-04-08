@@ -25,6 +25,7 @@
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.conn.nio.IOReactorConfig;
+import com.buession.httpclient.core.Configuration;
 
 /**
  * 异步连接管理器
@@ -32,7 +33,22 @@ import com.buession.httpclient.conn.nio.IOReactorConfig;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface NioConnectionManager extends ConnectionManager {
+public interface NioConnectionManager {
+
+	/**
+	 * 获取连接对象
+	 *
+	 * @return 连接对象
+	 */
+	Configuration getConfiguration();
+
+	/**
+	 * 设置连接对象
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 */
+	void setConfiguration(Configuration configuration);
 
 	IOReactorConfig getIoReactorConfig();
 

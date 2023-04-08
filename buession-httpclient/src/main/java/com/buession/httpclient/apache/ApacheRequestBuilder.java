@@ -38,7 +38,6 @@ import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
-import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
@@ -396,17 +395,8 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 		return this;
 	}
 
-	public final static class HttpComponentsRequest extends Request {
-
-		private HttpRequestBase httpRequest;
-
-		public HttpRequestBase getHttpRequest(){
-			return httpRequest;
-		}
-
-		public void setHttpRequest(HttpRequestBase httpRequest){
-			this.httpRequest = httpRequest;
-		}
+	@Deprecated
+	public final static class HttpComponentsRequest extends ApacheRequest {
 
 	}
 

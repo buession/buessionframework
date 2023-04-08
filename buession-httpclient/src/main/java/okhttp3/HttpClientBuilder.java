@@ -24,6 +24,11 @@
  */
 package okhttp3;
 
+import okhttp3.nio.HttpAsyncClientBuilder;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +48,14 @@ public class HttpClientBuilder {
 		return new HttpClientBuilder();
 	}
 
+	public HttpClientBuilder setRetryOnConnectionFailure(Boolean retryOnConnectionFailure){
+		if(retryOnConnectionFailure != null){
+			builder.retryOnConnectionFailure(retryOnConnectionFailure);
+		}
+
+		return this;
+	}
+
 	public HttpClientBuilder setConnectTimeout(long connectTimeout){
 		if(connectTimeout > -1){
 			builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
@@ -52,8 +65,16 @@ public class HttpClientBuilder {
 	}
 
 	public HttpClientBuilder setReadTimeout(long readTimeout){
-		if(readTimeout > -1){
+		if(readTimeout > 0){
 			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setWriteTimeout(long writeTimeout){
+		if(writeTimeout > 0){
+			builder.writeTimeout(writeTimeout, TimeUnit.MILLISECONDS);
 		}
 
 		return this;
@@ -62,6 +83,29 @@ public class HttpClientBuilder {
 	public HttpClientBuilder setFollowRedirects(Boolean followRedirects){
 		if(followRedirects != null){
 			builder.followRedirects(followRedirects);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory){
+		if(sslSocketFactory != null){
+			builder.sslSocketFactory(sslSocketFactory);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier){
+		if(hostnameVerifier != null){
+			builder.hostnameVerifier(hostnameVerifier);
+		}
+
+		return this;
+	}
+
+	public HttpClientBuilder setSSLContext(SSLContext sslContext){
+		if(sslContext != null){
 		}
 
 		return this;

@@ -22,58 +22,31 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.conn;
+package com.buession.httpclient.core;
 
-import com.buession.httpclient.core.Configuration;
+import com.buession.core.utils.Assert;
+import com.buession.httpclient.conn.ConnectionManager;
 
 /**
- * okhttp 连接管理器基类
+ * Http Client Builder 抽象类
  *
+ * @param <B>
+ * 		原生 Http Client Builder
  * @param <CM>
- * 		原生连接管理器
+ * 		连接管理器
+ * @param <C>
+ * 		原生 Http Client
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
+public abstract class AbstractHttpClientBuilder<B, CM extends ConnectionManager, C> implements HttpClientBuilder<B, C> {
 
-	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(){
-		super();
-	}
+	protected final CM connectionManager;
 
-	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration){
-		super(configuration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param clientConnectionManager
-	 * 		驱动连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(CM clientConnectionManager){
-		super(clientConnectionManager);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 * @param clientConnectionManager
-	 * 		驱动连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager){
-		super(configuration, clientConnectionManager);
+	public AbstractHttpClientBuilder(final CM connectionManager){
+		Assert.isNull(connectionManager, "Connection manager cloud not be null.");
+		this.connectionManager = connectionManager;
 	}
 
 }

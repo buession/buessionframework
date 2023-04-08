@@ -34,7 +34,6 @@ import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
-import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
@@ -370,9 +369,9 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		return request;
 	}
 
-	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder okhttp3RequestBuilder,
+	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder requestBuilder,
 											  final RequestMethod method){
-		request.setRequestBuilder(okhttp3RequestBuilder);
+		request.setRequestBuilder(requestBuilder);
 		request.setMethod(method);
 		return this;
 	}
@@ -388,17 +387,8 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		return convert == null ? DEFAULT_REQUEST_BODY : convert.convert(data);
 	}
 
-	public final static class OkHttpRequest extends Request {
-
-		private okhttp3.Request.Builder builder;
-
-		public okhttp3.Request.Builder getRequestBuilder(){
-			return builder;
-		}
-
-		public void setRequestBuilder(okhttp3.Request.Builder builder){
-			this.builder = builder;
-		}
+	@Deprecated
+	public final static class OkHttpRequest extends com.buession.httpclient.okhttp.OkHttpRequest {
 
 	}
 

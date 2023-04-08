@@ -25,15 +25,13 @@
 package com.buession.httpclient;
 
 import com.buession.httpclient.conn.OkHttpNioClientConnectionManager;
-import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
+import com.buession.httpclient.okhttp.OkHttpHttpAsyncClientBuilder;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.nio.DefaultCallback;
-import okhttp3.nio.NioHttpClientConnectionManager;
-import okhttp3.nio.HttpAsyncClientBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -80,19 +78,11 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	public okhttp3.OkHttpClient getHttpClient(){
 		if(httpClient == null){
-			final Configuration configuration = getConnectionManager().getConfiguration();
-			final NioHttpClientConnectionManager clientConnectionManager =
-					((OkHttpNioClientConnectionManager) getConnectionManager()).getClientConnectionManager();
-			final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
-					.setConnectionManager(clientConnectionManager)
-					.setConnectTimeout(configuration.getConnectTimeout())
-					.setReadTimeout(configuration.getReadTimeout());
+			final OkHttpHttpAsyncClientBuilder httpAsyncClientBuilder = new OkHttpHttpAsyncClientBuilder(
+					(OkHttpNioClientConnectionManager) getConnectionManager());
 
-			if(configuration.isAllowRedirects() != null){
-				builder.setFollowRedirects(configuration.isAllowRedirects());
-			}
-
-			httpClient = builder.build();
+			httpClient = httpAsyncClientBuilder.build((builder)->{
+			});
 		}
 
 		return httpClient;

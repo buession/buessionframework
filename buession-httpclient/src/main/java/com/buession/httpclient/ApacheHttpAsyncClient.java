@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient;
 
+import com.buession.httpclient.apache.ApacheHttpAsyncClientBuilder;
 import com.buession.httpclient.apache.ApacheRequestBuilder;
 import com.buession.httpclient.apache.nio.DefaultCallback;
 import com.buession.httpclient.apache.nio.protocol.BasicAsyncResponseConsumer;
@@ -35,10 +36,7 @@ import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
-import org.apache.http.nio.conn.NHttpClientConnectionManager;
 import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
 
 import java.io.IOException;
@@ -142,14 +140,11 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	public org.apache.http.nio.client.HttpAsyncClient getHttpClient(){
 		if(httpAsyncClient == null){
-			final NHttpClientConnectionManager connectionManager =
-					((ApacheNioClientConnectionManager) getConnectionManager()).getClientConnectionManager();
-			final HttpAsyncClientBuilder httpClientBuilder = HttpAsyncClientBuilder.create()
-					.setConnectionManager(connectionManager);
-			final CloseableHttpAsyncClient closeableHttpAsyncClient = httpClientBuilder.build();
-
-			closeableHttpAsyncClient.start();
-			httpAsyncClient = closeableHttpAsyncClient;
+			final ApacheHttpAsyncClientBuilder httpAsyncClientBuilder = new ApacheHttpAsyncClientBuilder(
+					(ApacheNioClientConnectionManager) getConnectionManager());
+			
+			httpAsyncClient = httpAsyncClientBuilder.build((builder)->{
+			});
 		}
 
 		return httpAsyncClient;

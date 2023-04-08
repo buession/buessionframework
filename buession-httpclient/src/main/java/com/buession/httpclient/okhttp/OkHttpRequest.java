@@ -22,58 +22,26 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.conn;
+package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.Configuration;
+import com.buession.httpclient.core.Request;
 
 /**
- * okhttp 连接管理器基类
- *
- * @param <CM>
- * 		原生连接管理器
+ * Okhttp3 Request.
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
+public class OkHttpRequest extends Request {
 
-	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(){
-		super();
+	private okhttp3.Request.Builder builder;
+
+	public okhttp3.Request.Builder getRequestBuilder(){
+		return builder;
 	}
 
-	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration){
-		super(configuration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param clientConnectionManager
-	 * 		驱动连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(CM clientConnectionManager){
-		super(clientConnectionManager);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 * @param clientConnectionManager
-	 * 		驱动连接管理器
-	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager){
-		super(configuration, clientConnectionManager);
+	public void setRequestBuilder(okhttp3.Request.Builder builder){
+		this.builder = builder;
 	}
 
 }
