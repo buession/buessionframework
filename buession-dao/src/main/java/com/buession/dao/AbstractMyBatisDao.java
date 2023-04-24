@@ -311,7 +311,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void updatePrimary(E e, P primary){
 		final Collection<ResultMap> resultMaps = masterSqlSessionTemplate.getConfiguration().getResultMaps();
 

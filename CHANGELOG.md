@@ -38,6 +38,7 @@
 
 ### ⏪ 优化
 
+- **buession-httpclient：** 内部优化
 - 其它优化
 
 

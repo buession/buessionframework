@@ -64,8 +64,6 @@ import java.util.Map;
  */
 public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> implements MongoDBDao<P, E> {
 
-	private final static OrderToMongoDBSortDirectionConverter ORDER_TO_MONGO_DB_SORT_DIRECTION_CONVERTER = new OrderToMongoDBSortDirectionConverter();
-
 	/**
 	 * master MongoTemplate
 	 */
@@ -391,10 +389,12 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	protected void buildSort(final Query query, final Map<String, Order> orders){
 		if(Validate.isNotEmpty(orders)){
+			final OrderToMongoDBSortDirectionConverter orderToMongoDBSortDirectionConverter =
+					new OrderToMongoDBSortDirectionConverter();
 			final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
 
 			orders.forEach((field, order)->{
-				Sort.Direction direction = ORDER_TO_MONGO_DB_SORT_DIRECTION_CONVERTER.convert(order);
+				Sort.Direction direction = orderToMongoDBSortDirectionConverter.convert(order);
 
 				if(direction != null){
 					sortOrders.add(new Sort.Order(direction, field));
