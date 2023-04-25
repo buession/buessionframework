@@ -22,7 +22,4 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-/**
- * @author Yong.Teng
- */
-package com.buession.redis.pubsub.jedis;
+package com.buession.redis.core.internal.convert.lettuce;

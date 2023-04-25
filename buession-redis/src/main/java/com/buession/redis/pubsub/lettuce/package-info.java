@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.redis.pubsub.jedis;
+package com.buession.redis.pubsub.lettuce;
