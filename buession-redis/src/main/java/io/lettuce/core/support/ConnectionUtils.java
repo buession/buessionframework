@@ -21,10 +21,28 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core.support;/**
- * 
- *
+ */
+package io.lettuce.core.support;
+
+import io.lettuce.core.api.StatefulConnection;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class ConnectionUtils {
+ */
+public class ConnectionUtils {
+
+	public static <C> C wrapConnection(C connection, ObjectPoolWrapper<C> pool){
+		return ConnectionWrapping.wrapConnection(connection, pool);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <C extends StatefulConnection<?, ?>> C getOriginalConnection(C connection){
+		if(connection instanceof ConnectionWrapping.HasTargetConnection){
+			return (C) ((ConnectionWrapping.HasTargetConnection) connection).getTargetConnection();
+		}else{
+			return connection;
+		}
+	}
+
 }

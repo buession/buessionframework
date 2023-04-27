@@ -21,10 +21,80 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
- *
+ */
+package io.lettuce.core;
+
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class Pool {
+ */
+public class Pool<T> extends GenericObjectPool<T> {
+
+	public Pool(GenericObjectPoolConfig<T> poolConfig, PooledObjectFactory<T> factory){
+		this(factory, poolConfig);
+	}
+
+	public Pool(final PooledObjectFactory<T> factory, final GenericObjectPoolConfig<T> poolConfig){
+		super(factory, poolConfig);
+	}
+
+	public T getResource(){
+		try{
+			return super.borrowObject();
+		}catch(Exception e){
+			throw new RedisConnectionException("Could not get a resource from the pool", e);
+		}
+	}
+
+	public void returnResource(final T resource){
+		if(resource == null){
+			return;
+		}
+
+		try{
+			super.returnObject(resource);
+		}catch(RuntimeException e){
+			throw new RedisConnectionException("Could not return the resource to the pool", e);
+		}
+	}
+
+	public void returnBrokenResource(final T resource){
+		if(resource == null){
+			return;
+		}
+		try{
+			super.invalidateObject(resource);
+		}catch(Exception e){
+			throw new RedisConnectionException("Could not return the broken resource to the pool", e);
+		}
+	}
+
+	@Override
+	public void addObjects(int count){
+		try{
+			for(int i = 0; i < count; i++){
+				addObject();
+			}
+		}catch(Exception e){
+			throw new RedisException("Error trying to add idle objects", e);
+		}
+	}
+
+	public void destroy(){
+		try{
+			super.close();
+		}catch(RuntimeException e){
+			throw new RedisConnectionException("Could not destroy the pool", e);
+		}
+	}
+
+	@Override
+	public void close(){
+		destroy();
+	}
+
 }

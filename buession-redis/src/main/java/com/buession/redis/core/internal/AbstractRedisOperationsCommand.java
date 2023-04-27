@@ -21,10 +21,33 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal;/**
- * 
- *
+ */
+package com.buession.redis.core.internal;
+
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.AbstractRedisCommand;
+import com.buession.redis.core.command.ProtocolCommand;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class AbstractRedisOperationsCommand {
+ */
+public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, R>
+		extends AbstractRedisCommand<CLIENT, R> {
+
+	protected CONN connection;
+
+	protected Runner runner;
+
+	protected Runner pipelineRunner;
+
+	protected Runner transactionRunner;
+
+	@SuppressWarnings({"unchecked"})
+	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command){
+		super(client, command);
+		connection = (CONN) client.getConnection();
+	}
+
 }

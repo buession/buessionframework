@@ -24,167 +24,151 @@
  */
 package io.lettuce.core;
 
+import com.buession.redis.core.internal.lettuce.RedisClientBuilder;
 import io.lettuce.core.api.StatefulConnection;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
-import redis.clients.jedis.exceptions.InvalidURIException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
 /**
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class RedisPooledFactory<T extends StatefulConnection<?, ?>> extends BasePooledObjectFactory<T> {
+public class LettuceRedisPooledFactory<T extends StatefulConnection<?, ?>> extends BasePooledObjectFactory<T> {
 
-	private Supplier<T> connectionSupplier;
+	private RedisPooledFactory<T> factory;
 
-	public RedisPooledFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
-							  final String password, final int database, final String clientName){
+	public LettuceRedisPooledFactory(final String host, final int port, final int connectionTimeout,
+									 final int soTimeout, final String password, final int database,
+									 final String clientName){
 		this(host, port, connectionTimeout, soTimeout, password, database, clientName, false, null, null, null);
 	}
 
-	public RedisPooledFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
-							  final String user, final String password, final int database, final String clientName){
+	public LettuceRedisPooledFactory(final String host, final int port, final int connectionTimeout,
+									 final int soTimeout, final String user, final String password, final int database,
+									 final String clientName){
 		this(host, port, connectionTimeout, soTimeout, 0, user, password, database, clientName);
 	}
 
-	public RedisPooledFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
-							  final int infiniteSoTimeout, final String user, final String password, final int database,
-							  final String clientName){
+	public LettuceRedisPooledFactory(final String host, final int port, final int connectionTimeout,
+									 final int soTimeout, final int infiniteSoTimeout, final String user,
+									 final String password, final int database, final String clientName){
 		this(host, port, connectionTimeout, soTimeout, infiniteSoTimeout, user, password, database, clientName, false,
 				null, null, null);
 	}
 
-	public RedisPooledFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
-							  final String password, final int database, final String clientName, final boolean ssl,
-							  final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-							  final HostnameVerifier hostnameVerifier){
+	public LettuceRedisPooledFactory(final String host, final int port, final int connectionTimeout,
+									 final int soTimeout, final String password, final int database,
+									 final String clientName, final boolean ssl,
+									 final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+									 final HostnameVerifier hostnameVerifier){
 		this(host, port, connectionTimeout, soTimeout, null, password, database, clientName, ssl, sslSocketFactory,
 				sslParameters, hostnameVerifier);
 	}
 
-	public RedisPooledFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
-							  final String user, final String password, final int database, final String clientName,
-							  final boolean ssl, final SSLSocketFactory sslSocketFactory,
-							  final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+	public LettuceRedisPooledFactory(final String host, final int port, final int connectionTimeout,
+									 final int soTimeout, final String user, final String password, final int database,
+									 final String clientName, final boolean ssl,
+									 final SSLSocketFactory sslSocketFactory,
+									 final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
 		this(host, port, connectionTimeout, soTimeout, 0, user, password, database, clientName, ssl, sslSocketFactory,
 				sslParameters, hostnameVerifier);
 	}
 
-	public RedisPooledFactory(final RedisURI redisURI){
+	public LettuceRedisPooledFactory(final RedisURI redisURI){
 		final RedisClient redisClient = RedisClient.create(redisURI);
-		setConnectionSupplier(redisClient::connect);
+		initialize(redisClient);
 	}
 
-	public RedisPooledFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
-							  final int infiniteSoTimeout, final String user, final String password, final int database,
-							  final String clientName, final boolean ssl, final SSLSocketFactory sslSocketFactory,
-							  final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
-		final RedisURI.Builder redisUriBuilder = RedisURI.builder()
-				.withHost(host)
-				.withPort(port)
-				.withDatabase(database)
-				.withSsl(ssl)
-				.withVerifyPeer(hostnameVerifier != null)
-				.withTimeout(Duration.of(connectionTimeout, ChronoUnit.MILLIS));
+	public LettuceRedisPooledFactory(final String host, final int port, final int connectionTimeout,
+									 final int soTimeout, final int infiniteSoTimeout, final String user,
+									 final String password, final int database, final String clientName,
+									 final boolean ssl, final SSLSocketFactory sslSocketFactory,
+									 final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+		final RedisClientBuilder redisClientBuilder = RedisClientBuilder.create().host(host).port(port)
+				.connectionTimeout(connectionTimeout).soTimeout(soTimeout).infiniteSoTimeout(infiniteSoTimeout)
+				.user(user).password(password).database(database).clientName(clientName).ssl(ssl)
+				.sslSocketFactory(sslSocketFactory).sslParameters(sslParameters).hostnameVerifier(hostnameVerifier);
+		final RedisClient redisClient = redisClientBuilder.build();
 
-		if(password != null){
-			redisUriBuilder.withPassword(password);
-		}
-		if(clientName != null){
-			redisUriBuilder.withClientName(clientName);
-		}
-
-		initialize(redisUriBuilder.build());
+		initialize(redisClient);
 	}
 
-	public RedisPooledFactory(final URI uri, final int connectionTimeout, final int soTimeout, final String clientName){
+	public LettuceRedisPooledFactory(final URI uri, final int connectionTimeout, final int soTimeout,
+									 final String clientName){
 		this(uri, connectionTimeout, soTimeout, clientName, null, null, null);
 	}
 
-	public RedisPooledFactory(final URI uri, final int connectionTimeout, final int soTimeout,
-							  final String clientName, final SSLSocketFactory sslSocketFactory,
-							  final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+	public LettuceRedisPooledFactory(final URI uri, final int connectionTimeout, final int soTimeout,
+									 final String clientName, final SSLSocketFactory sslSocketFactory,
+									 final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
 		this(uri, connectionTimeout, soTimeout, 0, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
-	public RedisPooledFactory(final URI uri, final int connectionTimeout, final int soTimeout,
-							  final int infiniteSoTimeout, final String clientName,
-							  final SSLSocketFactory sslSocketFactory,
-							  final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
-		RedisURI redisURI;
-
-		try{
-			redisURI = RedisURI.create(uri);
-		}catch(Exception e){
-			throw new InvalidURIException(String.format("Cannot open Redis connection due invalid URI. %s", uri));
-		}
-
-		initialize(redisURI);
+	public LettuceRedisPooledFactory(final URI uri, final int connectionTimeout, final int soTimeout,
+									 final int infiniteSoTimeout, final String clientName,
+									 final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+									 final HostnameVerifier hostnameVerifier){
+		this(uri.getHost(), uri.getPort(), connectionTimeout, soTimeout, infiniteSoTimeout, null, null, 0, clientName,
+				sslSocketFactory != null, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
-	private void initialize(final RedisURI redisURI){
-		final RedisClient redisClient = RedisClient.create(redisURI);
-		setConnectionSupplier(redisClient::connect);
-	}
-
-	private void setConnectionSupplier(Supplier<T> connectionSupplier){
-		this.connectionSupplier = connectionSupplier;
+	private void initialize(final RedisClient redisClient){
+		factory = new RedisPooledFactory(redisClient::connect);
 	}
 
 	@Override
 	public T create() throws Exception{
-		return connectionSupplier.get();
+		return factory.create();
 	}
 
 	@Override
 	public void destroyObject(PooledObject<T> p) throws Exception{
-		p.getObject().close();
+		factory.destroyObject(p);
 	}
 
 	@Override
 	public PooledObject<T> wrap(T obj){
-		return new DefaultPooledObject<>(obj);
+		return factory.wrap(obj);
 	}
 
 	@Override
 	public boolean validateObject(PooledObject<T> p){
-		return p.getObject().isOpen();
+		return factory.validateObject(p);
 	}
 
-	public class RedisPooledFactory<T extends StatefulConnection<?, ?>> extends BasePooledObjectFactory<T> {
+	private final static class RedisPooledFactory<P extends StatefulConnection<?, ?>>
+			extends BasePooledObjectFactory<P> {
 
-		private final Supplier<T> connectionSupplier;
+		private final Supplier<P> connectionSupplier;
 
-		public RedisPooledFactory(final Supplier<T> connectionSupplier){
+		public RedisPooledFactory(final Supplier<P> connectionSupplier){
 			this.connectionSupplier = connectionSupplier;
 		}
 
 		@Override
-		public T create() throws Exception{
+		public P create() throws Exception{
 			return connectionSupplier.get();
 		}
 
 		@Override
-		public void destroyObject(PooledObject<T> p) throws Exception{
+		public void destroyObject(PooledObject<P> p) throws Exception{
 			p.getObject().close();
 		}
 
 		@Override
-		public PooledObject<T> wrap(T obj){
+		public PooledObject<P> wrap(P obj){
 			return new DefaultPooledObject<>(obj);
 		}
 
 		@Override
-		public boolean validateObject(PooledObject<T> p){
+		public boolean validateObject(PooledObject<P> p){
 			return p.getObject().isOpen();
 		}
 

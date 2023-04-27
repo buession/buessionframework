@@ -22,4 +22,4 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce;
+package com.buession.redis.core.internal.convert.lettuce.params;

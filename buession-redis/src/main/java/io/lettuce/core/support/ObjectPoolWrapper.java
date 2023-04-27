@@ -21,10 +21,36 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core.support;/**
- * 
- *
+ */
+package io.lettuce.core.support;
+
+import org.apache.commons.pool2.ObjectPool;
+
+import java.util.concurrent.CompletableFuture;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class ObjectPoolWrapper {
+ */
+public class ObjectPoolWrapper<T> implements ConnectionWrapping.Origin<T> {
+
+	private static final CompletableFuture<Void> COMPLETED = CompletableFuture.completedFuture(null);
+
+	private final ObjectPool<T> pool;
+
+	public ObjectPoolWrapper(ObjectPool<T> pool){
+		this.pool = pool;
+	}
+
+	@Override
+	public void returnObject(T o) throws Exception{
+		pool.returnObject(o);
+	}
+
+	@Override
+	public CompletableFuture<Void> returnObjectAsync(T o) throws Exception{
+		pool.returnObject(o);
+		return COMPLETED;
+	}
+
 }

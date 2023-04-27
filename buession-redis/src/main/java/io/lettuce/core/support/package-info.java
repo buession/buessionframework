@@ -26,4 +26,4 @@
  * @author Yong.Teng
  * @since 2.3.0
  */
-package io.lettuce.core;
+package io.lettuce.core.support;

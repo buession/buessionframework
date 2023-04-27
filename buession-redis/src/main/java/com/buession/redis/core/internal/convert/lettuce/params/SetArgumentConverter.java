@@ -21,10 +21,56 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.params;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.params;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.StringCommands;
+import io.lettuce.core.SetArgs;
+import redis.clients.jedis.params.SetParams;
+
+/**
+ * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public class SetArgumentConverter {
+ */
+public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetArgs> {
+
+	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
+
+	@Override
+	public SetArgs convert(final StringCommands.SetArgument source){
+		final SetArgs setArgs = new SetArgs();
+
+		if(source.getEx() != null){
+			setArgs.ex(source.getEx());
+		}
+
+		if(source.getExAt() != null){
+			setArgs.px(source.getExAt());
+		}
+
+		if(source.getPx() != null){
+			setArgs.px(source.getPx());
+		}
+
+		if(source.getPxAt() != null){
+			setArgs.px(source.getPxAt() - System.currentTimeMillis());
+		}
+
+		if(source.getNxXx() == NxXx.NX){
+			setArgs.nx();
+		}else if(source.getNxXx() == NxXx.XX){
+			setArgs.xx();
+		}
+
+		if(Boolean.TRUE.equals(source.isKeepTtl())){
+			setArgs.keepttl();
+		}
+
+		return setArgs;
+	}
+
 }

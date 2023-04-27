@@ -42,8 +42,36 @@ public class SafeEncoder {
 		return str.getBytes(StandardCharsets.UTF_8);
 	}
 
+	public static byte[][] encode(final String... strs){
+		if(strs == null){
+			return null;
+		}else{
+			final byte[][] values = new byte[strs.length][];
+
+			for(int i = 0; i < strs.length; i++){
+				values[i] = strs[i].getBytes(StandardCharsets.UTF_8);
+			}
+
+			return values;
+		}
+	}
+
 	public static String encode(final byte[] data){
 		return new String(data, StandardCharsets.UTF_8);
+	}
+
+	public static String[] encode(final byte[]... data){
+		if(data == null){
+			return null;
+		}else{
+			final String[] values = new String[data.length];
+
+			for(int i = 0; i < data.length; i++){
+				values[i] = new String(data[i], StandardCharsets.UTF_8);
+			}
+
+			return values;
+		}
 	}
 
 }

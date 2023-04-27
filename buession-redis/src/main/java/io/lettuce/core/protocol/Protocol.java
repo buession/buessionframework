@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core;
+package io.lettuce.core.protocol;
 
 /**
  * @author Yong.Teng

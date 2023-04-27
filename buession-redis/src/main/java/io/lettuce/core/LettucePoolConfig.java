@@ -21,10 +21,20 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
- *
+ */
+package io.lettuce.core;
+
+import io.lettuce.core.connection.StandaloneStatefulRedisConnection;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class LettucePoolConfig {
+ */
+public class LettucePoolConfig extends GenericObjectPoolConfig<StandaloneStatefulRedisConnection> {
+
+	public LettucePoolConfig(){
+		super();
+	}
+
 }
