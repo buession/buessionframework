@@ -22,56 +22,45 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.client.lettuce;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.SetParams;
+import com.buession.redis.client.AbstractRedisClient;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.core.FutureResult;
+import redis.clients.jedis.Response;
 
-import java.util.Objects;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
- * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
+ * Jedis Redis 客户端 抽象类
  *
  * @author Yong.Teng
- * @since 2.0.0
  */
-public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
+public abstract class AbstractJedisRedisClient extends AbstractRedisClient implements JedisRedisClient {
 
-	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
+	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
+
+	/**
+	 * 构造函数
+	 */
+	public AbstractJedisRedisClient(){
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
+	 */
+	public AbstractJedisRedisClient(final JedisRedisConnection connection){
+		super(connection);
+	}
 
 	@Override
-	public SetParams convert(final StringCommands.SetArgument source){
-		final SetParams setParams = new SetParams();
-
-		if(source.getEx() != null){
-			setParams.ex(source.getEx());
-		}
-
-		if(source.getExAt() != null){
-			setParams.exAt(source.getExAt());
-		}
-
-		if(source.getPx() != null){
-			setParams.px(source.getPx());
-		}
-
-		if(source.getPxAt() != null){
-			setParams.pxAt(source.getPxAt());
-		}
-
-		if(source.getNxXx() == NxXx.NX){
-			setParams.nx();
-		}else if(source.getNxXx() == NxXx.XX){
-			setParams.xx();
-		}
-
-		if(Boolean.TRUE.equals(source.isKeepTtl())){
-			setParams.keepttl();
-		}
-
-		return setParams;
+	public Queue<FutureResult<Response<Object>, Object, Object>> getTxResults(){
+		return txResults;
 	}
 
 }

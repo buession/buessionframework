@@ -19,59 +19,62 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.SetParams;
+import com.buession.core.utils.NumberUtils;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.KeyOperations;
+import com.buession.redis.core.ScanResult;
 
-import java.util.Objects;
+import java.util.List;
 
 /**
- * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
+ * Jedis Key 命令操作抽象类
+ *
+ * @param <C>
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
+public abstract class AbstractKeyOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+		implements KeyOperations {
 
-	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
+	public AbstractKeyOperations(final C client){
+		super(client);
+	}
 
 	@Override
-	public SetParams convert(final StringCommands.SetArgument source){
-		final SetParams setParams = new SetParams();
+	public ScanResult<List<String>> scan(final long cursor){
+		return scan(Long.toString(cursor));
+	}
 
-		if(source.getEx() != null){
-			setParams.ex(source.getEx());
-		}
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern){
+		return scan(Long.toString(cursor), pattern);
+	}
 
-		if(source.getExAt() != null){
-			setParams.exAt(source.getExAt());
-		}
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
+		return scan(NumberUtils.long2bytes(cursor), pattern);
+	}
 
-		if(source.getPx() != null){
-			setParams.px(source.getPx());
-		}
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final long count){
+		return scan(Long.toString(cursor), count);
+	}
 
-		if(source.getPxAt() != null){
-			setParams.pxAt(source.getPxAt());
-		}
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
+		return scan(Long.toString(cursor), pattern, count);
+	}
 
-		if(source.getNxXx() == NxXx.NX){
-			setParams.nx();
-		}else if(source.getNxXx() == NxXx.XX){
-			setParams.xx();
-		}
-
-		if(Boolean.TRUE.equals(source.isKeepTtl())){
-			setParams.keepttl();
-		}
-
-		return setParams;
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
+		return scan(NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 }

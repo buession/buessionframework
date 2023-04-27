@@ -19,59 +19,50 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.SetParams;
-
-import java.util.Objects;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
+ * Jedis 服务端命令操作抽象类
+ *
+ * @param <C>
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
+public abstract class AbstractServerOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+		implements ServerOperations {
 
-	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
+	public AbstractServerOperations(final C client){
+		super(client);
+	}
 
 	@Override
-	public SetParams convert(final StringCommands.SetArgument source){
-		final SetParams setParams = new SetParams();
+	public Status moduleLoad(final byte[] path, final byte[]... arguments){
+		if(arguments == null){
+			return moduleLoad(SafeEncoder.encode(path));
+		}else{
+			final String[] args = new String[arguments.length];
 
-		if(source.getEx() != null){
-			setParams.ex(source.getEx());
+			for(int i = 0; i < arguments.length; i++){
+				args[i] = SafeEncoder.encode(arguments[i]);
+			}
+
+			return moduleLoad(SafeEncoder.encode(path), args);
 		}
+	}
 
-		if(source.getExAt() != null){
-			setParams.exAt(source.getExAt());
-		}
-
-		if(source.getPx() != null){
-			setParams.px(source.getPx());
-		}
-
-		if(source.getPxAt() != null){
-			setParams.pxAt(source.getPxAt());
-		}
-
-		if(source.getNxXx() == NxXx.NX){
-			setParams.nx();
-		}else if(source.getNxXx() == NxXx.XX){
-			setParams.xx();
-		}
-
-		if(Boolean.TRUE.equals(source.isKeepTtl())){
-			setParams.keepttl();
-		}
-
-		return setParams;
+	@Override
+	public Status moduleUnLoad(final byte[] name){
+		return moduleUnLoad(SafeEncoder.encode(name));
 	}
 
 }

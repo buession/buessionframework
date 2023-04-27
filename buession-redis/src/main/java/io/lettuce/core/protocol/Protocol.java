@@ -22,56 +22,22 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.SetParams;
-
-import java.util.Objects;
+package io.lettuce.core;
 
 /**
- * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
+public class Protocol {
 
-	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
+	public final static String DEFAULT_HOST = "127.0.0.1";
 
-	@Override
-	public SetParams convert(final StringCommands.SetArgument source){
-		final SetParams setParams = new SetParams();
+	public final static int DEFAULT_PORT = 6379;
 
-		if(source.getEx() != null){
-			setParams.ex(source.getEx());
-		}
+	public final static int DEFAULT_SENTINEL_PORT = 26379;
 
-		if(source.getExAt() != null){
-			setParams.exAt(source.getExAt());
-		}
+	public final static int DEFAULT_TIMEOUT = 2000;
 
-		if(source.getPx() != null){
-			setParams.px(source.getPx());
-		}
-
-		if(source.getPxAt() != null){
-			setParams.pxAt(source.getPxAt());
-		}
-
-		if(source.getNxXx() == NxXx.NX){
-			setParams.nx();
-		}else if(source.getNxXx() == NxXx.XX){
-			setParams.xx();
-		}
-
-		if(Boolean.TRUE.equals(source.isKeepTtl())){
-			setParams.keepttl();
-		}
-
-		return setParams;
-	}
+	public final static int DEFAULT_DATABASE = 0;
 
 }
