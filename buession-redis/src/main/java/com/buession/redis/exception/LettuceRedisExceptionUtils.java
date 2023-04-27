@@ -21,10 +21,30 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.exception;/**
- * 
- *
+ */
+package com.buession.redis.exception;
+
+import com.buession.core.utils.StringUtils;
+import io.lettuce.core.RedisConnectionException;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class LettuceRedisExceptionUtils {
+ */
+public class LettuceRedisExceptionUtils {
+
+	public static RedisException convert(final Exception e){
+		if(e instanceof RedisConnectionException){
+			if(StringUtils.contains(e.getMessage(), "pool")){
+				return new PoolException(e.getMessage(), e);
+			}else{
+				return new RedisConnectionFailureException(e.getMessage(), e);
+			}
+		}else if(e instanceof NotSupportedCommandException){
+			return (NotSupportedCommandException) e;
+		}else{
+			return new RedisException(e.getMessage(), e);
+		}
+	}
+
 }
