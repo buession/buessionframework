@@ -28,8 +28,7 @@ import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
-import com.buession.redis.client.connection.datasource.jedis.AbstractJedisDataSource;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
@@ -45,12 +44,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis 哨兵模式数据源
+ * Lettuce 哨兵模式数据源
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public class JedisSentinelDataSource extends AbstractJedisDataSource implements SentinelDataSource {
+public class LettuceSentinelDataSource extends AbstractLettuceDataSource implements SentinelDataSource {
 
 	/**
 	 * 数据库
@@ -152,11 +151,12 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 			}
 		}
 
-		return new JedisSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
+		return new LettuceSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
 				getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 	}
 
 	protected JedisSentinelPool createPool(){
+		/*
 		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(getSentinels());
 		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
 		final JedisClientConfigBuilder sentinelBuilder = JedisClientConfigBuilder.create(this,
@@ -170,6 +170,9 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 
 		return new JedisSentinelPool(getMasterName(), sentinels, jedisPoolConfig, builder.build(),
 				sentinelBuilder.build());
+
+		 */
+		return null;
 	}
 
 	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes){

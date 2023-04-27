@@ -27,8 +27,7 @@ package com.buession.redis.client.connection.datasource.lettuce;
 import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
-import com.buession.redis.client.connection.datasource.jedis.AbstractJedisDataSource;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
+import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import redis.clients.jedis.Connection;
@@ -42,12 +41,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis 集群模式数据源
+ * Lettuce 集群模式数据源
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public class JedisClusterDataSource extends AbstractJedisDataSource implements ClusterDataSource {
+public class LettuceClusterDataSource extends AbstractLettuceDataSource implements ClusterDataSource {
 
 	/**
 	 * 集群主机节点
@@ -105,11 +104,12 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 			cluster = createJedisCluster();
 		}
 
-		return new JedisClusterConnection(this, cluster, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+		return new LettuceClusterConnection(this, cluster, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
 				getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
 	}
 
 	protected JedisCluster createJedisCluster(){
+		/*
 		int maxRedirects = getMaxRedirects() < 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
 		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
 
@@ -136,6 +136,9 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 		}
 
 		return cluster;
+
+		 */
+		return null;
 	}
 
 	private Set<HostAndPort> createHostAndPorts(){

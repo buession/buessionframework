@@ -22,27 +22,28 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
+package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.lang.Constants;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.client.connection.jedis.JedisConnection;
+import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.core.RedisNode;
+import io.lettuce.core.LettucePool;
+import io.lettuce.core.LettucePoolConfig;
+import io.lettuce.core.connection.StandaloneStatefulRedisConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * Jedis 单机模式数据源
+ * Lettuce 单机模式数据源
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisDataSource extends AbstractJedisDataSource implements StandaloneDataSource {
+public class LettuceDataSource extends AbstractLettuceDataSource implements StandaloneDataSource {
 
 	/**
 	 * Redis 主机地址
@@ -59,9 +60,9 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
 
-	private JedisPool pool;
+	private LettucePool pool;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisDataSource.class);
+	private final static Logger logger = LoggerFactory.getLogger(LettuceDataSource.class);
 
 	@Override
 	public String getHost(){
@@ -101,29 +102,29 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 			}
 		}
 
-		return new JedisConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+		return new LettuceConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
 				getSslConfiguration());
 	}
 
-	protected JedisPool createPool(){
+	protected LettucePool createPool(){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		final PoolConfigConverter<Jedis> poolConfigConverter = new PoolConfigConverter<>(
-				jedisPoolConfig);
+		final LettucePoolConfig lettucePoolConfig = new LettucePoolConfig();
+		final PoolConfigConverter<StandaloneStatefulRedisConnection> poolConfigConverter = new PoolConfigConverter<>(
+				lettucePoolConfig);
 
 		poolConfigConverter.convert(getPoolConfig());
 
 		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
 		if(sslConfiguration == null){
-			logger.debug("Create jedis pool.");
-			return new JedisPool(jedisPoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
-					getUsername(), password, getDatabase(), getClientName(), isUseSsl());
+			logger.debug("Create lettuce pool.");
+			return new LettucePool(lettucePoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
+					getUsername(), password, getDatabase(), getClientName(), isUseSsl(), WRAP_CONNECTIONS);
 		}else{
-			logger.debug("Create jedis pool with ssl.");
-			return new JedisPool(jedisPoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
+			logger.debug("Create lettuce pool with ssl.");
+			return new LettucePool(lettucePoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
 					getUsername(), password, getDatabase(), getClientName(), isUseSsl(),
 					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
-					sslConfiguration.getHostnameVerifier());
+					sslConfiguration.getHostnameVerifier(), WRAP_CONNECTIONS);
 		}
 	}
 

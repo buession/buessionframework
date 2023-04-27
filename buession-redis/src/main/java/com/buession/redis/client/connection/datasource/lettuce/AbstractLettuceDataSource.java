@@ -19,18 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
+package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.AbstractDataSource;
 
 /**
- * Jedis 数据源抽象类
+ * Lettuce 数据源抽象类
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractJedisDataSource extends AbstractDataSource implements JedisRedisDataSource {
+public abstract class AbstractLettuceDataSource extends AbstractDataSource implements LettuceRedisDataSource {
+
+	protected final static boolean WRAP_CONNECTIONS = true;
 
 }
