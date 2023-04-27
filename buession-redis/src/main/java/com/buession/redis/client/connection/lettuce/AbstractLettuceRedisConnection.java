@@ -28,6 +28,7 @@ import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -38,8 +39,9 @@ import java.io.IOException;
  * Jedis Redis 连接对象抽象类
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractJedisRedisConnection extends AbstractRedisConnection implements LettuceRedisConnection {
+public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnection implements LettuceRedisConnection {
 
 	/**
 	 * 事务
@@ -54,7 +56,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	/**
 	 * 构造函数
 	 */
-	public AbstractJedisRedisConnection(){
+	public AbstractLettuceRedisConnection(){
 		super();
 	}
 
@@ -64,7 +66,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource){
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource){
 		super(dataSource);
 	}
 
@@ -78,7 +80,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout){
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
 	}
 
@@ -93,11 +95,9 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 2.0.0
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout){
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
+										  int infiniteSoTimeout){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -109,7 +109,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, SslConfiguration sslConfiguration){
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, SslConfiguration sslConfiguration){
 		super(dataSource, sslConfiguration);
 	}
 
@@ -125,8 +125,8 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										SslConfiguration sslConfiguration){
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
+										  SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -143,11 +143,9 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout, SslConfiguration sslConfiguration){
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
+										  int infiniteSoTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 

@@ -26,7 +26,7 @@ package com.buession.redis.client.connection.lettuce;
 
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
-import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +35,12 @@ import redis.clients.jedis.JedisCluster;
 import java.io.IOException;
 
 /**
- * Jedis 集群模式连接器
+ * Lettuce 集群模式连接器
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public class JedisClusterConnection extends AbstractLettuceRedisConnection implements RedisClusterConnection {
+public class LettuceClusterConnection extends AbstractLettuceRedisConnection implements RedisClusterConnection {
 
 	/**
 	 * 最大重定向次数
@@ -57,12 +57,12 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 */
 	private JedisCluster cluster;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisClusterConnection.class);
+	private final static Logger logger = LoggerFactory.getLogger(LettuceClusterConnection.class);
 
 	/**
 	 * 构造函数
 	 */
-	public JedisClusterConnection(){
+	public LettuceClusterConnection(){
 		super();
 	}
 
@@ -72,7 +72,7 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource){
 		super(dataSource);
 	}
 
@@ -86,7 +86,7 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
 	}
 
@@ -102,8 +102,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int infiniteSoTimeout){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -121,8 +121,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int infiniteSoTimeout, int maxRedirects){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 	}
@@ -143,8 +143,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param maxTotalRetriesDuration
 	 * 		最大重试时长（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration){
 		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects);
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -157,7 +157,7 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, SslConfiguration sslConfiguration){
 		super(dataSource, sslConfiguration);
 	}
 
@@ -173,8 +173,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -192,8 +192,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int infiniteSoTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -205,7 +205,7 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param cluster
 	 *        {@link JedisCluster}
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster){
 		super(dataSource);
 		this.cluster = cluster;
 	}
@@ -222,8 +222,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
 		this.cluster = cluster;
 	}
@@ -242,8 +242,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, int infiniteSoTimeout){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.cluster = cluster;
 	}
@@ -258,8 +258,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster,
-								  SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster,
+									SslConfiguration sslConfiguration){
 		super(dataSource, sslConfiguration);
 		this.cluster = cluster;
 	}
@@ -278,8 +278,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.cluster = cluster;
 	}
@@ -300,8 +300,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.cluster = cluster;
 	}
@@ -314,7 +314,7 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param maxRedirects
 	 * 		最大重试次数
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int maxRedirects){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int maxRedirects){
 		super(dataSource);
 		this.maxRedirects = maxRedirects;
 	}
@@ -329,8 +329,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, int maxRedirects,
-								  SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int maxRedirects,
+									SslConfiguration sslConfiguration){
 		this(dataSource, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 	}
@@ -345,7 +345,7 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param maxRedirects
 	 * 		最大重试次数
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int maxRedirects){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int maxRedirects){
 		this(dataSource, cluster);
 		this.maxRedirects = maxRedirects;
 	}
@@ -362,8 +362,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int maxRedirects,
-								  SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int maxRedirects,
+									SslConfiguration sslConfiguration){
 		this(dataSource, cluster, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 	}
@@ -384,8 +384,8 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param maxTotalRetriesDuration
 	 * 		最大重试时长（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, int maxRedirects, int maxTotalRetriesDuration){
 		this(dataSource, cluster, connectTimeout, soTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -409,9 +409,9 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
+									SslConfiguration sslConfiguration){
 		this(dataSource, cluster, connectTimeout, soTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -435,8 +435,9 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param maxTotalRetriesDuration
 	 * 		最大重试时长（单位：毫秒）
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, int infiniteSoTimeout, int maxRedirects,
+									int maxTotalRetriesDuration){
 		this(dataSource, cluster, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -462,9 +463,9 @@ public class JedisClusterConnection extends AbstractLettuceRedisConnection imple
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisClusterConnection(JedisClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration){
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, JedisCluster cluster, int connectTimeout,
+									int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
+									SslConfiguration sslConfiguration){
 		this(dataSource, cluster, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;

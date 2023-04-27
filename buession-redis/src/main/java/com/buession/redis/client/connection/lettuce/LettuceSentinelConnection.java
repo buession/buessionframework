@@ -30,6 +30,7 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
@@ -65,12 +66,12 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * Jedis 哨兵模式连接器
+ * Lettuce 哨兵模式连接器
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public class JedisSentinelConnection extends AbstractLettuceRedisConnection implements RedisSentinelConnection {
+public class LettuceSentinelConnection extends AbstractLettuceRedisConnection implements RedisSentinelConnection {
 
 	/**
 	 * 哨兵节点连接超时（单位：毫秒）
@@ -92,12 +93,12 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 */
 	private Jedis jedis;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisSentinelConnection.class);
+	private final static Logger logger = LoggerFactory.getLogger(LettuceSentinelConnection.class);
 
 	/**
 	 * 构造函数
 	 */
-	public JedisSentinelConnection(){
+	public LettuceSentinelConnection(){
 		super();
 	}
 
@@ -107,7 +108,7 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource){
 		super(dataSource);
 	}
 
@@ -121,7 +122,7 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
 	}
 
@@ -136,11 +137,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 2.0.0
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 int infiniteSoTimeout){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -152,7 +151,7 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, SslConfiguration sslConfiguration){
 		super(dataSource, sslConfiguration);
 	}
 
@@ -168,8 +167,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -186,11 +185,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 int infiniteSoTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -202,7 +199,7 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param pool
 	 * 		连接池
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool){
 		super(dataSource);
 		this.pool = pool;
 	}
@@ -219,8 +216,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout){
 		super(dataSource, connectTimeout, soTimeout);
 		this.pool = pool;
 	}
@@ -239,8 +236,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, int infiniteSoTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, int infiniteSoTimeout){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.pool = pool;
 	}
@@ -255,8 +252,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool,
-								   SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool,
+									 SslConfiguration sslConfiguration){
 		super(dataSource, sslConfiguration);
 		this.pool = pool;
 	}
@@ -275,8 +272,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.pool = pool;
 	}
@@ -297,8 +294,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.pool = pool;
 	}
@@ -317,8 +314,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sentinelSoTimeout
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int sentinelConnectTimeout, int sentinelSoTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 int sentinelConnectTimeout, int sentinelSoTimeout){
 		super(dataSource, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -340,8 +337,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sentinelSoTimeout
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -363,9 +360,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int sentinelConnectTimeout, int sentinelSoTimeout,
-								   SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 int sentinelConnectTimeout, int sentinelSoTimeout,
+									 SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -389,9 +386,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
-								   SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
+									 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
+									 SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -413,8 +410,8 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sentinelSoTimeout
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout){
 		this(dataSource, pool, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -438,9 +435,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sentinelSoTimeout
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
-								   int sentinelSoTimeout){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
+									 int sentinelSoTimeout){
 		this(dataSource, pool, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -464,9 +461,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
-								   SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
+									 SslConfiguration sslConfiguration){
 		this(dataSource, pool, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -492,9 +489,9 @@ public class JedisSentinelConnection extends AbstractLettuceRedisConnection impl
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisSentinelConnection(JedisSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
-								   int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
-								   int sentinelSoTimeout, SslConfiguration sslConfiguration){
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, JedisSentinelPool pool, int connectTimeout,
+									 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
+									 int sentinelSoTimeout, SslConfiguration sslConfiguration){
 		this(dataSource, pool, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
