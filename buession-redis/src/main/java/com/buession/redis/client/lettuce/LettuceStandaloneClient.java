@@ -26,37 +26,38 @@ package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.jedis.operations.JedisBitMapOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterOperations;
-import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisGeoOperations;
-import com.buession.redis.client.jedis.operations.JedisHashOperations;
-import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
-import com.buession.redis.client.jedis.operations.JedisKeyOperations;
-import com.buession.redis.client.jedis.operations.JedisListOperations;
-import com.buession.redis.client.jedis.operations.JedisPubSubOperations;
-import com.buession.redis.client.jedis.operations.JedisScriptingOperations;
-import com.buession.redis.client.jedis.operations.JedisServerOperations;
-import com.buession.redis.client.jedis.operations.JedisSetOperations;
-import com.buession.redis.client.jedis.operations.JedisSortedSetOperations;
-import com.buession.redis.client.jedis.operations.JedisStreamOperations;
-import com.buession.redis.client.jedis.operations.JedisStringOperations;
-import com.buession.redis.client.jedis.operations.JedisTransactionOperations;
+import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
+import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceGeoOperations;
+import com.buession.redis.client.lettuce.operations.LettuceHashOperations;
+import com.buession.redis.client.lettuce.operations.LettuceHyperLogLogOperations;
+import com.buession.redis.client.lettuce.operations.LettuceKeyOperations;
+import com.buession.redis.client.lettuce.operations.LettuceListOperations;
+import com.buession.redis.client.lettuce.operations.LettucePubSubOperations;
+import com.buession.redis.client.lettuce.operations.LettuceScriptingOperations;
+import com.buession.redis.client.lettuce.operations.LettuceServerOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSortedSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceStreamOperations;
+import com.buession.redis.client.lettuce.operations.LettuceStringOperations;
+import com.buession.redis.client.lettuce.operations.LettuceTransactionOperations;
 
 /**
- * jedis 单机模式客户端
+ * Lettuce 单机模式客户端
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisStandaloneClient extends AbstractJedisRedisClient implements RedisStandaloneClient {
+public class LettuceStandaloneClient extends AbstractLettuceRedisClient implements RedisStandaloneClient {
 
-	private JedisConnection connection;
+	private LettuceConnection connection;
 
 	/**
 	 * 构造函数
 	 */
-	public JedisStandaloneClient(){
+	public LettuceStandaloneClient(){
 		super();
 	}
 
@@ -64,100 +65,100 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	 * 构造函数
 	 *
 	 * @param connection
-	 * 		Jedis Redis 单机连接对象 {@link JedisConnection}
+	 * 		Lettuce Redis 单机连接对象 {@link LettuceConnection}
 	 */
-	public JedisStandaloneClient(final JedisConnection connection){
+	public LettuceStandaloneClient(final LettuceConnection connection){
 		super(connection);
 	}
 
 	@Override
-	public JedisConnection getConnection(){
+	public LettuceConnection getConnection(){
 		return connection;
 	}
 
 	@Override
 	public void setConnection(RedisConnection connection){
-		this.connection = (JedisConnection) connection;
+		this.connection = (LettuceConnection) connection;
 	}
 
 	@Override
-	public JedisBitMapOperations bitMapOperations(){
-		return new JedisBitMapOperations(this);
+	public LettuceBitMapOperations bitMapOperations(){
+		return new LettuceBitMapOperations(this);
 	}
 
 	@Override
-	public JedisClusterOperations clusterOperations(){
-		return new JedisClusterOperations(this);
+	public LettuceClusterOperations clusterOperations(){
+		return new LettuceClusterOperations(this);
 	}
 
 	@Override
-	public JedisConnectionOperations connectionOperations(){
-		return new JedisConnectionOperations(this);
+	public LettuceConnectionOperations connectionOperations(){
+		return new LettuceConnectionOperations(this);
 	}
 
 	@Override
-	public JedisGeoOperations geoOperations(){
-		return new JedisGeoOperations(this);
+	public LettuceGeoOperations geoOperations(){
+		return new LettuceGeoOperations(this);
 	}
 
 	@Override
-	public JedisHashOperations hashOperations(){
-		return new JedisHashOperations(this);
+	public LettuceHashOperations hashOperations(){
+		return new LettuceHashOperations(this);
 	}
 
 	@Override
-	public JedisHyperLogLogOperations hyperLogLogOperations(){
-		return new JedisHyperLogLogOperations(this);
+	public LettuceHyperLogLogOperations hyperLogLogOperations(){
+		return new LettuceHyperLogLogOperations(this);
 	}
 
 	@Override
-	public JedisKeyOperations keyOperations(){
-		return new JedisKeyOperations(this);
+	public LettuceKeyOperations keyOperations(){
+		return new LettuceKeyOperations(this);
 	}
 
 	@Override
-	public JedisListOperations listOperations(){
-		return new JedisListOperations(this);
+	public LettuceListOperations listOperations(){
+		return new LettuceListOperations(this);
 	}
 
 	@Override
-	public JedisPubSubOperations pubSubOperations(){
-		return new JedisPubSubOperations(this);
+	public LettucePubSubOperations pubSubOperations(){
+		return new LettucePubSubOperations(this);
 	}
 
 	@Override
-	public JedisScriptingOperations scriptingOperations(){
-		return new JedisScriptingOperations(this);
+	public LettuceScriptingOperations scriptingOperations(){
+		return new LettuceScriptingOperations(this);
 	}
 
 	@Override
-	public JedisServerOperations serverOperations(){
-		return new JedisServerOperations(this);
+	public LettuceServerOperations serverOperations(){
+		return new LettuceServerOperations(this);
 	}
 
 	@Override
-	public JedisSetOperations setOperations(){
-		return new JedisSetOperations(this);
+	public LettuceSetOperations setOperations(){
+		return new LettuceSetOperations(this);
 	}
 
 	@Override
-	public JedisSortedSetOperations sortedSetOperations(){
-		return new JedisSortedSetOperations(this);
+	public LettuceSortedSetOperations sortedSetOperations(){
+		return new LettuceSortedSetOperations(this);
 	}
 
 	@Override
-	public JedisStreamOperations streamOperations(){
-		return new JedisStreamOperations(this);
+	public LettuceStreamOperations streamOperations(){
+		return new LettuceStreamOperations(this);
 	}
 
 	@Override
-	public JedisStringOperations stringOperations(){
-		return new JedisStringOperations(this);
+	public LettuceStringOperations stringOperations(){
+		return new LettuceStringOperations(this);
 	}
 
 	@Override
-	public JedisTransactionOperations transactionOperations(){
-		return new JedisTransactionOperations(this);
+	public LettuceTransactionOperations transactionOperations(){
+		return new LettuceTransactionOperations(this);
 	}
 
 }

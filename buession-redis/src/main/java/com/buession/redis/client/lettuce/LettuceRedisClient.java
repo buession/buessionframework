@@ -31,11 +31,12 @@ import redis.clients.jedis.Response;
 import java.util.Queue;
 
 /**
- * Jedis Redis 客户端
+ * Lettuce Redis 客户端
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public interface JedisRedisClient extends RedisClient {
+public interface LettuceRedisClient extends RedisClient {
 
 	Queue<FutureResult<Response<Object>, Object, Object>> getTxResults();
 

@@ -25,7 +25,7 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.core.FutureResult;
 import redis.clients.jedis.Response;
 
@@ -33,18 +33,19 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Jedis Redis 客户端 抽象类
+ * Lettuce Redis 客户端抽象类
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public abstract class AbstractJedisRedisClient extends AbstractRedisClient implements JedisRedisClient {
+public abstract class AbstractLettuceRedisClient extends AbstractRedisClient implements LettuceRedisClient {
 
 	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
 
 	/**
 	 * 构造函数
 	 */
-	public AbstractJedisRedisClient(){
+	public AbstractLettuceRedisClient(){
 		super();
 	}
 
@@ -52,9 +53,9 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	 * 构造函数
 	 *
 	 * @param connection
-	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
+	 * 		Jedis Redis 连接对象 {@link LettuceRedisConnection}
 	 */
-	public AbstractJedisRedisClient(final JedisRedisConnection connection){
+	public AbstractLettuceRedisClient(final LettuceRedisConnection connection){
 		super(connection);
 	}
 
