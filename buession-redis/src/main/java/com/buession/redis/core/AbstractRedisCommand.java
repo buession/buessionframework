@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -32,6 +32,8 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
@@ -42,6 +44,8 @@ public abstract class AbstractRedisCommand<C extends RedisClient, R> implements 
 	protected final C client;
 
 	private final ProtocolCommand command;
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected AbstractRedisCommand(final C client, final ProtocolCommand command){
 		this.client = client;
