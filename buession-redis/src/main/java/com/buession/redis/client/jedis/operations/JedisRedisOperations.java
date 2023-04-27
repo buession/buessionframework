@@ -26,25 +26,22 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.connection.jedis.JedisConnection;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.AbstractRedisCommand;
-import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.Pipeline;
@@ -58,24 +55,15 @@ import redis.clients.jedis.Transaction;
  */
 public interface JedisRedisOperations extends RedisOperations {
 
-	abstract class AbstractJedisCommand<C extends JedisRedisClient, R> extends AbstractRedisCommand<C, R> {
+	abstract class AbstractJedisCommand<CLIENT extends JedisRedisClient, CONN extends JedisRedisConnection, R>
+			extends AbstractRedisOperationsCommand<CLIENT, CONN, R> {
 
-		protected Runner runner;
-
-		protected Runner pipelineRunner;
-
-		protected Runner transactionRunner;
-
-		private final Logger logger = LoggerFactory.getLogger(getClass());
-
-		protected AbstractJedisCommand(final C client, final ProtocolCommand command){
+		protected AbstractJedisCommand(final CLIENT client, final ProtocolCommand command){
 			super(client, command);
 		}
 
 		@Override
 		public R execute() throws RedisException{
-			final RedisConnection connection = client.getConnection();
-
 			if(connection.isPipeline()){
 				if(pipelineRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
@@ -171,13 +159,10 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, R> {
-
-		private final JedisConnection connection;
+	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, JedisConnection, R> {
 
 		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command){
 			super(client, command);
-			connection = client.getConnection();
 		}
 
 		public JedisCommand<R> general(final Executor<Jedis, R> executor){
@@ -230,13 +215,10 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, R> {
-
-		private final JedisSentinelConnection connection;
+	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, JedisSentinelConnection, R> {
 
 		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command){
 			super(client, command);
-			connection = client.getConnection();
 		}
 
 		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor){
@@ -290,13 +272,10 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, R> {
-
-		private final JedisClusterConnection connection;
+	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, JedisClusterConnection, R> {
 
 		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command){
 			super(client, command);
-			connection = client.getConnection();
 		}
 
 		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor){

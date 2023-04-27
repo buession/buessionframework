@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -133,7 +133,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 		final CommandArguments args = CommandArguments.create("name", name);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 		final CommandArguments args = CommandArguments.create("name", name);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override

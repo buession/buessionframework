@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -109,7 +109,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					}
 
 				}), OkStatusConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					}
 
 				}), OkStatusConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override
