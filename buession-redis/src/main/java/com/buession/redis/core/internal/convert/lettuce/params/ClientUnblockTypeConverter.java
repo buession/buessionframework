@@ -22,49 +22,32 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.pipeline.Pipeline;
-import io.lettuce.core.api.sync.RedisCommands;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClientUnblockType;
+import redis.clients.jedis.args.UnblockType;
 
 /**
+ * {@link ClientUnblockType} 转换为 jedis {@link UnblockType}
+ *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 2.0.0
  */
-public class LettucePipeline<K, V> implements Pipeline {
+public final class ClientUnblockTypeConverter implements Converter<ClientUnblockType, UnblockType> {
 
-	private RedisCommands<K, V> delegate;
-
-	private final static Logger logger = LoggerFactory.getLogger(LettucePipeline.class);
-
-	public LettucePipeline(RedisCommands<K, V> commands){
-		Assert.isNull(commands, "Redis Pipeline cloud not be null.");
-		this.delegate = commands;
-	}
-
-	public RedisCommands<K, V> primitive(){
-		return delegate;
-	}
+	public final static ClientUnblockTypeConverter INSTANCE = new ClientUnblockTypeConverter();
 
 	@Override
-	public void sync(){
-		logger.info("Redis pipeline sync.");
-	}
-
-	@Override
-	public List<Object> syncAndReturnAll(){
-		logger.info("Redis pipeline syncAndReturnAll.");
-		return null;
-	}
-
-	@Override
-	public void close(){
-		logger.info("Redis pipeline close.");
+	public UnblockType convert(final ClientUnblockType source){
+		switch(source){
+			case TIMEOUT:
+				return UnblockType.TIMEOUT;
+			case ERROR:
+				return UnblockType.ERROR;
+			default:
+				return null;
+		}
 	}
 
 }

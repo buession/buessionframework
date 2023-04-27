@@ -22,39 +22,49 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.transaction.lettuce;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.transaction.Transaction;
+import io.lettuce.core.TransactionResult;
+import io.lettuce.core.api.sync.RedisCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Jedis 事务
+ * Lettuce 事务
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisTransaction implements Transaction {
+public class LettuceTransaction<K, V> implements Transaction {
 
-	private redis.clients.jedis.Transaction delegate;
+	private RedisCommands<K, V> delegate;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisTransaction.class);
+	private final static Logger logger = LoggerFactory.getLogger(LettuceTransaction.class);
 
-	public JedisTransaction(redis.clients.jedis.Transaction transaction){
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
+	public LettuceTransaction(RedisCommands<K, V> commands){
+		Assert.isNull(commands, "Redis commands cloud not be null.");
+		this.delegate = commands;
 	}
 
-	public redis.clients.jedis.Transaction primitive(){
+	public RedisCommands<K, V> primitive(){
 		return delegate;
 	}
 
 	@Override
 	public List<Object> exec(){
 		logger.info("Redis transaction exec.");
-		return delegate.exec();
+		TransactionResult transactionResult = delegate.exec();
+
+		if(transactionResult == null){
+			return null;
+		}else{
+			return transactionResult.stream().collect(Collectors.toList());
+		}
 	}
 
 	@Override
@@ -66,7 +76,11 @@ public class JedisTransaction implements Transaction {
 	@Override
 	public void close(){
 		logger.info("Redis transaction close.");
-		delegate.close();
+		if(delegate.getStatefulConnection().isMulti()){
+			delegate.discard();
+		}
+
+		//delegate.unwatch();
 	}
 
 }

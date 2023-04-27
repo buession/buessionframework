@@ -22,45 +22,45 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FutureResult;
-import redis.clients.jedis.Response;
 
 /**
- * Jedis 事务、管道异步结果
+ * Lettuce 事务、管道异步结果
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisResult<SV, TV> extends FutureResult<Response<SV>, SV, TV> {
+public class LettuceResult<SV, TV> extends FutureResult<SV, SV, TV> {
 
-	public JedisResult(final Response<SV> resultHolder){
+	public LettuceResult(final SV resultHolder){
 		super(resultHolder);
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, TV> converter){
+	public LettuceResult(final SV resultHolder, final Converter<SV, TV> converter){
 		super(resultHolder, converter);
 	}
 
 	@Override
 	public SV get(){
-		return getHolder().get();
+		return getHolder();
 	}
 
 	public final static class Builder<SV, TV> {
 
-		private final Response<SV> response;
+		private final SV response;
 
 		private Converter<SV, TV> converter;
 
-		private Builder(final Response<SV> response, final Converter<SV, TV> converter){
+		private Builder(final SV response, final Converter<SV, TV> converter){
 			this.response = response;
 			this.converter = converter;
 		}
 
 		@SuppressWarnings("unchecked")
-		public static <SV, TV> Builder<SV, TV> forResponse(Response<SV> response){
+		public static <SV, TV> Builder<SV, TV> forResponse(SV response){
 			return new Builder<>(response, (source)->(TV) source);
 		}
 
@@ -69,8 +69,8 @@ public class JedisResult<SV, TV> extends FutureResult<Response<SV>, SV, TV> {
 			return this;
 		}
 
-		public JedisResult<SV, TV> build(){
-			return new JedisResult<>(response, converter);
+		public LettuceResult<SV, TV> build(){
+			return new LettuceResult<>(response, converter);
 		}
 
 	}

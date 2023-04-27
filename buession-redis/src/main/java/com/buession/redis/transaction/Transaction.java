@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -27,14 +27,29 @@ package com.buession.redis.transaction;
 import java.util.List;
 
 /**
+ * 事务
+ *
  * @author Yong.Teng
  */
 public interface Transaction {
 
+	/**
+	 * 执行事务
+	 *
+	 * @return 事务返回结果
+	 */
 	List<Object> exec();
 
+	/**
+	 * 取消事务
+	 *
+	 * @return OK
+	 */
 	String discard();
 
+	/**
+	 * 关闭事务
+	 */
 	void close();
 
 }

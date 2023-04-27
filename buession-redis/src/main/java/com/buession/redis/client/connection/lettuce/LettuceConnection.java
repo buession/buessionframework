@@ -33,6 +33,7 @@ import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -287,7 +288,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	@Override
 	public Transaction multi(){
 		if(transaction == null){
-			//transaction = new JedisTransaction(jedis.multi());
+			transaction = new LettuceTransaction<>(statefulRedisConnection.sync());
 		}
 
 		return transaction;
