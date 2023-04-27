@@ -19,10 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.EnumUtils;
@@ -30,7 +30,7 @@ import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Client;
-import redis.clients.jedis.Protocol;
+import com.buession.redis.core.command.ProtocolCommand;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -38,10 +38,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis Client Info 命令结果转换为 {@link Client}
+ * Client Info 命令结果转换为 {@link Client}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
 public final class ClientConverter implements Converter<String, Client> {
 
@@ -115,7 +115,7 @@ public final class ClientConverter implements Converter<String, Client> {
 			}else if("events".equals(keyValueParser.getKey())){
 				client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
 			}else if("cmd".equals(keyValueParser.getKey())){
-				client.setCmd(keyValueParser.getEnumValue(Protocol.Command.class));
+				client.setCmd(keyValueParser.getEnumValue(ProtocolCommand.class));
 			}
 		}
 
@@ -136,7 +136,6 @@ public final class ClientConverter implements Converter<String, Client> {
 			List<Client> result = new ArrayList<>(clients.length);
 
 			if(Validate.isNotEmpty(clients)){
-
 				for(String s : clients){
 					Client client = ClientConverter.INSTANCE.convert(s);
 
