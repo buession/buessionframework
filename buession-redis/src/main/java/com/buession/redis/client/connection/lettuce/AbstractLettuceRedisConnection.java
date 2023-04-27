@@ -36,7 +36,7 @@ import redis.clients.jedis.DefaultJedisClientConfig;
 import java.io.IOException;
 
 /**
- * Jedis Redis 连接对象抽象类
+ * Lettuce Redis 连接对象抽象类
  *
  * @author Yong.Teng
  * @since 2.3.0

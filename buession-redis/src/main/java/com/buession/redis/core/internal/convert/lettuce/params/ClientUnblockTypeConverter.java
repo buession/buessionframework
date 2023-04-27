@@ -22,17 +22,17 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ClientUnblockType;
-import redis.clients.jedis.args.UnblockType;
+import io.lettuce.core.UnblockType;
 
 /**
- * {@link ClientUnblockType} 转换为 jedis {@link UnblockType}
+ * {@link ClientUnblockType} 转换为 lettuce {@link UnblockType}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
 public final class ClientUnblockTypeConverter implements Converter<ClientUnblockType, UnblockType> {
 

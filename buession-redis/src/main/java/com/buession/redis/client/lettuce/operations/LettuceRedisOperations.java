@@ -34,15 +34,11 @@ import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
-import com.buession.redis.core.internal.jedis.JedisResult;
+import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.transaction.jedis.JedisTransaction;
 import io.lettuce.core.api.sync.RedisCommands;
-import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
-import redis.clients.jedis.Transaction;
 
 /**
  * Lettuce Redis 命令操作接口
@@ -95,63 +91,13 @@ public interface LettuceRedisOperations extends RedisOperations {
 			return null;
 		}
 
-		protected Runner createPipelineRunner(final Executor<Pipeline, Response<R>> executor){
-			return new Runner() {
-
-				@Override
-				public JedisResult<R, R> run() throws Exception{
-					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
-					return newJedisResult(executor.execute(jedisPipeline));
-				}
-
-			};
+		protected <SV, TV> LettuceResult<SV, TV> newLettuceResult(final SV response){
+			return LettuceResult.Builder.<SV, TV>forResponse(response).build();
 		}
 
-		protected <SR> Runner createPipelineRunner(final Executor<Pipeline, Response<SR>> executor,
-												   final Converter<SR, R> converter){
-			return new Runner() {
-
-				@Override
-				public JedisResult<SR, R> run() throws Exception{
-					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
-					return newJedisResult(executor.execute(jedisPipeline), converter);
-				}
-
-			};
-		}
-
-		protected Runner createTransactionRunner(final Executor<Transaction, Response<R>> executor){
-			return new Runner() {
-
-				@Override
-				public JedisResult<R, R> run() throws Exception{
-					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
-					return newJedisResult(executor.execute(transaction));
-				}
-
-			};
-		}
-
-		protected <SR> Runner createTransactionRunner(final Executor<Transaction, Response<SR>> executor,
-													  final Converter<SR, R> converter){
-			return new Runner() {
-
-				@Override
-				public JedisResult<SR, R> run() throws Exception{
-					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
-					return newJedisResult(executor.execute(transaction), converter);
-				}
-
-			};
-		}
-
-		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response){
-			return JedisResult.Builder.<SV, TV>forResponse(response).build();
-		}
-
-		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response,
-															  final Converter<SV, TV> converter){
-			return JedisResult.Builder.<SV, TV>forResponse(response).mappedWith(converter).build();
+		protected <SV, TV> LettuceResult<SV, TV> newLettuceResult(final SV response,
+																  final Converter<SV, TV> converter){
+			return LettuceResult.Builder.<SV, TV>forResponse(response).mappedWith(converter).build();
 		}
 
 	}
@@ -190,25 +136,55 @@ public interface LettuceRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public LettuceCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
-			this.pipelineRunner = createPipelineRunner(executor);
+		public LettuceCommand<R> pipeline(final Executor<RedisCommands<byte[], byte[]>, R> executor){
+			this.pipelineRunner = new Runner() {
+
+				@Override
+				public LettuceResult<R, R> run() throws Exception{
+					return newLettuceResult(executor.execute(connection.getStandaloneStatefulRedisConnection().sync()));
+				}
+
+			};
 			return this;
 		}
 
-		public <SR> LettuceCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
+		public <SR> LettuceCommand<R> pipeline(final Executor<RedisCommands<byte[], byte[]>, SR> executor,
 											   final Converter<SR, R> converter){
-			this.pipelineRunner = createPipelineRunner(executor, converter);
+			this.pipelineRunner = new Runner() {
+
+				@Override
+				public LettuceResult<SR, R> run() throws Exception{
+					return newLettuceResult(executor.execute(connection.getStandaloneStatefulRedisConnection().sync()),
+							converter);
+				}
+
+			};
 			return this;
 		}
 
-		public LettuceCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
-			this.transactionRunner = createTransactionRunner(executor);
+		public LettuceCommand<R> transaction(final Executor<RedisCommands<byte[], byte[]>, R> executor){
+			this.transactionRunner = new Runner() {
+
+				@Override
+				public LettuceResult<R, R> run() throws Exception{
+					return newLettuceResult(executor.execute(connection.getStandaloneStatefulRedisConnection().sync()));
+				}
+
+			};
 			return this;
 		}
 
-		public <SR> LettuceCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
+		public <SR> LettuceCommand<R> transaction(final Executor<RedisCommands<byte[], byte[]>, SR> executor,
 												  final Converter<SR, R> converter){
-			this.transactionRunner = createTransactionRunner(executor, converter);
+			this.transactionRunner = new Runner() {
+
+				@Override
+				public LettuceResult<SR, R> run() throws Exception{
+					return newLettuceResult(executor.execute(connection.getStandaloneStatefulRedisConnection().sync()),
+							converter);
+				}
+
+			};
 			return this;
 		}
 

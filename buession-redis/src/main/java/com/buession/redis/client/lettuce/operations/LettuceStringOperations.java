@@ -24,22 +24,18 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Lists;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyValue;
+import io.lettuce.core.SetArgs;
 import io.lettuce.core.Value;
-import redis.clients.jedis.params.GetExParams;
-import redis.clients.jedis.params.SetParams;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,8 +93,8 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<Long>(client, ProtocolCommand.INCRBY)
 				.general((cmd)->cmd.incrby(key, value))
-				.pipeline((cmd)->cmd.incrBy(key, value))
-				.transaction((cmd)->cmd.incrBy(key, value))
+				.pipeline((cmd)->cmd.incrby(key, value))
+				.transaction((cmd)->cmd.incrby(key, value))
 				.run(args);
 	}
 
@@ -112,8 +108,8 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
 				.general((cmd)->cmd.incrbyfloat(key, value))
-				.pipeline((cmd)->cmd.incrByFloat(key, value))
-				.transaction((cmd)->cmd.incrByFloat(key, value))
+				.pipeline((cmd)->cmd.incrbyfloat(key, value))
+				.transaction((cmd)->cmd.incrbyfloat(key, value))
 				.run(args);
 	}
 
@@ -142,8 +138,8 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<Long>(client, ProtocolCommand.DECRBY)
 				.general((cmd)->cmd.decrby(key, value))
-				.pipeline((cmd)->cmd.decrBy(key, value))
-				.transaction((cmd)->cmd.decrBy(key, value))
+				.pipeline((cmd)->cmd.decrby(key, value))
+				.transaction((cmd)->cmd.decrby(key, value))
 				.run(args);
 	}
 
@@ -183,8 +179,9 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public byte[] getSet(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<byte[]>(client, ProtocolCommand.GETSET)
-				.general((cmd)->cmd.getset(key, value)).pipeline((cmd)->cmd.getSet(key, value))
-				.transaction((cmd)->cmd.getSet(key, value))
+				.general((cmd)->cmd.getset(key, value))
+				.pipeline((cmd)->cmd.getset(key, value))
+				.transaction((cmd)->cmd.getset(key, value))
 				.run(args);
 	}
 
@@ -245,8 +242,8 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 
 		return new LettuceCommand<Status>(client, ProtocolCommand.MSETNX)
 				.general((cmd)->cmd.msetnx(temp), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.msetnx(temp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.msetnx(temp), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.msetnx(temp), Converters.BOOLEAN_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.msetnx(temp), Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
@@ -288,7 +285,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
+		final SetArgs params = SetArgumentConverter.INSTANCE.convert(setArgument);
 		return new LettuceCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
@@ -298,12 +295,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return new LettuceCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.run(args);
+		return setEx(SafeEncoder.encode(key), SafeEncoder.encode(value), lifetime);
 	}
 
 	@Override
@@ -318,31 +310,22 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 
 	@Override
 	public Status setNx(final String key, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new LettuceCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
+		return setNx(SafeEncoder.encode(key), SafeEncoder.encode(value));
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.setnx(key, value), Converters.BOOLEAN_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.setnx(key, value), Converters.BOOLEAN_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.setnx(key, value), Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new LettuceCommand<Long>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setrange(key, offset, value))
-				.pipeline((cmd)->cmd.setrange(key, offset, value))
-				.run(args);
+		return setRange(SafeEncoder.encode(key), offset, SafeEncoder.encode(value));
 	}
 
 	@Override
@@ -351,17 +334,13 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		return new LettuceCommand<Long>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setrange(key, offset, value))
 				.pipeline((cmd)->cmd.setrange(key, offset, value))
+				.transaction((cmd)->cmd.setrange(key, offset, value))
 				.run(args);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new LettuceCommand<String>(client, ProtocolCommand.GETRANGE)
-				.general((cmd)->cmd.getrange(key, start, end))
-				.pipeline((cmd)->cmd.getrange(key, start, end))
-				.transaction((cmd)->cmd.getrange(key, start, end))
-				.run(args);
+		return SafeEncoder.encode(getRange(SafeEncoder.encode(key), start, end));
 	}
 
 	@Override
@@ -376,12 +355,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 
 	@Override
 	public Long strlen(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<Long>(client, ProtocolCommand.STRLEN)
-				.general((cmd)->cmd.strlen(key))
-				.pipeline((cmd)->cmd.strlen(key))
-				.transaction((cmd)->cmd.strlen(key))
-				.run(args);
+		return strlen(SafeEncoder.encode(key));
 	}
 
 	@Override
@@ -396,21 +370,13 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 
 	@Override
 	public String substr(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new LettuceCommand<String>(client, ProtocolCommand.SUBSTR)
-				.general((cmd)->cmd.substr(key, (int) start, (int) end))
-				.pipeline((cmd)->cmd.substr(key, (int) start, (int) end))
-				.transaction((cmd)->cmd.substr(key, (int) start, (int) end))
-				.run(args);
+		return SafeEncoder.encode(substr(SafeEncoder.encode(key), start, end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<byte[]>(client, ProtocolCommand.SUBSTR)
-				.general((cmd)->cmd.substr(key, (int) start, (int) end))
-				.pipeline((cmd)->cmd.substr(key, (int) start, (int) end))
-				.transaction((cmd)->cmd.substr(key, (int) start, (int) end))
 				.run(args);
 	}
 

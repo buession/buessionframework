@@ -33,11 +33,11 @@ import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter;
-import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ClientConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
+import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status auth(final String user, final String password){
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
 		return new LettuceCommand<Status>(client, ProtocolCommand.AUTH)
-				.general((cmd)->cmd.auth(user, password), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.auth(password), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
@@ -71,10 +71,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public String echo(final String str){
-		final CommandArguments args = CommandArguments.create("str", str);
-		return new LettuceCommand<String>(client, ProtocolCommand.ECHO)
-				.general((cmd)->cmd.echo(str))
-				.run(args);
+		return SafeEncoder.encode(echo(SafeEncoder.encode(str)));
 	}
 
 	@Override
@@ -82,6 +79,8 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("str", str);
 		return new LettuceCommand<byte[]>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str))
+				.pipeline((cmd)->cmd.echo(str))
+				.transaction((cmd)->cmd.echo(str))
 				.run(args);
 	}
 
@@ -89,19 +88,36 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status ping(){
 		return new LettuceCommand<Status>(client, ProtocolCommand.PING)
 				.general((cmd)->cmd.ping(), PingResultConverter.INSTANCE)
+				.pipeline((cmd)->cmd.ping(), PingResultConverter.INSTANCE)
+				.transaction((cmd)->cmd.ping(), PingResultConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public Status reset(){
-		return new LettuceCommand<Status>(client, ProtocolCommand.RESET)
+		new LettuceCommand<Void>(client, ProtocolCommand.RESET)
+				.general((cmd)->{
+					cmd.reset();
+					return null;
+				})
+				.pipeline((cmd)->{
+					cmd.reset();
+					return null;
+				})
+				.transaction((cmd)->{
+					cmd.reset();
+					return null;
+				})
 				.run();
+		return Status.SUCCESS;
 	}
 
 	@Override
 	public Status quit(){
 		return new LettuceCommand<Status>(client, ProtocolCommand.QUIT)
 				.general((cmd)->cmd.quit(), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.quit(), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.quit(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
@@ -111,6 +127,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		return new LettuceCommand<Status>(client, ProtocolCommand.SELECT)
 				.general((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
@@ -125,15 +142,14 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Long clientId(){
 		return new LettuceCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.general((cmd)->cmd.clientId())
+				.pipeline((cmd)->cmd.clientId())
+				.transaction((cmd)->cmd.clientId())
 				.run();
 	}
 
 	@Override
 	public Status clientSetName(final String name){
-		final CommandArguments args = CommandArguments.create("name", name);
-		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
-				.run(args);
+		return clientSetName(SafeEncoder.encode(name));
 	}
 
 	@Override
@@ -141,13 +157,17 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("name", name);
 		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public String clientGetName(){
 		return new LettuceCommand<String>(client, ProtocolCommand.CLIENT_GETNAME)
-				.general((cmd)->cmd.clientGetname())
+				.general((cmd)->SafeEncoder.encode(cmd.clientGetname()))
+				.pipeline((cmd)->SafeEncoder.encode(cmd.clientGetname()))
+				.transaction((cmd)->SafeEncoder.encode(cmd.clientGetname()))
 				.run();
 	}
 
@@ -161,6 +181,8 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public List<Client> clientList(){
 		return new LettuceCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE)
+				.pipeline((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE)
+				.transaction((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE)
 				.run();
 	}
 
@@ -168,7 +190,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public List<Client> clientList(final ClientType clientType){
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
 		return new LettuceCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
+				.general((cmd)->cmd.clientList(),
 						ClientConverter.ClientListConverter.INSTANCE)
 				.run(args);
 	}
@@ -176,7 +198,6 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public Client clientInfo(){
 		return new LettuceCommand<Client>(client, ProtocolCommand.CLIENT_INFO)
-				.general((cmd)->cmd.clientInfo(), ClientConverter.INSTANCE)
 				.run();
 	}
 
@@ -185,6 +206,8 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
 				.general((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
@@ -200,6 +223,8 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
 				.general((cmd)->cmd.clientKill(host + ":" + port), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.clientKill(host + ":" + port), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.clientKill(host + ":" + port), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
@@ -208,6 +233,8 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
 		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER)
 				.run(args);
 	}
 
@@ -216,6 +243,10 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
+						Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
+						Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
 						Converters.ONE_STATUS_CONVERTER)
 				.run(args);
 	}
