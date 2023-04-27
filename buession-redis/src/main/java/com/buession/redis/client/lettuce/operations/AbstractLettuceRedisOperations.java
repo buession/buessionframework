@@ -21,10 +21,28 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.lettuce.operations;/**
- * 
+ */
+package com.buession.redis.client.lettuce.operations;
+
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.AbstractRedisOperations;
+
+/**
+ * Lettuce Redis 命令操作抽象类
+ *
+ * @param <C>
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public class AbstractLettuceRedisOperations {
+ */
+public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClient> extends AbstractRedisOperations<C>
+		implements LettuceRedisOperations {
+
+	protected C client;
+
+	public AbstractLettuceRedisOperations(final C client){
+		this.client = client;
+	}
+
 }

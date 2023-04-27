@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractSetOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -38,21 +37,21 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis 单机模式集合命令操作
+ * Lettuce 单机模式集合命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisSetOperations extends AbstractSetOperations<JedisStandaloneClient> {
+public final class LettuceSetOperations extends AbstractSetOperations<LettuceStandaloneClient> {
 
-	public JedisSetOperations(final JedisStandaloneClient client){
+	public LettuceSetOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public Long sAdd(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.SADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SADD)
 				.general((cmd)->cmd.sadd(key, members))
 				.pipeline((cmd)->cmd.sadd(key, members))
 				.transaction((cmd)->cmd.sadd(key, members))
@@ -62,7 +61,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.SADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SADD)
 				.general((cmd)->cmd.sadd(key, members))
 				.pipeline((cmd)->cmd.sadd(key, members))
 				.transaction((cmd)->cmd.sadd(key, members))
@@ -72,7 +71,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sCard(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.SCARD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SCARD)
 				.general((cmd)->cmd.scard(key))
 				.pipeline((cmd)->cmd.scard(key))
 				.transaction((cmd)->cmd.scard(key))
@@ -82,7 +81,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sCard(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.SCARD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SCARD)
 				.general((cmd)->cmd.scard(key))
 				.pipeline((cmd)->cmd.scard(key))
 				.transaction((cmd)->cmd.scard(key))
@@ -92,7 +91,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<String> sDiff(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.SDIFF)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.SDIFF)
 				.general((cmd)->cmd.sdiff(keys))
 				.pipeline((cmd)->cmd.sdiff(keys))
 				.transaction((cmd)->cmd.sdiff(keys))
@@ -102,7 +101,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.SDIFF)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.SDIFF)
 				.general((cmd)->cmd.sdiff(keys))
 				.pipeline((cmd)->cmd.sdiff(keys))
 				.transaction((cmd)->cmd.sdiff(keys))
@@ -112,7 +111,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sDiffStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
 				.general((cmd)->cmd.sdiffstore(destKey, keys))
 				.pipeline((cmd)->cmd.sdiffstore(destKey, keys))
 				.transaction((cmd)->cmd.sdiffstore(destKey, keys))
@@ -122,7 +121,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
 				.general((cmd)->cmd.sdiffstore(destKey, keys))
 				.pipeline((cmd)->cmd.sdiffstore(destKey, keys))
 				.transaction((cmd)->cmd.sdiffstore(destKey, keys))
@@ -132,7 +131,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<String> sInter(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.SINTER)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.SINTER)
 				.general((cmd)->cmd.sinter(keys))
 				.pipeline((cmd)->cmd.sinter(keys))
 				.transaction((cmd)->cmd.sinter(keys))
@@ -142,7 +141,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.SINTER)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.SINTER)
 				.general((cmd)->cmd.sinter(keys))
 				.pipeline((cmd)->cmd.sinter(keys))
 				.transaction((cmd)->cmd.sinter(keys))
@@ -152,7 +151,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sInterStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.SINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SINTERSTORE)
 				.general((cmd)->cmd.sinterstore(destKey, keys))
 				.pipeline((cmd)->cmd.sinterstore(destKey, keys))
 				.transaction((cmd)->cmd.sinterstore(destKey, keys))
@@ -162,7 +161,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.SINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SINTERSTORE)
 				.general((cmd)->cmd.sinterstore(destKey, keys))
 				.pipeline((cmd)->cmd.sinterstore(destKey, keys))
 				.transaction((cmd)->cmd.sinterstore(destKey, keys))
@@ -172,7 +171,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Boolean sIsMember(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
+		return new LettuceCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
 				.general((cmd)->cmd.sismember(key, member))
 				.pipeline((cmd)->cmd.sismember(key, member))
 				.transaction((cmd)->cmd.sismember(key, member))
@@ -182,7 +181,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Boolean sIsMember(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
+		return new LettuceCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
 				.general((cmd)->cmd.sismember(key, member))
 				.pipeline((cmd)->cmd.sismember(key, member))
 				.transaction((cmd)->cmd.sismember(key, member))
@@ -192,7 +191,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public List<Boolean> smIsMember(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
+		return new LettuceCommand<List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
 				.general((cmd)->cmd.smismember(key, members))
 				.pipeline((cmd)->cmd.smismember(key, members))
 				.transaction((cmd)->cmd.smismember(key, members))
@@ -202,7 +201,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public List<Boolean> smIsMember(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
+		return new LettuceCommand<List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
 				.general((cmd)->cmd.smismember(key, members))
 				.pipeline((cmd)->cmd.smismember(key, members))
 				.transaction((cmd)->cmd.smismember(key, members))
@@ -212,7 +211,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<String> sMembers(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.SMEMBERS)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.SMEMBERS)
 				.general((cmd)->cmd.smembers(key))
 				.pipeline((cmd)->cmd.smembers(key))
 				.transaction((cmd)->cmd.smembers(key))
@@ -222,7 +221,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<byte[]> sMembers(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.SMEMBERS)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.SMEMBERS)
 				.general((cmd)->cmd.smembers(key))
 				.pipeline((cmd)->cmd.smembers(key))
 				.transaction((cmd)->cmd.smembers(key))
@@ -232,7 +231,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Status sMove(final String key, final String destKey, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
-		return new JedisCommand<Status>(client, ProtocolCommand.SMOVE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SMOVE)
 				.general((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
@@ -242,7 +241,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
-		return new JedisCommand<Status>(client, ProtocolCommand.SMOVE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SMOVE)
 				.general((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
@@ -252,7 +251,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public String sPop(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.SPOP)
+		return new LettuceCommand<String>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key))
 				.pipeline((cmd)->cmd.spop(key))
 				.transaction((cmd)->cmd.spop(key))
@@ -262,7 +261,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public byte[] sPop(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.SPOP)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key))
 				.pipeline((cmd)->cmd.spop(key))
 				.transaction((cmd)->cmd.spop(key))
@@ -272,7 +271,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<String> sPop(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.SPOP)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key, count))
 				.pipeline((cmd)->cmd.spop(key, count))
 				.transaction((cmd)->cmd.spop(key, count))
@@ -282,7 +281,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<byte[]> sPop(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.SPOP)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key, count))
 				.pipeline((cmd)->cmd.spop(key, count))
 				.transaction((cmd)->cmd.spop(key, count))
@@ -292,7 +291,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public String sRandMember(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.SRANDMEMBER)
+		return new LettuceCommand<String>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key))
 				.pipeline((cmd)->cmd.srandmember(key))
 				.run(args);
@@ -301,7 +300,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public byte[] sRandMember(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.SRANDMEMBER)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key))
 				.pipeline((cmd)->cmd.srandmember(key))
 				.run(args);
@@ -310,7 +309,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public List<String> sRandMember(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.SRANDMEMBER)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key, (int) count))
 				.pipeline((cmd)->cmd.srandmember(key, (int) count))
 				.run(args);
@@ -319,7 +318,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public List<byte[]> sRandMember(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.SRANDMEMBER)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key, (int) count))
 				.pipeline((cmd)->cmd.srandmember(key, (int) count))
 				.run(args);
@@ -328,7 +327,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sRem(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.SREM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SREM)
 				.general((cmd)->cmd.srem(key, members))
 				.pipeline((cmd)->cmd.srem(key, members))
 				.transaction((cmd)->cmd.srem(key, members))
@@ -338,7 +337,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.SREM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SREM)
 				.general((cmd)->cmd.srem(key, members))
 				.pipeline((cmd)->cmd.srem(key, members))
 				.transaction((cmd)->cmd.srem(key, members))
@@ -348,7 +347,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor),
@@ -361,7 +360,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor),
@@ -375,7 +374,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
@@ -389,7 +388,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
@@ -403,7 +402,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
@@ -417,7 +416,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
@@ -433,7 +432,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
@@ -449,7 +448,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
+		return new LettuceCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
@@ -462,7 +461,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<String> sUnion(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.SUNION)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.SUNION)
 				.general((cmd)->cmd.sunion(keys))
 				.pipeline((cmd)->cmd.sunion(keys))
 				.transaction((cmd)->cmd.sunion(keys))
@@ -472,7 +471,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.SUNION)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.SUNION)
 				.general((cmd)->cmd.sunion(keys))
 				.pipeline((cmd)->cmd.sunion(keys))
 				.transaction((cmd)->cmd.sunion(keys))
@@ -482,7 +481,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
 				.general((cmd)->cmd.sunionstore(destKey, keys))
 				.pipeline((cmd)->cmd.sunionstore(destKey, keys))
 				.transaction((cmd)->cmd.sunionstore(destKey, keys))
@@ -492,7 +491,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
 				.general((cmd)->cmd.sunionstore(destKey, keys))
 				.pipeline((cmd)->cmd.sunionstore(destKey, keys))
 				.transaction((cmd)->cmd.sunionstore(destKey, keys))

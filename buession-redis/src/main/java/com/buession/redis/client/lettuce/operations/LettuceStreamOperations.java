@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractStreamOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamConsumer;
 import com.buession.redis.core.StreamEntry;
@@ -64,14 +63,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Jedis 单机模式 Stream 命令操作抽象类
+ * Lettuce 单机模式 Stream 命令操作抽象类
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisStreamOperations extends AbstractStreamOperations<JedisStandaloneClient> {
+public final class LettuceStreamOperations extends AbstractStreamOperations<LettuceStandaloneClient> {
 
-	public JedisStreamOperations(final JedisStandaloneClient client){
+	public LettuceStreamOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
@@ -79,7 +78,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("ids", ids);
 		final StreamEntryID[] streamEntryIDS = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
-		return new JedisCommand<Long>(client, ProtocolCommand.XACK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XACK)
 				.general((cmd)->cmd.xack(key, groupName, streamEntryIDS))
 				.pipeline((cmd)->cmd.xack(key, groupName, streamEntryIDS))
 				.transaction((cmd)->cmd.xack(key, groupName, streamEntryIDS))
@@ -90,7 +89,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
-		return new JedisCommand<StreamEntryId>(client, ProtocolCommand.XADD)
+		return new LettuceCommand<StreamEntryId>(client, ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIDConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIDConverter.INSTANCE)
 				.transaction((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIDConverter.INSTANCE)
@@ -104,7 +103,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("xAddArgument", xAddArgument);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
 		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(streamEntryID);
-		return new JedisCommand<StreamEntryId>(client, ProtocolCommand.XADD)
+		return new LettuceCommand<StreamEntryId>(client, ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, hash, params), StreamEntryIDConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xadd(key, hash, params), StreamEntryIDConverter.INSTANCE)
 				.transaction((cmd)->cmd.xadd(key, hash, params), StreamEntryIDConverter.INSTANCE)
@@ -118,7 +117,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("xAddArgument", xAddArgument);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
 		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(streamEntryID);
-		return new JedisCommand<StreamEntryId>(client, ProtocolCommand.XADD)
+		return new LettuceCommand<StreamEntryId>(client, ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, hash, params),
 						StreamEntryIDConverter.BinaryStreamEntryIdConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xadd(key, hash, params),
@@ -136,7 +135,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams();
-		return new JedisCommand<Map<StreamEntryId, List<StreamEntry>>>(client, ProtocolCommand.XAUTOCLAIM)
+		return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>>(client, ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, streamEntryID, params),
 						StreamEntryConverter.MapStreamEntryConverter.STREAMENTRYID_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, streamEntryID, params),
@@ -156,7 +155,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("count", count);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
-		return new JedisCommand<Map<StreamEntryId, List<StreamEntry>>>(client, ProtocolCommand.XAUTOCLAIM)
+		return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>>(client, ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, streamEntryID, params),
 						StreamEntryConverter.MapStreamEntryConverter.STREAMENTRYID_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, streamEntryID, params),
@@ -176,7 +175,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("count");
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams();
-		return new JedisCommand<Map<StreamEntryId, List<StreamEntryId>>>(client, ProtocolCommand.XAUTOCLAIM)
+		return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>>(client, ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, streamEntryID, params),
 						StreamEntryIDConverter.MapStreamEntryIdConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, streamEntryID, params),
@@ -196,7 +195,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("count", count);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
-		return new JedisCommand<Map<StreamEntryId, List<StreamEntryId>>>(client, ProtocolCommand.XAUTOCLAIM)
+		return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>>(client, ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, streamEntryID, params),
 						StreamEntryIDConverter.MapStreamEntryIdConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, streamEntryID, params),
@@ -214,7 +213,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids);
 		final XClaimParams params = new XClaimParams();
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
-		return new JedisCommand<List<StreamEntry>>(client, ProtocolCommand.XCLAIM)
+		return new LettuceCommand<List<StreamEntry>>(client, ProtocolCommand.XCLAIM)
 				.general((cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
 						StreamEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
@@ -234,7 +233,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("xClaimArgument", xClaimArgument);
 		final XClaimParams params = XClaimArgumentConverter.INSTANCE.convert(xClaimArgument);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
-		return new JedisCommand<List<StreamEntry>>(client, ProtocolCommand.XCLAIM)
+		return new LettuceCommand<List<StreamEntry>>(client, ProtocolCommand.XCLAIM)
 				.general((cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
 						StreamEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
@@ -252,7 +251,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids);
 		final XClaimParams params = new XClaimParams();
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
-		return new JedisCommand<List<StreamEntryId>>(client, ProtocolCommand.XCLAIM)
+		return new LettuceCommand<List<StreamEntryId>>(client, ProtocolCommand.XCLAIM)
 				.general((cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
 						StreamEntryIDConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
@@ -272,7 +271,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("xClaimArgument", xClaimArgument);
 		final XClaimParams params = XClaimArgumentConverter.INSTANCE.convert(xClaimArgument);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
-		return new JedisCommand<List<StreamEntryId>>(client, ProtocolCommand.XCLAIM)
+		return new LettuceCommand<List<StreamEntryId>>(client, ProtocolCommand.XCLAIM)
 				.general((cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
 						StreamEntryIDConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
@@ -287,7 +286,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Long xDel(final String key, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("ids", ids);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
-		return new JedisCommand<Long>(client, ProtocolCommand.XDEL)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XDEL)
 				.general((cmd)->cmd.xdel(key, streamEntryIDs))
 				.pipeline((cmd)->cmd.xdel(key, streamEntryIDs))
 				.transaction((cmd)->cmd.xdel(key, streamEntryIDs))
@@ -300,7 +299,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("id", id);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
-		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_CREATE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.XGROUP_CREATE)
 				.general((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream),
 						OkStatusConverter.INSTANCE)
@@ -313,7 +312,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
 						Converters.BOOLEAN_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
@@ -327,7 +326,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
 						Converters.BOOLEAN_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
@@ -341,7 +340,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new JedisCommand<Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
 				.general((cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName))
 				.pipeline((cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName))
 				.transaction((cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName))
@@ -352,7 +351,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new JedisCommand<Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
 				.general((cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName))
 				.pipeline((cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName))
 				.transaction((cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName))
@@ -362,7 +361,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public Status xGroupDestroy(final String key, final String groupName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_DESTROY)
+		return new LettuceCommand<Status>(client, ProtocolCommand.XGROUP_DESTROY)
 				.general((cmd)->cmd.xgroupDestroy(key, groupName), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.xgroupDestroy(key, groupName), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.xgroupDestroy(key, groupName), Converters.ONE_STATUS_CONVERTER)
@@ -372,7 +371,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public Status xGroupDestroy(final byte[] key, final byte[] groupName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_DESTROY)
+		return new LettuceCommand<Status>(client, ProtocolCommand.XGROUP_DESTROY)
 				.general((cmd)->cmd.xgroupDestroy(key, groupName), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.xgroupDestroy(key, groupName), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.xgroupDestroy(key, groupName), Converters.ONE_STATUS_CONVERTER)
@@ -383,7 +382,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("id", id);
 		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
-		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_SETID)
+		return new LettuceCommand<Status>(client, ProtocolCommand.XGROUP_SETID)
 				.general((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), OkStatusConverter.INSTANCE)
@@ -393,7 +392,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final String key, final String groupName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new JedisCommand<List<StreamConsumer>>(client,
+		return new LettuceCommand<List<StreamConsumer>>(client,
 				ProtocolCommand.XINFO_CONSUMERS)
 				.general((cmd)->cmd.xinfoConsumers(key, groupName), StreamConsumersInfoConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xinfoConsumers(key, groupName), StreamConsumersInfoConverter.LIST_CONVERTER)
@@ -404,7 +403,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamGroup> xInfoGroups(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<List<StreamGroup>>(client, ProtocolCommand.XINFO_GROUPS)
+		return new LettuceCommand<List<StreamGroup>>(client, ProtocolCommand.XINFO_GROUPS)
 				.general((cmd)->cmd.xinfoGroups(key), StreamGroupInfoConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xinfoGroups(key), StreamGroupInfoConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xinfoGroups(key), StreamGroupInfoConverter.LIST_CONVERTER)
@@ -414,7 +413,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public Stream xInfoStream(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Stream>(client, ProtocolCommand.XINFO_STREAM)
+		return new LettuceCommand<Stream>(client, ProtocolCommand.XINFO_STREAM)
 				.general((cmd)->cmd.xinfoStream(key), StreamInfoConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xinfoStream(key), StreamInfoConverter.INSTANCE)
 				.transaction((cmd)->cmd.xinfoStream(key), StreamInfoConverter.INSTANCE)
@@ -424,7 +423,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public StreamFull xInfoStream(final String key, final boolean full){
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full);
-		return new JedisCommand<StreamFull>(client, ProtocolCommand.XINFO_STREAM)
+		return new LettuceCommand<StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 				.general((cmd)->cmd.xinfoStreamFull(key), StreamFullInfoConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xinfoStreamFull(key), StreamFullInfoConverter.INSTANCE)
 				.transaction((cmd)->cmd.xinfoStreamFull(key), StreamFullInfoConverter.INSTANCE)
@@ -434,7 +433,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public StreamFull xInfoStream(final String key, final boolean full, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full).put("count", count);
-		return new JedisCommand<StreamFull>(client, ProtocolCommand.XINFO_STREAM)
+		return new LettuceCommand<StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 				.general((cmd)->cmd.xinfoStreamFull(key, (int) count), StreamFullInfoConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xinfoStreamFull(key, (int) count), StreamFullInfoConverter.INSTANCE)
 				.transaction((cmd)->cmd.xinfoStreamFull(key, (int) count), StreamFullInfoConverter.INSTANCE)
@@ -444,7 +443,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public Long xLen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.XLEN)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XLEN)
 				.general((cmd)->cmd.xlen(key))
 				.pipeline((cmd)->cmd.xlen(key))
 				.transaction((cmd)->cmd.xlen(key))
@@ -454,7 +453,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public Long xLen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.XLEN)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XLEN)
 				.general((cmd)->cmd.xlen(key))
 				.pipeline((cmd)->cmd.xlen(key))
 				.transaction((cmd)->cmd.xlen(key))
@@ -464,7 +463,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public StreamPendingSummary xPending(final String key, final String groupName){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new JedisCommand<StreamPendingSummary>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<StreamPendingSummary>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName), StreamPendingSummaryConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xpending(key, groupName), StreamPendingSummaryConverter.INSTANCE)
 				.transaction((cmd)->cmd.xpending(key, groupName), StreamPendingSummaryConverter.INSTANCE)
@@ -476,7 +475,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime);
 		final JedisXPendingParams params = new JedisXPendingParams(minIdleTime);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -489,7 +488,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("start", start).put("end", end).put("count", count);
 		final JedisXPendingParams params = new JedisXPendingParams(start, end, count);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -501,7 +500,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final JedisXPendingParams params = new JedisXPendingParams(consumerName);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -514,7 +513,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("start", start).put("end", end).put("count", count);
 		final JedisXPendingParams params = new JedisXPendingParams(minIdleTime, start, end, count);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -527,7 +526,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
 		final JedisXPendingParams params = new JedisXPendingParams(minIdleTime, consumerName);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -540,7 +539,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final JedisXPendingParams params = new JedisXPendingParams(start, end, count, consumerName);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -554,7 +553,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
 		final JedisXPendingParams params = new JedisXPendingParams(minIdleTime, start, end, count, consumerName);
-		return new JedisCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
+		return new LettuceCommand<List<StreamPending>>(client, ProtocolCommand.XPENDING)
 				.general((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xpending(key, groupName, params), StreamPendingEntryConverter.LIST_CONVERTER)
@@ -566,7 +565,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final StreamEntryID startStreamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final StreamEntryID endStreamEntryID = StreamEntryIdConverter.INSTANCE.convert(end);
-		return new JedisCommand<List<StreamEntry>>(client, ProtocolCommand.XRANGE)
+		return new LettuceCommand<List<StreamEntry>>(client, ProtocolCommand.XRANGE)
 				.general((cmd)->cmd.xrange(key, startStreamEntryID, endStreamEntryID),
 						StreamEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xrange(key, startStreamEntryID, endStreamEntryID),
@@ -582,7 +581,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final StreamEntryID startStreamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final StreamEntryID endStreamEntryID = StreamEntryIdConverter.INSTANCE.convert(end);
-		return new JedisCommand<List<StreamEntry>>(client, ProtocolCommand.XRANGE)
+		return new LettuceCommand<List<StreamEntry>>(client, ProtocolCommand.XRANGE)
 				.general((cmd)->cmd.xrange(key, startStreamEntryID, endStreamEntryID, (int) count),
 						StreamEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xrange(key, startStreamEntryID, endStreamEntryID, (int) count),
@@ -598,7 +597,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadParams params = new JedisXReadParams();
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
 				.general((cmd)->cmd.xread(params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xread(params, stringStreamEntryIDMap),
@@ -614,7 +613,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadParams params = new JedisXReadParams(count);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
 				.general((cmd)->cmd.xread(params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xread(params, stringStreamEntryIDMap),
@@ -630,7 +629,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadParams params = new JedisXReadParams(block);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
 				.general((cmd)->cmd.xread(params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xread(params, stringStreamEntryIDMap),
@@ -648,7 +647,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadParams params = new JedisXReadParams(count, block);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREAD)
 				.general((cmd)->cmd.xread(params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xread(params, stringStreamEntryIDMap),
@@ -666,7 +665,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams();
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -684,7 +683,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(count);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -702,7 +701,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(block);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -721,7 +720,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(isNoAck);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -740,7 +739,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(count, block);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -759,7 +758,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(count, isNoAck);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -778,7 +777,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(block, isNoAck);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -797,7 +796,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final JedisXReadGroupParams params = new JedisXReadGroupParams(count, block, isNoAck);
 		final Map<String, StreamEntryID> stringStreamEntryIDMap = StreamEntryIdConverter.MapStreamEntryIdConverter.STRING_MAP_CONVERTER.convert(
 				streams);
-		return new JedisCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
+		return new LettuceCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
 						StreamEntryConverter.ListMapStreamEntryConverter.STRING_KEY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
@@ -812,7 +811,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start);
 		final StreamEntryID endID = StreamEntryIdConverter.INSTANCE.convert(end);
 		final StreamEntryID startID = StreamEntryIdConverter.INSTANCE.convert(start);
-		return new JedisCommand<List<StreamEntry>>(client, ProtocolCommand.XREVRANGE)
+		return new LettuceCommand<List<StreamEntry>>(client, ProtocolCommand.XREVRANGE)
 				.general((cmd)->cmd.xrevrange(key, endID, startID), StreamEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xrevrange(key, endID, startID), StreamEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xrevrange(key, endID, startID), StreamEntryConverter.LIST_CONVERTER)
@@ -826,7 +825,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("count", count);
 		final StreamEntryID endID = StreamEntryIdConverter.INSTANCE.convert(end);
 		final StreamEntryID startID = StreamEntryIdConverter.INSTANCE.convert(start);
-		return new JedisCommand<List<StreamEntry>>(client, ProtocolCommand.XREVRANGE)
+		return new LettuceCommand<List<StreamEntry>>(client, ProtocolCommand.XREVRANGE)
 				.general((cmd)->cmd.xrevrange(key, endID, startID, (int) count), StreamEntryConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.xrevrange(key, endID, startID, (int) count), StreamEntryConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.xrevrange(key, endID, startID, (int) count),
@@ -838,7 +837,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Long xTrim(final String key, final XTrimArgument xTrimArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument);
-		return new JedisCommand<Long>(client, ProtocolCommand.XTRIM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XTRIM)
 				.general((cmd)->cmd.xtrim(key, params))
 				.pipeline((cmd)->cmd.xtrim(key, params))
 				.transaction((cmd)->cmd.xtrim(key, params))
@@ -849,7 +848,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument);
-		return new JedisCommand<Long>(client, ProtocolCommand.XTRIM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XTRIM)
 				.general((cmd)->cmd.xtrim(key, params))
 				.pipeline((cmd)->cmd.xtrim(key, params))
 				.transaction((cmd)->cmd.xtrim(key, params))
@@ -861,7 +860,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument).limit(limit);
-		return new JedisCommand<Long>(client, ProtocolCommand.XTRIM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XTRIM)
 				.general((cmd)->cmd.xtrim(key, params))
 				.pipeline((cmd)->cmd.xtrim(key, params))
 				.transaction((cmd)->cmd.xtrim(key, params))
@@ -873,7 +872,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
 		final XTrimParams params = XTrimArgumentConverter.INSTANCE.convert(xTrimArgument).limit(limit);
-		return new JedisCommand<Long>(client, ProtocolCommand.XTRIM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.XTRIM)
 				.general((cmd)->cmd.xtrim(key, params))
 				.pipeline((cmd)->cmd.xtrim(key, params))
 				.transaction((cmd)->cmd.xtrim(key, params))

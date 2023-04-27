@@ -19,35 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractHyperLogLogOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 /**
- * Jedis 单机模式 HyperLogLog 命令操作
+ * Lettuce 单机模式 HyperLogLog 命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<JedisStandaloneClient> {
+public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOperations<LettuceStandaloneClient> {
 
-	public JedisHyperLogLogOperations(final JedisStandaloneClient client){
+	public LettuceHyperLogLogOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public Status pfAdd(final String key, final String... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFADD)
+		return new LettuceCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
@@ -57,7 +56,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFADD)
+		return new LettuceCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
@@ -67,7 +66,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFMERGE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
@@ -77,7 +76,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFMERGE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
@@ -87,7 +86,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 	@Override
 	public Long pfCount(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.PFCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
 				.pipeline((cmd)->cmd.pfcount(keys))
 				.transaction((cmd)->cmd.pfcount(keys))
@@ -97,7 +96,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 	@Override
 	public Long pfCount(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.PFCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
 				.pipeline((cmd)->cmd.pfcount(keys))
 				.transaction((cmd)->cmd.pfcount(keys))

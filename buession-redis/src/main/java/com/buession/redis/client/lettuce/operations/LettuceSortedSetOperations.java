@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractSortedSetOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GtLt;
 import com.buession.redis.core.KeyedZSetElement;
@@ -50,21 +49,21 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Jedis 单机模式模式有序集合命令操作
+ * Lettuce 单机模式模式有序集合命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisSortedSetOperations extends AbstractSortedSetOperations<JedisStandaloneClient> {
+public final class LettuceSortedSetOperations extends AbstractSortedSetOperations<LettuceStandaloneClient> {
 
-	public JedisSortedSetOperations(final JedisStandaloneClient client){
+	public LettuceSortedSetOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public Tuple zPopMin(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Tuple>(client, ProtocolCommand.ZPOPMIN)
+		return new LettuceCommand<Tuple>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
 				.transaction((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
@@ -74,7 +73,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Tuple zPopMin(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Tuple>(client, ProtocolCommand.ZPOPMIN)
+		return new LettuceCommand<Tuple>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
 				.transaction((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
@@ -84,7 +83,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMin(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -94,7 +93,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -104,7 +103,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Tuple zPopMax(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Tuple>(client, ProtocolCommand.ZPOPMAX)
+		return new LettuceCommand<Tuple>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
 				.transaction((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
@@ -114,7 +113,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Tuple zPopMax(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Tuple>(client, ProtocolCommand.ZPOPMAX)
+		return new LettuceCommand<Tuple>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
 				.transaction((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
@@ -124,7 +123,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMax(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -134,7 +133,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -144,7 +143,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
+		return new LettuceCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
 				.transaction((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
@@ -154,7 +153,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
+		return new LettuceCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys),
 						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmin(timeout, keys),
@@ -167,7 +166,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMAX)
+		return new LettuceCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMAX)
 				.general((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
 				.transaction((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
@@ -177,7 +176,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
+		return new LettuceCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmax(timeout, keys),
 						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmax(timeout, keys),
@@ -190,7 +189,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members))
 				.pipeline((cmd)->cmd.zadd(key, members))
 				.transaction((cmd)->cmd.zadd(key, members))
@@ -200,7 +199,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members))
 				.pipeline((cmd)->cmd.zadd(key, members))
 				.transaction((cmd)->cmd.zadd(key, members))
@@ -211,7 +210,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
 		final JedisZAddParams params = new JedisZAddParams(nxXx);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -222,7 +221,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
 		final JedisZAddParams params = new JedisZAddParams(nxXx);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -233,7 +232,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(gtLt);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -244,7 +243,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(gtLt);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -255,7 +254,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -266,7 +265,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch){
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -278,7 +277,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -290,7 +289,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -302,7 +301,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -314,7 +313,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -326,7 +325,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(gtLt, ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -338,7 +337,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(gtLt, ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -351,7 +350,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt, ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -364,7 +363,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt, ch);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZADD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members, params))
 				.pipeline((cmd)->cmd.zadd(key, members, params))
 				.transaction((cmd)->cmd.zadd(key, members, params))
@@ -374,7 +373,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zCard(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZCARD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZCARD)
 				.general((cmd)->cmd.zcard(key))
 				.pipeline((cmd)->cmd.zcard(key))
 				.transaction((cmd)->cmd.zcard(key))
@@ -384,7 +383,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zCard(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZCARD)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZCARD)
 				.general((cmd)->cmd.zcard(key))
 				.pipeline((cmd)->cmd.zcard(key))
 				.transaction((cmd)->cmd.zcard(key))
@@ -394,7 +393,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zCount(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
 				.pipeline((cmd)->cmd.zcount(key, min, max))
 				.transaction((cmd)->cmd.zcount(key, min, max))
@@ -404,7 +403,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
 				.pipeline((cmd)->cmd.zcount(key, min, max))
 				.transaction((cmd)->cmd.zcount(key, min, max))
@@ -414,7 +413,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zCount(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
 				.pipeline((cmd)->cmd.zcount(key, min, max))
 				.transaction((cmd)->cmd.zcount(key, min, max))
@@ -424,7 +423,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
 				.pipeline((cmd)->cmd.zcount(key, min, max))
 				.transaction((cmd)->cmd.zcount(key, min, max))
@@ -434,7 +433,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Set<String> zDiff(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZDIFF)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiff(keys))
 				.pipeline((cmd)->cmd.zdiff(keys))
 				.transaction((cmd)->cmd.zdiff(keys))
@@ -444,7 +443,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Set<byte[]> zDiff(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZDIFF)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiff(keys))
 				.pipeline((cmd)->cmd.zdiff(keys))
 				.transaction((cmd)->cmd.zdiff(keys))
@@ -454,7 +453,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Set<Tuple> zDiffWithScores(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
@@ -464,7 +463,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Set<Tuple> zDiffWithScores(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
@@ -474,7 +473,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zDiffStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys)).pipeline((cmd)->cmd.zdiffStore(destKey, keys))
 				.transaction((cmd)->cmd.zdiffStore(destKey, keys))
 				.run(args);
@@ -483,7 +482,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys)).pipeline((cmd)->cmd.zdiffStore(destKey, keys))
 				.transaction((cmd)->cmd.zdiffStore(destKey, keys))
 				.run(args);
@@ -493,7 +492,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Double zIncrBy(final String key, final double increment, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("increment", increment)
 				.put("member", member);
-		return new JedisCommand<Double>(client, ProtocolCommand.ZINCRBY)
+		return new LettuceCommand<Double>(client, ProtocolCommand.ZINCRBY)
 				.general((cmd)->cmd.zincrby(key, increment, member))
 				.pipeline((cmd)->cmd.zincrby(key, increment, member))
 				.transaction((cmd)->cmd.zincrby(key, increment, member))
@@ -504,7 +503,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Double zIncrBy(final byte[] key, final double increment, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("increment", increment)
 				.put("member", member);
-		return new JedisCommand<Double>(client, ProtocolCommand.ZINCRBY)
+		return new LettuceCommand<Double>(client, ProtocolCommand.ZINCRBY)
 				.general((cmd)->cmd.zincrby(key, increment, member))
 				.pipeline((cmd)->cmd.zincrby(key, increment, member))
 				.transaction((cmd)->cmd.zincrby(key, increment, member))
@@ -515,7 +514,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<String> zInter(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final ZParams params = new JedisZParams();
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -526,7 +525,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<byte[]> zInter(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final ZParams params = new JedisZParams();
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -537,7 +536,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<String> zInter(final String[] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -548,7 +547,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -559,7 +558,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<String> zInter(final String[] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -570,7 +569,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<byte[]> zInter(final byte[][] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -582,7 +581,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -594,7 +593,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
 				.pipeline((cmd)->cmd.zinter(params, keys))
 				.transaction((cmd)->cmd.zinter(params, keys))
@@ -605,7 +604,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zInterWithScores(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final ZParams params = new JedisZParams();
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -616,7 +615,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zInterWithScores(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final ZParams params = new JedisZParams();
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -627,7 +626,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -638,7 +637,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -649,7 +648,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -660,7 +659,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -672,7 +671,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -684,7 +683,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -694,7 +693,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zInterStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, keys))
@@ -704,7 +703,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, keys))
@@ -716,7 +715,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, params, keys))
@@ -728,7 +727,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, params, keys))
@@ -740,7 +739,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, params, keys))
@@ -752,7 +751,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, params, keys))
@@ -765,7 +764,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, params, keys))
@@ -778,7 +777,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zinterstore(destKey, params, keys))
@@ -788,7 +787,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zLexCount(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, Double.toString(min), Double.toString(max)))
 				.pipeline((cmd)->cmd.zlexcount(key, Double.toString(min), Double.toString(max)))
 				.transaction((cmd)->cmd.zlexcount(key, Double.toString(min), Double.toString(max)))
@@ -798,7 +797,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zLexCount(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
 				.pipeline((cmd)->cmd.zlexcount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
 				.transaction((cmd)->cmd.zlexcount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
@@ -808,7 +807,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zLexCount(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, min, max))
 				.pipeline((cmd)->cmd.zlexcount(key, min, max))
 				.transaction((cmd)->cmd.zlexcount(key, min, max))
@@ -818,7 +817,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, min, max))
 				.pipeline((cmd)->cmd.zlexcount(key, min, max))
 				.transaction((cmd)->cmd.zlexcount(key, min, max))
@@ -828,7 +827,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Double> zMScore(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
+		return new LettuceCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
 				.general((cmd)->cmd.zmscore(key, members))
 				.pipeline((cmd)->cmd.zmscore(key, members))
 				.transaction((cmd)->cmd.zmscore(key, members))
@@ -838,7 +837,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Double> zMScore(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
+		return new LettuceCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
 				.general((cmd)->cmd.zmscore(key, members))
 				.pipeline((cmd)->cmd.zmscore(key, members))
 				.transaction((cmd)->cmd.zmscore(key, members))
@@ -848,7 +847,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public String zRandMember(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.ZRANDMEMBER)
+		return new LettuceCommand<String>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key))
 				.pipeline((cmd)->cmd.zrandmember(key))
 				.transaction((cmd)->cmd.zrandmember(key))
@@ -858,7 +857,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public byte[] zRandMember(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.ZRANDMEMBER)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key))
 				.pipeline((cmd)->cmd.zrandmember(key))
 				.transaction((cmd)->cmd.zrandmember(key))
@@ -868,7 +867,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRandMember(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANDMEMBER)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key, count))
 				.pipeline((cmd)->cmd.zrandmember(key, count))
 				.transaction((cmd)->cmd.zrandmember(key, count))
@@ -878,7 +877,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRandMember(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANDMEMBER)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key, count))
 				.pipeline((cmd)->cmd.zrandmember(key, count))
 				.transaction((cmd)->cmd.zrandmember(key, count))
@@ -888,7 +887,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRandMemberWithScores(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANDMEMBER)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
@@ -898,7 +897,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANDMEMBER)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
@@ -908,7 +907,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrange(key, start, end))
 				.pipeline((cmd)->cmd.zrange(key, start, end))
 				.transaction((cmd)->cmd.zrange(key, start, end))
@@ -918,7 +917,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrange(key, start, end))
 				.pipeline((cmd)->cmd.zrange(key, start, end))
 				.transaction((cmd)->cmd.zrange(key, start, end))
@@ -928,7 +927,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -938,7 +937,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -948,7 +947,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)))
 				.pipeline((cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)))
 				.transaction((cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)))
@@ -958,7 +957,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
 				.pipeline((cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
 				.transaction((cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
@@ -968,7 +967,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, min, max))
 				.pipeline((cmd)->cmd.zrangeByLex(key, min, max))
 				.transaction((cmd)->cmd.zrangeByLex(key, min, max))
@@ -978,7 +977,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, min, max))
 				.pipeline((cmd)->cmd.zrangeByLex(key, min, max))
 				.transaction((cmd)->cmd.zrangeByLex(key, min, max))
@@ -990,7 +989,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max), (int) offset,
 						(int) count))
 				.pipeline((cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max), (int) offset,
@@ -1005,7 +1004,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max),
 						(int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max),
@@ -1020,7 +1019,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count))
@@ -1032,7 +1031,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count))
@@ -1042,7 +1041,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1052,7 +1051,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1062,7 +1061,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1072,7 +1071,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1084,7 +1083,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1096,7 +1095,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1108,7 +1107,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1120,7 +1119,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1130,7 +1129,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1140,7 +1139,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1150,7 +1149,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1160,7 +1159,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1172,7 +1171,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1187,7 +1186,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1202,7 +1201,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1217,7 +1216,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1232,7 +1231,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1244,7 +1243,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1257,7 +1256,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1270,7 +1269,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1283,7 +1282,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1296,7 +1295,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1309,7 +1308,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1322,7 +1321,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1335,7 +1334,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1348,7 +1347,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1361,7 +1360,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1374,7 +1373,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1387,7 +1386,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1400,7 +1399,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1413,7 +1412,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1426,7 +1425,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev, offset, count);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANGESTORE)
 				.general((cmd)->cmd.zrangestore(destKey, key, params))
 				.pipeline((cmd)->cmd.zrangestore(destKey, key, params))
 				.transaction((cmd)->cmd.zrangestore(destKey, key, params))
@@ -1436,7 +1435,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRank(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANK)
 				.general((cmd)->cmd.zrank(key, member))
 				.pipeline((cmd)->cmd.zrank(key, member))
 				.transaction((cmd)->cmd.zrank(key, member))
@@ -1446,7 +1445,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRank(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZRANK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZRANK)
 				.general((cmd)->cmd.zrank(key, member))
 				.pipeline((cmd)->cmd.zrank(key, member))
 				.transaction((cmd)->cmd.zrank(key, member))
@@ -1456,7 +1455,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRem(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
 				.pipeline((cmd)->cmd.zrem(key, members))
 				.transaction((cmd)->cmd.zrem(key, members))
@@ -1466,7 +1465,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
 				.pipeline((cmd)->cmd.zrem(key, members))
 				.transaction((cmd)->cmd.zrem(key, members))
@@ -1476,7 +1475,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
 				.general((cmd)->cmd.zremrangeByLex(key, min, max))
 				.pipeline((cmd)->cmd.zremrangeByLex(key, min, max))
 				.transaction((cmd)->cmd.zremrangeByLex(key, min, max))
@@ -1486,7 +1485,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
 				.general((cmd)->cmd.zremrangeByLex(key, min, max))
 				.pipeline((cmd)->cmd.zremrangeByLex(key, min, max))
 				.transaction((cmd)->cmd.zremrangeByLex(key, min, max))
@@ -1496,7 +1495,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1506,7 +1505,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1516,7 +1515,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1526,7 +1525,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1536,7 +1535,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
 				.general((cmd)->cmd.zremrangeByRank(key, start, end))
 				.pipeline((cmd)->cmd.zremrangeByRank(key, start, end))
 				.transaction((cmd)->cmd.zremrangeByRank(key, start, end))
@@ -1546,7 +1545,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
 				.general((cmd)->cmd.zremrangeByRank(key, start, end))
 				.pipeline((cmd)->cmd.zremrangeByRank(key, start, end))
 				.transaction((cmd)->cmd.zremrangeByRank(key, start, end))
@@ -1556,7 +1555,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRevRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrange(key, start, end))
 				.pipeline((cmd)->cmd.zrevrange(key, start, end))
 				.transaction((cmd)->cmd.zrevrange(key, start, end))
@@ -1566,7 +1565,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRevRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrange(key, start, end))
 				.pipeline((cmd)->cmd.zrevrange(key, start, end))
 				.transaction((cmd)->cmd.zrevrange(key, start, end))
@@ -1576,7 +1575,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -1586,7 +1585,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -1596,7 +1595,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRevRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max))
 				.pipeline((cmd)->cmd.zrevrangeByLex(key, min, max))
 				.transaction((cmd)->cmd.zrevrangeByLex(key, min, max))
@@ -1606,7 +1605,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max))
 				.pipeline((cmd)->cmd.zrevrangeByLex(key, min, max))
 				.transaction((cmd)->cmd.zrevrangeByLex(key, min, max))
@@ -1617,7 +1616,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
 									   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
@@ -1628,7 +1627,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
@@ -1638,7 +1637,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1648,7 +1647,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1658,7 +1657,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<String> zRevRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1668,7 +1667,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1680,7 +1679,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 										 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1692,7 +1691,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 										 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1704,7 +1703,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 										 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1716,7 +1715,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 										 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.pipeline((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
 				.transaction((cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count))
@@ -1726,7 +1725,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1736,7 +1735,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1746,7 +1745,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1756,7 +1755,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1768,7 +1767,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1783,7 +1782,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1798,7 +1797,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1813,7 +1812,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return new JedisCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+		return new LettuceCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
 						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
@@ -1826,7 +1825,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRevRank(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREVRANK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREVRANK)
 				.general((cmd)->cmd.zrevrank(key, member))
 				.pipeline((cmd)->cmd.zrevrank(key, member))
 				.transaction((cmd)->cmd.zrevrank(key, member))
@@ -1836,7 +1835,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZREVRANK)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZREVRANK)
 				.general((cmd)->cmd.zrevrank(key, member))
 				.pipeline((cmd)->cmd.zrevrank(key, member))
 				.transaction((cmd)->cmd.zrevrank(key, member))
@@ -1846,7 +1845,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
@@ -1856,7 +1855,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
@@ -1867,7 +1866,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor, params),
 						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
@@ -1881,7 +1880,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor, params),
 						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
@@ -1895,7 +1894,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor, params),
 						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
@@ -1909,7 +1908,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor, params),
 						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
@@ -1924,7 +1923,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor, params),
 						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
@@ -1939,7 +1938,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
+		return new LettuceCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor, params),
 						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
@@ -1952,7 +1951,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Double zScore(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Double>(client, ProtocolCommand.ZSCORE)
+		return new LettuceCommand<Double>(client, ProtocolCommand.ZSCORE)
 				.general((cmd)->cmd.zscore(key, member))
 				.pipeline((cmd)->cmd.zscore(key, member))
 				.transaction((cmd)->cmd.zscore(key, member))
@@ -1962,7 +1961,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Double zScore(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return new JedisCommand<Double>(client, ProtocolCommand.ZSCORE)
+		return new LettuceCommand<Double>(client, ProtocolCommand.ZSCORE)
 				.general((cmd)->cmd.zscore(key, member))
 				.pipeline((cmd)->cmd.zscore(key, member))
 				.transaction((cmd)->cmd.zscore(key, member))
@@ -1973,7 +1972,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<String> zUnion(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisZParams params = new JedisZParams();
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -1984,7 +1983,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<byte[]> zUnion(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisZParams params = new JedisZParams();
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -1995,7 +1994,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<String> zUnion(final String[] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -2006,7 +2005,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -2017,7 +2016,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<String> zUnion(final String[] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -2028,7 +2027,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<byte[]> zUnion(final byte[][] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -2040,7 +2039,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -2052,7 +2051,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
 				.pipeline((cmd)->cmd.zunion(params, keys))
 				.transaction((cmd)->cmd.zunion(params, keys))
@@ -2063,7 +2062,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zUnionWithScores(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisZParams params = new JedisZParams();
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2074,7 +2073,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zUnionWithScores(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisZParams params = new JedisZParams();
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2085,7 +2084,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2096,7 +2095,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2107,7 +2106,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2118,7 +2117,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2130,7 +2129,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2142,7 +2141,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
+		return new LettuceCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
 				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2152,7 +2151,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zUnionStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, keys))
@@ -2162,7 +2161,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, keys))
@@ -2174,7 +2173,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, params, keys))
@@ -2186,7 +2185,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, params, keys))
@@ -2198,7 +2197,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, params, keys))
@@ -2210,7 +2209,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, params, keys))
@@ -2223,7 +2222,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, params, keys))
@@ -2236,7 +2235,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
-		return new JedisCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, params, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, params, keys))
 				.transaction((cmd)->cmd.zunionstore(destKey, params, keys))

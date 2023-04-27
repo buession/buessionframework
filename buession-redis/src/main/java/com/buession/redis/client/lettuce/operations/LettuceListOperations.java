@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractListOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
@@ -41,21 +40,21 @@ import redis.clients.jedis.params.LPosParams;
 import java.util.List;
 
 /**
- * Jedis 单机模式列表命令操作
+ * Lettuce 单机模式列表命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisListOperations extends AbstractListOperations<JedisStandaloneClient> {
+public final class LettuceListOperations extends AbstractListOperations<LettuceStandaloneClient> {
 
-	public JedisListOperations(final JedisStandaloneClient client){
+	public LettuceListOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public String lIndex(final String key, final long index){
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
-		return new JedisCommand<String>(client, ProtocolCommand.LINDEX)
+		return new LettuceCommand<String>(client, ProtocolCommand.LINDEX)
 				.general((cmd)->cmd.lindex(key, index))
 				.pipeline((cmd)->cmd.lindex(key, index))
 				.transaction((cmd)->cmd.lindex(key, index))
@@ -65,7 +64,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public byte[] lIndex(final byte[] key, final long index){
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.LINDEX)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.LINDEX)
 				.general((cmd)->cmd.lindex(key, index))
 				.pipeline((cmd)->cmd.lindex(key, index))
 				.transaction((cmd)->cmd.lindex(key, index))
@@ -77,7 +76,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
 		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
-		return new JedisCommand<Long>(client, ProtocolCommand.LINSERT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.linsert(key, pos, pivot, value))
 				.pipeline((cmd)->cmd.linsert(key, pos, pivot, value))
 				.transaction((cmd)->cmd.linsert(key, pos, pivot, value))
@@ -89,7 +88,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
 		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
-		return new JedisCommand<Long>(client, ProtocolCommand.LINSERT)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.linsert(key, pos, pivot, value))
 				.pipeline((cmd)->cmd.linsert(key, pos, pivot, value))
 				.transaction((cmd)->cmd.linsert(key, pos, pivot, value))
@@ -99,7 +98,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Status lSet(final String key, final long index, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.LINSERT)
+		return new LettuceCommand<Status>(client, ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
@@ -109,7 +108,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.LINSERT)
+		return new LettuceCommand<Status>(client, ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
@@ -119,7 +118,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lLen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.LLEN)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LLEN)
 				.general((cmd)->cmd.llen(key))
 				.pipeline((cmd)->cmd.llen(key))
 				.transaction((cmd)->cmd.llen(key))
@@ -129,7 +128,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lLen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.LLEN)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LLEN)
 				.general((cmd)->cmd.llen(key))
 				.pipeline((cmd)->cmd.llen(key))
 				.transaction((cmd)->cmd.llen(key))
@@ -139,7 +138,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public List<String> lRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.LRANGE)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.LRANGE)
 				.general((cmd)->cmd.lrange(key, start, end))
 				.pipeline((cmd)->cmd.lrange(key, start, end))
 				.transaction((cmd)->cmd.lrange(key, start, end))
@@ -149,7 +148,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.LRANGE)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.LRANGE)
 				.general((cmd)->cmd.lrange(key, start, end))
 				.pipeline((cmd)->cmd.lrange(key, start, end))
 				.transaction((cmd)->cmd.lrange(key, start, end))
@@ -159,7 +158,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lPos(final String key, final String element){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPOS)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element))
 				.pipeline((cmd)->cmd.lpos(key, element))
 				.transaction((cmd)->cmd.lpos(key, element))
@@ -169,7 +168,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lPos(final byte[] key, final byte[] element){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPOS)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element))
 				.pipeline((cmd)->cmd.lpos(key, element))
 				.transaction((cmd)->cmd.lpos(key, element))
@@ -180,7 +179,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	public Long lPos(final String key, final String element, final LPosArgument lPosArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
 		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPOS)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element, params))
 				.pipeline((cmd)->cmd.lpos(key, element, params))
 				.transaction((cmd)->cmd.lpos(key, element, params))
@@ -191,7 +190,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
 		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPOS)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element, params))
 				.pipeline((cmd)->cmd.lpos(key, element, params))
 				.transaction((cmd)->cmd.lpos(key, element, params))
@@ -203,7 +202,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.LPOS)
+		return new LettuceCommand<List<Long>>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element, params, count))
 				.pipeline((cmd)->cmd.lpos(key, element, params, count))
 				.transaction((cmd)->cmd.lpos(key, element, params, count))
@@ -215,7 +214,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.LPOS)
+		return new LettuceCommand<List<Long>>(client, ProtocolCommand.LPOS)
 				.general((cmd)->cmd.lpos(key, element, params, count))
 				.pipeline((cmd)->cmd.lpos(key, element, params, count))
 				.transaction((cmd)->cmd.lpos(key, element, params, count))
@@ -225,7 +224,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lRem(final String key, final String value, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
-		return new JedisCommand<Long>(client, ProtocolCommand.LREM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LREM)
 				.general((cmd)->cmd.lrem(key, count, value))
 				.pipeline((cmd)->cmd.lrem(key, count, value))
 				.transaction((cmd)->cmd.lrem(key, count, value))
@@ -235,7 +234,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lRem(final byte[] key, final byte[] value, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
-		return new JedisCommand<Long>(client, ProtocolCommand.LREM)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LREM)
 				.general((cmd)->cmd.lrem(key, count, value))
 				.pipeline((cmd)->cmd.lrem(key, count, value))
 				.transaction((cmd)->cmd.lrem(key, count, value))
@@ -245,7 +244,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Status lTrim(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<Status>(client, ProtocolCommand.LTRIM)
+		return new LettuceCommand<Status>(client, ProtocolCommand.LTRIM)
 				.general((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
@@ -255,7 +254,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<Status>(client, ProtocolCommand.LTRIM)
+		return new LettuceCommand<Status>(client, ProtocolCommand.LTRIM)
 				.general((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
@@ -268,7 +267,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 				.put("to", to);
 		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
 		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
-		return new JedisCommand<String>(client, ProtocolCommand.LMOVE)
+		return new LettuceCommand<String>(client, ProtocolCommand.LMOVE)
 				.general((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.pipeline((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.transaction((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
@@ -281,7 +280,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 				.put("to", to);
 		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
 		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.LMOVE)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.LMOVE)
 				.general((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.pipeline((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.transaction((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
@@ -295,7 +294,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 				.put("to", to).put("timeout", timeout);
 		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
 		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
-		return new JedisCommand<String>(client, ProtocolCommand.BLMOVE)
+		return new LettuceCommand<String>(client, ProtocolCommand.BLMOVE)
 				.general((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.pipeline((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.transaction((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
@@ -309,7 +308,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 				.put("to", to).put("timeout", timeout);
 		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
 		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.BLMOVE)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.BLMOVE)
 				.general((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.pipeline((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.transaction((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
@@ -319,7 +318,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.BLPOP)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.BLPOP)
 				.general((cmd)->cmd.blpop(timeout, keys))
 				.pipeline((cmd)->cmd.blpop(timeout, keys))
 				.transaction((cmd)->cmd.blpop(timeout, keys))
@@ -329,7 +328,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.BLPOP)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.BLPOP)
 				.general((cmd)->cmd.blpop(timeout, keys))
 				.pipeline((cmd)->cmd.blpop(timeout, keys))
 				.transaction((cmd)->cmd.blpop(timeout, keys))
@@ -339,7 +338,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.BRPOP)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.BRPOP)
 				.general((cmd)->cmd.brpop(timeout, keys))
 				.pipeline((cmd)->cmd.brpop(timeout, keys))
 				.transaction((cmd)->cmd.brpop(timeout, keys))
@@ -349,7 +348,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout){
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.BRPOP)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.BRPOP)
 				.general((cmd)->cmd.brpop(timeout, keys))
 				.pipeline((cmd)->cmd.brpop(timeout, keys))
 				.transaction((cmd)->cmd.brpop(timeout, keys))
@@ -360,7 +359,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	public String brPoplPush(final String key, final String destKey, final int timeout){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("timeout", timeout);
-		return new JedisCommand<String>(client, ProtocolCommand.BRPOPLPUSH)
+		return new LettuceCommand<String>(client, ProtocolCommand.BRPOPLPUSH)
 				.general((cmd)->cmd.brpoplpush(key, destKey, timeout))
 				.pipeline((cmd)->cmd.brpoplpush(key, destKey, timeout))
 				.transaction((cmd)->cmd.brpoplpush(key, destKey, timeout))
@@ -371,7 +370,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("timeout", timeout);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.BRPOPLPUSH)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.BRPOPLPUSH)
 				.general((cmd)->cmd.brpoplpush(key, destKey, timeout))
 				.pipeline((cmd)->cmd.brpoplpush(key, destKey, timeout))
 				.transaction((cmd)->cmd.brpoplpush(key, destKey, timeout))
@@ -381,7 +380,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public String lPop(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.LPOP)
+		return new LettuceCommand<String>(client, ProtocolCommand.LPOP)
 				.general((cmd)->cmd.lpop(key))
 				.pipeline((cmd)->cmd.lpop(key))
 				.transaction((cmd)->cmd.lpop(key))
@@ -391,7 +390,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public byte[] lPop(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.LPOP)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.LPOP)
 				.general((cmd)->cmd.lpop(key))
 				.pipeline((cmd)->cmd.lpop(key))
 				.transaction((cmd)->cmd.lpop(key))
@@ -401,7 +400,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lPush(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPUSH)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPUSH)
 				.general((cmd)->cmd.lpush(key, values))
 				.pipeline((cmd)->cmd.lpush(key, values))
 				.transaction((cmd)->cmd.lpush(key, values))
@@ -411,7 +410,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPUSH)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPUSH)
 				.general((cmd)->cmd.lpush(key, values))
 				.pipeline((cmd)->cmd.lpush(key, values))
 				.transaction((cmd)->cmd.lpush(key, values))
@@ -421,7 +420,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lPushX(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPUSHX)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPUSHX)
 				.general((cmd)->cmd.lpushx(key, values))
 				.pipeline((cmd)->cmd.lpushx(key, values))
 				.transaction((cmd)->cmd.lpushx(key, values))
@@ -431,7 +430,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.LPUSHX)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LPUSHX)
 				.general((cmd)->cmd.lpushx(key, values))
 				.pipeline((cmd)->cmd.lpushx(key, values))
 				.transaction((cmd)->cmd.lpushx(key, values))
@@ -441,7 +440,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public String rPop(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.RPOP)
+		return new LettuceCommand<String>(client, ProtocolCommand.RPOP)
 				.general((cmd)->cmd.rpop(key))
 				.pipeline((cmd)->cmd.rpop(key))
 				.transaction((cmd)->cmd.rpop(key))
@@ -451,7 +450,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public byte[] rPop(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.RPOP)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.RPOP)
 				.general((cmd)->cmd.rpop(key))
 				.pipeline((cmd)->cmd.rpop(key))
 				.transaction((cmd)->cmd.rpop(key))
@@ -461,7 +460,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public String rPoplPush(final String key, final String destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisCommand<String>(client, ProtocolCommand.RPOPLPUSH)
+		return new LettuceCommand<String>(client, ProtocolCommand.RPOPLPUSH)
 				.general((cmd)->cmd.rpoplpush(key, destKey))
 				.pipeline((cmd)->cmd.rpoplpush(key, destKey))
 				.transaction((cmd)->cmd.rpoplpush(key, destKey))
@@ -471,7 +470,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.RPOPLPUSH)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.RPOPLPUSH)
 				.general((cmd)->cmd.rpoplpush(key, destKey))
 				.pipeline((cmd)->cmd.rpoplpush(key, destKey))
 				.transaction((cmd)->cmd.rpoplpush(key, destKey))
@@ -481,7 +480,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long rPush(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.RPUSH)
+		return new LettuceCommand<Long>(client, ProtocolCommand.RPUSH)
 				.general((cmd)->cmd.rpush(key, values))
 				.pipeline((cmd)->cmd.rpush(key, values))
 				.transaction((cmd)->cmd.rpush(key, values))
@@ -491,7 +490,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.RPUSH)
+		return new LettuceCommand<Long>(client, ProtocolCommand.RPUSH)
 				.general((cmd)->cmd.rpush(key, values))
 				.pipeline((cmd)->cmd.rpush(key, values))
 				.transaction((cmd)->cmd.rpush(key, values))
@@ -501,7 +500,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long rPushX(final String key, final String... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.RPUSHX)
+		return new LettuceCommand<Long>(client, ProtocolCommand.RPUSHX)
 				.general((cmd)->cmd.rpushx(key, values))
 				.pipeline((cmd)->cmd.rpushx(key, values))
 				.transaction((cmd)->cmd.rpushx(key, values))
@@ -511,7 +510,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values){
 		final CommandArguments args = CommandArguments.create("key", key).put("values", values);
-		return new JedisCommand<Long>(client, ProtocolCommand.RPUSHX)
+		return new LettuceCommand<Long>(client, ProtocolCommand.RPUSHX)
 				.general((cmd)->cmd.rpushx(key, values))
 				.pipeline((cmd)->cmd.rpushx(key, values))
 				.transaction((cmd)->cmd.rpushx(key, values))

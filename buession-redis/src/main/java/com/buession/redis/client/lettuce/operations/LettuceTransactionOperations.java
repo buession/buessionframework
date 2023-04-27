@@ -19,15 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractTransactionOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -38,20 +37,20 @@ import redis.clients.jedis.Response;
 import java.util.List;
 
 /**
- * Jedis 单机模式事务命令操作
+ * Lettuce 单机模式事务命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisTransactionOperations extends AbstractTransactionOperations<JedisStandaloneClient> {
+public final class LettuceTransactionOperations extends AbstractTransactionOperations<LettuceStandaloneClient> {
 
-	public JedisTransactionOperations(final JedisStandaloneClient client){
+	public LettuceTransactionOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public Status multi(){
-		return new JedisCommand<Status>(client, ProtocolCommand.MULTI)
+		return new LettuceCommand<Status>(client, ProtocolCommand.MULTI)
 				.general((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.multi();
@@ -75,7 +74,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public List<Object> exec(){
-		return new JedisCommand<List<Object>>(client, ProtocolCommand.EXEC) {
+		return new LettuceCommand<List<Object>>(client, ProtocolCommand.EXEC) {
 
 			@Override
 			public List<Object> execute() throws RedisException{
@@ -88,7 +87,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public void discard(){
-		new JedisCommand<Void>(client, ProtocolCommand.DISCARD)
+		new LettuceCommand<Void>(client, ProtocolCommand.DISCARD)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.discard();
@@ -100,7 +99,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public Status watch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
+		return new LettuceCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -116,7 +115,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public Status watch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
+		return new LettuceCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -131,7 +130,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public Status unwatch(){
-		return new JedisCommand<Status>(client, ProtocolCommand.UNWATCH)
+		return new LettuceCommand<Status>(client, ProtocolCommand.UNWATCH)
 				.general((cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 

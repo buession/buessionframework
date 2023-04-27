@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractConnectionOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
@@ -43,21 +42,21 @@ import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import java.util.List;
 
 /**
- * Jedis 单机模式连接命令操作
+ * Lettuce 单机模式连接命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisConnectionOperations extends AbstractConnectionOperations<JedisStandaloneClient> {
+public final class LettuceConnectionOperations extends AbstractConnectionOperations<LettuceStandaloneClient> {
 
-	public JedisConnectionOperations(final JedisStandaloneClient client){
+	public LettuceConnectionOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public Status auth(final String user, final String password){
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
-		return new JedisCommand<Status>(client, ProtocolCommand.AUTH)
+		return new LettuceCommand<Status>(client, ProtocolCommand.AUTH)
 				.general((cmd)->cmd.auth(user, password), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -65,7 +64,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status auth(final String password){
 		final CommandArguments args = CommandArguments.create("password", password);
-		return new JedisCommand<Status>(client, ProtocolCommand.AUTH)
+		return new LettuceCommand<Status>(client, ProtocolCommand.AUTH)
 				.general((cmd)->cmd.auth(password), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -73,7 +72,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public String echo(final String str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		return new JedisCommand<String>(client, ProtocolCommand.ECHO)
+		return new LettuceCommand<String>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str))
 				.run(args);
 	}
@@ -81,27 +80,27 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public byte[] echo(final byte[] str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.ECHO)
+		return new LettuceCommand<byte[]>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str))
 				.run(args);
 	}
 
 	@Override
 	public Status ping(){
-		return new JedisCommand<Status>(client, ProtocolCommand.PING)
+		return new LettuceCommand<Status>(client, ProtocolCommand.PING)
 				.general((cmd)->cmd.ping(), PingResultConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public Status reset(){
-		return new JedisCommand<Status>(client, ProtocolCommand.RESET)
+		return new LettuceCommand<Status>(client, ProtocolCommand.RESET)
 				.run();
 	}
 
 	@Override
 	public Status quit(){
-		return new JedisCommand<Status>(client, ProtocolCommand.QUIT)
+		return new LettuceCommand<Status>(client, ProtocolCommand.QUIT)
 				.general((cmd)->cmd.quit(), OkStatusConverter.INSTANCE)
 				.run();
 	}
@@ -109,7 +108,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status select(final int db){
 		final CommandArguments args = CommandArguments.create("db", db);
-		return new JedisCommand<Status>(client, ProtocolCommand.SELECT)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SELECT)
 				.general((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
 				.run(args);
@@ -118,13 +117,13 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientCaching(final boolean isYes){
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_CACHING)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_CACHING)
 				.run(args);
 	}
 
 	@Override
 	public Long clientId(){
-		return new JedisCommand<Long>(client, ProtocolCommand.CLIENT_ID)
+		return new LettuceCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.general((cmd)->cmd.clientId())
 				.run();
 	}
@@ -132,35 +131,35 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientSetName(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE)
-				.run();
+				.run(args);
 	}
 
 	@Override
 	public String clientGetName(){
-		return new JedisCommand<String>(client, ProtocolCommand.CLIENT_GETNAME)
+		return new LettuceCommand<String>(client, ProtocolCommand.CLIENT_GETNAME)
 				.general((cmd)->cmd.clientGetname())
 				.run();
 	}
 
 	@Override
 	public Integer clientGetRedir(){
-		return new JedisCommand<Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+		return new LettuceCommand<Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
 				.run();
 	}
 
 	@Override
 	public List<Client> clientList(){
-		return new JedisCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+		return new LettuceCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE)
 				.run();
 	}
@@ -168,7 +167,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public List<Client> clientList(final ClientType clientType){
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		return new JedisCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+		return new LettuceCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
 						ClientConverter.ClientListConverter.INSTANCE)
 				.run(args);
@@ -176,7 +175,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 
 	@Override
 	public Client clientInfo(){
-		return new JedisCommand<Client>(client, ProtocolCommand.CLIENT_INFO)
+		return new LettuceCommand<Client>(client, ProtocolCommand.CLIENT_INFO)
 				.general((cmd)->cmd.clientInfo(), ClientConverter.INSTANCE)
 				.run();
 	}
@@ -184,7 +183,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientPause(final int timeout){
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
 				.general((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -192,14 +191,14 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientReply(final ClientReply option){
 		final CommandArguments args = CommandArguments.create("option", option);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_REPLY)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_REPLY)
 				.run(args);
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
 				.general((cmd)->cmd.clientKill(host + ":" + port), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -207,7 +206,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientUnblock(final int clientId){
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER)
 				.run(args);
 	}
@@ -215,7 +214,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		return new JedisCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
 						Converters.ONE_STATUS_CONVERTER)
 				.run(args);

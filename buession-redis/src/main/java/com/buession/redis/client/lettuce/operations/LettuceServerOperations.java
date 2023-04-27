@@ -19,15 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.collect.Arrays;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.operations.AbstractServerOperations;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.FlushMode;
@@ -59,17 +58,17 @@ import java.util.List;
  * Jedis 单机模式服务端命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public final class JedisServerOperations extends AbstractServerOperations<JedisStandaloneClient> {
+public final class LettuceServerOperations extends AbstractServerOperations<LettuceStandaloneClient> {
 
-	public JedisServerOperations(final JedisStandaloneClient client){
+	public LettuceServerOperations(final LettuceStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public List<String> aclCat(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
 				.general((cmd)->cmd.aclCat())
 				.run();
 	}
@@ -77,7 +76,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<String> aclCat(final String categoryName){
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
 				.general((cmd)->cmd.aclCat(categoryName))
 				.run(args);
 	}
@@ -85,7 +84,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<byte[]> aclCat(final byte[] categoryName){
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ACL_CAT)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.ACL_CAT)
 				.general((cmd)->cmd.aclCat(categoryName))
 				.run(args);
 	}
@@ -93,7 +92,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status aclSetUser(final String username, final String... rules){
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
 				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -101,7 +100,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status aclSetUser(final byte[] username, final byte[]... rules){
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
 				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -109,7 +108,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public AclUser aclGetUser(final String username){
 		final CommandArguments args = CommandArguments.create("username", username);
-		return new JedisCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
+		return new LettuceCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
 				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE)
 				.run(args);
 	}
@@ -117,21 +116,21 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public AclUser aclGetUser(final byte[] username){
 		final CommandArguments args = CommandArguments.create("username", username);
-		return new JedisCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
+		return new LettuceCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
 				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public List<String> aclUsers(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_USERS)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ACL_USERS)
 				.general((cmd)->cmd.aclUsers())
 				.run();
 	}
 
 	@Override
 	public String aclWhoAmI(){
-		return new JedisCommand<String>(client, ProtocolCommand.ACL_WHOAMI)
+		return new LettuceCommand<String>(client, ProtocolCommand.ACL_WHOAMI)
 				.general((cmd)->cmd.aclWhoAmI())
 				.run();
 	}
@@ -139,7 +138,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Long aclDelUser(final String... usernames){
 		final CommandArguments args = CommandArguments.create("usernames", usernames);
-		return new JedisCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
 					if(usernames.length > 1){
 						return cmd.aclDelUser(usernames[0], Arrays.subarray(usernames, 1, usernames.length - 1));
@@ -153,7 +152,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Long aclDelUser(final byte[]... usernames){
 		final CommandArguments args = CommandArguments.create("usernames", usernames);
-		return new JedisCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
+		return new LettuceCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
 					if(usernames.length > 1){
 						return cmd.aclDelUser(usernames[0], Arrays.subarray(usernames, 1, usernames.length - 1));
@@ -166,28 +165,28 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public String aclGenPass(){
-		return new JedisCommand<String>(client, ProtocolCommand.ACL_GENPASS)
+		return new LettuceCommand<String>(client, ProtocolCommand.ACL_GENPASS)
 				.general((cmd)->cmd.aclGenPass())
 				.run();
 	}
 
 	@Override
 	public List<String> aclList(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_LIST)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.ACL_LIST)
 				.general((cmd)->cmd.aclList())
 				.run();
 	}
 
 	@Override
 	public Status aclLoad(){
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOAD)
+		return new LettuceCommand<Status>(client, ProtocolCommand.ACL_LOAD)
 				.general((cmd)->cmd.aclLoad(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public List<AclLog> aclLog(){
-		return new JedisCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+		return new LettuceCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
 				.general((cmd)->cmd.aclLog(), AccessControlLogEntryConverter.LIST_CONVERTER)
 				.run();
 	}
@@ -195,34 +194,34 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<AclLog> aclLog(final long count){
 		final CommandArguments args = CommandArguments.create("count", count);
-		return new JedisCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+		return new LettuceCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
 				.general((cmd)->cmd.aclLog((int) count), AccessControlLogEntryConverter.LIST_CONVERTER)
 				.run();
 	}
 
 	@Override
 	public Status aclLogReset(){
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGREST)
+		return new LettuceCommand<Status>(client, ProtocolCommand.ACL_LOGREST)
 				.general((cmd)->cmd.aclLogReset(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public Status aclLogSave(){
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGSAVE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.ACL_LOGSAVE)
 				.run();
 	}
 
 	@Override
 	public String bgRewriteAof(){
-		return new JedisCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
+		return new LettuceCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
 				.general((cmd)->cmd.bgrewriteaof())
 				.run();
 	}
 
 	@Override
 	public String bgSave(){
-		return new JedisCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
+		return new LettuceCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
 				.general((cmd)->cmd.bgsave())
 				.run();
 	}
@@ -230,7 +229,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status configSet(final String parameter, final String value){
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CONFIG_SET)
 				.general((cmd)->cmd.configSet(parameter, value), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -238,7 +237,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value){
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CONFIG_SET)
 				.general((cmd)->cmd.configSet(parameter, value), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -246,7 +245,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<String> configGet(final String parameter){
 		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.CONFIG_GET)
+		return new LettuceCommand<List<String>>(client, ProtocolCommand.CONFIG_GET)
 				.general((cmd)->cmd.configGet(parameter))
 				.run(args);
 	}
@@ -254,35 +253,35 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<byte[]> configGet(final byte[] parameter){
 		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.CONFIG_GET)
+		return new LettuceCommand<List<byte[]>>(client, ProtocolCommand.CONFIG_GET)
 				.general((cmd)->cmd.configGet(parameter))
 				.run(args);
 	}
 
 	@Override
 	public Status configResetStat(){
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
 				.general((cmd)->cmd.configResetStat(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public Status configRewrite(){
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_REWRITE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.CONFIG_REWRITE)
 				.general((cmd)->cmd.configRewrite(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public Long dbSize(){
-		return new JedisCommand<Long>(client, ProtocolCommand.DBSIZE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.DBSIZE)
 				.general((cmd)->cmd.dbSize()).pipeline((cmd)->cmd.dbSize())
 				.run();
 	}
 
 	@Override
 	public Status failover(){
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(), OkStatusConverter.INSTANCE)
 				.run();
 	}
@@ -291,7 +290,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status failover(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -300,7 +299,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status failover(final String host, final int port, final int timeout){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -310,7 +309,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("isForce", isForce)
 				.put("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout, isForce);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -319,14 +318,14 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status failover(final int timeout){
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(timeout);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status flushAll(){
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FLUSHALL)
 				.general((cmd)->cmd.flushAll(), OkStatusConverter.INSTANCE)
 				.run();
 	}
@@ -334,14 +333,14 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status flushAll(final FlushMode mode){
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FLUSHALL)
 				.general((cmd)->cmd.flushAll(FlushModeConverter.INSTANCE.convert(mode)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status flushDb(){
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FLUSHDB)
 				.general((cmd)->cmd.flushDB(), OkStatusConverter.INSTANCE)
 				.run();
 	}
@@ -349,14 +348,14 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status flushDb(final FlushMode mode){
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
+		return new LettuceCommand<Status>(client, ProtocolCommand.FLUSHDB)
 				.general((cmd)->cmd.flushDB(FlushModeConverter.INSTANCE.convert(mode)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Info info(){
-		return new JedisCommand<Info>(client, ProtocolCommand.INFO)
+		return new LettuceCommand<Info>(client, ProtocolCommand.INFO)
 				.general((cmd)->cmd.info(), InfoConverter.INSTANCE)
 				.run();
 	}
@@ -364,41 +363,41 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Info info(final Info.Section section){
 		final CommandArguments args = CommandArguments.create("section", section);
-		return new JedisCommand<Info>(client, ProtocolCommand.INFO)
+		return new LettuceCommand<Info>(client, ProtocolCommand.INFO)
 				.general((cmd)->cmd.info(section.name().toLowerCase()), InfoConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Long lastSave(){
-		return new JedisCommand<Long>(client, ProtocolCommand.LASTSAVE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.LASTSAVE)
 				.general((cmd)->cmd.lastsave())
 				.run();
 	}
 
 	@Override
 	public String memoryDoctor(){
-		return new JedisCommand<String>(client, ProtocolCommand.MEMORY_DOCTOR)
+		return new LettuceCommand<String>(client, ProtocolCommand.MEMORY_DOCTOR)
 				.general((cmd)->cmd.memoryDoctor())
 				.run();
 	}
 
 	@Override
 	public Status memoryPurge(){
-		return new JedisCommand<Status>(client, ProtocolCommand.MEMORY_PURGE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.MEMORY_PURGE)
 				.run();
 	}
 
 	@Override
 	public MemoryStats memoryStats(){
-		return new JedisCommand<MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
+		return new LettuceCommand<MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
 				.run();
 	}
 
 	@Override
 	public Long memoryUsage(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
 				.pipeline((cmd)->cmd.memoryUsage(key))
 				.transaction((cmd)->cmd.memoryUsage(key))
@@ -408,7 +407,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Long memoryUsage(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
 				.pipeline((cmd)->cmd.memoryUsage(key))
 				.transaction((cmd)->cmd.memoryUsage(key))
@@ -418,7 +417,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Long memoryUsage(final String key, final int samples){
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
 				.pipeline((cmd)->cmd.memoryUsage(key, samples))
 				.transaction((cmd)->cmd.memoryUsage(key, samples))
@@ -428,7 +427,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples){
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
+		return new LettuceCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
 				.pipeline((cmd)->cmd.memoryUsage(key, samples))
 				.transaction((cmd)->cmd.memoryUsage(key, samples))
@@ -437,7 +436,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public List<Module> moduleList(){
-		return new JedisCommand<List<Module>>(client, ProtocolCommand.MODULE_LIST)
+		return new LettuceCommand<List<Module>>(client, ProtocolCommand.MODULE_LIST)
 				.general((cmd)->cmd.moduleList(), ModuleConverter.LIST_CONVERTER)
 				.run();
 	}
@@ -445,7 +444,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status moduleLoad(final String path, final String... arguments){
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", arguments);
-		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_LOAD)
+		return new LettuceCommand<Status>(client, ProtocolCommand.MODULE_LOAD)
 				.general((cmd)->cmd.moduleLoad(path, arguments), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -453,7 +452,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status moduleUnLoad(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_UNLOAD)
+		return new LettuceCommand<Status>(client, ProtocolCommand.MODULE_UNLOAD)
 				.general((cmd)->cmd.moduleUnload(name), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -461,7 +460,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public void monitor(final RedisMonitor redisMonitor){
 		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
-		new JedisCommand<Status>(client, ProtocolCommand.MONITOR)
+		new LettuceCommand<Status>(client, ProtocolCommand.MONITOR)
 				.general((cmd)->{
 					cmd.monitor(new JedisMonitor() {
 
@@ -479,20 +478,20 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Object pSync(final String replicationId, final long offset){
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return new JedisCommand<>(client, ProtocolCommand.PSYNC)
+		return new LettuceCommand<>(client, ProtocolCommand.PSYNC)
 				.run(args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset){
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return new JedisCommand<>(client, ProtocolCommand.PSYNC)
+		return new LettuceCommand<>(client, ProtocolCommand.PSYNC)
 				.run(args);
 	}
 
 	@Override
 	public void sync(){
-		new JedisCommand<Void>(client, ProtocolCommand.SYNC)
+		new LettuceCommand<Void>(client, ProtocolCommand.SYNC)
 				.pipeline((cmd)->{
 					cmd.sync();
 					return null;
@@ -503,7 +502,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status replicaOf(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return new JedisCommand<Status>(client, ProtocolCommand.REPLICAOF)
+		return new LettuceCommand<Status>(client, ProtocolCommand.REPLICAOF)
 				.general((cmd)->cmd.replicaof(host, port), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -511,28 +510,28 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status slaveOf(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return new JedisCommand<Status>(client, ProtocolCommand.SLAVEOF)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SLAVEOF)
 				.general((cmd)->cmd.slaveof(host, port), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public List<Role> role(){
-		return new JedisCommand<List<Role>>(client, ProtocolCommand.ROLE)
+		return new LettuceCommand<List<Role>>(client, ProtocolCommand.ROLE)
 				.general((cmd)->cmd.role(), RoleConverter.LIST_CONVERTER)
 				.run();
 	}
 
 	@Override
 	public Status save(){
-		return new JedisCommand<Status>(client, ProtocolCommand.SAVE)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SAVE)
 				.general((cmd)->cmd.save(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
 	public void shutdown(){
-		new JedisCommand<Void>(client, ProtocolCommand.SHUTDOWN)
+		new LettuceCommand<Void>(client, ProtocolCommand.SHUTDOWN)
 				.general((cmd)->{
 					cmd.shutdown();
 					return null;
@@ -543,7 +542,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public void shutdown(final boolean save){
 		final CommandArguments args = CommandArguments.create("save", save);
-		new JedisCommand<Void>(client, ProtocolCommand.SHUTDOWN)
+		new LettuceCommand<Void>(client, ProtocolCommand.SHUTDOWN)
 				.general((cmd)->{
 					final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
 					cmd.shutdown(saveMode);
@@ -554,7 +553,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public List<SlowLog> slowLogGet(){
-		return new JedisCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
+		return new LettuceCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
 				.general((cmd)->cmd.slowlogGet(), SlowlogConverter.LIST_CONVERTER)
 				.run();
 	}
@@ -562,21 +561,21 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<SlowLog> slowLogGet(final long count){
 		final CommandArguments args = CommandArguments.create("count", count);
-		return new JedisCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
+		return new LettuceCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
 				.general((cmd)->cmd.slowlogGet(count), SlowlogConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
 	public Long slowLogLen(){
-		return new JedisCommand<Long>(client, ProtocolCommand.SLOWLOG_LEN)
+		return new LettuceCommand<Long>(client, ProtocolCommand.SLOWLOG_LEN)
 				.general((cmd)->cmd.slowlogLen())
 				.run();
 	}
 
 	@Override
 	public Status slowLogReset(){
-		return new JedisCommand<Status>(client, ProtocolCommand.SLOWLOG_RESET)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SLOWLOG_RESET)
 				.general((cmd)->cmd.slowlogReset(), OkStatusConverter.INSTANCE)
 				.run();
 	}
@@ -584,7 +583,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status swapdb(final int db1, final int db2){
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
-		return new JedisCommand<Status>(client, ProtocolCommand.SWAPDB)
+		return new LettuceCommand<Status>(client, ProtocolCommand.SWAPDB)
 				.general((cmd)->cmd.swapDB(db1, db2), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.swapDB(db1, db2), OkStatusConverter.INSTANCE)
 				.run(args);
@@ -592,7 +591,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public RedisServerTime time(){
-		return new JedisCommand<RedisServerTime>(client, ProtocolCommand.TIME)
+		return new LettuceCommand<RedisServerTime>(client, ProtocolCommand.TIME)
 				.general((cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
 				.pipeline((cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
 				.run();

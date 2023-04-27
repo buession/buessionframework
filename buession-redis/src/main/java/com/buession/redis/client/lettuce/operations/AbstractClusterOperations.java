@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
@@ -35,15 +35,15 @@ import com.buession.redis.utils.SafeEncoder;
 import java.util.List;
 
 /**
- * Jedis 集群命令操作抽象类
+ * Lettuce 集群命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public abstract class AbstractClusterOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractClusterOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements ClusterOperations {
 
 	public AbstractClusterOperations(final C client){

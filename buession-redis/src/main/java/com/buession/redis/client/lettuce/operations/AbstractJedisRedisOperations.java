@@ -22,9 +22,10 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.operations.JedisRedisOperations;
 import com.buession.redis.client.operations.AbstractRedisOperations;
 
 /**

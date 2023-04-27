@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
@@ -33,16 +33,16 @@ import com.buession.redis.core.Tuple;
 import java.util.List;
 
 /**
- * Jedis 有序集合命令操作抽象类
+ * Lettuce 有序集合命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public abstract class AbstractSortedSetOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements SortedSetOperations {
+public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
+		extends AbstractLettuceRedisOperations<C> implements SortedSetOperations {
 
 	public AbstractSortedSetOperations(final C client){
 		super(client);

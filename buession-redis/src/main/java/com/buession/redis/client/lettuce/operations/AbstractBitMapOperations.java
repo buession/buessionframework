@@ -21,10 +21,26 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.lettuce.operations;/**
- * 
+ */
+package com.buession.redis.client.lettuce.operations;
+
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.BitMapOperations;
+
+/**
+ * Lettuce BitMap 命令操作抽象类
+ *
+ * @param <C>
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public class AbstractBitMapOperations {
+ */
+public abstract class AbstractBitMapOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
+		implements BitMapOperations {
+
+	public AbstractBitMapOperations(final C client){
+		super(client);
+	}
+
 }
