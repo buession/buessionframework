@@ -19,10 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.KeyValueParser;
@@ -30,10 +30,10 @@ import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.utils.ResponseUtils;
 
 /**
- * Jedis Cluster Info 命令结果转换为 {@link ClusterInfo}
+ * Cluster Info 命令结果转换为 {@link ClusterInfo}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
 public final class ClusterInfoConverter implements Converter<String, ClusterInfo> {
 

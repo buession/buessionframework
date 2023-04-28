@@ -22,37 +22,37 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClusterRedisNode;
+import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.utils.ResponseUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Lettuce 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 2.0.0
  */
-public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ConnectionOperations {
+public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
 
-	public AbstractConnectionOperations(final C client){
-		super(client);
-	}
+	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
 
 	@Override
-	public Status auth(final byte[] user, final byte[] password){
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
-	}
+	public List<ClusterRedisNode> convert(final String source){
+		String[] rows = ResponseUtils.parseRows(source);
 
-	@Override
-	public Status auth(final byte[] password){
-		return auth(SafeEncoder.encode(password));
+		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
+
+		for(String row : rows){
+			nodes.add(ClusterNodeConverter.INSTANCE.convert(row));
+		}
+
+		return nodes;
 	}
 
 }

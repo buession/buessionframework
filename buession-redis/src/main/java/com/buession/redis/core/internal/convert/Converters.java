@@ -48,6 +48,8 @@ public interface Converters {
 
 	PredicateStatusConverter<Long> ONE_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val == 1L);
 
+	Converter<Long, Boolean> LONG_BOOLEAN_CONVERTER = (val)->val == 1L;
+
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
 
 	ListConverter<String, byte[]> STRING_LIST_TO_BINARY_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);

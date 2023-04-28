@@ -22,27 +22,27 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core.support;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import io.lettuce.core.api.StatefulConnection;
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.StringUtils;
+import com.buession.redis.core.command.BitMapCommands;
+import org.springframework.lang.Nullable;
 
 /**
+ * {@link BitMapCommands.BitFieldArgument} 转换为 jedis bitfield 参数
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class ConnectionUtils {
+public final class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, String[]> {
 
-	public static <C> C wrapConnection(C connection, ObjectPoolWrapper<C> pool){
-		return ConnectionWrapping.wrapConnection(connection, pool);
-	}
+	public final static BitFieldArgumentConverter INSTANCE = new BitFieldArgumentConverter();
 
-	@SuppressWarnings("unchecked")
-	public static <C extends StatefulConnection<?, ?>> C getOriginalConnection(C connection){
-		if(connection instanceof ConnectionWrapping.HasTargetConnection){
-			return (C) ((ConnectionWrapping.HasTargetConnection) connection).getTargetConnection();
-		}else{
-			return connection;
-		}
+	@Nullable
+	@Override
+	public String[] convert(final BitMapCommands.BitFieldArgument source){
+		return source == null ? null : StringUtils.split(source.toString(), " ");
 	}
 
 }

@@ -22,25 +22,57 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.ClusterSlot;
+import com.buession.redis.core.RedisServer;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Lettuce Script 命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * Cluster Slots 命令结果转换为 {@link ClusterSlot}
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class AbstractScriptingOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ScriptingOperations {
+public final class ClusterSlotConverter implements Converter<Object, ClusterSlot> {
 
-	public AbstractScriptingOperations(final C client){
-		super(client);
+	public final static ClusterSlotConverter INSTANCE = new ClusterSlotConverter();
+
+	public final static ListConverter<Object, ClusterSlot> LIST_CONVERTER = new ListConverter<>(INSTANCE);
+
+	@Override
+	@SuppressWarnings({"unchecked"})
+	public ClusterSlot convert(final Object source){
+		if(source instanceof List){
+			List<Object> data = (List<Object>) source;
+
+			if(data.size() >= 3){
+				final long start = (long) data.get(0);
+				final long end = (long) data.get(1);
+				final List<RedisServer> masterNodes = new ArrayList<>(data.size() - 2);
+				List<Object> masterNode;
+
+				for(int i = 2; i < data.size(); i++){
+					masterNode = (List<Object>) data.get(i);
+
+					RedisServer redisServer = new RedisServer(
+							SafeEncoder.encode((byte[]) masterNode.get(0)), ((Long) masterNode.get(1)).intValue());
+
+					redisServer.setId(SafeEncoder.encode((byte[]) masterNode.get(2)));
+
+					masterNodes.add(redisServer);
+				}
+
+				return new ClusterSlot(start, end, masterNodes);
+			}
+		}
+
+		return null;
 	}
 
 }

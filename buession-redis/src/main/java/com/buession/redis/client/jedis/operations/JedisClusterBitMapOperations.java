@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -30,7 +30,9 @@ import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.BitFieldArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.BitOP;
 import redis.clients.jedis.params.BitPosParams;
 
@@ -115,6 +117,29 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	}
 
 	@Override
+	public List<Long> bitField(final String key, final BitFieldArgument argument){
+		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
+		final String[] arguments = BitFieldArgumentConverter.INSTANCE.convert(argument);
+		return new JedisClusterCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
+				.general((cmd)->cmd.bitfield(key, arguments))
+				.pipeline((cmd)->cmd.bitfield(key, arguments))
+				.transaction((cmd)->cmd.bitfield(key, arguments))
+				.run(args);
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final BitFieldArgument argument){
+		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
+		final byte[][] arguments = SafeEncoder.encode(BitFieldArgumentConverter.INSTANCE.convert(argument));
+		return new JedisClusterCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
+				.general((cmd)->cmd.bitfield(key, arguments))
+				.pipeline((cmd)->cmd.bitfield(key, arguments))
+				.transaction((cmd)->cmd.bitfield(key, arguments))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
 	public List<Long> bitField(final String key, final String... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
 		return new JedisClusterCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
@@ -124,6 +149,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);

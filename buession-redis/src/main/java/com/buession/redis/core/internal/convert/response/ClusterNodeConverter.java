@@ -19,10 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
@@ -36,10 +36,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Jedis Cluster Slaves 命令结果转换为 {@link RedisClusterServer}
+ * Cluster Slaves 命令结果转换为 {@link RedisClusterServer}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
 public final class ClusterNodeConverter implements Converter<String, ClusterRedisNode> {
 

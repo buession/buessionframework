@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -139,10 +139,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public List<Long> bitField(final String key, final BitFieldArgument argument){
+		return execute((client)->client.bitMapOperations().bitField(rawKey(key), argument));
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final BitFieldArgument argument){
+		return execute((client)->client.bitMapOperations().bitField(rawKey(key), argument));
+	}
+
+	@Deprecated
+	@Override
 	public List<Long> bitField(final String key, final String... arguments){
 		return execute((client)->client.bitMapOperations().bitField(rawKey(key), arguments));
 	}
 
+	@Deprecated
 	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
 		return execute((client)->client.bitMapOperations().bitField(rawKey(key), arguments));
