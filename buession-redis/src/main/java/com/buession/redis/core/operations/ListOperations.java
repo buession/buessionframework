@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
@@ -129,7 +129,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V lIndexObject(final String key, final long index, final TypeReference<V> type);
 
@@ -149,7 +149,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type);
 
@@ -340,7 +340,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
 	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type);
 
@@ -365,7 +365,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
 	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
 
@@ -465,7 +465,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 					  final TypeReference<V> type);
@@ -488,7 +488,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 					  final TypeReference<V> type);
@@ -606,7 +606,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 					   final int timeout, final TypeReference<V> type);
@@ -632,7 +632,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 					   final int timeout, final TypeReference<V> type);
@@ -728,7 +728,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 type 指定的对象。
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> blPopObject(final String[] keys, final int timeout, final TypeReference<V> type);
 
@@ -749,7 +749,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 type 指定的对象。
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> blPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type);
 
@@ -842,7 +842,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 type 指定的对象。
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> brPopObject(final String[] keys, final int timeout, final TypeReference<V> type);
 
@@ -863,7 +863,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 type 指定的对象。
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> brPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type);
 
@@ -976,7 +976,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 type 指定的对象 ，第二个等待时长
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V brPoplPushObject(final String key, final String destKey, final int timeout, final TypeReference<V> type);
 
@@ -1001,7 +1001,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 type 指定的对象 ，第二个等待时长
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final TypeReference<V> type);
 
@@ -1079,7 +1079,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V lPopObject(final String key, final TypeReference<V> type);
 
@@ -1097,7 +1097,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V lPopObject(final byte[] key, final TypeReference<V> type);
 
@@ -1299,7 +1299,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V rPopObject(final String key, final TypeReference<V> type);
 
@@ -1317,7 +1317,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V rPopObject(final byte[] key, final TypeReference<V> type);
 
@@ -1415,7 +1415,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type);
 
@@ -1437,7 +1437,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type);
 

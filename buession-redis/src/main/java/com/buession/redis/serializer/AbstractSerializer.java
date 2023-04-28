@@ -83,7 +83,7 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 
 	@Override
 	public <V> String[] serialize(final V... objects){
-		return objects == null ? null : Arrays.map(objects, String.class, this::serialize);
+		return Arrays.map(objects, String.class, this::serialize);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 
 	@Override
 	public <V> byte[][] serializeAsBytes(final V... objects){
-		return objects == null ? null : Arrays.map(objects, byte[].class, this::serializeAsBytes);
+		return Arrays.map(objects, byte[].class, this::serializeAsBytes);
 	}
 
 	@Override

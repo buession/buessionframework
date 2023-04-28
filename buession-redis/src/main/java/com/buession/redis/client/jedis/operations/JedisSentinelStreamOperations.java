@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -76,7 +76,8 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 
 	@Override
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids){
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("ids", ids);
+		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+				.put("ids", (Object[]) ids);
 		final StreamEntryID[] streamEntryIDS = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.XACK)
 				.general((cmd)->cmd.xack(key, groupName, streamEntryIDS))
@@ -210,7 +211,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									final int minIdleTime, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
-				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids);
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
 		final XClaimParams params = new XClaimParams();
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
 		return new JedisSentinelCommand<List<StreamEntry>>(client, ProtocolCommand.XCLAIM)
@@ -229,7 +230,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 									final int minIdleTime, final StreamEntryId[] ids,
 									final XClaimArgument xClaimArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
-				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
 		final XClaimParams params = XClaimArgumentConverter.INSTANCE.convert(xClaimArgument);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
@@ -248,7 +249,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											final int minIdleTime, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
-				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids);
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
 		final XClaimParams params = new XClaimParams();
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
 		return new JedisSentinelCommand<List<StreamEntryId>>(client, ProtocolCommand.XCLAIM)
@@ -267,7 +268,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 											final int minIdleTime, final StreamEntryId[] ids,
 											final XClaimArgument xClaimArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
-				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
 		final XClaimParams params = XClaimArgumentConverter.INSTANCE.convert(xClaimArgument);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
@@ -284,7 +285,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 
 	@Override
 	public Long xDel(final String key, final StreamEntryId... ids){
-		final CommandArguments args = CommandArguments.create("key", key).put("ids", ids);
+		final CommandArguments args = CommandArguments.create("key", key).put("ids", (Object[]) ids);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.ARRAY_CONVERTER.convert(ids);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.XDEL)
 				.general((cmd)->cmd.xdel(key, streamEntryIDs))

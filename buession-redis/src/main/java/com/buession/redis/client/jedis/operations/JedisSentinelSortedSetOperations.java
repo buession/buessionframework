@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -142,7 +142,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisSentinelCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
@@ -152,7 +152,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisSentinelCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys),
 						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
@@ -165,7 +165,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisSentinelCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMAX)
 				.general((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
@@ -175,7 +175,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisSentinelCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmax(timeout, keys),
 						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
@@ -432,7 +432,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zDiff(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiff(keys))
 				.pipeline((cmd)->cmd.zdiff(keys))
@@ -442,7 +442,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zDiff(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiff(keys))
 				.pipeline((cmd)->cmd.zdiff(keys))
@@ -452,7 +452,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zDiffWithScores(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
@@ -462,7 +462,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zDiffWithScores(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
 				.pipeline((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
@@ -472,7 +472,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zDiffStore(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys)).pipeline((cmd)->cmd.zdiffStore(destKey, keys))
 				.transaction((cmd)->cmd.zdiffStore(destKey, keys))
@@ -481,7 +481,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys)).pipeline((cmd)->cmd.zdiffStore(destKey, keys))
 				.transaction((cmd)->cmd.zdiffStore(destKey, keys))
@@ -512,7 +512,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zInter(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
@@ -523,7 +523,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zInter(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
@@ -534,7 +534,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zInter(final String[] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
@@ -545,7 +545,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
@@ -556,7 +556,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zInter(final String[] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
@@ -567,7 +567,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zInter(final byte[][] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinter(params, keys))
@@ -578,7 +578,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZINTER)
@@ -590,7 +590,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
@@ -602,7 +602,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -613,7 +613,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -624,7 +624,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -635,7 +635,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -646,7 +646,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -657,7 +657,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
 				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -668,7 +668,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -680,7 +680,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -692,7 +692,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zInterStore(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, keys))
@@ -702,7 +702,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
 				.pipeline((cmd)->cmd.zinterstore(destKey, keys))
@@ -712,7 +712,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
@@ -724,7 +724,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
@@ -736,7 +736,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
@@ -748,7 +748,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
@@ -761,7 +761,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
@@ -774,7 +774,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
@@ -826,7 +826,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public List<Double> zMScore(final String key, final String... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
 				.general((cmd)->cmd.zmscore(key, members))
 				.pipeline((cmd)->cmd.zmscore(key, members))
@@ -836,7 +836,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public List<Double> zMScore(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
 				.general((cmd)->cmd.zmscore(key, members))
 				.pipeline((cmd)->cmd.zmscore(key, members))
@@ -1454,7 +1454,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zRem(final String key, final String... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
 				.pipeline((cmd)->cmd.zrem(key, members))
@@ -1464,7 +1464,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
 				.pipeline((cmd)->cmd.zrem(key, members))
@@ -1970,7 +1970,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zUnion(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
@@ -1981,7 +1981,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zUnion(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
@@ -1992,7 +1992,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zUnion(final String[] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
@@ -2003,7 +2003,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
@@ -2014,7 +2014,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zUnion(final String[] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
@@ -2025,7 +2025,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zUnion(final byte[][] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunion(params, keys))
@@ -2036,7 +2036,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.ZUNION)
@@ -2048,7 +2048,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
@@ -2060,7 +2060,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2071,7 +2071,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2082,7 +2082,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2093,7 +2093,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2104,7 +2104,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2115,7 +2115,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
 				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
@@ -2126,7 +2126,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2138,7 +2138,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights){
-		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate)
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2150,7 +2150,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zUnionStore(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, keys))
@@ -2160,7 +2160,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
 				.pipeline((cmd)->cmd.zunionstore(destKey, keys))
@@ -2170,7 +2170,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
@@ -2182,7 +2182,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
@@ -2194,7 +2194,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
@@ -2206,7 +2206,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
@@ -2219,7 +2219,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
@@ -2232,7 +2232,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys)
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)

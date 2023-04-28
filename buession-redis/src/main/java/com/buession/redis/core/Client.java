@@ -573,7 +573,8 @@ public class Client implements Serializable {
 		/**
 		 * 客户端正在等待 VM I/O 操作（已废弃）
 		 */
-		@Deprecated i,
+		@Deprecated
+		i,
 
 		/**
 		 * 一个受监视（watched）的键已被修改， EXEC 命令将失败

@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.SetCommands;
 
@@ -146,7 +146,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sDiffObject(final String[] keys, final TypeReference<V> type);
 
@@ -164,7 +164,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type);
 
@@ -242,7 +242,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 交集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sInterObject(final String[] keys, final TypeReference<V> type);
 
@@ -260,7 +260,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 交集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type);
 
@@ -338,7 +338,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合中的所有成员
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sMembersObject(final String key, final TypeReference<V> type);
 
@@ -356,7 +356,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合中的所有成员
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type);
 
@@ -434,7 +434,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V sPopObject(final String key, final TypeReference<V> type);
 
@@ -452,7 +452,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V sPopObject(final byte[] key, final TypeReference<V> type);
 
@@ -540,7 +540,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type);
 
@@ -560,7 +560,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type);
 
@@ -638,7 +638,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V sRandMemberObject(final String key, final TypeReference<V> type);
 
@@ -656,7 +656,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V sRandMemberObject(final byte[] key, final TypeReference<V> type);
 
@@ -744,7 +744,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，序列化后的对象列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type);
 
@@ -764,7 +764,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，序列化后的对象列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
 
@@ -916,7 +916,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final TypeReference<V> type);
 
@@ -936,7 +936,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final TypeReference<V> type);
 
@@ -1024,7 +1024,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final TypeReference<V> type);
 
@@ -1044,7 +1044,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
 
@@ -1144,7 +1144,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
 										final TypeReference<V> type);
@@ -1167,7 +1167,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
 										final TypeReference<V> type);
@@ -1268,7 +1268,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
 										final TypeReference<V> type);
@@ -1291,7 +1291,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 										final TypeReference<V> type);
@@ -1390,7 +1390,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
 										final TypeReference<V> type);
@@ -1413,7 +1413,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
 										final TypeReference<V> type);
@@ -1512,7 +1512,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
 										final TypeReference<V> type);
@@ -1535,7 +1535,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
 										final TypeReference<V> type);
@@ -1646,7 +1646,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count,
 										final TypeReference<V> type);
@@ -1671,7 +1671,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count,
 										final TypeReference<V> type);
@@ -1782,7 +1782,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
 										final TypeReference<V> type);
@@ -1807,7 +1807,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
 										final TypeReference<V> type);
@@ -1886,7 +1886,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sUnionObject(final String[] keys, final TypeReference<V> type);
 
@@ -1904,7 +1904,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> sUnionObject(final byte[][] keys, final TypeReference<V> type);
 

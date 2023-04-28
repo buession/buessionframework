@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -61,7 +61,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long del(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.DEL)
 				.general((cmd)->cmd.del(keys))
 				.pipeline((cmd)->cmd.del(keys))
@@ -71,7 +71,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long del(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.DEL)
 				.general((cmd)->cmd.del(keys))
 				.pipeline((cmd)->cmd.del(keys))
@@ -121,7 +121,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long exists(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.EXISTS)
 				.general((cmd)->cmd.exists(keys))
 				.pipeline((cmd)->cmd.exists(keys))
@@ -131,7 +131,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long exists(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.EXISTS)
 				.general((cmd)->cmd.exists(keys))
 				.pipeline((cmd)->cmd.exists(keys))
@@ -393,7 +393,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("keys", keys);
+				.put("timeout", timeout).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -401,7 +401,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("keys", keys);
+				.put("timeout", timeout).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -410,7 +410,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("operation", operation).put("keys", keys);
+				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -419,7 +419,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("operation", operation).put("keys", keys);
+				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -428,7 +428,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("keys", keys);
+				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -437,7 +437,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("keys", keys);
+				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -446,7 +446,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
+				.put("password", password).put("timeout", timeout).put("operation", operation)
+				.put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -455,7 +456,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
+				.put("password", password).put("timeout", timeout).put("operation", operation)
+				.put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -464,7 +466,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
+				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -473,7 +475,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
+				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -483,7 +485,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final int timeout, final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", keys);
+				.put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -493,7 +495,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final int timeout, final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", keys);
+				.put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
 				.run(args);
 	}
@@ -811,7 +813,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long touch(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.TOUCH)
 				.general((cmd)->cmd.touch(keys))
 				.pipeline((cmd)->cmd.touch(keys))
@@ -821,7 +823,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long touch(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.TOUCH)
 				.general((cmd)->cmd.touch(keys))
 				.pipeline((cmd)->cmd.touch(keys))
@@ -851,7 +853,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long unlink(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.UNLINK)
 				.general((cmd)->cmd.unlink(keys))
 				.pipeline((cmd)->cmd.unlink(keys))
@@ -861,7 +863,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long unlink(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.UNLINK)
 				.general((cmd)->cmd.unlink(keys))
 				.pipeline((cmd)->cmd.unlink(keys))

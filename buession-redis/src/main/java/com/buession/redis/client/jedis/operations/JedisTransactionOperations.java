@@ -98,7 +98,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public Status watch(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
@@ -114,7 +114,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public Status watch(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {

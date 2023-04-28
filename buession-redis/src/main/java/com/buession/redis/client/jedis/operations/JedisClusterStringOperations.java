@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -255,7 +255,7 @@ public final class JedisClusterStringOperations extends AbstractStringOperations
 
 	@Override
 	public List<String> mGet(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.MGET)
 				.general((cmd)->cmd.mget(keys))
 				.pipeline((cmd)->cmd.mget(keys))
@@ -265,7 +265,7 @@ public final class JedisClusterStringOperations extends AbstractStringOperations
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.MGET)
 				.general((cmd)->cmd.mget(keys))
 				.pipeline((cmd)->cmd.mget(keys))

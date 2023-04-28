@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.command.StringCommands;
@@ -121,7 +121,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getObject(final String key, final TypeReference<V> type);
 
@@ -140,7 +140,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getObject(final byte[] key, final TypeReference<V> type);
 
@@ -228,7 +228,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type);
 
@@ -248,7 +248,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type);
 
@@ -336,7 +336,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的旧值反序列化后对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getSet(final String key, final V value, final TypeReference<V> type);
 
@@ -356,7 +356,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的旧值反序列化后对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getSet(final byte[] key, final V value, final TypeReference<V> type);
 
@@ -439,7 +439,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getDelObject(final String key, final TypeReference<V> type);
 
@@ -458,7 +458,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V getDelObject(final byte[] key, final TypeReference<V> type);
 
@@ -541,7 +541,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> mGetObject(final String[] keys, final TypeReference<V> type);
 
@@ -560,7 +560,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type);
 

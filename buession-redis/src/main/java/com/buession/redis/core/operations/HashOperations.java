@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
@@ -158,7 +158,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V hGetObject(final String key, final String field, final TypeReference<V> type);
 
@@ -178,7 +178,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type);
 
@@ -256,7 +256,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type);
 
@@ -274,7 +274,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Map<byte[], V> hGetAllObject(final byte[] key, TypeReference<V> type);
 
@@ -434,7 +434,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type);
 
@@ -454,7 +454,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
@@ -584,7 +584,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count, final TypeReference<V> type);
 
@@ -606,7 +606,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final TypeReference<V> type);
 
@@ -697,7 +697,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final TypeReference<V> type);
 
@@ -717,7 +717,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final TypeReference<V> type);
 
@@ -805,7 +805,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final TypeReference<V> type);
 
@@ -825,7 +825,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
 
@@ -925,7 +925,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 											   final TypeReference<V> type);
@@ -948,7 +948,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 											   final TypeReference<V> type);
@@ -1049,7 +1049,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 											   final TypeReference<V> type);
@@ -1072,7 +1072,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 											   final TypeReference<V> type);
@@ -1173,7 +1173,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
 											   final TypeReference<V> type);
@@ -1196,7 +1196,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
 											   final TypeReference<V> type);
@@ -1297,7 +1297,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
 											   final TypeReference<V> type);
@@ -1320,7 +1320,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
 											   final TypeReference<V> type);
@@ -1435,7 +1435,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
 											   final long count, final TypeReference<V> type);
@@ -1460,7 +1460,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
 											   final long count,
@@ -1574,7 +1574,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 											   final long count, final TypeReference<V> type);
@@ -1599,7 +1599,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 											   final long count, final TypeReference<V> type);
@@ -1736,7 +1736,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> hValsObject(final String key, final TypeReference<V> type);
 
@@ -1752,7 +1752,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> hValsObject(final byte[] key, final TypeReference<V> type);
 
