@@ -32,8 +32,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import com.buession.beans.BeanUtils;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
@@ -65,13 +63,11 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	/**
 	 * master SqlSessionTemplate
 	 */
-	@Resource
 	protected SqlSessionTemplate masterSqlSessionTemplate;
 
 	/**
 	 * slave SqlSessionTemplate
 	 */
-	@Resource
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
