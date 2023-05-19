@@ -45,6 +45,7 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.Nullable;
 
 import java.util.LinkedHashMap;
@@ -54,7 +55,7 @@ import java.util.function.Function;
 /**
  * @author Yong.Teng
  */
-public abstract class RedisAccessor implements AutoCloseable {
+public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	protected final static Options DEFAULT_OPTIONS = new Options();
 
@@ -123,6 +124,7 @@ public abstract class RedisAccessor implements AutoCloseable {
 		this.dataSource = dataSource;
 	}
 
+	@Override
 	public void afterPropertiesSet() throws RedisException{
 		Assert.isNull(getDataSource(), "DataSource is required");
 
