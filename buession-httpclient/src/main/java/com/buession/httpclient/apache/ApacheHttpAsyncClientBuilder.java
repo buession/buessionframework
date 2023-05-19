@@ -27,7 +27,7 @@ package com.buession.httpclient.apache;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.ApacheNioClientConnectionManager;
 import com.buession.httpclient.core.AbstractHttpClientBuilder;
-import com.buession.httpclient.core.Configuration;
+import com.buession.net.ssl.SslConfiguration;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.client.HttpAsyncClient;
@@ -51,13 +51,11 @@ public class ApacheHttpAsyncClientBuilder
 	@Override
 	public HttpAsyncClient build(Consumer<HttpAsyncClientBuilder> consumer){
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final Configuration.SSLConfiguration sslConfiguration =
-				connectionManager.getConfiguration().getSslConfiguration();
+		final SslConfiguration sslConfiguration = connectionManager.getConfiguration().getSslConfiguration();
 		final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
 				.setConnectionManager(connectionManager.getClientConnectionManager());
 
-		propertyMapper.from(connectionManager.getConnectionManagerShared())
-				.to(builder::setConnectionManagerShared);
+		propertyMapper.from(connectionManager.getConnectionManagerShared()).to(builder::setConnectionManagerShared);
 
 		if(sslConfiguration != null){
 			propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);

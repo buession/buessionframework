@@ -24,9 +24,8 @@
  */
 package com.buession.httpclient.core;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
+import com.buession.net.ssl.SslConfiguration;
+
 import java.util.StringJoiner;
 
 /**
@@ -123,7 +122,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	private SSLConfiguration sslConfiguration;
+	private SslConfiguration sslConfiguration;
 
 	/**
 	 * @since 2.3.0
@@ -491,7 +490,7 @@ public class Configuration {
 	 *
 	 * @return SSL 配置
 	 */
-	public SSLConfiguration getSslConfiguration(){
+	public SslConfiguration getSslConfiguration(){
 		return sslConfiguration;
 	}
 
@@ -501,7 +500,7 @@ public class Configuration {
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public void setSslConfiguration(SSLConfiguration sslConfiguration){
+	public void setSslConfiguration(SslConfiguration sslConfiguration){
 		this.sslConfiguration = sslConfiguration;
 	}
 
@@ -526,44 +525,6 @@ public class Configuration {
 				.add("normalizeUri: " + normalizeUri)
 				.add("sslConfiguration: " + sslConfiguration)
 				.toString();
-	}
-
-	/**
-	 * SSL 配置
-	 *
-	 * @since 2.3.0
-	 */
-	public final static class SSLConfiguration {
-
-		private HostnameVerifier hostnameVerifier;
-
-		private SSLContext sslContext;
-
-		private SSLSocketFactory socketfactory;
-
-		public HostnameVerifier getHostnameVerifier(){
-			return hostnameVerifier;
-		}
-
-		public void setHostnameVerifier(HostnameVerifier hostnameVerifier){
-			this.hostnameVerifier = hostnameVerifier;
-		}
-
-		public SSLContext getSslContext(){
-			return sslContext;
-		}
-
-		public void setSslContext(SSLContext sslContext){
-			this.sslContext = sslContext;
-		}
-
-		public SSLSocketFactory getSocketfactory(){
-			return socketfactory;
-		}
-
-		public void setSocketfactory(SSLSocketFactory socketfactory){
-			this.socketfactory = socketfactory;
-		}
 	}
 
 }

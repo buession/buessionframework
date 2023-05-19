@@ -28,6 +28,7 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.OkHttpNioClientConnectionManager;
 import com.buession.httpclient.core.AbstractHttpClientBuilder;
 import com.buession.httpclient.core.Configuration;
+import com.buession.net.ssl.SslConfiguration;
 import okhttp3.OkHttpClient;
 import okhttp3.nio.HttpAsyncClientBuilder;
 
@@ -51,7 +52,7 @@ public class OkHttpHttpAsyncClientBuilder
 	public OkHttpClient build(Consumer<HttpAsyncClientBuilder> consumer){
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final Configuration configuration = connectionManager.getConfiguration();
-		final Configuration.SSLConfiguration sslConfiguration = configuration.getSslConfiguration();
+		final SslConfiguration sslConfiguration = configuration.getSslConfiguration();
 		final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
 				.setConnectionManager(connectionManager.getClientConnectionManager())
 				.setConnectTimeout(configuration.getConnectTimeout())
@@ -61,7 +62,7 @@ public class OkHttpHttpAsyncClientBuilder
 		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
 
 		if(sslConfiguration != null){
-			propertyMapper.from(sslConfiguration.getSocketfactory()).to(builder::setSSLSocketFactory);
+			propertyMapper.from(sslConfiguration.getSslSocketFactory()).to(builder::setSSLSocketFactory);
 			propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
 			propertyMapper.from(sslConfiguration.getSslContext()).to(builder::setSSLContext);
 		}

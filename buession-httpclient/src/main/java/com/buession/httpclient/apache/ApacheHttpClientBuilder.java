@@ -27,7 +27,7 @@ package com.buession.httpclient.apache;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.ApacheClientConnectionManager;
 import com.buession.httpclient.core.AbstractHttpClientBuilder;
-import com.buession.httpclient.core.Configuration;
+import com.buession.net.ssl.SslConfiguration;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -50,20 +50,18 @@ public class ApacheHttpClientBuilder extends AbstractHttpClientBuilder<HttpClien
 	@Override
 	public HttpClient build(Consumer<HttpClientBuilder> consumer){
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final Configuration.SSLConfiguration sslConfiguration =
-				connectionManager.getConfiguration().getSslConfiguration();
+		final SslConfiguration sslConfiguration = connectionManager.getConfiguration().getSslConfiguration();
 		final HttpClientBuilder builder = HttpClientBuilder.create()
 				.setConnectionManager(connectionManager.getClientConnectionManager());
 
-		propertyMapper.from(connectionManager.getConnectionManagerShared())
-				.to(builder::setConnectionManagerShared);
+		propertyMapper.from(connectionManager.getConnectionManagerShared()).to(builder::setConnectionManagerShared);
 
 		if(sslConfiguration != null){
 			propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
 			propertyMapper.from(sslConfiguration.getSslContext()).to(builder::setSSLContext);
 
-			if(sslConfiguration.getSocketfactory() != null){
-				builder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslConfiguration.getSocketfactory(),
+			if(sslConfiguration.getSslSocketFactory() != null){
+				builder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslConfiguration.getSslSocketFactory(),
 						sslConfiguration.getHostnameVerifier()));
 			}
 		}
