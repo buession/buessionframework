@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net.ssl;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -35,6 +36,13 @@ import javax.net.ssl.SSLSocketFactory;
  * @since 2.0.0
  */
 public class SslConfiguration {
+
+	/**
+	 * {@link SSLContext}
+	 *
+	 * @since 2.3.0
+	 */
+	private SSLContext sslContext;
 
 	/**
 	 * {@link SSLSocketFactory}
@@ -72,6 +80,49 @@ public class SslConfiguration {
 		this.sslSocketFactory = sslSocketFactory;
 		this.sslParameters = sslParameters;
 		this.hostnameVerifier = hostnameVerifier;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param sslContext
+	 *        {@link SSLContext}
+	 * @param sslSocketFactory
+	 *        {@link SSLSocketFactory}
+	 * @param sslParameters
+	 *        {@link SSLParameters}
+	 * @param hostnameVerifier
+	 *        {@link HostnameVerifier}
+	 *
+	 * @since 2.3.0
+	 */
+	public SslConfiguration(SSLContext sslContext, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+							HostnameVerifier hostnameVerifier){
+		this(sslSocketFactory, sslParameters, hostnameVerifier);
+		this.sslContext = sslContext;
+	}
+
+	/**
+	 * 返回 {@link SSLContext}
+	 *
+	 * @return {@link SSLContext}
+	 *
+	 * @since 2.3.0
+	 */
+	public SSLContext getSslContext(){
+		return sslContext;
+	}
+
+	/**
+	 * 设置 {@link SSLContext}
+	 *
+	 * @param sslContext
+	 *        {@link SSLContext}
+	 *
+	 * @since 2.3.0
+	 */
+	public void setSslContext(SSLContext sslContext){
+		this.sslContext = sslContext;
 	}
 
 	/**
