@@ -22,13 +22,13 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.utils.useragentutils;
+package com.buession.lang;
 
 /**
  * 设备类型
  *
  * @author Yong.Teng
- * @since 2.2.1
+ * @since 2.3.0
  */
 public enum DeviceType {
 	/**

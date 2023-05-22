@@ -24,39 +24,38 @@
  */
 package com.buession.lang;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
- * 架构
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-public enum Arch {
+public class VersionTest {
 
-	/**
-	 * 32 位架构
-	 */
-	BIT_32("32"),
-
-	/**
-	 * 64 位架构
-	 */
-	BIT_64("64"),
-
-	UNKNOWN("Unknown");
-
-	private final String label;
-
-	Arch(final String label){
-		this.label = label;
+	@Test
+	public void create(){
+		Version version = new Version("1.11.2");
+		Assert.assertEquals(version.toString(), "1.11.2");
 	}
 
-	public String getLabel(){
-		return this.label;
+	@Test
+	public void createBeta(){
+		Version version = new Version("1.11.2beta");
+		Assert.assertEquals(version.toString(), "1.11.2 beta");
 	}
 
-	@Override
-	public String toString(){
-		return label;
+	@Test
+	public void createRc(){
+		Version version = new Version("1.11.2 RC");
+		Assert.assertEquals(version.toString(), "1.11.2 RC");
+	}
+
+	@Test
+	public void compare(){
+		Version version1 = new Version("1.11.2");
+		Version version2 = new Version("1.11.2 Beta");
+		Assert.assertEquals(version1.compareTo(version2), 1);
 	}
 
 }
