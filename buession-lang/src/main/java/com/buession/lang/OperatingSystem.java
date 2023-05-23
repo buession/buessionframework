@@ -87,7 +87,7 @@ public enum OperatingSystem {
 
 	private final String name;
 
-	private DeviceType deviceType;
+	private final DeviceType deviceType;
 
 	private final Manufacturer manufacturer;
 
@@ -138,25 +138,11 @@ public enum OperatingSystem {
 
 		NINTENDO("Nintendo"),
 
-		OPERA("Opera Software ASA"),
-
-		MOZILLA("Mozilla Foundation"),
-
 		GOOGLE("Google Inc."),
-
-		COMPUSERVE("CompuServe Interactive Services, Inc."),
-
-		YAHOO("Yahoo Inc."),
-
-		AOL("AOL LLC."),
-
-		MMC("Mail.com Media Corporation"),
 
 		AMAZON("Amazon.com, Inc."),
 
 		ROKU("Roku, Inc."),
-
-		ADOBE("Adobe Systems Inc."),
 
 		CONONICAL("Canonical Ltd."),
 

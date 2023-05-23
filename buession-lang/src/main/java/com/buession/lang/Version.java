@@ -57,6 +57,11 @@ public final class Version implements Comparable<Version>, Serializable {
 	private final int minorVersion;
 
 	/**
+	 * 修正版本号
+	 */
+	private final int buildVersion;
+
+	/**
 	 * 特殊版本
 	 */
 	private final String special;
@@ -72,6 +77,7 @@ public final class Version implements Comparable<Version>, Serializable {
 		int principalVersion = -1;
 		int majorVersion = -1;
 		int minorVersion = -1;
+		int buildVersion = -1;
 		String special = null;
 
 		try{
@@ -107,6 +113,29 @@ public final class Version implements Comparable<Version>, Serializable {
 					minorVersion = Integer.parseInt(versionParts[2]);
 				}
 			}
+
+			if(versionParts != null && versionParts.length >= 4){
+				int j = -1;
+
+				for(int i = 0, l = versionParts[3].length(); i < l; i++){
+					char c = versionParts[3].charAt(i);
+
+					if(VersionUtils.isAlpha(c) || c == ' '){
+						j = i;
+						break;
+					}
+				}
+
+				if(j >= 0){
+					buildVersion = Integer.parseInt(versionParts[3].substring(0, j));
+					special = versionParts[3].substring(j);
+					if(special.charAt(0) == ' '){
+						special = special.substring(1);
+					}
+				}else{
+					buildVersion = Integer.parseInt(versionParts[3]);
+				}
+			}
 		}catch(Exception e){
 			throw new IllegalArgumentException("Illegal version format.");
 		}
@@ -114,6 +143,7 @@ public final class Version implements Comparable<Version>, Serializable {
 		this.version = principalVersion;
 		this.majorVersion = majorVersion;
 		this.minorVersion = minorVersion;
+		this.buildVersion = buildVersion;
 		this.special = special;
 
 		if(this.version == -1){
@@ -158,14 +188,27 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * 		主版本号
 	 * @param minorVersion
 	 * 		次版本号
+	 * @param buildVersion
+	 * 		修正版本号
+	 */
+	public Version(final int version, final int majorVersion, final int minorVersion, final int buildVersion){
+		this(version, majorVersion, minorVersion, buildVersion, null);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param version
+	 * 		版本
+	 * @param majorVersion
+	 * 		主版本号
+	 * @param minorVersion
+	 * 		次版本号
 	 * @param special
 	 * 		特殊版本
 	 */
 	public Version(final int version, final int majorVersion, final int minorVersion, final String special){
-		this.version = version;
-		this.majorVersion = majorVersion;
-		this.minorVersion = minorVersion;
-		this.special = special;
+		this(version, majorVersion, minorVersion, -1, special);
 	}
 
 	/**
@@ -182,6 +225,49 @@ public final class Version implements Comparable<Version>, Serializable {
 	 */
 	public Version(final String version, final String majorVersion, final String minorVersion, final String special){
 		this(Integer.parseInt(version), Integer.parseInt(majorVersion), Integer.parseInt(minorVersion), special);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param version
+	 * 		版本
+	 * @param majorVersion
+	 * 		主版本号
+	 * @param minorVersion
+	 * 		次版本号
+	 * @param buildVersion
+	 * 		修正版本号
+	 * @param special
+	 * 		特殊版本
+	 */
+	public Version(final int version, final int majorVersion, final int minorVersion, final int buildVersion,
+				   final String special){
+		this.version = version;
+		this.majorVersion = majorVersion;
+		this.minorVersion = minorVersion;
+		this.buildVersion = buildVersion;
+		this.special = special;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param version
+	 * 		版本
+	 * @param majorVersion
+	 * 		主版本号
+	 * @param minorVersion
+	 * 		次版本号
+	 * @param buildVersion
+	 * 		修正版本号
+	 * @param special
+	 * 		特殊版本
+	 */
+	public Version(final String version, final String majorVersion, final String minorVersion,
+				   final String buildVersion, final String special){
+		this(Integer.parseInt(version), Integer.parseInt(majorVersion), Integer.parseInt(minorVersion),
+				Integer.parseInt(buildVersion), special);
 	}
 
 	/**
@@ -211,6 +297,24 @@ public final class Version implements Comparable<Version>, Serializable {
 		return minorVersion;
 	}
 
+	/**
+	 * 返回修正版本号
+	 *
+	 * @return 修正版本号
+	 */
+	public int getBuildVersion(){
+		return buildVersion;
+	}
+
+	/**
+	 * 返回特殊版本
+	 *
+	 * @return 特殊版本
+	 */
+	public String getSpecial(){
+		return special;
+	}
+
 	@Override
 	public int hashCode(){
 		final int prime = 31;
@@ -218,6 +322,7 @@ public final class Version implements Comparable<Version>, Serializable {
 		result = prime * (result + version);
 		result = prime * (result + majorVersion);
 		result = prime * (result + minorVersion);
+		result = prime * (result + buildVersion);
 		result = prime * (result + Objects.hashCode(special));
 		return result;
 	}
@@ -235,31 +340,7 @@ public final class Version implements Comparable<Version>, Serializable {
 				return false;
 			}
 
-			if(version == that.version && majorVersion == that.majorVersion && minorVersion == that.minorVersion){
-				if(special == null || that.special == null || special.equalsIgnoreCase(that.special)){
-					return true;
-				}
-
-				if("alpha".equalsIgnoreCase(special) && "a".equalsIgnoreCase(that.special) ||
-						"a".equalsIgnoreCase(special) && "alpha".equalsIgnoreCase(that.special)){
-					return true;
-				}
-
-				if("beta".equalsIgnoreCase(special) && "b".equalsIgnoreCase(that.special) ||
-						"b".equalsIgnoreCase(special) && "beta".equalsIgnoreCase(that.special)){
-					return true;
-				}
-
-				if("release".equalsIgnoreCase(special) && "rc".equalsIgnoreCase(that.special) ||
-						"rc".equalsIgnoreCase(special) && "release".equalsIgnoreCase(that.special)){
-					return true;
-				}
-
-				if("pl".equalsIgnoreCase(special) && "p".equalsIgnoreCase(that.special) ||
-						"p".equalsIgnoreCase(special) && "pl".equalsIgnoreCase(that.special)){
-					return true;
-				}
-			}
+			return compareTo(that) == 0;
 		}
 
 		return false;
@@ -289,6 +370,9 @@ public final class Version implements Comparable<Version>, Serializable {
 		}
 		if(minorVersion > -1){
 			sb.append('.').append(minorVersion);
+		}
+		if(buildVersion > -1){
+			sb.append('.').append(buildVersion);
 		}
 		if(special != null){
 			sb.append(' ').append(special);
@@ -368,8 +452,13 @@ public final class Version implements Comparable<Version>, Serializable {
 				return result;
 			}
 
-			result = compareSpecialVersion(version1.special == null ? NAN : version1.special.toLowerCase(),
-					version2.special == null ? NAN : version2.special.toLowerCase());
+			result = normalize(version1.getBuildVersion() - version2.getBuildVersion());
+			if(result != 0){
+				return result;
+			}
+
+			result = compareSpecialVersion(version1.getSpecial() == null ? NAN : version1.getSpecial().toLowerCase(),
+					version2.getSpecial() == null ? NAN : version2.getSpecial().toLowerCase());
 
 			return result;
 		}

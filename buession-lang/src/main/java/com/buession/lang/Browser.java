@@ -31,90 +31,75 @@ package com.buession.lang;
  * @since 2.3.0
  */
 public enum Browser {
-	IE("Internet Explorer", BrowserType.WEB_BROWSER, RenderingEngine.TRIDENT, Manufacturer.MICROSOFT),
+	IE("Internet Explorer", Manufacturer.MICROSOFT),
 
-	EDGE("Microsoft Edge", BrowserType.WEB_BROWSER, RenderingEngine.EDGE_HTML, Manufacturer.MICROSOFT),
+	EDGE("Microsoft Edge", Manufacturer.MICROSOFT),
 
-	CHROME("Chrome", BrowserType.WEB_BROWSER, RenderingEngine.WEBKIT, Manufacturer.GOOGLE),
+	CHROME("Chrome", Manufacturer.GOOGLE),
 
-	FIREFOX("Firefox", BrowserType.WEB_BROWSER, RenderingEngine.GECKO, Manufacturer.MOZILLA),
+	FIREFOX("Firefox", Manufacturer.MOZILLA),
 
-	SAFARI("Safari", BrowserType.WEB_BROWSER, RenderingEngine.WEBKIT, Manufacturer.APPLE),
+	SAFARI("Safari", Manufacturer.APPLE),
 
-	OPERA_COAST("Opera Coast", BrowserType.MOBILE_BROWSER, RenderingEngine.WEBKIT, Manufacturer.OPERA),
+	OPERA_COAST("Opera Coast", Manufacturer.OPERA),
 
-	OPERA("Opera", BrowserType.WEB_BROWSER, RenderingEngine.PRESTO, Manufacturer.OPERA),
+	OPERA("Opera", Manufacturer.OPERA),
 
-	MOZILLA("Mozilla", BrowserType.WEB_BROWSER, RenderingEngine.OTHER, Manufacturer.MOZILLA),
+	MOZILLA("Mozilla", Manufacturer.MOZILLA),
 
-	DOLFIN2("Samsung Dolphin 2", BrowserType.MOBILE_BROWSER, RenderingEngine.WEBKIT, Manufacturer.SAMSUNG),
+	DOLFIN2("Samsung Dolphin 2", Manufacturer.SAMSUNG),
 
-	CAMINO("Camino", BrowserType.WEB_BROWSER, RenderingEngine.GECKO, Manufacturer.OTHER),
+	CAMINO("Camino", Manufacturer.OTHER),
 
-	LOTUS_NOTES("Lotus Notes", BrowserType.EMAIL_CLIENT, RenderingEngine.OTHER, Manufacturer.OTHER),
+	LOTUS_NOTES("Lotus Notes", Manufacturer.OTHER),
 
-	OMNIWEB("Omniweb", BrowserType.WEB_BROWSER, RenderingEngine.WEBKIT, Manufacturer.OTHER),
+	OMNIWEB("Omniweb", Manufacturer.OTHER),
 
-	FLOCK("Flock", BrowserType.WEB_BROWSER, RenderingEngine.GECKO, Manufacturer.OTHER),
+	FLOCK("Flock", Manufacturer.OTHER),
 
-	VIVALDI("Vivaldi", BrowserType.WEB_BROWSER, RenderingEngine.BLINK, Manufacturer.OTHER),
+	VIVALDI("Vivaldi", Manufacturer.OTHER),
 
-	SEAMONKEY("SeaMonkey", BrowserType.WEB_BROWSER, RenderingEngine.GECKO, Manufacturer.OTHER),
+	SEAMONKEY("SeaMonkey", Manufacturer.OTHER),
 
-	BOT("Robot/Spider", BrowserType.ROBOT, RenderingEngine.OTHER, Manufacturer.OTHER),
+	BOT("Robot/Spider", Manufacturer.OTHER),
 
-	CFNETWORK("CFNetwork", BrowserType.UNKNOWN, RenderingEngine.OTHER, Manufacturer.OTHER),
+	CFNETWORK("CFNetwork", Manufacturer.OTHER),
 
-	EUDORA("Eudora", BrowserType.EMAIL_CLIENT, RenderingEngine.OTHER, Manufacturer.OTHER),
+	EUDORA("Eudora", Manufacturer.OTHER),
 
-	POCOMAIL("PocoMail", BrowserType.EMAIL_CLIENT, RenderingEngine.OTHER, Manufacturer.OTHER),
+	POCOMAIL("PocoMail", Manufacturer.OTHER),
 
-	THEBAT("The Bat!", BrowserType.EMAIL_CLIENT, RenderingEngine.OTHER, Manufacturer.OTHER),
+	THEBAT("The Bat!", Manufacturer.OTHER),
 
-	SILK("Silk", BrowserType.WEB_BROWSER, RenderingEngine.WEBKIT, Manufacturer.AMAZON),
+	SILK("Silk", Manufacturer.AMAZON),
 
-	BLACKBERRY("BlackBerry", BrowserType.MOBILE_BROWSER, RenderingEngine.WEBKIT, Manufacturer.BLACKBERRY),
+	BLACKBERRY("BlackBerry", Manufacturer.BLACKBERRY),
 
-	NETFRONT("NetFront", BrowserType.MOBILE_BROWSER, RenderingEngine.OTHER, Manufacturer.OTHER),
+	NETFRONT("NetFront", Manufacturer.OTHER),
 
-	EVOLUTION("Evolution", BrowserType.EMAIL_CLIENT, RenderingEngine.OTHER, Manufacturer.OTHER),
+	EVOLUTION("Evolution", Manufacturer.OTHER),
 
-	LYNX("Lynx", BrowserType.TEXT_BROWSER, RenderingEngine.OTHER, Manufacturer.OTHER),
+	LYNX("Lynx", Manufacturer.OTHER),
 
-	KONQUEROR("Konqueror", BrowserType.TEXT_BROWSER, RenderingEngine.KHTML, Manufacturer.OTHER),
+	KONQUEROR("Konqueror", Manufacturer.OTHER),
 
-	XBOX("Xbox", BrowserType.WEB_BROWSER, RenderingEngine.TRIDENT, Manufacturer.MICROSOFT),
+	XBOX("Xbox", Manufacturer.MICROSOFT),
 
-	THUNDERBIRD("Thunderbird", BrowserType.EMAIL_CLIENT, RenderingEngine.GECKO, Manufacturer.MOZILLA),
+	THUNDERBIRD("Thunderbird", Manufacturer.MOZILLA),
 
-	UNKNOWN("Unknown", BrowserType.UNKNOWN, RenderingEngine.OTHER, Manufacturer.OTHER);
+	UNKNOWN("Unknown", Manufacturer.OTHER);
 
 	private final String name;
 
-	private BrowserType browserType;
-
-	private final RenderingEngine renderingEngine;
-
 	private final Manufacturer manufacturer;
 
-	Browser(final String name, final BrowserType browserType, final RenderingEngine renderingEngine,
-			final Manufacturer manufacturer){
+	Browser(final String name, final Manufacturer manufacturer){
 		this.name = name;
-		this.browserType = browserType;
-		this.renderingEngine = renderingEngine;
 		this.manufacturer = manufacturer;
 	}
 
 	public String getName(){
 		return name;
-	}
-
-	public BrowserType getBrowserType(){
-		return browserType;
-	}
-
-	public RenderingEngine getRenderingEngine(){
-		return renderingEngine;
 	}
 
 	public Manufacturer getManufacturer(){
@@ -126,29 +111,73 @@ public enum Browser {
 		return name;
 	}
 
+	/**
+	 * 浏览器类型
+	 *
+	 * @author Yong.Teng
+	 * @since 2.3.0
+	 */
+	public enum Type {
+
+		/**
+		 * Standard web-browser
+		 */
+		WEB_BROWSER("Browser"),
+
+		/**
+		 * Special web-browser for mobile devices
+		 */
+		MOBILE_BROWSER("Browser (mobile)"),
+
+		/**
+		 * Text only browser like the good old Lynx
+		 */
+		TEXT_BROWSER("Browser (text only)"),
+
+		/**
+		 * Email client like Thunderbird
+		 */
+		EMAIL_CLIENT("Email Client"),
+
+		/**
+		 * Search robot, spider, crawler,...
+		 */
+		ROBOT("Robot"),
+
+		/**
+		 * Application
+		 */
+		APPLICATION("Application"),
+
+		UNKNOWN("unknown");
+
+		private final String name;
+
+		Type(final String name){
+			this.name = name;
+		}
+
+		public String getName(){
+			return name;
+		}
+
+	}
+
+	/**
+	 * 浏览器厂商
+	 *
+	 * @author Yong.Teng
+	 * @since 2.3.0
+	 */
 	public enum Manufacturer {
 
 		MICROSOFT("Microsoft Corporation"),
 
 		APPLE("Apple Inc."),
 
-		SUN("Sun Microsystems, Inc."),
-
-		SYMBIAN("Symbian Ltd."),
-
-		NOKIA("Nokia Corporation"),
-
 		BLACKBERRY("Research In Motion Limited"),
 
-		HP("Hewlett Packard"),
-
-		SONY_ERICSSON("Sony Ericsson Mobile Communications AB"),
-
 		SAMSUNG("Samsung Electronics"),
-
-		SONY("Sony Computer Entertainment, Inc."),
-
-		NINTENDO("Nintendo"),
 
 		OPERA("Opera Software ASA"),
 
@@ -156,23 +185,11 @@ public enum Browser {
 
 		GOOGLE("Google Inc."),
 
-		COMPUSERVE("CompuServe Interactive Services, Inc."),
-
-		YAHOO("Yahoo Inc."),
-
-		AOL("AOL LLC."),
-
 		MMC("Mail.com Media Corporation"),
 
 		AMAZON("Amazon.com, Inc."),
 
 		ROKU("Roku, Inc."),
-
-		ADOBE("Adobe Systems Inc."),
-
-		CONONICAL("Canonical Ltd."),
-
-		LINUX_FOUNDATION("Linux Foundation"),
 
 		OTHER("Other");
 
