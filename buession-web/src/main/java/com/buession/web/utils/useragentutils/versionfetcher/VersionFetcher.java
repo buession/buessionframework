@@ -25,7 +25,7 @@
 package com.buession.web.utils.useragentutils.versionfetcher;
 
 import com.buession.web.utils.useragentutils.Fetcher;
-import com.buession.web.utils.useragentutils.Version;
+import com.buession.lang.Version;
 
 /**
  * @author Yong.Teng

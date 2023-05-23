@@ -25,6 +25,7 @@
 package com.buession.web.utils.useragentutils;
 
 import com.buession.core.utils.StringUtils;
+import com.buession.lang.Version;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -209,8 +210,8 @@ class SafariUtils {
 			String[] parts = StringUtils.split(browserVersion, '.');
 			String majorVersion = parts[0];
 			String minorVersion = parts.length > 1 ? parts[1] : null;
-			Version version = new Version(browserVersion, majorVersion, minorVersion);
-			versions.put(webKitVersion, version);
+			//Version version = new Version(browserVersion, majorVersion, minorVersion);
+			versions.put(webKitVersion, new Version(browserVersion));
 		}
 
 		safariVersions = Collections.unmodifiableMap(versions);

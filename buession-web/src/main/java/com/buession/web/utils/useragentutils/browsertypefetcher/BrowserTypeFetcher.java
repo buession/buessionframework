@@ -24,7 +24,7 @@
  */
 package com.buession.web.utils.useragentutils.browsertypefetcher;
 
-import com.buession.web.utils.useragentutils.BrowserType;
+import com.buession.lang.BrowserType;
 import com.buession.web.utils.useragentutils.Fetcher;
 
 /**

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -120,13 +120,11 @@ public enum ProtocolVersion {
 
 		if(legalProtocol){
 			if(Objects.equals(illegalMajorVersion, true)){
-				throw new IllegalArgumentException(
-						"Unknown " + protocol + " protocol major version: " + major + ".");
+				throw new IllegalArgumentException("Unknown " + protocol + " protocol major version: " + major + ".");
 			}
 
 			if(Objects.equals(illegalMinorVersion, true)){
-				throw new IllegalArgumentException(
-						"Unknown " + protocol + " protocol minor version: " + minor + ".");
+				throw new IllegalArgumentException("Unknown " + protocol + " protocol minor version: " + minor + ".");
 			}
 		}
 
@@ -135,11 +133,7 @@ public enum ProtocolVersion {
 
 	@Override
 	public String toString(){
-		final StringBuilder sb = new StringBuilder();
-
-		sb.append(protocol).append('/').append(major).append('.').append(minor);
-
-		return sb.toString();
+		return protocol + '/' + major + '.' + minor;
 	}
 
 }

@@ -30,9 +30,9 @@ package com.buession.web.utils.useragentutils;
  */
 class VersionMapping {
 
-	private String[] patterns;
+	private final String[] patterns;
 
-	private String version;
+	private final String version;
 
 	VersionMapping(final String[] patterns, final String version){
 		this.patterns = patterns;

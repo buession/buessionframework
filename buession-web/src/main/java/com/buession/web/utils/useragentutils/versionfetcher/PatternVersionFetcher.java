@@ -24,7 +24,7 @@
  */
 package com.buession.web.utils.useragentutils.versionfetcher;
 
-import com.buession.web.utils.useragentutils.Version;
+import com.buession.lang.Version;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +60,7 @@ public class PatternVersionFetcher implements VersionFetcher {
 			minorVersion = matcher.group(3);
 		}
 
-		return new Version(fullVersionString, majorVersion, minorVersion);
+		return new Version(fullVersionString);
 	}
 
 }

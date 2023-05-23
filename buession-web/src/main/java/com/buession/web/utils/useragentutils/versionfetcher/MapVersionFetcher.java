@@ -24,7 +24,7 @@
  */
 package com.buession.web.utils.useragentutils.versionfetcher;
 
-import com.buession.web.utils.useragentutils.Version;
+import com.buession.lang.Version;
 
 import java.util.Collections;
 import java.util.Map;

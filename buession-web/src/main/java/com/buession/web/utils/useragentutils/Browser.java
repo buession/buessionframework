@@ -25,6 +25,9 @@
 package com.buession.web.utils.useragentutils;
 
 import com.buession.core.utils.StringUtils;
+import com.buession.lang.BrowserType;
+import com.buession.lang.RenderingEngine;
+import com.buession.lang.Version;
 import com.buession.web.utils.useragentutils.browsertypefetcher.BrowserTypeFetcher;
 import com.buession.web.utils.useragentutils.browsertypefetcher.ContainsBrowserTypeFetcher;
 import com.buession.web.utils.useragentutils.versionfetcher.MapVersionFetcher;
@@ -40,7 +43,7 @@ import com.buession.web.utils.useragentutils.versionfetcher.VersionFetcher;
  */
 public enum Browser {
 	IE(
-			"Internet Explorer",
+			com.buession.lang.Browser.IE,
 			new String[]{"MSIE", "Trident", "IE "},
 			null,
 			BrowserType.WEB_BROWSER,
@@ -48,7 +51,6 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("IEMobile", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.TRIDENT,
-			Manufacturer.MICROSOFT,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"IEMobile/11", "Trident/7"}, "11"),
 					new VersionMapping(new String[]{"IEMobile/10"}, "10"),
@@ -61,7 +63,7 @@ public enum Browser {
 	),
 
 	EDGE(
-			"Microsoft Edge",
+			com.buession.lang.Browser.EDGE,
 			new String[]{"Edge"},
 			null,
 			BrowserType.WEB_BROWSER,
@@ -69,13 +71,12 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("Mobile Safari", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.EDGE_HTML,
-			Manufacturer.MICROSOFT,
 			null,
 			new PatternVersionFetcher("(?:Edge\\/(([0-9]+)\\.([0-9]*)))")
 	),
 
 	CHROME(
-			"Chrome",
+			com.buession.lang.Browser.CHROME,
 			new String[]{"Chrome", "CrMo", "CriOS"},
 			null,
 			BrowserType.WEB_BROWSER,
@@ -85,13 +86,12 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("Mobile", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.WEBKIT,
-			Manufacturer.GOOGLE,
 			null,
 			new PatternVersionFetcher("(?:CriOS|CrMo|Chrome)\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	FIREFOX(
-			"Firefox",
+			com.buession.lang.Browser.FIREFOX,
 			new String[]{"Firefox", "FxiOS"},
 			null,
 			BrowserType.WEB_BROWSER,
@@ -100,13 +100,12 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("Mobile", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.GECKO,
-			Manufacturer.MOZILLA,
 			null,
 			new PatternVersionFetcher("Firefox\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	SAFARI(
-			"Safari",
+			com.buession.lang.Browser.SAFARI,
 			new String[]{"Safari"},
 			new String[]{"bot", "preview", "OPR/", "Coast/", "Vivaldi", "CFNetwork", "Phantom"},
 			BrowserType.WEB_BROWSER,
@@ -115,7 +114,6 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("Mobile/", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.WEBKIT,
-			Manufacturer.APPLE,
 			null,
 			new SequentialVersionFetcher(
 					new PatternVersionFetcher("Version\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?)"),
@@ -124,19 +122,18 @@ public enum Browser {
 	),
 
 	OPERA_COAST(
-			"Opera Coast",
+			com.buession.lang.Browser.OPERA_COAST,
 			new String[]{"Coast/"},
 			null,
 			BrowserType.MOBILE_BROWSER,
 			null,
 			RenderingEngine.WEBKIT,
-			Manufacturer.OPERA,
 			null,
 			new PatternVersionFetcher("Coast\\/(([\\d]+)\\.([\\w]+)?(\\.[\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	OPERA(
-			"Opera",
+			com.buession.lang.Browser.OPERA,
 			new String[]{" OPR/", "Opera"},
 			null,
 			BrowserType.WEB_BROWSER,
@@ -145,7 +142,6 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("Mobile", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.PRESTO,
-			Manufacturer.OPERA,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Opera/12", "Version/12."}, "12"),
 					new VersionMapping(new String[]{"Opera/11", "Version/11."}, "11"),
@@ -156,7 +152,7 @@ public enum Browser {
 	),
 
 	MOZILLA(
-			"Mozilla",
+			com.buession.lang.Browser.MOZILLA,
 			new String[]{"Mozilla", "Moozilla"},
 			null,
 			BrowserType.WEB_BROWSER,
@@ -168,96 +164,88 @@ public enum Browser {
 					new ContainsBrowserTypeFetcher("Mobile", BrowserType.MOBILE_BROWSER)
 			},
 			RenderingEngine.OTHER,
-			Manufacturer.MOZILLA,
 			null,
 			null
 	),
 
 	DOLFIN2(
-			"Samsung Dolphin 2",
+			com.buession.lang.Browser.DOLFIN2,
 			new String[]{"Dolfin/2"},
 			null,
 			BrowserType.MOBILE_BROWSER,
 			null,
 			RenderingEngine.WEBKIT,
-			Manufacturer.SAMSUNG,
 			null,
 			null
 	),
 
 	CAMINO(
-			"Camino",
+			com.buession.lang.Browser.CAMINO,
 			new String[]{"Camino"},
 			null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.GECKO,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("Camino\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	LOTUS_NOTES(
-			"Lotus Notes",
+			com.buession.lang.Browser.LOTUS_NOTES,
 			new String[]{"Lotus-Notes"},
 			null,
 			BrowserType.EMAIL_CLIENT,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("Lotus-Notes\\/(([\\d]+)\\.([\\w]+))")
 	),
 
 	OMNIWEB(
-			"Omniweb",
+			com.buession.lang.Browser.OMNIWEB,
 			new String[]{"OmniWeb"}, null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.WEBKIT,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	FLOCK(
-			"Flock",
+			com.buession.lang.Browser.FLOCK,
 			new String[]{"Flock"},
 			null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.GECKO,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("Flock\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	VIVALDI(
-			"Vivaldi",
+			com.buession.lang.Browser.VIVALDI,
 			new String[]{"Vivaldi"},
 			null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.BLINK,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("Vivaldi/(([\\d]+).([\\d]+).([\\d]+).([\\d]+))")
 	),
 
 	SEAMONKEY(
-			"SeaMonkey",
+			com.buession.lang.Browser.SEAMONKEY,
 			new String[]{"SeaMonkey"},
 			null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.GECKO,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("SeaMonkey\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	BOT(
-			"Robot/Spider",
+			com.buession.lang.Browser.BOT,
 			new String[]{"Googlebot", "Googlebot-Mobile", "Mediapartners-Google", "Web Preview", "bot",
 					"Applebot", "spider", "crawler", "Feedfetcher", "Slurp", "Twiceler", "Nutch", "BecomeBot",
 					"bingbot", "BingPreview", "Google Web Preview", "WordPress.com mShots", "Seznam",
@@ -267,168 +255,154 @@ public enum Browser {
 			BrowserType.ROBOT,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	CFNETWORK(
-			"CFNetwork",
+			com.buession.lang.Browser.CFNETWORK,
 			new String[]{"CFNetwork"},
 			null,
 			BrowserType.UNKNOWN,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("CFNetwork/(([\\d]+)(?:\\.([\\d]))?(?:\\.([\\d]+))?)")
 	),
 
 	EUDORA(
-			"Eudora",
+			com.buession.lang.Browser.EUDORA,
 			new String[]{"Eudora", "EUDORA"},
 			null,
 			BrowserType.EMAIL_CLIENT,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	POCOMAIL(
-			"PocoMail",
+			com.buession.lang.Browser.POCOMAIL,
 			new String[]{"PocoMail"},
 			null,
 			BrowserType.EMAIL_CLIENT,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	THEBAT(
-			"The Bat!",
+			com.buession.lang.Browser.THEBAT,
 			new String[]{"The Bat"},
 			null,
 			BrowserType.EMAIL_CLIENT,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	SILK(
-			"Silk",
+			com.buession.lang.Browser.SILK,
 			new String[]{"Silk/"},
 			null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.WEBKIT,
-			Manufacturer.AMAZON,
 			null,
 			new PatternVersionFetcher("Silk\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?(\\-[\\w]+)?)")
 	),
 
 	BLACKBERRY(
-			"BlackBerry",
+			com.buession.lang.Browser.BLACKBERRY,
 			new String[]{"BB10"},
 			null,
 			BrowserType.MOBILE_BROWSER,
 			null,
 			RenderingEngine.WEBKIT,
-			Manufacturer.BLACKBERRY,
 			null,
 			null
 	),
 
 	NETFRONT(
-			"NetFront",
+			com.buession.lang.Browser.NETFRONT,
 			new String[]{"NetFront"},
 			null,
 			BrowserType.MOBILE_BROWSER,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	EVOLUTION(
-			"Evolution",
+			com.buession.lang.Browser.EVOLUTION,
 			new String[]{"CamelHttpStream"},
 			null,
 			BrowserType.EMAIL_CLIENT,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	LYNX(
-			"Lynx",
+			com.buession.lang.Browser.LYNX,
 			new String[]{"Lynx"},
 			null,
 			BrowserType.TEXT_BROWSER,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("Lynx\\/(([0-9]+)\\.([\\d]+)\\.?([\\w-+]+)?\\.?([\\w-+]+)?)")
 	),
 
 	KONQUEROR(
-			"Konqueror",
+			com.buession.lang.Browser.KONQUEROR,
 			new String[]{"Konqueror"},
 			new String[]{"Exabot"},
 			BrowserType.TEXT_BROWSER,
 			null,
 			RenderingEngine.KHTML,
-			Manufacturer.OTHER,
 			null,
 			new PatternVersionFetcher("Konqueror\\/(([0-9]+)\\.?([\\w]+)?(-[\\w]+)?)")
 	),
 
 	XBOX(
-			"Xbox",
+			com.buession.lang.Browser.XBOX,
 			new String[]{"xbox"},
 			null,
 			BrowserType.WEB_BROWSER,
 			null,
 			RenderingEngine.TRIDENT,
-			Manufacturer.MICROSOFT,
 			null,
 			null
 	),
 
 	THUNDERBIRD(
-			"Thunderbird",
+			com.buession.lang.Browser.THUNDERBIRD,
 			new String[]{"Thunderbird"},
 			null,
 			BrowserType.EMAIL_CLIENT,
 			null,
 			RenderingEngine.GECKO,
-			Manufacturer.MOZILLA,
 			null,
 			new PatternVersionFetcher("Thunderbird\\/(([0-9]+)\\.?([\\w]+)?(\\.[\\w]+)?(\\.[\\w]+)?)")
 	),
 
 	UNKNOWN(
-			"Unknown",
+			com.buession.lang.Browser.UNKNOWN,
 			null,
 			null,
 			BrowserType.UNKNOWN,
 			null,
 			RenderingEngine.OTHER,
-			Manufacturer.OTHER,
 			null,
 			null
 	);
 
-	private final String name;
+	private final com.buession.lang.Browser browser;
 
 	private final String[] patterns;
 
@@ -440,31 +414,28 @@ public enum Browser {
 
 	private final RenderingEngine renderingEngine;
 
-	private final Manufacturer manufacturer;
-
 	private final VersionMapping[] versionMappings;
 
 	private final VersionFetcher versionFetcher;
 
 	private String version;
 
-	Browser(final String name, final String[] patterns, final String[] excludePatterns, final BrowserType browserType,
+	Browser(final com.buession.lang.Browser browser, final String[] patterns, final String[] excludePatterns,
+			final BrowserType browserType,
 			final BrowserTypeFetcher[] browserTypeFetchers, final RenderingEngine renderingEngine,
-			final Manufacturer manufacturer, final VersionMapping[] versionMappings,
-			final VersionFetcher versionFetcher){
-		this.name = name;
+			final VersionMapping[] versionMappings, final VersionFetcher versionFetcher){
+		this.browser = browser;
 		this.patterns = patterns;
 		this.excludePatterns = excludePatterns;
 		this.browserType = browserType;
 		this.browserTypeFetchers = browserTypeFetchers;
 		this.renderingEngine = renderingEngine;
-		this.manufacturer = manufacturer;
 		this.versionMappings = versionMappings;
 		this.versionFetcher = versionFetcher;
 	}
 
 	public String getName(){
-		return name;
+		return browser.getName();
 	}
 
 	public BrowserType getBrowserType(){
@@ -475,8 +446,8 @@ public enum Browser {
 		return renderingEngine;
 	}
 
-	public Manufacturer getManufacturer(){
-		return manufacturer;
+	public com.buession.lang.Browser.Manufacturer getManufacturer(){
+		return browser.getManufacturer();
 	}
 
 	public String getVersion(){
@@ -504,7 +475,7 @@ public enum Browser {
 
 	@Override
 	public String toString(){
-		return name + " " + version;
+		return getName() + " " + version;
 	}
 
 	private static Browser parseBrowser(final String userAgent){
@@ -554,7 +525,7 @@ public enum Browser {
 		if(browser.version == null && browser.versionFetcher != null){
 			Version version = browser.versionFetcher.fetch(userAgent);
 			if(version != null){
-				browser.version = version.getMajorVersion();
+				browser.version = version.toString();
 			}
 		}
 	}
@@ -574,3 +545,4 @@ public enum Browser {
 	}
 
 }
+

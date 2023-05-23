@@ -25,6 +25,8 @@
 package com.buession.web.utils.useragentutils;
 
 import com.buession.core.utils.StringUtils;
+import com.buession.lang.DeviceType;
+import com.buession.lang.Version;
 import com.buession.web.utils.useragentutils.devicetypefetcher.ContainsDeviceTypeFetcher;
 import com.buession.web.utils.useragentutils.devicetypefetcher.DeviceTypeFetcher;
 import com.buession.web.utils.useragentutils.versionfetcher.PatternVersionFetcher;
@@ -38,14 +40,13 @@ import com.buession.web.utils.useragentutils.versionfetcher.VersionFetcher;
  */
 public enum OperatingSystem {
 	WINDOWS(
-			"Windows",
+			com.buession.lang.OperatingSystem.WINDOWS,
 			new String[]{"Windows"},
 			null,
 			DeviceType.COMPUTER,
 			new DeviceTypeFetcher[]{
 					new ContainsDeviceTypeFetcher("Tablet", DeviceType.TABLET)
 			},
-			Manufacturer.MICROSOFT,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Windows NT 6.4", "Windows NT 10"}, "10"),
 					new VersionMapping(new String[]{"Windows NT 6.2", "Windows NT 6.3"}, "8"),
@@ -60,12 +61,11 @@ public enum OperatingSystem {
 	),
 
 	WINDOWS_PHONE(
-			"Windows Phone",
+			com.buession.lang.OperatingSystem.WINDOWS_PHONE,
 			new String[]{"Windows Phone", "Windows Mobile"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.MICROSOFT,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Windows Phone 10"}, "10"),
 					new VersionMapping(new String[]{"Windows Phone 8"}, "8"),
@@ -76,29 +76,27 @@ public enum OperatingSystem {
 	),
 
 	WINDOWS_MOBILE(
-			"Windows Mobile",
+			com.buession.lang.OperatingSystem.WINDOWS_MOBILE,
 			new String[]{"Windows CE"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.MICROSOFT,
 			null,
 			null
 	),
 
 	XBOX(
-			"Xbox OS",
+			com.buession.lang.OperatingSystem.XBOX,
 			new String[]{"xbox"},
 			null,
 			DeviceType.GAME_CONSOLE,
 			null,
-			Manufacturer.MICROSOFT,
 			null,
 			null
 	),
 
 	ANDROID(
-			"Android",
+			com.buession.lang.OperatingSystem.ANDROID,
 			new String[]{"Android"},
 			null,
 			DeviceType.MOBILE,
@@ -106,7 +104,6 @@ public enum OperatingSystem {
 					new ContainsDeviceTypeFetcher("Tablet", DeviceType.TABLET),
 					new ContainsDeviceTypeFetcher("GoogleTV", DeviceType.DMR),
 			},
-			Manufacturer.GOOGLE,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Kindle Fire", "GT-P1000", "SCH-I800"}, "2"),
 			},
@@ -114,108 +111,99 @@ public enum OperatingSystem {
 	),
 
 	IOS(
-			"iOS",
+			com.buession.lang.OperatingSystem.IOS,
 			new String[]{"iPhone", "iPad", "iPod", "iOS"},
 			null,
 			DeviceType.MOBILE,
 			new DeviceTypeFetcher[]{
 					new ContainsDeviceTypeFetcher("iPad", DeviceType.TABLET)
 			},
-			Manufacturer.APPLE,
 			null,
 			new PatternVersionFetcher("OS ((\\d+)_(\\d+)_(\\d+))")
 	),
 
 	CHROME_OS(
-			"Chrome OS",
+			com.buession.lang.OperatingSystem.CHROME_OS,
 			new String[]{"CrOS"},
 			null,
 			DeviceType.COMPUTER,
 			null,
-			Manufacturer.GOOGLE,
 			null,
 			null
 	),
 
 	MAC_OS_X(
-			"Mac OS X",
+			com.buession.lang.OperatingSystem.MAC_OS_X,
 			new String[]{"Mac OS X"},
 			null,
 			DeviceType.COMPUTER,
 			null,
-			Manufacturer.APPLE,
 			null,
 			new PatternVersionFetcher("Mac OS X ((\\d+)[_\\.]?(\\d+)?([_\\.]\\d+)?)")
 	),
 
 	MAC_OS(
-			"Mac OS",
+			com.buession.lang.OperatingSystem.MAC_OS,
 			new String[]{"Mac OS"},
 			null,
 			DeviceType.COMPUTER,
 			null,
-			Manufacturer.APPLE,
 			null,
 			new PatternVersionFetcher("Mac OS ((\\d+)[_\\.]?(\\d+)?([_\\.]\\d+)?)")
 	),
 
 	WEBOS(
-			"WebOS",
+			com.buession.lang.OperatingSystem.WEBOS,
 			new String[]{"webOS"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.HP,
 			null,
 			null
 	),
 
 	PALM(
-			"PalmOS",
+			com.buession.lang.OperatingSystem.PALM,
 			new String[]{"Palm"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.HP,
 			null,
 			null
 	),
 
 	MEEGO(
-			"MeeGo",
+			com.buession.lang.OperatingSystem.MEEGO,
 			new String[]{"MeeGo"},
 			null,
 			DeviceType.COMPUTER,
 			null,
-			Manufacturer.NOKIA,
 			null,
 			null
 	),
 
 	MAEMO(
-			"Maemo",
+			com.buession.lang.OperatingSystem.MAEMO,
 			new String[]{"Maemo"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.NOKIA,
 			null,
 			null
 	),
 
 	BADA(
-			"Bada",
+			com.buession.lang.OperatingSystem.BADA,
 			new String[]{"Bada"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.SAMSUNG,
 			null,
 			null
 	),
 
 	TIZEN(
-			"Tizen",
+			com.buession.lang.OperatingSystem.TIZEN,
 			new String[]{"Tizen"},
 			null,
 			DeviceType.COMPUTER,
@@ -224,76 +212,70 @@ public enum OperatingSystem {
 					new ContainsDeviceTypeFetcher("Smart-TV", DeviceType.DMR),
 					new ContainsDeviceTypeFetcher("TV ", DeviceType.DMR)
 			},
-			Manufacturer.LINUX_FOUNDATION,
 			null,
 			new PatternVersionFetcher("Tizen \\/((\\d+))\\.")
 	),
 
 	KINDLE(
-			"Kindle",
+			com.buession.lang.OperatingSystem.KINDLE,
 			new String[]{"Kindle"},
 			null,
 			DeviceType.TABLET,
 			null,
-			Manufacturer.AMAZON,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Kindle"}, null)
 			},
 			new PatternVersionFetcher("Kindle\\/((\\d+))")
 	),
 
-	Ubuntu(
-			"Ubuntu",
+	UBUNTU(
+			com.buession.lang.OperatingSystem.UBUNTU,
 			new String[]{"Ubuntu"},
 			null,
 			DeviceType.COMPUTER,
 			new DeviceTypeFetcher[]{
 					new ContainsDeviceTypeFetcher("mobile", DeviceType.MOBILE)
 			},
-			Manufacturer.CONONICAL,
 			null,
 			null
 	),
 
 	LINUX(
-			"Linux",
+			com.buession.lang.OperatingSystem.LINUX,
 			new String[]{"Linux"},
 			null,
 			DeviceType.COMPUTER,
 			new DeviceTypeFetcher[]{
 					new ContainsDeviceTypeFetcher("SmartTv ", DeviceType.DMR)
 			},
-			Manufacturer.OTHER,
 			null,
 			null
 	),
 
 	SUN_OS(
-			"SunOS",
+			com.buession.lang.OperatingSystem.SUN_OS,
 			new String[]{"SunOS"},
 			null,
 			DeviceType.COMPUTER,
 			null,
-			Manufacturer.SUN,
 			null,
 			null
 	),
 
 	BLACKBERRY(
-			"BlackBerryOS",
+			com.buession.lang.OperatingSystem.BLACKBERRY,
 			new String[]{"BlackBerry"},
 			null,
 			DeviceType.MOBILE,
 			new DeviceTypeFetcher[]{
 					new ContainsDeviceTypeFetcher("RIM Tablet OS", DeviceType.TABLET)
 			},
-			Manufacturer.BLACKBERRY,
 			null,
 			new PatternVersionFetcher("Version\\/((\\d+))")
 	),
 
 	SYMBIAN(
-			"Symbian OS",
+			com.buession.lang.OperatingSystem.SYMBIAN,
 			new String[]{"Symbian", "Series60"},
 			null,
 			DeviceType.MOBILE,
@@ -302,7 +284,6 @@ public enum OperatingSystem {
 					new ContainsDeviceTypeFetcher("Smart-TV", DeviceType.DMR),
 					new ContainsDeviceTypeFetcher("TV ", DeviceType.DMR)
 			},
-			Manufacturer.SYMBIAN,
 			new VersionMapping[]{
 					new VersionMapping(new String[]{"Series60/3"}, "9"),
 					new VersionMapping(new String[]{"Series60/2.6", "Series60/2.8"}, "8")
@@ -311,62 +292,57 @@ public enum OperatingSystem {
 	),
 
 	SERIES40(
-			"Series 40",
+			com.buession.lang.OperatingSystem.SERIES40,
 			new String[]{"Nokia6300"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.NOKIA,
 			null,
 			null
 	),
 
 	SONY_ERICSSON(
-			"Sony Ericsson",
+			com.buession.lang.OperatingSystem.SONY_ERICSSON,
 			new String[]{"SonyEricsson"},
 			null,
 			DeviceType.MOBILE,
 			null,
-			Manufacturer.SONY_ERICSSON,
 			null,
 			null
 	),
 
 	PSP(
-			"Sony Playstation",
+			com.buession.lang.OperatingSystem.PSP,
 			new String[]{"Playstation"},
 			null,
 			DeviceType.GAME_CONSOLE,
 			null,
-			Manufacturer.SONY,
 			null,
 			null
 	),
 
 	WII(
-			"Nintendo Wii",
+			com.buession.lang.OperatingSystem.WII,
 			new String[]{"Wii"},
 			null,
 			DeviceType.GAME_CONSOLE,
 			null,
-			Manufacturer.NINTENDO,
 			null,
 			null
 	),
 
 	ROKU(
-			"Roku OS",
+			com.buession.lang.OperatingSystem.ROKU,
 			new String[]{"Roku"},
 			null,
 			DeviceType.DMR,
 			null,
-			Manufacturer.ROKU,
 			null,
 			null
 	),
 
 	UNKNOWN(
-			"Unknown",
+			com.buession.lang.OperatingSystem.UNKNOWN,
 			null,
 			null,
 			DeviceType.COMPUTER,
@@ -374,12 +350,11 @@ public enum OperatingSystem {
 					new ContainsDeviceTypeFetcher("Mobile", DeviceType.MOBILE),
 					new ContainsDeviceTypeFetcher("Tablet", DeviceType.TABLET)
 			},
-			Manufacturer.OTHER,
 			null,
 			null
 	);
 
-	private final String name;
+	private final com.buession.lang.OperatingSystem operatingSystem;
 
 	private final String[] patterns;
 
@@ -389,38 +364,35 @@ public enum OperatingSystem {
 
 	private final DeviceTypeFetcher[] deviceTypeFetchers;
 
-	private final Manufacturer manufacturer;
-
 	private final VersionMapping[] versionMappings;
 
 	private final VersionFetcher versionFetcher;
 
 	private String version;
 
-	OperatingSystem(final String name, final String[] patterns, final String[] excludePatterns,
-					final DeviceType deviceType, final DeviceTypeFetcher[] deviceTypeFetchers,
-					final Manufacturer manufacturer, final VersionMapping[] versionMappings,
+	OperatingSystem(final com.buession.lang.OperatingSystem operatingSystem, final String[] patterns,
+					final String[] excludePatterns, final DeviceType deviceType,
+					final DeviceTypeFetcher[] deviceTypeFetchers, final VersionMapping[] versionMappings,
 					final VersionFetcher versionFetcher){
-		this.name = name;
+		this.operatingSystem = operatingSystem;
 		this.patterns = patterns;
 		this.excludePatterns = excludePatterns;
 		this.deviceType = deviceType;
 		this.deviceTypeFetchers = deviceTypeFetchers;
-		this.manufacturer = manufacturer;
 		this.versionMappings = versionMappings;
 		this.versionFetcher = versionFetcher;
 	}
 
 	public String getName(){
-		return name;
+		return operatingSystem.getName();
 	}
 
 	public DeviceType getDeviceType(){
 		return deviceType;
 	}
 
-	public Manufacturer getManufacturer(){
-		return manufacturer;
+	public com.buession.lang.OperatingSystem.Manufacturer getManufacturer(){
+		return operatingSystem.getManufacturer();
 	}
 
 	public String getVersion(){
@@ -447,7 +419,7 @@ public enum OperatingSystem {
 
 	@Override
 	public String toString(){
-		return name + " " + version;
+		return getName() + " " + version;
 	}
 
 	private static OperatingSystem parseOperatingSystem(final String userAgent){
@@ -497,7 +469,7 @@ public enum OperatingSystem {
 		if(operatingSystem.version == null && operatingSystem.versionFetcher != null){
 			Version version = operatingSystem.versionFetcher.fetch(userAgent);
 			if(version != null){
-				operatingSystem.version = version.getMajorVersion();
+				operatingSystem.version = version.toString();
 			}
 		}
 	}

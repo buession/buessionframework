@@ -24,7 +24,7 @@
  */
 package com.buession.web.utils.useragentutils.devicetypefetcher;
 
-import com.buession.web.utils.useragentutils.DeviceType;
+import com.buession.lang.DeviceType;
 import com.buession.web.utils.useragentutils.Fetcher;
 
 /**
