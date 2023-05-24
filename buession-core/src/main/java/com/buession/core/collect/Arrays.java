@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.collect;
@@ -2511,6 +2511,225 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 	 */
 	public static String[] toStringArray(final boolean[] a){
 		return toStringArray(toObject(a));
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static byte[] repeat(final byte value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		byte[] result = new byte[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static char[] repeat(final char value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		char[] result = new char[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static boolean[] repeat(final boolean value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		boolean[] result = new boolean[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static short[] repeat(final short value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		short[] result = new short[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static int[] repeat(final int value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		int[] result = new int[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static long[] repeat(final long value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		long[] result = new long[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static float[] repeat(final float value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		float[] result = new float[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	public static double[] repeat(final double value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		double[] result = new double[size];
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 数组填充
+	 *
+	 * @param value
+	 * 		重复内容
+	 * @param size
+	 * 		填充次数
+	 * @param <T>
+	 * 		数据类型
+	 *
+	 * @return 数组
+	 *
+	 * @since 2.3.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] repeat(final T value, final int size){
+		Assert.isNegative(size, "Repeat size is negative.");
+
+		T[] result = (T[]) Array.newInstance(value.getClass(), size);
+
+		for(int i = 0; i < size; i++){
+			result[i] = value;
+		}
+
+		return result;
 	}
 
 	/**
