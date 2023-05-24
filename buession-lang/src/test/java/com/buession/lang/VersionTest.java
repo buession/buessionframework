@@ -42,13 +42,25 @@ public class VersionTest {
 	@Test
 	public void createBeta(){
 		Version version = new Version("1.11.2beta");
-		Assert.assertEquals(version.toString(), "1.11.2 beta");
+		Assert.assertEquals(version.toString(), "1.11.2beta");
 	}
 
 	@Test
 	public void createRc(){
 		Version version = new Version("1.11.2 RC");
 		Assert.assertEquals(version.toString(), "1.11.2 RC");
+	}
+
+	@Test
+	public void createMajorVersionAndMinorVersion(){
+		Version version = new Version("1.113");
+		Assert.assertEquals(version.toString(), "1.113");
+	}
+
+	@Test
+	public void createMajorVersionAndMinorVersionRc(){
+		Version version = new Version("1.113 Rc");
+		Assert.assertEquals(version.toString(), "1.113 Rc");
 	}
 
 	@Test
