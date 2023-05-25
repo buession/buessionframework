@@ -41,6 +41,34 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 		implements DataSource<T, P> {
 
 	/**
+	 * 数据库驱动类名
+	 *
+	 * @since 2.3.0
+	 */
+	private String driverClassName;
+
+	/**
+	 * JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	private String url;
+
+	/**
+	 * 数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	private String username;
+
+	/**
+	 * 数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	private String password;
+
+	/**
 	 * 连接池配置
 	 */
 	private P poolConfiguration;
@@ -54,11 +82,160 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	/**
 	 * 构造函数
 	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	public AbstractDataSource(String driverClassName, String url){
+		this.driverClassName = driverClassName;
+		this.url = url;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	public AbstractDataSource(String driverClassName, String url, String username){
+		this(driverClassName, url);
+		this.username = username;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	public AbstractDataSource(String driverClassName, String url, String username, String password){
+		this(driverClassName, url, username);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
 	public AbstractDataSource(P poolConfiguration){
 		this.poolConfiguration = poolConfiguration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public AbstractDataSource(String driverClassName, String url, P poolConfiguration){
+		this(driverClassName, url);
+		this.poolConfiguration = poolConfiguration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public AbstractDataSource(String driverClassName, String url, String username, P poolConfiguration){
+		this(driverClassName, url, username);
+		this.poolConfiguration = poolConfiguration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public AbstractDataSource(String driverClassName, String url, String username, String password,
+							  P poolConfiguration){
+		this(driverClassName, url, username, password);
+		this.poolConfiguration = poolConfiguration;
+	}
+
+	@Override
+	public String getDriverClassName(){
+		return driverClassName;
+	}
+
+	@Override
+	public void setDriverClassName(String driverClassName){
+		this.driverClassName = driverClassName;
+	}
+
+	@Override
+	public String getUrl(){
+		return url;
+	}
+
+	@Override
+	public void setUrl(String url){
+		this.url = url;
+	}
+
+	@Override
+	public String getUsername(){
+		return username;
+	}
+
+	@Override
+	public void setUsername(String username){
+		this.username = username;
+	}
+
+	@Override
+	public String getPassword(){
+		return password;
+	}
+
+	@Override
+	public void setPassword(String password){
+		this.password = password;
 	}
 
 	@Override
@@ -71,12 +248,10 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 		this.poolConfiguration = poolConfiguration;
 	}
 
-	protected T doCreateDataSource(final T dataSource){
+	protected void initialize(final T dataSource){
 		if(getPoolConfiguration() != null){
 			applyPoolConfiguration(dataSource, getPoolConfiguration());
 		}
-		
-		return dataSource;
 	}
 
 	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration){

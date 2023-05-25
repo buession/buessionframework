@@ -47,6 +47,54 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	/**
 	 * 构造函数
 	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	public HikariDataSource(String driverClassName, String url){
+		super(driverClassName, url);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	public HikariDataSource(String driverClassName, String url, String username){
+		super(driverClassName, url, username);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	public HikariDataSource(String driverClassName, String url, String username, String password){
+		super(driverClassName, url, username, password);
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
@@ -54,9 +102,75 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 		super(poolConfiguration);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public HikariDataSource(String driverClassName, String url, HikariPoolConfiguration poolConfiguration){
+		super(driverClassName, url, poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public HikariDataSource(String driverClassName, String url, String username,
+							HikariPoolConfiguration poolConfiguration){
+		super(driverClassName, url, username, poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public HikariDataSource(String driverClassName, String url, String username, String password,
+							HikariPoolConfiguration poolConfiguration){
+		super(driverClassName, url, username, password, poolConfiguration);
+	}
+
 	@Override
 	public com.zaxxer.hikari.HikariDataSource createDataSource(){
-		return doCreateDataSource(new com.zaxxer.hikari.HikariDataSource());
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final com.zaxxer.hikari.HikariDataSource dataSource = new com.zaxxer.hikari.HikariDataSource();
+
+		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+		propertyMapper.from(this::getUrl).to(dataSource::setJdbcUrl);
+		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
+		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
+		initialize(dataSource);
+
+		return dataSource;
 	}
 
 	@Override

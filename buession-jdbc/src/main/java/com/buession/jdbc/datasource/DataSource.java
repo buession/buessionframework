@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -37,6 +37,82 @@ import com.buession.jdbc.datasource.config.PoolConfiguration;
  * @author Yong.Teng
  */
 public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfiguration> {
+
+	/**
+	 * 返回数据库驱动类名
+	 *
+	 * @return 数据库驱动类名
+	 *
+	 * @since 2.3.0
+	 */
+	String getDriverClassName();
+
+	/**
+	 * 设置数据库驱动类名
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 *
+	 * @since 2.3.0
+	 */
+	void setDriverClassName(String driverClassName);
+
+	/**
+	 * 返回 JDBC URL
+	 *
+	 * @return JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	String getUrl();
+
+	/**
+	 * 设置 JDBC URL
+	 *
+	 * @param url
+	 * 		JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	void setUrl(String url);
+
+	/**
+	 * 返回数据库账号
+	 *
+	 * @return 数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	String getUsername();
+
+	/**
+	 * 设置数据库账号
+	 *
+	 * @param username
+	 * 		数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	void setUsername(String username);
+
+	/**
+	 * 返回数据库密码
+	 *
+	 * @return 数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	String getPassword();
+
+	/**
+	 * 设置数据库密码
+	 *
+	 * @param password
+	 * 		数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	void setPassword(String password);
 
 	/**
 	 * 获取连接池配置

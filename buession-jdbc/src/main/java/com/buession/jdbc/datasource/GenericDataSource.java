@@ -46,11 +46,115 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	/**
 	 * 构造函数
 	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	public GenericDataSource(String driverClassName, String url){
+		super(driverClassName, url);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	public GenericDataSource(String driverClassName, String url, String username){
+		super(driverClassName, url, username);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	public GenericDataSource(String driverClassName, String url, String username, String password){
+		super(driverClassName, url, username, password);
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
 	public GenericDataSource(GenericPoolConfiguration poolConfiguration){
 		super(poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public GenericDataSource(String driverClassName, String url, GenericPoolConfiguration poolConfiguration){
+		super(driverClassName, url, poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public GenericDataSource(String driverClassName, String url, String username,
+							 GenericPoolConfiguration poolConfiguration){
+		super(driverClassName, url, username, poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public GenericDataSource(String driverClassName, String url, String username, String password,
+							 GenericPoolConfiguration poolConfiguration){
+		super(driverClassName, url, username, password, poolConfiguration);
 	}
 
 	@Override
