@@ -68,22 +68,19 @@ public class ThreadPoolConfiguration {
 	private Boolean allowCoreThreadTimeOut;
 
 	/**
-	 * 工作队列
-	 * {@link BlockingQueue}
+	 * 工作队列 {@link BlockingQueue}
 	 */
-	private Class<BlockingQueue<Runnable>> workQueue;
+	private BlockingQueue<Runnable> workQueue;
 
 	/**
-	 * 创建线程的工厂
-	 * {@link ThreadFactory}
+	 * 创建线程的工厂 {@link ThreadFactory}
 	 */
-	private Class<ThreadFactory> threadFactory;
+	private ThreadFactory threadFactory;
 
 	/**
-	 * 拒绝策略
-	 * {@link RejectedExecutionHandler}
+	 * 拒绝策略 {@link RejectedExecutionHandler}
 	 */
-	private Class<RejectedExecutionHandler> rejectedHandler;
+	private RejectedExecutionHandler rejectedHandler;
 
 	/**
 	 * 是否后台运行，当设置了 {@link #threadFactory} 时无效
@@ -227,10 +224,9 @@ public class ThreadPoolConfiguration {
 	 * 返回工作队列
 	 * <p>新任务被提交后，会先进入到此工作队列中，任务调度时再从队列中取出任务。</p>
 	 *
-	 * @return 工作队列
-	 * {@link BlockingQueue}
+	 * @return 工作队列 {@link BlockingQueue}
 	 */
-	public Class<BlockingQueue<Runnable>> getWorkQueue(){
+	public BlockingQueue<Runnable> getWorkQueue(){
 		return workQueue;
 	}
 
@@ -239,10 +235,9 @@ public class ThreadPoolConfiguration {
 	 * <p>新任务被提交后，会先进入到此工作队列中，任务调度时再从队列中取出任务。</p>
 	 *
 	 * @param workQueue
-	 * 		工作队列
-	 *        {@link BlockingQueue}
+	 * 		工作队列 {@link BlockingQueue}
 	 */
-	public void setWorkQueue(Class<BlockingQueue<Runnable>> workQueue){
+	public void setWorkQueue(BlockingQueue<Runnable> workQueue){
 		this.workQueue = workQueue;
 	}
 
@@ -250,10 +245,9 @@ public class ThreadPoolConfiguration {
 	 * 返回创建线程的工厂
 	 * <p>可以通过线程工厂给每个创建出来的线程做些更有意义的事情，比如 设定线程名、设置 daemon 和优先级等等。</p>
 	 *
-	 * @return 创建线程的工厂
-	 * {@link ThreadFactory}
+	 * @return 创建线程的工厂 {@link ThreadFactory}
 	 */
-	public Class<ThreadFactory> getThreadFactory(){
+	public ThreadFactory getThreadFactory(){
 		return threadFactory;
 	}
 
@@ -262,10 +256,9 @@ public class ThreadPoolConfiguration {
 	 * <p>可以通过线程工厂给每个创建出来的线程做些更有意义的事情，比如 设定线程名、设置 daemon 和优先级等等。</p>
 	 *
 	 * @param threadFactory
-	 * 		创建线程的工厂
-	 *        {@link ThreadFactory}
+	 * 		创建线程的工厂 {@link ThreadFactory}
 	 */
-	public void setThreadFactory(Class<ThreadFactory> threadFactory){
+	public void setThreadFactory(ThreadFactory threadFactory){
 		this.threadFactory = threadFactory;
 	}
 
@@ -274,10 +267,9 @@ public class ThreadPoolConfiguration {
 	 * <p>当工作队列中的任务已到达最大限制，并且线程池中的线程数量也达到最大限制；
 	 * 这时如果有新任务提交进来，通过 {@link RejectedExecutionHandler} 策略进行处理。</p>
 	 *
-	 * @return 拒绝策略
-	 * {@link RejectedExecutionHandler}
+	 * @return 拒绝策略 {@link RejectedExecutionHandler}
 	 */
-	public Class<RejectedExecutionHandler> getRejectedHandler(){
+	public RejectedExecutionHandler getRejectedHandler(){
 		return rejectedHandler;
 	}
 
@@ -287,10 +279,9 @@ public class ThreadPoolConfiguration {
 	 * 这时如果有新任务提交进来，通过 {@link RejectedExecutionHandler} 策略进行处理。</p>
 	 *
 	 * @param rejectedHandler
-	 * 		拒绝策略
-	 *        {@link RejectedExecutionHandler}
+	 * 		拒绝策略 {@link RejectedExecutionHandler}
 	 */
-	public void setRejectedHandler(Class<RejectedExecutionHandler> rejectedHandler){
+	public void setRejectedHandler(RejectedExecutionHandler rejectedHandler){
 		this.rejectedHandler = rejectedHandler;
 	}
 
