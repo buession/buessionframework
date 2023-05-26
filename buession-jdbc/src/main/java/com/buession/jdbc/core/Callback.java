@@ -21,10 +21,40 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.jdbc.core;/**
- * 
+ */
+package com.buession.jdbc.core;
+
+import com.buession.core.Configurer;
+
+/**
+ * {@link javax.sql.DataSource} 初始化回调
+ *
+ * @param <D>
+ *        {@link javax.sql.DataSource}
+ * @param <C>
+ * 		配置
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public interface Callback {
+ */
+@FunctionalInterface
+public interface Callback<D extends javax.sql.DataSource, C> extends Configurer<D, C> {
+
+	/**
+	 * {@link javax.sql.DataSource} 初始化回调
+	 *
+	 * @param dataSource
+	 *        {@link javax.sql.DataSource} 实例
+	 * @param properties
+	 * 		配置
+	 *
+	 * @return {@link javax.sql.DataSource} 实例
+	 */
+	D apply(D dataSource, C properties);
+
+	@Override
+	default void configure(D dataSource, C properties){
+		apply(dataSource, properties);
+	}
+
 }
