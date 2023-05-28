@@ -43,7 +43,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	/**
 	 * 构造函数
 	 */
-	public Dbcp2DataSource(){
+	public Dbcp2DataSource() {
 		super();
 	}
 
@@ -57,7 +57,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 *
 	 * @since 2.3.0
 	 */
-	public Dbcp2DataSource(String driverClassName, String url){
+	public Dbcp2DataSource(String driverClassName, String url) {
 		super(driverClassName, url);
 	}
 
@@ -73,7 +73,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 *
 	 * @since 2.3.0
 	 */
-	public Dbcp2DataSource(String driverClassName, String url, String username){
+	public Dbcp2DataSource(String driverClassName, String url, String username) {
 		super(driverClassName, url, username);
 	}
 
@@ -91,7 +91,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 *
 	 * @since 2.3.0
 	 */
-	public Dbcp2DataSource(String driverClassName, String url, String username, String password){
+	public Dbcp2DataSource(String driverClassName, String url, String username, String password) {
 		super(driverClassName, url, username, password);
 	}
 
@@ -101,7 +101,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public Dbcp2DataSource(Dbcp2PoolConfiguration poolConfiguration){
+	public Dbcp2DataSource(Dbcp2PoolConfiguration poolConfiguration) {
 		super(poolConfiguration);
 	}
 
@@ -117,7 +117,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 *
 	 * @since 2.3.0
 	 */
-	public Dbcp2DataSource(String driverClassName, String url, Dbcp2PoolConfiguration poolConfiguration){
+	public Dbcp2DataSource(String driverClassName, String url, Dbcp2PoolConfiguration poolConfiguration) {
 		super(driverClassName, url, poolConfiguration);
 	}
 
@@ -136,7 +136,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 * @since 2.3.0
 	 */
 	public Dbcp2DataSource(String driverClassName, String url, String username,
-						   Dbcp2PoolConfiguration poolConfiguration){
+						   Dbcp2PoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, poolConfiguration);
 	}
 
@@ -157,12 +157,12 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 * @since 2.3.0
 	 */
 	public Dbcp2DataSource(String driverClassName, String url, String username, String password,
-						   Dbcp2PoolConfiguration poolConfiguration){
+						   Dbcp2PoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, password, poolConfiguration);
 	}
 
 	@Override
-	public BasicDataSource createDataSource(){
+	public BasicDataSource createDataSource() {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final BasicDataSource dataSource = new BasicDataSource();
 
@@ -178,7 +178,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 
 	@Override
 	protected void applyPoolConfiguration(final BasicDataSource dataSource,
-										  final Dbcp2PoolConfiguration poolConfiguration){
+										  final Dbcp2PoolConfiguration poolConfiguration) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);
@@ -199,8 +199,8 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 				.to(dataSource::setConnectionFactoryClassName);
 		propertyMapper.from(poolConfiguration::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
 		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(poolConfiguration::getValidationQueryTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
 		propertyMapper.from(poolConfiguration::getDefaultSchema).to(dataSource::setDefaultSchema);
 		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);

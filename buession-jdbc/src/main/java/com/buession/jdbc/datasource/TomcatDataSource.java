@@ -27,11 +27,8 @@ package com.buession.jdbc.datasource;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.TomcatPoolConfiguration;
-import org.apache.tomcat.jdbc.pool.DataSource;
 
 import java.time.Duration;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Tomcat DataSource 抽象类
@@ -39,12 +36,13 @@ import java.util.concurrent.TimeUnit;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolConfiguration> {
+public class TomcatDataSource
+		extends AbstractDataSource<org.apache.tomcat.jdbc.pool.DataSource, TomcatPoolConfiguration> {
 
 	/**
 	 * 构造函数
 	 */
-	public TomcatDataSource(){
+	public TomcatDataSource() {
 		super();
 	}
 
@@ -58,7 +56,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 *
 	 * @since 2.3.0
 	 */
-	public TomcatDataSource(String driverClassName, String url){
+	public TomcatDataSource(String driverClassName, String url) {
 		super(driverClassName, url);
 	}
 
@@ -74,7 +72,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 *
 	 * @since 2.3.0
 	 */
-	public TomcatDataSource(String driverClassName, String url, String username){
+	public TomcatDataSource(String driverClassName, String url, String username) {
 		super(driverClassName, url, username);
 	}
 
@@ -92,7 +90,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 *
 	 * @since 2.3.0
 	 */
-	public TomcatDataSource(String driverClassName, String url, String username, String password){
+	public TomcatDataSource(String driverClassName, String url, String username, String password) {
 		super(driverClassName, url, username, password);
 	}
 
@@ -102,7 +100,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public TomcatDataSource(TomcatPoolConfiguration poolConfiguration){
+	public TomcatDataSource(TomcatPoolConfiguration poolConfiguration) {
 		super(poolConfiguration);
 	}
 
@@ -118,7 +116,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 *
 	 * @since 2.3.0
 	 */
-	public TomcatDataSource(String driverClassName, String url, TomcatPoolConfiguration poolConfiguration){
+	public TomcatDataSource(String driverClassName, String url, TomcatPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, poolConfiguration);
 	}
 
@@ -137,7 +135,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 * @since 2.3.0
 	 */
 	public TomcatDataSource(String driverClassName, String url, String username,
-							TomcatPoolConfiguration poolConfiguration){
+							TomcatPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, poolConfiguration);
 	}
 
@@ -158,14 +156,14 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	 * @since 2.3.0
 	 */
 	public TomcatDataSource(String driverClassName, String url, String username, String password,
-							TomcatPoolConfiguration poolConfiguration){
+							TomcatPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, password, poolConfiguration);
 	}
 
 	@Override
-	public DataSource createDataSource(){
+	public org.apache.tomcat.jdbc.pool.DataSource createDataSource() {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final DataSource dataSource = new DataSource();
+		final org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
 
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
 		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
@@ -178,7 +176,8 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 	}
 
 	@Override
-	protected void applyPoolConfiguration(final DataSource dataSource, final TomcatPoolConfiguration poolConfiguration){
+	protected void applyPoolConfiguration(final org.apache.tomcat.jdbc.pool.DataSource dataSource,
+										  final TomcatPoolConfiguration poolConfiguration) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
@@ -187,27 +186,24 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
-		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
-				.to(dataSource::setMaxWait);
+		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) v.getSeconds()).to(dataSource::setMaxWait);
 		propertyMapper.from(poolConfiguration::getMaxAge).to(dataSource::setMaxAge);
 		propertyMapper.from(poolConfiguration::getInitSQL).to(dataSource::setInitSQL);
 		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(poolConfiguration::getValidationInterval).as(
-				Duration::toMillis).to(dataSource::setValidationInterval);
-		propertyMapper.from(poolConfiguration::getValidationQueryTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getValidationInterval).as(Duration::toMillis)
+				.to(dataSource::setValidationInterval);
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
 		propertyMapper.from(poolConfiguration::getValidatorClassName).to(dataSource::setValidatorClassName);
 		propertyMapper.from(poolConfiguration::getLogValidationErrors).to(dataSource::setLogValidationErrors);
 		propertyMapper.from(poolConfiguration::getTestOnConnect).to(dataSource::setTestOnConnect);
 		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
 		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as((v)->(int) v.getSeconds())
 				.to(dataSource::setTimeBetweenEvictionRunsMillis);
 		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
-		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime).as((v)->(int) v.getSeconds())
 				.to(dataSource::setMinEvictableIdleTimeMillis);
 		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
@@ -216,14 +212,13 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 		propertyMapper.from(poolConfiguration::getRollbackOnReturn).to(dataSource::setRollbackOnReturn);
 		propertyMapper.from(poolConfiguration::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
 		propertyMapper.from(poolConfiguration::getRemoveAbandoned).to(dataSource::setRemoveAbandoned);
-		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setRemoveAbandonedTimeout);
 		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
 		propertyMapper.from(poolConfiguration::getAbandonWhenPercentageFull)
 				.to(dataSource::setAbandonWhenPercentageFull);
-		propertyMapper.from(poolConfiguration::getSuspectTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setSuspectTimeout);
+		propertyMapper.from(poolConfiguration::getSuspectTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setSuspectTimeout);
 		propertyMapper.from(poolConfiguration::getAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
 		propertyMapper.from(poolConfiguration::getJdbcInterceptors).to(dataSource::setJdbcInterceptors);
 		propertyMapper.from(poolConfiguration::getIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
@@ -238,7 +233,7 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		propertyMapper.from(poolConfiguration::getJmxEnabled).to(dataSource::setJmxEnabled);
 
-		if(Objects.equals(poolConfiguration.getFairQueue(), Boolean.TRUE) &&
+		if(Boolean.TRUE.equals(poolConfiguration.getFairQueue()) &&
 				"Linux".equalsIgnoreCase(System.getProperties().getProperty("os.name"))){
 			dataSource.getDbProperties().setProperty("org.apache.tomcat.jdbc.pool.FairBlockingQueue.ignoreOS", "true");
 		}

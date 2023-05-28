@@ -40,7 +40,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	/**
 	 * 构造函数
 	 */
-	public HikariDataSource(){
+	public HikariDataSource() {
 		super();
 	}
 
@@ -54,7 +54,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 *
 	 * @since 2.3.0
 	 */
-	public HikariDataSource(String driverClassName, String url){
+	public HikariDataSource(String driverClassName, String url) {
 		super(driverClassName, url);
 	}
 
@@ -70,7 +70,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 *
 	 * @since 2.3.0
 	 */
-	public HikariDataSource(String driverClassName, String url, String username){
+	public HikariDataSource(String driverClassName, String url, String username) {
 		super(driverClassName, url, username);
 	}
 
@@ -88,7 +88,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 *
 	 * @since 2.3.0
 	 */
-	public HikariDataSource(String driverClassName, String url, String username, String password){
+	public HikariDataSource(String driverClassName, String url, String username, String password) {
 		super(driverClassName, url, username, password);
 	}
 
@@ -98,7 +98,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public HikariDataSource(HikariPoolConfiguration poolConfiguration){
+	public HikariDataSource(HikariPoolConfiguration poolConfiguration) {
 		super(poolConfiguration);
 	}
 
@@ -114,7 +114,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 *
 	 * @since 2.3.0
 	 */
-	public HikariDataSource(String driverClassName, String url, HikariPoolConfiguration poolConfiguration){
+	public HikariDataSource(String driverClassName, String url, HikariPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, poolConfiguration);
 	}
 
@@ -133,7 +133,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 * @since 2.3.0
 	 */
 	public HikariDataSource(String driverClassName, String url, String username,
-							HikariPoolConfiguration poolConfiguration){
+							HikariPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, poolConfiguration);
 	}
 
@@ -154,12 +154,12 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 * @since 2.3.0
 	 */
 	public HikariDataSource(String driverClassName, String url, String username, String password,
-							HikariPoolConfiguration poolConfiguration){
+							HikariPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, password, poolConfiguration);
 	}
 
 	@Override
-	public com.zaxxer.hikari.HikariDataSource createDataSource(){
+	public com.zaxxer.hikari.HikariDataSource createDataSource() {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final com.zaxxer.hikari.HikariDataSource dataSource = new com.zaxxer.hikari.HikariDataSource();
 
@@ -175,7 +175,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 
 	@Override
 	protected void applyPoolConfiguration(final com.zaxxer.hikari.HikariDataSource dataSource,
-										  final HikariPoolConfiguration poolConfiguration){
+										  final HikariPoolConfiguration poolConfiguration) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 		propertyMapper.from(poolConfiguration::getCatalog).to(dataSource::setCatalog);
