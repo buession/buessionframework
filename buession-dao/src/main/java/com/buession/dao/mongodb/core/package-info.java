@@ -24,6 +24,6 @@
  */
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-package com.buession.dao.mongodb;
+package com.buession.dao.mongodb.core;

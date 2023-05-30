@@ -22,8 +22,49 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.dao.mongodb.core;
+
 /**
+ * 决定使用哪一个节点来满足正在发起的读请求
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-package com.buession.dao.mongodb;
+public enum ReadPreference {
+
+	/**
+	 * 只选择主节点
+	 */
+	PRIMARY(com.mongodb.ReadPreference.primary()),
+
+	/**
+	 * 优先选择主节点，如果不可用则选择从节点
+	 */
+	PRIMARY_PREFERRED(com.mongodb.ReadPreference.primaryPreferred()),
+
+	/**
+	 * 只选择从节点
+	 */
+	SECONDARY(com.mongodb.ReadPreference.secondary()),
+
+	/**
+	 * 优先选择从节点，如果从节点不可用则选择主节点
+	 */
+	SECONDARY_PREFERRED(com.mongodb.ReadPreference.secondaryPreferred()),
+
+	/**
+	 * 选择最近的节点
+	 */
+	NEAREST(com.mongodb.ReadPreference.nearest());
+
+	private final com.mongodb.ReadPreference value;
+
+	ReadPreference(final com.mongodb.ReadPreference value) {
+		this.value = value;
+	}
+
+	public com.mongodb.ReadPreference getValue() {
+		return value;
+	}
+
+}

@@ -70,14 +70,14 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	 */
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 返回 master SqlSessionTemplate
 	 *
 	 * @return master SqlSessionTemplate
 	 */
-	public SqlSessionTemplate getMasterSqlSessionTemplate(){
+	public SqlSessionTemplate getMasterSqlSessionTemplate() {
 		return masterSqlSessionTemplate;
 	}
 
@@ -87,7 +87,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	 * @param masterSqlSessionTemplate
 	 * 		master SqlSessionTemplate
 	 */
-	public void setMasterSqlSessionTemplate(final SqlSessionTemplate masterSqlSessionTemplate){
+	public void setMasterSqlSessionTemplate(final SqlSessionTemplate masterSqlSessionTemplate) {
 		this.masterSqlSessionTemplate = masterSqlSessionTemplate;
 	}
 
@@ -96,7 +96,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	 *
 	 * @return slave SqlSessionTemplate
 	 */
-	public List<SqlSessionTemplate> getSlaveSqlSessionTemplates(){
+	public List<SqlSessionTemplate> getSlaveSqlSessionTemplates() {
 		return slaveSqlSessionTemplates;
 	}
 
@@ -106,23 +106,23 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	 * @param slaveSqlSessionTemplates
 	 * 		slave SqlSessionTemplate
 	 */
-	public void setSlaveSqlSessionTemplates(final List<SqlSessionTemplate> slaveSqlSessionTemplates){
+	public void setSlaveSqlSessionTemplates(final List<SqlSessionTemplate> slaveSqlSessionTemplates) {
 		this.slaveSqlSessionTemplates = slaveSqlSessionTemplates;
 	}
 
 	@Override
-	public int insert(E e){
+	public int insert(E e) {
 		return getMasterSqlSessionTemplate().insert(getStatement(DML.INSERT), e);
 	}
 
 	@Override
-	public int replace(E e){
+	public int replace(E e) {
 		return getMasterSqlSessionTemplate().insert(getStatement(DML.REPLACE), e);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public int update(E e, Map<String, Object> conditions){
+	public int update(E e, Map<String, Object> conditions) {
 		Assert.isNull(e, "The data could not be empty for update.");
 
 		Map<String, Object> data = new HashMap<>(conditions == null ? 16 : conditions.size());
@@ -141,13 +141,13 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int updateByPrimary(P primary, E e){
+	public int updateByPrimary(P primary, E e) {
 		updatePrimary(e, primary);
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE_BY_PRIMARY), e);
 	}
 
 	@Override
-	public E getByPrimary(P primary){
+	public E getByPrimary(P primary) {
 		try{
 			return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.GET_BY_PRIMARY), primary);
 		}catch(OperationException e){
@@ -158,7 +158,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
+	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders) {
 		final Map<String, Object> parameters = buildParameters(conditions);
 
 		if(orders != null){
@@ -175,7 +175,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
+	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders) {
 		final Map<String, Object> parameters = buildParameters(conditions);
 
 		if(orders != null){
@@ -192,7 +192,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
+	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders) {
 		Assert.isNegative(offset, "Offset argument value could not be negative integer");
 		Assert.isZeroNegative(size, "Size argument value must be positive integer");
 
@@ -213,7 +213,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
+	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders) {
 		Assert.isZeroNegative(page, "Page argument value must be positive integer");
 		Assert.isZeroNegative(pagesize, "Pagesize argument value must be positive integer");
 
@@ -230,7 +230,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public List<E> getAll(){
+	public List<E> getAll() {
 		try{
 			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.GET_ALL));
 		}catch(OperationException e){
@@ -241,7 +241,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public long count(){
+	public long count() {
 		try{
 			return getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
 		}catch(OperationException e){
@@ -252,7 +252,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public long count(Map<String, Object> conditions){
+	public long count(Map<String, Object> conditions) {
 		try{
 			return getSlaveSqlSessionTemplate().selectOne(getStatement("count"), conditions);
 		}catch(OperationException e){
@@ -263,26 +263,26 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int delete(Map<String, Object> conditions){
+	public int delete(Map<String, Object> conditions) {
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), conditions);
 	}
 
 	@Override
-	public int deleteByPrimary(P primary){
+	public int deleteByPrimary(P primary) {
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
 	}
 
 	@Override
-	public int clear(){
+	public int clear() {
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.CLEAR));
 	}
 
 	@Override
-	public int truncate(){
+	public int truncate() {
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));
 	}
 
-	protected final SqlSessionTemplate getSlaveSqlSessionTemplate(final int index) throws OperationException{
+	protected final SqlSessionTemplate getSlaveSqlSessionTemplate(final int index) throws OperationException {
 		if(Validate.isEmpty(slaveSqlSessionTemplates)){
 			return getMasterSqlSessionTemplate();
 		}else{
@@ -296,7 +296,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException{
+	protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException {
 		if(Validate.isEmpty(slaveSqlSessionTemplates)){
 			return getMasterSqlSessionTemplate();
 		}else if(slaveSqlSessionTemplates.size() == 1){
@@ -307,7 +307,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	protected void updatePrimary(E e, P primary){
+	protected void updatePrimary(E e, P primary) {
 		final Collection<ResultMap> resultMaps = masterSqlSessionTemplate.getConfiguration().getResultMaps();
 
 		if(Validate.isEmpty(resultMaps)){
@@ -335,17 +335,17 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	protected static Map<String, Object> buildParameters(final Map<String, Object> conditions){
+	protected static Map<String, Object> buildParameters(final Map<String, Object> conditions) {
 		return conditions == null ? new LinkedHashMap<>(16) : new LinkedHashMap<>(conditions);
 	}
 
 	protected abstract String getStatement();
 
-	protected String getStatement(final DML dml){
+	protected String getStatement(final DML dml) {
 		return getStatement(dml.toString());
 	}
 
-	protected String getStatement(final String dml){
+	protected String getStatement(final String dml) {
 		return getStatement() + '.' + dml;
 	}
 

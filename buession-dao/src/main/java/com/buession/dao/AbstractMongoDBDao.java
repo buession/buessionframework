@@ -73,14 +73,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 */
 	private List<MongoTemplate> slaveMongoTemplates;
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 返回 master MongoTemplate
 	 *
 	 * @return master MongoTemplate
 	 */
-	public MongoTemplate getMasterMongoTemplate(){
+	public MongoTemplate getMasterMongoTemplate() {
 		return masterMongoTemplate;
 	}
 
@@ -90,7 +90,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 * @param masterMongoTemplate
 	 * 		master MongoTemplate
 	 */
-	public void setMasterMongoTemplate(MongoTemplate masterMongoTemplate){
+	public void setMasterMongoTemplate(MongoTemplate masterMongoTemplate) {
 		this.masterMongoTemplate = masterMongoTemplate;
 	}
 
@@ -99,7 +99,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 *
 	 * @return slave MongoTemplate
 	 */
-	public List<MongoTemplate> getSlaveMongoTemplates(){
+	public List<MongoTemplate> getSlaveMongoTemplates() {
 		return slaveMongoTemplates;
 	}
 
@@ -109,7 +109,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 * @param slaveMongoTemplates
 	 * 		slave MongoTemplate
 	 */
-	public void setSlaveMongoTemplates(List<MongoTemplate> slaveMongoTemplates){
+	public void setSlaveMongoTemplates(List<MongoTemplate> slaveMongoTemplates) {
 		this.slaveMongoTemplates = slaveMongoTemplates;
 	}
 
@@ -122,7 +122,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 * @return 成功返回 1，失败返回 0
 	 */
 	@Override
-	public int insert(E e){
+	public int insert(E e) {
 		try{
 			masterMongoTemplate.insert(e);
 			return 1;
@@ -133,7 +133,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int update(E e, Map<String, Object> conditions){
+	public int update(E e, Map<String, Object> conditions) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 		final Update update = new Update();
@@ -155,21 +155,21 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int updateByPrimary(P primary, E e){
+	public int updateByPrimary(P primary, E e) {
 		final Map<String, Object> conditions = new HashMap<>(1);
 		conditions.put(PRIMARY_FIELD, primary);
 		return update(e, conditions);
 	}
 
 	@Override
-	public E getByPrimary(P primary){
+	public E getByPrimary(P primary) {
 		final Map<String, Object> conditions = new HashMap<>(1);
 		conditions.put(PRIMARY_FIELD, primary);
 		return selectOne(conditions);
 	}
 
 	@Override
-	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
+	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 
@@ -191,7 +191,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
+	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 
@@ -211,7 +211,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
+	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 
@@ -222,7 +222,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return select(query, offset, size, orders);
 	}
 
-	public List<E> select(Query query, int offset, int size, Map<String, Order> orders){
+	public List<E> select(Query query, int offset, int size, Map<String, Order> orders) {
 		Assert.isNull(query, "Query Argument could not be null");
 
 		buildSort(query, orders);
@@ -238,7 +238,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
+	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 
@@ -249,7 +249,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return paging(query, page, pagesize, orders);
 	}
 
-	public Pagination<E> paging(Query query, int page, int pagesize, Map<String, Order> orders){
+	public Pagination<E> paging(Query query, int page, int pagesize, Map<String, Order> orders) {
 		Assert.isZeroNegative(page, "Page argument value must be positive integer");
 		Assert.isZeroNegative(pagesize, "Pagesize argument value must be positive integer");
 
@@ -266,7 +266,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public List<E> getAll(){
+	public List<E> getAll() {
 		try{
 			return getSlaveMongoTemplate().findAll(getStatement());
 		}catch(OperationException e){
@@ -277,12 +277,12 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public long count(){
+	public long count() {
 		return count(new Query());
 	}
 
 	@Override
-	public long count(Map<String, Object> conditions){
+	public long count(Map<String, Object> conditions) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 
@@ -293,7 +293,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return count(query);
 	}
 
-	public long count(Query query){
+	public long count(Query query) {
 		Assert.isNull(query, "Query Argument could not be null");
 
 		try{
@@ -306,7 +306,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int delete(Map<String, Object> conditions){
+	public int delete(Map<String, Object> conditions) {
 		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
 
@@ -319,7 +319,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int deleteByPrimary(P primary){
+	public int deleteByPrimary(P primary) {
 		final Query query = new Query();
 		final Criteria criteria = Criteria.where(PRIMARY_FIELD).is(primary);
 
@@ -330,12 +330,12 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
-	public int clear(){
+	public int clear() {
 		DeleteResult writeResult = getMasterMongoTemplate().remove(new Query(), getStatement());
 		return (int) writeResult.getDeletedCount();
 	}
 
-	protected final MongoTemplate getSlaveMongoTemplate(final int index) throws OperationException{
+	protected final MongoTemplate getSlaveMongoTemplate(final int index) throws OperationException {
 		if(Validate.isEmpty(slaveMongoTemplates)){
 			return getMasterMongoTemplate();
 		}else{
@@ -349,7 +349,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	protected final MongoTemplate getSlaveMongoTemplate() throws OperationException{
+	protected final MongoTemplate getSlaveMongoTemplate() throws OperationException {
 		if(Validate.isEmpty(slaveMongoTemplates)){
 			return getMasterMongoTemplate();
 		}else if(slaveMongoTemplates.size() == 1){
@@ -361,11 +361,11 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Class<E> getStatement(){
+	protected Class<E> getStatement() {
 		return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 	}
 
-	protected static Criteria buildCriteria(Map<String, Object> conditions){
+	protected static Criteria buildCriteria(Map<String, Object> conditions) {
 		if(conditions == null){
 			return null;
 		}
@@ -384,7 +384,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		return criteria;
 	}
 
-	protected void buildSort(final Query query, final Map<String, Order> orders){
+	protected void buildSort(final Query query, final Map<String, Order> orders) {
 		if(Validate.isNotEmpty(orders)){
 			final OrderToMongoDBSortDirectionConverter orderToMongoDBSortDirectionConverter =
 					new OrderToMongoDBSortDirectionConverter();
@@ -402,7 +402,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	private BasicDBObject toDbObject(E e){
+	private BasicDBObject toDbObject(E e) {
 		BasicDBObject doc = new BasicDBObject();
 		masterMongoTemplate.getConverter().write(e, doc);
 		return doc;

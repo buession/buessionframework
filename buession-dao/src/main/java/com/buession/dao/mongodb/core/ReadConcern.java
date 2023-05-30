@@ -22,8 +22,51 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.dao.mongodb.core;
+
 /**
+ * 在 readPreference 选择了指定的节点后，readConcern 决定这个节点上的数据哪些是可读的
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-package com.buession.dao.mongodb;
+public enum ReadConcern {
+
+	DEFAULT(com.mongodb.ReadConcern.DEFAULT),
+
+	/**
+	 * 读取所有可用且属于当前分片的数据
+	 */
+	LOCAL(com.mongodb.ReadConcern.LOCAL),
+
+	/**
+	 * 读取在大多数节点上提交完成的数据
+	 */
+	MAJORITY(com.mongodb.ReadConcern.MAJORITY),
+
+	/**
+	 * 可线性化读取文档
+	 */
+	LINEARIZABLE(com.mongodb.ReadConcern.LINEARIZABLE),
+
+	/**
+	 * 读取最近快照中的数据
+	 */
+	SNAPSHOT(com.mongodb.ReadConcern.SNAPSHOT),
+
+	/**
+	 * 读取所有可用的数据
+	 */
+	AVAILABLE(com.mongodb.ReadConcern.AVAILABLE);
+
+	private final com.mongodb.ReadConcern value;
+
+	ReadConcern(final com.mongodb.ReadConcern value) {
+		this.value = value;
+	}
+
+	public com.mongodb.ReadConcern getValue() {
+		return value;
+	}
+
+}

@@ -22,8 +22,38 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.dao.mongodb.core;
+
 /**
+ * 决定一个写操作落到多少个节点上才算成功
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.0
  */
-package com.buession.dao.mongodb;
+public enum WriteConcern {
+
+	ACKNOWLEDGED(com.mongodb.WriteConcern.ACKNOWLEDGED),
+
+	W1(com.mongodb.WriteConcern.W1),
+
+	W2(com.mongodb.WriteConcern.W2),
+
+	W3(com.mongodb.WriteConcern.W3),
+
+	UNACKNOWLEDGED(com.mongodb.WriteConcern.UNACKNOWLEDGED),
+
+	JOURNALED(com.mongodb.WriteConcern.JOURNALED),
+
+	MAJORITY(com.mongodb.WriteConcern.MAJORITY);
+
+	private final com.mongodb.WriteConcern value;
+
+	WriteConcern(final com.mongodb.WriteConcern value) {
+		this.value = value;
+	}
+
+	public com.mongodb.WriteConcern getValue() {
+		return value;
+	}
+
+}
