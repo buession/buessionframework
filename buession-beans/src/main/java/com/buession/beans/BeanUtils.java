@@ -31,10 +31,12 @@ import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.cglib.core.Converter;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +54,34 @@ public class BeanUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(BeanUtils.class);
 
+	public static <T> T instantiateClass(String className) throws BeanInstantiationException {
+		try{
+			return instantiateClass((Class<T>) Class.forName(className));
+		}catch(ClassNotFoundException e){
+			throw new IllegalStateException("No supported " + className + " type found");
+		}
+	}
+
+	public static <T> T instantiateClass(String className, Class<T> assignableTo) throws BeanInstantiationException {
+		try{
+			return instantiateClass(Class.forName(className), assignableTo);
+		}catch(ClassNotFoundException e){
+			throw new IllegalStateException("No supported " + className + " type found");
+		}
+	}
+
+	public static <T> T instantiateClass(Class<T> clazz) throws BeanInstantiationException {
+		return org.springframework.beans.BeanUtils.instantiateClass(clazz);
+	}
+
+	public static <T> T instantiateClass(Class<?> clazz, Class<T> assignableTo) throws BeanInstantiationException {
+		return org.springframework.beans.BeanUtils.instantiateClass(clazz, assignableTo);
+	}
+
+	public static <T> T instantiateClass(Constructor<T> constructor, Object... args) throws BeanInstantiationException {
+		return org.springframework.beans.BeanUtils.instantiateClass(constructor, args);
+	}
+
 	/**
 	 * 属性映射，与方法 copy 最大的区别是：该方法会将原始对象中下划线属性转换成驼峰命名映射到目标对象中
 	 *
@@ -60,7 +90,7 @@ public class BeanUtils {
 	 * @param source
 	 * 		原始对象
 	 */
-	public static void populate(final Object target, final Object source){
+	public static void populate(final Object target, final Object source) {
 		populate(target, source, null);
 	}
 
@@ -74,7 +104,7 @@ public class BeanUtils {
 	 * @param converter
 	 * 		转换器
 	 */
-	public static void populate(final Object target, final Object source, final Converter converter){
+	public static void populate(final Object target, final Object source, final Converter converter) {
 		Assert.isNull(target, "No destination bean specified.");
 
 		if(source == null){
@@ -110,7 +140,7 @@ public class BeanUtils {
 	 * @param source
 	 * 		原始对象
 	 */
-	public static void copyProperties(final Object target, final Object source){
+	public static void copyProperties(final Object target, final Object source) {
 		copyProperties(target, source, null);
 	}
 
@@ -125,7 +155,7 @@ public class BeanUtils {
 	 * 		转换器
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static void copyProperties(final Object target, final Object source, final Converter converter){
+	public static void copyProperties(final Object target, final Object source, final Converter converter) {
 		Assert.isNull(target, "No destination bean specified.");
 
 		if(source == null){
@@ -160,7 +190,7 @@ public class BeanUtils {
 	 * @return Map
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static Map<String, Object> toMap(final Object bean){
+	public static Map<String, Object> toMap(final Object bean) {
 		Assert.isNull(bean, "No source bean specified.");
 
 		BeanMap beanMap = BeanMap.create(bean);
@@ -175,21 +205,21 @@ public class BeanUtils {
 
 		private final static Logger logger = LoggerFactory.getLogger(HumpBeanUtilsBean.class);
 
-		public HumpBeanUtilsBean(){
+		public HumpBeanUtilsBean() {
 			super();
 		}
 
-		public HumpBeanUtilsBean(ConvertUtilsBean convertUtilsBean){
+		public HumpBeanUtilsBean(ConvertUtilsBean convertUtilsBean) {
 			super(convertUtilsBean);
 		}
 
-		public HumpBeanUtilsBean(ConvertUtilsBean convertUtilsBean, PropertyUtilsBean propertyUtilsBean){
+		public HumpBeanUtilsBean(ConvertUtilsBean convertUtilsBean, PropertyUtilsBean propertyUtilsBean) {
 			super(convertUtilsBean, propertyUtilsBean);
 		}
 
 		@Override
 		public void populate(Object bean, Map<String, ?> properties)
-				throws IllegalAccessException, InvocationTargetException{
+				throws IllegalAccessException, InvocationTargetException {
 			if(bean != null && properties != null){
 				if(logger.isDebugEnabled()){
 					logger.debug("BeanUtils.populate(" + bean + ", " + properties + ")");
