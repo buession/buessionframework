@@ -97,7 +97,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return SSL protocol.
 	 */
-	public String getProtocol(){
+	public String getProtocol() {
 		return protocol;
 	}
 
@@ -107,7 +107,7 @@ public class SslConfigure implements Serializable {
 	 * @param protocol
 	 * 		SSL protocol.
 	 */
-	public void setProtocol(String protocol){
+	public void setProtocol(String protocol) {
 		this.protocol = protocol;
 	}
 
@@ -116,7 +116,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Path of the key store file.
 	 */
-	public String getKeyStorePath(){
+	public String getKeyStorePath() {
 		return keyStorePath;
 	}
 
@@ -126,7 +126,7 @@ public class SslConfigure implements Serializable {
 	 * @param keyStorePath
 	 * 		Path of the key store file.
 	 */
-	public void setKeyStorePath(String keyStorePath){
+	public void setKeyStorePath(String keyStorePath) {
 		this.keyStorePath = keyStorePath;
 	}
 
@@ -135,7 +135,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Key store type.
 	 */
-	public String getKeyStoreType(){
+	public String getKeyStoreType() {
 		return keyStoreType;
 	}
 
@@ -145,7 +145,7 @@ public class SslConfigure implements Serializable {
 	 * @param keyStoreType
 	 * 		Key store type.
 	 */
-	public void setKeyStoreType(String keyStoreType){
+	public void setKeyStoreType(String keyStoreType) {
 		this.keyStoreType = keyStoreType;
 	}
 
@@ -154,7 +154,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Password of the private key in the key store file.
 	 */
-	public String getKeyPassword(){
+	public String getKeyPassword() {
 		return keyPassword;
 	}
 
@@ -164,7 +164,7 @@ public class SslConfigure implements Serializable {
 	 * @param keyPassword
 	 * 		Password of the private key in the key store file.
 	 */
-	public void setKeyPassword(String keyPassword){
+	public void setKeyPassword(String keyPassword) {
 		this.keyPassword = keyPassword;
 	}
 
@@ -173,7 +173,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Password used to access the key store.
 	 */
-	public String getKeyStorePassword(){
+	public String getKeyStorePassword() {
 		return keyStorePassword;
 	}
 
@@ -183,7 +183,7 @@ public class SslConfigure implements Serializable {
 	 * @param keyStorePassword
 	 * 		Password used to access the key store.
 	 */
-	public void setKeyStorePassword(String keyStorePassword){
+	public void setKeyStorePassword(String keyStorePassword) {
 		this.keyStorePassword = keyStorePassword;
 	}
 
@@ -192,7 +192,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Path of the trust store file.
 	 */
-	public String getTrustStorePath(){
+	public String getTrustStorePath() {
 		return trustStorePath;
 	}
 
@@ -202,7 +202,7 @@ public class SslConfigure implements Serializable {
 	 * @param trustStorePath
 	 * 		Path of the trust store file.
 	 */
-	public void setTrustStorePath(String trustStorePath){
+	public void setTrustStorePath(String trustStorePath) {
 		this.trustStorePath = trustStorePath;
 	}
 
@@ -211,7 +211,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Type of the trust store.
 	 */
-	public String getTrustStoreType(){
+	public String getTrustStoreType() {
 		return trustStoreType;
 	}
 
@@ -221,7 +221,7 @@ public class SslConfigure implements Serializable {
 	 * @param trustStoreType
 	 * 		Type of the trust store.
 	 */
-	public void setTrustStoreType(String trustStoreType){
+	public void setTrustStoreType(String trustStoreType) {
 		this.trustStoreType = trustStoreType;
 	}
 
@@ -230,7 +230,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return Store password for the trust store file.
 	 */
-	public String getTrustStorePassword(){
+	public String getTrustStorePassword() {
 		return trustStorePassword;
 	}
 
@@ -240,7 +240,7 @@ public class SslConfigure implements Serializable {
 	 * @param trustStorePassword
 	 * 		Store password for the trust store file.
 	 */
-	public void setTrustStorePassword(String trustStorePassword){
+	public void setTrustStorePassword(String trustStorePassword) {
 		this.trustStorePassword = trustStorePassword;
 	}
 
@@ -249,7 +249,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return SSL algorithm to use.
 	 */
-	public Set<String> getAlgorithms(){
+	public Set<String> getAlgorithms() {
 		return algorithms;
 	}
 
@@ -259,7 +259,7 @@ public class SslConfigure implements Serializable {
 	 * @param algorithms
 	 * 		SSL algorithm to use.
 	 */
-	public void setAlgorithm(Set<String> algorithms){
+	public void setAlgorithms(Set<String> algorithms) {
 		this.algorithms = algorithms;
 	}
 
@@ -268,7 +268,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return true / false
 	 */
-	public boolean isValidateServerCertificate(){
+	public boolean isValidateServerCertificate() {
 		return validateServerCertificate;
 	}
 
@@ -278,7 +278,7 @@ public class SslConfigure implements Serializable {
 	 * @param validateServerCertificate
 	 * 		Whether to enable server side certificate validation.
 	 */
-	public void setValidateServerCertificate(boolean validateServerCertificate){
+	public void setValidateServerCertificate(boolean validateServerCertificate) {
 		this.validateServerCertificate = validateServerCertificate;
 	}
 
@@ -287,7 +287,7 @@ public class SslConfigure implements Serializable {
 	 *
 	 * @return true / false
 	 */
-	public boolean isVerifyHostname(){
+	public boolean isVerifyHostname() {
 		return verifyHostname;
 	}
 
@@ -297,7 +297,7 @@ public class SslConfigure implements Serializable {
 	 * @param verifyHostname
 	 * 		Whether to enable hostname verification.
 	 */
-	public void setVerifyHostname(boolean verifyHostname){
+	public void setVerifyHostname(boolean verifyHostname) {
 		this.verifyHostname = verifyHostname;
 	}
 
