@@ -49,7 +49,7 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	/**
 	 * 构造函数
 	 */
-	public AbstractBaseHttpClient(){
+	public AbstractBaseHttpClient() {
 	}
 
 	/**
@@ -58,36 +58,36 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public AbstractBaseHttpClient(ConnectionManager connectionManager){
+	public AbstractBaseHttpClient(ConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 
 	@Override
-	public ConnectionManager getConnectionManager(){
+	public ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
 
 	@Override
-	public void setConnectionManager(ConnectionManager connectionManager){
+	public void setConnectionManager(ConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 
 	@Override
-	public ProtocolVersion getHttpVersion(){
+	public ProtocolVersion getHttpVersion() {
 		return httpVersion;
 	}
 
 	@Override
-	public void setHttpVersion(ProtocolVersion httpVersion){
+	public void setHttpVersion(ProtocolVersion httpVersion) {
 		this.httpVersion = httpVersion;
 	}
 
-	protected static URI URL2URI(final URL url) throws URISyntaxException{
+	protected static URI URL2URI(final URL url) throws URISyntaxException {
 		Assert.isNull(url, "Request URL cloud not be null.");
 		return url.toURI();
 	}
 
-	protected static <T> T execute(Execute<T> execute) throws IOException, RequestException{
+	protected static <T> T execute(Execute<T> execute) throws IOException, RequestException {
 		try{
 			return execute.exec();
 		}catch(URISyntaxException e){
@@ -95,7 +95,7 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		}
 	}
 
-	protected static void asyncExecute(AsyncExecute execute) throws IOException, RequestException{
+	protected static void asyncExecute(AsyncExecute execute) throws IOException, RequestException {
 		try{
 			execute.exec();
 		}catch(URISyntaxException e){
@@ -103,12 +103,14 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		}
 	}
 
+	@FunctionalInterface
 	protected interface Execute<T> {
 
 		T exec() throws URISyntaxException, IOException, RequestException;
 
 	}
 
+	@FunctionalInterface
 	protected interface AsyncExecute {
 
 		void exec() throws URISyntaxException, IOException, RequestException;

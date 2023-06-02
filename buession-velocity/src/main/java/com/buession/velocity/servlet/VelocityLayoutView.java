@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -65,32 +65,32 @@ public class VelocityLayoutView extends VelocityToolboxView {
 
 	private final static Logger logger = LoggerFactory.getLogger(VelocityLayoutView.class);
 
-	public String getLayoutUrl(){
+	public String getLayoutUrl() {
 		return layoutUrl;
 	}
 
-	public void setLayoutUrl(String layoutUrl){
+	public void setLayoutUrl(String layoutUrl) {
 		this.layoutUrl = layoutUrl;
 	}
 
-	public String getLayoutKey(){
+	public String getLayoutKey() {
 		return layoutKey;
 	}
 
-	public void setLayoutKey(String layoutKey){
+	public void setLayoutKey(String layoutKey) {
 		this.layoutKey = layoutKey;
 	}
 
-	public String getScreenContentKey(){
+	public String getScreenContentKey() {
 		return screenContentKey;
 	}
 
-	public void setScreenContentKey(String screenContentKey){
+	public void setScreenContentKey(String screenContentKey) {
 		this.screenContentKey = screenContentKey;
 	}
 
 	@Override
-	public boolean checkResource(Locale locale) throws Exception{
+	public boolean checkResource(Locale locale) throws Exception {
 		if(super.checkResource(locale) == false){
 			return false;
 		}
@@ -107,7 +107,7 @@ public class VelocityLayoutView extends VelocityToolboxView {
 	}
 
 	@Override
-	protected void doRender(Context context, HttpServletResponse response) throws Exception{
+	protected void doRender(Context context, HttpServletResponse response) throws Exception {
 		renderScreenContent(context);
 
 		String layoutUrlToUse = (String) context.get(layoutKey);
@@ -120,10 +120,10 @@ public class VelocityLayoutView extends VelocityToolboxView {
 		mergeTemplate(getTemplate(layoutUrlToUse), context, response);
 	}
 
-	private void renderScreenContent(Context velocityContext) throws Exception{
+	private void renderScreenContent(Context velocityContext) throws Exception {
 		logger.debug("Rendering screen content template [{}]", getUrl());
 
-		StringWriter writer = new StringWriter();
+		final StringWriter writer = new StringWriter();
 		Template screenContentTemplate = getTemplate(getUrl());
 
 		screenContentTemplate.merge(velocityContext, writer);

@@ -27,6 +27,7 @@
 package com.buession.dao;
 
 import com.buession.core.Pagination;
+import com.buession.core.builder.MapBuilder;
 import com.buession.core.exception.OperationException;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.RandomUtils;
@@ -47,7 +48,6 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -134,13 +134,9 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public int update(E e, Map<String, Object> conditions) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
+		final Query query = new Query(criteria);
 		final Update update = new Update();
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
 
 		if(e != null){
 			BasicDBObject data = toDbObject(e);
@@ -156,26 +152,18 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public int updateByPrimary(P primary, E e) {
-		final Map<String, Object> conditions = new HashMap<>(1);
-		conditions.put(PRIMARY_FIELD, primary);
-		return update(e, conditions);
+		return update(e, MapBuilder.of(PRIMARY_FIELD, primary));
 	}
 
 	@Override
 	public E getByPrimary(P primary) {
-		final Map<String, Object> conditions = new HashMap<>(1);
-		conditions.put(PRIMARY_FIELD, primary);
-		return selectOne(conditions);
+		return selectOne(MapBuilder.of(PRIMARY_FIELD, primary));
 	}
 
 	@Override
 	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
+		final Query query = new Query(criteria);
 
 		buildSort(query, orders);
 
@@ -192,12 +180,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
+		final Query query = new Query(criteria);
 
 		buildSort(query, orders);
 
@@ -212,12 +196,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
+		final Query query = new Query(criteria);
 
 		return select(query, offset, size, orders);
 	}
@@ -239,12 +219,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
+		final Query query = new Query(criteria);
 
 		return paging(query, page, pagesize, orders);
 	}
@@ -283,12 +259,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public long count(Map<String, Object> conditions) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
+		final Query query = new Query(criteria);
 
 		return count(query);
 	}
@@ -307,12 +279,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public int delete(Map<String, Object> conditions) {
-		final Query query = new Query();
 		final Criteria criteria = buildCriteria(conditions);
-
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
+		final Query query = new Query(criteria);
 
 		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
 		return (int) writeResult.getDeletedCount();
@@ -320,10 +288,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public int deleteByPrimary(P primary) {
-		final Query query = new Query();
 		final Criteria criteria = Criteria.where(PRIMARY_FIELD).is(primary);
-
-		query.addCriteria(criteria);
+		final Query query = new Query(criteria);
 
 		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
 		return (int) writeResult.getDeletedCount();

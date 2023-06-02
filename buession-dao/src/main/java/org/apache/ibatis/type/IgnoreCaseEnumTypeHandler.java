@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -49,12 +49,12 @@ public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTy
 
 	private final static Logger logger = LoggerFactory.getLogger(IgnoreCaseEnumTypeHandler.class);
 
-	public IgnoreCaseEnumTypeHandler(Class<E> type){
+	public IgnoreCaseEnumTypeHandler(final Class<E> type) {
 		super(type);
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
+	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
 		if(jdbcType == null){
 			ps.setString(i, parameter.name());
 		}else{
@@ -63,22 +63,22 @@ public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTy
 	}
 
 	@Override
-	public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
+	public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
 		return parseResult(rs.getString(columnName));
 	}
 
 	@Override
-	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
+	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
 		return parseResult(rs.getString(columnIndex));
 	}
 
 	@Override
-	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
+	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
 		return parseResult(cs.getString(columnIndex));
 	}
 
 	@Override
-	protected E parseResult(final String str) throws SQLException{
+	protected E parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			E result = EnumUtils.getEnumIgnoreCase(type, str);
 			if(result == null && logger.isErrorEnabled()){

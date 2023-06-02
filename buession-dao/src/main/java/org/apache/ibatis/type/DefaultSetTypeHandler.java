@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -41,12 +41,12 @@ import java.util.Set;
  */
 public class DefaultSetTypeHandler extends AbstractSetTypeHandler<String> {
 
-	public DefaultSetTypeHandler(Class<String> type){
+	public DefaultSetTypeHandler(final Class<String> type) {
 		super(type);
 	}
 
 	@Override
-	protected Set<String> parseResult(final String str) throws SQLException{
+	protected Set<String> parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			return Arrays.toSet(StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER));
 		}

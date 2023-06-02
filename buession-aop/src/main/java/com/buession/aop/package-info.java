@@ -22,21 +22,7 @@
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package org.apache.ibatis.type;
-
 /**
- * Enum 型 Set {@link TypeHandler} 基类
- *
- * @param <E>
- * 		枚举类型
- *
  * @author Yong.Teng
- * @since 1.3.2
  */
-public abstract class AbstractSetEnumTypeHandler<E extends Enum<E>> extends AbstractSetTypeHandler<E> {
-
-	public AbstractSetEnumTypeHandler(final Class<E> type) {
-		super(type);
-	}
-
-}
+package com.buession.aop;

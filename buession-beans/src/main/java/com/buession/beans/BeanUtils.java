@@ -54,6 +54,7 @@ public class BeanUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(BeanUtils.class);
 
+	@SuppressWarnings({"unchecked"})
 	public static <T> T instantiateClass(String className) throws BeanInstantiationException {
 		try{
 			return instantiateClass((Class<T>) Class.forName(className));
@@ -104,6 +105,7 @@ public class BeanUtils {
 	 * @param converter
 	 * 		转换器
 	 */
+	@SuppressWarnings({"unchecked"})
 	public static void populate(final Object target, final Object source, final Converter converter) {
 		Assert.isNull(target, "No destination bean specified.");
 
@@ -222,7 +224,7 @@ public class BeanUtils {
 				throws IllegalAccessException, InvocationTargetException {
 			if(bean != null && properties != null){
 				if(logger.isDebugEnabled()){
-					logger.debug("BeanUtils.populate(" + bean + ", " + properties + ")");
+					logger.debug("BeanUtils.populate({}, {})", bean, properties);
 				}
 
 				for(Map.Entry<String, ?> e : properties.entrySet()){

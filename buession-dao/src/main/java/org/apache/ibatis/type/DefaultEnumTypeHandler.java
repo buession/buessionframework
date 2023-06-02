@@ -48,12 +48,12 @@ public class DefaultEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTypeH
 
 	private final static Logger logger = LoggerFactory.getLogger(DefaultEnumTypeHandler.class);
 
-	public DefaultEnumTypeHandler(Class<E> type){
+	public DefaultEnumTypeHandler(final Class<E> type) {
 		super(type);
 	}
 
 	@Override
-	protected E parseResult(final String str) throws SQLException{
+	protected E parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			E result = EnumUtils.getEnum(type, str);
 			if(result == null && logger.isErrorEnabled()){

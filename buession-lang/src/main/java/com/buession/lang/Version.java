@@ -77,7 +77,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @param version
 	 * 		版本
 	 */
-	public Version(final String version){
+	public Version(final String version) {
 		String[] versionParts = splitVersion(version, true);
 		int majorVersion = -1;
 		int minorVersion = -1;
@@ -205,8 +205,8 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @param minorVersion
 	 * 		次版本号
 	 */
-	public Version(final int majorVersion, final int minorVersion){
-		this(majorVersion, minorVersion, -1);
+	public Version(final int majorVersion, final int minorVersion) {
+		this(majorVersion, minorVersion, -1, -1, null);
 	}
 
 	/**
@@ -217,22 +217,8 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @param minorVersion
 	 * 		次版本号
 	 */
-	public Version(final String majorVersion, final String minorVersion){
-		this(majorVersion, minorVersion, null);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param majorVersion
-	 * 		主版本号
-	 * @param minorVersion
-	 * 		次版本号
-	 * @param revisionVersion
-	 * 		修订版本号
-	 */
-	public Version(final int majorVersion, final int minorVersion, final int revisionVersion){
-		this(majorVersion, minorVersion, revisionVersion, null);
+	public Version(final String majorVersion, final String minorVersion) {
+		this(Integer.parseInt(majorVersion), Integer.parseInt(minorVersion));
 	}
 
 	/**
@@ -245,8 +231,22 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @param revisionVersion
 	 * 		修订版本号
 	 */
-	public Version(final String majorVersion, final String minorVersion, final String revisionVersion){
-		this(Integer.parseInt(majorVersion), Integer.parseInt(minorVersion), Integer.parseInt(revisionVersion), null);
+	public Version(final int majorVersion, final int minorVersion, final int revisionVersion) {
+		this(majorVersion, minorVersion, revisionVersion, -1, null);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param majorVersion
+	 * 		主版本号
+	 * @param minorVersion
+	 * 		次版本号
+	 * @param revisionVersion
+	 * 		修订版本号
+	 */
+	public Version(final String majorVersion, final String minorVersion, final String revisionVersion) {
+		this(Integer.parseInt(majorVersion), Integer.parseInt(minorVersion), Integer.parseInt(revisionVersion));
 	}
 
 	/**
@@ -261,7 +261,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @param buildVersion
 	 * 		build 版本号
 	 */
-	public Version(final int majorVersion, final int minorVersion, final int revisionVersion, final int buildVersion){
+	public Version(final int majorVersion, final int minorVersion, final int revisionVersion, final int buildVersion) {
 		this(majorVersion, minorVersion, revisionVersion, buildVersion, null);
 	}
 
@@ -278,9 +278,9 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * 		build 版本号
 	 */
 	public Version(final String majorVersion, final String minorVersion, final String revisionVersion,
-				   final String buildVersion){
+				   final String buildVersion) {
 		this(Integer.parseInt(majorVersion), Integer.parseInt(minorVersion), Integer.parseInt(revisionVersion),
-				Integer.parseInt(buildVersion), null);
+				Integer.parseInt(buildVersion));
 	}
 
 	/**
@@ -295,7 +295,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @param special
 	 * 		特殊版本
 	 */
-	public Version(final int majorVersion, final int minorVersion, final int revisionVersion, final String special){
+	public Version(final int majorVersion, final int minorVersion, final int revisionVersion, final String special) {
 		this(majorVersion, minorVersion, revisionVersion, -1, special);
 	}
 
@@ -314,7 +314,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * 		特殊版本
 	 */
 	public Version(final int majorVersion, final int minorVersion, final int revisionVersion, final int buildVersion,
-				   final String special){
+				   final String special) {
 		this.majorVersion = majorVersion;
 		this.minorVersion = minorVersion;
 		this.revisionVersion = revisionVersion;
@@ -358,7 +358,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * 		特殊版本
 	 */
 	public Version(final String majorVersion, final String minorVersion, final String revisionVersion,
-				   final String buildVersion, final String special){
+				   final String buildVersion, final String special) {
 		this(Integer.parseInt(majorVersion), Integer.parseInt(minorVersion), Integer.parseInt(revisionVersion),
 				Integer.parseInt(buildVersion), special);
 	}
@@ -368,7 +368,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 *
 	 * @return 版本
 	 */
-	public String getVersion(){
+	public String getVersion() {
 		return version;
 	}
 
@@ -377,7 +377,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 *
 	 * @return 主版本号
 	 */
-	public int getMajorVersion(){
+	public int getMajorVersion() {
 		return majorVersion;
 	}
 
@@ -386,7 +386,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 *
 	 * @return 次版本号
 	 */
-	public int getMinorVersion(){
+	public int getMinorVersion() {
 		return minorVersion;
 	}
 
@@ -395,7 +395,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 *
 	 * @return 修订版本号
 	 */
-	public int getRevisionVersion(){
+	public int getRevisionVersion() {
 		return revisionVersion;
 	}
 
@@ -404,7 +404,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	 *
 	 * @return Build 版本号
 	 */
-	public int getBuildVersion(){
+	public int getBuildVersion() {
 		return buildVersion;
 	}
 
@@ -413,12 +413,12 @@ public final class Version implements Comparable<Version>, Serializable {
 	 *
 	 * @return 特殊版本
 	 */
-	public String getSpecial(){
+	public String getSpecial() {
 		return special;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * (result + majorVersion);
@@ -430,7 +430,7 @@ public final class Version implements Comparable<Version>, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
@@ -457,16 +457,16 @@ public final class Version implements Comparable<Version>, Serializable {
 	 * @return 当 &lt; other 时，返回 -1；当 = other 时，返回 0；当 &gt; other 时返回 1
 	 */
 	@Override
-	public int compareTo(Version other){
+	public int compareTo(Version other) {
 		return other == null ? 1 : VersionUtils.compare(this, other);
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return version;
 	}
 
-	private static String[] splitVersion(final String str, final boolean preserveAllTokens){
+	private static String[] splitVersion(final String str, final boolean preserveAllTokens) {
 		if(str == null){
 			return null;
 		}
@@ -508,7 +508,7 @@ public final class Version implements Comparable<Version>, Serializable {
 
 		private final static Map<String, Integer> SPECIAL_VERSIONS = new LinkedHashMap<>(10);
 
-		static{
+		static {
 			SPECIAL_VERSIONS.put("dev", 0);
 			SPECIAL_VERSIONS.put("alpha", 1);
 			SPECIAL_VERSIONS.put("a", 1);
@@ -521,7 +521,7 @@ public final class Version implements Comparable<Version>, Serializable {
 			SPECIAL_VERSIONS.put("p", 5);
 		}
 
-		public static int compare(final Version version1, final Version version2){
+		public static int compare(final Version version1, final Version version2) {
 			int result = normalize(version1.getMajorVersion() - version2.getMajorVersion());
 			if(result != 0){
 				return result;
@@ -548,7 +548,7 @@ public final class Version implements Comparable<Version>, Serializable {
 			return result;
 		}
 
-		private static int compareSpecialVersion(final String version1, final String version2){
+		private static int compareSpecialVersion(final String version1, final String version2) {
 			int found1 = -1;
 			int found2 = -1;
 
@@ -568,23 +568,23 @@ public final class Version implements Comparable<Version>, Serializable {
 			return normalize(found1 - found2);
 		}
 
-		private static boolean isSpecialVer(final char c){
+		private static boolean isSpecialVer(final char c) {
 			return c == '-' || c == '_' || c == '+';
 		}
 
-		private static boolean isAlpha(final char ch){
+		private static boolean isAlpha(final char ch) {
 			return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 		}
 
-		private static boolean isDigit(final char ch){
+		private static boolean isDigit(final char ch) {
 			return ch >= '0' && ch <= '9';
 		}
 
-		private static boolean isAlnum(final char ch){
+		private static boolean isAlnum(final char ch) {
 			return isAlpha(ch) || isDigit(ch);
 		}
 
-		private static int normalize(final int value){
+		private static int normalize(final int value) {
 			return Integer.compare(value, 0);
 		}
 
