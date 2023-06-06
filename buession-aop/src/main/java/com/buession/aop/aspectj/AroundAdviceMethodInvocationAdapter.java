@@ -33,13 +33,13 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 
 /**
- * 异常通知，在方法正常返回结果之后执行
+ * 环绕通知，可以在方法调用前后完成自定义的行为。它也会选择是否继续执行连接点或直接返回它们自己的返回值或抛出异常来结束执行。
  *
  * @author Yong.Teng
- * @see org.aspectj.lang.annotation.AfterThrowing
+ * @see org.aspectj.lang.annotation.Around
  * @since 2.3.0
  */
-public class AfterThrowingAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
+public class AroundAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
 
 	/**
 	 * 构造函数
@@ -51,26 +51,26 @@ public class AfterThrowingAdviceMethodInvocationAdapter extends AbstractAdviceMe
 	 * @param arguments
 	 * 		调用目标方法的参数
 	 */
-	public AfterThrowingAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
+	public AroundAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
 		super(object, method, arguments);
 	}
 
 	/**
-	 * 从 AspectJ {@link JoinPoint} 创建 {@link AfterThrowingAdviceMethodInvocationAdapter} 实例
+	 * 从 AspectJ {@link JoinPoint} 创建 {@link AroundAdviceMethodInvocationAdapter} 实例
 	 *
 	 * @param joinPoint
 	 * 		AspectJ {@link JoinPoint}
 	 *
-	 * @return {@link AfterThrowingAdviceMethodInvocationAdapter} 实例
+	 * @return {@link AroundAdviceMethodInvocationAdapter} 实例
 	 */
-	public static AfterThrowingAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
+	public static AroundAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
 		Signature signature = joinPoint.getSignature();
 
 		if(signature instanceof MethodSignature){
-			return new AfterThrowingAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
+			return new AroundAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
 					.getMethod(), joinPoint.getArgs());
 		}else if(signature instanceof AdviceSignature){
-			return new AfterThrowingAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
+			return new AroundAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
 					.getAdvice(), joinPoint.getArgs());
 		}else{
 			throw new SignatureIllegalArgumentException(signature);

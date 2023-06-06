@@ -33,9 +33,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 
 /**
- * 方法调用的描述，在方法调用时后置拦截器适配器
+ * 后置通知，在方法执行之后执行
  *
  * @author Yong.Teng
+ * @see org.aspectj.lang.annotation.After
  */
 public class AfterAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
 
@@ -49,7 +50,7 @@ public class AfterAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvo
 	 * @param arguments
 	 * 		调用目标方法的参数
 	 */
-	public AfterAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
+	public AfterAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
 		super(object, method, arguments);
 	}
 
@@ -61,7 +62,7 @@ public class AfterAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvo
 	 *
 	 * @return {@link AfterAdviceMethodInvocationAdapter} 实例
 	 */
-	public static AfterAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint){
+	public static AfterAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
 		Signature signature = joinPoint.getSignature();
 
 		if(signature instanceof MethodSignature){

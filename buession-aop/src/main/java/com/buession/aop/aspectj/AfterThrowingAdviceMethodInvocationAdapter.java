@@ -33,13 +33,13 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 
 /**
- * 返回通知，在方法正常返回结果之后执行
+ * 异常通知，在方法正常返回结果之后执行
  *
  * @author Yong.Teng
- * @see org.aspectj.lang.annotation.AfterReturning
+ * @see org.aspectj.lang.annotation.AfterThrowing
  * @since 2.3.0
  */
-public class AfterReturningAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
+public class AfterThrowingAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
 
 	/**
 	 * 构造函数
@@ -51,26 +51,26 @@ public class AfterReturningAdviceMethodInvocationAdapter extends AbstractAdviceM
 	 * @param arguments
 	 * 		调用目标方法的参数
 	 */
-	public AfterReturningAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
+	public AfterThrowingAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
 		super(object, method, arguments);
 	}
 
 	/**
-	 * 从 AspectJ {@link JoinPoint} 创建 {@link AfterReturningAdviceMethodInvocationAdapter} 实例
+	 * 从 AspectJ {@link JoinPoint} 创建 {@link AfterThrowingAdviceMethodInvocationAdapter} 实例
 	 *
 	 * @param joinPoint
 	 * 		AspectJ {@link JoinPoint}
 	 *
-	 * @return {@link AfterReturningAdviceMethodInvocationAdapter} 实例
+	 * @return {@link AfterThrowingAdviceMethodInvocationAdapter} 实例
 	 */
-	public static AfterReturningAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
+	public static AfterThrowingAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
 		Signature signature = joinPoint.getSignature();
 
 		if(signature instanceof MethodSignature){
-			return new AfterReturningAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
+			return new AfterThrowingAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
 					.getMethod(), joinPoint.getArgs());
 		}else if(signature instanceof AdviceSignature){
-			return new AfterReturningAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
+			return new AfterThrowingAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
 					.getAdvice(), joinPoint.getArgs());
 		}else{
 			throw new SignatureIllegalArgumentException(signature);

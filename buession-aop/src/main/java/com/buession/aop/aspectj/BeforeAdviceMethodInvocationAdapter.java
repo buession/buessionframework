@@ -33,9 +33,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 
 /**
- * 方法调用的描述，在方法调用时前置拦截器适配器
+ * 前置通知，在方法执行之前执行
  *
  * @author Yong.Teng
+ * @see org.aspectj.lang.annotation.Before
  */
 public class BeforeAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
 
@@ -49,7 +50,7 @@ public class BeforeAdviceMethodInvocationAdapter extends AbstractAdviceMethodInv
 	 * @param arguments
 	 * 		调用目标方法的参数
 	 */
-	public BeforeAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
+	public BeforeAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
 		super(object, method, arguments);
 	}
 
@@ -61,7 +62,7 @@ public class BeforeAdviceMethodInvocationAdapter extends AbstractAdviceMethodInv
 	 *
 	 * @return {@link BeforeAdviceMethodInvocationAdapter} 实例
 	 */
-	public static BeforeAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint){
+	public static BeforeAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
 		Signature signature = joinPoint.getSignature();
 
 		if(signature instanceof MethodSignature){
