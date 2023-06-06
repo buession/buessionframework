@@ -24,48 +24,57 @@
  */
 package com.buession.aop.aspectj;
 
+import com.buession.aop.exception.SignatureIllegalArgumentException;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.AdviceSignature;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
 
-import java.util.Arrays;
+import java.lang.reflect.Method;
 
 /**
+ * 方法调用的描述，在方法调用时后置拦截器适配器
+ *
  * @author Yong.Teng
- * @since 2.1.0
+ * @see org.aspectj.lang.annotation.AfterRunning
+ * @since 2.3.0
  */
-class AspectjAnnotationsMethodInterceptorLogUtils {
+public class AfterRunningAdviceMethodInvocationAdapter extends AbstractAdviceMethodInvocationAdapter {
 
-	private AspectjAnnotationsMethodInterceptorLogUtils(){
-
+	/**
+	 * 构造函数
+	 *
+	 * @param object
+	 * 		当前连接点静态部分的对象，一般指被代理的目标对象
+	 * @param method
+	 * 		正在被调用的方法的 {@link Method} 对象
+	 * @param arguments
+	 * 		调用目标方法的参数
+	 */
+	public AfterRunningAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments) {
+		super(object, method, arguments);
 	}
 
-	public static void performBeforeInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
-		final StringBuilder message = new StringBuilder(255);
+	/**
+	 * 从 AspectJ {@link JoinPoint} 创建 {@link AfterRunningAdviceMethodInvocationAdapter} 实例
+	 *
+	 * @param joinPoint
+	 * 		AspectJ {@link JoinPoint}
+	 *
+	 * @return {@link AfterRunningAdviceMethodInvocationAdapter} 实例
+	 */
+	public static AfterRunningAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint) {
+		Signature signature = joinPoint.getSignature();
 
-		message.append("Invoking a method decorated with a annotation").append(System.lineSeparator());
-		message.append("\tkind       : ").append(joinPoint.getKind()).append(System.lineSeparator());
-		message.append("\tjoinPoint  : ").append(joinPoint).append(System.lineSeparator());
-		message.append("\tannotations: ")
-				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
-				.append(System.lineSeparator());
-		message.append("\ttarget     : ").append(joinPoint.getTarget());
-
-		logger.debug(message.toString());
-	}
-
-	public static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
-		final StringBuilder message = new StringBuilder(255);
-
-		message.append("Invoking a method decorated with a annotation").append(System.lineSeparator());
-		message.append("\tkind       : ").append(joinPoint.getKind()).append(System.lineSeparator());
-		message.append("\tjoinPoint  : ").append(joinPoint).append(System.lineSeparator());
-		message.append("\tannotations: ")
-				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
-				.append(System.lineSeparator());
-		message.append("\ttarget     : ").append(joinPoint.getTarget());
-
-		logger.debug(message.toString());
+		if(signature instanceof MethodSignature){
+			return new AfterRunningAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
+					.getMethod(), joinPoint.getArgs());
+		}else if(signature instanceof AdviceSignature){
+			return new AfterRunningAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
+					.getAdvice(), joinPoint.getArgs());
+		}else{
+			throw new SignatureIllegalArgumentException(signature);
+		}
 	}
 
 }
