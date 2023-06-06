@@ -19,14 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.aspect;
 
 import com.buession.web.aop.aspect.AbstractWebAnnotationAspect;
 import com.buession.web.servlet.aop.aspect.interceptor.ServletWebAspectAnnotationsMethodInterceptor;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 
 /**
  * @author Yong.Teng
@@ -35,8 +38,27 @@ import org.aspectj.lang.annotation.Aspect;
 public class ServletWebAnnotationAspect
 		extends AbstractWebAnnotationAspect<ServletWebAspectAnnotationsMethodInterceptor> {
 
-	public ServletWebAnnotationAspect(){
+	public ServletWebAnnotationAspect() {
 		super(new ServletWebAspectAnnotationsMethodInterceptor());
+	}
+
+	@Pointcut(EXPRESSIONS)
+	@Override
+	public void anyAnnotatedMethod() {
+		super.anyAnnotatedMethod();
+	}
+
+	@Pointcut(EXPRESSIONS)
+	@Override
+	public void anyAnnotatedMethodCall(JoinPoint joinPoint) {
+		super.anyAnnotatedMethodCall(joinPoint);
+	}
+
+	@After("anyAnnotatedMethodCall(joinPoint)")
+	@Override
+	public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable {
+		annotatedMethodExecuteLog("executeAnnotatedMethod");
+		methodInterceptor.performAfterInterception(joinPoint);
 	}
 
 }

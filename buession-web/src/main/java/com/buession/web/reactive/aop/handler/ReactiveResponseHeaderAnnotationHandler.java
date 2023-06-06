@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
@@ -42,17 +42,15 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
 
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResponseHeaderAnnotationHandler.class);
 
-	public ReactiveResponseHeaderAnnotationHandler(){
+	public ReactiveResponseHeaderAnnotationHandler() {
 		super();
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ResponseHeader responseHeader){
+	public void execute(MethodInvocation mi, ResponseHeader responseHeader) {
 		ServerHttpResponse response = RequestUtils.getResponse();
 		if(response == null){
-			if(logger.isWarnEnabled()){
-				logger.warn("ServerHttpResponse is null");
-			}
+			logger.warn("ServerHttpResponse is null");
 			return;
 		}
 

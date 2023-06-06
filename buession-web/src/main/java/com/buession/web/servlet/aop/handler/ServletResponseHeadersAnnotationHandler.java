@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -44,12 +44,12 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeadersAnnotationHandler.class);
 
-	public ServletResponseHeadersAnnotationHandler(){
+	public ServletResponseHeadersAnnotationHandler() {
 		super();
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders) {
 		ResponseHeader[] headers = responseHeaders.value();
 		if(Validate.isEmpty(headers)){
 			return;
@@ -57,9 +57,8 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 
 		HttpServletResponse response = RequestUtils.getResponse();
 		if(response == null){
-			if(logger.isWarnEnabled()){
-				logger.warn("HttpServletResponse is null");
-			}
+			logger.warn("HttpServletResponse is null");
+			return;
 		}
 
 		for(ResponseHeader header : headers){
