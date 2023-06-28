@@ -30,4 +30,8 @@ package com.buession.core.serializer.type;
 @Deprecated
 public abstract class TypeReference<T> extends com.buession.core.type.TypeReference<T> {
 
+	protected TypeReference() {
+		super();
+	}
+
 }

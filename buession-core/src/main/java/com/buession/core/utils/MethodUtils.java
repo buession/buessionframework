@@ -45,7 +45,7 @@ public class MethodUtils extends org.apache.commons.lang3.reflect.MethodUtils {
 	 *
 	 * @return 方法是为静态方法，返回 true；否则返回 false
 	 */
-	public static boolean isStatic(Method method){
+	public static boolean isStatic(Method method) {
 		Assert.isNull(method, "The method cloud not be null.");
 		return Modifier.isStatic(method.getModifiers());
 	}
@@ -56,10 +56,10 @@ public class MethodUtils extends org.apache.commons.lang3.reflect.MethodUtils {
 	 * @param method
 	 * 		方法
 	 */
-	public static void setAccessible(Method method){
+	public static void setAccessible(Method method) {
 		Assert.isNull(method, "The method cloud not be null.");
 
-		if(MemberUtils.isNotAccessible(method) == false && method.isAccessible() == false){
+		if(MemberUtils.isNotAccessible(method) && method.isAccessible() == false){
 			method.setAccessible(true);
 		}
 	}
