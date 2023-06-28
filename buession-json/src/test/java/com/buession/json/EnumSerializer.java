@@ -38,7 +38,7 @@ import java.util.StringJoiner;
 public class EnumSerializer {
 
 	@Test
-	public void test(){
+	public void test() {
 		User user = new User();
 
 		user.setId(100);
@@ -67,53 +67,53 @@ public class EnumSerializer {
 
 		@JsonEnum2Map
 		private Type type;
-		
+
 		private Type[] types;
 
 		private int[] ivs;
 
-		public int getId(){
+		public int getId() {
 			return id;
 		}
 
-		public void setId(final int id){
+		public void setId(final int id) {
 			this.id = id;
 		}
 
-		public String getUsername(){
+		public String getUsername() {
 			return username;
 		}
 
-		public void setUsername(final String username){
+		public void setUsername(final String username) {
 			this.username = username;
 		}
 
-		public Type getType(){
+		public Type getType() {
 			return type;
 		}
 
-		public void setType(final Type type){
+		public void setType(final Type type) {
 			this.type = type;
 		}
 
-		public Type[] getTypes(){
+		public Type[] getTypes() {
 			return types;
 		}
 
-		public void setTypes(Type[] types){
+		public void setTypes(Type[] types) {
 			this.types = types;
 		}
 
-		public int[] getIvs(){
+		public int[] getIvs() {
 			return ivs;
 		}
 
-		public void setIvs(int[] ivs){
+		public void setIvs(int[] ivs) {
 			this.ivs = ivs;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
 					.add("id=" + id)
 					.add("username='" + username + "'")
@@ -134,16 +134,16 @@ public class EnumSerializer {
 
 		private String description;
 
-		Type(String value, String description){
+		Type(String value, String description) {
 			this.value = value;
 			this.description = description;
 		}
 
-		public String getValue(){
+		public String getValue() {
 			return value;
 		}
 
-		public String getDescription(){
+		public String getDescription() {
 			return description;
 		}
 

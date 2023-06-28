@@ -47,18 +47,20 @@ import java.lang.reflect.Field;
 @JacksonStdImpl
 public class Enum2MapSerializer extends StdScalarSerializer<Enum<?>> implements ContextualSerializer {
 
+	private final static long serialVersionUID = 8436605332881634259L;
+
 	private final static Logger logger = LoggerFactory.getLogger(Enum2MapSerializer.class);
 
-	public Enum2MapSerializer(){
+	public Enum2MapSerializer() {
 		super(Enum.class, false);
 	}
 
-	public Enum2MapSerializer(Class<Enum<?>> v){
+	public Enum2MapSerializer(Class<Enum<?>> v) {
 		super(v, false);
 	}
 
 	@Override
-	public void serialize(Enum en, JsonGenerator generator, SerializerProvider provider) throws IOException{
+	public void serialize(Enum en, JsonGenerator generator, SerializerProvider provider) throws IOException {
 		Field[] fields = en.getClass().getDeclaredFields();
 		generator.writeStartObject();
 
@@ -74,7 +76,7 @@ public class Enum2MapSerializer extends StdScalarSerializer<Enum<?>> implements 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
-			throws JsonMappingException{
+			throws JsonMappingException {
 		JsonFormat.Value format = findFormatOverrides(provider, property, handledType());
 
 		if(format != null){
@@ -85,7 +87,7 @@ public class Enum2MapSerializer extends StdScalarSerializer<Enum<?>> implements 
 	}
 
 	private static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field)
-			throws IOException{
+			throws IOException {
 		FieldUtils.setAccessible(field);
 
 		try{
