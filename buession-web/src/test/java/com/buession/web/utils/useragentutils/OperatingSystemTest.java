@@ -36,14 +36,14 @@ import java.util.Arrays;
 public class OperatingSystemTest {
 
 	@Test
-	public void parse(){
+	public void parse() {
 		OperatingSystem operatingSystem = OperatingSystem.parse(
-				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/111.0");
+				"\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36");
 		System.out.println(operatingSystem + " " + operatingSystem.getDeviceType());
 	}
 
 	@Test
-	public void toEnum(){
+	public void toEnum() {
 		for(OperatingSystem operatingSystem : OperatingSystem.values()){
 			System.out.println(operatingSystem.name() + "(\"" + operatingSystem.getName() + "\"),");
 			System.out.println("");
@@ -51,7 +51,7 @@ public class OperatingSystemTest {
 	}
 
 	@Test
-	public void join(){
+	public void join() {
 		System.out.println("'" +
 				StringUtils.join(Arrays.stream(OperatingSystem.values()).map(Enum::name).toArray(), "', '") + "'");
 	}

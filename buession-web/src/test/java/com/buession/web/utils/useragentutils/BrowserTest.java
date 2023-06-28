@@ -38,14 +38,14 @@ import java.util.stream.Collectors;
 public class BrowserTest {
 
 	@Test
-	public void parse(){
+	public void parse() {
 		Browser browser = Browser.parse(
-				"Mozilla/5.0 (Linux; Android 11; V2054A Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/107.0.5304.141 Mobile Safari/537.36 XWEB/5023 MMWEBSDK/20230202 MMWEBID/2072 MicroMessenger/8.0.33.2320(0x28002151) WeChat/arm64 Weixin NetType/5G Language/zh_CN ABI/arm64");
+				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0");
 		System.out.println(browser + " " + browser.getBrowserType());
 	}
 
 	@Test
-	public void toEnum(){
+	public void toEnum() {
 		for(Browser browser : Browser.values()){
 			System.out.println(browser.name() + "(\"" + browser.getName() + "\"),");
 			System.out.println("");
@@ -53,7 +53,7 @@ public class BrowserTest {
 	}
 
 	@Test
-	public void join(){
+	public void join() {
 		System.out.println("'" +
 				StringUtils.join(Arrays.stream(Browser.values()).map(Enum::name).toArray(), "', '") + "'");
 	}

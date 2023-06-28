@@ -37,33 +37,32 @@ public class PatternVersionFetcher implements VersionFetcher {
 
 	private final Pattern pattern;
 
-	public PatternVersionFetcher(final String regex){
+	public PatternVersionFetcher(final String regex) {
 		this(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
 	}
 
-	public PatternVersionFetcher(final Pattern pattern){
+	public PatternVersionFetcher(final Pattern pattern) {
 		this.pattern = pattern;
 	}
 
 	@Override
-	public final Version fetch(String userAgent){
+	public final Version fetch(String userAgent) {
 		Matcher matcher = pattern.matcher(userAgent);
 		return matcher.find() ? createVersion(matcher) : null;
 	}
 
-	protected Version createVersion(Matcher matcher){
-		String fullVersionString = matcher.group(1);
-		String majorVersion = matcher.group(2);
+	protected Version createVersion(Matcher matcher) {
+		String majorVersion = removePeriod(matcher.group(2));
 		String minorVersion = "0";
 		String revisionVersion = null;
 		String buildVersion = null;
 
 		if(matcher.groupCount() > 2){ // usually but not always there is a minor version
-			minorVersion = matcher.group(3);
+			minorVersion = removePeriod(matcher.group(3));
 		}
 
 		if(matcher.groupCount() > 3){ // usually but not always there is a revision version
-			revisionVersion = matcher.group(4);
+			revisionVersion = removePeriod(matcher.group(4));
 		}
 
 		if(revisionVersion == null){
@@ -71,7 +70,7 @@ public class PatternVersionFetcher implements VersionFetcher {
 		}
 
 		if(matcher.groupCount() > 4){ // usually but not always there is a build version
-			buildVersion = matcher.group(5);
+			buildVersion = removePeriod(matcher.group(5));
 		}
 
 		if(buildVersion == null){
@@ -79,6 +78,15 @@ public class PatternVersionFetcher implements VersionFetcher {
 		}
 
 		return new Version(majorVersion, minorVersion, revisionVersion, buildVersion);
+	}
+
+	private static String removePeriod(final String s) {
+		if(s == null){
+			return null;
+		}
+		
+		final char c = s.charAt(0);
+		return (c == '.' || c == '_') ? s.substring(1) : s;
 	}
 
 }
