@@ -46,6 +46,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +67,13 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	/**
 	 * master MongoTemplate
 	 */
+	@Resource
 	private MongoTemplate masterMongoTemplate;
 
 	/**
 	 * slave MongoTemplate
 	 */
+	@Resource
 	private List<MongoTemplate> slaveMongoTemplates;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());

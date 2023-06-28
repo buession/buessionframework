@@ -48,6 +48,8 @@ import org.slf4j.LoggerFactory;
 import com.buession.core.Pagination;
 import com.buession.core.exception.OperationException;
 
+import javax.annotation.Resource;
+
 /**
  * MyBatis Data Access Object 抽象类
  *
@@ -63,11 +65,13 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	/**
 	 * master SqlSessionTemplate
 	 */
+	@Resource
 	protected SqlSessionTemplate masterSqlSessionTemplate;
 
 	/**
 	 * slave SqlSessionTemplate
 	 */
+	@Resource
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
