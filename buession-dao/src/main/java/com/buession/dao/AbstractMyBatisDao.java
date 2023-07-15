@@ -272,6 +272,15 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
+	public int delete(Map<String, Object> conditions, int size) {
+		final Map<String, Object> parameters = new HashMap<>(conditions);
+
+		parameters.put("SIZE", size);
+
+		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), parameters);
+	}
+
+	@Override
 	public int deleteByPrimary(P primary) {
 		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
 	}

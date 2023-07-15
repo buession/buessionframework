@@ -282,11 +282,17 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public int delete(Map<String, Object> conditions) {
-		final Criteria criteria = buildCriteria(conditions);
-		final Query query = new Query(criteria);
+		final Query query = new Query();
+		return delete(query, conditions);
+	}
 
-		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
-		return (int) writeResult.getDeletedCount();
+	@Override
+	public int delete(Map<String, Object> conditions, int size) {
+		final Query query = new Query();
+
+		query.limit(size);
+
+		return delete(query, conditions);
 	}
 
 	@Override
@@ -369,6 +375,13 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 			query.with(Sort.by(sortOrders));
 		}
+	}
+
+	private int delete(final Query query, final Map<String, Object> conditions) {
+		query.addCriteria(buildCriteria(conditions));
+
+		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
+		return (int) writeResult.getDeletedCount();
 	}
 
 	private BasicDBObject toDbObject(E e) {
