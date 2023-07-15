@@ -21,10 +21,22 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.utils;/**
- * 
- *
+ */
+package com.buession.core.utils;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 2.3.0
- */public class StringUtilsTest {
+ */
+public class StringUtilsTest {
+
+	@Test
+	public void left() {
+		String str = "123456789";
+		Assert.assertEquals("123", StringUtils.left(str, 3));
+	}
+
 }
