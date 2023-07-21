@@ -33,8 +33,13 @@ import org.junit.Test;
 public class DateTimeTest {
 
 	@Test
-	public void test(){
+	public void microtime() {
 		System.out.println(DateTime.microtime());
+	}
+
+	@Test
+	public void getDays() {
+		System.out.println(DateTime.getDays(2023));
 	}
 
 }

@@ -26,6 +26,16 @@
  */
 package com.buession.core.datetime;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 /**
  * 日期时间
  *
@@ -38,7 +48,7 @@ public class DateTime {
 	 *
 	 * @return 以 "msec sec" 的格式返回一个字符串
 	 */
-	public static String microtime(){
+	public static String microtime() {
 		long timestamp = System.currentTimeMillis();
 
 		final StringBuilder sb = new StringBuilder(24);
@@ -55,7 +65,7 @@ public class DateTime {
 	 *
 	 * @since 1.3.1
 	 */
-	public static long unixtime(){
+	public static long unixtime() {
 		return System.currentTimeMillis() / 1000L;
 	}
 
@@ -69,7 +79,7 @@ public class DateTime {
 	 *
 	 * @since 2.1.1
 	 */
-	public static int getDays(final int year){
+	public static int getDays(final int year) {
 		if(year <= 0){
 			return -1;
 		}
@@ -95,7 +105,7 @@ public class DateTime {
 	 *
 	 * @since 2.1.1
 	 */
-	public static int getDays(final int year, final int month){
+	public static int getDays(final int year, final int month) {
 		if(year <= 0){
 			return -1;
 		}
@@ -131,7 +141,7 @@ public class DateTime {
 	 *
 	 * @since 2.1.1
 	 */
-	public static boolean isLeapYear(final int year){
+	public static boolean isLeapYear(final int year) {
 		if(year <= 0){
 			return false;
 		}
@@ -143,6 +153,189 @@ public class DateTime {
 		}
 
 		return false;
+	}
+
+	/**
+	 * 获取 {@link Date} 实例
+	 *
+	 * @return {@link Date} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static Date getDate() {
+		return new Date();
+	}
+
+	/**
+	 * 获取 {@link Calendar} 实例
+	 *
+	 * @return {@link Calendar} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static Calendar geCalendar() {
+		return Calendar.getInstance();
+	}
+
+	/**
+	 * 获取 {@link Calendar} 实例
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 *
+	 * @return {@link Calendar} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static Calendar geCalendar(final TimeZone timeZone) {
+		return Calendar.getInstance(timeZone);
+	}
+
+	/**
+	 * 获取 {@link Calendar} 实例
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 *
+	 * @return {@link Calendar} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static Calendar geCalendar(final Locale locale) {
+		return Calendar.getInstance(locale);
+	}
+
+	/**
+	 * 获取 {@link Calendar} 实例
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param locale
+	 *        {@link Locale}
+	 *
+	 * @return {@link Calendar} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static Calendar geCalendar(final TimeZone timeZone, final Locale locale) {
+		return Calendar.getInstance(timeZone, locale);
+	}
+
+	/**
+	 * 获取 {@link LocalDate} 实例
+	 *
+	 * @return {@link LocalDate} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalDate geLocalDate() {
+		return LocalDate.now();
+	}
+
+	/**
+	 * 获取 {@link LocalDate} 实例
+	 *
+	 * @param zone
+	 *        {@link ZoneId}
+	 *
+	 * @return {@link LocalDate} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalDate geLocalDate(final ZoneId zone) {
+		return LocalDate.now(zone);
+	}
+
+	/**
+	 * 获取 {@link LocalDate} 实例
+	 *
+	 * @param clock
+	 *        {@link Clock}
+	 *
+	 * @return {@link LocalDate} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalDate geLocalDate(final Clock clock) {
+		return LocalDate.now(clock);
+	}
+
+	/**
+	 * 获取 {@link LocalTime} 实例
+	 *
+	 * @return {@link LocalTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalTime geLocalTime() {
+		return LocalTime.now();
+	}
+
+	/**
+	 * 获取 {@link LocalTime} 实例
+	 *
+	 * @param zone
+	 *        {@link ZoneId}
+	 *
+	 * @return {@link LocalTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalTime geLocalTime(final ZoneId zone) {
+		return LocalTime.now(zone);
+	}
+
+	/**
+	 * 获取 {@link LocalTime} 实例
+	 *
+	 * @param clock
+	 *        {@link Clock}
+	 *
+	 * @return {@link LocalTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalTime geLocalTime(final Clock clock) {
+		return LocalTime.now(clock);
+	}
+
+	/**
+	 * 获取 {@link LocalDateTime} 实例
+	 *
+	 * @return {@link LocalDateTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalDateTime geLocalDateTime() {
+		return LocalDateTime.now();
+	}
+
+	/**
+	 * 获取 {@link LocalDateTime} 实例
+	 *
+	 * @param zone
+	 *        {@link ZoneId}
+	 *
+	 * @return {@link LocalDateTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalDateTime geLocalDateTime(final ZoneId zone) {
+		return LocalDateTime.now(zone);
+	}
+
+	/**
+	 * 获取 {@link LocalDateTime} 实例
+	 *
+	 * @param clock
+	 *        {@link Clock}
+	 *
+	 * @return {@link LocalDateTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static LocalDateTime geLocalDateTime(final Clock clock) {
+		return LocalDateTime.now(clock);
 	}
 
 }
