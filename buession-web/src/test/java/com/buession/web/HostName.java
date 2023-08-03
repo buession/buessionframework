@@ -34,18 +34,8 @@ import java.net.UnknownHostException;
  */
 public class HostName {
 
-    @Test
-    public void test(){
-        System.out.println(System.getenv("COMPUTERNAME"));
-        System.out.println(System.getenv("HOSTNAME"));
-
-        try{
-            InetAddress inetAddress = InetAddress.getLocalHost();
-            System.out.println(inetAddress.getCanonicalHostName());
-            System.out.println(inetAddress.getHostName());
-        }catch(UnknownHostException e){
-            e.printStackTrace();
-        }
-    }
+	@Test
+	public void test() {
+	}
 
 }

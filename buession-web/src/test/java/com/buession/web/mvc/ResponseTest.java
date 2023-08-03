@@ -21,10 +21,13 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.web.mvc;/**
- * 
- *
+ */
+package com.buession.web.mvc;
+
+/**
  * @author Yong.Teng
  * @since 0.0.1
- */public class ReponseTest {
+ */
+public class ResponseTest {
+
 }
