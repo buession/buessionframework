@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -53,7 +54,7 @@ public class DateTime {
 
 		final StringBuilder sb = new StringBuilder(24);
 
-		sb.append(timestamp / 1000L).append(" ").append(timestamp % 1000L * 1000L);
+		sb.append(timestamp / 1000L).append(' ').append(timestamp % 1000L * 1000L);
 
 		return sb.toString();
 	}
@@ -173,7 +174,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static Calendar geCalendar() {
+	public static Calendar getCalendar() {
 		return Calendar.getInstance();
 	}
 
@@ -187,7 +188,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static Calendar geCalendar(final TimeZone timeZone) {
+	public static Calendar getCalendar(final TimeZone timeZone) {
 		return Calendar.getInstance(timeZone);
 	}
 
@@ -201,7 +202,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static Calendar geCalendar(final Locale locale) {
+	public static Calendar getCalendar(final Locale locale) {
 		return Calendar.getInstance(locale);
 	}
 
@@ -217,7 +218,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static Calendar geCalendar(final TimeZone timeZone, final Locale locale) {
+	public static Calendar getCalendar(final TimeZone timeZone, final Locale locale) {
 		return Calendar.getInstance(timeZone, locale);
 	}
 
@@ -228,7 +229,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalDate geLocalDate() {
+	public static LocalDate getLocalDate() {
 		return LocalDate.now();
 	}
 
@@ -242,7 +243,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalDate geLocalDate(final ZoneId zone) {
+	public static LocalDate getLocalDate(final ZoneId zone) {
 		return LocalDate.now(zone);
 	}
 
@@ -256,7 +257,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalDate geLocalDate(final Clock clock) {
+	public static LocalDate getLocalDate(final Clock clock) {
 		return LocalDate.now(clock);
 	}
 
@@ -267,7 +268,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalTime geLocalTime() {
+	public static LocalTime getLocalTime() {
 		return LocalTime.now();
 	}
 
@@ -281,7 +282,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalTime geLocalTime(final ZoneId zone) {
+	public static LocalTime getLocalTime(final ZoneId zone) {
 		return LocalTime.now(zone);
 	}
 
@@ -295,7 +296,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalTime geLocalTime(final Clock clock) {
+	public static LocalTime getLocalTime(final Clock clock) {
 		return LocalTime.now(clock);
 	}
 
@@ -306,7 +307,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalDateTime geLocalDateTime() {
+	public static LocalDateTime getLocalDateTime() {
 		return LocalDateTime.now();
 	}
 
@@ -320,7 +321,7 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalDateTime geLocalDateTime(final ZoneId zone) {
+	public static LocalDateTime getLocalDateTime(final ZoneId zone) {
 		return LocalDateTime.now(zone);
 	}
 
@@ -334,8 +335,47 @@ public class DateTime {
 	 *
 	 * @since 2.3.0
 	 */
-	public static LocalDateTime geLocalDateTime(final Clock clock) {
+	public static LocalDateTime getLocalDateTime(final Clock clock) {
 		return LocalDateTime.now(clock);
+	}
+
+	/**
+	 * 获取 {@link ZonedDateTime} 实例
+	 *
+	 * @return {@link ZonedDateTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ZonedDateTime getZonedDateTime() {
+		return ZonedDateTime.now();
+	}
+
+	/**
+	 * 获取 {@link ZonedDateTime} 实例
+	 *
+	 * @param zone
+	 *        {@link ZoneId}
+	 *
+	 * @return {@link ZonedDateTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ZonedDateTime getZonedDateTime(final ZoneId zone) {
+		return ZonedDateTime.now(zone);
+	}
+
+	/**
+	 * 获取 {@link ZonedDateTime} 实例
+	 *
+	 * @param clock
+	 *        {@link Clock}
+	 *
+	 * @return {@link ZonedDateTime} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static ZonedDateTime getZonedDateTime(final Clock clock) {
+		return ZonedDateTime.now(clock);
 	}
 
 }

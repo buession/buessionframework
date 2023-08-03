@@ -33,33 +33,36 @@ import org.junit.Test;
 public class IdGeneratorTest {
 
 	@Test
-	public void snowflake(){
+	public void snowflake() {
 		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator();
-		System.out.println(idGenerator.nextId());
+
+		for(int i = 1; i <= 10; i++){
+			System.out.println(idGenerator.nextId());
+		}
 	}
 
 	@Test
-	public void nanoId(){
+	public void nanoId() {
 		NanoIDIdGenerator idGenerator = new NanoIDIdGenerator(
 				"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray());
 		System.out.println(idGenerator.nextId());
 	}
 
 	@Test
-	public void atomicUUID(){
+	public void atomicUUID() {
 		AtomicUUIDIdGenerator idGenerator = new AtomicUUIDIdGenerator();
 		System.out.println(idGenerator.nextId());
 		System.out.println(idGenerator.nextId());
 	}
 
 	@Test
-	public void uuid(){
+	public void uuid() {
 		UUIDIdGenerator idGenerator = new UUIDIdGenerator();
 		System.out.println(idGenerator.nextId());
 	}
 
 	@Test
-	public void simpleId(){
+	public void simpleId() {
 		SimpleIdGenerator idGenerator = new SimpleIdGenerator();
 		System.out.println(idGenerator.nextId());
 	}
