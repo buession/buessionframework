@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -34,6 +34,7 @@ import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.RequestException;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -43,16 +44,13 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractHttpClient implements HttpClient {
-
-	private ConnectionManager connectionManager;
-
-	private ProtocolVersion httpVersion;
+public abstract class AbstractHttpClient extends AbstractBaseHttpClient implements HttpClient {
 
 	/**
 	 * 构造函数
 	 */
 	public AbstractHttpClient(){
+		super();
 	}
 
 	/**
@@ -62,1177 +60,2273 @@ public abstract class AbstractHttpClient implements HttpClient {
 	 * 		连接管理器
 	 */
 	public AbstractHttpClient(ConnectionManager connectionManager){
-		this.connectionManager = connectionManager;
-	}
-
-	/**
-	 * 获取连接管理器
-	 *
-	 * @return 连接管理器
-	 */
-	@Override
-	public ConnectionManager getConnectionManager(){
-		return connectionManager;
-	}
-
-	/**
-	 * 设置连接管理器
-	 *
-	 * @param connectionManager
-	 * 		连接管理器
-	 */
-	@Override
-	public void setConnectionManager(ConnectionManager connectionManager){
-		this.connectionManager = connectionManager;
+		super(connectionManager);
 	}
 
 	@Override
-	public ProtocolVersion getHttpVersion(){
-		return httpVersion;
-	}
-
-	@Override
-	public void setHttpVersion(ProtocolVersion httpVersion){
-		this.httpVersion = httpVersion;
-	}
-
-	@Override
-	public Response get(String url) throws IOException, RequestException{
-		return get(url, null, null);
+	public Response get(URI uri) throws IOException, RequestException{
+		return get(uri, null, null);
 	}
 
 	@Override
 	public Response get(URL url) throws IOException, RequestException{
-		return get(url, null, null);
+		return execute(()->get(URL2URI(url)));
 	}
 
 	@Override
-	public Response get(String url, List<Header> headers) throws IOException, RequestException{
-		return get(url, null, headers);
-	}
-
-	@Override
-	public Response get(URL url, List<Header> headers) throws IOException, RequestException{
-		return get(url, null, headers);
-	}
-
-	@Override
-	public Response get(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return get(url, parameters, null);
+	public Response get(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return get(uri, parameters, null);
 	}
 
 	@Override
 	public Response get(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return get(url, parameters, null);
+		return execute(()->get(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response get(URI uri, List<Header> headers) throws IOException, RequestException{
+		return get(uri, null, headers);
+	}
+
+	@Override
+	public Response get(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->get(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response get(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return get(url.toString(), parameters, headers);
+		return execute(()->get(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response post(String url) throws IOException, RequestException{
-		return post(url, null, null, null);
+	public Response get(URI uri, int readTimeout) throws IOException, RequestException{
+		return get(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response get(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->get(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response get(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return get(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response get(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->get(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response get(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return get(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response get(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->get(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->get(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response post(URI uri) throws IOException, RequestException{
+		return post(uri, null, null, null);
 	}
 
 	@Override
 	public Response post(URL url) throws IOException, RequestException{
-		return post(url, null, null, null);
+		return execute(()->post(URL2URI(url)));
 	}
 
 	@Override
-	public Response post(String url, List<Header> headers) throws IOException, RequestException{
-		return post(url, null, null, headers);
-	}
-
-	@Override
-	public Response post(URL url, List<Header> headers) throws IOException, RequestException{
-		return post(url, null, null, headers);
-	}
-
-	@Override
-	public Response post(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return post(url, null, parameters, null);
+	public Response post(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return post(uri, null, parameters, null);
 	}
 
 	@Override
 	public Response post(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return post(url, null, parameters, null);
+		return execute(()->post(URL2URI(url), parameters));
 	}
 
 	@Override
-	public Response post(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response post(URI uri, List<Header> headers) throws IOException, RequestException{
+		return post(uri, null, null, headers);
+	}
+
+	@Override
+	public Response post(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), headers));
+	}
+
+	@Override
+	public Response post(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return post(url, null, parameters, headers);
+		return post(uri, null, parameters, headers);
 	}
 
 	@Override
 	public Response post(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return post(url, null, parameters, headers);
+		return execute(()->post(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response post(String url, RequestBody<?> data)
-			throws IOException, RequestException{
-		return post(url, data, null, null);
+	public Response post(URI uri, RequestBody<?> data) throws IOException, RequestException{
+		return post(uri, data, null, null);
 	}
 
 	@Override
 	public Response post(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return post(url, data, null, null);
+		return execute(()->post(URL2URI(url), data));
 	}
 
 	@Override
-	public Response post(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return post(url, data, null, headers);
-	}
-
-	@Override
-	public Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return post(url, data, null, headers);
-	}
-
-	@Override
-	public Response post(String url, RequestBody<?> data, Map<String, Object> parameters)
+	public Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return post(url, data, parameters, null);
+		return post(uri, data, parameters, null);
 	}
 
 	@Override
 	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return post(url, data, parameters, null);
+		return execute(()->post(URL2URI(url), data, parameters));
+	}
+
+	@Override
+	public Response post(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return post(uri, data, null, headers);
+	}
+
+	@Override
+	public Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), data, headers));
 	}
 
 	@Override
 	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return post(url.toString(), data, parameters, headers);
+		return execute(()->post(URL2URI(url), data, parameters, headers));
 	}
 
 	@Override
-	public Response patch(String url) throws IOException, RequestException{
-		return patch(url, null, null, null);
+	public Response post(URI uri, int readTimeout) throws IOException, RequestException{
+		return post(uri, readTimeout, null, null, null);
 	}
 
 	@Override
-	public Response patch(URL url) throws IOException, RequestException{
-		return patch(url, null, null, null);
+	public Response post(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), readTimeout));
 	}
 
 	@Override
-	public Response patch(String url, List<Header> headers) throws IOException, RequestException{
-		return patch(url, null, null, headers);
+	public Response post(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return post(uri, readTimeout, null, parameters, null);
 	}
 
 	@Override
-	public Response patch(URL url, List<Header> headers) throws IOException, RequestException{
-		return patch(url, null, null, headers);
-	}
-
-	@Override
-	public Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return patch(url, null, parameters, null);
-	}
-
-	@Override
-	public Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return patch(url, null, parameters, null);
-	}
-
-	@Override
-	public Response patch(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response post(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return patch(url, null, parameters, headers);
+		return execute(()->post(URL2URI(url), readTimeout, parameters));
 	}
 
 	@Override
-	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers)
+	public Response post(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return post(uri, readTimeout, null, null, headers);
+	}
+
+	@Override
+	public Response post(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response post(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return patch(url, null, parameters, headers);
+		return post(uri, readTimeout, null, parameters, headers);
 	}
 
 	@Override
-	public Response patch(String url, RequestBody<?> data) throws IOException, RequestException{
-		return patch(url, data, null, null);
-	}
-
-	@Override
-	public Response patch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return patch(url, data, null, null);
-	}
-
-	@Override
-	public Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return patch(url, data, null, headers);
-	}
-
-	@Override
-	public Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return patch(url, data, null, headers);
-	}
-
-	@Override
-	public Response patch(String url, RequestBody<?> data, Map<String, Object> parameters)
+	public Response post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return patch(url, data, parameters, null);
+		return execute(()->post(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters)
+	public Response post(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return post(uri, readTimeout, data, null, null);
+	}
+
+	@Override
+	public Response post(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), readTimeout, data));
+	}
+
+	@Override
+	public Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return patch(url, data, parameters, null);
+		return post(uri, readTimeout, data, parameters, null);
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+	public Response post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		validateURL(url);
-		return patch(url.toString(), data, parameters, headers);
+		return execute(()->post(URL2URI(url), readTimeout, data, parameters));
 	}
 
 	@Override
-	public Response put(String url) throws IOException, RequestException{
-		return put(url, null, null, null);
+	public Response post(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return post(uri, readTimeout, data, null, headers);
+	}
+
+	@Override
+	public Response post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), readTimeout, data, headers));
+	}
+
+	@Override
+	public Response post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 List<Header> headers) throws IOException, RequestException{
+		return execute(()->post(URL2URI(url), readTimeout, data, parameters, headers));
+	}
+
+	@Override
+	public Response put(URI uri) throws IOException, RequestException{
+		return put(uri, null, null, null);
 	}
 
 	@Override
 	public Response put(URL url) throws IOException, RequestException{
-		return put(url, null, null, null);
+		return execute(()->put(URL2URI(url)));
 	}
 
 	@Override
-	public Response put(String url, List<Header> headers) throws IOException, RequestException{
-		return put(url, null, null, headers);
-	}
-
-	@Override
-	public Response put(URL url, List<Header> headers) throws IOException, RequestException{
-		return put(url, null, null, headers);
-	}
-
-	@Override
-	public Response put(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return put(url, null, parameters, null);
+	public Response put(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return put(uri, null, parameters, null);
 	}
 
 	@Override
 	public Response put(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return put(url, null, parameters, null);
+		return execute(()->put(URL2URI(url), parameters));
 	}
 
 	@Override
-	public Response put(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response put(URI uri, List<Header> headers) throws IOException, RequestException{
+		return put(uri, null, null, headers);
+	}
+
+	@Override
+	public Response put(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), headers));
+	}
+
+	@Override
+	public Response put(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return put(url, null, parameters, headers);
+		return put(uri, null, parameters, headers);
 	}
 
 	@Override
 	public Response put(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return put(url, null, parameters, headers);
+		return execute(()->put(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response put(String url, RequestBody<?> data) throws IOException, RequestException{
-		return put(url, data, null, null);
+	public Response put(URI uri, RequestBody<?> data) throws IOException, RequestException{
+		return put(uri, data, null, null);
 	}
 
 	@Override
 	public Response put(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return put(url, data, null, null);
+		return execute(()->put(URL2URI(url), data));
 	}
 
 	@Override
-	public Response put(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return put(url, data, null, headers);
-	}
-
-	@Override
-	public Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return put(url, data, null, headers);
-	}
-
-	@Override
-	public Response put(String url, RequestBody<?> data, Map<String, Object> parameters)
+	public Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return put(url, data, parameters, null);
+		return put(uri, data, parameters, null);
 	}
 
 	@Override
 	public Response put(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return put(url, data, parameters, null);
+		return execute(()->put(URL2URI(url), data, parameters));
+	}
+
+	@Override
+	public Response put(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return put(uri, data, null, headers);
+	}
+
+	@Override
+	public Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), data, headers));
 	}
 
 	@Override
 	public Response put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return put(url.toString(), data, parameters, headers);
+		return execute(()->put(URL2URI(url), data, parameters, headers));
 	}
 
 	@Override
-	public Response delete(String url) throws IOException, RequestException{
-		return delete(url, null, null);
+	public Response put(URI uri, int readTimeout) throws IOException, RequestException{
+		return put(uri, readTimeout, null, null, null);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response put(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return put(uri, readTimeout, null, parameters, null);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response put(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return put(uri, readTimeout, null, null, headers);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return put(uri, readTimeout, null, parameters, headers);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response put(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return put(uri, readTimeout, data, null, null);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, data));
+	}
+
+	@Override
+	public Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return put(uri, readTimeout, data, parameters, null);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, data, parameters));
+	}
+
+	@Override
+	public Response put(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return put(uri, readTimeout, data, null, headers);
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, data, headers));
+	}
+
+	@Override
+	public Response put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						List<Header> headers) throws IOException, RequestException{
+		return execute(()->put(URL2URI(url), readTimeout, data, parameters, headers));
+	}
+
+	@Override
+	public Response patch(URI uri) throws IOException, RequestException{
+		return patch(uri, null, null, null);
+	}
+
+	@Override
+	public Response patch(URL url) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url)));
+	}
+
+	@Override
+	public Response patch(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return patch(uri, null, parameters, null);
+	}
+
+	@Override
+	public Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response patch(URI uri, List<Header> headers) throws IOException, RequestException{
+		return patch(uri, null, null, headers);
+	}
+
+	@Override
+	public Response patch(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), headers));
+	}
+
+	@Override
+	public Response patch(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(uri, null, parameters, headers);
+	}
+
+	@Override
+	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), parameters, headers));
+	}
+
+	@Override
+	public Response patch(URI uri, RequestBody<?> data) throws IOException, RequestException{
+		return patch(uri, data, null, null);
+	}
+
+	@Override
+	public Response patch(URL url, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), data));
+	}
+
+	@Override
+	public Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return patch(uri, data, parameters, null);
+	}
+
+	@Override
+	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), data, parameters));
+	}
+
+	@Override
+	public Response patch(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return patch(uri, data, null, headers);
+	}
+
+	@Override
+	public Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), data, headers));
+	}
+
+	@Override
+	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), data, parameters, headers));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout) throws IOException, RequestException{
+		return patch(uri, readTimeout, null, null, null);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return patch(uri, readTimeout, null, parameters, null);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return patch(uri, readTimeout, null, null, headers);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(uri, readTimeout, null, parameters, headers);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return patch(uri, readTimeout, data, null, null);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, data));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return patch(uri, readTimeout, data, parameters, null);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, data, parameters));
+	}
+
+	@Override
+	public Response patch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return patch(uri, readTimeout, data, null, headers);
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, data, headers));
+	}
+
+	@Override
+	public Response patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  List<Header> headers) throws IOException, RequestException{
+		return execute(()->patch(URL2URI(url), readTimeout, data, parameters, headers));
+	}
+
+	@Override
+	public Response delete(URI uri) throws IOException, RequestException{
+		return delete(uri, null, null);
+	}
+
+	@Override
+	public Response delete(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return delete(uri, parameters, null);
 	}
 
 	@Override
 	public Response delete(URL url) throws IOException, RequestException{
-		return delete(url, null, null);
-	}
-
-	@Override
-	public Response delete(String url, List<Header> headers) throws IOException, RequestException{
-		return delete(url, null, headers);
-	}
-
-	@Override
-	public Response delete(URL url, List<Header> headers) throws IOException, RequestException{
-		return delete(url, null, headers);
-	}
-
-	@Override
-	public Response delete(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return delete(url, parameters, null);
+		return execute(()->delete(URL2URI(url)));
 	}
 
 	@Override
 	public Response delete(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return delete(url, parameters, null);
+		return execute(()->delete(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response delete(URI uri, List<Header> headers) throws IOException, RequestException{
+		return delete(uri, null, headers);
+	}
+
+	@Override
+	public Response delete(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->delete(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response delete(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return delete(url.toString(), parameters, headers);
+		return execute(()->delete(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response connect(String url) throws IOException, RequestException{
-		return connect(url, null, null);
+	public Response delete(URI uri, int readTimeout) throws IOException, RequestException{
+		return delete(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response delete(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return delete(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response delete(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->delete(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response delete(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->delete(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response delete(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return delete(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response delete(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->delete(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->delete(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response connect(URI uri) throws IOException, RequestException{
+		return connect(uri, null, null);
 	}
 
 	@Override
 	public Response connect(URL url) throws IOException, RequestException{
-		return connect(url, null, null);
+		return execute(()->connect(URL2URI(url)));
 	}
 
 	@Override
-	public Response connect(String url, List<Header> headers) throws IOException, RequestException{
-		return connect(url, null, headers);
-	}
-
-	@Override
-	public Response connect(URL url, List<Header> headers) throws IOException, RequestException{
-		return connect(url, null, headers);
-	}
-
-	@Override
-	public Response connect(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return connect(url, parameters, null);
+	public Response connect(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return connect(uri, parameters, null);
 	}
 
 	@Override
 	public Response connect(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return connect(url, parameters, null);
+		return execute(()->connect(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response connect(URI uri, List<Header> headers) throws IOException, RequestException{
+		return connect(uri, null, headers);
+	}
+
+	@Override
+	public Response connect(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->connect(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response connect(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return connect(url.toString(), parameters, headers);
+		return execute(()->connect(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response trace(String url) throws IOException, RequestException{
-		return trace(url, null, null);
+	public Response connect(URI uri, int readTimeout) throws IOException, RequestException{
+		return connect(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response connect(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->connect(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response connect(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return connect(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response connect(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->connect(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response connect(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return connect(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response connect(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->connect(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->connect(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response trace(URI uri) throws IOException, RequestException{
+		return trace(uri, null, null);
 	}
 
 	@Override
 	public Response trace(URL url) throws IOException, RequestException{
-		return trace(url, null, null);
+		return execute(()->trace(URL2URI(url)));
 	}
 
 	@Override
-	public Response trace(String url, List<Header> headers) throws IOException, RequestException{
-		return trace(url, null, headers);
-	}
-
-	@Override
-	public Response trace(URL url, List<Header> headers) throws IOException, RequestException{
-		return trace(url, null, headers);
-	}
-
-	@Override
-	public Response trace(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return trace(url, parameters, null);
+	public Response trace(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return trace(uri, parameters, null);
 	}
 
 	@Override
 	public Response trace(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return trace(url, parameters, null);
+		return execute(()->trace(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response trace(URI uri, List<Header> headers) throws IOException, RequestException{
+		return trace(uri, null, headers);
+	}
+
+	@Override
+	public Response trace(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->trace(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response trace(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return trace(url.toString(), parameters, headers);
+		return execute(()->trace(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response copy(String url) throws IOException, RequestException{
-		return copy(url, null, null);
+	public Response trace(URI uri, int readTimeout) throws IOException, RequestException{
+		return trace(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response trace(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->trace(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response trace(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return trace(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response trace(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->trace(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response trace(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return trace(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response trace(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->trace(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->trace(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response copy(URI uri) throws IOException, RequestException{
+		return copy(uri, null, null);
 	}
 
 	@Override
 	public Response copy(URL url) throws IOException, RequestException{
-		return copy(url, null, null);
+		return execute(()->copy(URL2URI(url)));
 	}
 
 	@Override
-	public Response copy(String url, List<Header> headers) throws IOException, RequestException{
-		return copy(url, null, headers);
-	}
-
-	@Override
-	public Response copy(URL url, List<Header> headers) throws IOException, RequestException{
-		return copy(url, null, headers);
-	}
-
-	@Override
-	public Response copy(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return copy(url, parameters, null);
+	public Response copy(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return copy(uri, parameters, null);
 	}
 
 	@Override
 	public Response copy(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return copy(url, parameters, null);
+		return execute(()->copy(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response copy(URI uri, List<Header> headers) throws IOException, RequestException{
+		return copy(uri, null, headers);
+	}
+
+	@Override
+	public Response copy(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->copy(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response copy(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return copy(url.toString(), parameters, headers);
+		return execute(()->copy(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response move(String url) throws IOException, RequestException{
-		return move(url, null, null);
+	public Response copy(URI uri, int readTimeout) throws IOException, RequestException{
+		return copy(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response copy(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->copy(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response copy(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return copy(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response copy(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->copy(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response copy(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return copy(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response copy(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->copy(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->copy(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response move(URI uri) throws IOException, RequestException{
+		return move(uri, null, null);
 	}
 
 	@Override
 	public Response move(URL url) throws IOException, RequestException{
-		return move(url, null, null);
+		return execute(()->move(URL2URI(url)));
 	}
 
 	@Override
-	public Response move(String url, List<Header> headers) throws IOException, RequestException{
-		return move(url, null, headers);
-	}
-
-	@Override
-	public Response move(URL url, List<Header> headers) throws IOException, RequestException{
-		return move(url, null, headers);
-	}
-
-	@Override
-	public Response move(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return move(url, parameters, null);
+	public Response move(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return move(uri, parameters, null);
 	}
 
 	@Override
 	public Response move(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return move(url, parameters, null);
+		return execute(()->move(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response move(URI uri, List<Header> headers) throws IOException, RequestException{
+		return move(uri, null, headers);
+	}
+
+	@Override
+	public Response move(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->move(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response move(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return move(url.toString(), parameters, headers);
+		return execute(()->move(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response head(String url) throws IOException, RequestException{
-		return head(url, null, null);
+	public Response move(URI uri, int readTimeout) throws IOException, RequestException{
+		return move(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response move(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->move(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response move(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return move(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response move(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->move(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response move(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return move(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response move(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->move(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->move(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response head(URI uri) throws IOException, RequestException{
+		return head(uri, null, null);
 	}
 
 	@Override
 	public Response head(URL url) throws IOException, RequestException{
-		return head(url, null, null);
+		return execute(()->head(URL2URI(url)));
 	}
 
 	@Override
-	public Response head(String url, List<Header> headers) throws IOException, RequestException{
-		return head(url, null, headers);
-	}
-
-	@Override
-	public Response head(URL url, List<Header> headers) throws IOException, RequestException{
-		return head(url, null, headers);
-	}
-
-	@Override
-	public Response head(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return head(url, parameters, null);
+	public Response head(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return head(uri, parameters, null);
 	}
 
 	@Override
 	public Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return head(url, parameters, null);
+		return execute(()->head(URL2URI(url), parameters));
 	}
 
 	@Override
-	public Response head(URL url, Map<String, Object> parameters, List<Header> headers)
+	public Response head(URI uri, List<Header> headers) throws IOException, RequestException{
+		return head(uri, null, headers);
+	}
+
+	@Override
+	public Response head(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), headers));
+	}
+
+	@Override
+	public Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
+			RequestException{
+		return execute(()->head(URL2URI(url), parameters, headers));
+	}
+
+	@Override
+	public Response head(URI uri, int readTimeout) throws IOException, RequestException{
+		return head(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response head(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response head(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return head(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response head(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response head(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return head(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response head(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->head(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return head(url.toString(), parameters, headers);
+		return execute(()->head(URL2URI(url), readTimeout, parameters, headers));
 	}
 
 	@Override
-	public Response options(String url) throws IOException, RequestException{
-		return options(url, null, null);
+	public Response options(URI uri) throws IOException, RequestException{
+		return options(uri, null, null);
 	}
 
 	@Override
 	public Response options(URL url) throws IOException, RequestException{
-		return options(url, null, null);
+		return execute(()->options(URL2URI(url)));
 	}
 
 	@Override
-	public Response options(String url, List<Header> headers) throws IOException, RequestException{
-		return options(url, null, headers);
-	}
-
-	@Override
-	public Response options(URL url, List<Header> headers) throws IOException, RequestException{
-		return options(url, null, headers);
-	}
-
-	@Override
-	public Response options(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return options(url, parameters, null);
+	public Response options(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return options(uri, parameters, null);
 	}
 
 	@Override
 	public Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return options(url, parameters, null);
+		return execute(()->options(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response options(URI uri, List<Header> headers) throws IOException, RequestException{
+		return options(uri, null, headers);
+	}
+
+	@Override
+	public Response options(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response options(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return options(url.toString(), parameters, headers);
+		return execute(()->options(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response link(String url) throws IOException, RequestException{
-		return link(url, null, null);
+	public Response options(URI uri, int readTimeout) throws IOException, RequestException{
+		return options(uri, null, null);
+	}
+
+	@Override
+	public Response options(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response options(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return options(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response options(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response options(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return options(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response options(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->options(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response link(URI uri) throws IOException, RequestException{
+		return link(uri, null, null);
 	}
 
 	@Override
 	public Response link(URL url) throws IOException, RequestException{
-		return link(url, null, null);
+		return execute(()->link(URL2URI(url)));
 	}
 
 	@Override
-	public Response link(String url, List<Header> headers) throws IOException, RequestException{
-		return link(url, null, headers);
-	}
-
-	@Override
-	public Response link(URL url, List<Header> headers) throws IOException, RequestException{
-		return link(url, null, headers);
-	}
-
-	@Override
-	public Response link(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return link(url, parameters, null);
+	public Response link(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return link(uri, parameters, null);
 	}
 
 	@Override
 	public Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return link(url, parameters, null);
+		return execute(()->link(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response link(URI uri, List<Header> headers) throws IOException, RequestException{
+		return link(uri, null, headers);
+	}
+
+	@Override
+	public Response link(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response link(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return link(url.toString(), parameters, headers);
+		return execute(()->link(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response unlink(String url) throws IOException, RequestException{
-		return unlink(url, null, null);
+	public Response link(URI uri, int readTimeout) throws IOException, RequestException{
+		return link(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response link(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response link(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return link(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response link(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response link(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return link(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response link(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->link(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response unlink(URI uri) throws IOException, RequestException{
+		return unlink(uri, null, null);
 	}
 
 	@Override
 	public Response unlink(URL url) throws IOException, RequestException{
-		return unlink(url, null, null);
+		return execute(()->unlink(URL2URI(url)));
 	}
 
 	@Override
-	public Response unlink(String url, List<Header> headers) throws IOException, RequestException{
-		return unlink(url, null, headers);
-	}
-
-	@Override
-	public Response unlink(URL url, List<Header> headers) throws IOException, RequestException{
-		return unlink(url, null, headers);
-	}
-
-	@Override
-	public Response unlink(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return unlink(url, parameters, null);
+	public Response unlink(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return unlink(uri, parameters, null);
 	}
 
 	@Override
 	public Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return unlink(url, parameters, null);
+		return execute(()->unlink(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response unlink(URI uri, List<Header> headers) throws IOException, RequestException{
+		return unlink(uri, null, headers);
+	}
+
+	@Override
+	public Response unlink(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return unlink(url.toString(), parameters, headers);
+		return execute(()->unlink(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response purge(String url) throws IOException, RequestException{
-		return purge(url, null, null);
+	public Response unlink(URI uri, int readTimeout) throws IOException, RequestException{
+		return unlink(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response unlink(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response unlink(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return unlink(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response unlink(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response unlink(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return unlink(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response unlink(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->unlink(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response purge(URI uri) throws IOException, RequestException{
+		return purge(uri, null, null);
 	}
 
 	@Override
 	public Response purge(URL url) throws IOException, RequestException{
-		return purge(url, null, null);
+		return execute(()->purge(URL2URI(url)));
 	}
 
 	@Override
-	public Response purge(String url, List<Header> headers) throws IOException, RequestException{
-		return purge(url, null, headers);
-	}
-
-	@Override
-	public Response purge(URL url, List<Header> headers) throws IOException, RequestException{
-		return purge(url, null, headers);
-	}
-
-	@Override
-	public Response purge(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return purge(url, parameters, null);
+	public Response purge(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return purge(uri, parameters, null);
 	}
 
 	@Override
 	public Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return purge(url, parameters, null);
+		return execute(()->purge(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response purge(URI uri, List<Header> headers) throws IOException, RequestException{
+		return purge(uri, null, headers);
+	}
+
+	@Override
+	public Response purge(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response purge(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return purge(url.toString(), parameters, headers);
+		return execute(()->purge(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response lock(String url) throws IOException, RequestException{
-		return lock(url, null, null);
+	public Response purge(URI uri, int readTimeout) throws IOException, RequestException{
+		return purge(uri, null, null);
+	}
+
+	@Override
+	public Response purge(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response purge(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return purge(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response purge(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response purge(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return purge(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response purge(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->purge(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response lock(URI uri) throws IOException, RequestException{
+		return lock(uri, null, null);
 	}
 
 	@Override
 	public Response lock(URL url) throws IOException, RequestException{
-		return lock(url, null, null);
+		return execute(()->lock(URL2URI(url)));
 	}
 
 	@Override
-	public Response lock(String url, List<Header> headers) throws IOException, RequestException{
-		return lock(url, null, headers);
-	}
-
-	@Override
-	public Response lock(URL url, List<Header> headers) throws IOException, RequestException{
-		return lock(url, null, headers);
-	}
-
-	@Override
-	public Response lock(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return lock(url, parameters, null);
+	public Response lock(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return lock(uri, parameters, null);
 	}
 
 	@Override
 	public Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return lock(url, parameters, null);
+		return execute(()->lock(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response lock(URI uri, List<Header> headers) throws IOException, RequestException{
+		return lock(uri, null, headers);
+	}
+
+	@Override
+	public Response lock(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response lock(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return lock(url.toString(), parameters, headers);
+		return execute(()->lock(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response unlock(String url) throws IOException, RequestException{
-		return unlock(url, null, null);
+	public Response lock(URI uri, int readTimeout) throws IOException, RequestException{
+		return lock(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response lock(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response lock(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return lock(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response lock(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response lock(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return lock(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response lock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->lock(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response unlock(URI uri) throws IOException, RequestException{
+		return unlock(uri, null, null);
 	}
 
 	@Override
 	public Response unlock(URL url) throws IOException, RequestException{
-		return unlock(url, null, null);
+		return execute(()->unlock(URL2URI(url)));
 	}
 
 	@Override
-	public Response unlock(String url, List<Header> headers) throws IOException, RequestException{
-		return unlock(url, null, headers);
-	}
-
-	@Override
-	public Response unlock(URL url, List<Header> headers) throws IOException, RequestException{
-		return unlock(url, null, headers);
-	}
-
-	@Override
-	public Response unlock(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return unlock(url, parameters, null);
+	public Response unlock(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return unlock(uri, parameters, null);
 	}
 
 	@Override
 	public Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return unlock(url, parameters, null);
+		return execute(()->unlock(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response unlock(URI uri, List<Header> headers) throws IOException, RequestException{
+		return unlock(uri, null, headers);
+	}
+
+	@Override
+	public Response unlock(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return unlock(url.toString(), parameters, headers);
+		return execute(()->unlock(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response propfind(String url) throws IOException, RequestException{
-		return propfind(url, null, null);
+	public Response unlock(URI uri, int readTimeout) throws IOException, RequestException{
+		return unlock(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response unlock(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response unlock(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return unlock(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response unlock(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response unlock(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return unlock(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response unlock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->unlock(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response propfind(URI uri) throws IOException, RequestException{
+		return propfind(uri, null, null);
 	}
 
 	@Override
 	public Response propfind(URL url) throws IOException, RequestException{
-		return propfind(url, null, null);
+		return execute(()->propfind(URL2URI(url)));
 	}
 
 	@Override
-	public Response propfind(String url, List<Header> headers) throws IOException, RequestException{
-		return propfind(url, null, headers);
-	}
-
-	@Override
-	public Response propfind(URL url, List<Header> headers) throws IOException, RequestException{
-		return propfind(url, null, headers);
-	}
-
-	@Override
-	public Response propfind(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return propfind(url, parameters, null);
+	public Response propfind(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return propfind(uri, parameters, null);
 	}
 
 	@Override
 	public Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return propfind(url, parameters, null);
+		return execute(()->propfind(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response propfind(URI uri, List<Header> headers) throws IOException, RequestException{
+		return propfind(uri, null, headers);
+	}
+
+	@Override
+	public Response propfind(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return propfind(url.toString(), parameters, headers);
+		return execute(()->propfind(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response proppatch(String url) throws IOException, RequestException{
-		return proppatch(url, null, null, null);
+	public Response propfind(URI uri, int readTimeout) throws IOException, RequestException{
+		return propfind(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response propfind(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response propfind(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return propfind(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response propfind(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response propfind(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return propfind(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response propfind(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->propfind(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response proppatch(URI uri) throws IOException, RequestException{
+		return proppatch(uri, null, null, null);
 	}
 
 	@Override
 	public Response proppatch(URL url) throws IOException, RequestException{
-		return proppatch(url, null, null, null);
+		return execute(()->proppatch(URL2URI(url)));
 	}
 
 	@Override
-	public Response proppatch(String url, List<Header> headers) throws IOException, RequestException{
-		return proppatch(url, null, null, headers);
-	}
-
-	@Override
-	public Response proppatch(URL url, List<Header> headers) throws IOException, RequestException{
-		return proppatch(url, null, null, headers);
-	}
-
-	@Override
-	public Response proppatch(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return proppatch(url, null, parameters, null);
+	public Response proppatch(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return proppatch(uri, null, parameters, null);
 	}
 
 	@Override
 	public Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return proppatch(url, null, parameters, null);
+		return execute(()->proppatch(URL2URI(url), parameters));
 	}
 
 	@Override
-	public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response proppatch(URI uri, List<Header> headers) throws IOException, RequestException{
+		return proppatch(uri, null, null, headers);
+	}
+
+	@Override
+	public Response proppatch(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), headers));
+	}
+
+	@Override
+	public Response proppatch(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return proppatch(url, null, parameters, headers);
+		return proppatch(uri, null, parameters, headers);
 	}
 
 	@Override
 	public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return proppatch(url, null, parameters, headers);
+		return execute(()->proppatch(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody<?> data) throws IOException, RequestException{
-		return proppatch(url, data, null, null);
+	public Response proppatch(URI uri, RequestBody<?> data) throws IOException, RequestException{
+		return proppatch(uri, data, null, null);
 	}
 
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return proppatch(url, data, null, null);
+		return execute(()->proppatch(URL2URI(url), data));
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody<?> data, List<Header> headers)
+	public Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return proppatch(url, data, null, headers);
-	}
-
-	@Override
-	public Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return proppatch(url, data, null, headers);
-	}
-
-	@Override
-	public Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return proppatch(url, data, parameters, null);
+		return proppatch(uri, data, parameters, null);
 	}
 
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return proppatch(url, data, parameters, null);
+		return execute(()->proppatch(URL2URI(url), data, parameters));
+	}
+
+	@Override
+	public Response proppatch(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return proppatch(uri, data, null, headers);
+	}
+
+	@Override
+	public Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), data, headers));
 	}
 
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return proppatch(url.toString(), data, parameters, headers);
+		return execute(()->proppatch(URL2URI(url), data, parameters, headers));
 	}
 
 	@Override
-	public Response report(String url) throws IOException, RequestException{
-		return report(url, null, null, null);
+	public Response proppatch(URI uri, int readTimeout) throws IOException, RequestException{
+		return proppatch(uri, readTimeout, null, null, null);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return proppatch(uri, readTimeout, null, parameters, null);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return proppatch(uri, readTimeout, null, null, headers);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return proppatch(uri, readTimeout, null, parameters, headers);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return proppatch(uri, readTimeout, data, null, null);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return proppatch(uri, readTimeout, data, parameters, null);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return proppatch(uri, readTimeout, data, null, headers);
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data, headers));
+	}
+
+	@Override
+	public Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							  List<Header> headers) throws IOException, RequestException{
+		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers));
+	}
+
+	@Override
+	public Response report(URI uri) throws IOException, RequestException{
+		return report(uri, null, null, null);
 	}
 
 	@Override
 	public Response report(URL url) throws IOException, RequestException{
-		return report(url, null, null, null);
+		return execute(()->report(URL2URI(url)));
 	}
 
 	@Override
-	public Response report(String url, List<Header> headers) throws IOException, RequestException{
-		return report(url, null, null, headers);
-	}
-
-	@Override
-	public Response report(URL url, List<Header> headers) throws IOException, RequestException{
-		return report(url, null, null, headers);
-	}
-
-	@Override
-	public Response report(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return report(url, null, parameters, null);
+	public Response report(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return report(uri, null, parameters, null);
 	}
 
 	@Override
 	public Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return report(url, null, parameters, null);
+		return execute(()->report(URL2URI(url), parameters));
 	}
 
 	@Override
-	public Response report(String url, Map<String, Object> parameters, List<Header> headers)
+	public Response report(URI uri, List<Header> headers) throws IOException, RequestException{
+		return report(uri, null, null, headers);
+	}
+
+	@Override
+	public Response report(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), headers));
+	}
+
+	@Override
+	public Response report(URI uri, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return report(url, null, parameters, headers);
+		return report(uri, null, parameters, headers);
 	}
 
 	@Override
 	public Response report(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return report(url, null, parameters, headers);
+		return execute(()->report(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response report(String url, RequestBody<?> data) throws IOException, RequestException{
-		return report(url, data, null, null);
+	public Response report(URI uri, RequestBody<?> data) throws IOException, RequestException{
+		return report(uri, data, null, null);
 	}
 
 	@Override
 	public Response report(URL url, RequestBody<?> data) throws IOException, RequestException{
-		return report(url, data, null, null);
+		return execute(()->report(URL2URI(url), data));
 	}
 
 	@Override
-	public Response report(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return report(url, data, null, headers);
-	}
-
-	@Override
-	public Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
-		return report(url, data, null, headers);
-	}
-
-	@Override
-	public Response report(String url, RequestBody<?> data, Map<String, Object> parameters)
+	public Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return report(url, data, parameters, null);
+		return report(uri, data, parameters, null);
 	}
 
 	@Override
 	public Response report(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return report(url, data, parameters, null);
+		return execute(()->report(URL2URI(url), data, parameters));
+	}
+
+	@Override
+	public Response report(URI uri, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return report(uri, data, null, headers);
+	}
+
+	@Override
+	public Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), data, headers));
 	}
 
 	@Override
 	public Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return report(url.toString(), data, parameters, headers);
+		return execute(()->report(URL2URI(url), data, parameters, headers));
 	}
 
 	@Override
-	public Response view(String url) throws IOException, RequestException{
-		return view(url, null, null);
+	public Response report(URI uri, int readTimeout) throws IOException, RequestException{
+		return report(uri, readTimeout, null, null, null);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return report(uri, readTimeout, null, parameters, null);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return report(uri, readTimeout, null, null, headers);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return report(uri, readTimeout, null, parameters, headers);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return report(uri, readTimeout, data, null, null);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return report(uri, readTimeout, data, parameters, null);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data, parameters));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return report(uri, readTimeout, data, null, headers);
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data, headers));
+	}
+
+	@Override
+	public Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   List<Header> headers) throws IOException, RequestException{
+		return execute(()->report(URL2URI(url), readTimeout, data, parameters, headers));
+	}
+
+	@Override
+	public Response view(URI uri) throws IOException, RequestException{
+		return view(uri, null, null);
 	}
 
 	@Override
 	public Response view(URL url) throws IOException, RequestException{
-		return view(url, null, null);
+		return execute(()->view(URL2URI(url)));
 	}
 
 	@Override
-	public Response view(String url, List<Header> headers) throws IOException, RequestException{
-		return view(url, null, headers);
-	}
-
-	@Override
-	public Response view(URL url, List<Header> headers) throws IOException, RequestException{
-		return view(url, null, headers);
-	}
-
-	@Override
-	public Response view(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return view(url, parameters, null);
+	public Response view(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return view(uri, parameters, null);
 	}
 
 	@Override
 	public Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return view(url, parameters, null);
+		return execute(()->view(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response view(URI uri, List<Header> headers) throws IOException, RequestException{
+		return view(uri, null, headers);
+	}
+
+	@Override
+	public Response view(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response view(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return view(url.toString(), parameters, headers);
+		return execute(()->view(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response wrapped(String url) throws IOException, RequestException{
-		return wrapped(url, null, null);
+	public Response view(URI uri, int readTimeout) throws IOException, RequestException{
+		return view(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response view(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response view(URI uri, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return view(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response view(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response view(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return view(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response view(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->view(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response wrapped(URI uri) throws IOException, RequestException{
+		return wrapped(uri, null, null);
 	}
 
 	@Override
 	public Response wrapped(URL url) throws IOException, RequestException{
-		return wrapped(url, null, null);
+		return execute(()->wrapped(URL2URI(url)));
 	}
 
 	@Override
-	public Response wrapped(String url, List<Header> headers) throws IOException, RequestException{
-		return wrapped(url, null, headers);
-	}
-
-	@Override
-	public Response wrapped(URL url, List<Header> headers) throws IOException, RequestException{
-		return wrapped(url, null, headers);
-	}
-
-	@Override
-	public Response wrapped(String url, Map<String, Object> parameters) throws IOException, RequestException{
-		return wrapped(url, parameters, null);
+	public Response wrapped(URI uri, Map<String, Object> parameters) throws IOException, RequestException{
+		return wrapped(uri, parameters, null);
 	}
 
 	@Override
 	public Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException{
-		return wrapped(url, parameters, null);
+		return execute(()->wrapped(URL2URI(url), parameters));
+	}
+
+	@Override
+	public Response wrapped(URI uri, List<Header> headers) throws IOException, RequestException{
+		return wrapped(uri, null, headers);
+	}
+
+	@Override
+	public Response wrapped(URL url, List<Header> headers) throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), headers));
 	}
 
 	@Override
 	public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		validateURL(url);
-		return wrapped(url.toString(), parameters, headers);
+		return execute(()->wrapped(URL2URI(url), parameters, headers));
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod) throws IOException, RequestException{
-		return request(url, requestMethod, null, null, null);
+	public Response wrapped(URI uri, int readTimeout) throws IOException, RequestException{
+		return wrapped(uri, readTimeout, null, null);
+	}
+
+	@Override
+	public Response wrapped(URL url, int readTimeout) throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout));
+	}
+
+	@Override
+	public Response wrapped(URI uri, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return wrapped(uri, readTimeout, parameters, null);
+	}
+
+	@Override
+	public Response wrapped(URL url, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout, parameters));
+	}
+
+	@Override
+	public Response wrapped(URI uri, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return wrapped(uri, readTimeout, null, headers);
+	}
+
+	@Override
+	public Response wrapped(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout, headers));
+	}
+
+	@Override
+	public Response wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->wrapped(URL2URI(url), readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod) throws IOException, RequestException{
+		return request(uri, requestMethod, null, null, null);
 	}
 
 	@Override
 	public Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException{
-		return request(url, requestMethod, null, null, null);
+		return execute(()->request(URL2URI(url), requestMethod));
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, List<Header> headers)
+	public Response request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return request(url, requestMethod, null, null, headers);
+		return request(uri, requestMethod, null, parameters, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, List<Header> headers)
+	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
+			IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, parameters));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, List<Header> headers)
 			throws IOException, RequestException{
-		return request(url, requestMethod, null, null, headers);
+		return request(uri, requestMethod, null, null, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return request(url, requestMethod, null, parameters, null);
+	public Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws IOException,
+			RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, headers));
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters)
-			throws IOException, RequestException{
-		return request(url, requestMethod, null, parameters, null);
-	}
-
-	@Override
-	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
+	public Response request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters,
 							List<Header> headers) throws IOException, RequestException{
-		return request(url, requestMethod, null, parameters, headers);
+		return request(uri, requestMethod, null, parameters, headers);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
-							List<Header> headers) throws IOException, RequestException{
-		return request(url, requestMethod, null, parameters, headers);
-	}
-
-	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data)
+	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException{
-		return request(url, requestMethod, data, null, null);
+		return execute(()->request(URL2URI(url), requestMethod, parameters, headers));
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data)
+	public Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data)
 			throws IOException, RequestException{
-		return request(url, requestMethod, data, null, null);
+		return request(uri, requestMethod, data, null, null);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
+	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
+			RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, data));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return request(url, requestMethod, data, null, headers);
-	}
-
-	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
-		return request(url, requestMethod, data, null, headers);
-	}
-
-	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
-							Map<String, Object> parameters) throws IOException, RequestException{
-		return request(url, requestMethod, data, parameters, null);
+		return request(uri, requestMethod, data, parameters, null);
 	}
 
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException{
-		return request(url, requestMethod, data, parameters, null);
+		return execute(()->request(URL2URI(url), requestMethod, data, parameters));
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
-							Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
-		Assert.isBlank(url, "Request url could not be null or empty.");
+	public Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return request(uri, requestMethod, data, null, headers);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, data, headers));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
+							List<Header> headers) throws IOException, RequestException{
+		Assert.isNull(requestMethod, "Request method could not be null.");
 
 		switch(requestMethod){
 			case POST:
-				return post(url, data, parameters, headers);
+				return post(uri, data, parameters, headers);
 			case PUT:
-				return put(url, data, parameters, headers);
+				return put(uri, data, parameters, headers);
 			case PATCH:
-				return patch(url, data, parameters, headers);
+				return patch(uri, data, parameters, headers);
 			case DELETE:
-				return delete(url, parameters, headers);
+				return delete(uri, parameters, headers);
 			case CONNECT:
-				return connect(url, parameters, headers);
+				return connect(uri, parameters, headers);
 			case TRACE:
-				return trace(url, parameters, headers);
+				return trace(uri, parameters, headers);
 			case COPY:
-				return copy(url, parameters, headers);
+				return copy(uri, parameters, headers);
 			case MOVE:
-				return move(url, parameters, headers);
+				return move(uri, parameters, headers);
 			case HEAD:
-				return head(url, parameters, headers);
+				return head(uri, parameters, headers);
 			case OPTIONS:
-				return options(url, parameters, headers);
+				return options(uri, parameters, headers);
 			case LINK:
-				return link(url, parameters, headers);
+				return link(uri, parameters, headers);
 			case UNLINK:
-				return unlink(url, parameters, headers);
+				return unlink(uri, parameters, headers);
 			case PURGE:
-				return purge(url, parameters, headers);
+				return purge(uri, parameters, headers);
 			case LOCK:
-				return lock(url, parameters, headers);
+				return lock(uri, parameters, headers);
 			case UNLOCK:
-				return unlock(url, parameters, headers);
+				return unlock(uri, parameters, headers);
 			case PROPFIND:
-				return propfind(url, parameters, headers);
+				return propfind(uri, parameters, headers);
+			case PROPPATCH:
+				return proppatch(uri, data, parameters, headers);
+			case REPORT:
+				return report(uri, data, parameters, headers);
 			case VIEW:
-				return view(url, parameters, headers);
+				return view(uri, parameters, headers);
 			case WRAPPED:
-				return wrapped(url, parameters, headers);
+				return wrapped(uri, parameters, headers);
 			default:
-				return get(url, parameters, headers);
+				return get(uri, parameters, headers);
 		}
 	}
 
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 							List<Header> headers) throws IOException, RequestException{
-		Assert.isNull(url, "Request url could not be null.");
-		return request(url.toString(), requestMethod, data, parameters, headers);
+		return execute(()->request(URL2URI(url), requestMethod, data, parameters, headers));
 	}
 
-	protected static void validateURL(final URL url){
-		Assert.isNull(url, "Request URL cloud not be null.");
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout) throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, null, null, null);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, null, parameters, null);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, List<Header> headers)
+			throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, null, null, headers);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, headers));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							List<Header> headers) throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, null, parameters, headers);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
+							List<Header> headers) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
+			throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, data, null, null);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
+			throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							Map<String, Object> parameters)
+			throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, data, parameters, null);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							Map<String, Object> parameters) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							List<Header> headers) throws IOException, RequestException{
+		return request(uri, requestMethod, readTimeout, data, null, headers);
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							List<Header> headers) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers));
+	}
+
+	@Override
+	public Response request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
+		Assert.isNull(requestMethod, "Request method could not be null.");
+
+		switch(requestMethod){
+			case POST:
+				return post(uri, readTimeout, data, parameters, headers);
+			case PUT:
+				return put(uri, readTimeout, data, parameters, headers);
+			case PATCH:
+				return patch(uri, readTimeout, data, parameters, headers);
+			case DELETE:
+				return delete(uri, readTimeout, parameters, headers);
+			case CONNECT:
+				return connect(uri, readTimeout, parameters, headers);
+			case TRACE:
+				return trace(uri, readTimeout, parameters, headers);
+			case COPY:
+				return copy(uri, readTimeout, parameters, headers);
+			case MOVE:
+				return move(uri, readTimeout, parameters, headers);
+			case HEAD:
+				return head(uri, readTimeout, parameters, headers);
+			case OPTIONS:
+				return options(uri, readTimeout, parameters, headers);
+			case LINK:
+				return link(uri, readTimeout, parameters, headers);
+			case UNLINK:
+				return unlink(uri, readTimeout, parameters, headers);
+			case PURGE:
+				return purge(uri, readTimeout, parameters, headers);
+			case LOCK:
+				return lock(uri, readTimeout, parameters, headers);
+			case UNLOCK:
+				return unlock(uri, readTimeout, parameters, headers);
+			case PROPFIND:
+				return propfind(uri, readTimeout, parameters, headers);
+			case PROPPATCH:
+				return proppatch(uri, readTimeout, data, parameters, headers);
+			case REPORT:
+				return report(uri, readTimeout, data, parameters, headers);
+			case VIEW:
+				return view(uri, readTimeout, parameters, headers);
+			case WRAPPED:
+				return wrapped(uri, readTimeout, parameters, headers);
+			default:
+				return get(uri, readTimeout, parameters, headers);
+		}
+	}
+
+	@Override
+	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
+							Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
+		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers));
 	}
 
 }

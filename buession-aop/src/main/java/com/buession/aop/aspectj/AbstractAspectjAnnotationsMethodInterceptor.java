@@ -19,15 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aspectj;
 
 import com.buession.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * Aspectj 方法注解拦截器抽象类
@@ -39,13 +42,13 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	public AbstractAspectjAnnotationsMethodInterceptor(){
+	public AbstractAspectjAnnotationsMethodInterceptor() {
 		super();
 	}
 
-	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable{
+	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable {
 		if(logger.isDebugEnabled()){
-			AspectjAnnotationsMethodInterceptorLogUtils.performBeforeInterceptionDebug(logger, joinPoint);
+			performInterceptionDebug(joinPoint);
 		}
 
 		// 1. Adapt the join point into a method invocation
@@ -54,15 +57,74 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 		super.invoke(mi);
 	}
 
-	public void performAfterInterception(JoinPoint joinPoint) throws Throwable{
+	public void performAfterInterception(JoinPoint joinPoint) throws Throwable {
 		if(logger.isDebugEnabled()){
-			AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
+			performInterceptionDebug(joinPoint);
 		}
 
 		// 1. Adapt the join point into a method invocation
 		AfterAdviceMethodInvocationAdapter mi = AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
 		// 2. Delegate the authorization of the method call to the super class
 		super.invoke(mi);
+	}
+
+	/**
+	 * @since 2.3.0
+	 */
+	public void performAfterReturningInterception(JoinPoint joinPoint) throws Throwable {
+		if(logger.isDebugEnabled()){
+			performInterceptionDebug(joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		AfterReturningAdviceMethodInvocationAdapter mi = AfterReturningAdviceMethodInvocationAdapter.createFromJoinPoint(
+				joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
+
+	/**
+	 * @since 2.3.0
+	 */
+	public void performAfterThrowingInterception(JoinPoint joinPoint) throws Throwable {
+		if(logger.isDebugEnabled()){
+			performInterceptionDebug(joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		AfterThrowingAdviceMethodInvocationAdapter mi = AfterThrowingAdviceMethodInvocationAdapter.createFromJoinPoint(
+				joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
+
+	/**
+	 * @since 2.3.0
+	 */
+	public void performAroundInterception(JoinPoint joinPoint) throws Throwable {
+		if(logger.isDebugEnabled()){
+			performInterceptionDebug(joinPoint);
+		}
+
+		// 1. Adapt the join point into a method invocation
+		AroundAdviceMethodInvocationAdapter mi = AroundAdviceMethodInvocationAdapter.createFromJoinPoint(
+				joinPoint);
+		// 2. Delegate the authorization of the method call to the super class
+		super.invoke(mi);
+	}
+
+	protected void performInterceptionDebug(final JoinPoint joinPoint) {
+		final StringBuilder message = new StringBuilder(255);
+
+		message.append("Invoking a method decorated with a annotation").append(System.lineSeparator());
+		message.append("\tkind       : ").append(joinPoint.getKind()).append(System.lineSeparator());
+		message.append("\tjoinPoint  : ").append(joinPoint).append(System.lineSeparator());
+		message.append("\tannotations: ")
+				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
+				.append(System.lineSeparator());
+		message.append("\ttarget     : ").append(joinPoint.getTarget());
+
+		logger.debug(message.toString());
 	}
 
 }

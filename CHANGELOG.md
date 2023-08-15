@@ -2,6 +2,90 @@
 ===========================
 
 
+## [2.3.0](https://github.com/buession/buession-security/releases/tag/v2.3.0) (2023-08-15)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.0)
+
+
+### 🔔 变化
+
+- **buession-core：** 废弃 com.buession.core.serializer.type.TypeReference 使用 com.buession.core.type.TypeReference【3.0.0 版本删除】
+- **buession-core：** 将序列化类，拆分成序列化和反序列化
+- **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler【3.0.0 版本删除】
+- **buession-httpclient：** 废弃 Request.setUrl(String url) 使用 Request.setUri(URI uri) 替代【3.0.0 版本删除】
+- **buession-web：** AbstractRestController 添加主键类型、数据传输对象类型、数据输出对象类型
+- **buession-web：** Response 的 Pagination 类型由 com.buession.core.Pagination 更改为 com.buession.web.mvc.Pagination 不再返回数据
+- **buession-redis：** 废弃 bitfield 通过可变参数传参
+
+
+### ⭐ 新特性
+
+- **buession-lang：** 新增浏览器类型 BrowserType、设备类型 DeviceType、渲染引擎 RenderingEngine、版本 Version、浏览器 Browser、操作系统 OperatingSystem 定义
+- **buession-lang：** 新增重试配置 Retry
+- **buession-aop：** 增加 AfterReturningAdviceMethodInvocationAdapter、AfterThrowingAdviceMethodInvocationAdapter、AroundAdviceMethodInvocationAdapter
+- **buession-core：** 新增类型引用类 com.buession.core.type.TypeReference
+- **buession-core：** 新增配置器接口 Configurer
+- **buession-core：** 新增定制器接口 Customizer
+- **buession-core：** 新增线程池配置类 ThreadPoolConfiguration
+- **buession-core：** Arrays 新增元素重复填充方法
+- **buession-core：** StringUtils 新增截取左边指定个字符串
+- **buession-core：** DateTime 新增如果获取原生日期、时间对象方法
+- **buession-dao：** 删除数据时，支持指定删除条数
+- **buession-httpclient：** 新增实验性 HTTP 异步请求客户端
+- **buession-httpclient：** 请求方法支持传 URI
+- **buession-httpclient：** 支持为每次请求单独配置 readTimeout
+- **buession-jdbc：** DataSource 可设置驱动、JDBC URL、数据库用户名、数据库密码信息
+- **buession-jdbc：** 新增 javax.sql.DataSource 初始化回调接口 Callback
+- **buession-redis：** bitfield API 支持通过 BitFieldArgument 传参
+- **buession-net：** SslConfiguration 增加 sslContext 属性
+- **buession-net：** 新增 SSL 配置 SslConfigure
+
+
+### 🐞 Bug 修复
+
+- **buession-redis：** 修复 Jedis StringCommands.SetArgument 设置过期时间戳，处理成过期时间的 BUG
+- **buession-redis：** 修复 Client 对象返回的 cmd 类型错误的 BUG
+- **buession-jdbc：** 修复 DataSource 未设置 PoolConfiguration 创建原生 DataSource 空指针 BUG
+- **buession-httpclient：** 修复 HttpClient request 方法，无法发送 report、proppatch 请求 BUG
+- **buession-httpclient：** 修复 OkHttpClientConnectionManager 中错误设置 IdleConnectionTime 的 BUG
+- **buession-web：** 修复 AbstractBasicRestController 无法调用重写 pageNotFound(final String uri) 方法 BUG
+- **buession-web：** 修复 ServerInfoFilter 通过 setHeaderName 方法设置响应头名称无效的 BUG
+- **buession-web：** 修复 ServerInfoFilter 通过构造函数设置响应头名称未进行有效性验证的 BUG
+- **buession-web：** 修复 ServletContentTypeAnnotationHandler、ServletResponseHeadersAnnotationHandler 空指针 BUG
+- **buession-web：** 修复 servlet 下 ExceptionResolver 处理异常时，响应流异常关闭的 BUG
+
+
+### ⏪ 优化
+
+- **buession-httpclient：** 内部优化
+- 其它优化
+
+
+---
+
+
+## [2.2.1](https://github.com/buession/buession-security/releases/tag/v2.2.1) (2023-03-31)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.2.1)
+- **buession-geoip：** 升级 IP 库
+
+
+### 🔔 变化
+- **buession-web：** Servlet AbstractHandlerExceptionResolver doResolve 方法支持接收 handler
+
+
+### ⭐ 新特性
+
+- **buession-web：** 新增实验性 User-Agent 解析工具
+
+
+---
+
+
 ## [2.2.0](https://github.com/buession/buession-security/releases/tag/v2.2.0) (2023-03-10)
 
 ### 🔨依赖升级
@@ -35,7 +119,9 @@
 
 
 ### ⏪ 优化
-- 其它优化
+
+- 其它性能优化
+- 其它代码优化
 
 
 ---

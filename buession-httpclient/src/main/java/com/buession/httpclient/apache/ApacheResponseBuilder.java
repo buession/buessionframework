@@ -99,13 +99,10 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder<org.apache.ht
 	private static class ApacheResponseHeaderParse extends AbstractResponseHeaderParse<Header[]> {
 
 		@Override
-		protected void doParse(final org.apache.http.Header[] headers,
-							   final Multimap<String, String> headersMap){
-			if(headers.length > 0){
-				for(org.apache.http.Header header : headers){
-					if(header.getElements() != null){
-						headersMap.put(header.getName(), header.getValue());
-					}
+		protected void doParse(final org.apache.http.Header[] headers, final Multimap<String, String> headersMap){
+			for(org.apache.http.Header header : headers){
+				if(header.getElements() != null){
+					headersMap.put(header.getName(), header.getValue());
 				}
 			}
 		}

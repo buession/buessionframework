@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.spring;
@@ -28,7 +28,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ResourceLoaderAware;
 
 import java.io.IOException;
 
@@ -36,7 +35,7 @@ import java.io.IOException;
  * @author Yong.Teng
  */
 public class VelocityEngineFactoryBean extends VelocityEngineFactory implements FactoryBean<VelocityEngine>,
-		InitializingBean, ResourceLoaderAware {
+		InitializingBean {
 
 	private VelocityEngine velocityEngine;
 

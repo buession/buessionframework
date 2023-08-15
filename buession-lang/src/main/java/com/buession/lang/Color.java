@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -141,7 +141,8 @@ public class Color implements Serializable {
 				String a, c, d;
 				int[] temp = new int[3];
 				for(int i = 0; i < 3; i++){
-					a = hex.length() == 6 ? hex.substring(i * 2, i * 2 + 2) : hex.substring(i, i + 1) + hex.substring(i, i + 1);
+					a = hex.length() == 6 ? hex.substring(i * 2, i * 2 + 2) :
+							hex.substring(i, i + 1) + hex.substring(i, i + 1);
 					c = a.substring(0, 1);
 					d = a.substring(1, 2);
 					temp[i] = str.indexOf(c) * 16 + str.indexOf(d);
@@ -177,11 +178,7 @@ public class Color implements Serializable {
 
 	@Override
 	public String toString(){
-		final StringBuilder sb = new StringBuilder(11);
-
-		sb.append(r).append(',').append(g).append(',').append(b);
-
-		return sb.toString();
+		return "" + r + ',' + g + ',' + b;
 	}
 
 }

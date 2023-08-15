@@ -19,61 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
-import okhttp3.HttpClientConnectionManager;
-import okhttp3.OkHttpClient;
-
-import java.util.concurrent.TimeUnit;
-
 /**
  * @author Yong.Teng
  */
-public class HttpClientBuilder {
-
-	private final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+@Deprecated
+public class HttpClientBuilder extends okhttp3.HttpClientBuilder {
 
 	private HttpClientBuilder(){
 	}
 
 	public static HttpClientBuilder create(){
 		return new HttpClientBuilder();
-	}
-
-	public HttpClientBuilder setConnectionManager(HttpClientConnectionManager connectionManager){
-		builder.connectionPool(connectionManager.getConnectionPool());
-		return this;
-	}
-
-	public HttpClientBuilder setConnectTimeout(long connectTimeout){
-		if(connectTimeout > -1){
-			builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
-		}
-
-		return this;
-	}
-
-	public HttpClientBuilder setReadTimeout(long readTimeout){
-		if(readTimeout > -1){
-			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
-		}
-
-		return this;
-	}
-
-	public HttpClientBuilder setFollowRedirects(Boolean followRedirects){
-		if(followRedirects != null){
-			builder.followRedirects(followRedirects);
-		}
-
-		return this;
-	}
-
-	public OkHttpClient build(){
-		return builder.build();
 	}
 
 }

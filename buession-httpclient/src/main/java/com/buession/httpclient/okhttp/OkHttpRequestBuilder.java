@@ -34,7 +34,6 @@ import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
-import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
@@ -54,6 +53,7 @@ import com.buession.httpclient.okhttp.convert.XmlRawRequestBodyConverter;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBuilder.OkHttpRequest> {
+public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.httpclient.okhttp.OkHttpRequest> {
 
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
@@ -86,34 +86,145 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		request = new OkHttpRequest();
 	}
 
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 */
 	public static OkHttpRequestBuilder create(){
 		return new OkHttpRequestBuilder();
 	}
 
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static OkHttpRequestBuilder create(String url){
-		return create().setUrl(url);
+		final OkHttpRequestBuilder builder = create();
+		builder.setUrl(url);
+		return builder;
 	}
 
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static OkHttpRequestBuilder create(String url, Map<String, Object> parameters){
 		return create(url).setParameters(parameters);
 	}
 
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static OkHttpRequestBuilder create(String url, List<Header> headers){
 		return create(url).setHeaders(headers);
 	}
 
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param url
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 */
+	@Deprecated
 	public static OkHttpRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
 		return create(url, parameters).setHeaders(headers);
 	}
 
-	@Override
-	public OkHttpRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-		return this;
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static OkHttpRequestBuilder create(URI uri){
+		final OkHttpRequestBuilder builder = create();
+		builder.setUri(uri);
+		return builder;
+	}
+
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static OkHttpRequestBuilder create(URI uri, Map<String, Object> parameters){
+		return create(uri).setParameters(parameters);
+	}
+
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static OkHttpRequestBuilder create(URI uri, List<Header> headers){
+		return create(uri).setHeaders(headers);
+	}
+
+	/**
+	 * 创建 {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @param uri
+	 * 		请求 URL
+	 * @param parameters
+	 * 		请求参数
+	 * @param headers
+	 * 		请求头
+	 *
+	 * @return {@link OkHttpRequestBuilder} 实例
+	 *
+	 * @since 2.3.0
+	 */
+	public static OkHttpRequestBuilder create(URI uri, Map<String, Object> parameters, List<Header> headers){
+		return create(uri, parameters).setHeaders(headers);
 	}
 
 	@Override
-	public OkHttpRequestBuilder setUrl(String url){
-		this.url = url;
+	public OkHttpRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
 		return this;
 	}
 
@@ -242,8 +353,8 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	}
 
 	@Override
-	public OkHttpRequest build(){
-		OkHttpRequest request = super.build();
+	public com.buession.httpclient.okhttp.OkHttpRequest build(){
+		com.buession.httpclient.okhttp.OkHttpRequest request = super.build();
 
 		final Headers.Builder headersBuilder = new Headers.Builder();
 
@@ -258,9 +369,9 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		return request;
 	}
 
-	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder okhttp3RequestBuilder,
+	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder requestBuilder,
 											  final RequestMethod method){
-		request.setRequestBuilder(okhttp3RequestBuilder);
+		request.setRequestBuilder(requestBuilder);
 		request.setMethod(method);
 		return this;
 	}
@@ -276,17 +387,8 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		return convert == null ? DEFAULT_REQUEST_BODY : convert.convert(data);
 	}
 
-	public final static class OkHttpRequest extends Request {
-
-		private okhttp3.Request.Builder builder;
-
-		public okhttp3.Request.Builder getRequestBuilder(){
-			return builder;
-		}
-
-		public void setRequestBuilder(okhttp3.Request.Builder builder){
-			this.builder = builder;
-		}
+	@Deprecated
+	public final static class OkHttpRequest extends com.buession.httpclient.okhttp.OkHttpRequest {
 
 	}
 

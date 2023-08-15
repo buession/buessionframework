@@ -37,13 +37,13 @@ import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.ClusterFailoverOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.response.BumpEpochConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ClusterInfoConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ClusterNodesConverter;
+import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
+import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
+import com.buession.redis.core.internal.convert.response.ClusterNodesConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterReplicasConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterResetOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ClusterNodeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ClusterSlotConverter;
+import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
+import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;

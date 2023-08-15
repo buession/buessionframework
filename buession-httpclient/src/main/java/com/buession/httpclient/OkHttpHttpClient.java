@@ -19,21 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.conn.OkHttpClientConnectionManager;
-import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestException;
-import com.buession.httpclient.okhttp.HttpClientBuilder;
+import com.buession.httpclient.okhttp.OkHttpHttpClientBuilder;
+import com.buession.httpclient.okhttp.OkHttpRequest;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
 import org.slf4j.Logger;
@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 	/**
 	 * 构造函数
 	 */
-	public OkHttpHttpClient(){
+	public OkHttpHttpClient() {
 		super();
 		setConnectionManager(new OkHttpClientConnectionManager());
 	}
@@ -70,7 +71,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public OkHttpHttpClient(OkHttpClientConnectionManager connectionManager){
+	public OkHttpHttpClient(OkHttpClientConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
@@ -80,164 +81,290 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 	 * @param httpClient
 	 * 		OkHttp Client
 	 */
-	public OkHttpHttpClient(okhttp3.OkHttpClient httpClient){
+	public OkHttpHttpClient(okhttp3.OkHttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
-	public okhttp3.OkHttpClient getHttpClient(){
+	public okhttp3.OkHttpClient getHttpClient() {
 		if(httpClient == null){
-			final Configuration configuration = getConnectionManager().getConfiguration();
+			final OkHttpHttpClientBuilder httpClientBuilder = new OkHttpHttpClientBuilder(
+					(OkHttpClientConnectionManager) getConnectionManager());
 
-			HttpClientBuilder builder = HttpClientBuilder.create()
-					.setConnectionManager(
-							((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager())
-					.setConnectTimeout(configuration.getConnectTimeout())
-					.setReadTimeout(configuration.getReadTimeout());
-
-			if(configuration.isAllowRedirects() != null){
-				builder.setFollowRedirects(configuration.isAllowRedirects());
-			}
-
-			httpClient = builder.build();
+			httpClient = httpClientBuilder.build((builder)->{
+			});
 		}
 
 		return httpClient;
 	}
 
-	public void setHttpClient(okhttp3.OkHttpClient httpClient){
+	public void setHttpClient(okhttp3.OkHttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
 	@Override
-	public Response get(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).get());
+	public Response get(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).get());
 	}
 
 	@Override
-	public Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).post(data));
+	public Response get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).get(), readTimeout);
 	}
 
 	@Override
-	public Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).patch(data));
+	public Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data));
 	}
 
 	@Override
-	public Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).put(data));
+	public Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						 List<Header> headers) throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).post(data), readTimeout);
 	}
 
 	@Override
-	public Response delete(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).delete());
+	public Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data));
 	}
 
 	@Override
-	public Response connect(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).connect());
+	public Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						List<Header> headers) throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).put(data), readTimeout);
 	}
 
 	@Override
-	public Response trace(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).trace());
+	public Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data));
 	}
 
 	@Override
-	public Response copy(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).copy());
+	public Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						  List<Header> headers) throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout);
 	}
 
 	@Override
-	public Response move(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).move());
+	public Response delete(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).delete());
 	}
 
 	@Override
-	public Response head(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).head());
+	public Response delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).delete(), readTimeout);
 	}
 
 	@Override
-	public Response options(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).options());
+	public Response connect(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).connect());
 	}
 
 	@Override
-	public Response link(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).link());
+	public Response connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).connect(), readTimeout);
 	}
 
 	@Override
-	public Response unlink(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).unlink());
+	public Response trace(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).trace());
 	}
 
 	@Override
-	public Response purge(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).purge());
+	public Response trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).trace(), readTimeout);
 	}
 
 	@Override
-	public Response lock(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).lock());
+	public Response copy(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).copy());
 	}
 
 	@Override
-	public Response unlock(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).unlock());
+	public Response copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).copy(), readTimeout);
 	}
 
 	@Override
-	public Response propfind(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).propfind());
+	public Response move(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).move());
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).proppatch(data));
+	public Response move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).move(), readTimeout);
 	}
 
 	@Override
-	public Response report(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).report(data));
+	public Response head(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).head());
 	}
 
 	@Override
-	public Response view(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).view());
+	public Response head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).head(), readTimeout);
 	}
 
 	@Override
-	public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
-		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).wrapped());
+	public Response options(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).options());
 	}
 
-	protected Response doRequest(final OkHttpRequestBuilder builder)
-			throws IOException, RequestException{
-		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+	@Override
+	public Response options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).options(), readTimeout);
+	}
 
+	@Override
+	public Response link(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).link());
+	}
+
+	@Override
+	public Response link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).link(), readTimeout);
+	}
+
+	@Override
+	public Response unlink(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlink());
+	}
+
+	@Override
+	public Response unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlink(), readTimeout);
+	}
+
+	@Override
+	public Response purge(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).purge());
+	}
+
+	@Override
+	public Response purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).purge(), readTimeout);
+	}
+
+	@Override
+	public Response lock(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).lock());
+	}
+
+	@Override
+	public Response lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).lock(), readTimeout);
+	}
+
+	@Override
+	public Response unlock(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlock());
+	}
+
+	@Override
+	public Response unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).unlock(), readTimeout);
+	}
+
+	@Override
+	public Response propfind(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).propfind());
+	}
+
+	@Override
+	public Response propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).propfind(), readTimeout);
+	}
+
+	@Override
+	public Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data));
+	}
+
+	@Override
+	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+							  List<Header> headers) throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout);
+	}
+
+	@Override
+	public Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data));
+	}
+
+	@Override
+	public Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
+						   List<Header> headers) throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).report(data), readTimeout);
+	}
+
+	@Override
+	public Response view(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).view());
+	}
+
+	@Override
+	public Response view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).view(), readTimeout);
+	}
+
+	@Override
+	public Response wrapped(URI uri, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).wrapped());
+	}
+
+	@Override
+	public Response wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(OkHttpRequestBuilder.create(uri, parameters, headers).wrapped(), readTimeout);
+	}
+
+	protected Response doRequest(final OkHttpRequestBuilder builder) throws IOException, RequestException {
+		final OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+		return doRequest(request);
+	}
+
+	protected Response doRequest(final OkHttpRequestBuilder builder, final int readTimeout)
+			throws IOException, RequestException {
+		final OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
+		return doRequest(request);
+	}
+
+	protected Response doRequest(final OkHttpRequest request) throws IOException, RequestException {
 		okhttp3.Request okHttpRequest = request.getRequestBuilder().build();
 		okhttp3.Response httpResponse = null;
 		final OkHttpResponseBuilder httpResponseBuilder = new OkHttpResponseBuilder();

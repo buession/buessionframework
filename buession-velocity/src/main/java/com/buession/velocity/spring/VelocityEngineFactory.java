@@ -33,6 +33,7 @@ import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -48,7 +49,7 @@ import java.util.Properties;
 /**
  * @author Yong.Teng
  */
-public class VelocityEngineFactory {
+public class VelocityEngineFactory implements ResourceLoaderAware {
 
 	private Resource configLocation;
 
@@ -98,6 +99,7 @@ public class VelocityEngineFactory {
 		return resourceLoader;
 	}
 
+	@Override
 	public void setResourceLoader(ResourceLoader resourceLoader){
 		this.resourceLoader = resourceLoader;
 	}

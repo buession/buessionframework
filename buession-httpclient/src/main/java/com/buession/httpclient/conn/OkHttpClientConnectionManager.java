@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -32,7 +32,7 @@ import okhttp3.HttpClientConnectionManager;
  *
  * @author Yong.Teng
  */
-public class OkHttpClientConnectionManager extends AbstractConnectionManager<HttpClientConnectionManager> {
+public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionManager<HttpClientConnectionManager> {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
@@ -81,12 +81,16 @@ public class OkHttpClientConnectionManager extends AbstractConnectionManager<Htt
 	 */
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
-		HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
+		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
 		//最大连接数
 		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
+		// 默认的最大并发请求数量
+		//connectionManager.setMaxRequests(getConfiguration().getMaxPerRoute());
+		// 同时请求相同主机的请求数量最大值
+		connectionManager.setMaxRequestsPerHost(getConfiguration().getMaxPerRoute());
 		// 空闲连接存活时长
-		connectionManager.setIdleConnectionTime(getConfiguration().getMaxConnections());
+		connectionManager.setIdleConnectionTime(getConfiguration().getIdleConnectionTime());
 
 		return connectionManager;
 	}

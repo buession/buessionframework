@@ -19,15 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core.utils;
 
 import com.buession.core.builder.ListBuilder;
+import com.buession.core.utils.Assert;
 import com.buession.httpclient.core.Header;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +46,8 @@ import java.util.TimeZone;
 public class HeadersBuilder {
 
 	private final ListBuilder<Header> builder = ListBuilder.create();
+
+	private static DateTimeFormatter dateTimeFormatter = null;
 
 	/**
 	 * 构造函数
@@ -190,11 +196,10 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final String name, final Date value){
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss GMT", Locale.US);
+		Assert.isNull(value, "Date cloud not be null.");
 
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-		return add(name, sdf.format(value));
+		final Instant instant = Instant.ofEpochMilli(value.getTime());
+		return add(name, createDateTimeFormatter().format(instant));
 	}
 
 	/**
@@ -209,7 +214,7 @@ public class HeadersBuilder {
 		if(headers != null){
 			builder.addAll(headers);
 		}
-		
+
 		return this;
 	}
 
@@ -220,6 +225,16 @@ public class HeadersBuilder {
 	 */
 	public List<Header> build(){
 		return builder.build();
+	}
+
+	protected static DateTimeFormatter createDateTimeFormatter(){
+		if(dateTimeFormatter == null){
+			dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss GMT", Locale.US);
+
+			dateTimeFormatter.withZone(TimeZone.getTimeZone("GMT").toZoneId());
+		}
+
+		return dateTimeFormatter;
 	}
 
 }

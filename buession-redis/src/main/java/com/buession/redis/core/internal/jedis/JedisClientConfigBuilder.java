@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -37,8 +37,7 @@ public class JedisClientConfigBuilder {
 
 	private final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
 
-	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource,
-									 final SslConfiguration sslConfiguration){
+	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource, final SslConfiguration sslConfiguration){
 		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
 				.blockingSocketTimeoutMillis(dataSource.getInfiniteSoTimeout())

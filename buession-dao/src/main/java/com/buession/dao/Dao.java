@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -369,6 +369,20 @@ public interface Dao<P, E> {
 	 * @return 影响条数
 	 */
 	int delete(Map<String, Object> conditions);
+
+	/**
+	 * 删除数据
+	 *
+	 * @param conditions
+	 * 		删除条件
+	 * @param size
+	 * 		删除条数
+	 *
+	 * @return 影响条数
+	 *
+	 * @since 2.3.0
+	 */
+	int delete(Map<String, Object> conditions, int size);
 
 	/**
 	 * 根据主键删除数据

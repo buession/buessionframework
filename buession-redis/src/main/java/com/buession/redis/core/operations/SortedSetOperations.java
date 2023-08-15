@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.builder.MapBuilder;
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GtLt;
 import com.buession.redis.core.NxXx;
@@ -873,7 +873,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zDiffObject(final String[] keys, final TypeReference<V> type);
 
@@ -891,7 +891,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zDiffObject(final byte[][] keys, final TypeReference<V> type);
 
@@ -1061,7 +1061,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final String[] keys, final TypeReference<V> type);
 
@@ -1079,7 +1079,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final byte[][] keys, final TypeReference<V> type);
 
@@ -1167,7 +1167,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
 
@@ -1187,7 +1187,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
 
@@ -1275,7 +1275,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type);
 
@@ -1295,7 +1295,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
 
@@ -1395,7 +1395,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
 							final TypeReference<V> type);
@@ -1418,7 +1418,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of intersection
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 							final TypeReference<V> type);
@@ -1497,7 +1497,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V zRandMemberObject(final String key, final TypeReference<V> type);
 
@@ -1515,7 +1515,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> V zRandMemberObject(final byte[] key, final TypeReference<V> type);
 
@@ -1603,7 +1603,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合 key 中的随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRandMemberObject(final String key, final long count, final TypeReference<V> type);
 
@@ -1623,7 +1623,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合 key 中的随机元素反序列化后的对象
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
 
@@ -1741,7 +1741,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeObject(final String key, final long start, final long end, final TypeReference<V> type);
 
@@ -1767,7 +1767,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
 
@@ -1870,7 +1870,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByLexObject(final String key, final double min, final double max, final TypeReference<V> type);
 
@@ -1893,7 +1893,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max, final TypeReference<V> type);
 
@@ -1996,7 +1996,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByLexObject(final String key, final String min, final String max, final TypeReference<V> type);
 
@@ -2019,7 +2019,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final TypeReference<V> type);
 
@@ -2122,7 +2122,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final TypeReference<V> type);
 
@@ -2145,7 +2145,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final TypeReference<V> type);
 
@@ -2248,7 +2248,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final TypeReference<V> type);
 
@@ -2271,7 +2271,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final TypeReference<V> type);
 
@@ -2398,7 +2398,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
 									final long count, final TypeReference<V> type);
@@ -2426,7 +2426,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 									final long count, final TypeReference<V> type);
@@ -2554,7 +2554,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
 									final long count, final TypeReference<V> type);
@@ -2582,7 +2582,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									final long count, final TypeReference<V> type);
@@ -2733,7 +2733,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeObject(final String key, final long start, final long end, final TypeReference<V> type);
 
@@ -2759,7 +2759,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
 
@@ -2862,7 +2862,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final TypeReference<V> type);
 
@@ -2885,7 +2885,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final TypeReference<V> type);
 
@@ -2988,7 +2988,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final TypeReference<V> type);
 
@@ -3011,7 +3011,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final TypeReference<V> type);
 
@@ -3138,7 +3138,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
 									 final long count, final TypeReference<V> type);
@@ -3166,7 +3166,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
 									 final long count, final TypeReference<V> type);
@@ -3294,7 +3294,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 									 final long count, final TypeReference<V> type);
@@ -3322,7 +3322,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									 final long count, final TypeReference<V> type);
@@ -3431,7 +3431,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max,
 									   final TypeReference<V> type);
@@ -3456,7 +3456,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max,
 									   final TypeReference<V> type);
@@ -3565,7 +3565,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
 									   final TypeReference<V> type);
@@ -3590,7 +3590,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
 									   final TypeReference<V> type);
@@ -3723,7 +3723,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
 									   final long count, final TypeReference<V> type);
@@ -3752,7 +3752,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
 									   final long count, final TypeReference<V> type);
@@ -3885,7 +3885,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
 									   final long count, final TypeReference<V> type);
@@ -3914,7 +3914,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									   final long count, final TypeReference<V> type);
@@ -3993,7 +3993,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 反序列化为对象后的集合并集
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final String[] keys, final TypeReference<V> type);
 
@@ -4011,7 +4011,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 反序列化为对象后的集合并集
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final byte[][] keys, final TypeReference<V> type);
 
@@ -4099,7 +4099,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
 
@@ -4119,7 +4119,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
 
@@ -4207,7 +4207,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type);
 
@@ -4227,7 +4227,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
 
@@ -4327,7 +4327,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
 							final TypeReference<V> type);
@@ -4350,7 +4350,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @see TypeReference
 	 */
 	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 							final TypeReference<V> type);

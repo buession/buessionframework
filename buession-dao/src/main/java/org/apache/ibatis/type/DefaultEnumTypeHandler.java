@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -40,18 +40,20 @@ import java.sql.SQLException;
  * 		枚举类型
  *
  * @author Yong.Teng
+ * @see org.apache.ibatis.type.EnumTypeHandler
  * @since 1.3.2
  */
+@Deprecated
 public class DefaultEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTypeHandler<E> {
 
 	private final static Logger logger = LoggerFactory.getLogger(DefaultEnumTypeHandler.class);
 
-	public DefaultEnumTypeHandler(Class<E> type){
+	public DefaultEnumTypeHandler(final Class<E> type) {
 		super(type);
 	}
 
 	@Override
-	protected E parseResult(final String str) throws SQLException{
+	protected E parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			E result = EnumUtils.getEnum(type, str);
 			if(result == null && logger.isErrorEnabled()){

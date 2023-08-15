@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
@@ -29,9 +29,9 @@ package com.buession.redis.exception;
  */
 public class PoolException extends RedisConnectionFailureException {
 
-    private static final long serialVersionUID = 6014038319970079646L;
+	private final static long serialVersionUID = 6014038319970079646L;
 
-    public PoolException(){
+	public PoolException(){
 		super();
 	}
 

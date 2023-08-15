@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -33,7 +34,10 @@ public class Request {
 
 	private RequestMethod method;
 
+	@Deprecated
 	private String url;
+
+	private URI uri;
 
 	private List<Header> headers;
 
@@ -51,8 +55,19 @@ public class Request {
 		return url;
 	}
 
+	@Deprecated
 	public void setUrl(String url){
 		this.url = url;
+		this.uri = URI.create(url);
+	}
+
+	public URI getUri(){
+		return uri;
+	}
+
+	public void setUri(URI uri){
+		this.uri = uri;
+		this.url = uri.toString();
 	}
 
 	public List<Header> getHeaders(){
@@ -73,7 +88,7 @@ public class Request {
 
 	@Override
 	public String toString(){
-		return "Request{" + "method=" + method + ", url='" + url + '\'' + ", headers=" + headers + ", requestBody=" +
+		return "Request{" + "method=" + method + ", url='" + uri + '\'' + ", headers=" + headers + ", requestBody=" +
 				requestBody + '}';
 	}
 

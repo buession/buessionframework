@@ -19,17 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
-import com.buession.redis.utils.PoolConfigUtils;
+import redis.clients.jedis.Connection;
 import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -113,8 +114,10 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 
 		if(isUsePool()){
 			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
+			final PoolConfigConverter<Connection> poolConfigConverter = new PoolConfigConverter<>(
+					connectionPoolConfig);
 
-			PoolConfigUtils.convert(getPoolConfig(), connectionPoolConfig);
+			poolConfigConverter.convert(getPoolConfig());
 
 			if(getMaxTotalRetriesDuration() > 0){
 				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects,

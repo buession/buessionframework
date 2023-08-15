@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -46,7 +46,7 @@ public class FieldUtils extends org.apache.commons.lang3.reflect.FieldUtils {
 	 *
 	 * @return 属性是为静态属性，返回 true；否则返回 false
 	 */
-	public static boolean isStatic(Field field){
+	public static boolean isStatic(Field field) {
 		Assert.isNull(field, "The field cloud not be null.");
 		return Modifier.isStatic(field.getModifiers());
 	}
@@ -57,12 +57,10 @@ public class FieldUtils extends org.apache.commons.lang3.reflect.FieldUtils {
 	 * @param field
 	 * 		属性
 	 */
-	public static void setAccessible(Field field){
+	public static void setAccessible(Field field) {
 		Assert.isNull(field, "The field cloud not be null.");
 
-		if((Modifier.isPublic(field.getModifiers()) == false ||
-				Modifier.isPublic(field.getDeclaringClass().getModifiers()) == false ||
-				Modifier.isFinal(field.getModifiers())) && field.isAccessible() == false){
+		if(MemberUtils.isNotAccessible(field) && field.isAccessible() == false){
 			field.setAccessible(true);
 		}
 	}

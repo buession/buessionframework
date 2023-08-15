@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -68,7 +68,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final String script, final String... params){
-		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
+		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, paramsSize, params))
@@ -79,7 +79,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params){
-		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
+		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, paramsSize, params))
@@ -90,8 +90,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
-				.put("arguments", arguments);
+		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
+				.put("arguments", (Object[]) arguments);
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
@@ -101,8 +101,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
-				.put("arguments", arguments);
+		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
+				.put("arguments", (Object[]) arguments);
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
@@ -132,7 +132,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
+		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
@@ -143,7 +143,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
+		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
@@ -154,8 +154,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
-				.put("arguments", arguments);
+		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
+				.put("arguments", (Object[]) arguments);
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
@@ -165,8 +165,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
-				.put("arguments", arguments);
+		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
+				.put("arguments", (Object[]) arguments);
 		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
@@ -176,7 +176,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		final CommandArguments args = CommandArguments.create("sha1", sha1);
+		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 		return new JedisSentinelCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 				.general((cmd)->cmd.scriptExists(sha1))
 				.pipeline((cmd)->cmd.scriptExists(null, sha1))
@@ -186,7 +186,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
-		final CommandArguments args = CommandArguments.create("sha1", sha1);
+		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 		return new JedisSentinelCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 				.general((cmd)->cmd.scriptExists(sha1))
 				.pipeline((cmd)->cmd.scriptExists(null, sha1))

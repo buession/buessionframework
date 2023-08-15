@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3;
@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * okhttp(3) 连接管理器
+ *
  * @author Yong.Teng
  * @since 1.3.1
  */
@@ -50,6 +52,20 @@ public class HttpClientConnectionManager implements Closeable {
 	 */
 	private int idleConnectionTime = 5 * 60 * 1000;
 
+	/**
+	 * 默认的最大并发请求数量
+	 *
+	 * @since 2.3.0
+	 */
+	private int maxRequests;
+
+	/**
+	 * 同时请求相同主机的请求数量最大值
+	 *
+	 * @since 2.3.0
+	 */
+	private int maxRequestsPerHost;
+
 	public HttpClientConnectionManager(){
 	}
 
@@ -70,6 +86,17 @@ public class HttpClientConnectionManager implements Closeable {
 	}
 
 	/**
+	 * 返回最大链接数
+	 *
+	 * @return 最大链接数
+	 *
+	 * @since 2.3.0
+	 */
+	public int getMaxConnections(){
+		return maxConnections;
+	}
+
+	/**
 	 * 设置最大链接数
 	 *
 	 * @param maxConnections
@@ -82,6 +109,17 @@ public class HttpClientConnectionManager implements Closeable {
 	}
 
 	/**
+	 * 返回空闲连接存活时长，单位：毫秒
+	 *
+	 * @return 空闲连接存活时长
+	 *
+	 * @since 2.3.0
+	 */
+	public int getIdleConnectionTime(){
+		return idleConnectionTime;
+	}
+
+	/**
 	 * 设置闲连接存活时长，单位：毫秒
 	 *
 	 * @param idleConnectionTime
@@ -89,6 +127,52 @@ public class HttpClientConnectionManager implements Closeable {
 	 */
 	public void setIdleConnectionTime(int idleConnectionTime){
 		this.idleConnectionTime = idleConnectionTime;
+	}
+
+	/**
+	 * 返回默认的最大并发请求数量
+	 *
+	 * @return 默认的最大并发请求数量
+	 *
+	 * @since 2.3.0
+	 */
+	public int getMaxRequests(){
+		return maxRequests;
+	}
+
+	/**
+	 * 设置默认的最大并发请求数量
+	 *
+	 * @param maxRequests
+	 * 		默认的最大并发请求数量
+	 *
+	 * @since 2.3.0
+	 */
+	public void setMaxRequests(int maxRequests){
+		this.maxRequests = maxRequests;
+	}
+
+	/**
+	 * 返回同时请求相同主机的请求数量最大值
+	 *
+	 * @return 同时请求相同主机的请求数量最大值
+	 *
+	 * @since 2.3.0
+	 */
+	public int getMaxRequestsPerHost(){
+		return maxRequestsPerHost;
+	}
+
+	/**
+	 * 设置同时请求相同主机的请求数量最大值
+	 *
+	 * @param maxRequestsPerHost
+	 * 		同时请求相同主机的请求数量最大值
+	 *
+	 * @since 2.3.0
+	 */
+	public void setMaxRequestsPerHost(int maxRequestsPerHost){
+		this.maxRequestsPerHost = maxRequestsPerHost;
 	}
 
 	@Override

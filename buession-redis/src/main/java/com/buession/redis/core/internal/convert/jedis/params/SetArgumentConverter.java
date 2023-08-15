@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -54,11 +54,11 @@ public final class SetArgumentConverter implements Converter<StringCommands.SetA
 		}
 
 		if(source.getPx() != null){
-			setParams.px(source.getPx().intValue());
+			setParams.px(source.getPx());
 		}
 
 		if(source.getPxAt() != null){
-			setParams.px(source.getPxAt());
+			setParams.pxAt(source.getPxAt());
 		}
 
 		if(source.getNxXx() == NxXx.NX){

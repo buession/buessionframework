@@ -29,13 +29,21 @@ import com.buession.httpclient.core.Configuration;
 /**
  * 连接管理器抽象类
  *
+ * @param <CM>
+ * 		原生连接管理器
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractConnectionManager<O> implements ConnectionManager {
+public abstract class AbstractConnectionManager<CM> implements ConnectionManager {
 
 	private Configuration configuration = new Configuration();
 
-	private O clientConnectionManager;
+	private CM clientConnectionManager;
+
+	/**
+	 * @since 2.3.0
+	 */
+	private Boolean connectionManagerShared;
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
@@ -61,7 +69,7 @@ public abstract class AbstractConnectionManager<O> implements ConnectionManager 
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public AbstractConnectionManager(O clientConnectionManager){
+	public AbstractConnectionManager(CM clientConnectionManager){
 		this.clientConnectionManager = clientConnectionManager;
 	}
 
@@ -73,7 +81,7 @@ public abstract class AbstractConnectionManager<O> implements ConnectionManager 
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public AbstractConnectionManager(Configuration configuration, O clientConnectionManager){
+	public AbstractConnectionManager(Configuration configuration, CM clientConnectionManager){
 		this.configuration = configuration;
 		this.clientConnectionManager = clientConnectionManager;
 	}
@@ -104,7 +112,7 @@ public abstract class AbstractConnectionManager<O> implements ConnectionManager 
 	 *
 	 * @return 连接管理器
 	 */
-	public O getClientConnectionManager(){
+	public CM getClientConnectionManager(){
 		return clientConnectionManager;
 	}
 
@@ -114,8 +122,22 @@ public abstract class AbstractConnectionManager<O> implements ConnectionManager 
 	 * @param clientConnectionManager
 	 * 		连接管理器
 	 */
-	public void setClientConnectionManager(O clientConnectionManager){
+	public void setClientConnectionManager(CM clientConnectionManager){
 		this.clientConnectionManager = clientConnectionManager;
+	}
+
+	/**
+	 * @since 2.3.0
+	 */
+	public Boolean getConnectionManagerShared(){
+		return connectionManagerShared;
+	}
+
+	/**
+	 * @since 2.3.0
+	 */
+	public void setConnectionManagerShared(Boolean connectionManagerShared){
+		this.connectionManagerShared = connectionManagerShared;
 	}
 
 	/**
@@ -123,6 +145,6 @@ public abstract class AbstractConnectionManager<O> implements ConnectionManager 
 	 *
 	 * @return 连接管理器
 	 */
-	protected abstract O createDefaultClientConnectionManager();
+	protected abstract CM createDefaultClientConnectionManager();
 
 }

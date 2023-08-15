@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Redis 基本操作封装扩展，可序列化对象和反序列化为对象
@@ -181,22 +182,18 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> Status hMSet(final String key, final List<KeyValue<String, V>> data){
-		Map<String, String> temp = new LinkedHashMap<>(data.size());
-
-		for(KeyValue<String, V> kv : data){
-			temp.put(kv.getKey(), serializer.serialize(kv.getValue()));
-		}
+		Map<String, String> temp = data.stream()
+				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()),
+						(key1, key2)->key2, LinkedHashMap::new));
 
 		return hMSet(key, temp);
 	}
 
 	@Override
 	public <V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data){
-		Map<byte[], byte[]> temp = new LinkedHashMap<>(data.size());
-
-		for(KeyValue<byte[], V> kv : data){
-			temp.put(kv.getKey(), serializer.serializeAsBytes(kv.getValue()));
-		}
+		Map<byte[], byte[]> temp = data.stream()
+				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()),
+						(key1, key2)->key2, LinkedHashMap::new));
 
 		return hMSet(key, temp);
 	}

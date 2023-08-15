@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -45,7 +45,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 
 	@Override
 	public Status pfAdd(final String key, final String... elements){
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
+		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
@@ -55,7 +55,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
+		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
@@ -65,7 +65,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
@@ -75,7 +75,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
@@ -85,7 +85,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 
 	@Override
 	public Long pfCount(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
 				.pipeline((cmd)->cmd.pfcount(keys))
@@ -95,7 +95,7 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 
 	@Override
 	public Long pfCount(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
 				.pipeline((cmd)->cmd.pfcount(keys))

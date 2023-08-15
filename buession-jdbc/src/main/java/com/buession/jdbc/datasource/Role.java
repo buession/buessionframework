@@ -60,7 +60,7 @@ public enum Role {
 	 * @param isReadOnly
 	 * 		是否只读
 	 */
-	Role(final String name, final boolean isReadOnly){
+	Role(final String name, final boolean isReadOnly) {
 		this.name = name;
 		this.isReadOnly = isReadOnly;
 	}
@@ -70,7 +70,7 @@ public enum Role {
 	 *
 	 * @return 角色名称
 	 */
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 
@@ -79,13 +79,13 @@ public enum Role {
 	 *
 	 * @return 是否只读
 	 */
-	public boolean isReadOnly(){
+	public boolean isReadOnly() {
 		return isReadOnly;
 	}
 
 	@Override
-	public String toString(){
-		return "name: " + name + '\'' + ", isReadOnly: " + isReadOnly;
+	public String toString() {
+		return "name: " + name + ", isReadOnly: " + isReadOnly;
 	}
 
 }

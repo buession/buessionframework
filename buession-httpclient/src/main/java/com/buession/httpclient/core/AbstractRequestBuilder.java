@@ -28,9 +28,13 @@ package com.buession.httpclient.core;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-import com.buession.httpclient.apache.convert.ApacheRequestBodyConverter;
 import com.buession.net.HttpURI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -47,9 +51,11 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 
 	protected R request;
 
-	protected String url;
+	protected URI uri;
 
 	protected Map<String, Object> parameters;
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractRequestBuilder.class);
 
 	@Override
 	public RequestBuilder<R> setProtocolVersion(ProtocolVersion protocolVersion){
@@ -58,6 +64,26 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 
 	@Override
 	public RequestBuilder<R> setUrl(String url){
+		return setUri(URI.create(url));
+	}
+
+	@Override
+	public RequestBuilder<R> setUrl(URL url){
+		try{
+			uri = url.toURI();
+		}catch(URISyntaxException e){
+			if(logger.isErrorEnabled()){
+				logger.error("URL {} convert to URI syntax: {}, reason: {}", url, e.getMessage(), e.getReason());
+			}
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+
+		return this;
+	}
+
+	@Override
+	public RequestBuilder<R> setUri(URI uri){
+		this.uri = uri;
 		return this;
 	}
 
@@ -76,34 +102,38 @@ public abstract class AbstractRequestBuilder<R extends Request> implements Reque
 	@Override
 	public R build(){
 		if(Validate.isNotEmpty(parameters)){
-			request.setUrl(determineRequestUrl(url, parameters));
+			request.setUri(determineRequestUri(uri, parameters));
 		}else{
-			request.setUrl(url);
+			request.setUri(uri);
 		}
 
 		return request;
 	}
 
-	protected static String determineRequestUrl(final String url, final Map<String, Object> parameters){
-		final StringBuilder sb = new StringBuilder(url.length());
-
-		sb.append(url);
-
-		if(Validate.isNotEmpty(parameters)){
-			final String queryString = HttpURI.toQueryString(parameters, true);
-
-			if(url.contains("?")){
-				if(StringUtils.endsWith(url, '&') == false){
-					sb.append('&');
-				}
-			}else{
-				sb.append('?');
-			}
-
-			sb.append(queryString);
+	private static URI determineRequestUri(final URI uri, final Map<String, Object> parameters){
+		if(Validate.isEmpty(uri.getRawQuery())){
+			return uri;
 		}
 
-		return sb.toString();
+		final StringBuilder newQuery = new StringBuilder(uri.getRawQuery().length());
+
+		newQuery.append(uri.getRawQuery());
+
+		if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
+			newQuery.append('&');
+		}
+
+		newQuery.append(HttpURI.toQueryString(parameters, false));
+
+		try{
+			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(),
+					uri.getPath(), newQuery.toString(), uri.getFragment());
+		}catch(URISyntaxException e){
+			if(logger.isErrorEnabled()){
+				logger.error("URL {} add parameters syntax: {}, reason: {}", uri, e.getMessage(), e.getReason());
+			}
+			return uri;
+		}
 	}
 
 	protected static <S, T> RequestBodyConverter<S, T> findBodyConverter(

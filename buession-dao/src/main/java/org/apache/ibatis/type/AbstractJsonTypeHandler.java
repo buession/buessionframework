@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -38,23 +38,23 @@ public abstract class AbstractJsonTypeHandler<E> extends BaseTypeHandler<E> {
 
 	protected final Class<E> type;
 
-	public AbstractJsonTypeHandler(Class<E> type){
+	public AbstractJsonTypeHandler(final Class<E> type) {
 		Assert.isNull(type, "Type argument cannot be null.");
 		this.type = type;
 	}
 
 	@Override
-	public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
+	public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
 		return parseResult(rs.getString(columnName));
 	}
 
 	@Override
-	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
+	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
 		return parseResult(rs.getString(columnIndex));
 	}
 
 	@Override
-	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
+	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
 		return parseResult(cs.getString(columnIndex));
 	}
 

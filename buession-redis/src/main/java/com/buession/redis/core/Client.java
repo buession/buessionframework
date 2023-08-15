@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.utils.ObjectStringBuilder;
-import redis.clients.jedis.Protocol;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -135,7 +135,7 @@ public class Client implements Serializable {
 	/**
 	 * 最近一次执行的命令
 	 */
-	private Protocol.Command cmd;
+	private ProtocolCommand cmd;
 
 	/**
 	 * 获取客户端 ID
@@ -503,7 +503,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 最近一次执行的命令
 	 */
-	public Protocol.Command getCmd(){
+	public ProtocolCommand getCmd(){
 		return cmd;
 	}
 
@@ -513,7 +513,7 @@ public class Client implements Serializable {
 	 * @param cmd
 	 * 		最近一次执行的命令
 	 */
-	public void setCmd(Protocol.Command cmd){
+	public void setCmd(ProtocolCommand cmd){
 		this.cmd = cmd;
 	}
 
@@ -573,7 +573,8 @@ public class Client implements Serializable {
 		/**
 		 * 客户端正在等待 VM I/O 操作（已废弃）
 		 */
-		@Deprecated i,
+		@Deprecated
+		i,
 
 		/**
 		 * 一个受监视（watched）的键已被修改， EXEC 命令将失败

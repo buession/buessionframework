@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
 import com.buession.core.collect.Maps;
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.serializer.Serializer;
@@ -343,9 +343,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public List<V> convert(final RedisConnection connection, final List<String> value){
-			final Function<List<String>, List<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserialize(val, clazz))
-							.collect(Collectors.toCollection(ArrayList::new));
+			final Function<List<String>, List<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserialize(val, clazz)).collect(Collectors.toList());
 
 			if(isTransactionOrPipeline(connection)){
 				return addListConverter(index, function);
@@ -369,7 +368,7 @@ interface Converter<SV, TV> {
 		public List<V> convert(final RedisConnection connection, final List<byte[]> value){
 			final Function<List<byte[]>, List<V>> function = (data)->
 					data == null ? null : data.stream().map((val)->serializer.deserializeBytes(val, clazz))
-							.collect(Collectors.toCollection(ArrayList::new));
+							.collect(Collectors.toList());
 
 			if(isTransactionOrPipeline(connection)){
 				return addListBinaryConverter(index, function);
@@ -391,9 +390,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public List<V> convert(final RedisConnection connection, final List<String> value){
-			final Function<List<String>, List<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserialize(val, typeReference))
-							.collect(Collectors.toCollection(ArrayList::new));
+			final Function<List<String>, List<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserialize(val, typeReference)).collect(Collectors.toList());
 
 			if(isTransactionOrPipeline(connection)){
 				return addListConverter(index, function);
@@ -415,9 +413,9 @@ interface Converter<SV, TV> {
 
 		@Override
 		public List<V> convert(final RedisConnection connection, final List<byte[]> value){
-			final Function<List<byte[]>, List<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserializeBytes(val, typeReference))
-							.collect(Collectors.toCollection(ArrayList::new));
+			final Function<List<byte[]>, List<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserializeBytes(val, typeReference))
+							.collect(Collectors.toList());
 
 			if(isTransactionOrPipeline(connection)){
 				return addListBinaryConverter(index, function);
@@ -517,8 +515,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Set<V> convert(final RedisConnection connection, final Set<String> value){
-			final Function<Set<String>, Set<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserialize(val, clazz))
+			final Function<Set<String>, Set<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserialize(val, clazz))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
 
 			if(isTransactionOrPipeline(connection)){
@@ -541,8 +539,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value){
-			final Function<Set<byte[]>, Set<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserializeBytes(val, clazz))
+			final Function<Set<byte[]>, Set<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserializeBytes(val, clazz))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
 
 			if(isTransactionOrPipeline(connection)){
@@ -565,8 +563,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Set<V> convert(final RedisConnection connection, final Set<String> value){
-			final Function<Set<String>, Set<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserialize(val, typeReference))
+			final Function<Set<String>, Set<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserialize(val, typeReference))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
 
 			if(isTransactionOrPipeline(connection)){
@@ -589,8 +587,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value){
-			final Function<Set<byte[]>, Set<V>> function = (data)->
-					data == null ? null : data.stream().map((val)->serializer.deserializeBytes(val, typeReference))
+			final Function<Set<byte[]>, Set<V>> function = (data)->data == null ? null :
+					data.stream().map((val)->serializer.deserializeBytes(val, typeReference))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
 
 			if(isTransactionOrPipeline(connection)){
@@ -626,8 +624,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value){
-			final Function<Map<String, String>, Map<String, V>> function = (data)->
-					data == null ? null : Maps.map(data, (key)->key, serializer::deserialize);
+			final Function<Map<String, String>, Map<String, V>> function = (data)->data == null ? null :
+					Maps.map(data, (key)->key, serializer::deserialize);
 
 			if(isTransactionOrPipeline(connection)){
 				return addMapConverter(index, function);
@@ -646,8 +644,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value){
-			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->
-					data == null ? null : Maps.map(data, (key)->key, serializer::deserializeBytes);
+			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->data == null ? null :
+					Maps.map(data, (key)->key, serializer::deserializeBytes);
 
 			if(isTransactionOrPipeline(connection)){
 				return addMapBinaryConverter(index, function);
@@ -669,8 +667,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value){
-			final Function<Map<String, String>, Map<String, V>> function = (data)->
-					data == null ? null : Maps.map(data, (key)->key, (val)->serializer.deserialize(val, clazz));
+			final Function<Map<String, String>, Map<String, V>> function = (data)->data == null ? null :
+					Maps.map(data, (key)->key, (val)->serializer.deserialize(val, clazz));
 
 			if(isTransactionOrPipeline(connection)){
 				return addMapConverter(index, function);
@@ -692,8 +690,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value){
-			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->
-					data == null ? null : Maps.map(data, (key)->key, (val)->serializer.deserializeBytes(val, clazz));
+			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->data == null ? null :
+					Maps.map(data, (key)->key, (val)->serializer.deserializeBytes(val, clazz));
 
 			if(isTransactionOrPipeline(connection)){
 				return addMapBinaryConverter(index, function);
@@ -715,8 +713,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value){
-			final Function<Map<String, String>, Map<String, V>> function = (data)->
-					data == null ? null : Maps.map(data, (key)->key, (val)->serializer.deserialize(val, typeReference));
+			final Function<Map<String, String>, Map<String, V>> function = (data)->data == null ? null :
+					Maps.map(data, (key)->key, (val)->serializer.deserialize(val, typeReference));
 
 			if(isTransactionOrPipeline(connection)){
 				return addMapConverter(index, function);
@@ -738,9 +736,8 @@ interface Converter<SV, TV> {
 
 		@Override
 		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value){
-			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->
-					data == null ? null : Maps.map(data, (key)->key,
-							(val)->serializer.deserializeBytes(val, typeReference));
+			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->data == null ? null :
+					Maps.map(data, (key)->key, (val)->serializer.deserializeBytes(val, typeReference));
 
 			if(isTransactionOrPipeline(connection)){
 				return addMapBinaryConverter(index, function);
@@ -859,8 +856,7 @@ interface Converter<SV, TV> {
 		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value){
 			final Function<ScanResult<List<String>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
-						.map((val)->serializer.deserialize(val, clazz))
-						.collect(Collectors.toCollection(ArrayList::new));
+						.map((val)->serializer.deserialize(val, clazz)).collect(Collectors.toList());
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -886,8 +882,7 @@ interface Converter<SV, TV> {
 		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value){
 			final Function<ScanResult<List<byte[]>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
-						.map((val)->serializer.deserializeBytes(val, clazz))
-						.collect(Collectors.toCollection(ArrayList::new));
+						.map((val)->serializer.deserializeBytes(val, clazz)).collect(Collectors.toList());
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -913,8 +908,7 @@ interface Converter<SV, TV> {
 		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value){
 			final Function<ScanResult<List<String>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
-						.map((val)->serializer.deserialize(val, typeReference))
-						.collect(Collectors.toCollection(ArrayList::new));
+						.map((val)->serializer.deserialize(val, typeReference)).collect(Collectors.toList());
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -940,8 +934,7 @@ interface Converter<SV, TV> {
 		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value){
 			final Function<ScanResult<List<byte[]>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
-						.map((val)->serializer.deserializeBytes(val, typeReference))
-						.collect(Collectors.toCollection(ArrayList::new));
+						.map((val)->serializer.deserializeBytes(val, typeReference)).collect(Collectors.toList());
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -1040,9 +1033,8 @@ interface Converter<SV, TV> {
 		public ScanResult<Map<String, V>> convert(final RedisConnection connection,
 												  final ScanResult<Map<String, String>> value){
 			final Function<ScanResult<Map<String, String>>, ScanResult<Map<String, V>>> function = (scanResult)->{
-				final Map<String, V> result =
-						scanResult.getResults() == null ? null : Maps.map(value.getResults(), (key)->key,
-								(val)->serializer.deserialize(val, clazz));
+				final Map<String, V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
+						(key)->key, (val)->serializer.deserialize(val, clazz));
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -1068,9 +1060,8 @@ interface Converter<SV, TV> {
 		public ScanResult<Map<byte[], V>> convert(final RedisConnection connection,
 												  final ScanResult<Map<byte[], byte[]>> value){
 			final Function<ScanResult<Map<byte[], byte[]>>, ScanResult<Map<byte[], V>>> function = (scanResult)->{
-				final Map<byte[], V> result =
-						scanResult.getResults() == null ? null : Maps.map(value.getResults(), (key)->key,
-								(val)->serializer.deserializeBytes(val, clazz));
+				final Map<byte[], V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
+						(key)->key, (val)->serializer.deserializeBytes(val, clazz));
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -1096,9 +1087,8 @@ interface Converter<SV, TV> {
 		public ScanResult<Map<String, V>> convert(final RedisConnection connection,
 												  final ScanResult<Map<String, String>> value){
 			final Function<ScanResult<Map<String, String>>, ScanResult<Map<String, V>>> function = (scanResult)->{
-				final Map<String, V> result =
-						scanResult.getResults() == null ? null : Maps.map(value.getResults(), (key)->key,
-								(val)->serializer.deserialize(val, typeReference));
+				final Map<String, V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
+						(key)->key, (val)->serializer.deserialize(val, typeReference));
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 
@@ -1124,9 +1114,8 @@ interface Converter<SV, TV> {
 		public ScanResult<Map<byte[], V>> convert(final RedisConnection connection,
 												  final ScanResult<Map<byte[], byte[]>> value){
 			final Function<ScanResult<Map<byte[], byte[]>>, ScanResult<Map<byte[], V>>> function = (scanResult)->{
-				final Map<byte[], V> result =
-						scanResult.getResults() == null ? null : Maps.map(value.getResults(), (key)->key,
-								(val)->serializer.deserializeBytes(val, typeReference));
+				final Map<byte[], V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
+						(key)->key, (val)->serializer.deserializeBytes(val, typeReference));
 				return new ScanResult<>(scanResult.getCursor(), result);
 			};
 

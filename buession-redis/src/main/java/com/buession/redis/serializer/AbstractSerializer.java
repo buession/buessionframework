@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
 import com.buession.core.collect.Arrays;
+import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.serializer.SerializerException;
 import com.buession.core.utils.Assert;
 import org.slf4j.Logger;
@@ -37,12 +38,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractSerializer<T extends com.buession.core.serializer.Serializer> implements Serializer {
+public abstract class AbstractSerializer<S extends com.buession.core.serializer.Serializer,
+		D extends com.buession.core.deserializer.Deserializer> implements Serializer {
 
 	/**
 	 * 序列化器
 	 */
-	protected final T serializer;
+	protected final S serializer;
+
+	/**
+	 * 反序列化器
+	 */
+	protected final D deserializer;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -51,10 +58,14 @@ public abstract class AbstractSerializer<T extends com.buession.core.serializer.
 	 *
 	 * @param serializer
 	 * 		序列化器
+	 * @param deserializer
+	 * 		反序列化器
 	 */
-	protected AbstractSerializer(final T serializer){
+	protected AbstractSerializer(final S serializer, final D deserializer){
 		Assert.isNull(serializer, "original serializer object cloud not be null.");
+		Assert.isNull(deserializer, "original deserializer object cloud not be null.");
 		this.serializer = serializer;
+		this.deserializer = deserializer;
 	}
 
 	@Override
@@ -72,7 +83,7 @@ public abstract class AbstractSerializer<T extends com.buession.core.serializer.
 
 	@Override
 	public <V> String[] serialize(final V... objects){
-		return objects == null ? null : Arrays.map(objects, String.class, this::serialize);
+		return Arrays.map(objects, String.class, this::serialize);
 	}
 
 	@Override
@@ -90,15 +101,15 @@ public abstract class AbstractSerializer<T extends com.buession.core.serializer.
 
 	@Override
 	public <V> byte[][] serializeAsBytes(final V... objects){
-		return objects == null ? null : Arrays.map(objects, byte[].class, this::serializeAsBytes);
+		return Arrays.map(objects, byte[].class, this::serializeAsBytes);
 	}
 
 	@Override
 	public <V> V deserialize(final String str){
 		if(str != null){
 			try{
-				return serializer.deserialize(str);
-			}catch(SerializerException e){
+				return deserializer.deserialize(str);
+			}catch(DeserializerException e){
 				logger.error("{} serializer error.", str, e);
 			}
 		}
@@ -110,23 +121,13 @@ public abstract class AbstractSerializer<T extends com.buession.core.serializer.
 	public <V> V deserializeBytes(final byte[] bytes){
 		if(bytes != null){
 			try{
-				return serializer.deserialize(bytes);
-			}catch(SerializerException e){
+				return deserializer.deserialize(bytes);
+			}catch(DeserializerException e){
 				logger.error("{} serializer error.", bytes, e);
 			}
 		}
 
 		return null;
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz){
-		return deserialize(str);
-	}
-
-	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
-		return deserializeBytes(bytes);
 	}
 
 }

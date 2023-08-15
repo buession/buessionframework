@@ -19,16 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.aspect;
 
+import com.buession.aop.aspectj.AbstractAspectjAnnotationsMethodInterceptor;
 import com.buession.core.utils.Assert;
-import com.buession.aop.aspectj.AbstractAspectAnnotationsMethodInterceptor;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,41 +34,32 @@ import org.slf4j.LoggerFactory;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractWebAnnotationAspect<T extends AbstractAspectAnnotationsMethodInterceptor>
+public abstract class AbstractWebAnnotationAspect<T extends AbstractAspectjAnnotationsMethodInterceptor>
 		implements WebAnnotationAspect {
 
-	private final T methodInterceptor;
+	protected final T methodInterceptor;
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	public AbstractWebAnnotationAspect(final T methodInterceptor){
+	public AbstractWebAnnotationAspect(final T methodInterceptor) {
 		Assert.isNull(methodInterceptor, "The instance for " + getClass().getName() + " cloud not be null.");
 		this.methodInterceptor = methodInterceptor;
 	}
 
-	@Pointcut(EXPRESSIONS)
 	@Override
-	public void anyAnnotatedMethod(){
-		if(logger.isDebugEnabled()){
-			logger.debug("Call {}::anyAnnotatedMethod()", getClass().getName());
-		}
+	public void anyAnnotatedMethod() {
+		annotatedMethodExecuteLog("anyAnnotatedMethod");
 	}
 
-	@Pointcut(EXPRESSIONS)
 	@Override
-	public void anyAnnotatedMethodCall(JoinPoint joinPoint){
-		if(logger.isDebugEnabled()){
-			logger.debug("Call {}::anyAnnotatedMethodCall()", getClass().getName());
-		}
+	public void anyAnnotatedMethodCall(JoinPoint joinPoint) {
+		annotatedMethodExecuteLog("anyAnnotatedMethodCall");
 	}
 
-	@After("anyAnnotatedMethodCall(joinPoint)")
-	@Override
-	public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
+	protected void annotatedMethodExecuteLog(final String method) {
 		if(logger.isDebugEnabled()){
-			logger.debug("Call {}::executeAnnotatedMethod()", getClass().getName());
+			logger.debug("Call {}::{}()", getClass().getName(), method);
 		}
-		methodInterceptor.performAfterInterception(joinPoint);
 	}
 
 }

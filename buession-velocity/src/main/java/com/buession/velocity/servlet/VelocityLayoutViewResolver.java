@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 /**
@@ -37,48 +38,43 @@ public class VelocityLayoutViewResolver extends VelocityViewResolver {
 
 	private String screenContentKey;
 
-	public String getLayoutUrl(){
+	public String getLayoutUrl() {
 		return layoutUrl;
 	}
 
-	public void setLayoutUrl(String layoutUrl){
+	public void setLayoutUrl(String layoutUrl) {
 		this.layoutUrl = layoutUrl;
 	}
 
-	public String getLayoutKey(){
+	public String getLayoutKey() {
 		return layoutKey;
 	}
 
-	public void setLayoutKey(String layoutKey){
+	public void setLayoutKey(String layoutKey) {
 		this.layoutKey = layoutKey;
 	}
 
-	public String getScreenContentKey(){
+	public String getScreenContentKey() {
 		return screenContentKey;
 	}
 
-	public void setScreenContentKey(String screenContentKey){
+	public void setScreenContentKey(String screenContentKey) {
 		this.screenContentKey = screenContentKey;
 	}
 
 	@Override
-	protected Class<?> requiredViewClass(){
+	protected Class<?> requiredViewClass() {
 		return VelocityLayoutView.class;
 	}
 
 	@Override
-	protected AbstractUrlBasedView buildView(String viewName) throws Exception{
+	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		VelocityLayoutView view = (VelocityLayoutView) super.buildView(viewName);
 
-		if(layoutUrl != null){
-			view.setLayoutUrl(layoutUrl);
-		}
-		if(layoutKey != null){
-			view.setLayoutKey(layoutKey);
-		}
-		if(screenContentKey != null){
-			view.setScreenContentKey(screenContentKey);
-		}
+		propertyMapper.from(layoutKey).to(view::setLayoutKey);
+		propertyMapper.from(layoutUrl).to(view::setLayoutUrl);
+		propertyMapper.from(screenContentKey).to(view::setScreenContentKey);
 
 		return view;
 	}

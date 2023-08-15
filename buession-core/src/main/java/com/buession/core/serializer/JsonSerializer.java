@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.type.TypeReference;
 
 /**
- * JSON 序列化和反序列化
+ * JSON 序列化
  *
  * @author Yong.Teng
  */
@@ -48,6 +48,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	<V> V deserialize(final String str, final Class<V> clazz) throws SerializerException;
 
 	/**
@@ -65,6 +66,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	<V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException;
 
 	/**
@@ -82,6 +84,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	<V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException;
 
 	/**
@@ -99,6 +102,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	<V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException;
 
 	/**
@@ -116,6 +120,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	default <V> V unserialize(final String str, final Class<V> clazz) throws SerializerException{
 		return deserialize(str, clazz);
 	}
@@ -135,6 +140,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	default <V> V unserialize(final String str, final TypeReference<V> type) throws SerializerException{
 		return deserialize(str, type);
 	}
@@ -154,6 +160,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	default <V> V unserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
 		return deserialize(bytes, clazz);
 	}
@@ -173,6 +180,7 @@ public interface JsonSerializer extends Serializer {
 	 * @throws SerializerException
 	 * 		反序列化异常
 	 */
+	@Deprecated
 	default <V> V unserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
 		return deserialize(bytes, type);
 	}

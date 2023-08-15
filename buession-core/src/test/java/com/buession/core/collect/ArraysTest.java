@@ -27,6 +27,9 @@ package com.buession.core.collect;
 import com.buession.core.converter.ArrayConverter;
 import org.junit.Test;
 
+import java.util.Set;
+import java.util.function.Function;
+
 /**
  * @author Yong.Teng
  * @since 2.0.0
@@ -34,7 +37,7 @@ import org.junit.Test;
 public class ArraysTest {
 
 	@Test
-	public void convert(){
+	public void convert() {
 		String[] data = new String[]{"1", "2"};
 		ArrayConverter<String, Integer> converter = new ArrayConverter<>((value)->Integer.parseInt(value),
 				Integer.class);
@@ -42,6 +45,52 @@ public class ArraysTest {
 
 		for(Integer s : result){
 			System.out.println(s);
+		}
+	}
+
+	@Test
+	public void repeatStr() {
+		String[] data = Arrays.repeat("A", 3);
+
+		for(String s : data){
+			System.out.println(s);
+		}
+	}
+
+	@Test
+	public void merge() {
+		int[] a = new int[]{1};
+		int[] b = new int[]{2};
+
+		for(int s : Arrays.merge(a, b)){
+			System.out.println(s);
+		}
+	}
+
+	@Test
+	public void repeatInt() {
+		int[] data = Arrays.repeat(1, 3);
+
+		for(int s : data){
+			System.out.println(s);
+		}
+	}
+
+	@Test
+	public void map() {
+		Long[] data = new Long[]{1L, 2L};
+
+		Integer[] result = Arrays.map(data, Integer.class, (v)->v.intValue());
+	}
+
+	@Test
+	public void toSet() {
+		Long[] data = new Long[]{1L, 2L};
+
+		Set<Long> result = Arrays.toSet(data);
+
+		for(Long v : result){
+			System.out.println(v);
 		}
 	}
 

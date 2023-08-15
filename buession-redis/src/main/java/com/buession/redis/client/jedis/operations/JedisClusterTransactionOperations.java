@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -108,7 +108,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 
 	@Override
 	public Status watch(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -123,7 +123,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 
 	@Override
 	public Status watch(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", keys);
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 

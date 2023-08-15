@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -91,7 +91,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status aclSetUser(final String username, final String... rules){
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
+		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
 				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
 				.run(args);
@@ -99,7 +99,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status aclSetUser(final byte[] username, final byte[]... rules){
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
+		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
 				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
 				.run(args);
@@ -137,7 +137,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Long aclDelUser(final String... usernames){
-		final CommandArguments args = CommandArguments.create("usernames", usernames);
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
 					if(usernames.length > 1){
@@ -151,7 +151,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames){
-		final CommandArguments args = CommandArguments.create("usernames", usernames);
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
 					if(usernames.length > 1){
@@ -442,7 +442,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments){
-		final CommandArguments args = CommandArguments.create("path", path).put("arguments", arguments);
+		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MODULE_LOAD)
 				.general((cmd)->cmd.moduleLoad(path, arguments), OkStatusConverter.INSTANCE)
 				.run(args);

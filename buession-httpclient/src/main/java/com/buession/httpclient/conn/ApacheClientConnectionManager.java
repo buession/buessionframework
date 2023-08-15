@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Yong.Teng
  */
-public class ApacheClientConnectionManager extends AbstractConnectionManager<HttpClientConnectionManager> {
+public class ApacheClientConnectionManager extends ApacheBaseClientConnectionManager<HttpClientConnectionManager> {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
@@ -84,7 +84,7 @@ public class ApacheClientConnectionManager extends AbstractConnectionManager<Htt
 	 */
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
-		PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
 		//最大连接数
 		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());

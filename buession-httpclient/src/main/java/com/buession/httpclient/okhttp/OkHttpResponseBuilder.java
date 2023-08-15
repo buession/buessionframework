@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -97,10 +97,8 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder<okhttp3.Respo
 
 		@Override
 		protected void doParse(final Headers headers, final Multimap<String, String> headersMap){
-			if(headers.size() > 0){
-				for(String name : headers.names()){
-					headersMap.put(name, headers.get(name));
-				}
+			for(String name : headers.names()){
+				headersMap.put(name, headers.get(name));
 			}
 		}
 

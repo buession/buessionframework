@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.EnumUtils;
 
 /**
  * 枚举转换器，将字符串转换为枚举
@@ -36,9 +35,7 @@ import com.buession.core.utils.EnumUtils;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
-
-	private final Class<E> enumType;
+public class EnumConverter<E extends Enum<E>> extends AbstractEnumConverter<String, E> {
 
 	/**
 	 * 构造函数
@@ -47,24 +44,13 @@ public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
 	 * 		枚举类型
 	 */
 	public EnumConverter(final Class<E> enumType){
-		this.enumType = enumType;
+		super(enumType);
 	}
 
 	@Override
 	public E convert(final String source){
 		Assert.isNull(source, "String cloud not be null.");
-
-		E result = EnumUtils.valueOf(enumType, source);
-
-		if(result == null){
-			result = EnumUtils.valueOf(enumType, source.toUpperCase());
-		}
-
-		if(result == null){
-			result = EnumUtils.valueOf(enumType, source.toLowerCase());
-		}
-
-		return result;
+		return doConvert(source);
 	}
 
 }

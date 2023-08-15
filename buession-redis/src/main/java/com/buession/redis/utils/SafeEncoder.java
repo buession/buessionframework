@@ -24,6 +24,7 @@
  */
 package com.buession.redis.utils;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.utils.Assert;
 
 import java.nio.charset.StandardCharsets;
@@ -42,8 +43,16 @@ public class SafeEncoder {
 		return str.getBytes(StandardCharsets.UTF_8);
 	}
 
+	public static byte[][] encode(final String... strs){
+		return Arrays.map(strs, byte[].class, (v)->v.getBytes(StandardCharsets.UTF_8));
+	}
+
 	public static String encode(final byte[] data){
 		return new String(data, StandardCharsets.UTF_8);
+	}
+
+	public static String[] encode(final byte[]... data){
+		return Arrays.map(data, String.class, (v)->new String(v, StandardCharsets.UTF_8));
 	}
 
 }

@@ -24,15 +24,15 @@
  */
 package com.buession.redis.utils;
 
+import java.util.StringJoiner;
+
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class ObjectStringBuilder {
 
-	private final StringBuilder sb = new StringBuilder("{");
-
-	private boolean initialized = false;
+	private final StringJoiner joiner = new StringJoiner(", ", "{", "}");
 
 	private ObjectStringBuilder(){
 	}
@@ -42,79 +42,38 @@ public final class ObjectStringBuilder {
 	}
 
 	public ObjectStringBuilder add(final String name, final boolean value){
-		if(initialized){
-			sb.append(", ");
-		}
-
-		sb.append(name).append('=').append(value);
-		initialized = true;
-
+		joiner.add(name + '=' + value);
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final short value){
-		if(initialized){
-			sb.append(", ");
-		}
-
-		sb.append(name).append('=').append(value);
-		initialized = true;
-
+		joiner.add(name + '=' + value);
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final int value){
-		if(initialized){
-			sb.append(", ");
-		}
-
-		sb.append(name).append('=').append(value);
-		initialized = true;
-
+		joiner.add(name + '=' + value);
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final long value){
-		if(initialized){
-			sb.append(", ");
-		}
-
-		sb.append(name).append('=').append(value);
-		initialized = true;
-
+		joiner.add(name + '=' + value);
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final float value){
-		if(initialized){
-			sb.append(", ");
-		}
-
-		sb.append(name).append('=').append(value);
-		initialized = true;
-
+		joiner.add(name + '=' + value);
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final double value){
-		if(initialized){
-			sb.append(", ");
-		}
-
-		sb.append(name).append('=').append(value);
-		initialized = true;
-
+		joiner.add(name + '=' + value);
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final byte[] value){
 		if(value != null){
-			if(initialized){
-				sb.append(", ");
-			}
-
-			sb.append(name).append('=').append(SafeEncoder.encode(value));
-			initialized = true;
+			joiner.add(name + '=' + SafeEncoder.encode(value));
 		}
 
 		return this;
@@ -122,12 +81,7 @@ public final class ObjectStringBuilder {
 
 	public ObjectStringBuilder add(final String name, final String value){
 		if(value != null){
-			if(initialized){
-				sb.append(", ");
-			}
-
-			sb.append(name).append('=').append(value);
-			initialized = true;
+			joiner.add(name + '=' + value);
 		}
 
 		return this;
@@ -135,12 +89,7 @@ public final class ObjectStringBuilder {
 
 	public ObjectStringBuilder add(final String name, final Object value){
 		if(value != null){
-			if(initialized){
-				sb.append(", ");
-			}
-
-			sb.append(name).append('=').append(value);
-			initialized = true;
+			joiner.add(name + '=' + value);
 		}
 
 		return this;
@@ -148,19 +97,14 @@ public final class ObjectStringBuilder {
 
 	public ObjectStringBuilder append(final CharSequence seq){
 		if(seq != null){
-			if(initialized){
-				sb.append(", ");
-			}
-
-			sb.append(seq);
-			initialized = true;
+			joiner.add(seq);
 		}
 
 		return this;
 	}
 
 	public String build(){
-		return sb.append('}').toString();
+		return joiner.toString();
 	}
 
 }

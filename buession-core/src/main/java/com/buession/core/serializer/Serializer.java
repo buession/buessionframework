@@ -19,10 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
+
+import com.buession.core.deserializer.Deserializer;
 
 import java.nio.charset.Charset;
 
@@ -143,8 +145,12 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
-	<V> V deserialize(final String str) throws SerializerException;
+	@Deprecated
+	default <V> V deserialize(final String str) throws SerializerException{
+		return deserialize(str, Charset.defaultCharset());
+	}
 
 	/**
 	 * 字符串反序列化
@@ -160,7 +166,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	<V> V deserialize(final String str, final String charsetName) throws SerializerException;
 
 	/**
@@ -177,7 +185,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	<V> V deserialize(final String str, final Charset charset) throws SerializerException;
 
 	/**
@@ -192,8 +202,12 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
-	<V> V deserialize(final byte[] bytes) throws SerializerException;
+	@Deprecated
+	default <V> V deserialize(final byte[] bytes) throws SerializerException{
+		return deserialize(bytes, Charset.defaultCharset().name());
+	}
 
 	/**
 	 * 字节反序列化
@@ -209,7 +223,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	<V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException;
 
 	/**
@@ -226,7 +242,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	<V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException;
 
 	/**
@@ -241,7 +259,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	default <V> V unserialize(final String str) throws SerializerException{
 		return deserialize(str);
 	}
@@ -260,7 +280,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	default <V> V unserialize(final String str, final String charsetName) throws SerializerException{
 		return deserialize(str, charsetName);
 	}
@@ -279,7 +301,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	default <V> V unserialize(final String str, final Charset charset) throws SerializerException{
 		return deserialize(str, charset);
 	}
@@ -296,7 +320,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	default <V> V unserialize(final byte[] bytes) throws SerializerException{
 		return deserialize(bytes);
 	}
@@ -315,7 +341,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	default <V> V unserialize(final byte[] bytes, final String charsetName) throws SerializerException{
 		return deserialize(bytes, charsetName);
 	}
@@ -334,7 +362,9 @@ public interface Serializer {
 	 *
 	 * @throws SerializerException
 	 * 		反序列化异常
+	 * @see Deserializer
 	 */
+	@Deprecated
 	default <V> V unserialize(final byte[] bytes, final Charset charset) throws SerializerException{
 		return deserialize(bytes, charset);
 	}

@@ -19,20 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.lang.Constants;
 import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.utils.PoolConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -107,8 +108,10 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	protected JedisPool createPool(){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		final PoolConfigConverter<Jedis> poolConfigConverter = new PoolConfigConverter<>(
+				jedisPoolConfig);
 
-		PoolConfigUtils.convert(getPoolConfig(), jedisPoolConfig);
+		poolConfigConverter.convert(getPoolConfig());
 
 		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
 		if(sslConfiguration == null){

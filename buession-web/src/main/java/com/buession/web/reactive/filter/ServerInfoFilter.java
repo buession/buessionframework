@@ -21,16 +21,18 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
 
+import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
 import com.buession.web.http.response.IServerInfoFilter;
 import com.buession.web.utils.ServerUtils;
 
-import java.util.Collections;
+import java.util.Map;
 
 /**
  * Server 信息过滤器
@@ -59,8 +61,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	 */
 	public ServerInfoFilter(final String headerName){
 		super();
-		this.headerName = headerName;
-		setHeaders(Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName())));
+		setHeaderName(headerName);
 	}
 
 	@Override
@@ -72,6 +73,17 @@ public class ServerInfoFilter extends ResponseHeadersFilter implements IServerIn
 	public void setHeaderName(String headerName){
 		Assert.isBlank(headerName, "Server info response header name cloud not be null or empty");
 		this.headerName = headerName;
+	}
+
+	@Override
+	public Map<String, String> getHeaders(){
+		Map<String, String> headers = super.getHeaders();
+
+		if(Validate.isEmpty(headers)){
+			setHeaders(MapBuilder.of(getHeaderName(), format(ServerUtils.getHostName())));
+		}
+
+		return headers;
 	}
 
 	protected String format(final String computerName){

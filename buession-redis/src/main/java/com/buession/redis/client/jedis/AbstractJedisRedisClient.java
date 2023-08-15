@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Jedis Redis 客户端 抽象类
+ * Jedis Redis 客户端抽象类
  *
  * @author Yong.Teng
  */

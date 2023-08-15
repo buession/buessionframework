@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -43,12 +43,12 @@ import java.util.Set;
  */
 public class IgnoreCaseSetEnumTypeHandler<E extends Enum<E>> extends AbstractSetEnumTypeHandler<E> {
 
-	public IgnoreCaseSetEnumTypeHandler(Class<E> type){
+	public IgnoreCaseSetEnumTypeHandler(final Class<E> type) {
 		super(type);
 	}
 
 	@Override
-	protected Set<E> parseResult(final String str) throws SQLException{
+	protected Set<E> parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			String[] elements = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER);
 			Set<E> result = new LinkedHashSet<>(elements.length);
@@ -62,4 +62,5 @@ public class IgnoreCaseSetEnumTypeHandler<E extends Enum<E>> extends AbstractSet
 
 		return null;
 	}
+
 }

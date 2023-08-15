@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -37,7 +37,7 @@ public class Geo implements Serializable {
 	private final static long serialVersionUID = 957160301954808183L;
 
 	/**
-	 * 精度
+	 * 经度
 	 */
 	private double longitude;
 
@@ -57,7 +57,7 @@ public class Geo implements Serializable {
 	 * 构造函数
 	 *
 	 * @param longitude
-	 * 		精度
+	 * 		经度
 	 * @param latitude
 	 * 		纬度
 	 */
@@ -67,19 +67,19 @@ public class Geo implements Serializable {
 	}
 
 	/**
-	 * 返回精度
+	 * 返回经度
 	 *
-	 * @return 精度
+	 * @return 经度
 	 */
 	public double getLongitude(){
 		return longitude;
 	}
 
 	/**
-	 * 设置精度
+	 * 设置经度
 	 *
 	 * @param longitude
-	 * 		精度
+	 * 		经度
 	 */
 	public void setLongitude(double longitude){
 		this.longitude = longitude;

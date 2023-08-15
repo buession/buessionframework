@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
 
-import com.buession.core.collect.Arrays;
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.DruidPoolConfiguration;
@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Druid DataSource 抽象类
@@ -50,8 +49,56 @@ public class DruidDataSource
 	/**
 	 * 构造函数
 	 */
-	public DruidDataSource(){
+	public DruidDataSource() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	public DruidDataSource(String driverClassName, String url) {
+		super(driverClassName, url);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	public DruidDataSource(String driverClassName, String url, String username) {
+		super(driverClassName, url, username);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	public DruidDataSource(String driverClassName, String url, String username, String password) {
+		super(driverClassName, url, username, password);
 	}
 
 	/**
@@ -60,22 +107,84 @@ public class DruidDataSource
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public DruidDataSource(DruidPoolConfiguration poolConfiguration){
+	public DruidDataSource(DruidPoolConfiguration poolConfiguration) {
 		super(poolConfiguration);
 	}
 
-	@Override
-	public com.alibaba.druid.pool.DruidDataSource createDataSource(){
-		com.alibaba.druid.pool.DruidDataSource dataSource = new com.alibaba.druid.pool.DruidDataSource();
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public DruidDataSource(String driverClassName, String url, DruidPoolConfiguration poolConfiguration) {
+		super(driverClassName, url, poolConfiguration);
+	}
 
-		applyPoolConfiguration(dataSource, getPoolConfiguration());
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public DruidDataSource(String driverClassName, String url, String username,
+						   DruidPoolConfiguration poolConfiguration) {
+		super(driverClassName, url, username, poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public DruidDataSource(String driverClassName, String url, String username, String password,
+						   DruidPoolConfiguration poolConfiguration) {
+		super(driverClassName, url, username, password, poolConfiguration);
+	}
+
+	@Override
+	public com.alibaba.druid.pool.DruidDataSource createDataSource() {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final com.alibaba.druid.pool.DruidDataSource dataSource = new com.alibaba.druid.pool.DruidDataSource();
+
+		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
+		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
+		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
+		initialize(dataSource);
 
 		return dataSource;
 	}
 
 	@Override
 	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
-										  final DruidPoolConfiguration poolConfiguration){
+										  final DruidPoolConfiguration poolConfiguration) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
@@ -114,10 +223,10 @@ public class DruidDataSource
 			}
 		}
 
-		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(
-				v.toMillis())).to(dataSource::setValidationQueryTimeout);
-		propertyMapper.from(poolConfiguration::getQueryTimeout).as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(
-				v.toMillis())).to(dataSource::setQueryTimeout);
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setQueryTimeout);
 		propertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount).to(dataSource::setNotFullTimeoutRetryCount);
 		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
@@ -137,8 +246,7 @@ public class DruidDataSource
 		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
 		propertyMapper.from(poolConfiguration::getTransactionThreshold).to(dataSource::setTransactionThresholdMillis);
-		propertyMapper.from(poolConfiguration::getTransactionQueryTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis()))
+		propertyMapper.from(poolConfiguration::getTransactionQueryTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setTransactionQueryTimeout);
 		propertyMapper.from(poolConfiguration::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
 		propertyMapper.from(poolConfiguration::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
@@ -152,7 +260,7 @@ public class DruidDataSource
 
 		if(Validate.isNotEmpty(poolConfiguration.getFilters())){
 			try{
-				dataSource.setFilters(Arrays.toString(poolConfiguration.getFilters().toArray(new String[]{}), ","));
+				dataSource.setFilters(StringUtils.join(poolConfiguration.getFilters(), ','));
 			}catch(SQLException e){
 				if(logger.isErrorEnabled()){
 					logger.error("Set filters error: {}(errorCode: {}, sqlState: {})", e.getMessage(), e.getErrorCode(),

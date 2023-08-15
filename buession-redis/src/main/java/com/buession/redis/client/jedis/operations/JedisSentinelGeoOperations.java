@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -99,7 +99,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 
 	@Override
 	public List<String> geoHash(final String key, final String... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.GEOHASH)
 				.general((cmd)->cmd.geohash(key, members))
 				.pipeline((cmd)->cmd.geohash(key, members))
@@ -109,7 +109,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.GEOHASH)
 				.general((cmd)->cmd.geohash(key, members))
 				.pipeline((cmd)->cmd.geohash(key, members))
@@ -119,7 +119,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<Geo>>(client, ProtocolCommand.GEOPOS)
 				.general((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
@@ -129,7 +129,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<Geo>>(client, ProtocolCommand.GEOPOS)
 				.general((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)

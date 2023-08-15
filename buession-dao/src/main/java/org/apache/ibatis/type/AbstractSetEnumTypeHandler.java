@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -35,7 +35,7 @@ package org.apache.ibatis.type;
  */
 public abstract class AbstractSetEnumTypeHandler<E extends Enum<E>> extends AbstractSetTypeHandler<E> {
 
-	public AbstractSetEnumTypeHandler(Class<E> type){
+	public AbstractSetEnumTypeHandler(final Class<E> type) {
 		super(type);
 	}
 

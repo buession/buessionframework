@@ -21,10 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.view.document;
+
+import com.buession.core.utils.StringUtils;
 
 import java.io.Serializable;
 
@@ -183,14 +185,17 @@ public class MetaData implements Serializable {
 
 	@Override
 	public String toString(){
+		final String equalsSign = StringUtils.repeat("=", 16);
 		final StringBuilder sb = new StringBuilder(128);
 
-		sb.append("title：").append(title).append(", ");
-		sb.append("charset: ").append(charset).append(", ");
-		sb.append("keywords: ").append(keywords).append(", ");
-		sb.append("description: ").append(description).append(", ");
-		sb.append("author: ").append(author).append(", ");
-		sb.append("copyright: ").append(copyright);
+		sb.append(equalsSign).append(System.lineSeparator());
+		sb.append("title：").append(title).append(System.lineSeparator());
+		sb.append("charset: ").append(charset).append(System.lineSeparator());
+		sb.append("keywords: ").append(keywords).append(System.lineSeparator());
+		sb.append("description: ").append(description).append(System.lineSeparator());
+		sb.append("author: ").append(author).append(System.lineSeparator());
+		sb.append("copyright: ").append(copyright).append(System.lineSeparator());
+		sb.append(equalsSign);
 
 		return sb.toString();
 	}

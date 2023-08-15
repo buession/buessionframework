@@ -19,20 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
-import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.deserializer.DeserializerException;
+import com.buession.core.deserializer.GsonJsonDeserializer;
+import com.buession.core.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.google.gson.Gson;
 
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
 
 /**
- * Gson JSON 序列化和反序列化
+ * Gson JSON 反序列化
  *
  * @author Yong.Teng
  */
@@ -40,14 +41,6 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException{
-		Assert.isNull(object, "Object cloud not be null.");
-
-		Gson gson = new Gson();
-		return gson.toJson(object);
-	}
-
-	@Override
-	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
 		Assert.isNull(object, "Object cloud not be null.");
 
 		Gson gson = new Gson();
@@ -64,46 +57,70 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 		return serialize(object).getBytes(charset);
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final String str) throws SerializerException{
-		Gson gson = new Gson();
-		return gson.fromJson(str, new TypeReference<V>() {
-
-		}.getType());
+		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
+		try{
+			return deserializer.deserialize(str);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
-		Assert.isNull(str, "String cloud not be null.");
-
-		Gson gson = new Gson();
-		return gson.fromJson(str, clazz);
+		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
+		try{
+			return deserializer.deserialize(str, clazz);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(String str, TypeReference<V> type) throws SerializerException{
-		Assert.isNull(str, "String cloud not be null.");
-
-		Gson gson = new Gson();
-		return gson.fromJson(str, type.getType());
+		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
+		try{
+			return deserializer.deserialize(str, type);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(final byte[] bytes) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes));
+		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
+		try{
+			return deserializer.deserialize(bytes);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes), clazz);
+		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
+		try{
+			return deserializer.deserialize(bytes, clazz);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
+	@Deprecated
 	@Override
 	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes), type);
+		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
+		try{
+			return deserializer.deserialize(bytes, type);
+		}catch(DeserializerException e){
+			throw new SerializerException(e.getMessage(), e);
+		}
 	}
 
 }

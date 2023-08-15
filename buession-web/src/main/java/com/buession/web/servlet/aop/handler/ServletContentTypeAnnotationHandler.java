@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -42,17 +42,16 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletContentTypeAnnotationHandler.class);
 
-	public ServletContentTypeAnnotationHandler(){
+	public ServletContentTypeAnnotationHandler() {
 		super();
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ContentType contentType){
+	public void execute(MethodInvocation mi, ContentType contentType) {
 		HttpServletResponse response = RequestUtils.getResponse();
 		if(response == null){
-			if(logger.isWarnEnabled()){
-				logger.warn("HttpServletResponse is null");
-			}
+			logger.warn("HttpServletResponse is null");
+			return;
 		}
 
 		StringBuilder sb = new StringBuilder(contentType.mime().length() + 24);

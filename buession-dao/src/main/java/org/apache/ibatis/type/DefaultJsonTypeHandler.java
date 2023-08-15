@@ -39,12 +39,12 @@ import java.sql.SQLException;
  */
 public class DefaultJsonTypeHandler<E> extends AbstractJsonTypeHandler<E> {
 
-	public DefaultJsonTypeHandler(Class<E> type){
+	public DefaultJsonTypeHandler(final Class<E> type) {
 		super(type);
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
+	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
 		JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
 
 		try{
@@ -59,9 +59,10 @@ public class DefaultJsonTypeHandler<E> extends AbstractJsonTypeHandler<E> {
 	}
 
 	@Override
-	protected E parseResult(final String str) throws SQLException{
+	protected E parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
+
 			try{
 				return jsonSerializer.deserialize(str, type);
 			}catch(SerializerException e){

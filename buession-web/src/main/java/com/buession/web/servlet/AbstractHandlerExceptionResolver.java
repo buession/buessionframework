@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
@@ -53,7 +53,6 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +64,14 @@ public abstract class AbstractHandlerExceptionResolver
 		extends org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver
 		implements ServletExceptionHandlerResolver {
 
+	/**
+	 * 异常属性名称
+	 */
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
+	/**
+	 * 默认错误视图
+	 */
 	private String defaultErrorView = DEFAULT_ERROR_VIEW;
 
 	private String cacheControl = CACHE_CONTROL;
@@ -75,31 +80,77 @@ public abstract class AbstractHandlerExceptionResolver
 
 	private Map<Exception, String> exceptionViews;
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractHandlerExceptionResolver.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
+	protected final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
 
-	public String getCacheControl(){
+	/**
+	 * 返回异常属性名称
+	 *
+	 * @return 异常属性名称
+	 *
+	 * @since 2.2.1
+	 */
+	public String getExceptionAttribute() {
+		return exceptionAttribute;
+	}
+
+	/**
+	 * 设置异常属性名称
+	 *
+	 * @param exceptionAttribute
+	 * 		异常属性名称
+	 *
+	 * @since 2.2.1
+	 */
+	public void setExceptionAttribute(String exceptionAttribute) {
+		this.exceptionAttribute = exceptionAttribute;
+	}
+
+	/**
+	 * 返回默认错误视图
+	 *
+	 * @return 默认错误视图
+	 *
+	 * @since 2.2.1
+	 */
+	public String getDefaultErrorView() {
+		return defaultErrorView;
+	}
+
+	/**
+	 * 设置默认错误视图
+	 *
+	 * @param defaultErrorView
+	 * 		默认错误视图
+	 *
+	 * @since 2.2.1
+	 */
+	public void setDefaultErrorView(String defaultErrorView) {
+		this.defaultErrorView = defaultErrorView;
+	}
+
+	public String getCacheControl() {
 		return cacheControl;
 	}
 
-	public void setCacheControl(String cacheControl){
+	public void setCacheControl(String cacheControl) {
 		this.cacheControl = cacheControl;
 	}
 
-	public Map<HttpStatus, String> getErrorViews(){
+	public Map<HttpStatus, String> getErrorViews() {
 		return errorViews;
 	}
 
-	public void setErrorViews(Map<HttpStatus, String> errorViews){
+	public void setErrorViews(Map<HttpStatus, String> errorViews) {
 		this.errorViews = errorViews;
 	}
 
-	public Map<Exception, String> getExceptionViews(){
+	public Map<Exception, String> getExceptionViews() {
 		return exceptionViews;
 	}
 
-	public void setExceptionViews(Map<Exception, String> exceptionViews){
+	public void setExceptionViews(Map<Exception, String> exceptionViews) {
 		this.exceptionViews = exceptionViews;
 	}
 
@@ -107,7 +158,10 @@ public abstract class AbstractHandlerExceptionResolver
 	@Nullable
 	@Override
 	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response,
-											  @Nullable Object handler, Exception ex){
+											  @Nullable Object handler, Exception ex) {
+		if(logger.isErrorEnabled()){
+			logger.error("Resolve Exception: {}", ex.getMessage(), ex);
+		}
 		ModelAndView mv = doSpecialResolveException(request, response, handler, ex);
 
 		if(mv != null){
@@ -169,13 +223,13 @@ public abstract class AbstractHandlerExceptionResolver
 
 	protected ModelAndView doSpecialResolveException(final HttpServletRequest request,
 													 final HttpServletResponse response, final Object handler,
-													 final Exception ex){
+													 final Exception ex) {
 		return null;
 	}
 
 	protected ModelAndView doDefaultResolveException(final HttpServletRequest request,
 													 final HttpServletResponse response, final Object handler,
-													 final Exception ex){
+													 final Exception ex) {
 		return null;
 	}
 
@@ -193,17 +247,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link MethodArgumentNotValidException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleMethodArgumentNotValidException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final MethodArgumentNotValidException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+																 final MethodArgumentNotValidException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -220,17 +270,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link MissingServletRequestPartException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleMissingServletRequestPartException(final HttpServletRequest request,
 																	final HttpServletResponse response,
 																	@Nullable final Object handler,
-																	final MissingServletRequestPartException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+																	final MissingServletRequestPartException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -247,15 +293,11 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link BindException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleBindException(final HttpServletRequest request, final HttpServletResponse response,
-											   @Nullable final Object handler, final BindException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+											   @Nullable final Object handler, final BindException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -272,17 +314,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link MissingServletRequestParameterException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleMissingServletRequestParameterException(final HttpServletRequest request,
 																		 final HttpServletResponse response,
 																		 @Nullable final Object handler,
-																		 final MissingServletRequestParameterException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-		return doResolve(request, response, ex);
+																		 final MissingServletRequestParameterException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -299,17 +337,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link ServletRequestBindingException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleServletRequestBindingException(final HttpServletRequest request,
 																final HttpServletResponse response,
 																@Nullable final Object handler,
-																final ServletRequestBindingException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-		return doResolve(request, response, ex);
+																final ServletRequestBindingException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -326,16 +360,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link TypeMismatchException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleTypeMismatchException(final HttpServletRequest request,
 													   final HttpServletResponse response,
-													   @Nullable final Object handler, final TypeMismatchException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+													   @Nullable final Object handler,
+													   final TypeMismatchException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -352,17 +383,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link HttpMessageNotReadableException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleHttpMessageNotReadableException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final HttpMessageNotReadableException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		return doResolve(request, response, ex);
+																 final HttpMessageNotReadableException ex) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -379,17 +406,14 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link NoHandlerFoundException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleNoHandlerFoundException(final HttpServletRequest request,
 														 final HttpServletResponse response,
 														 @Nullable final Object handler,
-														 final NoHandlerFoundException ex) throws IOException{
+														 final NoHandlerFoundException ex) {
 		pageNotFoundLogger.warn(ex.getMessage());
-		response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		return doResolve(request, response, ex);
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -406,23 +430,19 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link HttpRequestMethodNotSupportedException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleHttpRequestMethodNotSupportedException(final HttpServletRequest request,
 																		final HttpServletResponse response,
 																		@Nullable final Object handler,
-																		final HttpRequestMethodNotSupportedException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
+																		final HttpRequestMethodNotSupportedException ex) {
+		response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
 
 		String[] supportedMethods = ex.getSupportedMethods();
 		if(supportedMethods != null){
 			response.setHeader("Allow", Arrays.toString(supportedMethods, ", "));
 		}
 
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -439,17 +459,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link HttpMediaTypeNotAcceptableException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleHttpMediaTypeNotAcceptableException(final HttpServletRequest request,
 																	 final HttpServletResponse response,
 																	 @Nullable final Object handler,
-																	 final HttpMediaTypeNotAcceptableException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
-		return doResolve(request, response, ex);
+																	 final HttpMediaTypeNotAcceptableException ex) {
+		response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -466,23 +482,19 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link HttpMediaTypeNotSupportedException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleHttpMediaTypeNotSupportedException(final HttpServletRequest request,
 																	final HttpServletResponse response,
 																	@Nullable final Object handler,
-																	final HttpMediaTypeNotSupportedException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+																	final HttpMediaTypeNotSupportedException ex) {
+		response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 
 		List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
 		if(!CollectionUtils.isEmpty(mediaTypes)){
 			response.setHeader("Accept", MediaType.toString(mediaTypes));
 		}
 
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -499,16 +511,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link MissingPathVariableException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleMissingPathVariableException(final HttpServletRequest request,
 															  final HttpServletResponse response,
 															  @Nullable final Object handler,
-															  final MissingPathVariableException ex) throws IOException{
-		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
-		return doResolve(request, response, ex);
+															  final MissingPathVariableException ex) {
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -525,17 +534,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link ConversionNotSupportedException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleConversionNotSupportedException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final ConversionNotSupportedException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		return doResolve(request, response, ex);
+																 final ConversionNotSupportedException ex) {
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -552,17 +557,13 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link HttpMessageNotWritableException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleHttpMessageNotWritableException(final HttpServletRequest request,
 																 final HttpServletResponse response,
 																 @Nullable final Object handler,
-																 final HttpMessageNotWritableException ex)
-			throws IOException{
-		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		return doResolve(request, response, ex);
+																 final HttpMessageNotWritableException ex) {
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		return doResolve(request, response, handler, ex);
 	}
 
 	/**
@@ -579,40 +580,43 @@ public abstract class AbstractHandlerExceptionResolver
 	 *        {@link AsyncRequestTimeoutException}
 	 *
 	 * @return 返回数据
-	 *
-	 * @throws IOException
-	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleAsyncRequestTimeoutException(final HttpServletRequest request,
 															  final HttpServletResponse response,
 															  @Nullable final Object handler,
-															  final AsyncRequestTimeoutException ex) throws IOException{
+															  final AsyncRequestTimeoutException ex) {
 		if(response.isCommitted() == false){
-			response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+			response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 		}else{
 			logger.warn("Async request timed out");
 		}
 
-		return doResolve(request, response, ex);
+		return doResolve(request, response, handler, ex);
 	}
 
-	protected boolean acceptTextHtml(final HttpServletRequest request){
+	protected boolean acceptTextHtml(final HttpServletRequest request) {
 		return true;
 	}
 
-	protected boolean acceptJson(final HttpServletRequest request){
+	protected boolean acceptJson(final HttpServletRequest request) {
 		final String contentType = request.getHeader("Content-Type");
 		return contentType != null && contentType.contains(MediaType.APPLICATION_JSON_VALUE);
 	}
 
 	protected ModelAndView createModelAndView(final HttpServletRequest request, final HttpServletResponse response,
-											  final HttpStatus httpStatus, final Exception ex){
+											  final HttpStatus httpStatus, final Exception ex) {
 		return acceptJson(request) ? new ModelAndView(new MappingJackson2JsonView()) :
 				new ModelAndView(determineViewName(request, response, ex, httpStatus));
 	}
 
+	@Deprecated
 	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response,
-									 final Exception ex){
+									 final Exception ex) {
+		return doResolve(request, response, null, ex);
+	}
+
+	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response,
+									 @Nullable final Object handler, final Exception ex) {
 		request.setAttribute("javax.servlet.error.exception", ex);
 
 		HttpStatus httpStatus = HttpStatus.resolve(response.getStatus());
@@ -624,7 +628,7 @@ public abstract class AbstractHandlerExceptionResolver
 		mv.addObject("message", httpStatus.getReasonPhrase());
 		mv.addObject("status", httpStatus);
 		mv.addObject("timestamp", new Date());
-		mv.addObject(exceptionAttribute, ex);
+		mv.addObject(getExceptionAttribute(), ex);
 
 		applyStatusCodeIfPossible(request, response, httpStatus);
 
@@ -632,7 +636,7 @@ public abstract class AbstractHandlerExceptionResolver
 	}
 
 	protected String determineViewName(final HttpServletRequest request, final HttpServletResponse response,
-									   final Exception ex, final HttpStatus httpStatus){
+									   final Exception ex, final HttpStatus httpStatus) {
 		String viewName = null;
 
 		if(getExceptionViews() != null){
@@ -647,20 +651,20 @@ public abstract class AbstractHandlerExceptionResolver
 			viewName = SERIES_VIEWS.get(httpStatus.series());
 		}
 
-		if(viewName == null && defaultErrorView != null){
+		if(viewName == null && getDefaultErrorView() != null){
 			if(logger.isDebugEnabled()){
-				logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView,
+				logger.debug("Resolving to default view '{}' for exception of type [{}]", getDefaultErrorView(),
 						ex.getClass().getName());
 			}
 
-			viewName = defaultErrorView;
+			viewName = getDefaultErrorView();
 		}
 
 		return viewName;
 	}
 
 	protected void applyStatusCodeIfPossible(final HttpServletRequest request, final HttpServletResponse response,
-											 final HttpStatus statusCode){
+											 final HttpStatus statusCode) {
 		if(WebUtils.isIncludeRequest(request) == false){
 			logger.debug("Applying HTTP status code {}", statusCode);
 

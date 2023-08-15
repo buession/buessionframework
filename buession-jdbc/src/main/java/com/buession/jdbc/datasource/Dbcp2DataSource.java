@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -43,8 +43,56 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	/**
 	 * 构造函数
 	 */
-	public Dbcp2DataSource(){
+	public Dbcp2DataSource() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 *
+	 * @since 2.3.0
+	 */
+	public Dbcp2DataSource(String driverClassName, String url) {
+		super(driverClassName, url);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 *
+	 * @since 2.3.0
+	 */
+	public Dbcp2DataSource(String driverClassName, String url, String username) {
+		super(driverClassName, url, username);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 *
+	 * @since 2.3.0
+	 */
+	public Dbcp2DataSource(String driverClassName, String url, String username, String password) {
+		super(driverClassName, url, username, password);
 	}
 
 	/**
@@ -53,22 +101,84 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public Dbcp2DataSource(Dbcp2PoolConfiguration poolConfiguration){
+	public Dbcp2DataSource(Dbcp2PoolConfiguration poolConfiguration) {
 		super(poolConfiguration);
 	}
 
-	@Override
-	public BasicDataSource createDataSource(){
-		BasicDataSource dataSource = new BasicDataSource();
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public Dbcp2DataSource(String driverClassName, String url, Dbcp2PoolConfiguration poolConfiguration) {
+		super(driverClassName, url, poolConfiguration);
+	}
 
-		applyPoolConfiguration(dataSource, getPoolConfiguration());
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public Dbcp2DataSource(String driverClassName, String url, String username,
+						   Dbcp2PoolConfiguration poolConfiguration) {
+		super(driverClassName, url, username, poolConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param driverClassName
+	 * 		数据库驱动类名
+	 * @param url
+	 * 		JDBC URL
+	 * @param username
+	 * 		数据库账号
+	 * @param password
+	 * 		数据库密码
+	 * @param poolConfiguration
+	 * 		连接池配置
+	 *
+	 * @since 2.3.0
+	 */
+	public Dbcp2DataSource(String driverClassName, String url, String username, String password,
+						   Dbcp2PoolConfiguration poolConfiguration) {
+		super(driverClassName, url, username, password, poolConfiguration);
+	}
+
+	@Override
+	public BasicDataSource createDataSource() {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final BasicDataSource dataSource = new BasicDataSource();
+
+		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
+		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
+		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
+		initialize(dataSource);
 
 		return dataSource;
 	}
 
 	@Override
 	protected void applyPoolConfiguration(final BasicDataSource dataSource,
-										  final Dbcp2PoolConfiguration poolConfiguration){
+										  final Dbcp2PoolConfiguration poolConfiguration) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);
@@ -89,8 +199,8 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 				.to(dataSource::setConnectionFactoryClassName);
 		propertyMapper.from(poolConfiguration::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
 		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(poolConfiguration::getValidationQueryTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
 		propertyMapper.from(poolConfiguration::getDefaultSchema).to(dataSource::setDefaultSchema);
 		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
