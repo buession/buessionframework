@@ -173,7 +173,7 @@ public class BeanUtils {
 			return;
 		}
 
-		final String cacheKey = source.getClass().getName() + "_" + target.getClass().getName();
+		final String cacheKey = source.getClass().getName() + '_' + target.getClass().getName();
 		BeanCopier copier = BEAN_COPIERS.get(cacheKey);
 
 		if(copier == null){
