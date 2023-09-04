@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.config;
@@ -34,6 +34,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
@@ -49,18 +50,18 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	private final ReactiveAdapterRegistry registry;
 
-	public WebFluxConfiguration(@Nullable ConfigurableBeanFactory factory, ReactiveAdapterRegistry registry){
+	public WebFluxConfiguration(@Nullable ConfigurableBeanFactory factory, ReactiveAdapterRegistry registry) {
 		this.factory = factory;
 		this.registry = registry;
 	}
 
 	@Override
-	public void addFormatters(FormatterRegistry registry){
+	public void addFormatters(@NonNull FormatterRegistry registry) {
 		FormatterRegistryUtils.addConverters(registry);
 	}
 
 	@Override
-	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer){
+	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
 		configurer.addCustomResolver(new RequestClientIpHandlerMethodArgumentResolver(factory, registry));
 	}
 

@@ -49,29 +49,29 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class AbstractBasicRestController<P, DTO, VO> extends AbstractRestController<P, DTO, VO> {
 
 	@RequestMapping(path = "", method = RequestMethod.POST)
-	public Response<VO> add(HttpServletRequest request, HttpServletResponse response, @RequestBody DTO e){
+	public Response<VO> add(HttpServletRequest request, HttpServletResponse response, @RequestBody DTO e) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	public Response<VO> edit(HttpServletRequest request, HttpServletResponse response, @PathVariable(name = "id") P id,
-							 @RequestBody DTO e){
+							 @RequestBody DTO e) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	public Response<VO> detail(HttpServletRequest request, HttpServletResponse response,
-							   @PathVariable(name = "id") P id){
+							   @PathVariable(name = "id") P id) {
 		return pageNotFound(request);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	public Response<VO> delete(HttpServletRequest request, HttpServletResponse response,
-							   @PathVariable(name = "id") P id){
+							   @PathVariable(name = "id") P id) {
 		return pageNotFound(request);
 	}
 
-	protected Response<VO> pageNotFound(final HttpServletRequest request){
+	protected Response<VO> pageNotFound(final HttpServletRequest request) {
 		return pageNotFound(request.getRequestURI());
 	}
 
