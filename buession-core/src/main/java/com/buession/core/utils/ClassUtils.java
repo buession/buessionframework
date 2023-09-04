@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 
-	public static <T> T instantiate(Class<T> clazz, Object... args) throws ClassInstantiationException{
+	public static <T> T instantiate(Class<T> clazz, Object... args) throws ClassInstantiationException {
 		Assert.isNull(clazz, "Class cloud not be null");
 
 		if(clazz.isInterface()){
@@ -64,7 +64,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 			}
 
 			Class<?>[] parameterTypes = constructor.getParameterTypes();
-			Assert.isTrue(args.length <= parameterTypes.length,
+			Assert.isTrue(args.length < parameterTypes.length,
 					"Can't specify more arguments than constructor parameters");
 
 			Object[] argsWithDefaultValues = new Object[args.length];
@@ -100,7 +100,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 类的所有声明的字段
 	 */
-	public static Field[] getFields(final Class<?> clazz){
+	public static Field[] getFields(final Class<?> clazz) {
 		Assert.isNull(clazz, "Class cloud not be null.");
 		return clazz.getDeclaredFields();
 	}
@@ -113,7 +113,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 类的所有声明的字段
 	 */
-	public static Field[] getAllFields(final Class<?> clazz){
+	public static Field[] getAllFields(final Class<?> clazz) {
 		Assert.isNull(clazz, "Class cloud not be null.");
 		final List<Field> allFields = new ArrayList<>(16);
 		Class<?> currentClass = clazz;
@@ -142,7 +142,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *        {@link IllegalAccessException}
 	 */
 	public static Object invoke(final Object object, final Method method) throws InvocationTargetException,
-			IllegalAccessException{
+			IllegalAccessException {
 		Assert.isNull(object, "Object cloud not be null.");
 		Assert.isNull(method, "Object method cloud not be null.");
 
@@ -169,7 +169,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *        {@link IllegalAccessException}
 	 */
 	public static Object invoke(final Object object, final Method method, final Object... arguments)
-			throws InvocationTargetException, IllegalAccessException{
+			throws InvocationTargetException, IllegalAccessException {
 		Assert.isNull(object, "Object cloud not be null.");
 		Assert.isNull(method, "Object method cloud not be null.");
 
