@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3.nio;
 
-import okhttp3.HttpClientBuilder;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.HostnameVerifier;
@@ -42,14 +41,14 @@ public class HttpAsyncClientBuilder {
 
 	private NioHttpClientConnectionManager connectionManager;
 
-	protected HttpAsyncClientBuilder(){
+	protected HttpAsyncClientBuilder() {
 	}
 
-	public static HttpAsyncClientBuilder create(){
+	public static HttpAsyncClientBuilder create() {
 		return new HttpAsyncClientBuilder();
 	}
 
-	public HttpAsyncClientBuilder setConnectTimeout(long connectTimeout){
+	public HttpAsyncClientBuilder setConnectTimeout(long connectTimeout) {
 		if(connectTimeout > -1){
 			builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
 		}
@@ -57,7 +56,7 @@ public class HttpAsyncClientBuilder {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setReadTimeout(long readTimeout){
+	public HttpAsyncClientBuilder setReadTimeout(long readTimeout) {
 		if(readTimeout > 0){
 			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
 		}
@@ -65,7 +64,7 @@ public class HttpAsyncClientBuilder {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setWriteTimeout(long writeTimeout){
+	public HttpAsyncClientBuilder setWriteTimeout(long writeTimeout) {
 		if(writeTimeout > 0){
 			builder.writeTimeout(writeTimeout, TimeUnit.MILLISECONDS);
 		}
@@ -73,7 +72,7 @@ public class HttpAsyncClientBuilder {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setFollowRedirects(Boolean followRedirects){
+	public HttpAsyncClientBuilder setFollowRedirects(Boolean followRedirects) {
 		if(followRedirects != null){
 			builder.followRedirects(followRedirects);
 		}
@@ -81,7 +80,7 @@ public class HttpAsyncClientBuilder {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory){
+	public HttpAsyncClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
 		if(sslSocketFactory != null){
 			builder.sslSocketFactory(sslSocketFactory);
 		}
@@ -89,7 +88,7 @@ public class HttpAsyncClientBuilder {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier){
+	public HttpAsyncClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier) {
 		if(hostnameVerifier != null){
 			builder.hostnameVerifier(hostnameVerifier);
 		}
@@ -97,19 +96,16 @@ public class HttpAsyncClientBuilder {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setSSLContext(SSLContext sslContext){
-		if(sslContext != null){
-		}
-
+	public HttpAsyncClientBuilder setSSLContext(SSLContext sslContext) {
 		return this;
 	}
 
-	public HttpAsyncClientBuilder setConnectionManager(NioHttpClientConnectionManager connectionManager){
+	public HttpAsyncClientBuilder setConnectionManager(NioHttpClientConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
 		return this;
 	}
 
-	public OkHttpClient build(){
+	public OkHttpClient build() {
 		if(connectionManager != null){
 			builder.connectionPool(connectionManager.getConnectionPool());
 		}
