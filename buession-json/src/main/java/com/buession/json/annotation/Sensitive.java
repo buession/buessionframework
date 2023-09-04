@@ -25,7 +25,10 @@
 package com.buession.json.annotation;
 
 import com.buession.json.serializer.SensitiveSerializer;
+import com.buession.json.strategy.ISensitiveStrategy;
+import com.buession.json.strategy.NoneSensitiveStrategy;
 import com.buession.json.strategy.SensitiveStrategy;
+import com.buession.json.strategy.UsernameSensitiveStrategy;
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -47,6 +50,15 @@ import java.lang.annotation.Target;
 public @interface Sensitive {
 
 	String DEFAULT_REPLACEMENT = "***";
+
+	/**
+	 * 脱敏策略
+	 *
+	 * @return 脱敏策略
+	 *
+	 * @since 2.3.1
+	 */
+	Class<? extends ISensitiveStrategy> strategyType() default NoneSensitiveStrategy.class;
 
 	/**
 	 * 脱敏策略

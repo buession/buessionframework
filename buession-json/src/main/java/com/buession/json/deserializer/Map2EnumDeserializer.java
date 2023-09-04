@@ -56,17 +56,18 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 
 	private final static Logger logger = LoggerFactory.getLogger(Map2EnumDeserializer.class);
 
-	public Map2EnumDeserializer(){
+	public Map2EnumDeserializer() {
 		super(Enum.class);
 	}
 
-	public Map2EnumDeserializer(Class<Enum<?>> v){
+	public Map2EnumDeserializer(Class<Enum<?>> v) {
 		super(v);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Enum<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException{
+	public Enum<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+			throws IOException {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		/** 当前节点名 */
 		String fieldName = jsonParser.getCurrentName();
@@ -128,9 +129,7 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 					}
 				}
 			}
-		}catch(NoSuchFieldException e){
-			logger.error(e.getMessage(), e);
-		}catch(IllegalAccessException e){
+		}catch(Exception e){
 			logger.error(e.getMessage(), e);
 		}
 
@@ -140,11 +139,11 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public JsonDeserializer<?> createContextual(DeserializationContext context, BeanProperty property)
-			throws JsonMappingException{
+			throws JsonMappingException {
 		return new Map2EnumDeserializer((Class<Enum<?>>) property.getType().getRawClass());
 	}
 
-	private static String parseCacheKey(final Class<?> clazz, final Field field, final JsonNode node){
+	private static String parseCacheKey(final Class<?> clazz, final Field field, final JsonNode node) {
 		final String className = clazz.getName();
 		final String fieldName = field.getName();
 		final String nodeName = node.toString();
@@ -155,7 +154,7 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 		return sb.toString();
 	}
 
-	private static Map<String, JsonNode> getNodeMapValues(final JsonNode node){
+	private static Map<String, JsonNode> getNodeMapValues(final JsonNode node) {
 		if(node == null || node.isObject() == false){
 			return null;
 		}
@@ -172,7 +171,7 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 		return result;
 	}
 
-	private static boolean comparatorMap(final Map<String, Object> map1, final Map<String, JsonNode> map2){
+	private static boolean comparatorMap(final Map<String, Object> map1, final Map<String, JsonNode> map2) {
 		Iterator<Map.Entry<String, Object>> iterator1 = map1.entrySet().iterator();
 		Map.Entry<String, Object> entry1;
 
@@ -186,7 +185,7 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 		return true;
 	}
 
-	private static boolean checkEquals(Object value, JsonNode node){
+	private static boolean checkEquals(Object value, JsonNode node) {
 		if(node.isBigDecimal()){
 			return value.equals(node.decimalValue());
 		}else if(node.isBigInteger()){

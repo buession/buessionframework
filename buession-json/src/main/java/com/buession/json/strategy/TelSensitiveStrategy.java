@@ -24,62 +24,22 @@
  */
 package com.buession.json.strategy;
 
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
 /**
- * 脱敏策略
+ * 座机号码脱敏策略
  *
  * @author Yong.Teng
- * @since 1.3.1
+ * @since 2.3.1
  */
-public enum SensitiveStrategy {
+public class TelSensitiveStrategy implements ISensitiveStrategy {
 
-	/**
-	 * 无脱敏策略
-	 */
-	NONE(NoneSensitiveStrategy.class),
+	private final static Pattern PATTERN = Pattern.compile("(\\d{3})\\d{2,3}(\\d{2})");
 
-	/**
-	 * 用户名脱敏策略
-	 */
-	USERNAME(UsernameSensitiveStrategy.class),
-
-	/**
-	 * 身份证号码脱敏策略
-	 */
-	ID_CARD(IdCardSensitiveStrategy.class),
-
-	/**
-	 * 座机号码脱敏策略
-	 */
-	TEL(TelSensitiveStrategy.class),
-
-	/**
-	 * 手机号码脱敏策略
-	 */
-	MOBILE(MobileSensitiveStrategy.class),
-
-	/**
-	 * QQ 号码脱敏策略
-	 */
-	QQ(QqSensitiveStrategy.class),
-
-	/**
-	 * IP 地址脱敏策略
-	 */
-	IP(IpSensitiveStrategy.class),
-
-	/**
-	 * 地址脱敏策略
-	 */
-	ADDRESS(AddressSensitiveStrategy.class);
-
-	private final Class<? extends ISensitiveStrategy> strategy;
-
-	SensitiveStrategy(final Class<? extends ISensitiveStrategy> strategy) {
-		this.strategy = strategy;
-	}
-
-	public Class<? extends ISensitiveStrategy> getStrategy() {
-		return strategy;
+	@Override
+	public Function<String, String> getFunction() {
+		return str->PATTERN.matcher(str).replaceAll("$1****$2");
 	}
 
 }

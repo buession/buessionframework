@@ -24,9 +24,11 @@
  */
 package com.buession.json.serializer;
 
+import com.buession.core.utils.ClassUtils;
 import com.buession.core.validator.Validate;
 import com.buession.json.annotation.Sensitive;
-import com.buession.json.strategy.SensitiveStrategy;
+import com.buession.json.strategy.ISensitiveStrategy;
+import com.buession.json.strategy.NoneSensitiveStrategy;
 import com.buession.lang.Constants;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
@@ -48,19 +50,19 @@ import java.util.Optional;
 @JacksonStdImpl
 public class SensitiveSerializer extends StdScalarSerializer<CharSequence> implements ContextualSerializer {
 
-	private SensitiveStrategy strategy;
+	private ISensitiveStrategy strategy;
 
 	private String format;
 
 	private String replacement;
 
-	public SensitiveSerializer(){
+	public SensitiveSerializer() {
 		super(CharSequence.class);
 	}
 
 	@Override
 	public void serialize(CharSequence value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-			throws IOException{
+			throws IOException {
 		if(value == null){
 			jsonGenerator.writeNull();
 		}else if(value.length() == 0){
@@ -81,11 +83,16 @@ public class SensitiveSerializer extends StdScalarSerializer<CharSequence> imple
 
 	@Override
 	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
-			throws JsonMappingException{
+			throws JsonMappingException {
 		Sensitive annotation = property.getAnnotation(Sensitive.class);
 
 		if(Objects.nonNull(annotation) && CharSequence.class.isAssignableFrom(property.getType().getRawClass())){
-			this.strategy = annotation.strategy();
+			if(annotation.strategyType() != NoneSensitiveStrategy.class){
+				this.strategy = ClassUtils.instantiate(annotation.strategyType());
+			}else{
+				this.strategy = ClassUtils.instantiate(annotation.strategy().getStrategy());
+			}
+			
 			this.format = annotation.format();
 			this.replacement = annotation.replacement();
 			return this;
