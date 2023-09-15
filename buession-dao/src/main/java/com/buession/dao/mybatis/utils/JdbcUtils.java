@@ -38,6 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
+ * JDBC 工具
+ *
  * @author Yong.Teng
  * @since 2.3.1
  */
@@ -47,17 +49,32 @@ public class JdbcUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
 
-	public static DbType getDbType(Executor executor) {
+	/**
+	 * 根据 {@link Executor} 获取数据库类型 {@link DbType}
+	 *
+	 * @param executor
+	 *        {@link Executor}
+	 *
+	 * @return 数据库类型 {@link DbType}
+	 */
+	public static DbType getDbType(final Executor executor) {
 		try{
 			Connection conn = executor.getTransaction().getConnection();
-			return JDBC_DB_TYPE_CACHE.computeIfAbsent(conn.getMetaData().getURL(),
-					JdbcUtils::getDbType);
+			return JDBC_DB_TYPE_CACHE.computeIfAbsent(conn.getMetaData().getURL(), JdbcUtils::getDbType);
 		}catch(SQLException e){
 			throw new ParsingException(e);
 		}
 	}
 
-	public static DbType getDbType(String jdbcUrl) {
+	/**
+	 * 根据 JDBC URL 获取数据库类型
+	 *
+	 * @param jdbcUrl
+	 * 		JDBC URL
+	 *
+	 * @return 数据库类型 {@link DbType}
+	 */
+	public static DbType getDbType(final String jdbcUrl) {
 		Assert.isBlank(jdbcUrl, "The jdbc url is empty or null, cannot read database type");
 
 		String url = jdbcUrl.toLowerCase();
@@ -136,7 +153,10 @@ public class JdbcUtils {
 		}else if(url.contains(":uxdb:")){
 			return DbType.UXDB;
 		}else{
-			logger.warn("The jdbc url: {}, cannot read database type or the database not supported!", jdbcUrl);
+			if(logger.isWarnEnabled()){
+				logger.warn("The jdbc url: {}, cannot read database type or the database not supported!", jdbcUrl);
+			}
+
 			return DbType.OTHER;
 		}
 	}

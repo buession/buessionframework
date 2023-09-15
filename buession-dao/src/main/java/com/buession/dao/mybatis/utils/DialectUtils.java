@@ -126,4 +126,16 @@ public class DialectUtils {
 		}
 	}
 
+	/**
+	 * 根据 JDBC URL 获取数据库方言
+	 *
+	 * @param jdbcUrl
+	 * 		JDBC URL
+	 *
+	 * @return 数据库方言
+	 */
+	public static Dialect getDialect(final String jdbcUrl) {
+		return getDialect(JdbcUtils.getDbType(jdbcUrl));
+	}
+
 }

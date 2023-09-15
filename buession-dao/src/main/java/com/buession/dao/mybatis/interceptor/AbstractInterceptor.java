@@ -58,7 +58,7 @@ public abstract class AbstractInterceptor implements Interceptor {
 	 *
 	 * @return 分页方言类
 	 */
-	protected Dialect findIDialect(Executor executor) {
+	protected Dialect findDialect(final Executor executor) {
 		if(dialect != null){
 			return dialect;
 		}

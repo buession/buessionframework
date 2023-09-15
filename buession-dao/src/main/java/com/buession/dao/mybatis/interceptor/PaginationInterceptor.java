@@ -25,15 +25,12 @@
 package com.buession.dao.mybatis.interceptor;
 
 import com.buession.dao.mybatis.dialect.Dialect;
-import com.buession.dao.mybatis.utils.DialectUtils;
-import com.buession.dao.mybatis.utils.JdbcUtils;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
@@ -63,7 +60,7 @@ import java.util.Properties;
 						RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
 		}
 )
-public class PaginationInterceptor implements Interceptor {
+public class PaginationInterceptor extends AbstractInterceptor {
 
 	@SuppressWarnings({"rawtypes"})
 	@Override
@@ -83,7 +80,7 @@ public class PaginationInterceptor implements Interceptor {
 
 				BoundSql boundSql = args.length == 4 ? statement.getBoundSql(parameter) : (BoundSql) args[5];
 
-				Dialect dialect = DialectUtils.getDialect(JdbcUtils.getDbType(executor));
+				Dialect dialect = findDialect(executor);
 
 				if(dialect.supportsLimit()){
 					boundSql = createPaginationBoundSql(dialect, statement, boundSql, rowBounds);
