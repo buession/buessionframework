@@ -55,7 +55,7 @@ public class MapBuilder<K, V> {
 	 * @param data
 	 * 		Map 数据
 	 */
-	private MapBuilder(final Map<K, V> data){
+	private MapBuilder(final Map<K, V> data) {
 		this.data = data;
 	}
 
@@ -69,7 +69,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public static <K, V> MapBuilder<K, V> create(){
+	public static <K, V> MapBuilder<K, V> create() {
 		return new MapBuilder<>(new HashMap<>());
 	}
 
@@ -87,7 +87,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <K, V> MapBuilder<K, V> create(final int initialCapacity){
+	public static <K, V> MapBuilder<K, V> create(final int initialCapacity) {
 		return new MapBuilder<>(new HashMap<>(initialCapacity));
 	}
 
@@ -107,7 +107,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <K, V> MapBuilder<K, V> create(final int initialCapacity, final float loadFactor){
+	public static <K, V> MapBuilder<K, V> create(final int initialCapacity, final float loadFactor) {
 		return new MapBuilder<>(new HashMap<>(initialCapacity, loadFactor));
 	}
 
@@ -125,7 +125,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <K, V> MapBuilder<K, V> create(final Map<K, V> m){
+	public static <K, V> MapBuilder<K, V> create(final Map<K, V> m) {
 		return new MapBuilder<>(m);
 	}
 
@@ -143,7 +143,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public static <K, V, M extends Map<K, V>> MapBuilder<K, V> create(final Class<M> clazz){
+	public static <K, V, M extends Map<K, V>> MapBuilder<K, V> create(final Class<M> clazz) {
 		Assert.isNull(clazz, "java.util.Map class cloud not be null.");
 
 		Map<K, V> data;
@@ -167,8 +167,27 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public MapBuilder<K, V> put(final K key, final V value){
+	public MapBuilder<K, V> put(final K key, final V value) {
 		data.put(key, value);
+		return this;
+	}
+
+	/**
+	 * 添加元素，仅当 value 不为 null 时
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 *
+	 * @return {@link MapBuilder} 实例
+	 *
+	 * @since 2.3.1
+	 */
+	public MapBuilder<K, V> putIfPresent(final K key, final V value) {
+		if(value != null){
+			data.put(key, value);
+		}
 		return this;
 	}
 
@@ -180,7 +199,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public MapBuilder<K, V> putAll(final Map<K, V> data){
+	public MapBuilder<K, V> putAll(final Map<K, V> data) {
 		if(Validate.isNotEmpty(data)){
 			this.data.putAll(data);
 		}
@@ -195,7 +214,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public MapBuilder<K, V> remove(final K key){
+	public MapBuilder<K, V> remove(final K key) {
 		data.remove(key);
 		return this;
 	}
@@ -205,7 +224,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return {@link MapBuilder} 实例
 	 */
-	public MapBuilder<K, V> clear(){
+	public MapBuilder<K, V> clear() {
 		data.clear();
 		return this;
 	}
@@ -215,7 +234,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return Map 数据
 	 */
-	public Map<K, V> build(){
+	public Map<K, V> build() {
 		return data;
 	}
 
@@ -229,7 +248,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return 空 Map
 	 */
-	public static <K, V> Map<K, V> empty(){
+	public static <K, V> Map<K, V> empty() {
 		return MapBuilder.<K, V>create().build();
 	}
 
@@ -243,7 +262,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return 空 Map
 	 */
-	public static <K, V> Map<K, V> of(){
+	public static <K, V> Map<K, V> of() {
 		return empty();
 	}
 
@@ -261,7 +280,7 @@ public class MapBuilder<K, V> {
 	 *
 	 * @return 单一元素 Map
 	 */
-	public static <K, V> Map<K, V> of(final K key, final V value){
+	public static <K, V> Map<K, V> of(final K key, final V value) {
 		return MapBuilder.<K, V>create(1).put(key, value).build();
 	}
 
