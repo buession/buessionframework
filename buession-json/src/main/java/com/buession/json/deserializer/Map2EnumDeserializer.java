@@ -47,6 +47,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * {@link Map} 反序列化为枚举
+ *
  * @author Yong.Teng
  */
 @JacksonStdImpl
@@ -172,12 +174,8 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 	}
 
 	private static boolean comparatorMap(final Map<String, Object> map1, final Map<String, JsonNode> map2) {
-		Iterator<Map.Entry<String, Object>> iterator1 = map1.entrySet().iterator();
-		Map.Entry<String, Object> entry1;
-
-		while(iterator1.hasNext()){
-			entry1 = iterator1.next();
-			if(checkEquals(entry1.getValue(), map2.get(entry1.getKey())) == false){
+		for(Map.Entry<String, Object> entry : map1.entrySet()){
+			if(checkEquals(entry.getValue(), map2.get(entry.getKey())) == false){
 				return false;
 			}
 		}

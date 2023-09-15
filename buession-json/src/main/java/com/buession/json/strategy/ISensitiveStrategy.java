@@ -32,8 +32,14 @@ import java.util.function.Function;
  * @author Yong.Teng
  * @since 2.3.1
  */
+@FunctionalInterface
 public interface ISensitiveStrategy {
 
+	/**
+	 * 返回数据脱敏处理函数
+	 *
+	 * @return 数据脱敏处理函数
+	 */
 	Function<String, String> getFunction();
 
 }

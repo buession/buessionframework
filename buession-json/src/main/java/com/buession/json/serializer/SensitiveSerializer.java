@@ -50,6 +50,8 @@ import java.util.Optional;
 @JacksonStdImpl
 public class SensitiveSerializer extends StdScalarSerializer<CharSequence> implements ContextualSerializer {
 
+	private final static long serialVersionUID = 5197972718452230362L;
+
 	private ISensitiveStrategy strategy;
 
 	private String format;
@@ -87,14 +89,15 @@ public class SensitiveSerializer extends StdScalarSerializer<CharSequence> imple
 		Sensitive annotation = property.getAnnotation(Sensitive.class);
 
 		if(Objects.nonNull(annotation) && CharSequence.class.isAssignableFrom(property.getType().getRawClass())){
-			if(annotation.strategyType() != NoneSensitiveStrategy.class){
-				this.strategy = ClassUtils.instantiate(annotation.strategyType());
-			}else{
-				this.strategy = ClassUtils.instantiate(annotation.strategy().getStrategy());
-			}
-			
 			this.format = annotation.format();
 			this.replacement = annotation.replacement();
+			if(Validate.isEmpty(this.format)){
+				if(annotation.strategyType() != NoneSensitiveStrategy.class){
+					this.strategy = ClassUtils.instantiate(annotation.strategyType());
+				}else{
+					this.strategy = ClassUtils.instantiate(annotation.strategy().getStrategy());
+				}
+			}
 			return this;
 		}
 
