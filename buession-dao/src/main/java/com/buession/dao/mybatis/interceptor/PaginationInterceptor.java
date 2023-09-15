@@ -24,6 +24,7 @@
  */
 package com.buession.dao.mybatis.interceptor;
 
+import com.buession.dao.mybatis.PageRowBounds;
 import com.buession.dao.mybatis.dialect.Dialect;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
@@ -70,12 +71,12 @@ public class PaginationInterceptor extends AbstractInterceptor {
 
 		if(target instanceof Executor){
 			final MappedStatement statement = (MappedStatement) args[0];
+			RowBounds rowBounds = (RowBounds) args[2];
 
-			if(statement.getSqlCommandType() == SqlCommandType.SELECT){
+			if(statement.getSqlCommandType() == SqlCommandType.SELECT && rowBounds instanceof PageRowBounds){
 				final Executor executor = (Executor) target;
 
 				Object parameter = args[1];
-				RowBounds rowBounds = (RowBounds) args[2];
 				ResultHandler resultHandler = (ResultHandler) args[3];
 
 				BoundSql boundSql = args.length == 4 ? statement.getBoundSql(parameter) : (BoundSql) args[5];

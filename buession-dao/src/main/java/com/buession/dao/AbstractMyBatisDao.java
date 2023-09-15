@@ -37,6 +37,7 @@ import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.RandomUtils;
 import com.buession.core.validator.Validate;
+import com.buession.dao.mybatis.PageRowBounds;
 import com.buession.lang.Order;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -226,8 +227,19 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		com.buession.dao.Pagination<E> pagination = new com.buession.dao.Pagination<>(page, pagesize, totalRecords);
 
 		if(totalRecords > 0){
-			List<E> result = select(conditions, pagination.getOffset(), pagination.getPagesize(), orders);
-			pagination.setData(result);
+			final Map<String, Object> parameters = buildParameters(conditions);
+
+			if(orders != null){
+				parameters.put(ORDERS_PARAMETER_NAME, orders);
+			}
+
+			try{
+				List<E> result = getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters,
+						new PageRowBounds(pagination.getOffset(), pagination.getPagesize()));
+				pagination.setData(result);
+			}catch(OperationException e){
+				logger.error(e.getMessage());
+			}
 		}
 
 		return pagination;
