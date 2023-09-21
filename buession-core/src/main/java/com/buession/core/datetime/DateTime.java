@@ -51,12 +51,7 @@ public class DateTime {
 	 */
 	public static String microtime() {
 		long timestamp = System.currentTimeMillis();
-
-		final StringBuilder sb = new StringBuilder(24);
-
-		sb.append(timestamp / 1000L).append(' ').append(timestamp % 1000L * 1000L);
-
-		return sb.toString();
+		return String.valueOf(timestamp / 1000L) + ' ' + timestamp % 1000L * 1000L;
 	}
 
 	/**
