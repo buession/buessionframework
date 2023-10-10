@@ -50,7 +50,7 @@ public class PropertyMapper {
 
 	private final SourceOperator sourceOperator;
 
-	private PropertyMapper(final PropertyMapper parent, final SourceOperator sourceOperator){
+	private PropertyMapper(final PropertyMapper parent, final SourceOperator sourceOperator) {
 		this.parent = parent;
 		this.sourceOperator = sourceOperator;
 	}
@@ -61,7 +61,7 @@ public class PropertyMapper {
 	 *
 	 * @return a new property mapper instance
 	 */
-	public PropertyMapper alwaysApplyingWhenNonNull(){
+	public PropertyMapper alwaysApplyingWhenNonNull() {
 		return alwaysApplying(this::whenNonNull);
 	}
 
@@ -71,7 +71,7 @@ public class PropertyMapper {
 	 *
 	 * @return a new property mapper instance
 	 */
-	public PropertyMapper alwaysApplyingWhenHasText(){
+	public PropertyMapper alwaysApplyingWhenHasText() {
 		return alwaysApplying(this::whenHasText);
 	}
 
@@ -84,7 +84,7 @@ public class PropertyMapper {
 	 *
 	 * @return a new property mapper instance
 	 */
-	public PropertyMapper alwaysApplying(SourceOperator operator){
+	public PropertyMapper alwaysApplying(SourceOperator operator) {
 		Assert.isNull(operator, "Operator cloud not be null");
 		return new PropertyMapper(this, operator);
 	}
@@ -102,7 +102,7 @@ public class PropertyMapper {
 	 *
 	 * @see #from(Object)
 	 */
-	public <T> Source<T> from(Supplier<T> supplier){
+	public <T> Source<T> from(Supplier<T> supplier) {
 		Assert.isNull(supplier, "Supplier cloud not be null");
 
 		Source<T> source = getSource(supplier);
@@ -123,12 +123,12 @@ public class PropertyMapper {
 	 *
 	 * @return a {@link Source} that can be used to complete the mapping
 	 */
-	public <T> Source<T> from(T value){
+	public <T> Source<T> from(T value) {
 		return from(()->value);
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> Source<T> getSource(Supplier<T> supplier){
+	private <T> Source<T> getSource(Supplier<T> supplier) {
 		if(parent != null){
 			return parent.from(supplier);
 		}
@@ -141,43 +141,16 @@ public class PropertyMapper {
 	 *
 	 * @return the property mapper
 	 */
-	public static PropertyMapper get(){
+	public static PropertyMapper get() {
 		return INSTANCE;
 	}
 
-	private <T> Source<T> whenNonNull(Source<T> source){
+	private <T> Source<T> whenNonNull(Source<T> source) {
 		return source.whenNonNull();
 	}
 
-	private <T> Source<T> whenHasText(Source<T> source){
+	private <T> Source<T> whenHasText(Source<T> source) {
 		return source.whenHasText();
-	}
-
-	/**
-	 * Supplier that caches the value to prevent multiple calls.
-	 */
-	private final static class CachingSupplier<T> implements Supplier<T> {
-
-		private final Supplier<T> supplier;
-
-		private boolean hasResult;
-
-		private T result;
-
-		CachingSupplier(Supplier<T> supplier){
-			this.supplier = supplier;
-		}
-
-		@Override
-		public T get(){
-			if(hasResult == false){
-				result = this.supplier.get();
-				hasResult = true;
-			}
-
-			return result;
-		}
-
 	}
 
 	/**
@@ -212,40 +185,136 @@ public class PropertyMapper {
 
 		private final Predicate<T> predicate;
 
-		private Source(final Supplier<T> supplier, final Predicate<T> predicate){
+		private Source(final Supplier<T> supplier, final Predicate<T> predicate) {
 			Assert.isNull(predicate, "Predicate cloud not be null");
 			this.supplier = supplier;
 			this.predicate = predicate;
 		}
 
 		/**
-		 * Return an adapted version of the source with {@link Integer} type.
+		 * Return an adapted version of the source with {@link Byte} type.
 		 *
-		 * @param <R>
-		 * 		the resulting type
 		 * @param adapter
 		 * 		an adapter to convert the current value to a number.
+		 * @param <R>
+		 * 		the resulting type
+		 *
+		 * @return a new adapted source instance
+		 *
+		 * @since 2.3.1
+		 */
+		public <R extends Number> Source<Byte> asByte(Function<T, R> adapter) {
+			return as(adapter).as(Number::byteValue);
+		}
+
+		/**
+		 * Return an adapted version of the source with {@link Short} type.
+		 *
+		 * @param adapter
+		 * 		an adapter to convert the current value to a number.
+		 * @param <R>
+		 * 		the resulting type
+		 *
+		 * @return a new adapted source instance
+		 *
+		 * @since 2.3.1
+		 */
+		public <R extends Number> Source<Short> asShort(Function<T, R> adapter) {
+			return as(adapter).as(Number::shortValue);
+		}
+
+		/**
+		 * Return an adapted version of the source with {@link Integer} type.
+		 *
+		 * @param adapter
+		 * 		an adapter to convert the current value to a number.
+		 * @param <R>
+		 * 		the resulting type
 		 *
 		 * @return a new adapted source instance
 		 */
-		public <R extends Number> Source<Integer> asInt(Function<T, R> adapter){
+		public <R extends Number> Source<Integer> asInt(Function<T, R> adapter) {
 			return as(adapter).as(Number::intValue);
+		}
+
+		/**
+		 * Return an adapted version of the source with {@link Long} type.
+		 *
+		 * @param adapter
+		 * 		an adapter to convert the current value to a number.
+		 * @param <R>
+		 * 		the resulting type
+		 *
+		 * @return a new adapted source instance
+		 *
+		 * @since 2.3.1
+		 */
+		public <R extends Number> Source<Long> asLong(Function<T, R> adapter) {
+			return as(adapter).as(Number::longValue);
+		}
+
+		/**
+		 * Return an adapted version of the source with {@link Float} type.
+		 *
+		 * @param adapter
+		 * 		an adapter to convert the current value to a number.
+		 * @param <R>
+		 * 		the resulting type
+		 *
+		 * @return a new adapted source instance
+		 *
+		 * @since 2.3.1
+		 */
+		public <R extends Number> Source<Float> asFloat(Function<T, R> adapter) {
+			return as(adapter).as(Number::floatValue);
+		}
+
+		/**
+		 * Return an adapted version of the source with {@link Double} type.
+		 *
+		 * @param adapter
+		 * 		an adapter to convert the current value to a number.
+		 * @param <R>
+		 * 		the resulting type
+		 *
+		 * @return a new adapted source instance
+		 *
+		 * @since 2.3.1
+		 */
+		public <R extends Number> Source<Double> asDouble(Function<T, R> adapter) {
+			return as(adapter).as(Number::doubleValue);
+		}
+
+		/**
+		 * Return an adapted version of the source with {@link Boolean} type.
+		 *
+		 * @param adapter
+		 * 		an adapter to convert the current value to a boolean.
+		 * @param <R>
+		 * 		the resulting type
+		 *
+		 * @return a new adapted source instance
+		 *
+		 * @since 2.3.1
+		 */
+		public <R extends Boolean> Source<Boolean> asBoolean(Function<T, R> adapter) {
+			return as(adapter).as(Boolean::booleanValue);
 		}
 
 		/**
 		 * Return an adapted version of the source changed via the given adapter function.
 		 *
-		 * @param <R>
-		 * 		the resulting type
 		 * @param adapter
 		 * 		the adapter to apply
+		 * @param <R>
+		 * 		the resulting type
 		 *
 		 * @return a new adapted source instance
 		 */
-		public <R> Source<R> as(Function<T, R> adapter){
+		public <R> Source<R> as(Function<T, R> adapter) {
 			Assert.isNull(adapter, "Adapter cloud not be null");
 
-			Supplier<Boolean> test = ()->predicate.test(supplier.get());
+			Supplier<Boolean> test = ()->this.predicate.test(this.supplier.get());
 			Predicate<R> predicate = (t)->test.get();
 			Supplier<R> supplier = ()->test.get() ? adapter.apply(this.supplier.get()) : null;
 
@@ -258,7 +327,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> whenNonNull(){
+		public Source<T> whenNonNull() {
 			return new Source<>(new NullPointerExceptionSafeSupplier<>(this.supplier), Objects::nonNull);
 		}
 
@@ -267,7 +336,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> whenTrue(){
+		public Source<T> whenTrue() {
 			return when(Boolean.TRUE::equals);
 		}
 
@@ -276,7 +345,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> whenFalse(){
+		public Source<T> whenFalse() {
 			return when(Boolean.FALSE::equals);
 		}
 
@@ -286,7 +355,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> whenHasText(){
+		public Source<T> whenHasText() {
 			return when((value)->Validate.hasText(Objects.toString(value, null)));
 		}
 
@@ -298,7 +367,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> whenEqualTo(Object object){
+		public Source<T> whenEqualTo(Object object) {
 			return when(object::equals);
 		}
 
@@ -313,7 +382,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public <R extends T> Source<R> whenInstanceOf(Class<R> target){
+		public <R extends T> Source<R> whenInstanceOf(Class<R> target) {
 			return when(target::isInstance).as(target::cast);
 		}
 
@@ -325,7 +394,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> whenNot(Predicate<T> predicate){
+		public Source<T> whenNot(Predicate<T> predicate) {
 			Assert.isNull(predicate, "Predicate cloud not be null");
 			return when(predicate.negate());
 		}
@@ -338,7 +407,7 @@ public class PropertyMapper {
 		 *
 		 * @return a new filtered source instance
 		 */
-		public Source<T> when(Predicate<T> predicate){
+		public Source<T> when(Predicate<T> predicate) {
 			Assert.isNull(predicate, "Predicate cloud not be null");
 			return new Source<>(supplier, this.predicate != null ? predicate.and(predicate) : predicate);
 		}
@@ -350,7 +419,7 @@ public class PropertyMapper {
 		 * 		the consumer that should accept the value if it's not been
 		 * 		filtered
 		 */
-		public void to(Consumer<T> consumer){
+		public void to(Consumer<T> consumer) {
 			Assert.isNull(consumer, "Consumer cloud not be null");
 
 			T value = supplier.get();
@@ -372,7 +441,7 @@ public class PropertyMapper {
 		 * @throws NoSuchElementException
 		 * 		if the value has been filtered
 		 */
-		public <R> R toInstance(Function<T, R> factory){
+		public <R> R toInstance(Function<T, R> factory) {
 			Assert.isNull(factory, "Factory cloud not be null");
 
 			T value = supplier.get();
@@ -386,18 +455,45 @@ public class PropertyMapper {
 	}
 
 	/**
+	 * Supplier that caches the value to prevent multiple calls.
+	 */
+	private final static class CachingSupplier<T> implements Supplier<T> {
+
+		private final Supplier<T> supplier;
+
+		private boolean hasResult;
+
+		private T result;
+
+		CachingSupplier(final Supplier<T> supplier) {
+			this.supplier = supplier;
+		}
+
+		@Override
+		public T get() {
+			if(hasResult == false){
+				result = this.supplier.get();
+				hasResult = true;
+			}
+
+			return result;
+		}
+
+	}
+
+	/**
 	 * Supplier that will catch and ignore any {@link NullPointerException}.
 	 */
 	private final static class NullPointerExceptionSafeSupplier<T> implements Supplier<T> {
 
 		private final Supplier<T> supplier;
 
-		NullPointerExceptionSafeSupplier(final Supplier<T> supplier){
+		NullPointerExceptionSafeSupplier(final Supplier<T> supplier) {
 			this.supplier = supplier;
 		}
 
 		@Override
-		public T get(){
+		public T get() {
 			try{
 				return this.supplier.get();
 			}catch(NullPointerException ex){
