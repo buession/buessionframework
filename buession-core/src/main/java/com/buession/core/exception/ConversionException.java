@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
@@ -36,14 +36,29 @@ public class ConversionException extends RuntimeException {
 
 	private final static long serialVersionUID = 7447103473093979500L;
 
-	private Class<?> type;
+	/**
+	 * 待转换源类型
+	 *
+	 * @since 2.3.1
+	 */
+	private Class<?> sourceType;
 
+	/**
+	 * 待转换目标类型
+	 *
+	 * @since 2.3.1
+	 */
+	private Class<?> targetType;
+
+	/**
+	 * 待转换值
+	 */
 	private Object value;
 
 	/**
 	 * 构造函数
 	 */
-	public ConversionException(){
+	public ConversionException() {
 		super();
 	}
 
@@ -53,7 +68,7 @@ public class ConversionException extends RuntimeException {
 	 * @param message
 	 * 		异常信息
 	 */
-	public ConversionException(String message){
+	public ConversionException(String message) {
 		super(message);
 	}
 
@@ -65,7 +80,7 @@ public class ConversionException extends RuntimeException {
 	 * @param cause
 	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
 	 */
-	public ConversionException(String message, Throwable cause){
+	public ConversionException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -81,7 +96,7 @@ public class ConversionException extends RuntimeException {
 	 * @param writableStackTrace
 	 * 		堆栈跟踪是否应该是可写的
 	 */
-	public ConversionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+	public ConversionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
@@ -93,8 +108,8 @@ public class ConversionException extends RuntimeException {
 	 * @param value
 	 * 		待转换的值
 	 */
-	public ConversionException(Class<?> type, Object value){
-		super(typeConvertMessage(type, value));
+	public ConversionException(Class<?> type, Object value) {
+		this(null, type, value, typeConvertMessage(type, value));
 	}
 
 	/**
@@ -107,8 +122,8 @@ public class ConversionException extends RuntimeException {
 	 * @param cause
 	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
 	 */
-	public ConversionException(Class<?> type, Object value, Throwable cause){
-		super(typeConvertMessage(type, value), cause);
+	public ConversionException(Class<?> type, Object value, Throwable cause) {
+		this(null, type, value, typeConvertMessage(type, value), cause);
 	}
 
 	/**
@@ -126,8 +141,197 @@ public class ConversionException extends RuntimeException {
 	 * 		堆栈跟踪是否应该是可写的
 	 */
 	public ConversionException(Class<?> type, Object value, Throwable cause, boolean enableSuppression,
-							   boolean writableStackTrace){
-		super(typeConvertMessage(type, value), cause, enableSuppression, writableStackTrace);
+							   boolean writableStackTrace) {
+		this(null, type, value, typeConvertMessage(type, value), cause, enableSuppression, writableStackTrace);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param targetType
+	 * 		待转换目标类型
+	 * @param type
+	 * 		待转换的源类型
+	 * @param value
+	 * 		待转换的值
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> targetType, Class<?> type, Object value) {
+		this(type, value);
+		this.targetType = targetType;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param targetType
+	 * 		待转换目标类型
+	 * @param type
+	 * 		待转换的源类型
+	 * @param value
+	 * 		待转换的值
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> targetType, Class<?> type, Object value, Throwable cause) {
+		this(type, value, cause);
+		this.targetType = targetType;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param targetType
+	 * 		待转换目标类型
+	 * @param type
+	 * 		待转换的源类型
+	 * @param value
+	 * 		待转换的值
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> targetType, Class<?> type, Object value, Throwable cause,
+							   boolean enableSuppression, boolean writableStackTrace) {
+		this(type, value, cause, enableSuppression, writableStackTrace);
+		this.targetType = targetType;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		待转换的类
+	 * @param value
+	 * 		待转换的值
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> type, Object value, String message) {
+		super(message);
+		this.sourceType = type;
+		this.value = value;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		待转换的类
+	 * @param value
+	 * 		待转换的值
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> type, Object value, String message, Throwable cause) {
+		super(message, cause);
+		this.sourceType = type;
+		this.value = value;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		待转换的类
+	 * @param value
+	 * 		待转换的值
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> type, Object value, String message, Throwable cause, boolean enableSuppression,
+							   boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		this.sourceType = type;
+		this.value = value;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param targetType
+	 * 		待转换目标类型
+	 * @param type
+	 * 		待转换的源类型
+	 * @param value
+	 * 		待转换的值
+	 * @param message
+	 * 		异常信息
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> targetType, Class<?> type, Object value, String message) {
+		this(type, value, message);
+		this.targetType = targetType;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param targetType
+	 * 		待转换目标类型
+	 * @param type
+	 * 		待转换的源类型
+	 * @param value
+	 * 		待转换的值
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> targetType, Class<?> type, Object value, String message, Throwable cause) {
+		this(type, value, message, cause);
+		this.targetType = targetType;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param targetType
+	 * 		待转换目标类型
+	 * @param type
+	 * 		待转换的源类型
+	 * @param value
+	 * 		待转换的值
+	 * @param message
+	 * 		异常信息
+	 * @param cause
+	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
+	 * @param enableSuppression
+	 * 		是否启用抑制
+	 * @param writableStackTrace
+	 * 		堆栈跟踪是否应该是可写的
+	 *
+	 * @since 2.3.1
+	 */
+	public ConversionException(Class<?> targetType, Class<?> type, Object value, String message, Throwable cause,
+							   boolean enableSuppression, boolean writableStackTrace) {
+		this(type, value, message, cause, enableSuppression, writableStackTrace);
+		this.targetType = targetType;
 	}
 
 	/**
@@ -136,11 +340,44 @@ public class ConversionException extends RuntimeException {
 	 * @param cause
 	 * 		原因（保存以供以后通过Throwable.getCause()方法检索）。（允许值为null ，表示原因不存在或未知。）
 	 */
-	public ConversionException(Throwable cause){
+	public ConversionException(Throwable cause) {
 		super(cause);
 	}
 
-	protected static String typeConvertMessage(Class<?> type, Object value){
+	/**
+	 * 返回待转换源类型
+	 *
+	 * @return 待转换源类型
+	 *
+	 * @since 2.3.1
+	 */
+	public Class<?> getSourceType() {
+		return sourceType;
+	}
+
+	/**
+	 * 返回待转换目标类型
+	 *
+	 * @return 待转换目标类型
+	 *
+	 * @since 2.3.1
+	 */
+	public Class<?> getTargetType() {
+		return targetType;
+	}
+
+	/**
+	 * 返回待转换换值
+	 *
+	 * @return 待转换换值
+	 *
+	 * @since 2.3.1
+	 */
+	public Object getValue() {
+		return value;
+	}
+
+	protected static String typeConvertMessage(Class<?> type, Object value) {
 		StringBuilder sb = new StringBuilder(32);
 
 		sb.append("Error converting ");
