@@ -25,6 +25,7 @@
 package com.buession.beans;
 
 import org.junit.Test;
+import org.springframework.cglib.beans.BeanMap;
 import org.springframework.cglib.core.Converter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -39,13 +40,9 @@ import java.util.Map;
 public class BeanUtilsTest {
 
 	@Test
-	public void populate(){
+	public void populate() {
 		Map<String, Object> data = new HashMap<>();
-		data.put("age", null);
-		data.put("username", "username");
-		data.put("height", 3L);
-		data.put("enable", "on");
-		data.put("last_login_time", new Date());
+		data.put("last_login_time", "2023-11-11 00:23:12");
 
 		User user = new User();
 		BeanUtils.populate(user, data);
@@ -54,7 +51,39 @@ public class BeanUtilsTest {
 	}
 
 	@Test
-	public void copy(){
+	public void populate1() {
+		Map<String, Object> data = new HashMap<>();
+
+		User user = new User();
+
+		user.setAge(100);
+		user.setUsername("username");
+		user.setLastLoginTime(new Date());
+
+		BeanMap beanMap = BeanMap.create(user);
+		beanMap.forEach((key, value)->{
+			data.put(String.valueOf(key), value);
+		});
+		data.forEach((key, value)->{
+			System.out.println(key + ": " + value);
+		});
+	}
+
+	@Test
+	public void populate2() {
+		Map<String, Object> data = new HashMap<>();
+		data.put("last_login_time", "2023-11-11 00:23:12");
+
+		Map<String, Object> data2 = new HashMap<>();
+		BeanUtils.populate(data2, data);
+
+		data2.forEach((key, value)->{
+			System.out.println(key + ": " + value);
+		});
+	}
+
+	@Test
+	public void copy() {
 		Map<String, Object> data = new HashMap<>();
 		data.put("age", null);
 		data.put("username", "username");
@@ -69,7 +98,7 @@ public class BeanUtilsTest {
 	}
 
 	@Test
-	public void copy1(){
+	public void copy1() {
 		Map<String, Object> data = new HashMap<>();
 
 		User user = new User();
@@ -84,7 +113,7 @@ public class BeanUtilsTest {
 	}
 
 	@Test
-	public void copy2(){
+	public void copy2() {
 		User user = new User();
 
 		user.setId(100);
@@ -96,7 +125,7 @@ public class BeanUtilsTest {
 	}
 
 	@Test
-	public void copy3(){
+	public void copy3() {
 		User user = new User();
 
 		user.setId(100);
@@ -106,7 +135,7 @@ public class BeanUtilsTest {
 		BeanUtils.copyProperties(person, user, new Converter() {
 
 			@Override
-			public Object convert(Object sourceFieldValue, Class targetFieldType, Object targetSetter){
+			public Object convert(Object sourceFieldValue, Class targetFieldType, Object targetSetter) {
 				if(sourceFieldValue instanceof Short || sourceFieldValue instanceof Integer){
 					if(targetFieldType.isAssignableFrom(Long.class) || targetFieldType.isAssignableFrom(long.class)){
 						return sourceFieldValue;
@@ -120,6 +149,37 @@ public class BeanUtilsTest {
 
 		});
 		System.out.println(person);
+	}
+
+	@Test
+	public void toMap() {
+		User user = new User();
+
+		user.setAge(100);
+		user.setUsername("username");
+
+		Map<String, Object> data = BeanUtils.toMap(user);
+		data.forEach((key, value)->{
+			System.out.println(key + ": " + value);
+		});
+	}
+
+	@Test
+	public void toMap1() {
+		Map<String, Object> data = new HashMap<>();
+		data.put("age", null);
+		data.put("username", "username");
+		data.put("height", 3L);
+		//data.put("enable", "on");
+		data.put("lastLoginTime1", new Date());
+		//data.put("lastLoginTime", "2022-11-12 12:23:00");
+
+		User user = new User();
+
+		BeanMap beanMap = BeanMap.create(user);
+		beanMap.putAll(data);
+
+		System.out.println(user);
 	}
 
 }
