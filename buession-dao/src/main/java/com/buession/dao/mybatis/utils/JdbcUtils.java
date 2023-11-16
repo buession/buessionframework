@@ -162,7 +162,7 @@ public class JdbcUtils {
 	}
 
 	private static boolean regexTest(final String regex, final CharSequence str) {
-		return str == null ? false : Pattern.compile(regex).matcher(str).find();
+		return str != null && Pattern.compile(regex).matcher(str).find();
 	}
 
 }
