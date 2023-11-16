@@ -65,6 +65,7 @@ public class BeanConverterTest {
 		data.put("enable", "on");
 		//data.put("last_login_time", new Date());
 		data.put("last_login_time", "2022-11-12T12:23:00");
+		data.put("arr", new int[]{1, 2});
 
 		User user = new User();
 		BeanConverter beanConverter = new DefaultBeanConverter();
@@ -78,6 +79,7 @@ public class BeanConverterTest {
 
 		user.setAge(100);
 		user.setUsername("username");
+		user.setArr(new String[]{"A", "B"});
 
 		Map<String, Object> data = new HashMap<>();
 		BeanConverter beanConverter = new DefaultBeanConverter();

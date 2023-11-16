@@ -25,12 +25,14 @@
 package com.buession.beans.converters;
 
 import com.buession.beans.AbstractPropertyConverter;
+import com.buession.core.validator.Validate;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -53,6 +55,101 @@ public abstract class DateTimePropertyConverter<T> extends AbstractPropertyConve
 	 * {@link TimeZone}
 	 */
 	private TimeZone timeZone;
+
+	/**
+	 * 日期时间格式
+	 */
+	private String format;
+
+	/**
+	 * 构造函数
+	 */
+	public DateTimePropertyConverter() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 */
+	public DateTimePropertyConverter(Locale locale) {
+		this.locale = locale;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 */
+	public DateTimePropertyConverter(TimeZone timeZone) {
+		this.timeZone = timeZone;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public DateTimePropertyConverter(Locale locale, String format) {
+		this.locale = locale;
+		this.format = format;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 */
+	public DateTimePropertyConverter(Locale locale, TimeZone timeZone) {
+		this.locale = locale;
+		this.timeZone = timeZone;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public DateTimePropertyConverter(TimeZone timeZone, String format) {
+		this.timeZone = timeZone;
+		this.format = format;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public DateTimePropertyConverter(String format) {
+		this.format = format;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public DateTimePropertyConverter(Locale locale, TimeZone timeZone, String format) {
+		this(locale, timeZone);
+		this.format = format;
+	}
 
 	/**
 	 * 返回 {@link Locale}
@@ -90,6 +187,25 @@ public abstract class DateTimePropertyConverter<T> extends AbstractPropertyConve
 	 */
 	public void setTimeZone(TimeZone timeZone) {
 		this.timeZone = timeZone;
+	}
+
+	/**
+	 * 返回日期时间格式
+	 *
+	 * @return 日期时间格式
+	 */
+	public String getFormat() {
+		return format;
+	}
+
+	/**
+	 * 设置日期时间格式
+	 *
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	@Override
@@ -151,7 +267,12 @@ public abstract class DateTimePropertyConverter<T> extends AbstractPropertyConve
 
 		// Handle CharSequence
 		if(value instanceof CharSequence){
-			return toDate(targetType, sourceType, LocalDateTime.parse(value.toString()));
+			if(Validate.hasText(getFormat())){
+				final DateTimeFormatter dft = DateTimeFormatter.ofPattern(getFormat());
+				return toDate(targetType, sourceType, LocalDateTime.parse(value.toString(), dft));
+			}else{
+				return toDate(targetType, sourceType, LocalDateTime.parse(value.toString()));
+			}
 		}
 
 		return null;

@@ -26,6 +26,8 @@ package com.buession.beans.converters;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * {@link LocalDate} 类型 Bean 属性转换器
@@ -34,6 +36,93 @@ import java.time.LocalDate;
  * @since 2.3.1
  */
 public final class LocalDatePropertyConverter extends DateTimePropertyConverter<LocalDate> {
+
+	/**
+	 * 构造函数
+	 */
+	public LocalDatePropertyConverter() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 */
+	public LocalDatePropertyConverter(Locale locale) {
+		super(locale);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 */
+	public LocalDatePropertyConverter(TimeZone timeZone) {
+		super(timeZone);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public LocalDatePropertyConverter(Locale locale, String format) {
+		super(locale, format);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 */
+	public LocalDatePropertyConverter(Locale locale, TimeZone timeZone) {
+		super(locale, timeZone);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public LocalDatePropertyConverter(TimeZone timeZone, String format) {
+		super(timeZone, format);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public LocalDatePropertyConverter(String format) {
+		super(format);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public LocalDatePropertyConverter(Locale locale, TimeZone timeZone, String format) {
+		super(locale, timeZone, format);
+	}
 
 	@Override
 	protected LocalDate toDate(final Class<LocalDate> targetType, final Class<?> sourceType, final long value) {

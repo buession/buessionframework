@@ -33,7 +33,7 @@ package com.buession.beans.converters;
 public final class FloatPropertyConverter extends NumberPropertyConverter<Float> {
 
 	@Override
-	protected Float toTargetNumber(final Class<?> sourceType, final Class<Float> targetType, final Number value) {
+	protected Float toNumber(final Class<?> sourceType, final Class<Float> targetType, final Number value) {
 		return value.floatValue();
 	}
 

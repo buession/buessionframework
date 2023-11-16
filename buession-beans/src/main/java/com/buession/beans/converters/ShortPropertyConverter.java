@@ -33,7 +33,7 @@ package com.buession.beans.converters;
 public final class ShortPropertyConverter extends NumberPropertyConverter<Short> {
 
 	@Override
-	protected Short toTargetNumber(final Class<?> sourceType, final Class<Short> targetType, final Number value) {
+	protected Short toNumber(final Class<?> sourceType, final Class<Short> targetType, final Number value) {
 		return value.shortValue();
 	}
 

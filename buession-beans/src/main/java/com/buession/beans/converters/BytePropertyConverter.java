@@ -35,8 +35,7 @@ import com.buession.core.exception.ConversionException;
 public final class BytePropertyConverter extends NumberPropertyConverter<Byte> {
 
 	@Override
-	protected Byte toTargetNumber(final Class<?> sourceType, final Class<Byte> targetType,
-								  final Number value) {
+	protected Byte toNumber(final Class<?> sourceType, final Class<Byte> targetType, final Number value) {
 		final long longValue = value.longValue();
 		if(longValue > Byte.MAX_VALUE){
 			throw new ConversionException(sourceType, targetType, value,
@@ -45,7 +44,7 @@ public final class BytePropertyConverter extends NumberPropertyConverter<Byte> {
 
 		if(longValue < Byte.MIN_VALUE){
 			throw new ConversionException(sourceType, targetType, value,
-					toString(sourceType) + " value '" + value + "' is too small " + toString(targetType));
+					toString(sourceType) + " value '" + value + "' is too small for " + toString(targetType));
 		}
 
 		return value.byteValue();

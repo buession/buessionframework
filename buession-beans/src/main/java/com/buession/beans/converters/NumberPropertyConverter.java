@@ -97,14 +97,6 @@ public abstract class NumberPropertyConverter<T extends Number> extends Abstract
 		return null;
 	}
 
-	protected T toNumber(final Class<?> sourceType, final Class<T> targetType, final Number value) {
-		if(targetType.equals(sourceType)){
-			return targetType.cast(value);
-		}
-
-		return toTargetNumber(sourceType, targetType, value);
-	}
-
-	protected abstract T toTargetNumber(final Class<?> sourceType, final Class<T> targetType, final Number value);
+	protected abstract T toNumber(final Class<?> sourceType, final Class<T> targetType, final Number value);
 
 }

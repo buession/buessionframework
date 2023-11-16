@@ -33,7 +33,7 @@ package com.buession.beans.converters;
 public final class DoublePropertyConverter extends NumberPropertyConverter<Double> {
 
 	@Override
-	protected Double toTargetNumber(final Class<?> sourceType, final Class<Double> targetType, final Number value) {
+	protected Double toNumber(final Class<?> sourceType, final Class<Double> targetType, final Number value) {
 		return value.doubleValue();
 	}
 

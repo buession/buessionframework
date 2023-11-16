@@ -36,8 +36,7 @@ import java.math.BigInteger;
 public final class BigDecimalPropertyConverter extends NumberPropertyConverter<BigDecimal> {
 
 	@Override
-	protected BigDecimal toTargetNumber(final Class<?> sourceType, final Class<BigDecimal> targetType,
-										final Number value) {
+	protected BigDecimal toNumber(final Class<?> sourceType, final Class<BigDecimal> targetType, final Number value) {
 		if(value instanceof Float || value instanceof Double){
 			return new BigDecimal(value.toString());
 		}else if(value instanceof BigInteger){

@@ -54,7 +54,7 @@ public final class BooleanPropertyConverter extends AbstractPropertyConverter<Bo
 			}
 		}
 
-		return false;
+		throw conversionException(sourceType, value, targetType);
 	}
 
 }

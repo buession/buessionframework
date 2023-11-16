@@ -25,16 +25,16 @@
 package com.buession.beans;
 
 import com.buession.beans.converters.*;
-import com.buession.core.exception.ConversionException;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Primitive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.beans.BeanMap;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -60,7 +60,9 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 
 	private final static Map<String, BeanMap> BEAN_MAPS = new ConcurrentHashMap<>(32);
 
-	private final static Map<Class<?>, BeanPropertyConverter<?>> converters = new ConcurrentHashMap<>(25);
+	private final static Map<Class<?>, BeanPropertyConverter<?>> converters = new ConcurrentHashMap<>(24);
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractBeanConverter.class);
 
 	/**
 	 * 构造函数
@@ -154,10 +156,16 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 					final BeanPropertyConverter<?> propertyConverter = converters.get(
 							Primitive.primitiveToWrapper(fieldType));
 
-					if(propertyConverter == null){
-						beanMap.put(propertyName, value);
-					}else{
-						beanMap.put(propertyName, propertyConverter.convert(value));
+					try{
+						if(propertyConverter == null){
+							beanMap.put(propertyName, value);
+						}else{
+							beanMap.put(propertyName, propertyConverter.convert(value));
+						}
+					}catch(Exception e){
+						if(logger.isWarnEnabled()){
+							logger.warn(e.getMessage());
+						}
 					}
 				}
 			}
@@ -193,8 +201,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 						Primitive.primitiveToWrapper(targetType));
 
 				if(propertyConverter == null){
-					throw new ConversionException(targetType, value.getClass(), value,
-							"Can not get converter for: " + targetType);
+					return value;
 				}else{
 					return propertyConverter.convert(value);
 				}
@@ -209,8 +216,6 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 	}
 
 	private void initDefaultBeanPropertyConverters() {
-		converters.put(Array.class, new ArrayPropertyConverter());
-
 		converters.put(Byte.class, new BytePropertyConverter());
 		converters.put(Short.class, new ShortPropertyConverter());
 		converters.put(Integer.class, new IntegerPropertyConverter());

@@ -25,6 +25,8 @@
 package com.buession.beans.converters;
 
 import java.sql.Timestamp;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * {@link Timestamp} 类型 Bean 属性转换器
@@ -33,6 +35,93 @@ import java.sql.Timestamp;
  * @since 2.3.1
  */
 public final class SqlTimestampPropertyConverter extends DateTimePropertyConverter<Timestamp> {
+
+	/**
+	 * 构造函数
+	 */
+	public SqlTimestampPropertyConverter() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 */
+	public SqlTimestampPropertyConverter(Locale locale) {
+		super(locale);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 */
+	public SqlTimestampPropertyConverter(TimeZone timeZone) {
+		super(timeZone);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public SqlTimestampPropertyConverter(Locale locale, String format) {
+		super(locale, format);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 */
+	public SqlTimestampPropertyConverter(Locale locale, TimeZone timeZone) {
+		super(locale, timeZone);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public SqlTimestampPropertyConverter(TimeZone timeZone, String format) {
+		super(timeZone, format);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public SqlTimestampPropertyConverter(String format) {
+		super(format);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param locale
+	 *        {@link Locale}
+	 * @param timeZone
+	 *        {@link TimeZone}
+	 * @param format
+	 * 		日期时间格式
+	 */
+	public SqlTimestampPropertyConverter(Locale locale, TimeZone timeZone, String format) {
+		super(locale, timeZone, format);
+	}
 
 	@Override
 	protected Timestamp toDate(final Class<Timestamp> targetType, final Class<?> sourceType, final long value) {

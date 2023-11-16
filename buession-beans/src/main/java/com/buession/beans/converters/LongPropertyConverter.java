@@ -33,7 +33,7 @@ package com.buession.beans.converters;
 public final class LongPropertyConverter extends NumberPropertyConverter<Long> {
 
 	@Override
-	protected Long toTargetNumber(final Class<?> sourceType, final Class<Long> targetType, final Number value) {
+	protected Long toNumber(final Class<?> sourceType, final Class<Long> targetType, final Number value) {
 		return value.longValue();
 	}
 

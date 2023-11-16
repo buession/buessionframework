@@ -33,7 +33,7 @@ package com.buession.beans.converters;
 public final class IntegerPropertyConverter extends NumberPropertyConverter<Integer> {
 
 	@Override
-	protected Integer toTargetNumber(final Class<?> sourceType, final Class<Integer> targetType, final Number value) {
+	protected Integer toNumber(final Class<?> sourceType, final Class<Integer> targetType, final Number value) {
 		return value.intValue();
 	}
 
