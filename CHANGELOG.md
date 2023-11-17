@@ -2,7 +2,41 @@
 ===========================
 
 
-## [2.3.0](https://github.com/buession/buession-security/releases/tag/v2.3.0) (2023-08-15)
+## [2.3.1](https://github.com/buession/buessionframework/releases/tag/v2.3.1) (2023-11-17)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.1)
+
+
+### ⭐ 新特性
+
+- **buession-beans：** 新增 bean 转换器 BeanConverter , 支持 map、bean 互转
+- **buession-core：** 新增日期、时间格式化工具类 DateFormatUtils
+- **buession-core：** DateTime 新增日期时间对象、日历对象、时钟对象转换为时间戳方法
+- **buession-core：** 新增线程池饱和策略 ThreadPolicy
+- **buession-dao：** 新增实验性的 MyBatis 分页插件
+- **buession-json：** 注解 Sensitive 增加 strategyType 用于定义脱敏策略类，优先级高于 strategy
+
+
+### 🐞 Bug 修复
+
+- **buession-core：** 修复 ClassUtils instantiate 方法初始化类时，参数长度错误判断异常
+- **buession-core：** 修复 MapBuilder 增加 putIfPresent 方法，值不为 null 时添加到 Map 中
+- **buession-dao：** 修复修改数据 BUG
+- **buession-web：** 修复获取客户端真实 IP 注解判断错误 BUG
+- **buession-web：** 修复 velocity JsonTool 为设置日期时间格式时，无法设置时区的 BUG
+
+
+### ⏪ 优化
+
+- **buession-httpclient：** okhttp3 连接池关闭时驱逐连接资源
+
+
+---
+
+
+## [2.3.0](https://github.com/buession/buessionframework/releases/tag/v2.3.0) (2023-08-15)
 
 ### 🔨依赖升级
 
@@ -66,7 +100,7 @@
 ---
 
 
-## [2.2.1](https://github.com/buession/buession-security/releases/tag/v2.2.1) (2023-03-31)
+## [2.2.1](https://github.com/buession/buessionframework/releases/tag/v2.2.1) (2023-03-31)
 
 ### 🔨依赖升级
 
@@ -86,7 +120,7 @@
 ---
 
 
-## [2.2.0](https://github.com/buession/buession-security/releases/tag/v2.2.0) (2023-03-10)
+## [2.2.0](https://github.com/buession/buessionframework/releases/tag/v2.2.0) (2023-03-10)
 
 ### 🔨依赖升级
 

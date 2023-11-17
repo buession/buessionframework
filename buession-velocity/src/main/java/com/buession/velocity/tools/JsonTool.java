@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.tools;
@@ -61,7 +61,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @return 对象编码后字符串
 	 */
-	public String encode(Object object){
+	public String encode(Object object) {
 		return encode(object, null, null, (TimeZone) null);
 	}
 
@@ -75,7 +75,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @return 对象编码后字符串
 	 */
-	public String encode(Object object, Boolean ignoreNullValue){
+	public String encode(Object object, Boolean ignoreNullValue) {
 		return encode(object, ignoreNullValue, (String) null);
 	}
 
@@ -89,7 +89,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @return 对象编码后字符串
 	 */
-	public String encode(Object object, String dateFormat){
+	public String encode(Object object, String dateFormat) {
 		return encode(object, null, dateFormat);
 	}
 
@@ -105,7 +105,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @return 对象编码后字符串
 	 */
-	public String encode(Object object, String dateFormat, TimeZone timeZone){
+	public String encode(Object object, String dateFormat, TimeZone timeZone) {
 		return encode(object, null, dateFormat, timeZone);
 	}
 
@@ -121,7 +121,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @return 对象编码后字符串
 	 */
-	public String encode(Object object, Boolean ignoreNullValue, String dateFormat){
+	public String encode(Object object, Boolean ignoreNullValue, String dateFormat) {
 		return encode(object, ignoreNullValue, dateFormat, (TimeZone) null);
 	}
 
@@ -139,7 +139,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @return 对象编码后字符串
 	 */
-	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone){
+	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone) {
 		return encode(object, ignoreNullValue, dateFormat, timeZone, false);
 	}
 
@@ -157,7 +157,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @since 1.2.2
 	 */
-	public String encode(Object object, Boolean ignoreNullValue, Boolean pretty){
+	public String encode(Object object, Boolean ignoreNullValue, Boolean pretty) {
 		return encode(object, ignoreNullValue, null, pretty);
 	}
 
@@ -175,7 +175,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @since 1.2.2
 	 */
-	public String encode(Object object, String dateFormat, Boolean pretty){
+	public String encode(Object object, String dateFormat, Boolean pretty) {
 		return encode(object, null, dateFormat, pretty);
 	}
 
@@ -195,7 +195,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @since 1.2.2
 	 */
-	public String encode(Object object, String dateFormat, TimeZone timeZone, Boolean pretty){
+	public String encode(Object object, String dateFormat, TimeZone timeZone, Boolean pretty) {
 		return encode(object, null, dateFormat, timeZone, pretty);
 	}
 
@@ -215,7 +215,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @since 1.2.2
 	 */
-	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, Boolean pretty){
+	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, Boolean pretty) {
 		return encode(object, ignoreNullValue, dateFormat, null, pretty);
 	}
 
@@ -237,7 +237,7 @@ public class JsonTool extends SafeConfig {
 	 *
 	 * @since 1.2.2
 	 */
-	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone, Boolean pretty){
+	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone, Boolean pretty) {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		if(Boolean.TRUE.equals(ignoreNullValue)){
@@ -245,12 +245,11 @@ public class JsonTool extends SafeConfig {
 		}
 
 		if(Validate.hasText(dateFormat)){
-			SimpleDateFormat smt = new SimpleDateFormat(dateFormat);
-			objectMapper.setDateFormat(smt);
+			objectMapper.setDateFormat(new SimpleDateFormat(dateFormat));
+		}
 
-			if(timeZone != null){
-				objectMapper.setTimeZone(timeZone);
-			}
+		if(timeZone != null){
+			objectMapper.setTimeZone(timeZone);
 		}
 
 		try{
@@ -268,7 +267,7 @@ public class JsonTool extends SafeConfig {
 		return null;
 	}
 
-	private static PrettyPrinter getPrettyPrinter(){
+	private static PrettyPrinter getPrettyPrinter() {
 		if(prettyPrinter == null){
 			prettyPrinter = new VelocityPrettyPrinter();
 		}
@@ -280,16 +279,16 @@ public class JsonTool extends SafeConfig {
 
 		private final static long serialVersionUID = -2266232157759904063L;
 
-		public VelocityPrettyPrinter(){
+		public VelocityPrettyPrinter() {
 			super(Constants.EMPTY_STRING);
 		}
 
-		public VelocityPrettyPrinter(DefaultPrettyPrinter base){
+		public VelocityPrettyPrinter(DefaultPrettyPrinter base) {
 			super(base);
 		}
 
 		@Override
-		public DefaultPrettyPrinter withSeparators(Separators separators){
+		public DefaultPrettyPrinter withSeparators(Separators separators) {
 			_separators = separators;
 			_objectFieldValueSeparatorWithSpaces =
 					separators.getObjectFieldValueSeparator() + Constants.SPACING_STRING;
@@ -297,7 +296,7 @@ public class JsonTool extends SafeConfig {
 		}
 
 		@Override
-		public DefaultPrettyPrinter createInstance(){
+		public DefaultPrettyPrinter createInstance() {
 			return new VelocityPrettyPrinter(this);
 		}
 

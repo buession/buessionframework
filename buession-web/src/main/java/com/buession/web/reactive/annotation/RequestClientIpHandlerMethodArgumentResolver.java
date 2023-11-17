@@ -49,17 +49,17 @@ import org.springframework.web.server.ServerWebExchange;
 public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedValueSyncArgumentResolver {
 
 	public RequestClientIpHandlerMethodArgumentResolver(@Nullable ConfigurableBeanFactory factory,
-														ReactiveAdapterRegistry registry){
+														ReactiveAdapterRegistry registry) {
 		super(factory, registry);
 	}
 
 	@Override
-	public boolean supportsParameter(MethodParameter parameter){
+	public boolean supportsParameter(MethodParameter parameter) {
 		return RequestClientIpAnnotationUtils.checkSupports(parameter);
 	}
 
 	@Override
-	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter){
+	protected NamedValueInfo createNamedValueInfo(MethodParameter parameter) {
 		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
 		Assert.isNull(requestClientIp, "No RequestClientIp annotation");
 		return new RequestClientIpNamedValueInfo(requestClientIp);
@@ -67,23 +67,26 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 
 	@Nullable
 	@Override
-	protected Object resolveNamedValue(String name, MethodParameter parameter, ServerWebExchange exchange){
+	protected Object resolveNamedValue(String name, MethodParameter parameter, ServerWebExchange exchange) {
 		return RequestClientIpAnnotationUtils.resolveNamedValue(parameter,
 				(methodParameter)->getClientIp(exchange.getRequest(), methodParameter));
 	}
 
-	private String getClientIp(final ServerHttpRequest request, final MethodParameter parameter){
+	@Nullable
+	private String getClientIp(final ServerHttpRequest request, final MethodParameter parameter) {
 		RequestClientIp requestClientIp = parameter.getParameterAnnotation(RequestClientIp.class);
 
-		if(Validate.isNotEmpty(requestClientIp.headerName())){
-			HttpHeaders httpHeaders = request.getHeaders();
-			String clientIp;
+		if(requestClientIp != null){
+			if(Validate.isNotEmpty(requestClientIp.headerName())){
+				HttpHeaders httpHeaders = request.getHeaders();
+				String clientIp;
 
-			for(String headerName : requestClientIp.headerName()){
-				if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) != false){
-					clientIp = httpHeaders.getFirst(headerName);
-					if(Validate.hasText(clientIp)){
-						return clientIp;
+				for(String headerName : requestClientIp.headerName()){
+					if(Validate.hasText(headerName) && ValueConstants.DEFAULT_NONE.equals(headerName) == false){
+						clientIp = httpHeaders.getFirst(headerName);
+						if(Validate.hasText(clientIp)){
+							return clientIp;
+						}
 					}
 				}
 			}
@@ -94,7 +97,7 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractNamedV
 
 	private final static class RequestClientIpNamedValueInfo extends NamedValueInfo {
 
-		private RequestClientIpNamedValueInfo(RequestClientIp annotation){
+		private RequestClientIpNamedValueInfo(RequestClientIp annotation) {
 			super(RequestClientIp.class.getName(), true, null);
 		}
 

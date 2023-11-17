@@ -19,107 +19,74 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
 
 import org.junit.Test;
-import org.springframework.cglib.core.Converter;
+import org.springframework.cglib.beans.BeanMap;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.3.1
  */
-public class BeanUtilsTest {
+public class BeanConverterTest {
 
 	@Test
-	public void populate(){
+	public void mapToMap() {
 		Map<String, Object> data = new HashMap<>();
+		Map<String, Object> target = new HashMap<>();
+
 		data.put("age", null);
 		data.put("username", "username");
 		data.put("height", 3L);
 		data.put("enable", "on");
 		data.put("last_login_time", new Date());
 
-		User user = new User();
-		BeanUtils.populate(user, data);
-
-		System.out.println(user);
-	}
-
-	@Test
-	public void copy(){
-		Map<String, Object> data = new HashMap<>();
-		data.put("age", null);
-		data.put("username", "username");
-		data.put("height", 3L);
-		data.put("enable", "on");
-		data.put("last_login_time", new Date());
-
-		User user = new User();
-		BeanUtils.copyProperties(user, data);
-
-		System.out.println(user);
-	}
-
-	@Test
-	public void copy1(){
-		Map<String, Object> data = new HashMap<>();
-
-		User user = new User();
-
-		user.setAge(100);
-		user.setUsername("username");
-
-		BeanUtils.copyProperties(data, user);
-		data.forEach((key, value)->{
+		BeanConverter beanConverter = new DefaultBeanConverter();
+		beanConverter.convert(data, target);
+		target.forEach((key, value)->{
 			System.out.println(key + ": " + value);
 		});
 	}
 
 	@Test
-	public void copy2(){
+	public void mapToBean() {
+		Map<String, Object> data = new HashMap<>();
+
+		data.put("age", null);
+		data.put("username", "username");
+		data.put("height", 3L);
+		data.put("enable", "on");
+		//data.put("last_login_time", new Date());
+		data.put("last_login_time", "2022-11-12T12:23:00");
+		data.put("arr", new int[]{1, 2});
+
 		User user = new User();
-
-		user.setId(100);
-		user.setUsername("username");
-
-		Person person = new Person();
-		BeanUtils.copyProperties(person, user);
-		System.out.println(person);
+		BeanConverter beanConverter = new DefaultBeanConverter();
+		beanConverter.convert(data, user);
+		System.out.println(user);
 	}
 
 	@Test
-	public void copy3(){
+	public void beanToMap() {
 		User user = new User();
 
-		user.setId(100);
+		user.setAge(100);
 		user.setUsername("username");
+		user.setArr(new String[]{"A", "B"});
 
-		Person person = new Person();
-		BeanUtils.copyProperties(person, user, new Converter() {
-
-			@Override
-			public Object convert(Object sourceFieldValue, Class targetFieldType, Object targetSetter){
-				if(sourceFieldValue instanceof Short || sourceFieldValue instanceof Integer){
-					if(targetFieldType.isAssignableFrom(Long.class) || targetFieldType.isAssignableFrom(long.class)){
-						return sourceFieldValue;
-					}
-				}else if(sourceFieldValue.getClass().isAssignableFrom(targetFieldType)){
-					return sourceFieldValue;
-				}
-
-				return null;
-			}
-
+		Map<String, Object> data = new HashMap<>();
+		BeanConverter beanConverter = new DefaultBeanConverter();
+		beanConverter.convert(user, data);
+		data.forEach((key, value)->{
+			System.out.println(key + ": " + value);
 		});
-		System.out.println(person);
 	}
 
 }

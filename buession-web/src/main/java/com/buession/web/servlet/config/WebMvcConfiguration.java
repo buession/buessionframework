@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.config;
@@ -30,6 +30,7 @@ import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentR
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.lang.NonNull;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -43,12 +44,12 @@ import java.util.List;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	@Override
-	public void addFormatters(FormatterRegistry registry){
+	public void addFormatters(@NonNull FormatterRegistry registry) {
 		FormatterRegistryUtils.addConverters(registry);
 	}
 
 	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
 	}
 

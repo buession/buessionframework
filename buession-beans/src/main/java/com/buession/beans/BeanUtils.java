@@ -33,8 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.cglib.beans.BeanMap;
 import org.springframework.cglib.core.Converter;
+import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -56,26 +56,19 @@ public class BeanUtils {
 
 	@SuppressWarnings({"unchecked"})
 	public static <T> T instantiateClass(String className) throws BeanInstantiationException {
-		try{
-			return instantiateClass((Class<T>) Class.forName(className));
-		}catch(ClassNotFoundException e){
-			throw new IllegalStateException("No supported " + className + " type found");
-		}
+		return (T) instantiateClass(ClassUtils.resolveClassName(className, null));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static <T> T instantiateClass(String className, Class<T> assignableTo) throws BeanInstantiationException {
-		try{
-			return instantiateClass(Class.forName(className), assignableTo);
-		}catch(ClassNotFoundException e){
-			throw new IllegalStateException("No supported " + className + " type found");
-		}
+		return instantiateClass((Class<T>) ClassUtils.resolveClassName(className, null), assignableTo);
 	}
 
 	public static <T> T instantiateClass(Class<T> clazz) throws BeanInstantiationException {
 		return org.springframework.beans.BeanUtils.instantiateClass(clazz);
 	}
 
-	public static <T> T instantiateClass(Class<?> clazz, Class<T> assignableTo) throws BeanInstantiationException {
+	public static <T> T instantiateClass(Class<T> clazz, Class<T> assignableTo) throws BeanInstantiationException {
 		return org.springframework.beans.BeanUtils.instantiateClass(clazz, assignableTo);
 	}
 
@@ -91,6 +84,7 @@ public class BeanUtils {
 	 * @param source
 	 * 		原始对象
 	 */
+	@Deprecated
 	public static void populate(final Object target, final Object source) {
 		populate(target, source, null);
 	}
@@ -106,6 +100,7 @@ public class BeanUtils {
 	 * 		转换器
 	 */
 	@SuppressWarnings({"unchecked"})
+	@Deprecated
 	public static void populate(final Object target, final Object source, final Converter converter) {
 		Assert.isNull(target, "No destination bean specified.");
 
@@ -117,21 +112,18 @@ public class BeanUtils {
 			HumpBeanUtilsBean humpBeanUtilsBean = new HumpBeanUtilsBean();
 
 			try{
-				humpBeanUtilsBean.populate(target, (Map<String, ? extends Object>) source);
+				humpBeanUtilsBean.populate(target, (Map<String, ?>) source);
 			}catch(Exception e){
 				logger.error("Copy Map to {} error: {}.", target.getClass().getName(), e.getMessage());
 			}
 			return;
 		}
 
-		final String cacheKey = source.getClass().getName() + "_" + target.getClass().getName();
-		BeanCopier copier = BEAN_COPIERS.get(cacheKey);
+		final String cacheKey = source.getClass().getName() + '_' + target.getClass().getName();
+		final BeanCopier beanCopier = BEAN_COPIERS.computeIfAbsent(cacheKey,
+				(key)->BeanCopier.create(source.getClass(), target.getClass(), converter != null));
 
-		if(copier == null){
-			copier = BeanCopier.create(source.getClass(), target.getClass(), converter != null);
-			BEAN_COPIERS.put(cacheKey, copier);
-		}
-		copier.copy(source, target, converter);
+		beanCopier.copy(source, target, converter);
 	}
 
 	/**
@@ -142,6 +134,7 @@ public class BeanUtils {
 	 * @param source
 	 * 		原始对象
 	 */
+	@Deprecated
 	public static void copyProperties(final Object target, final Object source) {
 		copyProperties(target, source, null);
 	}
@@ -157,6 +150,7 @@ public class BeanUtils {
 	 * 		转换器
 	 */
 	@SuppressWarnings({"unchecked"})
+	@Deprecated
 	public static void copyProperties(final Object target, final Object source, final Converter converter) {
 		Assert.isNull(target, "No destination bean specified.");
 
@@ -173,14 +167,11 @@ public class BeanUtils {
 			return;
 		}
 
-		final String cacheKey = source.getClass().getName() + "_" + target.getClass().getName();
-		BeanCopier copier = BEAN_COPIERS.get(cacheKey);
+		final String cacheKey = source.getClass().getName() + '_' + target.getClass().getName();
+		final BeanCopier beanCopier = BEAN_COPIERS.computeIfAbsent(cacheKey,
+				(key)->BeanCopier.create(source.getClass(), target.getClass(), converter != null));
 
-		if(copier == null){
-			copier = BeanCopier.create(source.getClass(), target.getClass(), converter != null);
-			BEAN_COPIERS.put(cacheKey, copier);
-		}
-		copier.copy(source, target, converter);
+		beanCopier.copy(source, target, converter);
 	}
 
 	/**
@@ -191,16 +182,12 @@ public class BeanUtils {
 	 *
 	 * @return Map
 	 */
-	@SuppressWarnings({"unchecked"})
+	@Deprecated
 	public static Map<String, Object> toMap(final Object bean) {
-		Assert.isNull(bean, "No source bean specified.");
+		final BeanConverter converter = new DefaultBeanConverter();
+		final Map<String, Object> result = new HashMap<>(16);
 
-		BeanMap beanMap = BeanMap.create(bean);
-		Map<String, Object> result = new HashMap<>(beanMap.size());
-
-		beanMap.forEach((key, value)->result.put(key.toString(), value));
-
-		return result;
+		return converter.convert(bean, result);
 	}
 
 	private final static class HumpBeanUtilsBean extends BeanUtilsBean {

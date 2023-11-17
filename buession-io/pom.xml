@@ -7,7 +7,7 @@
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>2.3.0</version>
+		<version>2.3.1</version>
 	</parent>
 	<artifactId>buession-io</artifactId>
 	<url>http://www.buession.com/</url>
