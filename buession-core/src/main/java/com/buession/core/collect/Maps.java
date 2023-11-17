@@ -66,7 +66,7 @@ public class Maps {
 	 * @return 新的 Map
 	 */
 	public static <SK, SV, TK, TV> Map<TK, TV> map(final Map<SK, SV> map, final Function<SK, TK> keyFun,
-												   final Function<SV, TV> valueFun){
+												   final Function<SV, TV> valueFun) {
 		if(map == null){
 			return null;
 		}
@@ -111,7 +111,7 @@ public class Maps {
 	 * @return 新的 Map
 	 */
 	public static <SK, SV, TK, TV> Map<TK, TV> map(final Map<SK, SV> map, final Function<SK, TK> keyFun,
-												   final Function<SV, TV> valueFun, final Map<TK, TV> targetMap){
+												   final Function<SV, TV> valueFun, final Map<TK, TV> targetMap) {
 		if(map == null){
 			return null;
 		}
@@ -133,7 +133,7 @@ public class Maps {
 	 *
 	 * @return 当 map 为 null 时，返回 null；否则返回 V 类型的 {@link List}
 	 */
-	public static <K, V> List<V> toList(final Map<K, V> map){
+	public static <K, V> List<V> toList(final Map<K, V> map) {
 		return map == null ? null : new ArrayList<>(map.values());
 	}
 
@@ -149,7 +149,7 @@ public class Maps {
 	 *
 	 * @return 当 map 为 null 时，返回 null；否则返回 V 类型的 {@link Set}
 	 */
-	public static <K, V> Set<V> toSet(final Map<K, V> map){
+	public static <K, V> Set<V> toSet(final Map<K, V> map) {
 		if(map == null){
 			return null;
 		}else if(map instanceof LinkedHashMap){

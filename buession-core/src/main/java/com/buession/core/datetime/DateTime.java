@@ -26,11 +26,14 @@
  */
 package com.buession.core.datetime;
 
+import com.buession.core.utils.Assert;
+
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,12 +54,7 @@ public class DateTime {
 	 */
 	public static String microtime() {
 		long timestamp = System.currentTimeMillis();
-
-		final StringBuilder sb = new StringBuilder(24);
-
-		sb.append(timestamp / 1000L).append(' ').append(timestamp % 1000L * 1000L);
-
-		return sb.toString();
+		return String.valueOf(timestamp / 1000L) + ' ' + timestamp % 1000L * 1000L;
 	}
 
 	/**
@@ -376,6 +374,81 @@ public class DateTime {
 	 */
 	public static ZonedDateTime getZonedDateTime(final Clock clock) {
 		return ZonedDateTime.now(clock);
+	}
+
+	/**
+	 * 返回 {@link Date} Unix 时间戳
+	 *
+	 * @param date
+	 *        {@link Date}
+	 *
+	 * @return {@link Date} Unix 时间戳
+	 *
+	 * @since 2.3.1
+	 */
+	public static long toUnixTime(final Date date) {
+		Assert.isNull(date, "java.util.Date cloud not be null.");
+		return date.getTime() / 1000;
+	}
+
+	/**
+	 * 返回 {@link Calendar} Unix 时间戳
+	 *
+	 * @param calendar
+	 *        {@link Calendar}
+	 *
+	 * @return {@link Calendar} Unix 时间戳
+	 *
+	 * @since 2.3.1
+	 */
+	public static long toUnixTime(final Calendar calendar) {
+		Assert.isNull(calendar, "java.util.Calendar cloud not be null.");
+		return calendar.getTimeInMillis() / 1000;
+	}
+
+	/**
+	 * 返回 {@link LocalDate} Unix 时间戳
+	 *
+	 * @param date
+	 *        {@link LocalDate}
+	 *
+	 * @return {@link LocalDate} Unix 时间戳
+	 *
+	 * @since 2.3.1
+	 */
+	public static long toUnixTime(final LocalDate date) {
+		Assert.isNull(date, "java.time.LocalDate cloud not be null.");
+		return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000;
+	}
+
+	/**
+	 * 返回 {@link LocalDateTime} Unix 时间戳
+	 *
+	 * @param dateTime
+	 *        {@link LocalDateTime}
+	 *
+	 * @return {@link LocalDateTime} Unix 时间戳
+	 *
+	 * @since 2.3.1
+	 */
+	public static long toUnixTime(final LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "java.time.LocalDateTime cloud not be null.");
+		return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000;
+	}
+
+	/**
+	 * 返回 {@link Clock} Unix 时间戳
+	 *
+	 * @param clock
+	 *        {@link Clock}
+	 *
+	 * @return {@link Clock} Unix 时间戳
+	 *
+	 * @since 2.3.1
+	 */
+	public static long toUnixTime(final Clock clock) {
+		Assert.isNull(clock, "java.time.Clock cloud not be null.");
+		return clock.millis() / 1000;
 	}
 
 }

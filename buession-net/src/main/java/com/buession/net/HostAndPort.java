@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -55,7 +55,7 @@ public class HostAndPort implements Serializable {
 	 * @param host
 	 * 		主机地址
 	 */
-	public HostAndPort(String host){
+	public HostAndPort(String host) {
 		this.host = host;
 	}
 
@@ -67,7 +67,7 @@ public class HostAndPort implements Serializable {
 	 * @param port
 	 * 		端口
 	 */
-	public HostAndPort(String host, int port){
+	public HostAndPort(String host, int port) {
 		this(host);
 		setPort(port);
 	}
@@ -77,7 +77,7 @@ public class HostAndPort implements Serializable {
 	 *
 	 * @return 主机地址
 	 */
-	public String getHost(){
+	public String getHost() {
 		return host;
 	}
 
@@ -87,7 +87,7 @@ public class HostAndPort implements Serializable {
 	 * @param host
 	 * 		主机地址
 	 */
-	public void setHost(String host){
+	public void setHost(String host) {
 		this.host = host;
 	}
 
@@ -96,7 +96,7 @@ public class HostAndPort implements Serializable {
 	 *
 	 * @return 端口
 	 */
-	public int getPort(){
+	public int getPort() {
 		return port;
 	}
 
@@ -106,27 +106,23 @@ public class HostAndPort implements Serializable {
 	 * @param port
 	 * 		端口
 	 */
-	public void setPort(int port){
+	public void setPort(int port) {
 		Assert.isTrue(Validate.isPort(port), String.format("Port out of range: %s", port));
 		this.port = port;
 	}
 
 	@Override
-	public String toString(){
-		final StringBuilder sb = new StringBuilder(46);
-
-		sb.append(host).append(':').append(port);
-
-		return sb.toString();
+	public String toString() {
+		return host + ':' + port;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(host, port);
 	}
 
 	@Override
-	public boolean equals(Object o){
+	public boolean equals(Object o) {
 		if(this == o){
 			return true;
 		}

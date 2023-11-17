@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.http.request;
@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
-	private RequestUtils(){
+	private RequestUtils() {
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 2.1.0
 	 */
-	public static HttpServletResponse getResponse(){
+	public static HttpServletResponse getResponse() {
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attributes.getResponse();
 	}
@@ -65,7 +65,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 客户端真实 IP 地址
 	 */
-	public static String getClientIp(final HttpServletRequest request){
+	public static String getClientIp(final HttpServletRequest request) {
 		Assert.isNull(request, "HttpServletRequest cloud not be null.");
 		return getClientIp(request::getHeader, request.getRemoteAddr());
 	}
@@ -78,7 +78,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 是否为 Ajax 请求
 	 */
-	public static boolean isAjaxRequest(final HttpServletRequest request){
+	public static boolean isAjaxRequest(final HttpServletRequest request) {
 		return isAjaxRequest(request.getHeader(HttpHeader.X_REQUESTED_WITH.getValue()));
 	}
 
@@ -90,7 +90,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 是否为移动端请求
 	 */
-	public static boolean isMobile(final HttpServletRequest request){
+	public static boolean isMobile(final HttpServletRequest request) {
 		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()),
 				request.getHeader(HttpHeader.ACCEPT.getValue()));
 	}
@@ -103,7 +103,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 请求的真实 Scheme
 	 */
-	public static String getScheme(final HttpServletRequest request){
+	public static String getScheme(final HttpServletRequest request) {
 		String scheme = getScheme(request::getHeader);
 		return Validate.hasText(scheme) ? scheme : request.getScheme();
 	}
@@ -118,7 +118,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public static String getHost(final HttpServletRequest request){
+	public static String getHost(final HttpServletRequest request) {
 		String host = getHost(request::getHeader);
 		return Validate.hasText(host) ? host : request.getServerName();
 	}
@@ -132,7 +132,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 请求的真实域名
 	 */
 	@Deprecated
-	public static String getDomain(final HttpServletRequest request){
+	public static String getDomain(final HttpServletRequest request) {
 		return getHost(request);
 	}
 
@@ -146,13 +146,9 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public static int getPort(final HttpServletRequest request){
+	public static int getPort(final HttpServletRequest request) {
 		String forwardedPort = request.getHeader(HttpHeader.X_FORWARDED_PORT.getValue());
-		if(Validate.hasText(forwardedPort)){
-			return Integer.parseInt(forwardedPort);
-		}
-
-		return request.getServerPort();
+		return Validate.hasText(forwardedPort) ? Integer.parseInt(forwardedPort) : request.getServerPort();
 	}
 
 	/**
@@ -165,7 +161,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public static String getAuthority(final HttpServletRequest request){
+	public static String getAuthority(final HttpServletRequest request) {
 		final String host = getHost(request);
 		return getAuthority(getScheme(request), host, host.contains(":") ? 0 : getPort(request));
 	}

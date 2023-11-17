@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.http.request;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
-	private RequestUtils(){
+	private RequestUtils() {
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 2.1.0
 	 */
-	public static ServerHttpResponse getResponse(){
+	public static ServerHttpResponse getResponse() {
 		ReactiveRequestAttributes requestAttributes = (ReactiveRequestAttributes) RequestContextHolder.getRequestAttributes();
 		return requestAttributes.getResponse();
 	}
@@ -67,7 +67,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 客户端真实 IP 地址
 	 */
-	public static String getClientIp(final ServerHttpRequest request){
+	public static String getClientIp(final ServerHttpRequest request) {
 		Assert.isNull(request, "HttpServletRequest cloud not be null.");
 		HttpHeaders httpHeaders = request.getHeaders();
 
@@ -94,7 +94,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 是否为 Ajax 请求
 	 */
-	public static boolean isAjaxRequest(final ServerHttpRequest request){
+	public static boolean isAjaxRequest(final ServerHttpRequest request) {
 		HttpHeaders httpHeaders = request.getHeaders();
 		return isAjaxRequest(httpHeaders.getFirst(HttpHeader.X_REQUESTED_WITH.getValue()));
 	}
@@ -107,7 +107,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 是否为移动端请求
 	 */
-	public static boolean isMobile(final ServerHttpRequest request){
+	public static boolean isMobile(final ServerHttpRequest request) {
 		HttpHeaders httpHeaders = request.getHeaders();
 		return isMobile(httpHeaders.getFirst(HttpHeader.USER_AGENT.getValue()),
 				httpHeaders.getFirst(HttpHeader.ACCEPT.getValue()));
@@ -121,7 +121,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 请求的真实 Scheme
 	 */
-	public static String getScheme(final ServerHttpRequest request){
+	public static String getScheme(final ServerHttpRequest request) {
 		HttpHeaders httpHeaders = request.getHeaders();
 		String scheme = getScheme(httpHeaders::getFirst);
 		return Validate.hasText(scheme) ? scheme : request.getURI().getScheme();
@@ -137,7 +137,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public static String getHost(final ServerHttpRequest request){
+	public static String getHost(final ServerHttpRequest request) {
 		HttpHeaders httpHeaders = request.getHeaders();
 		String host = getScheme(httpHeaders::getFirst);
 		return Validate.hasText(host) ? host : request.getURI().getHost();
@@ -152,7 +152,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 请求的真实域名
 	 */
 	@Deprecated
-	public static String getDomain(final ServerHttpRequest request){
+	public static String getDomain(final ServerHttpRequest request) {
 		return getHost(request);
 	}
 
@@ -166,14 +166,10 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public static int getPort(final ServerHttpRequest request){
+	public static int getPort(final ServerHttpRequest request) {
 		HttpHeaders httpHeaders = request.getHeaders();
 		String forwardedPort = httpHeaders.getFirst(HttpHeader.X_FORWARDED_PORT.getValue());
-		if(Validate.hasText(forwardedPort)){
-			return Integer.parseInt(forwardedPort);
-		}
-
-		return request.getURI().getPort();
+		return Validate.hasText(forwardedPort) ? Integer.parseInt(forwardedPort) : request.getURI().getPort();
 	}
 
 	/**
@@ -186,7 +182,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public static String getAuthority(final ServerHttpRequest request){
+	public static String getAuthority(final ServerHttpRequest request) {
 		final String host = getHost(request);
 		return getAuthority(getScheme(request), host, host.contains(":") ? 0 : getPort(request));
 	}

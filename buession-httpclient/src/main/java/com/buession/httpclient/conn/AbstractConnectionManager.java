@@ -48,7 +48,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public AbstractConnectionManager(){
+	public AbstractConnectionManager() {
 		clientConnectionManager = createDefaultClientConnectionManager();
 	}
 
@@ -58,7 +58,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @param configuration
 	 * 		连接对象
 	 */
-	public AbstractConnectionManager(Configuration configuration){
+	public AbstractConnectionManager(Configuration configuration) {
 		this.configuration = configuration;
 		clientConnectionManager = createDefaultClientConnectionManager();
 	}
@@ -69,7 +69,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public AbstractConnectionManager(CM clientConnectionManager){
+	public AbstractConnectionManager(CM clientConnectionManager) {
 		this.clientConnectionManager = clientConnectionManager;
 	}
 
@@ -81,7 +81,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public AbstractConnectionManager(Configuration configuration, CM clientConnectionManager){
+	public AbstractConnectionManager(Configuration configuration, CM clientConnectionManager) {
 		this.configuration = configuration;
 		this.clientConnectionManager = clientConnectionManager;
 	}
@@ -92,7 +92,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @return 连接对象
 	 */
 	@Override
-	public Configuration getConfiguration(){
+	public Configuration getConfiguration() {
 		return configuration;
 	}
 
@@ -103,7 +103,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * 		连接对象
 	 */
 	@Override
-	public void setConfiguration(Configuration configuration){
+	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -112,7 +112,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 *
 	 * @return 连接管理器
 	 */
-	public CM getClientConnectionManager(){
+	public CM getClientConnectionManager() {
 		return clientConnectionManager;
 	}
 
@@ -122,21 +122,30 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @param clientConnectionManager
 	 * 		连接管理器
 	 */
-	public void setClientConnectionManager(CM clientConnectionManager){
+	public void setClientConnectionManager(CM clientConnectionManager) {
 		this.clientConnectionManager = clientConnectionManager;
 	}
 
 	/**
+	 * 返回链接管理器是否共享
+	 *
+	 * @return True / False
+	 *
 	 * @since 2.3.0
 	 */
-	public Boolean getConnectionManagerShared(){
+	public Boolean getConnectionManagerShared() {
 		return connectionManagerShared;
 	}
 
 	/**
+	 * 设置链接管理器是否共享
+	 *
+	 * @param connectionManagerShared
+	 * 		链接管理器是否共享
+	 *
 	 * @since 2.3.0
 	 */
-	public void setConnectionManagerShared(Boolean connectionManagerShared){
+	public void setConnectionManagerShared(Boolean connectionManagerShared) {
 		this.connectionManagerShared = connectionManagerShared;
 	}
 

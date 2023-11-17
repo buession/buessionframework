@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.tools;
@@ -31,6 +31,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.TimeZone;
 
 /**
@@ -42,19 +43,18 @@ public class LocaleAwareDateTool extends DateTool {
 
 	private final HttpServletRequest request;
 
-	public LocaleAwareDateTool(HttpServletRequest request){
+	public LocaleAwareDateTool(HttpServletRequest request) {
 		this.request = request;
 	}
 
 	@Override
-	public Locale getLocale(){
+	public Locale getLocale() {
 		return RequestContextUtils.getLocale(request);
 	}
 
 	@Override
-	public TimeZone getTimeZone(){
-		TimeZone timeZone = RequestContextUtils.getTimeZone(request);
-		return timeZone != null ? timeZone : super.getTimeZone();
+	public TimeZone getTimeZone() {
+		return Optional.ofNullable(RequestContextUtils.getTimeZone(request)).orElse(super.getTimeZone());
 	}
 
 }

@@ -40,8 +40,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 /**
+ * 枚举序列化为 {@link Map}
+ *
  * @author Yong.Teng
  */
 @JacksonStdImpl

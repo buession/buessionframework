@@ -60,14 +60,14 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 */
 	private int maxRequestsPerHost;
 
-	public NioHttpClientConnectionManager(){
+	public NioHttpClientConnectionManager() {
 	}
 
-	public NioHttpClientConnectionManager(ConnectionPool connectionPool){
+	public NioHttpClientConnectionManager(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}
 
-	public ConnectionPool getConnectionPool(){
+	public ConnectionPool getConnectionPool() {
 		if(connectionPool == null){
 			connectionPool = new ConnectionPool(maxConnections, idleConnectionTime, TimeUnit.MILLISECONDS);
 		}
@@ -75,7 +75,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 		return connectionPool;
 	}
 
-	public void setConnectionPool(ConnectionPool connectionPool){
+	public void setConnectionPool(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}
 
@@ -86,7 +86,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 *
 	 * @since 2.3.0
 	 */
-	public int getMaxConnections(){
+	public int getMaxConnections() {
 		return maxConnections;
 	}
 
@@ -96,7 +96,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 * @param maxConnections
 	 * 		最大链接数
 	 */
-	public void setMaxConnections(int maxConnections){
+	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
@@ -105,7 +105,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 *
 	 * @return 空闲连接存活时长
 	 */
-	public int getIdleConnectionTime(){
+	public int getIdleConnectionTime() {
 		return idleConnectionTime;
 	}
 
@@ -115,7 +115,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 * @param idleConnectionTime
 	 * 		空闲连接存活时长
 	 */
-	public void setIdleConnectionTime(int idleConnectionTime){
+	public void setIdleConnectionTime(int idleConnectionTime) {
 		this.idleConnectionTime = idleConnectionTime;
 	}
 
@@ -124,7 +124,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 *
 	 * @return 默认的最大并发请求数量
 	 */
-	public int getMaxRequests(){
+	public int getMaxRequests() {
 		return maxRequests;
 	}
 
@@ -134,7 +134,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 * @param maxRequests
 	 * 		默认的最大并发请求数量
 	 */
-	public void setMaxRequests(int maxRequests){
+	public void setMaxRequests(int maxRequests) {
 		this.maxRequests = maxRequests;
 	}
 
@@ -143,7 +143,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 *
 	 * @return 同时请求相同主机的请求数量最大值
 	 */
-	public int getMaxRequestsPerHost(){
+	public int getMaxRequestsPerHost() {
 		return maxRequestsPerHost;
 	}
 
@@ -153,13 +153,15 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 * @param maxRequestsPerHost
 	 * 		同时请求相同主机的请求数量最大值
 	 */
-	public void setMaxRequestsPerHost(int maxRequestsPerHost){
+	public void setMaxRequestsPerHost(int maxRequestsPerHost) {
 		this.maxRequestsPerHost = maxRequestsPerHost;
 	}
 
 	@Override
-	public void close() throws IOException{
-
+	public void close() throws IOException {
+		if(connectionPool != null){
+			connectionPool.evictAll();
+		}
 	}
 
 }

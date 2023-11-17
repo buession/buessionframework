@@ -19,12 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.strategy;
-
-import java.util.function.Function;
 
 /**
  * 脱敏策略
@@ -37,51 +35,51 @@ public enum SensitiveStrategy {
 	/**
 	 * 无脱敏策略
 	 */
-	NONE(str->str),
+	NONE(NoneSensitiveStrategy.class),
 
 	/**
 	 * 用户名脱敏策略
 	 */
-	USERNAME(str->str.replaceAll("(\\S)\\S(\\S*)", "$1*$2")),
+	USERNAME(UsernameSensitiveStrategy.class),
 
 	/**
 	 * 身份证号码脱敏策略
 	 */
-	ID_CARD(str->str.replaceAll("(\\d{5})\\d{10}(\\d{4}[\\dX])", "$1****$2")),
+	ID_CARD(IdCardSensitiveStrategy.class),
 
 	/**
 	 * 座机号码脱敏策略
 	 */
-	TEL(str->str.replaceAll("(\\d{3})\\d{2,3}(\\d{2})", "$1****$2")),
+	TEL(TelSensitiveStrategy.class),
 
 	/**
 	 * 手机号码脱敏策略
 	 */
-	MOBILE(str->str.replaceAll("(1\\d{2})\\d{4}(\\d{4})", "$1****$2")),
+	MOBILE(MobileSensitiveStrategy.class),
 
 	/**
 	 * QQ 号码脱敏策略
 	 */
-	QQ(str->str.replaceAll("(([1-9]\\d{2})\\d{2,5}(\\d{2}))|(([1-9]\\d)\\d{2,3}(\\d))", "$2$5****$3$6")),
+	QQ(QqSensitiveStrategy.class),
 
 	/**
 	 * IP 地址脱敏策略
 	 */
-	IP(str->str.replaceAll("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}",
-			"$1.****.$2")),
+	IP(IpSensitiveStrategy.class),
+
 	/**
 	 * 地址脱敏策略
 	 */
-	ADDRESS(str->str.replaceAll("(\\S{3})\\S{2}(\\S*)\\S{2}", "$1****$2****"));
+	ADDRESS(AddressSensitiveStrategy.class);
 
-	private final Function<String, String> function;
+	private final Class<? extends ISensitiveStrategy> strategy;
 
-	SensitiveStrategy(final Function<String, String> function){
-		this.function = function;
+	SensitiveStrategy(final Class<? extends ISensitiveStrategy> strategy) {
+		this.strategy = strategy;
 	}
 
-	public Function<String, String> getFunction(){
-		return function;
+	public Class<? extends ISensitiveStrategy> getStrategy() {
+		return strategy;
 	}
 
 }

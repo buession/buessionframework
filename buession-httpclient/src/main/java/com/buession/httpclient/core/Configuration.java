@@ -125,16 +125,25 @@ public class Configuration {
 	private SslConfiguration sslConfiguration;
 
 	/**
+	 * 返回链接管理器是否共享
+	 *
+	 * @return True / False
+	 *
 	 * @since 2.3.0
 	 */
-	public Boolean getConnectionManagerShared(){
+	public Boolean getConnectionManagerShared() {
 		return connectionManagerShared;
 	}
 
 	/**
+	 * 设置链接管理器是否共享
+	 *
+	 * @param connectionManagerShared
+	 * 		链接管理器是否共享
+	 *
 	 * @since 2.3.0
 	 */
-	public void setConnectionManagerShared(Boolean connectionManagerShared){
+	public void setConnectionManagerShared(Boolean connectionManagerShared) {
 		this.connectionManagerShared = connectionManagerShared;
 	}
 
@@ -145,7 +154,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public Boolean getRetryOnConnectionFailure(){
+	public Boolean getRetryOnConnectionFailure() {
 		return retryOnConnectionFailure;
 	}
 
@@ -157,7 +166,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public void setRetryOnConnectionFailure(Boolean retryOnConnectionFailure){
+	public void setRetryOnConnectionFailure(Boolean retryOnConnectionFailure) {
 		this.retryOnConnectionFailure = retryOnConnectionFailure;
 	}
 
@@ -166,7 +175,7 @@ public class Configuration {
 	 *
 	 * @return 最大连接数
 	 */
-	public int getMaxConnections(){
+	public int getMaxConnections() {
 		return maxConnections;
 	}
 
@@ -176,7 +185,7 @@ public class Configuration {
 	 * @param maxConnections
 	 * 		最大连接数
 	 */
-	public void setMaxConnections(int maxConnections){
+	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
@@ -185,7 +194,7 @@ public class Configuration {
 	 *
 	 * @return 每个路由的最大连接数
 	 */
-	public int getMaxPerRoute(){
+	public int getMaxPerRoute() {
 		return maxPerRoute;
 	}
 
@@ -195,7 +204,7 @@ public class Configuration {
 	 * @param maxPerRoute
 	 * 		每个路由的最大连接数
 	 */
-	public void setMaxPerRoute(int maxPerRoute){
+	public void setMaxPerRoute(int maxPerRoute) {
 		this.maxPerRoute = maxPerRoute;
 	}
 
@@ -204,7 +213,7 @@ public class Configuration {
 	 *
 	 * @return 空闲连接存活时长
 	 */
-	public int getIdleConnectionTime(){
+	public int getIdleConnectionTime() {
 		return idleConnectionTime;
 	}
 
@@ -214,7 +223,7 @@ public class Configuration {
 	 * @param idleConnectionTime
 	 * 		空闲连接存活时长，单位：毫秒
 	 */
-	public void setIdleConnectionTime(int idleConnectionTime){
+	public void setIdleConnectionTime(int idleConnectionTime) {
 		this.idleConnectionTime = idleConnectionTime;
 	}
 
@@ -223,7 +232,7 @@ public class Configuration {
 	 *
 	 * @return 连接超时时间
 	 */
-	public int getConnectTimeout(){
+	public int getConnectTimeout() {
 		return connectTimeout;
 	}
 
@@ -233,7 +242,7 @@ public class Configuration {
 	 * @param connectTimeout
 	 * 		连接超时时间，单位：毫秒
 	 */
-	public void setConnectTimeout(int connectTimeout){
+	public void setConnectTimeout(int connectTimeout) {
 		this.connectTimeout = connectTimeout;
 	}
 
@@ -242,7 +251,7 @@ public class Configuration {
 	 *
 	 * @return 从连接池获取连接的超时时间
 	 */
-	public int getConnectionRequestTimeout(){
+	public int getConnectionRequestTimeout() {
 		return connectionRequestTimeout;
 	}
 
@@ -252,7 +261,7 @@ public class Configuration {
 	 * @param connectionRequestTimeout
 	 * 		从连接池获取连接的超时时间，单位：毫秒
 	 */
-	public void setConnectionRequestTimeout(int connectionRequestTimeout){
+	public void setConnectionRequestTimeout(int connectionRequestTimeout) {
 		this.connectionRequestTimeout = connectionRequestTimeout;
 	}
 
@@ -261,7 +270,7 @@ public class Configuration {
 	 *
 	 * @return 读取超时时间
 	 */
-	public int getReadTimeout(){
+	public int getReadTimeout() {
 		return readTimeout;
 	}
 
@@ -271,7 +280,7 @@ public class Configuration {
 	 * @param readTimeout
 	 * 		读取超时时间，单位：毫秒
 	 */
-	public void setReadTimeout(int readTimeout){
+	public void setReadTimeout(int readTimeout) {
 		this.readTimeout = readTimeout;
 	}
 
@@ -282,7 +291,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public int getWriteTimeout(){
+	public int getWriteTimeout() {
 		return writeTimeout;
 	}
 
@@ -294,7 +303,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public void setWriteTimeout(int writeTimeout){
+	public void setWriteTimeout(int writeTimeout) {
 		this.writeTimeout = writeTimeout;
 	}
 
@@ -303,7 +312,7 @@ public class Configuration {
 	 *
 	 * @return 是否允许重定向
 	 */
-	public Boolean isAllowRedirects(){
+	public Boolean isAllowRedirects() {
 		return getAllowRedirects();
 	}
 
@@ -312,7 +321,7 @@ public class Configuration {
 	 *
 	 * @return 是否允许重定向
 	 */
-	public Boolean getAllowRedirects(){
+	public Boolean getAllowRedirects() {
 		return allowRedirects;
 	}
 
@@ -322,7 +331,7 @@ public class Configuration {
 	 * @param allowRedirects
 	 * 		是否允许重定向
 	 */
-	public void setAllowRedirects(Boolean allowRedirects){
+	public void setAllowRedirects(Boolean allowRedirects) {
 		this.allowRedirects = allowRedirects;
 	}
 
@@ -331,7 +340,7 @@ public class Configuration {
 	 *
 	 * @return 是否应拒绝相对重定向
 	 */
-	public Boolean isRelativeRedirectsAllowed(){
+	public Boolean isRelativeRedirectsAllowed() {
 		return getRelativeRedirectsAllowed();
 	}
 
@@ -340,7 +349,7 @@ public class Configuration {
 	 *
 	 * @return 是否应拒绝相对重定向
 	 */
-	public Boolean getRelativeRedirectsAllowed(){
+	public Boolean getRelativeRedirectsAllowed() {
 		return relativeRedirectsAllowed;
 	}
 
@@ -350,7 +359,7 @@ public class Configuration {
 	 * @param relativeRedirectsAllowed
 	 * 		是否应拒绝相对重定向
 	 */
-	public void setRelativeRedirectsAllowed(Boolean relativeRedirectsAllowed){
+	public void setRelativeRedirectsAllowed(Boolean relativeRedirectsAllowed) {
 		this.relativeRedirectsAllowed = relativeRedirectsAllowed;
 	}
 
@@ -359,7 +368,7 @@ public class Configuration {
 	 *
 	 * @return 是否允许循环重定向
 	 */
-	public Boolean isCircularRedirectsAllowed(){
+	public Boolean isCircularRedirectsAllowed() {
 		return getCircularRedirectsAllowed();
 	}
 
@@ -368,7 +377,7 @@ public class Configuration {
 	 *
 	 * @return 是否允许循环重定向
 	 */
-	public Boolean getCircularRedirectsAllowed(){
+	public Boolean getCircularRedirectsAllowed() {
 		return circularRedirectsAllowed;
 	}
 
@@ -378,7 +387,7 @@ public class Configuration {
 	 * @param circularRedirectsAllowed
 	 * 		是否允许循环重定向
 	 */
-	public void setCircularRedirectsAllowed(Boolean circularRedirectsAllowed){
+	public void setCircularRedirectsAllowed(Boolean circularRedirectsAllowed) {
 		this.circularRedirectsAllowed = circularRedirectsAllowed;
 	}
 
@@ -387,7 +396,7 @@ public class Configuration {
 	 *
 	 * @return 最大允许重定向次数
 	 */
-	public Integer getMaxRedirects(){
+	public Integer getMaxRedirects() {
 		return maxRedirects;
 	}
 
@@ -397,7 +406,7 @@ public class Configuration {
 	 * @param maxRedirects
 	 * 		最大允许重定向次数
 	 */
-	public void setMaxRedirects(Integer maxRedirects){
+	public void setMaxRedirects(Integer maxRedirects) {
 		this.maxRedirects = maxRedirects;
 	}
 
@@ -406,7 +415,7 @@ public class Configuration {
 	 *
 	 * @return 是否开启 Http Basic 认证
 	 */
-	public boolean isAuthenticationEnabled(){
+	public boolean isAuthenticationEnabled() {
 		return getAuthenticationEnabled();
 	}
 
@@ -415,7 +424,7 @@ public class Configuration {
 	 *
 	 * @return 是否开启 Http Basic 认证
 	 */
-	public boolean getAuthenticationEnabled(){
+	public boolean getAuthenticationEnabled() {
 		return authenticationEnabled;
 	}
 
@@ -425,7 +434,7 @@ public class Configuration {
 	 * @param authenticationEnabled
 	 * 		是否开启 Http Basic 认证
 	 */
-	public void setAuthenticationEnabled(boolean authenticationEnabled){
+	public void setAuthenticationEnabled(boolean authenticationEnabled) {
 		this.authenticationEnabled = authenticationEnabled;
 	}
 
@@ -434,7 +443,7 @@ public class Configuration {
 	 *
 	 * @return 是否启用内容压缩
 	 */
-	public boolean isContentCompressionEnabled(){
+	public boolean isContentCompressionEnabled() {
 		return getContentCompressionEnabled();
 	}
 
@@ -443,7 +452,7 @@ public class Configuration {
 	 *
 	 * @return 是否启用内容压缩
 	 */
-	public boolean getContentCompressionEnabled(){
+	public boolean getContentCompressionEnabled() {
 		return contentCompressionEnabled;
 	}
 
@@ -453,7 +462,7 @@ public class Configuration {
 	 * @param contentCompressionEnabled
 	 * 		是否启用内容压缩
 	 */
-	public void setContentCompressionEnabled(boolean contentCompressionEnabled){
+	public void setContentCompressionEnabled(boolean contentCompressionEnabled) {
 		this.contentCompressionEnabled = contentCompressionEnabled;
 	}
 
@@ -462,7 +471,7 @@ public class Configuration {
 	 *
 	 * @return 是否标准化 URI
 	 */
-	public boolean isNormalizeUri(){
+	public boolean isNormalizeUri() {
 		return getNormalizeUri();
 	}
 
@@ -471,7 +480,7 @@ public class Configuration {
 	 *
 	 * @return 是否标准化 URI
 	 */
-	public boolean getNormalizeUri(){
+	public boolean getNormalizeUri() {
 		return normalizeUri;
 	}
 
@@ -481,7 +490,7 @@ public class Configuration {
 	 * @param normalizeUri
 	 * 		是否标准化 URI
 	 */
-	public void setNormalizeUri(boolean normalizeUri){
+	public void setNormalizeUri(boolean normalizeUri) {
 		this.normalizeUri = normalizeUri;
 	}
 
@@ -490,7 +499,7 @@ public class Configuration {
 	 *
 	 * @return SSL 配置
 	 */
-	public SslConfiguration getSslConfiguration(){
+	public SslConfiguration getSslConfiguration() {
 		return sslConfiguration;
 	}
 
@@ -500,12 +509,12 @@ public class Configuration {
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public void setSslConfiguration(SslConfiguration sslConfiguration){
+	public void setSslConfiguration(SslConfiguration sslConfiguration) {
 		this.sslConfiguration = sslConfiguration;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return new StringJoiner(", ")
 				.add("connectionManagerShared: " + connectionManagerShared)
 				.add("retryOnConnectionFailure: " + retryOnConnectionFailure)
