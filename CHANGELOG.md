@@ -2,7 +2,7 @@
 ===========================
 
 
-## [2.3.1](https://github.com/buession/buessionframework/releases/tag/v2.3.1) (2023-xx-xx)
+## [2.3.1](https://github.com/buession/buessionframework/releases/tag/v2.3.1) (2023-11-17)
 
 ### 🔨依赖升级
 
@@ -22,7 +22,8 @@
 ### 🐞 Bug 修复
 
 - **buession-core：** 修复 ClassUtils instantiate 方法初始化类时，参数长度错误判断异常
-- **buession-core：** 新增 MapBuilder 增加 putIfPresent 方法，值不为 null 时添加到 Map 中
+- **buession-core：** 修复 MapBuilder 增加 putIfPresent 方法，值不为 null 时添加到 Map 中
+- **buession-dao：** 修复修改数据 BUG
 - **buession-web：** 修复获取客户端真实 IP 注解判断错误 BUG
 - **buession-web：** 修复 velocity JsonTool 为设置日期时间格式时，无法设置时区的 BUG
 
