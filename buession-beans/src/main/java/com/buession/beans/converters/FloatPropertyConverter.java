@@ -37,4 +37,9 @@ public final class FloatPropertyConverter extends NumberPropertyConverter<Float>
 		return value.floatValue();
 	}
 
+	@Override
+	protected Float strToNumber(final Class<?> sourceType, final Class<Float> targetType, final String value) {
+		return Float.parseFloat(value);
+	}
+
 }

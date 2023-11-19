@@ -50,4 +50,9 @@ public final class BytePropertyConverter extends NumberPropertyConverter<Byte> {
 		return value.byteValue();
 	}
 
+	@Override
+	protected Byte strToNumber(final Class<?> sourceType, final Class<Byte> targetType, final String value) {
+		return Byte.parseByte(value);
+	}
+
 }

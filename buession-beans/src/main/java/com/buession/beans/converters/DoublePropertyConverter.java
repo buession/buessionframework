@@ -37,4 +37,9 @@ public final class DoublePropertyConverter extends NumberPropertyConverter<Doubl
 		return value.doubleValue();
 	}
 
+	@Override
+	protected Double strToNumber(final Class<?> sourceType, final Class<Double> targetType, final String value) {
+		return Double.parseDouble(value);
+	}
+
 }

@@ -42,10 +42,16 @@ public final class BigDecimalPropertyConverter extends NumberPropertyConverter<B
 		}else if(value instanceof BigInteger){
 			return new BigDecimal((BigInteger) value);
 		}else if(value instanceof BigDecimal){
-			return new BigDecimal(value.toString());
+			return (BigDecimal) value;
 		}else{
 			return BigDecimal.valueOf(value.longValue());
 		}
 	}
 
+	@Override
+	protected BigDecimal strToNumber(final Class<?> sourceType, final Class<BigDecimal> targetType,
+									 final String value) {
+		return new BigDecimal(value);
+	}
+	
 }

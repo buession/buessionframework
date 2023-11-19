@@ -37,4 +37,9 @@ public final class LongPropertyConverter extends NumberPropertyConverter<Long> {
 		return value.longValue();
 	}
 
+	@Override
+	protected Long strToNumber(final Class<?> sourceType, final Class<Long> targetType, final String value) {
+		return Long.parseLong(value);
+	}
+
 }
