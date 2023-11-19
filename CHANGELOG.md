@@ -16,7 +16,7 @@
 
 ### 🐞 Bug 修复
 
-- **
+- **buession-beans：** 修复 NumberPropertyConverter 字符串转换为数字时异常的 BUG
 
 
 ### ⏪ 优化

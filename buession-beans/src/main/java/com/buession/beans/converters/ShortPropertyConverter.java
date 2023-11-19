@@ -39,7 +39,11 @@ public final class ShortPropertyConverter extends NumberPropertyConverter<Short>
 
 	@Override
 	protected Short strToNumber(final Class<?> sourceType, final Class<Short> targetType, final String value) {
-		return Short.parseShort(value);
+		try{
+			return Short.parseShort(value);
+		}catch(NumberFormatException e){
+			throw conversionException(sourceType, value, Short.class);
+		}
 	}
 
 }

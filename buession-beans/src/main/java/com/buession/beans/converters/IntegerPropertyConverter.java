@@ -39,7 +39,11 @@ public final class IntegerPropertyConverter extends NumberPropertyConverter<Inte
 
 	@Override
 	protected Integer strToNumber(final Class<?> sourceType, final Class<Integer> targetType, final String value) {
-		return Integer.parseInt(value);
+		try{
+			return Integer.parseInt(value);
+		}catch(NumberFormatException e){
+			throw conversionException(sourceType, value, Integer.class);
+		}
 	}
 
 }

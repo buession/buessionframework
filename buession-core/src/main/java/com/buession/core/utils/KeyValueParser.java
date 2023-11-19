@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -39,12 +39,12 @@ public class KeyValueParser {
 	/**
 	 * 键
 	 */
-	private String key;
+	private final String key;
 
 	/**
 	 * 字符串值
 	 */
-	private String value;
+	private final String value;
 
 	/**
 	 * Float 类型值
@@ -89,7 +89,7 @@ public class KeyValueParser {
 	 * @param delimiter
 	 * 		分隔符
 	 */
-	public KeyValueParser(final String str, final String delimiter){
+	public KeyValueParser(final String str, final String delimiter) {
 		int i = str.indexOf(delimiter);
 		this.key = str.substring(0, i);
 		this.value = str.substring(i + 1);
@@ -103,7 +103,7 @@ public class KeyValueParser {
 	 * @param delimiter
 	 * 		分隔符
 	 */
-	public KeyValueParser(final String str, final char delimiter){
+	public KeyValueParser(final String str, final char delimiter) {
 		int i = str.indexOf(delimiter);
 		this.key = str.substring(0, i);
 		this.value = str.substring(i + 1);
@@ -117,7 +117,7 @@ public class KeyValueParser {
 	 *
 	 * @return 键为 s 时，返回 true；否则，返回 false
 	 */
-	public boolean isKey(String s){
+	public boolean isKey(String s) {
 		return Objects.equals(s, key);
 	}
 
@@ -129,7 +129,7 @@ public class KeyValueParser {
 	 *
 	 * @return 键是否匹配模式 pattern 时，返回 true；否则，返回 false
 	 */
-	public boolean isKey(Pattern pattern){
+	public boolean isKey(Pattern pattern) {
 		return pattern != null && pattern.matcher(key).matches();
 	}
 
@@ -138,7 +138,7 @@ public class KeyValueParser {
 	 *
 	 * @return 键
 	 */
-	public String getKey(){
+	public String getKey() {
 		return key;
 	}
 
@@ -147,7 +147,7 @@ public class KeyValueParser {
 	 *
 	 * @return 值
 	 */
-	public String getValue(){
+	public String getValue() {
 		return value;
 	}
 
@@ -156,7 +156,7 @@ public class KeyValueParser {
 	 *
 	 * @return Float 类型的值
 	 */
-	public Float getFloatValue(){
+	public Float getFloatValue() {
 		if(floatValue == null){
 			floatValue = Float.parseFloat(value);
 		}
@@ -169,7 +169,7 @@ public class KeyValueParser {
 	 *
 	 * @return Double 类型的值
 	 */
-	public Double getDoubleValue(){
+	public Double getDoubleValue() {
 		if(doubleValue == null){
 			doubleValue = Double.parseDouble(value);
 		}
@@ -182,7 +182,7 @@ public class KeyValueParser {
 	 *
 	 * @return Short 类型的值
 	 */
-	public Short getShortValue(){
+	public Short getShortValue() {
 		if(shortValue == null){
 			shortValue = Short.parseShort(value);
 		}
@@ -195,7 +195,7 @@ public class KeyValueParser {
 	 *
 	 * @return Integer 类型的值
 	 */
-	public Integer getIntegerValue(){
+	public Integer getIntegerValue() {
 		if(intValue == null){
 			intValue = Integer.parseInt(value);
 		}
@@ -208,7 +208,7 @@ public class KeyValueParser {
 	 *
 	 * @return Integer 类型的值
 	 */
-	public Integer getIntValue(){
+	public Integer getIntValue() {
 		return getIntegerValue();
 	}
 
@@ -217,7 +217,7 @@ public class KeyValueParser {
 	 *
 	 * @return Long 类型的值
 	 */
-	public Long getLongValue(){
+	public Long getLongValue() {
 		if(longValue == null){
 			longValue = Long.parseLong(value);
 		}
@@ -230,7 +230,7 @@ public class KeyValueParser {
 	 *
 	 * @return Boolean 类型的值，当 value 为 1 或不区分大小写为 true 时，返回 true；否则，返回 false
 	 */
-	public Boolean getBooleanValue(){
+	public Boolean getBooleanValue() {
 		if(boolValue == null){
 			boolValue = Boolean.parseBoolean(value) || "1".equals(value);
 		}
@@ -243,7 +243,7 @@ public class KeyValueParser {
 	 *
 	 * @see #getBooleanValue()
 	 */
-	public Boolean getBoolValue(){
+	public Boolean getBoolValue() {
 		return getBooleanValue();
 	}
 
@@ -254,7 +254,7 @@ public class KeyValueParser {
 	 *
 	 * @see Status
 	 */
-	public Status getStatusValue(){
+	public Status getStatusValue() {
 		if(statusValue == null){
 			statusValue =
 					StatusUtils.valueOf("OK".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) ||
@@ -276,7 +276,7 @@ public class KeyValueParser {
 	 *
 	 * @see EnumUtils#getEnumIgnoreCase(Class, String)
 	 */
-	public <E extends Enum<E>> E getEnumValue(Class<E> clazz){
+	public <E extends Enum<E>> E getEnumValue(Class<E> clazz) {
 		return EnumUtils.getEnumIgnoreCase(clazz, value);
 	}
 

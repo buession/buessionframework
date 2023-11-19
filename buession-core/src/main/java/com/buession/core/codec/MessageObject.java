@@ -38,41 +38,80 @@ public class MessageObject implements Serializable {
 
 	private final static long serialVersionUID = -5074627895618171892L;
 
+	/**
+	 * 错误码
+	 */
 	private int code;
 
+	/**
+	 * 错误文本
+	 */
 	private String text;
 
-	public MessageObject(){
+	/**
+	 * 构造函数
+	 */
+	public MessageObject() {
 	}
 
-	public MessageObject(int code, String text){
+	/**
+	 * 构造函数
+	 *
+	 * @param code
+	 * 		错误码
+	 * @param text
+	 * 		错误文本
+	 */
+	public MessageObject(int code, String text) {
 		this.code = code;
 		this.text = text;
 	}
 
-	public int getCode(){
+	/**
+	 * 返回错误码
+	 *
+	 * @return 错误码
+	 */
+	public int getCode() {
 		return code;
 	}
 
-	public void setCode(int code){
+	/**
+	 * 设置错误码
+	 *
+	 * @param code
+	 * 		错误码
+	 */
+	public void setCode(int code) {
 		this.code = code;
 	}
 
-	public String getText(){
+	/**
+	 * 返回错误文本
+	 *
+	 * @return 错误文本
+	 */
+	public String getText() {
 		return text;
 	}
 
-	public void setText(String text){
+	/**
+	 * 设置错误文本
+	 *
+	 * @param text
+	 * 		错误文本
+	 */
+	public void setText(String text) {
 		this.text = text;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(code, text);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}

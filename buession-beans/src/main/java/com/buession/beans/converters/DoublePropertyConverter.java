@@ -39,7 +39,11 @@ public final class DoublePropertyConverter extends NumberPropertyConverter<Doubl
 
 	@Override
 	protected Double strToNumber(final Class<?> sourceType, final Class<Double> targetType, final String value) {
-		return Double.parseDouble(value);
+		try{
+			return Double.parseDouble(value);
+		}catch(NumberFormatException e){
+			throw conversionException(sourceType, value, Double.class);
+		}
 	}
 
 }

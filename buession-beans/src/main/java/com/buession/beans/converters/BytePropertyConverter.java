@@ -52,7 +52,11 @@ public final class BytePropertyConverter extends NumberPropertyConverter<Byte> {
 
 	@Override
 	protected Byte strToNumber(final Class<?> sourceType, final Class<Byte> targetType, final String value) {
-		return Byte.parseByte(value);
+		try{
+			return Byte.parseByte(value);
+		}catch(NumberFormatException e){
+			throw conversionException(sourceType, value, Byte.class);
+		}
 	}
 
 }

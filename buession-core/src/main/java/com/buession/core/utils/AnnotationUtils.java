@@ -49,7 +49,7 @@ public class AnnotationUtils extends org.springframework.core.annotation.Annotat
 	 * @return 类包含有 annotations 中的任意一个注解返回 true；否则返回 false
 	 */
 	public static boolean hasClassAnnotationPresent(final Class<?> clazz,
-													final Class<? extends Annotation>[] annotations){
+													final Class<? extends Annotation>[] annotations) {
 		Assert.isNull(clazz, "Find annotation class cloud not be null.");
 
 		if(Validate.isNotEmpty(annotations)){
@@ -74,7 +74,7 @@ public class AnnotationUtils extends org.springframework.core.annotation.Annotat
 	 *
 	 * @return 方法包含有 annotations 中的任意一个注解返回 true；否则返回 false
 	 */
-	public static boolean hasMethodAnnotationPresent(Method method, final Class<? extends Annotation>[] annotations){
+	public static boolean hasMethodAnnotationPresent(Method method, final Class<? extends Annotation>[] annotations) {
 		Assert.isNull(method, "Find annotation method cloud not be null.");
 
 		if(Validate.isNotEmpty(annotations)){
