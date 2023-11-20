@@ -58,8 +58,6 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 
 	private final static Map<String, BeanCopier> BEAN_COPIERS = new ConcurrentHashMap<>(32);
 
-	private final static Map<String, BeanMap> BEAN_MAPS = new ConcurrentHashMap<>(32);
-
 	private final static Map<Class<?>, BeanPropertyConverter<?>> converters = new ConcurrentHashMap<>(24);
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractBeanConverter.class);
@@ -122,8 +120,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 	@SuppressWarnings({"unchecked"})
 	protected <S, T> T mapToBean(final S source, final T target) {
 		final Map<Object, Object> sourceMap = (Map<Object, Object>) source;
-		final String cacheKey = buildCacheKey(source, target);
-		final BeanMap beanMap = BEAN_MAPS.computeIfAbsent(cacheKey, (key)->BeanMap.create(target));
+		final BeanMap beanMap = BeanMap.create(target);
 
 		sourceMap.forEach((key, value)->{
 			if(key instanceof CharSequence){
@@ -152,19 +149,22 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 				Field field = FieldUtils.getField(target.getClass(), propertyName, true);
 
 				if(field != null){
-					Class<?> fieldType = field.getType();
-					final BeanPropertyConverter<?> propertyConverter = converters.get(
-							Primitive.primitiveToWrapper(fieldType));
+					Class<?> fieldType = Primitive.primitiveToWrapper(field.getType());
 
-					try{
-						if(propertyConverter == null){
-							beanMap.put(propertyName, value);
-						}else{
-							beanMap.put(propertyName, propertyConverter.convert(value));
-						}
-					}catch(Exception e){
-						if(logger.isWarnEnabled()){
-							logger.warn(e.getMessage());
+					if(value == null || fieldType == value.getClass()){
+						beanMap.put(propertyName, value);
+					}else{
+						final BeanPropertyConverter<?> propertyConverter = converters.get(fieldType);
+						try{
+							if(propertyConverter == null){
+								beanMap.put(propertyName, value);
+							}else{
+								beanMap.put(propertyName, propertyConverter.convert(value));
+							}
+						}catch(Exception e){
+							if(logger.isWarnEnabled()){
+								logger.warn(e.getMessage());
+							}
 						}
 					}
 				}
@@ -176,8 +176,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 
 	@SuppressWarnings({"unchecked"})
 	protected <S, T> T beanToMap(final S source, final T target) {
-		final String cacheKey = buildCacheKey(source, target);
-		final BeanMap beanMap = BEAN_MAPS.computeIfAbsent(cacheKey, (key)->BeanMap.create(source));
+		final BeanMap beanMap = BeanMap.create(source);
 		final Map<Object, Object> targetMap = (Map<Object, Object>) target;
 
 		targetMap.putAll(beanMap);
