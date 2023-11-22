@@ -46,7 +46,7 @@ public final class SQLServer2005Dialect implements Dialect {
 	}
 
 	@Override
-	public String buildPaginationSql(final String sql, final long offset, final long limit) {
+	public String buildPaginationSql(final String sql, final int offset, final int limit) {
 		StringBuilder pagingBuilder = new StringBuilder();
 		String orderBy = getOrderByPart(sql);
 		String distinctStr = Constants.EMPTY_STRING;

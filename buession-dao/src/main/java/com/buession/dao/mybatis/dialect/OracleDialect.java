@@ -38,7 +38,7 @@ public final class OracleDialect implements Dialect {
 	}
 
 	@Override
-	public String buildPaginationSql(String sql, long offset, long limit) {
+	public String buildPaginationSql(final String sql, final int offset, final int limit) {
 		final StringBuilder sb = new StringBuilder("SELECT * FROM");
 
 		sb.append("(SELECT TEMP.*, ROWNUM ROW_ID FROM (").append(sql).append(") TEMP WHERE ROWNUM <= ").append(limit)

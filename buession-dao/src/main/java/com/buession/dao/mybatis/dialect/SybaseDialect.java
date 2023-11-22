@@ -48,7 +48,7 @@ public final class SybaseDialect implements Dialect {
 	}
 
 	@Override
-	public String buildPaginationSql(final String sql, final long offset, final long limit) {
+	public String buildPaginationSql(final String sql, final int offset, final int limit) {
 		int index = findFrom(sql);
 
 		if(index == -1){
