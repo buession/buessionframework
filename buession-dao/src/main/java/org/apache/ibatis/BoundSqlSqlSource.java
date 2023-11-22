@@ -21,50 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.web.mvc;
-
-/**
- * 分页
+ */package org.apache.ibatis;/**
+ * 
  *
  * @author Yong.Teng
- * @since 2.3.0
- */
-public class Pagination extends com.buession.core.Pagination<Object> {
-
-	/**
-	 * Constructs with default configuration.
-	 */
-	public Pagination() {
-		super();
-	}
-
-	/**
-	 * Constructs with page and pagesize.
-	 *
-	 * @param page
-	 * 		当前页码
-	 * @param pagesize
-	 * 		每页大小
-	 */
-	public Pagination(int page, int pagesize) {
-		super(page, pagesize);
-		setNextPage(getPage() + 1);
-	}
-
-	/**
-	 * Constructs with page, pagesize and totalRecords.
-	 *
-	 * @param page
-	 * 		当前页码
-	 * @param pagesize
-	 * 		每页大小
-	 * @param totalRecords
-	 * 		总记录数
-	 */
-	public Pagination(int page, int pagesize, long totalRecords) {
-		super(page, pagesize, totalRecords);
-		setNextPage(getPage() + 1);
-	}
-
+ * @since 2.3.2
+ */public class BoundSqlSqlSource {
 }
