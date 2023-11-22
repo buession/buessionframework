@@ -24,14 +24,18 @@
  */
 package com.buession.dao.mybatis.interceptor;
 
+import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.core.utils.StringUtils;
 import com.buession.dao.mybatis.PageRowBounds;
 import com.buession.dao.mybatis.dialect.Dialect;
+import org.apache.ibatis.BoundSqlSqlSource;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
@@ -39,8 +43,6 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.Properties;
 
 /**
@@ -49,21 +51,14 @@ import java.util.Properties;
  * @author Yong.Teng
  * @since 2.3.1
  */
-@Intercepts(
-		{
-				@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class}),
-				@Signature(type = StatementHandler.class, method = "query", args = {Statement.class,
-						ResultHandler.class}),
-				@Signature(type = StatementHandler.class, method = "getBoundSql", args = {}),
-				@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
-						RowBounds.class, ResultHandler.class}),
-				@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
-						RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
-		}
-)
+@Intercepts({
+		@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
+				RowBounds.class, ResultHandler.class}),
+		@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
+				RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
+})
 public class PaginationInterceptor extends AbstractInterceptor {
 
-	@SuppressWarnings({"rawtypes"})
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 		Object target = invocation.getTarget();
@@ -75,11 +70,9 @@ public class PaginationInterceptor extends AbstractInterceptor {
 
 			if(statement.getSqlCommandType() == SqlCommandType.SELECT && rowBounds instanceof PageRowBounds){
 				final Executor executor = (Executor) target;
+				final Object parameter = args[1];
 
-				Object parameter = args[1];
-				ResultHandler resultHandler = (ResultHandler) args[3];
-
-				BoundSql boundSql = args.length == 4 ? statement.getBoundSql(parameter) : (BoundSql) args[5];
+				BoundSql boundSql = args.length == 6 ? (BoundSql) args[5] : statement.getBoundSql(parameter);
 
 				Dialect dialect = findDialect(executor);
 
@@ -87,8 +80,14 @@ public class PaginationInterceptor extends AbstractInterceptor {
 					boundSql = createPaginationBoundSql(dialect, statement, boundSql, rowBounds);
 				}
 
-				CacheKey cacheKey = executor.createCacheKey(statement, parameter, rowBounds, boundSql);
-				return executor.query(statement, parameter, rowBounds, resultHandler, cacheKey, boundSql);
+				invocation.getArgs()[0] = copyMappedStatement(statement, new BoundSqlSqlSource(boundSql));
+				invocation.getArgs()[2] = RowBounds.DEFAULT;
+
+				if(args.length == 6){
+					CacheKey cacheKey = executor.createCacheKey(statement, parameter, rowBounds, boundSql);
+					invocation.getArgs()[4] = cacheKey;
+					invocation.getArgs()[5] = boundSql;
+				}
 			}
 		}else{
 			// StatementHandler
@@ -109,6 +108,28 @@ public class PaginationInterceptor extends AbstractInterceptor {
 
 	@Override
 	public void setProperties(Properties properties) {
+	}
+
+	private static MappedStatement copyMappedStatement(final MappedStatement statement, final SqlSource newSqlSource) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final MappedStatement.Builder builder = new MappedStatement.Builder(statement.getConfiguration(),
+				statement.getId(), newSqlSource, statement.getSqlCommandType());
+
+		builder.resource(statement.getResource()).parameterMap(statement.getParameterMap())
+				.resultMaps(statement.getResultMaps()).fetchSize(statement.getFetchSize())
+				.timeout(statement.getTimeout()).statementType(statement.getStatementType())
+				.resultSetType(statement.getResultSetType()).cache(statement.getCache())
+				.flushCacheRequired(statement.isFlushCacheRequired()).useCache(statement.isUseCache())
+				.resultOrdered(statement.isResultOrdered()).keyGenerator(statement.getKeyGenerator())
+				.databaseId(statement.getDatabaseId()).lang(statement.getLang()).dirtySelect(statement.isDirtySelect());
+
+		propertyMapper.from(statement.getKeyProperties()).as((value)->StringUtils.join(value, ','))
+				.to(builder::keyProperty);
+		propertyMapper.from(statement.getKeyColumns()).as((value)->StringUtils.join(value, ',')).to(builder::keyColumn);
+		propertyMapper.from(statement.getResultSets()).as((value)->StringUtils.join(value, ','))
+				.to(builder::resultSets);
+
+		return builder.build();
 	}
 
 	private static BoundSql createPaginationBoundSql(final Dialect dialect, final MappedStatement statement,

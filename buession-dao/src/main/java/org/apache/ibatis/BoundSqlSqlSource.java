@@ -21,10 +21,27 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package org.apache.ibatis;/**
- * 
- *
+ */
+package org.apache.ibatis;
+
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.SqlSource;
+
+/**
  * @author Yong.Teng
  * @since 2.3.2
- */public class BoundSqlSqlSource {
+ */
+public class BoundSqlSqlSource implements SqlSource {
+
+	BoundSql boundSql;
+
+	public BoundSqlSqlSource(BoundSql boundSql) {
+		this.boundSql = boundSql;
+	}
+
+	@Override
+	public BoundSql getBoundSql(Object parameterObject) {
+		return boundSql;
+	}
+
 }
