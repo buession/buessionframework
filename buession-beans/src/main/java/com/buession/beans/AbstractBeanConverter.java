@@ -156,11 +156,8 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 					}else{
 						final BeanPropertyConverter<?> propertyConverter = converters.get(fieldType);
 						try{
-							if(propertyConverter == null){
-								beanMap.put(propertyName, value);
-							}else{
-								beanMap.put(propertyName, propertyConverter.convert(value));
-							}
+							beanMap.put(propertyName, propertyConverter == null ? value :
+									propertyConverter.convert(value));
 						}catch(Exception e){
 							if(logger.isWarnEnabled()){
 								logger.warn(e.getMessage());
