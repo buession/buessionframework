@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
@@ -39,6 +40,8 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedPipelineCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -66,7 +69,8 @@ public interface JedisRedisOperations extends RedisOperations {
 		public R execute() throws RedisException {
 			if(connection.isPipeline()){
 				if(pipelineRunner == null){
-					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
+					throw new NotSupportedPipelineCommandException(
+							RedisConnectionUtils.getRedisMode(client.getConnection()), getCommand());
 				}else{
 					try{
 						client.getTxResults().add(pipelineRunner.run());
@@ -76,7 +80,8 @@ public interface JedisRedisOperations extends RedisOperations {
 				}
 			}else if(connection.isTransaction()){
 				if(transactionRunner == null){
-					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
+					throw new NotSupportedTransactionCommandException(
+							RedisConnectionUtils.getRedisMode(client.getConnection()), getCommand());
 				}else{
 					try{
 						client.getTxResults().add(transactionRunner.run());
@@ -86,7 +91,9 @@ public interface JedisRedisOperations extends RedisOperations {
 				}
 			}else{
 				if(runner == null){
-					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.NORMAL);
+					throw new NotSupportedCommandException(
+							RedisConnectionUtils.getRedisMode(client.getConnection()),
+							NotSupportedCommandException.Type.NORMAL, getCommand());
 				}else{
 					try{
 						return runner.run();
