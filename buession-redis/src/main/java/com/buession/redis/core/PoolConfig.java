@@ -143,7 +143,7 @@ public class PoolConfig {
 	 *
 	 * @return 池模式，为 true 时，后进先出；为 false 时，先进先出
 	 */
-	public boolean getLifo(){
+	public boolean getLifo() {
 		return lifo;
 	}
 
@@ -153,7 +153,7 @@ public class PoolConfig {
 	 * @param lifo
 	 * 		池模式，为 true 时，后进先出；为 false 时，先进先出
 	 */
-	public void setLifo(boolean lifo){
+	public void setLifo(boolean lifo) {
 		this.lifo = lifo;
 	}
 
@@ -162,7 +162,7 @@ public class PoolConfig {
 	 *
 	 * @return 当从池中获取资源或者将资源还回池中时，是否使用 {@link java.util.concurrent.locks.ReentrantLock} 的公平锁机制
 	 */
-	public boolean getFairness(){
+	public boolean getFairness() {
 		return fairness;
 	}
 
@@ -172,7 +172,7 @@ public class PoolConfig {
 	 * @param fairness
 	 * 		当从池中获取资源或者将资源还回池中时，是否使用 {@link java.util.concurrent.locks.ReentrantLock} 的公平锁机制
 	 */
-	public void setFairness(boolean fairness){
+	public void setFairness(boolean fairness) {
 		this.fairness = fairness;
 	}
 
@@ -181,7 +181,7 @@ public class PoolConfig {
 	 *
 	 * @return 当连接池资源用尽后，调用者获取连接时的最大等待时间
 	 */
-	public Duration getMaxWait(){
+	public Duration getMaxWait() {
 		return maxWait;
 	}
 
@@ -191,7 +191,7 @@ public class PoolConfig {
 	 * @param maxWait
 	 * 		当连接池资源用尽后，调用者获取连接时的最大等待时间
 	 */
-	public void setMaxWait(Duration maxWait){
+	public void setMaxWait(Duration maxWait) {
 		this.maxWait = maxWait;
 	}
 
@@ -200,7 +200,7 @@ public class PoolConfig {
 	 *
 	 * @return 连接的最小空闲时间，达到此值后且已达最大空闲连接数该空闲连接可能会被移除
 	 */
-	public Duration getMinEvictableIdleTime(){
+	public Duration getMinEvictableIdleTime() {
 		return minEvictableIdleTime;
 	}
 
@@ -210,7 +210,7 @@ public class PoolConfig {
 	 * @param minEvictableIdleTime
 	 * 		连接的最小空闲时间，达到此值后且已达最大空闲连接数该空闲连接可能会被移除
 	 */
-	public void setMinEvictableIdleTime(Duration minEvictableIdleTime){
+	public void setMinEvictableIdleTime(Duration minEvictableIdleTime) {
 		this.minEvictableIdleTime = minEvictableIdleTime;
 	}
 
@@ -219,7 +219,7 @@ public class PoolConfig {
 	 *
 	 * @return 连接空闲的最小时间，达到此值后空闲链接将会被移除，且保留 minIdle 个空闲连接数
 	 */
-	public Duration getSoftMinEvictableIdleTime(){
+	public Duration getSoftMinEvictableIdleTime() {
 		return softMinEvictableIdleTime;
 	}
 
@@ -229,7 +229,7 @@ public class PoolConfig {
 	 * @param softMinEvictableIdleTime
 	 * 		连接空闲的最小时间，达到此值后空闲链接将会被移除，且保留 minIdle 个空闲连接数
 	 */
-	public void setSoftMinEvictableIdleTime(Duration softMinEvictableIdleTime){
+	public void setSoftMinEvictableIdleTime(Duration softMinEvictableIdleTime) {
 		this.softMinEvictableIdleTime = softMinEvictableIdleTime;
 	}
 
@@ -238,7 +238,7 @@ public class PoolConfig {
 	 *
 	 * @return 驱逐策略的类名
 	 */
-	public String getEvictionPolicyClassName(){
+	public String getEvictionPolicyClassName() {
 		return evictionPolicyClassName;
 	}
 
@@ -248,7 +248,7 @@ public class PoolConfig {
 	 * @param evictionPolicyClassName
 	 * 		驱逐策略的类名
 	 */
-	public void setEvictionPolicyClassName(String evictionPolicyClassName){
+	public void setEvictionPolicyClassName(String evictionPolicyClassName) {
 		this.evictionPolicyClassName = evictionPolicyClassName;
 	}
 
@@ -257,7 +257,7 @@ public class PoolConfig {
 	 *
 	 * @return 关闭驱逐线程的超时时间
 	 */
-	public Duration getEvictorShutdownTimeout(){
+	public Duration getEvictorShutdownTimeout() {
 		return evictorShutdownTimeout;
 	}
 
@@ -267,7 +267,7 @@ public class PoolConfig {
 	 * @param evictorShutdownTimeout
 	 * 		关闭驱逐线程的超时时间
 	 */
-	public void setEvictorShutdownTimeout(Duration evictorShutdownTimeout){
+	public void setEvictorShutdownTimeout(Duration evictorShutdownTimeout) {
 		this.evictorShutdownTimeout = evictorShutdownTimeout;
 	}
 
@@ -278,7 +278,7 @@ public class PoolConfig {
 	 * 如果 numTestsPerEvictionRun &gt;= 0, 则取 numTestsPerEvictionRun 和池内的连接数的较小值作为每次检测的连接数；
 	 * 如果 numTestsPerEvictionRun &lt; 0，则每次检查的连接数是检查时池内连接的总数除以这个值的绝对值再向上取整的结果
 	 */
-	public int getNumTestsPerEvictionRun(){
+	public int getNumTestsPerEvictionRun() {
 		return numTestsPerEvictionRun;
 	}
 
@@ -288,7 +288,7 @@ public class PoolConfig {
 	 * @param numTestsPerEvictionRun
 	 * 		检测空闲对象线程每次运行时检测的空闲对象的数量
 	 */
-	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun){
+	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
 		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
 	}
 
@@ -297,7 +297,7 @@ public class PoolConfig {
 	 *
 	 * @return 在创建对象时检测对象是否有效
 	 */
-	public boolean isTestOnCreate(){
+	public boolean isTestOnCreate() {
 		return getTestOnCreate();
 	}
 
@@ -306,7 +306,7 @@ public class PoolConfig {
 	 *
 	 * @return 在创建对象时检测对象是否有效
 	 */
-	public boolean getTestOnCreate(){
+	public boolean getTestOnCreate() {
 		return testOnCreate;
 	}
 
@@ -316,7 +316,7 @@ public class PoolConfig {
 	 * @param testOnCreate
 	 * 		在创建对象时检测对象是否有效，配置 true 会降低性能
 	 */
-	public void setTestOnCreate(boolean testOnCreate){
+	public void setTestOnCreate(boolean testOnCreate) {
 		this.testOnCreate = testOnCreate;
 	}
 
@@ -325,7 +325,7 @@ public class PoolConfig {
 	 *
 	 * @return 在从对象池获取对象时是否检测对象有效
 	 */
-	public boolean isTestOnBorrow(){
+	public boolean isTestOnBorrow() {
 		return getTestOnBorrow();
 	}
 
@@ -334,7 +334,7 @@ public class PoolConfig {
 	 *
 	 * @return 在从对象池获取对象时是否检测对象有效
 	 */
-	public boolean getTestOnBorrow(){
+	public boolean getTestOnBorrow() {
 		return testOnBorrow;
 	}
 
@@ -344,7 +344,7 @@ public class PoolConfig {
 	 * @param testOnBorrow
 	 * 		在从对象池获取对象时是否检测对象有效，配置 true 会降低性能
 	 */
-	public void setTestOnBorrow(boolean testOnBorrow){
+	public void setTestOnBorrow(boolean testOnBorrow) {
 		this.testOnBorrow = testOnBorrow;
 	}
 
@@ -353,7 +353,7 @@ public class PoolConfig {
 	 *
 	 * @return 在向对象池中归还对象时是否检测对象有效
 	 */
-	public boolean isTestOnReturn(){
+	public boolean isTestOnReturn() {
 		return getTestOnReturn();
 	}
 
@@ -362,7 +362,7 @@ public class PoolConfig {
 	 *
 	 * @return 在向对象池中归还对象时是否检测对象有效
 	 */
-	public boolean getTestOnReturn(){
+	public boolean getTestOnReturn() {
 		return testOnReturn;
 	}
 
@@ -372,7 +372,7 @@ public class PoolConfig {
 	 * @param testOnReturn
 	 * 		在向对象池中归还对象时是否检测对象有效，配置 true 会降低性能
 	 */
-	public void setTestOnReturn(boolean testOnReturn){
+	public void setTestOnReturn(boolean testOnReturn) {
 		this.testOnReturn = testOnReturn;
 	}
 
@@ -381,7 +381,7 @@ public class PoolConfig {
 	 *
 	 * @return 在检测空闲对象线程检测到对象不需要移除时，是否检测对象的有效性
 	 */
-	public boolean isTestWhileIdle(){
+	public boolean isTestWhileIdle() {
 		return getTestWhileIdle();
 	}
 
@@ -390,7 +390,7 @@ public class PoolConfig {
 	 *
 	 * @return 在检测空闲对象线程检测到对象不需要移除时，是否检测对象的有效性
 	 */
-	public boolean getTestWhileIdle(){
+	public boolean getTestWhileIdle() {
 		return testWhileIdle;
 	}
 
@@ -400,7 +400,7 @@ public class PoolConfig {
 	 * @param testWhileIdle
 	 * 		在检测空闲对象线程检测到对象不需要移除时，是否检测对象的有效性
 	 */
-	public void setTestWhileIdle(boolean testWhileIdle){
+	public void setTestWhileIdle(boolean testWhileIdle) {
 		this.testWhileIdle = testWhileIdle;
 	}
 
@@ -409,7 +409,7 @@ public class PoolConfig {
 	 *
 	 * @return 空闲连接检测的周期，如果为负值，表示不运行检测线程
 	 */
-	public Duration getTimeBetweenEvictionRuns(){
+	public Duration getTimeBetweenEvictionRuns() {
 		return timeBetweenEvictionRuns;
 	}
 
@@ -419,7 +419,7 @@ public class PoolConfig {
 	 * @param timeBetweenEvictionRuns
 	 * 		空闲连接检测的周期
 	 */
-	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns){
+	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns) {
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
@@ -428,7 +428,7 @@ public class PoolConfig {
 	 *
 	 * @return 当对象池没有空闲对象时，新的获取对象的请求是否阻塞（true 阻塞，maxWaitMillis 才生效； false 连接池没有资源立马抛异常）
 	 */
-	public boolean isBlockWhenExhausted(){
+	public boolean isBlockWhenExhausted() {
 		return getBlockWhenExhausted();
 	}
 
@@ -437,7 +437,7 @@ public class PoolConfig {
 	 *
 	 * @return 当对象池没有空闲对象时，新的获取对象的请求是否阻塞（true 阻塞，maxWaitMillis 才生效； false 连接池没有资源立马抛异常）
 	 */
-	public boolean getBlockWhenExhausted(){
+	public boolean getBlockWhenExhausted() {
 		return blockWhenExhausted;
 	}
 
@@ -447,7 +447,7 @@ public class PoolConfig {
 	 * @param blockWhenExhausted
 	 * 		当对象池没有空闲对象时，新的获取对象的请求是否阻塞
 	 */
-	public void setBlockWhenExhausted(boolean blockWhenExhausted){
+	public void setBlockWhenExhausted(boolean blockWhenExhausted) {
 		this.blockWhenExhausted = blockWhenExhausted;
 	}
 
@@ -456,7 +456,7 @@ public class PoolConfig {
 	 *
 	 * @return 是否注册 JMX
 	 */
-	public boolean isJmxEnabled(){
+	public boolean isJmxEnabled() {
 		return getJmxEnabled();
 	}
 
@@ -465,7 +465,7 @@ public class PoolConfig {
 	 *
 	 * @return 是否注册 JMX
 	 */
-	public boolean getJmxEnabled(){
+	public boolean getJmxEnabled() {
 		return jmxEnabled;
 	}
 
@@ -475,7 +475,7 @@ public class PoolConfig {
 	 * @param jmxEnabled
 	 * 		是否注册 JMX
 	 */
-	public void setJmxEnabled(boolean jmxEnabled){
+	public void setJmxEnabled(boolean jmxEnabled) {
 		this.jmxEnabled = jmxEnabled;
 	}
 
@@ -484,7 +484,7 @@ public class PoolConfig {
 	 *
 	 * @return JMX 前缀
 	 */
-	public String getJmxNamePrefix(){
+	public String getJmxNamePrefix() {
 		return jmxNamePrefix;
 	}
 
@@ -494,15 +494,15 @@ public class PoolConfig {
 	 * @param jmxNamePrefix
 	 * 		JMX 前缀
 	 */
-	public void setJmxNamePrefix(String jmxNamePrefix){
+	public void setJmxNamePrefix(String jmxNamePrefix) {
 		this.jmxNamePrefix = jmxNamePrefix;
 	}
 
-	public String getJmxNameBase(){
+	public String getJmxNameBase() {
 		return jmxNameBase;
 	}
 
-	public void setJmxNameBase(String jmxNameBase){
+	public void setJmxNameBase(String jmxNameBase) {
 		this.jmxNameBase = jmxNameBase;
 	}
 
@@ -511,7 +511,7 @@ public class PoolConfig {
 	 *
 	 * @return 最大连接数
 	 */
-	public int getMaxTotal(){
+	public int getMaxTotal() {
 		return maxTotal;
 	}
 
@@ -521,7 +521,7 @@ public class PoolConfig {
 	 * @param maxTotal
 	 * 		最大连接数
 	 */
-	public void setMaxTotal(int maxTotal){
+	public void setMaxTotal(int maxTotal) {
 		this.maxTotal = maxTotal;
 	}
 
@@ -530,7 +530,7 @@ public class PoolConfig {
 	 *
 	 * @return 最小空闲连接数
 	 */
-	public int getMinIdle(){
+	public int getMinIdle() {
 		return minIdle;
 	}
 
@@ -540,7 +540,7 @@ public class PoolConfig {
 	 * @param minIdle
 	 * 		最小空闲连接数
 	 */
-	public void setMinIdle(int minIdle){
+	public void setMinIdle(int minIdle) {
 		this.minIdle = minIdle;
 	}
 
@@ -549,7 +549,7 @@ public class PoolConfig {
 	 *
 	 * @return 最大空闲连接数
 	 */
-	public int getMaxIdle(){
+	public int getMaxIdle() {
 		return maxIdle;
 	}
 
@@ -559,8 +559,45 @@ public class PoolConfig {
 	 * @param maxIdle
 	 * 		最大空闲连接数
 	 */
-	public void setMaxIdle(int maxIdle){
+	public void setMaxIdle(int maxIdle) {
 		this.maxIdle = maxIdle;
+	}
+
+	/**
+	 * 转换为 jedis {@link GenericObjectPoolConfig}
+	 *
+	 * @param poolConfig
+	 *        {@link GenericObjectPoolConfig} 实例
+	 * @param <T>
+	 *        {@link GenericObjectPoolConfig} 类型
+	 *
+	 * @return {@link GenericObjectPoolConfig} 实例
+	 *
+	 * @since 2.3.2
+	 */
+	public <T> GenericObjectPoolConfig<T> toGenericObjectPoolConfig(final GenericObjectPoolConfig<T> poolConfig) {
+		poolConfig.setLifo(getLifo());
+		poolConfig.setFairness(getFairness());
+		poolConfig.setMaxWait(getMaxWait());
+		poolConfig.setMinEvictableIdleTime(getMinEvictableIdleTime());
+		poolConfig.setSoftMinEvictableIdleTime(getSoftMinEvictableIdleTime());
+		poolConfig.setEvictionPolicyClassName(getEvictionPolicyClassName());
+		poolConfig.setEvictorShutdownTimeout(getEvictorShutdownTimeout());
+		poolConfig.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
+		poolConfig.setTestOnCreate(getTestOnCreate());
+		poolConfig.setTestOnBorrow(getTestOnBorrow());
+		poolConfig.setTestOnReturn(getTestOnReturn());
+		poolConfig.setTestWhileIdle(getTestWhileIdle());
+		poolConfig.setTimeBetweenEvictionRuns(getTimeBetweenEvictionRuns());
+		poolConfig.setBlockWhenExhausted(getBlockWhenExhausted());
+		poolConfig.setJmxEnabled(getJmxEnabled());
+		poolConfig.setJmxNamePrefix(getJmxNamePrefix());
+		poolConfig.setJmxNameBase(getJmxNameBase());
+		poolConfig.setMaxTotal(getMaxTotal());
+		poolConfig.setMinIdle(getMinIdle());
+		poolConfig.setMaxIdle(getMaxIdle());
+
+		return poolConfig;
 	}
 
 }

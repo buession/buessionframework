@@ -17,6 +17,11 @@
 ### 🐞 Bug 修复
 
 - **buession-beans：** 修复 NumberPropertyConverter 字符串转换为数字时异常的 BUG
+- **buession-beans：** 修复 Map 转换为 bean 时字段为 null 值的 BUG
+- **buession-beans：** 修复 Map 转换为 bean 或 bean 转换为 map 时缓存导致的异常
+- **buession-dao：** 修复分页插件 PaginationInterceptor 当页码大于等于 2 时，无法返回数据的 BUG
+- **buession-dao：** 修复分页对象下一页值错误的 BUG
+- **buession-web：** 修复分页对象下一页值错误的 BUG
 
 
 ### ⏪ 优化

@@ -24,13 +24,11 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
-import redis.clients.jedis.Connection;
 import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
@@ -114,10 +112,8 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 
 		if(isUsePool()){
 			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
-			final PoolConfigConverter<Connection> poolConfigConverter = new PoolConfigConverter<>(
-					connectionPoolConfig);
 
-			poolConfigConverter.convert(getPoolConfig());
+			getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
 
 			if(getMaxTotalRetriesDuration() > 0){
 				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects,

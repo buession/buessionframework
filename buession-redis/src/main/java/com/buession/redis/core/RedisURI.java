@@ -19,19 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
+import com.buession.core.builder.SetBuilder;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.net.AbstractUserInfoURI;
 import com.buession.net.AbstractUserInfoURIBuilder;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,7 +55,7 @@ public class RedisURI extends AbstractUserInfoURI {
 
 	public final static String PARAMETER_NAME_TIMEOUT = "timeout";
 
-	public final static Set<String> ALLOWED_SCHEMES = new HashSet<>();
+	public final static Set<String> ALLOWED_SCHEMES = SetBuilder.<String>create().add(REDIS).add(REDISS).build();
 
 	public final static int DEFAULT_TIMEOUT = 60;
 
@@ -70,61 +69,57 @@ public class RedisURI extends AbstractUserInfoURI {
 
 	private int timeout = DEFAULT_TIMEOUT;
 
-	static{
-		Collections.addAll(ALLOWED_SCHEMES, REDIS, REDISS);
-	}
-
-	public int getDatabase(){
+	public int getDatabase() {
 		return database;
 	}
 
-	public void setDatabase(int database){
+	public void setDatabase(int database) {
 		this.database = database;
 	}
 
-	public String getClientName(){
+	public String getClientName() {
 		return clientName;
 	}
 
-	public void setClientName(String clientName){
+	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
 
-	public int getWeight(){
+	public int getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight){
+	public void setWeight(int weight) {
 		this.weight = weight;
 	}
 
-	public int getTimeout(){
+	public int getTimeout() {
 		return timeout;
 	}
 
-	public void setTimeout(int timeout){
+	public void setTimeout(int timeout) {
 		this.timeout = timeout;
 	}
 
 	@Override
-	public boolean isSsl(){
+	public boolean isSsl() {
 		return REDISS.equals(getScheme());
 	}
 
-	public boolean isUseSsl(){
+	public boolean isUseSsl() {
 		return isSsl();
 	}
 
-	public void setUseSsl(boolean useSsl){
+	public void setUseSsl(boolean useSsl) {
 		setUseSsl(useSsl);
 	}
 
-	public static RedisURI create(String uri){
+	public static RedisURI create(String uri) {
 		Assert.isBlank(uri, "URI must not be null or empty.");
 		return create(URI.create(uri));
 	}
 
-	public static RedisURI create(URI uri){
+	public static RedisURI create(URI uri) {
 		RedisURI redisURI = buildRedisUriFromUri(uri);
 
 		redisURI.uri = uri;
@@ -133,7 +128,7 @@ public class RedisURI extends AbstractUserInfoURI {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 
 		sb.append(getClass().getSimpleName());
@@ -163,11 +158,11 @@ public class RedisURI extends AbstractUserInfoURI {
 	}
 
 	@Override
-	public URI toURI(){
+	public URI toURI() {
 		return this.uri;
 	}
 
-	private static RedisURI buildRedisUriFromUri(URI uri){
+	private static RedisURI buildRedisUriFromUri(URI uri) {
 		Assert.isNull(uri, "URI must not be null");
 
 		if(Validate.hasText(uri.getScheme()) && ALLOWED_SCHEMES.contains(uri.getScheme())){
@@ -221,29 +216,29 @@ public class RedisURI extends AbstractUserInfoURI {
 
 		private String queryString;
 
-		private Builder(){
+		private Builder() {
 			super();
 			host(RedisNode.DEFAULT_HOST);
 			port(RedisNode.DEFAULT_PORT);
 		}
 
-		public static Builder getInstance(){
+		public static Builder getInstance() {
 			return new Builder();
 		}
 
-		public Builder database(final int database){
+		public Builder database(final int database) {
 			Assert.isNegative(database, "Invalid database number: " + database);
 			this.database = database;
 			return this;
 		}
 
-		public Builder queryString(final String queryString){
+		public Builder queryString(final String queryString) {
 			this.queryString = queryString;
 			return this;
 		}
 
 		@Override
-		public RedisURI build(){
+		public RedisURI build() {
 			RedisURI redisURI = new RedisURI();
 
 			redisURI.setHost(host);
@@ -270,7 +265,7 @@ public class RedisURI extends AbstractUserInfoURI {
 			return redisURI;
 		}
 
-		protected static void parseDatabase(final RedisURI redisURI, final String paramValue){
+		private static void parseDatabase(final RedisURI redisURI, final String paramValue) {
 			if(Validate.hasText(paramValue)){
 				int db = Integer.parseInt(paramValue);
 
@@ -280,13 +275,13 @@ public class RedisURI extends AbstractUserInfoURI {
 			}
 		}
 
-		protected static void parseClientName(final RedisURI redisURI, final String paramValue){
+		private static void parseClientName(final RedisURI redisURI, final String paramValue) {
 			if(Validate.hasText(paramValue)){
 				redisURI.setClientName(paramValue);
 			}
 		}
 
-		protected static void parseWeight(final RedisURI redisURI, final String paramValue){
+		private static void parseWeight(final RedisURI redisURI, final String paramValue) {
 			if(Validate.hasText(paramValue)){
 				int weight = Integer.parseInt(paramValue);
 
@@ -296,7 +291,7 @@ public class RedisURI extends AbstractUserInfoURI {
 			}
 		}
 
-		protected static void parseTimeout(final RedisURI redisURI, final String paramValue){
+		private static void parseTimeout(final RedisURI redisURI, final String paramValue) {
 			if(Validate.hasText(paramValue)){
 				int timeout = Integer.parseInt(paramValue);
 

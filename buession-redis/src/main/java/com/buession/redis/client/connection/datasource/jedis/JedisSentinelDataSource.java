@@ -25,7 +25,6 @@
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.core.validator.Validate;
-import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
@@ -33,7 +32,6 @@ import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
 
@@ -162,11 +160,10 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 		final JedisClientConfigBuilder sentinelBuilder = JedisClientConfigBuilder.create(this,
 				getSslConfiguration());
 		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		final PoolConfigConverter<Jedis> poolConfigConverter = new PoolConfigConverter<>(jedisPoolConfig);
 
 		builder.database(getDatabase());
 
-		poolConfigConverter.convert(getPoolConfig());
+		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
 
 		return new JedisSentinelPool(getMasterName(), sentinels, jedisPoolConfig, builder.build(),
 				sentinelBuilder.build());

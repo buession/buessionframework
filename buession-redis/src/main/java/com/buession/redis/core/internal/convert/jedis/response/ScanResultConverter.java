@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@FunctionalInterface
 public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
 
 	/**
@@ -55,7 +56,7 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 		public final static ListScanResultConverter<byte[]> BINARY_LIST_CONVERTER = new ListScanResultConverter<>();
 
 		@Override
-		public ScanResult<List<S>> convert(final redis.clients.jedis.resps.ScanResult<S> source){
+		public ScanResult<List<S>> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
 			return new ScanResult<>(source.getCursor(), source.getResult());
 		}
 
@@ -74,7 +75,7 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 
 		@Override
 		public ScanResult<List<Tuple>> convert(
-				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source){
+				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source) {
 			return new com.buession.redis.core.ScanResult<>(source.getCursor(),
 					TupleConverter.LIST_CONVERTER.convert(source.getResult()));
 		}
@@ -100,7 +101,7 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 		public final static MapScanResultConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapScanResultConverter<>();
 
 		@Override
-		public ScanResult<Map<K, V>> convert(final redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source){
+		public ScanResult<Map<K, V>> convert(final redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source) {
 			final Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(Map.Entry::getKey,
 					Map.Entry::getValue, (a, b)->a, LinkedHashMap::new));
 			return new ScanResult<>(source.getCursorAsBytes(), data);

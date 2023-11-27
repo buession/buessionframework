@@ -58,12 +58,12 @@ public interface JedisRedisOperations extends RedisOperations {
 	abstract class AbstractJedisCommand<CLIENT extends JedisRedisClient, CONN extends JedisRedisConnection, R>
 			extends AbstractRedisOperationsCommand<CLIENT, CONN, R> {
 
-		protected AbstractJedisCommand(final CLIENT client, final ProtocolCommand command){
+		protected AbstractJedisCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
 		@Override
-		public R execute() throws RedisException{
+		public R execute() throws RedisException {
 			if(connection.isPipeline()){
 				if(pipelineRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
@@ -71,7 +71,7 @@ public interface JedisRedisOperations extends RedisOperations {
 					try{
 						client.getTxResults().add(pipelineRunner.run());
 					}catch(Exception e){
-						logger.error(e.getMessage());
+						throw new RedisException(e.getMessage(), e);
 					}
 				}
 			}else if(connection.isTransaction()){
@@ -81,7 +81,7 @@ public interface JedisRedisOperations extends RedisOperations {
 					try{
 						client.getTxResults().add(transactionRunner.run());
 					}catch(Exception e){
-						logger.error(e.getMessage());
+						throw new RedisException(e.getMessage(), e);
 					}
 				}
 			}else{
@@ -91,18 +91,19 @@ public interface JedisRedisOperations extends RedisOperations {
 					try{
 						return runner.run();
 					}catch(Exception e){
-						logger.error(e.getMessage());
+						throw new RedisException(e.getMessage(), e);
 					}
 				}
 			}
 			return null;
 		}
 
-		protected Runner createPipelineRunner(final Executor<Pipeline, Response<R>> executor){
+		protected Runner createPipelineRunner(final Executor<Pipeline, Response<R>> executor) {
 			return new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public JedisResult<R, R> run() throws Exception{
+				public JedisResult<R, R> run() throws Exception {
 					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline));
 				}
@@ -111,11 +112,12 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		protected <SR> Runner createPipelineRunner(final Executor<Pipeline, Response<SR>> executor,
-												   final Converter<SR, R> converter){
+												   final Converter<SR, R> converter) {
 			return new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public JedisResult<SR, R> run() throws Exception{
+				public JedisResult<SR, R> run() throws Exception {
 					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline), converter);
 				}
@@ -123,11 +125,12 @@ public interface JedisRedisOperations extends RedisOperations {
 			};
 		}
 
-		protected Runner createTransactionRunner(final Executor<Transaction, Response<R>> executor){
+		protected Runner createTransactionRunner(final Executor<Transaction, Response<R>> executor) {
 			return new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public JedisResult<R, R> run() throws Exception{
+				public JedisResult<R, R> run() throws Exception {
 					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
 					return newJedisResult(executor.execute(transaction));
 				}
@@ -136,11 +139,12 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		protected <SR> Runner createTransactionRunner(final Executor<Transaction, Response<SR>> executor,
-													  final Converter<SR, R> converter){
+													  final Converter<SR, R> converter) {
 			return new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public JedisResult<SR, R> run() throws Exception{
+				public JedisResult<SR, R> run() throws Exception {
 					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
 					return newJedisResult(executor.execute(transaction), converter);
 				}
@@ -148,12 +152,12 @@ public interface JedisRedisOperations extends RedisOperations {
 			};
 		}
 
-		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response){
+		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response) {
 			return JedisResult.Builder.<SV, TV>forResponse(response).build();
 		}
 
 		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response,
-															  final Converter<SV, TV> converter){
+															  final Converter<SV, TV> converter) {
 			return JedisResult.Builder.<SV, TV>forResponse(response).mappedWith(converter).build();
 		}
 
@@ -161,15 +165,16 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, JedisConnection, R> {
 
-		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command){
+		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		public JedisCommand<R> general(final Executor<Jedis, R> executor){
+		public JedisCommand<R> general(final Executor<Jedis, R> executor) {
 			this.runner = new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public R run() throws Exception{
+				public R run() throws Exception {
 					return executor.execute(connection.getJedis());
 				}
 
@@ -178,11 +183,12 @@ public interface JedisRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public <SR> JedisCommand<R> general(final Executor<Jedis, SR> executor, final Converter<SR, R> converter){
+		public <SR> JedisCommand<R> general(final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
 			this.runner = new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public R run() throws Exception{
+				public R run() throws Exception {
 					return converter.convert(executor.execute(connection.getJedis()));
 				}
 
@@ -191,24 +197,24 @@ public interface JedisRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public JedisCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
+		public JedisCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
 			this.pipelineRunner = createPipelineRunner(executor);
 			return this;
 		}
 
 		public <SR> JedisCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-											 final Converter<SR, R> converter){
+											 final Converter<SR, R> converter) {
 			this.pipelineRunner = createPipelineRunner(executor, converter);
 			return this;
 		}
 
-		public JedisCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
+		public JedisCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
 			this.transactionRunner = createTransactionRunner(executor);
 			return this;
 		}
 
 		public <SR> JedisCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-												final Converter<SR, R> converter){
+												final Converter<SR, R> converter) {
 			this.transactionRunner = createTransactionRunner(executor, converter);
 			return this;
 		}
@@ -217,15 +223,16 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, JedisSentinelConnection, R> {
 
-		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command){
+		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor){
+		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor) {
 			this.runner = new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public R run() throws Exception{
+				public R run() throws Exception {
 					return executor.execute(connection.getJedis());
 				}
 
@@ -235,11 +242,12 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		public <SR> JedisSentinelCommand<R> general(final Executor<Jedis, SR> executor,
-													final Converter<SR, R> converter){
+													final Converter<SR, R> converter) {
 			this.runner = new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public R run() throws Exception{
+				public R run() throws Exception {
 					return converter.convert(executor.execute(connection.getJedis()));
 				}
 
@@ -248,24 +256,24 @@ public interface JedisRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
+		public JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
 			this.pipelineRunner = createPipelineRunner(executor);
 			return this;
 		}
 
 		public <SR> JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-													 final Converter<SR, R> converter){
+													 final Converter<SR, R> converter) {
 			this.pipelineRunner = createPipelineRunner(executor, converter);
 			return this;
 		}
 
-		public JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
+		public JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
 			this.transactionRunner = createTransactionRunner(executor);
 			return this;
 		}
 
 		public <SR> JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-														final Converter<SR, R> converter){
+														final Converter<SR, R> converter) {
 			this.transactionRunner = createTransactionRunner(executor, converter);
 			return this;
 		}
@@ -274,15 +282,16 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, JedisClusterConnection, R> {
 
-		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command){
+		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor){
+		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor) {
 			this.runner = new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public R run() throws Exception{
+				public R run() throws Exception {
 					return executor.execute(connection.getCluster());
 				}
 
@@ -292,11 +301,12 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		public <SR> JedisClusterCommand<R> general(final Executor<JedisCluster, SR> executor,
-												   final Converter<SR, R> converter){
+												   final Converter<SR, R> converter) {
 			this.runner = new Runner() {
 
+				@SuppressWarnings({"unchecked"})
 				@Override
-				public R run() throws Exception{
+				public R run() throws Exception {
 					return converter.convert(executor.execute(connection.getCluster()));
 				}
 
@@ -305,24 +315,24 @@ public interface JedisRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
+		public JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
 			this.pipelineRunner = createPipelineRunner(executor);
 			return this;
 		}
 
 		public <SR> JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-													final Converter<SR, R> converter){
+													final Converter<SR, R> converter) {
 			this.pipelineRunner = createPipelineRunner(executor, converter);
 			return this;
 		}
 
-		public JedisClusterCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
+		public JedisClusterCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
 			this.transactionRunner = createTransactionRunner(executor);
 			return this;
 		}
 
 		public <SR> JedisClusterCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-													   final Converter<SR, R> converter){
+													   final Converter<SR, R> converter) {
 			this.transactionRunner = createTransactionRunner(executor, converter);
 			return this;
 		}
