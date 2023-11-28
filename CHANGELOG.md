@@ -16,6 +16,7 @@
 
 ### 🐞 Bug 修复
 
+- **buession-core：** 修改错误的类名 BuesssionFrameworkVersion 为 BuessionFrameworkVersion
 - **buession-beans：** 修复 NumberPropertyConverter 字符串转换为数字时异常的 BUG
 - **buession-beans：** 修复 Map 转换为 bean 时字段为 null 值的 BUG
 - **buession-beans：** 修复 Map 转换为 bean 或 bean 转换为 map 时缓存导致的异常
@@ -26,11 +27,13 @@
 
 ### ⏪ 优化
 
+- **buession-httpclient：** 代码优化
 - **buession-redis：** 代码优化
 
 
 ### 📔 文档
 
+- **buession-httpclient：** 完善注释
 - **buession-redis：** 完善注释
 
 

@@ -19,23 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
 
-/**
- * @author Yong.Teng
- */
-@Deprecated
-public final class BuesssionFrameworkVersion {
+import com.buession.core.utils.VersionUtils;
 
-	private BuesssionFrameworkVersion() {
+/**
+ * Buession Framework 版本
+ *
+ * @author Yong.Teng
+ * @since 2.3.2
+ */
+public final class BuessionFrameworkVersion {
+
+	private BuessionFrameworkVersion() {
 
 	}
 
 	public static String getVersion() {
-		return BuessionFrameworkVersion.getVersion();
+		return VersionUtils.determineClassVersion(BuessionFrameworkVersion.class);
 	}
 
 }
