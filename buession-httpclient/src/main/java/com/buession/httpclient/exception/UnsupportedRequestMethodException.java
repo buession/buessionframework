@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
@@ -27,35 +27,40 @@ package com.buession.httpclient.exception;
 import com.buession.httpclient.core.RequestMethod;
 
 /**
+ * 不支持的请求异常
+ *
  * @author Yong.Teng
  */
 public class UnsupportedRequestMethodException extends Exception {
 
-    public UnsupportedRequestMethodException(){
-    }
+	private final static long serialVersionUID = 2627739916305092393L;
 
-    public UnsupportedRequestMethodException(String message){
-        super(message);
-    }
+	public UnsupportedRequestMethodException() {
+		super();
+	}
 
-    public UnsupportedRequestMethodException(String message, Throwable cause){
-        super(message, cause);
-    }
+	public UnsupportedRequestMethodException(String message) {
+		super(message);
+	}
 
-    public UnsupportedRequestMethodException(RequestMethod method){
-        this("Unsupported HTTP Method '" + method + "'.");
-    }
+	public UnsupportedRequestMethodException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public UnsupportedRequestMethodException(Throwable cause){
-        super(cause);
-    }
+	public UnsupportedRequestMethodException(RequestMethod method) {
+		this("Unsupported HTTP Method '" + method + "'.");
+	}
 
-    public UnsupportedRequestMethodException(RequestMethod method, Throwable cause){
-        this("Unsupported HTTP Method '" + method + "'.", cause);
-    }
+	public UnsupportedRequestMethodException(Throwable cause) {
+		super(cause);
+	}
 
-    public UnsupportedRequestMethodException(String message, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public UnsupportedRequestMethodException(RequestMethod method, Throwable cause) {
+		this("Unsupported HTTP Method '" + method + "'.", cause);
+	}
+
+	public UnsupportedRequestMethodException(String message, Throwable cause, boolean enableSuppression, boolean
+			writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 }

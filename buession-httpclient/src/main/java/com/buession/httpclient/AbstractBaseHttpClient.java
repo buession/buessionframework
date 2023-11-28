@@ -87,7 +87,7 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		return url.toURI();
 	}
 
-	protected static <T> T execute(Execute<T> execute) throws IOException, RequestException {
+	protected static <T> T execute(final Execute<T> execute) throws IOException, RequestException {
 		try{
 			return execute.exec();
 		}catch(URISyntaxException e){
@@ -95,7 +95,7 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 		}
 	}
 
-	protected static void asyncExecute(AsyncExecute execute) throws IOException, RequestException {
+	protected static void asyncExecute(final AsyncExecute execute) throws IOException, RequestException {
 		try{
 			execute.exec();
 		}catch(URISyntaxException e){

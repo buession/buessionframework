@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
 
 /**
+ * 错误的 HTTP 响应异常
+ *
  * @author Yong.Teng
  */
 public class HttpResponseErrorException extends Exception {
@@ -35,23 +37,23 @@ public class HttpResponseErrorException extends Exception {
 
 	private final String text;
 
-	public HttpResponseErrorException(final int code, final String text){
+	public HttpResponseErrorException(final int code, final String text) {
 		super("HttpResponseError[code=" + code + ", text='" + text + "']");
 		this.code = code;
 		this.text = text;
 	}
 
-	public int getCode(){
+	public int getCode() {
 		return code;
 	}
 
-	public String getText(){
+	public String getText() {
 		return text;
 	}
 
 	@Override
-	public String toString(){
-		return "HttpResponseErrorException{" + "code=" + code + ", text='" + text + '\'' + '}';
+	public String toString() {
+		return "Http Response Error: " + "code=" + code + ", text=" + text;
 	}
 
 }

@@ -27,16 +27,20 @@ package com.buession.httpclient.exception;
 import java.io.InterruptedIOException;
 
 /**
+ * 连接超时异常
+ *
  * @author Yong.Teng
  */
 public class ConnectTimeoutException extends InterruptedIOException {
 
-    public ConnectTimeoutException(){
-        super();
-    }
+	private final static long serialVersionUID = 8003120529375299301L;
 
-    public ConnectTimeoutException(String message){
-        super(message);
-    }
+	public ConnectTimeoutException() {
+		super();
+	}
+
+	public ConnectTimeoutException(String message) {
+		super(message);
+	}
 
 }
