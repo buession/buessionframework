@@ -11,7 +11,9 @@
 
 ### ⭐ 新特性
 
-- **
+- **buession-core：** ClassUtils、MethodUtils、FieldUtils 增加检测是否含义任意注解的方法
+- **buession-core：** AnnotationUtils 增加检测属性是否含义任意注解的方法
+- **buession-core：** 断言 Assert 可指定异常
 
 
 ### 🐞 Bug 修复
@@ -22,6 +24,7 @@
 - **buession-beans：** 修复 Map 转换为 bean 或 bean 转换为 map 时缓存导致的异常
 - **buession-dao：** 修复分页插件 PaginationInterceptor 当页码大于等于 2 时，无法返回数据的 BUG
 - **buession-dao：** 修复分页对象下一页值错误的 BUG
+- **buession-git：** 修复无法解析 git 信息时，空指针异常
 - **buession-web：** 修复分页对象下一页值错误的 BUG
 
 
