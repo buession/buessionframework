@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.hashing;
@@ -35,12 +35,13 @@ public class Md5Hashing extends AbstractHashing {
 	private final static ThreadLocal<MessageDigest> MD5_HOLDER = new ThreadLocal<>();
 
 	@Override
-	public long hash(byte[] key){
+	public long hash(byte[] key) {
 		try{
 			if(MD5_HOLDER.get() == null){
 				MD5_HOLDER.set(MessageDigest.getInstance("MD5"));
 			}
 		}catch(NoSuchAlgorithmException e){
+			MD5_HOLDER.remove();
 			throw new IllegalStateException("++++ no md5 algorithm found");
 		}
 
@@ -50,7 +51,8 @@ public class Md5Hashing extends AbstractHashing {
 		md5.update(key);
 
 		byte[] bKey = md5.digest();
-		return ((long) (bKey[3] & 0xFF) << 24) | ((long) (bKey[2] & 0xFF) << 16) | ((long) (bKey[1] & 0xFF) << 8) | (long) (bKey[0] & 0xFF);
+		return ((long) (bKey[3] & 0xFF) << 24) | ((long) (bKey[2] & 0xFF) << 16) | ((long) (bKey[1] & 0xFF) << 8) |
+				(long) (bKey[0] & 0xFF);
 	}
 
 }

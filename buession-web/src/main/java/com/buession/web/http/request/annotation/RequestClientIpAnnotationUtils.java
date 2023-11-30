@@ -28,6 +28,7 @@ import com.buession.net.utils.InetAddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.Nullable;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -41,11 +42,11 @@ public class RequestClientIpAnnotationUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(RequestClientIpAnnotationUtils.class);
 
-	private RequestClientIpAnnotationUtils(){
+	private RequestClientIpAnnotationUtils() {
 
 	}
 
-	public static boolean checkSupports(final MethodParameter parameter){
+	public static boolean checkSupports(final MethodParameter parameter) {
 		if(parameter.hasParameterAnnotation(RequestClientIp.class) == false){
 			return false;
 		}
@@ -55,7 +56,9 @@ public class RequestClientIpAnnotationUtils {
 				InetAddress.class.isAssignableFrom(clazz);
 	}
 
-	public static Object resolveNamedValue(final MethodParameter parameter, final Function<MethodParameter, String> fn){
+	@Nullable
+	public static Object resolveNamedValue(final MethodParameter parameter,
+										   final Function<MethodParameter, String> fn) {
 		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
 
 		if(Long.class.isAssignableFrom(clazz)){

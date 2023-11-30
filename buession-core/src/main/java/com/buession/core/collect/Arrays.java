@@ -34,7 +34,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 数组工具类
@@ -1822,16 +1821,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -1863,16 +1853,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -1904,16 +1885,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -1945,16 +1917,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -1986,17 +1949,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringUtils.join(a, glue);
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -2028,16 +1981,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -2069,16 +2013,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
@@ -2110,16 +2045,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
+			return StringUtils.join(a, glue);
 		}
 	}
 
