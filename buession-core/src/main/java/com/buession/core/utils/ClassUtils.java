@@ -29,6 +29,7 @@ package com.buession.core.utils;
 import com.buession.core.exception.ClassInstantiationException;
 import com.buession.lang.Primitive;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -124,6 +125,22 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 		}
 
 		return allFields.toArray(new Field[]{});
+	}
+
+	/**
+	 * 检测一个类是否含有 annotations 中的任意一个注解
+	 *
+	 * @param clazz
+	 * 		待验证的类
+	 * @param annotations
+	 * 		检测是否含有的注解
+	 *
+	 * @return 类包含有 annotations 中的任意一个注解返回 true；否则返回 false
+	 *
+	 * @since 2.3.2
+	 */
+	public static boolean hasAnnotation(final Class<?> clazz, final Class<? extends Annotation>[] annotations) {
+		return AnnotationUtils.hasClassAnnotationPresent(clazz, annotations);
 	}
 
 	/**
