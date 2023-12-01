@@ -21,10 +21,27 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.utils;/**
- * 
- *
+ */
+package com.buession.core.utils;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 2.3.2
- */public class ObjectUtilsTest {
+ */
+public class ObjectUtilsTest {
+
+	@Test
+	public void nullTest() {
+		String str = null;
+		ObjectUtils.invokeIfAvailable(str, String::length);
+	}
+
+	@Test
+	public void nonNullTest() {
+		String str = "abc";
+		ObjectUtils.invokeIfAvailable(str, String::length);
+	}
+
 }
