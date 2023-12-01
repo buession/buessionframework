@@ -26,6 +26,7 @@ package com.buession.beans;
 
 import com.buession.beans.converters.*;
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Primitive;
@@ -107,6 +108,24 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 		return beanToBean(source, target);
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	protected static Object convertValue(final Object value, final Class<?> targetType) {
+		if(value == null){
+			return null;
+		}else if(targetType.isEnum()){
+			return EnumUtils.getEnumIgnoreCase((Class) targetType, value.toString());
+		}else{
+			final Class<?> targetWrapperType = Primitive.primitiveToWrapper(targetType);
+
+			if(targetWrapperType == value.getClass()){
+				return value;
+			}else{
+				final BeanPropertyConverter<?> propertyConverter = converters.get(targetType);
+				return propertyConverter == null ? value : propertyConverter.convert(value);
+			}
+		}
+	}
+
 	@SuppressWarnings({"unchecked"})
 	protected <S, T> T mapToMap(final S source, final T target) {
 		Map<Object, Object> sourceMap = (Map<Object, Object>) source;
@@ -149,21 +168,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 				Field field = FieldUtils.getField(target.getClass(), propertyName, true);
 
 				if(field != null){
-					Class<?> fieldType = Primitive.primitiveToWrapper(field.getType());
-
-					if(value == null || fieldType == value.getClass()){
-						beanMap.put(propertyName, value);
-					}else{
-						final BeanPropertyConverter<?> propertyConverter = converters.get(fieldType);
-						try{
-							beanMap.put(propertyName, propertyConverter == null ? value :
-									propertyConverter.convert(value));
-						}catch(Exception e){
-							if(logger.isWarnEnabled()){
-								logger.warn(e.getMessage());
-							}
-						}
-					}
+					beanMap.put(propertyName, convertValue(value, field.getType()));
 				}
 			}
 		});
@@ -181,28 +186,13 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 		return target;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtype"})
+	@SuppressWarnings({"rawtype"})
 	protected <S, T> T beanToBean(final S source, final T target) {
 		final String cacheKey = buildCacheKey(source, target);
 		final BeanCopier beanCopier = BEAN_COPIERS.computeIfAbsent(cacheKey,
 				(key)->BeanCopier.create(source.getClass(), target.getClass(), true));
 
-		beanCopier.copy(source, target, (value, targetType, setter)->{
-			if(value == null){
-				return null;
-			}else if(targetType.equals(value.getClass())){
-				return value;
-			}else{
-				final BeanPropertyConverter<?> propertyConverter = converters.get(
-						Primitive.primitiveToWrapper(targetType));
-
-				if(propertyConverter == null){
-					return value;
-				}else{
-					return propertyConverter.convert(value);
-				}
-			}
-		});
+		beanCopier.copy(source, target, (value, targetType, setter)->convertValue(value, targetType));
 
 		return target;
 	}
