@@ -21,10 +21,37 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.utils;/**
- * 
+ */
+package com.buession.core.utils;
+
+import java.util.function.Consumer;
+
+/**
+ * 对象工具类
  *
  * @author Yong.Teng
  * @since 2.3.2
- */public class ObjectUtils {
+ */
+public class ObjectUtils {
+
+	private ObjectUtils() {
+
+	}
+
+	/**
+	 * 当对象不为 null 时，执行方法
+	 *
+	 * @param object
+	 * 		对象
+	 * @param consumer
+	 *        {@link Consumer}
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> void invokeIfAvailable(final T object, final Consumer<T> consumer) {
+		if(object != null){
+			consumer.accept(object);
+		}
+	}
+
 }
