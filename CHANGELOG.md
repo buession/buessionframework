@@ -14,6 +14,8 @@
 - **buession-core：** ClassUtils、MethodUtils、FieldUtils 增加检测是否含义任意注解的方法
 - **buession-core：** AnnotationUtils 增加检测属性是否含义任意注解的方法
 - **buession-core：** 断言 Assert 可指定异常
+- **buession-core：** 新增对象工具类 ObjectUtils
+- **buession-core：** AbstractBeanConverter 新增支持 String 转枚举
 
 
 ### 🐞 Bug 修复
@@ -30,6 +32,7 @@
 
 ### ⏪ 优化
 
+- **buession-beans：** 代码优化
 - **buession-httpclient：** 代码优化
 - **buession-redis：** 代码优化
 
