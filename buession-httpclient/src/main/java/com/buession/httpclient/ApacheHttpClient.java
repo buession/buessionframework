@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.apache.ApacheHttpClientBuilder;
 import com.buession.httpclient.apache.ApacheRequest;
 import com.buession.httpclient.conn.ApacheClientConnectionManager;
@@ -67,7 +68,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	/**
 	 * 构造函数
 	 */
-	public ApacheHttpClient(){
+	public ApacheHttpClient() {
 		super();
 		setConnectionManager(new ApacheClientConnectionManager());
 	}
@@ -78,7 +79,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public ApacheHttpClient(ApacheClientConnectionManager connectionManager){
+	public ApacheHttpClient(ApacheClientConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
@@ -88,7 +89,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param httpClient
 	 *        {@link org.apache.http.client.HttpClient} 实例
 	 */
-	public ApacheHttpClient(org.apache.http.client.HttpClient httpClient){
+	public ApacheHttpClient(org.apache.http.client.HttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
@@ -100,16 +101,16 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param requestConfig
 	 * 		请求配置
 	 */
-	public ApacheHttpClient(org.apache.http.client.HttpClient httpClient, RequestConfig requestConfig){
+	public ApacheHttpClient(org.apache.http.client.HttpClient httpClient, RequestConfig requestConfig) {
 		this.httpClient = httpClient;
 		this.requestConfig = requestConfig;
 	}
 
-	public RequestConfig getRequestConfig(){
+	public RequestConfig getRequestConfig() {
 		if(requestConfig == null){
+			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 			final Configuration configuration = getConnectionManager().getConfiguration();
-
-			RequestConfig.Builder builder = RequestConfig.custom()
+			final RequestConfig.Builder builder = RequestConfig.custom()
 					.setConnectTimeout(configuration.getConnectTimeout())
 					.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
 					.setSocketTimeout(configuration.getReadTimeout())
@@ -117,21 +118,10 @@ public class ApacheHttpClient extends AbstractHttpClient {
 					.setContentCompressionEnabled(configuration.isContentCompressionEnabled())
 					.setNormalizeUri(configuration.isNormalizeUri());
 
-			if(configuration.isAllowRedirects() != null){
-				builder.setRedirectsEnabled(configuration.isAllowRedirects());
-			}
-
-			if(configuration.getMaxRedirects() != null){
-				builder.setMaxRedirects(configuration.getMaxRedirects());
-			}
-
-			if(configuration.isCircularRedirectsAllowed() != null){
-				builder.setCircularRedirectsAllowed(configuration.isCircularRedirectsAllowed());
-			}
-
-			if(configuration.isRelativeRedirectsAllowed() != null){
-				builder.setRelativeRedirectsAllowed(configuration.isRelativeRedirectsAllowed());
-			}
+			propertyMapper.from(configuration.isAllowRedirects()).to(builder::setRedirectsEnabled);
+			propertyMapper.from(configuration.getMaxRedirects()).to(builder::setMaxRedirects);
+			propertyMapper.from(configuration.isCircularRedirectsAllowed()).to(builder::setCircularRedirectsAllowed);
+			propertyMapper.from(configuration.isRelativeRedirectsAllowed()).to(builder::setRelativeRedirectsAllowed);
 
 			requestConfig = builder.build();
 		}
@@ -139,11 +129,11 @@ public class ApacheHttpClient extends AbstractHttpClient {
 		return requestConfig;
 	}
 
-	public void setRequestConfig(RequestConfig requestConfig){
+	public void setRequestConfig(RequestConfig requestConfig) {
 		this.requestConfig = requestConfig;
 	}
 
-	public org.apache.http.client.HttpClient getHttpClient(){
+	public org.apache.http.client.HttpClient getHttpClient() {
 		if(httpClient == null){
 			final ApacheHttpClientBuilder httpClientBuilder = new ApacheHttpClientBuilder(
 					(ApacheClientConnectionManager) getConnectionManager());
@@ -155,276 +145,276 @@ public class ApacheHttpClient extends AbstractHttpClient {
 		return httpClient;
 	}
 
-	public void setHttpClient(org.apache.http.client.HttpClient httpClient){
+	public void setHttpClient(org.apache.http.client.HttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
 	@Override
 	public Response get(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).get());
 	}
 
 	@Override
 	public Response get(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).get(), readTimeout);
 	}
 
 	@Override
 	public Response post(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).post(data));
 	}
 
 	@Override
 	public Response post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						 List<Header> headers) throws IOException, RequestException{
+						 List<Header> headers) throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).post(data), readTimeout);
 	}
 
 	@Override
 	public Response put(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).put(data));
 	}
 
 	@Override
 	public Response put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						List<Header> headers) throws IOException, RequestException{
+						List<Header> headers) throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).put(data), readTimeout);
 	}
 
 	@Override
 	public Response patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).patch(data));
 	}
 
 	@Override
 	public Response patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						  List<Header> headers) throws IOException, RequestException{
+						  List<Header> headers) throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).patch(data), readTimeout);
 	}
 
 	@Override
 	public Response delete(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).delete());
 	}
 
 	@Override
 	public Response delete(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).delete(), readTimeout);
 	}
 
 	@Override
 	public Response connect(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).connect());
 	}
 
 	@Override
 	public Response connect(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).connect(), readTimeout);
 	}
 
 	@Override
 	public Response trace(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).trace());
 	}
 
 	@Override
 	public Response trace(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).trace(), readTimeout);
 	}
 
 	@Override
 	public Response copy(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).copy());
 	}
 
 	@Override
 	public Response copy(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).copy(), readTimeout);
 	}
 
 	@Override
 	public Response move(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).move());
 	}
 
 	@Override
 	public Response move(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).move(), readTimeout);
 	}
 
 	@Override
 	public Response head(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).head());
 	}
 
 	@Override
 	public Response head(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).head(), readTimeout);
 	}
 
 	@Override
 	public Response options(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).options());
 	}
 
 	@Override
 	public Response options(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).options(), readTimeout);
 	}
 
 	@Override
 	public Response link(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).link());
 	}
 
 	@Override
 	public Response link(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).link(), readTimeout);
 	}
 
 	@Override
 	public Response unlink(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlink());
 	}
 
 	@Override
 	public Response unlink(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlink(), readTimeout);
 	}
 
 	@Override
 	public Response purge(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).purge());
 	}
 
 	@Override
 	public Response purge(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).purge(), readTimeout);
 	}
 
 	@Override
 	public Response lock(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).lock());
 	}
 
 	@Override
 	public Response lock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).lock(), readTimeout);
 	}
 
 	@Override
 	public Response unlock(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlock());
 	}
 
 	@Override
 	public Response unlock(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).unlock(), readTimeout);
 	}
 
 	@Override
 	public Response propfind(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).propfind());
 	}
 
 	@Override
 	public Response propfind(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).propfind(), readTimeout);
 	}
 
 	@Override
 	public Response proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).proppatch(data));
 	}
 
 	@Override
 	public Response proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-							  List<Header> headers) throws IOException, RequestException{
+							  List<Header> headers) throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).proppatch(data), readTimeout);
 	}
 
 	@Override
 	public Response report(URI uri, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).report(data));
 	}
 
 	@Override
 	public Response report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						   List<Header> headers) throws IOException, RequestException{
+						   List<Header> headers) throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).report(data), readTimeout);
 	}
 
 	@Override
 	public Response view(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).view());
 	}
 
 	@Override
 	public Response view(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).view(), readTimeout);
 	}
 
 	@Override
 	public Response wrapped(URI uri, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).wrapped());
 	}
 
 	@Override
 	public Response wrapped(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(ApacheRequestBuilder.create(uri, parameters, headers).wrapped(), readTimeout);
 	}
 
 	protected Response doRequest(final ApacheRequestBuilder builder)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return doRequest(builder, getRequestConfig());
 	}
 
 	protected Response doRequest(final ApacheRequestBuilder builder, final int readTimeout)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		final RequestConfig.Builder requestConfigBuilder = RequestConfig.copy(getRequestConfig())
 				.setSocketTimeout(readTimeout);
 		return doRequest(builder, requestConfigBuilder.build());
 	}
 
 	protected Response doRequest(final ApacheRequestBuilder builder, final RequestConfig requestConfig)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		final ApacheRequest request = builder.setRequestConfig(requestConfig)
 				.setProtocolVersion(getHttpVersion()).build();
 		final ApacheResponseBuilder apacheResponseBuilder = new ApacheResponseBuilder();

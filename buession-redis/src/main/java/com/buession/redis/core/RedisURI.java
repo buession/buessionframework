@@ -165,9 +165,8 @@ public class RedisURI extends AbstractUserInfoURI {
 	private static RedisURI buildRedisUriFromUri(URI uri) {
 		Assert.isNull(uri, "URI must not be null");
 
-		if(Validate.hasText(uri.getScheme()) && ALLOWED_SCHEMES.contains(uri.getScheme())){
-			throw new IllegalArgumentException("Scheme " + uri.getScheme() + " not supported.");
-		}
+		Assert.isTrue(Validate.hasText(uri.getScheme()) &&
+				ALLOWED_SCHEMES.contains(uri.getScheme()), "Scheme " + uri.getScheme() + " not supported.");
 
 		Builder builder = Builder.getInstance();
 
