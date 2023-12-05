@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -39,27 +39,28 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Override
-	public <V> String serialize(final V object) throws SerializerException{
+	public <V> String serialize(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 		return JSON.toJSONString(object);
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 		return JSON.toJSONBytes(object);
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException {
 		return serializeAsBytes(object, Charset.forName(charsetName));
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 		return JSON.toJSONBytes(charset, object, SerializeConfig.globalInstance, new SerializeFilter[0], null, JSON
 				.DEFAULT_GENERATE_FEATURE);
@@ -67,7 +68,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str) throws SerializerException{
+	public <V> V deserialize(final String str) throws SerializerException {
 		FastJsonJsonDeserializer deserializer = new FastJsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str);
@@ -78,7 +79,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
+	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException {
 		FastJsonJsonDeserializer deserializer = new FastJsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str, clazz);
@@ -89,7 +90,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException {
 		FastJsonJsonDeserializer deserializer = new FastJsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str, type);
@@ -100,7 +101,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes) throws SerializerException {
 		FastJsonJsonDeserializer deserializer = new FastJsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes);
@@ -111,7 +112,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException {
 		FastJsonJsonDeserializer deserializer = new FastJsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes, clazz);
@@ -122,7 +123,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException {
 		FastJsonJsonDeserializer deserializer = new FastJsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes, type);

@@ -21,62 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.core.deserializer;
-
-import com.buession.core.type.TypeReference;
-import com.buession.core.utils.Assert;
-import com.google.gson.Gson;
-
-/**
- * Gson JSON 反序列化
+ */package com.buession.velocity.tools;/**
+ * 
  *
  * @author Yong.Teng
- * @since 2.3.0
- */
-@Deprecated
-public class GsonJsonDeserializer extends AbstractJsonDeserializer {
-
-	@Override
-	public <V> V deserialize(final String str) throws DeserializerException {
-		Gson gson = new Gson();
-		return gson.fromJson(str, new TypeReference<V>() {
-
-		}.getType());
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
-		Assert.isNull(str, "String cloud not be null.");
-
-		Gson gson = new Gson();
-		return gson.fromJson(str, clazz);
-	}
-
-	@Override
-	public <V> V deserialize(String str, TypeReference<V> type) throws DeserializerException {
-		Assert.isNull(str, "String cloud not be null.");
-
-		Gson gson = new Gson();
-		return gson.fromJson(str, type.getType());
-	}
-
-	@Override
-	public <V> V deserialize(final byte[] bytes) throws DeserializerException {
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes));
-	}
-
-	@Override
-	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException {
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes), clazz);
-	}
-
-	@Override
-	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws DeserializerException {
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes), type);
-	}
-
+ * @since 2.3.2
+ */public class User {
 }

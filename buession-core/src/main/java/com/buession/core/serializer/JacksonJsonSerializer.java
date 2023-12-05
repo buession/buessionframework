@@ -37,10 +37,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 	@Override
-	public <V> String serialize(final V object) throws SerializerException{
+	public <V> String serialize(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		try{
@@ -51,7 +52,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		try{
@@ -62,7 +63,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str) throws SerializerException{
+	public <V> V deserialize(final String str) throws SerializerException {
 		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str);
@@ -72,7 +73,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
+	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException {
 		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str, clazz);
@@ -82,7 +83,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException {
 		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str, type);
@@ -92,7 +93,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes) throws SerializerException {
 		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes);
@@ -102,7 +103,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException {
 		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes, clazz);
@@ -112,7 +113,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException {
 		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes, type);
@@ -121,7 +122,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		}
 	}
 
-	protected static ObjectMapper getObjectMapper(){
+	protected static ObjectMapper getObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
