@@ -30,8 +30,6 @@ import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Primitive;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.beans.BeanMap;
 
@@ -60,8 +58,6 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 	private final static Map<String, BeanCopier> BEAN_COPIERS = new ConcurrentHashMap<>(32);
 
 	private final static Map<Class<?>, BeanPropertyConverter<?>> converters = new ConcurrentHashMap<>(24);
-
-	private final static Logger logger = LoggerFactory.getLogger(AbstractBeanConverter.class);
 
 	/**
 	 * 构造函数
@@ -120,7 +116,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 			if(targetWrapperType == value.getClass()){
 				return value;
 			}else{
-				final BeanPropertyConverter<?> propertyConverter = converters.get(targetType);
+				final BeanPropertyConverter<?> propertyConverter = converters.get(targetWrapperType);
 				return propertyConverter == null ? value : propertyConverter.convert(value);
 			}
 		}

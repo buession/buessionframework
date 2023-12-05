@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -99,7 +99,7 @@ public class ClusterRedisNode extends RedisNode {
 	 */
 	public ClusterRedisNode(final String id, final String ip, final int port, final Set<Flag> flags,
 							final String masterId, final long pingSent, final long pongSent, final long configEpoch,
-							final LinkState linkState, final SlotRange slot){
+							final LinkState linkState, final SlotRange slot) {
 		super(ip, port);
 		setId(id);
 		this.ip = ip;
@@ -117,7 +117,7 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return 客户端与节点通信使用的地址
 	 */
-	public String getIp(){
+	public String getIp() {
 		return ip;
 	}
 
@@ -126,7 +126,7 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return 标记位
 	 */
-	public Set<Flag> getFlags(){
+	public Set<Flag> getFlags() {
 		return flags;
 	}
 
@@ -135,7 +135,7 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return 最近一次发送 ping 的时间（unix 毫秒时间戳），0 代表没有发送过
 	 */
-	public long getPingSent(){
+	public long getPingSent() {
 		return pingSent;
 	}
 
@@ -144,7 +144,7 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return 最近一次收到 pong 的时间（unix 毫秒时间戳），0 代表没有接收过
 	 */
-	public long getPongSent(){
+	public long getPongSent() {
 		return pongSent;
 	}
 
@@ -153,7 +153,7 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return 节点的 epoch 值
 	 */
-	public long getConfigEpoch(){
+	public long getConfigEpoch() {
 		return configEpoch;
 	}
 
@@ -162,7 +162,7 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return node-to-node 集群总线使用的链接的状态
 	 */
-	public LinkState getLinkState(){
+	public LinkState getLinkState() {
 		return linkState;
 	}
 
@@ -171,12 +171,12 @@ public class ClusterRedisNode extends RedisNode {
 	 *
 	 * @return 哈希槽值或者一个哈希槽范围
 	 */
-	public SlotRange getSlot(){
+	public SlotRange getSlot() {
 		return slot;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("id", getId())
 				.add("host", getHost() + ":" + getPort())
@@ -236,16 +236,16 @@ public class ClusterRedisNode extends RedisNode {
 
 		private final String value;
 
-		Flag(final String value){
+		Flag(final String value) {
 			this.value = value;
 		}
 
-		public String getValue(){
+		public String getValue() {
 			return value;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return getValue();
 		}
 
@@ -260,18 +260,18 @@ public class ClusterRedisNode extends RedisNode {
 
 		DISCONNECTED("disconnected");
 
-		private String value;
+		private final String value;
 
-		LinkState(final String value){
+		LinkState(final String value) {
 			this.value = value;
 		}
 
-		public String getValue(){
+		public String getValue() {
 			return value;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return getValue();
 		}
 

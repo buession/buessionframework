@@ -57,7 +57,7 @@ public interface Serializer {
 	 *
 	 * @return 序列化后的字符串
 	 */
-	<V> String[] serialize(final V... objects);
+	<V> String[] serialize(final V[] objects);
 
 	/**
 	 * 将任意对象序列化为字节
@@ -81,7 +81,7 @@ public interface Serializer {
 	 *
 	 * @return 序列化后的字节
 	 */
-	<V> byte[][] serializeAsBytes(final V... objects);
+	<V> byte[][] serializeAsBytes(final V[] objects);
 
 	/**
 	 * 将字符串反序列化为对象

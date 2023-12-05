@@ -160,12 +160,12 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response) {
-			return JedisResult.Builder.<SV, TV>forResponse(response).build();
+			return JedisResult.Builder.<SV, TV>fromResponse(response).build();
 		}
 
 		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response,
 															  final Converter<SV, TV> converter) {
-			return JedisResult.Builder.<SV, TV>forResponse(response).mappedWith(converter).build();
+			return JedisResult.Builder.<SV, TV>fromResponse(response).mappedWith(converter).build();
 		}
 
 	}

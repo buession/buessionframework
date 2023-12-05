@@ -18,6 +18,11 @@
 - **buession-core：** AbstractBeanConverter 新增支持 String 转枚举
 
 
+### 🔔 变化
+
+- **buession-core：** 废弃 JsonSerializer 和 JsonDeserializer
+
+
 ### 🐞 Bug 修复
 
 - **buession-core：** 修改错误的类名 BuesssionFrameworkVersion 为 BuessionFrameworkVersion
@@ -41,6 +46,7 @@
 
 - **buession-httpclient：** 完善注释
 - **buession-redis：** 完善注释
+- **buession-velocity：** 完善注释
 
 
 ---
