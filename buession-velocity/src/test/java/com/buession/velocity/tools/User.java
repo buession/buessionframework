@@ -21,10 +21,85 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.velocity.tools;/**
- * 
- *
+ */
+package com.buession.velocity.tools;
+
+import java.util.Date;
+import java.util.List;
+
+/**
  * @author Yong.Teng
  * @since 2.3.2
- */public class User {
+ */
+public class User {
+
+	private long id;
+
+	private String username;
+
+	private Date createdAt;
+
+	private String createdIp;
+
+	private List<String> ips;
+
+	private Boolean status;
+
+	private boolean isDeleted;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getCreatedIp() {
+		return createdIp;
+	}
+
+	public void setCreatedIp(String createdIp) {
+		this.createdIp = createdIp;
+	}
+
+	public List<String> getIps() {
+		return ips;
+	}
+
+	public void setIps(List<String> ips) {
+		this.ips = ips;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		isDeleted = deleted;
+	}
 }

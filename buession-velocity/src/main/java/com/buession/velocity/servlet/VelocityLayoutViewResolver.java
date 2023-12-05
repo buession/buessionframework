@@ -70,7 +70,7 @@ public class VelocityLayoutViewResolver extends VelocityViewResolver {
 	@Override
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		VelocityLayoutView view = (VelocityLayoutView) super.buildView(viewName);
+		final VelocityLayoutView view = (VelocityLayoutView) super.buildView(viewName);
 
 		propertyMapper.from(layoutKey).to(view::setLayoutKey);
 		propertyMapper.from(layoutUrl).to(view::setLayoutUrl);
