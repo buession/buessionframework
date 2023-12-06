@@ -16,6 +16,7 @@
 - **buession-core：** 断言 Assert 可指定异常
 - **buession-core：** 新增对象工具类 ObjectUtils
 - **buession-core：** AbstractBeanConverter 新增支持 String 转枚举
+- **buession-httpclient：** OKHTTP client 增加可设置 maxRequests
 
 
 ### 🔔 变化
@@ -40,6 +41,10 @@
 - **buession-beans：** 代码优化
 - **buession-httpclient：** 代码优化
 - **buession-redis：** 代码优化
+- **buession-redis：** 优化 RedisAccessor 多次调用 afterPropertiesSet 时，重复初始化 RedisConnectionFactory
+- **buession-geoip：** 优化 GeoIPResolverFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 DatabaseResolver
+- **buession-thesaurus：** 优化 ThesaurusFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 Parser
+- **buession-velocity：** 优化 VelocityEngineFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 VelocityEngine
 
 
 ### 📔 文档

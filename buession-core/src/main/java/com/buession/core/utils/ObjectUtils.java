@@ -46,7 +46,7 @@ public class ObjectUtils {
 	 * @param consumer
 	 *        {@link Consumer}
 	 * @param <T>
-	 * 		对象类型
+	 * 		对象引用类型
 	 */
 	public static <T> void invokeIfAvailable(final T object, final Consumer<T> consumer) {
 		if(object != null){

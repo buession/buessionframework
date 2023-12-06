@@ -34,6 +34,7 @@ import com.buession.httpclient.exception.RequestException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	/**
 	 * 构造函数
 	 */
-	public AbstractHttpAsyncClient(){
+	public AbstractHttpAsyncClient() {
 		super();
 	}
 
@@ -59,2171 +60,2179 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public AbstractHttpAsyncClient(ConnectionManager connectionManager){
+	public AbstractHttpAsyncClient(ConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
 	@Override
-	public void get(URI uri, Callback callback) throws IOException, RequestException{
+	public void get(URI uri, Callback callback) throws IOException, RequestException {
 		get(uri, null, null, callback);
 	}
 
 	@Override
-	public void get(URL url, Callback callback) throws IOException, RequestException{
+	public void get(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void get(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void get(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		get(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void get(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void get(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void get(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void get(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		get(uri, null, headers, callback);
 	}
 
 	@Override
-	public void get(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void get(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void get(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void get(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void get(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		get(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void get(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void get(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void get(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		get(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void get(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void get(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		get(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void get(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->get(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					Callback callback) throws IOException, RequestException{
+					Callback callback) throws IOException, RequestException {
 		asyncExecute(()->get(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void post(URI uri, Callback callback) throws IOException, RequestException{
+	public void post(URI uri, Callback callback) throws IOException, RequestException {
 		post(uri, null, null, null, callback);
 	}
 
 	@Override
-	public void post(URL url, Callback callback) throws IOException, RequestException{
+	public void post(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public void post(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void post(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		post(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public void post(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void post(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public void post(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void post(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		post(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public void post(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void post(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public void post(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void post(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public void post(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void post(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		post(uri, data, null, null, callback);
 	}
 
 	@Override
-	public void post(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void post(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public void post(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public void post(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
 	public void post(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(uri, data, null, headers, callback);
 	}
 
 	@Override
 	public void post(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public void post(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void post(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		post(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public void post(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void post(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		post(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		post(uri, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		post(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		post(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public void post(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					 List<Header> headers, Callback callback) throws IOException, RequestException{
+					 List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->post(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public void put(URI uri, Callback callback) throws IOException, RequestException{
+	public void put(URI uri, Callback callback) throws IOException, RequestException {
 		put(uri, null, null, null, callback);
 	}
 
 	@Override
-	public void put(URL url, Callback callback) throws IOException, RequestException{
+	public void put(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public void put(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void put(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		put(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public void put(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void put(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public void put(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void put(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		put(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public void put(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void put(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public void put(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void put(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public void put(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void put(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		put(uri, data, null, null, callback);
 	}
 
 	@Override
-	public void put(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void put(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public void put(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public void put(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
 	public void put(URI uri, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(uri, data, null, headers, callback);
 	}
 
 	@Override
 	public void put(URL url, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->put(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					Callback callback) throws IOException, RequestException{
+					Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public void put(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void put(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		put(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public void put(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void put(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					Callback callback) throws IOException, RequestException{
+					Callback callback) throws IOException, RequestException {
 		put(uri, readTimeout, parameters, headers, callback);
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					Callback callback) throws IOException, RequestException{
+					Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					Callback callback) throws IOException, RequestException{
+					Callback callback) throws IOException, RequestException {
 		put(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					Callback callback) throws IOException, RequestException{
+					Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public void put(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					List<Header> headers, Callback callback) throws IOException, RequestException{
+					List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->put(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public void patch(URI uri, Callback callback) throws IOException, RequestException{
+	public void patch(URI uri, Callback callback) throws IOException, RequestException {
 		patch(uri, null, null, null, callback);
 	}
 
 	@Override
-	public void patch(URL url, Callback callback) throws IOException, RequestException{
+	public void patch(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public void patch(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void patch(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		patch(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public void patch(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void patch(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public void patch(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void patch(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		patch(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public void patch(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void patch(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public void patch(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void patch(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public void patch(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void patch(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		patch(uri, data, null, null, callback);
 	}
 
 	@Override
-	public void patch(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void patch(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public void patch(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public void patch(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
 	public void patch(URI uri, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		patch(uri, data, null, headers, callback);
 	}
 
 	@Override
 	public void patch(URL url, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->patch(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public void patch(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void patch(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		patch(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public void patch(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void patch(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		patch(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		patch(uri, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, RequestBody<?> data, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		patch(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public void patch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					  List<Header> headers, Callback callback) throws IOException, RequestException{
+					  List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->patch(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public void delete(URI uri, Callback callback) throws IOException, RequestException{
+	public void delete(URI uri, Callback callback) throws IOException, RequestException {
 		delete(uri, null, null, callback);
 	}
 
 	@Override
-	public void delete(URL url, Callback callback) throws IOException, RequestException{
+	public void delete(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void delete(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void delete(URI uri, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		delete(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void delete(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void delete(URL url, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void delete(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void delete(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		delete(uri, null, headers, callback);
 	}
 
 	@Override
-	public void delete(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void delete(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void delete(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void delete(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void delete(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		delete(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void delete(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void delete(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void delete(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		delete(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void delete(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void delete(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		delete(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void delete(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->delete(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		asyncExecute(()->delete(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void connect(URI uri, Callback callback) throws IOException, RequestException{
+	public void connect(URI uri, Callback callback) throws IOException, RequestException {
 		connect(uri, null, null, callback);
 	}
 
 	@Override
-	public void connect(URL url, Callback callback) throws IOException, RequestException{
+	public void connect(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->connect(URL2URI(url), null, null, callback));
 	}
 
 	@Override
 	public void connect(URI uri, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		connect(uri, parameters, null, callback);
 	}
 
 	@Override
 	public void connect(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->connect(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void connect(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void connect(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		connect(uri, null, headers, callback);
 	}
 
 	@Override
-	public void connect(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void connect(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->connect(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void connect(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->connect(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void connect(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void connect(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		connect(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void connect(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void connect(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->connect(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void connect(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		connect(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void connect(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->connect(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void connect(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		connect(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void connect(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->connect(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->connect(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void trace(URI uri, Callback callback) throws IOException, RequestException{
+	public void trace(URI uri, Callback callback) throws IOException, RequestException {
 		trace(uri, null, null, callback);
 	}
 
 	@Override
-	public void trace(URL url, Callback callback) throws IOException, RequestException{
+	public void trace(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void trace(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void trace(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		trace(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void trace(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void trace(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void trace(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void trace(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		trace(uri, null, headers, callback);
 	}
 
 	@Override
-	public void trace(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void trace(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void trace(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void trace(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void trace(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		trace(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void trace(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void trace(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void trace(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		trace(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void trace(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void trace(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		trace(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void trace(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->trace(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->trace(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void copy(URI uri, Callback callback) throws IOException, RequestException{
+	public void copy(URI uri, Callback callback) throws IOException, RequestException {
 		copy(uri, null, null, callback);
 	}
 
 	@Override
-	public void copy(URL url, Callback callback) throws IOException, RequestException{
+	public void copy(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void copy(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void copy(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		copy(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void copy(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void copy(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void copy(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void copy(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		copy(uri, null, headers, callback);
 	}
 
 	@Override
-	public void copy(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void copy(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void copy(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void copy(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void copy(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		copy(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void copy(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void copy(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void copy(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		copy(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void copy(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void copy(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		copy(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void copy(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->copy(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->copy(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void move(URI uri, Callback callback) throws IOException, RequestException{
+	public void move(URI uri, Callback callback) throws IOException, RequestException {
 		move(uri, null, null, callback);
 	}
 
 	@Override
-	public void move(URL url, Callback callback) throws IOException, RequestException{
+	public void move(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void move(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void move(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		move(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void move(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void move(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void move(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void move(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		move(uri, null, headers, callback);
 	}
 
 	@Override
-	public void move(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void move(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void move(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void move(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void move(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		move(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void move(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void move(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void move(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		move(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void move(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void move(URI uri, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		move(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void move(URL url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->move(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void head(URI uri, Callback callback) throws IOException, RequestException{
+	public void head(URI uri, Callback callback) throws IOException, RequestException {
 		head(uri, null, null, callback);
 	}
 
 	@Override
-	public void head(URL url, Callback callback) throws IOException, RequestException{
+	public void head(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void head(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void head(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		head(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void head(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void head(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void head(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void head(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		head(uri, null, headers, callback);
 	}
 
 	@Override
-	public void head(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void head(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void head(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void head(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void head(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		head(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void head(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void head(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void head(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		head(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void head(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void head(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		head(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void head(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->head(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->head(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void options(URI uri, Callback callback) throws IOException, RequestException{
+	public void options(URI uri, Callback callback) throws IOException, RequestException {
 		options(uri, null, null, callback);
 	}
 
 	@Override
-	public void options(URL url, Callback callback) throws IOException, RequestException{
+	public void options(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->options(URL2URI(url), null, null, callback));
 	}
 
 	@Override
 	public void options(URI uri, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		options(uri, parameters, null, callback);
 	}
 
 	@Override
 	public void options(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->options(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void options(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void options(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		options(uri, null, headers, callback);
 	}
 
 	@Override
-	public void options(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void options(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->options(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void options(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->options(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void options(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void options(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		options(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void options(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void options(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->options(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void options(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		options(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void options(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->options(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void options(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		options(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void options(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->options(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->options(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void link(URI uri, Callback callback) throws IOException, RequestException{
+	public void link(URI uri, Callback callback) throws IOException, RequestException {
 		link(uri, null, null, callback);
 	}
 
 	@Override
-	public void link(URL url, Callback callback) throws IOException, RequestException{
+	public void link(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void link(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void link(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		link(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void link(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void link(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void link(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void link(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		link(uri, null, headers, callback);
 	}
 
 	@Override
-	public void link(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void link(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void link(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void link(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void link(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		link(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void link(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void link(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void link(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		link(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void link(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void link(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		link(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void link(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->link(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->link(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void unlink(URI uri, Callback callback) throws IOException, RequestException{
+	public void unlink(URI uri, Callback callback) throws IOException, RequestException {
 		unlink(uri, null, null, callback);
 	}
 
 	@Override
-	public void unlink(URL url, Callback callback) throws IOException, RequestException{
+	public void unlink(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void unlink(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void unlink(URI uri, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		unlink(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void unlink(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void unlink(URL url, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void unlink(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void unlink(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		unlink(uri, null, headers, callback);
 	}
 
 	@Override
-	public void unlink(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void unlink(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void unlink(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void unlink(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void unlink(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		unlink(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void unlink(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void unlink(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void unlink(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		unlink(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void unlink(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void unlink(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		unlink(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void unlink(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->unlink(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlink(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void purge(URI uri, Callback callback) throws IOException, RequestException{
+	public void purge(URI uri, Callback callback) throws IOException, RequestException {
 		purge(uri, null, null, callback);
 	}
 
 	@Override
-	public void purge(URL url, Callback callback) throws IOException, RequestException{
+	public void purge(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void purge(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void purge(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		purge(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void purge(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void purge(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void purge(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void purge(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		purge(uri, null, headers, callback);
 	}
 
 	@Override
-	public void purge(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void purge(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void purge(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void purge(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void purge(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		purge(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void purge(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void purge(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void purge(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		purge(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void purge(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void purge(URI uri, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		purge(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void purge(URL url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->purge(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void lock(URI uri, Callback callback) throws IOException, RequestException{
+	public void lock(URI uri, Callback callback) throws IOException, RequestException {
 		lock(uri, null, null, callback);
 	}
 
 	@Override
-	public void lock(URL url, Callback callback) throws IOException, RequestException{
+	public void lock(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void lock(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void lock(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		lock(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void lock(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void lock(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void lock(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void lock(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		lock(uri, null, headers, callback);
 	}
 
 	@Override
-	public void lock(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void lock(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void lock(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void lock(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void lock(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		lock(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void lock(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void lock(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void lock(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		lock(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void lock(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void lock(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		lock(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void lock(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->lock(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->lock(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void unlock(URI uri, Callback callback) throws IOException, RequestException{
+	public void unlock(URI uri, Callback callback) throws IOException, RequestException {
 		unlock(uri, null, null, callback);
 	}
 
 	@Override
-	public void unlock(URL url, Callback callback) throws IOException, RequestException{
+	public void unlock(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void unlock(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void unlock(URI uri, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		unlock(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void unlock(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void unlock(URL url, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void unlock(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void unlock(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		unlock(uri, null, headers, callback);
 	}
 
 	@Override
-	public void unlock(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void unlock(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void unlock(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void unlock(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void unlock(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		unlock(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void unlock(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void unlock(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void unlock(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		unlock(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void unlock(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void unlock(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		unlock(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void unlock(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->unlock(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		asyncExecute(()->unlock(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void propfind(URI uri, Callback callback) throws IOException, RequestException{
+	public void propfind(URI uri, Callback callback) throws IOException, RequestException {
 		propfind(uri, null, null, callback);
 	}
 
 	@Override
-	public void propfind(URL url, Callback callback) throws IOException, RequestException{
+	public void propfind(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->propfind(URL2URI(url), null, null, callback));
 	}
 
 	@Override
 	public void propfind(URI uri, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		propfind(uri, parameters, null, callback);
 	}
 
 	@Override
 	public void propfind(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->propfind(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void propfind(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void propfind(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		propfind(uri, null, headers, callback);
 	}
 
 	@Override
-	public void propfind(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void propfind(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->propfind(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void propfind(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->propfind(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void propfind(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void propfind(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		propfind(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void propfind(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void propfind(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->propfind(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void propfind(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		propfind(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void propfind(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->propfind(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void propfind(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		propfind(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void propfind(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->propfind(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->propfind(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void proppatch(URI uri, Callback callback) throws IOException, RequestException{
+	public void proppatch(URI uri, Callback callback) throws IOException, RequestException {
 		proppatch(uri, null, null, null, callback);
 	}
 
 	@Override
-	public void proppatch(URL url, Callback callback) throws IOException, RequestException{
+	public void proppatch(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		proppatch(uri, null, parameters, null, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public void proppatch(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void proppatch(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		proppatch(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public void proppatch(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void proppatch(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public void proppatch(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void proppatch(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		proppatch(uri, data, null, null, callback);
 	}
 
 	@Override
-	public void proppatch(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void proppatch(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(uri, data, null, headers, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-						  Callback callback) throws IOException, RequestException{
+						  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public void proppatch(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void proppatch(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		proppatch(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public void proppatch(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void proppatch(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						  Callback callback) throws IOException, RequestException{
+						  Callback callback) throws IOException, RequestException {
 		proppatch(uri, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						  Callback callback) throws IOException, RequestException{
+						  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		proppatch(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						  Callback callback) throws IOException, RequestException{
+						  Callback callback) throws IOException, RequestException {
 		proppatch(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						  Callback callback) throws IOException, RequestException{
+						  Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public void proppatch(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						  List<Header> headers, Callback callback) throws IOException, RequestException{
+						  List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public void report(URI uri, Callback callback) throws IOException, RequestException{
+	public void report(URI uri, Callback callback) throws IOException, RequestException {
 		report(uri, null, null, null, callback);
 	}
 
 	@Override
-	public void report(URL url, Callback callback) throws IOException, RequestException{
+	public void report(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), null, null, null, callback));
 	}
 
 	@Override
-	public void report(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void report(URI uri, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		report(uri, null, parameters, null, callback);
 	}
 
 	@Override
-	public void report(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void report(URL url, Map<String, Object> parameters, Callback callback)
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), null, parameters, null, callback));
 	}
 
 	@Override
-	public void report(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void report(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		report(uri, null, null, headers, callback);
 	}
 
 	@Override
-	public void report(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void report(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), null, null, headers, callback));
 	}
 
 	@Override
 	public void report(URI uri, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(uri, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void report(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), null, parameters, headers, callback));
 	}
 
 	@Override
-	public void report(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void report(URI uri, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		report(uri, data, null, null, callback);
 	}
 
 	@Override
-	public void report(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	public void report(URL url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), data, null, null, callback));
 	}
 
 	@Override
 	public void report(URI uri, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(uri, data, parameters, null, callback);
 	}
 
 	@Override
 	public void report(URL url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), data, parameters, null, callback));
 	}
 
 	@Override
 	public void report(URI uri, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(uri, data, null, headers, callback);
 	}
 
 	@Override
 	public void report(URL url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), data, null, headers, callback));
 	}
 
 	@Override
 	public void report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), data, parameters, headers, callback));
 	}
 
 	@Override
-	public void report(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void report(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		report(uri, readTimeout, null, null, null, callback);
 	}
 
 	@Override
-	public void report(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void report(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, null, null, null, callback));
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(uri, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, null, parameters, null, callback));
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(uri, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, null, null, headers, callback));
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		report(uri, readTimeout, parameters, headers, callback);
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		report(uri, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, data, null, null, callback));
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		report(uri, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, data, parameters, null, callback));
 	}
 
 	@Override
 	public void report(URI uri, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(uri, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, data, null, headers, callback));
 	}
 
 	@Override
 	public void report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					   List<Header> headers, Callback callback) throws IOException, RequestException{
+					   List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->report(URL2URI(url), readTimeout, data, parameters, headers, callback));
 	}
 
 	@Override
-	public void view(URI uri, Callback callback) throws IOException, RequestException{
+	public void view(URI uri, Callback callback) throws IOException, RequestException {
 		view(uri, null, null, callback);
 	}
 
 	@Override
-	public void view(URL url, Callback callback) throws IOException, RequestException{
+	public void view(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), null, null, callback));
 	}
 
 	@Override
-	public void view(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void view(URI uri, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		view(uri, parameters, null, callback);
 	}
 
 	@Override
-	public void view(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+	public void view(URL url, Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void view(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void view(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		view(uri, null, headers, callback);
 	}
 
 	@Override
-	public void view(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void view(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void view(URL url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void view(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void view(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		view(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void view(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void view(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void view(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		view(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void view(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void view(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		view(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void view(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->view(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		asyncExecute(()->view(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void wrapped(URI uri, Callback callback) throws IOException, RequestException{
+	public void wrapped(URI uri, Callback callback) throws IOException, RequestException {
 		wrapped(uri, null, null, callback);
 	}
 
 	@Override
-	public void wrapped(URL url, Callback callback) throws IOException, RequestException{
+	public void wrapped(URL url, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), null, null, callback));
 	}
 
 	@Override
 	public void wrapped(URI uri, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		wrapped(uri, parameters, null, callback);
 	}
 
 	@Override
 	public void wrapped(URL url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), parameters, null, callback));
 	}
 
 	@Override
-	public void wrapped(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void wrapped(URI uri, List<Header> headers, Callback callback) throws IOException, RequestException {
 		wrapped(uri, null, headers, callback);
 	}
 
 	@Override
-	public void wrapped(URL url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	public void wrapped(URL url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), null, headers, callback));
 	}
 
 	@Override
 	public void wrapped(URL url, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), parameters, headers, callback));
 	}
 
 	@Override
-	public void wrapped(URI uri, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void wrapped(URI uri, int readTimeout, Callback callback) throws IOException, RequestException {
 		wrapped(uri, readTimeout, null, null, callback);
 	}
 
 	@Override
-	public void wrapped(URL url, int readTimeout, Callback callback) throws IOException, RequestException{
+	public void wrapped(URL url, int readTimeout, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), readTimeout, null, null, callback));
 	}
 
 	@Override
 	public void wrapped(URI uri, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		wrapped(uri, readTimeout, parameters, null, callback);
 	}
 
 	@Override
 	public void wrapped(URL url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), readTimeout, parameters, null, callback));
 	}
 
 	@Override
 	public void wrapped(URI uri, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		wrapped(uri, readTimeout, null, headers, callback);
 	}
 
 	@Override
 	public void wrapped(URL url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), readTimeout, null, headers, callback));
 	}
 
 	@Override
 	public void wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->wrapped(URL2URI(url), readTimeout, parameters, headers, callback));
 	}
 
 	@Override
-	public void request(URI uri, RequestMethod requestMethod, Callback callback) throws IOException, RequestException{
+	public void request(URI uri, RequestMethod requestMethod, Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, null, null, null, callback);
 	}
 
 	@Override
-	public void request(URL url, RequestMethod requestMethod, Callback callback) throws IOException, RequestException{
+	public void request(URL url, RequestMethod requestMethod, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(uri, requestMethod, null, parameters, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, parameters, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(uri, requestMethod, null, null, headers, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, parameters, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(uri, requestMethod, data, null, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, data, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, data, parameters, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, data, parameters, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, data, null, headers, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, data, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		Assert.isNull(requestMethod, "Request method could not be null.");
 
 		switch(requestMethod){
@@ -2274,98 +2283,98 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, data, parameters, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, null, null, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, null, parameters, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, null, null, headers, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, null, parameters, headers, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, data, null, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+						Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, data, parameters, null, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+						Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		request(uri, requestMethod, readTimeout, data, null, headers, callback);
 	}
 
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers, callback));
 	}
 
 	@Override
 	public void request(URI uri, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		Assert.isNull(requestMethod, "Request method could not be null.");
 
 		switch(requestMethod){
@@ -2417,8 +2426,23 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	@Override
 	public void request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		asyncExecute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers, callback));
+	}
+
+	protected static void asyncExecute(final AsyncExecute execute) throws IOException, RequestException {
+		try{
+			execute.exec();
+		}catch(URISyntaxException e){
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	@FunctionalInterface
+	protected interface AsyncExecute {
+
+		void exec() throws URISyntaxException, IOException, RequestException;
+
 	}
 
 }

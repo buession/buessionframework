@@ -24,6 +24,8 @@
  */
 package okhttp3;
 
+import com.buession.core.utils.ObjectUtils;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -177,9 +179,7 @@ public class HttpClientConnectionManager implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		if(connectionPool != null){
-			connectionPool.evictAll();
-		}
+		ObjectUtils.invokeIfAvailable(connectionPool, ConnectionPool::evictAll);
 	}
 
 }

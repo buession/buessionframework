@@ -58,6 +58,13 @@ public class Configuration {
 	private int maxPerRoute = 500;
 
 	/**
+	 * 最大并发请求数量
+	 *
+	 * @since 2.3.2
+	 */
+	private int maxRequests;
+
+	/**
 	 * 空闲连接存活时长，单位：毫秒
 	 */
 	private int idleConnectionTime = 60 * 1000;
@@ -206,6 +213,25 @@ public class Configuration {
 	 */
 	public void setMaxPerRoute(int maxPerRoute) {
 		this.maxPerRoute = maxPerRoute;
+	}
+
+	/**
+	 * 返回最大并发请求数量
+	 *
+	 * @return 最大并发请求数量
+	 */
+	public int getMaxRequests() {
+		return maxRequests;
+	}
+
+	/**
+	 * 设置最大并发请求数量
+	 *
+	 * @param maxRequests
+	 * 		最大并发请求数量
+	 */
+	public void setMaxRequests(int maxRequests) {
+		this.maxRequests = maxRequests;
 	}
 
 	/**
@@ -520,6 +546,7 @@ public class Configuration {
 				.add("retryOnConnectionFailure: " + retryOnConnectionFailure)
 				.add("maxConnections: " + maxConnections)
 				.add("maxPerRoute: " + maxPerRoute)
+				.add("maxRequests:" + maxRequests)
 				.add("idleConnectionTime: " + idleConnectionTime)
 				.add("connectTimeout: " + connectTimeout)
 				.add("connectionRequestTimeout: " + connectionRequestTimeout)

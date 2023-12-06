@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus.spring;
@@ -28,8 +28,10 @@ import com.buession.core.utils.Assert;
 import com.buession.thesaurus.Parser;
 import com.buession.thesaurus.core.Type;
 import com.buession.thesaurus.execption.ThesaurusTypeNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.ClassUtils;
 
 /**
  * @author Yong.Teng
@@ -38,34 +40,39 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 
 	private Parser parser;
 
-	private Class<Parser> clazz;
-
-	public ThesaurusFactoryBean(){
+	public ThesaurusFactoryBean() {
 		super();
 	}
 
-	public ThesaurusFactoryBean(Type type){
+	public ThesaurusFactoryBean(Type type) {
 		super(type);
 	}
 
-	public ThesaurusFactoryBean(String type){
+	public ThesaurusFactoryBean(String type) {
 		super(type);
 	}
 
 	@Override
-	public Parser getObject() throws Exception{
+	public Parser getObject() throws Exception {
 		return parser;
 	}
 
 	@Override
-	public Class<? extends Parser> getObjectType(){
-		return clazz;
+	public Class<? extends Parser> getObjectType() {
+		return parser.getClass();
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception{
+	public void afterPropertiesSet() throws Exception {
 		Assert.isNull(getType(), "Thesaurus key could not be null.");
 
+		if(parser == null){
+			parser = createParser();
+		}
+	}
+
+	@SuppressWarnings({"unchecked"})
+	private Parser createParser() throws ThesaurusTypeNotFoundException {
 		char first = getType().getId().charAt(0);
 
 		StringBuilder sb = new StringBuilder(64);
@@ -82,8 +89,7 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 		sb.append("Parser");
 
 		try{
-			clazz = (Class<Parser>) Class.forName(sb.toString());
-			parser = clazz.newInstance();
+			return BeanUtils.instantiateClass((Class<? extends Parser>) ClassUtils.forName(sb.toString(), null));
 		}catch(ClassNotFoundException e){
 			throw new ThesaurusTypeNotFoundException("The " + getType() + " thesaurus not be found.");
 		}
