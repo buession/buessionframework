@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter.mapper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +60,18 @@ public interface Mapper<S, T> {
 	 * @return 目标对象实例数组
 	 */
 	T[] mapping(S[] object);
+
+	/**
+	 * 将源 Collection 对象映射到目标 Collection 对象
+	 *
+	 * @param object
+	 * 		源 Collection 对象
+	 *
+	 * @return 目标对象 Collection 实例
+	 *
+	 * @since 2.3.2
+	 */
+	Collection<T> mapping(Collection<S> object);
 
 	/**
 	 * 将源 list 对象映射到目标 list 对象

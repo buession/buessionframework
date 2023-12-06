@@ -24,10 +24,12 @@
  */
 package com.buession.core.converter;
 
+import org.springframework.beans.BeanUtils;
+
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Map 转换器
@@ -64,19 +66,27 @@ public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<
 	 * @param valueConverter
 	 * 		Map value 转换器
 	 */
-	public MapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter){
+	public MapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
 		this.keyConverter = keyConverter;
 		this.valueConverter = valueConverter;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Map<TK, TV> convert(final Map<SK, SV> source){
+	public Map<TK, TV> convert(final Map<SK, SV> source) {
 		if(source == null){
 			return null;
 		}else{
-			return source.entrySet().stream().collect(Collectors.toMap(e->keyConverter.convert(e.getKey()),
-					e->valueConverter.convert(e.getValue()), (a, b)->a, source instanceof LinkedHashMap ?
-							LinkedHashMap::new : HashMap::new));
+			Stream<Map.Entry<SK, SV>> stream = source.entrySet().stream();
+
+			try{
+				return stream.collect(Collectors.toMap(entry->keyConverter.convert(entry.getKey()),
+						entry->valueConverter.convert(entry.getValue()), (a, b)->a,
+						()->BeanUtils.instantiateClass(source.getClass())));
+			}catch(Exception e){
+				return stream.collect(Collectors.toMap(entry->keyConverter.convert(entry.getKey()),
+						entry->valueConverter.convert(entry.getValue()), (a, b)->a, HashMap::new));
+			}
 		}
 	}
 
