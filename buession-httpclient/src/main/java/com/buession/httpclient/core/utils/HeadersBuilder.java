@@ -25,17 +25,15 @@
 package com.buession.httpclient.core.utils;
 
 import com.buession.core.builder.ListBuilder;
+import com.buession.core.datetime.TimeZone;
 import com.buession.core.utils.Assert;
 import com.buession.httpclient.core.Header;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * HTTP 头构建器
@@ -230,7 +228,7 @@ public class HeadersBuilder {
 	protected static DateTimeFormatter createDateTimeFormatter() {
 		if(dateTimeFormatter == null){
 			dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss GMT", Locale.US);
-			dateTimeFormatter.withZone(TimeZone.getTimeZone("GMT").toZoneId());
+			dateTimeFormatter.withZone(TimeZone.GMT.toZoneId());
 		}
 
 		return dateTimeFormatter;
