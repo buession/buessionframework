@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -1498,7 +1498,7 @@ public interface KeyCommands extends RedisCommands {
 
 		private Long frequency;
 
-		private RestoreArgument(){
+		private RestoreArgument() {
 		}
 
 		/**
@@ -1506,7 +1506,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 是否替换已存在 key
 		 */
-		public Boolean isReplace(){
+		public Boolean isReplace() {
 			return replace;
 		}
 
@@ -1517,20 +1517,20 @@ public interface KeyCommands extends RedisCommands {
 		 * @return If the ABSTTL modifier was used,
 		 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
 		 */
-		public Boolean isAbsTtl(){
+		public Boolean isAbsTtl() {
 			return absTtl;
 		}
 
-		public Long getIdleTime(){
+		public Long getIdleTime() {
 			return idleTime;
 		}
 
-		public Long getFrequency(){
+		public Long getFrequency() {
 			return frequency;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().
 					add("replace", replace).
 					add("absTtl", absTtl).
@@ -1542,34 +1542,34 @@ public interface KeyCommands extends RedisCommands {
 
 			private final RestoreArgument restoreArgument = new RestoreArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
-			public Builder replace(){
+			public Builder replace() {
 				restoreArgument.replace = true;
 				return this;
 			}
 
-			public Builder absTtl(){
+			public Builder absTtl() {
 				restoreArgument.absTtl = true;
 				return this;
 			}
 
-			public Builder idleTime(long idleTime){
+			public Builder idleTime(long idleTime) {
 				restoreArgument.idleTime = idleTime;
 				return this;
 			}
 
-			public Builder frequency(long frequency){
+			public Builder frequency(long frequency) {
 				restoreArgument.frequency = frequency;
 				return this;
 			}
 
-			public RestoreArgument build(){
+			public RestoreArgument build() {
 				return restoreArgument;
 			}
 
@@ -1582,7 +1582,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @author Yong.Teng
 	 */
-	class SortArgument {
+	final class SortArgument {
 
 		private byte[] by;
 
@@ -1594,7 +1594,7 @@ public interface KeyCommands extends RedisCommands {
 
 		private Boolean alpha;
 
-		private SortArgument(){
+		private SortArgument() {
 		}
 
 		/**
@@ -1602,7 +1602,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 可以让 uid 按其他键的元素来排序模式
 		 */
-		public byte[] getBy(){
+		public byte[] getBy() {
 			return by;
 		}
 
@@ -1611,7 +1611,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 排序方式
 		 */
-		public Order getOrder(){
+		public Order getOrder() {
 			return order;
 		}
 
@@ -1620,7 +1620,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 返回结果限制
 		 */
-		public Limit getLimit(){
+		public Limit getLimit() {
 			return limit;
 		}
 
@@ -1629,7 +1629,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 通过外部 key 排序模式
 		 */
-		public byte[][] getGetPatterns(){
+		public byte[][] getGetPatterns() {
 			return getPatterns;
 		}
 
@@ -1638,12 +1638,12 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 使用对字符串进行排序
 		 */
-		public Boolean isAlpha(){
+		public Boolean isAlpha() {
 			return alpha;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			final ObjectStringBuilder builder = ObjectStringBuilder.create();
 
 			if(by != null){
@@ -1665,10 +1665,10 @@ public interface KeyCommands extends RedisCommands {
 
 			private final SortArgument sortArgument = new SortArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
@@ -1680,7 +1680,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder by(String pattern){
+			public Builder by(String pattern) {
 				sortArgument.by = SafeEncoder.encode(pattern);
 				return this;
 			}
@@ -1693,7 +1693,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder by(byte[] pattern){
+			public Builder by(byte[] pattern) {
 				sortArgument.by = pattern;
 				return this;
 			}
@@ -1703,7 +1703,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder asc(){
+			public Builder asc() {
 				sortArgument.order = Order.ASC;
 				return this;
 			}
@@ -1713,7 +1713,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder desc(){
+			public Builder desc() {
 				sortArgument.order = Order.DESC;
 				return this;
 			}
@@ -1726,7 +1726,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder order(Order order){
+			public Builder order(Order order) {
 				sortArgument.order = order;
 				return this;
 			}
@@ -1741,7 +1741,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder limit(long offset, long count){
+			public Builder limit(long offset, long count) {
 				sortArgument.limit = new Limit(offset, count);
 				return this;
 			}
@@ -1754,7 +1754,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder getPatterns(byte[]... patterns){
+			public Builder getPatterns(byte[]... patterns) {
 				sortArgument.getPatterns = patterns;
 				return this;
 			}
@@ -1767,7 +1767,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder getPatterns(String... patterns){
+			public Builder getPatterns(String... patterns) {
 				if(patterns != null){
 					sortArgument.getPatterns = new byte[patterns.length][];
 
@@ -1784,12 +1784,12 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return 使用对字符串进行排序
 			 */
-			public Builder alpha(){
+			public Builder alpha() {
 				sortArgument.alpha = true;
 				return this;
 			}
 
-			public SortArgument build(){
+			public SortArgument build() {
 				return sortArgument;
 			}
 

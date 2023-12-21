@@ -54,71 +54,72 @@ interface Converter<SV, TV> {
 
 		protected final Serializer serializer;
 
-		public AbstractConverter(final RedisAccessor accessor){
+		public AbstractConverter(final RedisAccessor accessor) {
 			this.index = RedisAccessor.index;
 			this.serializer = accessor.serializer;
 		}
 
-		protected static <V> V addConverter(ThreadLocal<Integer> index, Function<String, V> function){
+		protected static <V> V addConverter(ThreadLocal<Integer> index, Function<String, V> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> V addBinaryConverter(ThreadLocal<Integer> index, Function<byte[], V> function){
+		protected static <V> V addBinaryConverter(ThreadLocal<Integer> index, Function<byte[], V> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
 		protected static <V> List<V> addListConverter(ThreadLocal<Integer> index,
-													  Function<List<String>, List<V>> function){
+													  Function<List<String>, List<V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
 		protected static <V> List<V> addListBinaryConverter(ThreadLocal<Integer> index,
-															Function<List<byte[]>, List<V>> function){
+															Function<List<byte[]>, List<V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected static <V> Set<V> addSetConverter(ThreadLocal<Integer> index, Function<Set<String>, Set<V>> function){
+		protected static <V> Set<V> addSetConverter(ThreadLocal<Integer> index,
+													Function<Set<String>, Set<V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
 		protected static <V> Set<V> addSetBinaryConverter(ThreadLocal<Integer> index,
-														  Function<Set<byte[]>, Set<V>> function){
+														  Function<Set<byte[]>, Set<V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
 		protected static <V> Map<String, V> addMapConverter(ThreadLocal<Integer> index,
-															Function<Map<String, String>, Map<String, V>> function){
+															Function<Map<String, String>, Map<String, V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
 		protected static <V> Map<byte[], V> addMapBinaryConverter(ThreadLocal<Integer> index,
-																  Function<Map<byte[], byte[]>, Map<byte[], V>> function){
+																  Function<Map<byte[], byte[]>, Map<byte[], V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
 		protected static <T, V> ScanResult<V> addScanResultConverter(ThreadLocal<Integer> index,
-																	 Function<ScanResult<T>, ScanResult<V>> function){
+																	 Function<ScanResult<T>, ScanResult<V>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
 
-		protected boolean isTransaction(final RedisConnection connection){
+		protected boolean isTransaction(final RedisConnection connection) {
 			return connection.isTransaction();
 		}
 
-		protected boolean isPipeline(final RedisConnection connection){
+		protected boolean isPipeline(final RedisConnection connection) {
 			return connection.isPipeline();
 		}
 
-		protected boolean isTransactionOrPipeline(final RedisConnection connection){
+		protected boolean isTransactionOrPipeline(final RedisConnection connection) {
 			return isTransaction(connection) || isPipeline(connection);
 		}
 
@@ -126,7 +127,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractStringConverter<V> extends AbstractConverter<String, V> {
 
-		public AbstractStringConverter(final RedisAccessor accessor){
+		public AbstractStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -134,7 +135,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractBinaryConverter<V> extends AbstractConverter<byte[], V> {
 
-		public AbstractBinaryConverter(final RedisAccessor accessor){
+		public AbstractBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -142,12 +143,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleStringConverter<V> extends AbstractStringConverter<V> {
 
-		public SimpleStringConverter(final RedisAccessor accessor){
+		public SimpleStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public V convert(final RedisConnection connection, final String value){
+		public V convert(final RedisConnection connection, final String value) {
 			if(isTransactionOrPipeline(connection)){
 				return addConverter(index, serializer::deserialize);
 			}else{
@@ -159,12 +160,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleBinaryConverter<V> extends AbstractBinaryConverter<V> {
 
-		public SimpleBinaryConverter(final RedisAccessor accessor){
+		public SimpleBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public V convert(final RedisConnection connection, final byte[] value){
+		public V convert(final RedisConnection connection, final byte[] value) {
 			if(isTransactionOrPipeline(connection)){
 				return addBinaryConverter(index, serializer::deserializeBytes);
 			}else{
@@ -178,13 +179,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzStringConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public V convert(final RedisConnection connection, final String value){
+		public V convert(final RedisConnection connection, final String value) {
 			if(isTransactionOrPipeline(connection)){
 				return addConverter(index, (val)->serializer.deserialize(val, clazz));
 			}else{
@@ -198,13 +199,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzBinaryConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public V convert(final RedisConnection connection, final byte[] value){
+		public V convert(final RedisConnection connection, final byte[] value) {
 			if(isTransactionOrPipeline(connection)){
 				return addBinaryConverter(index, (val)->serializer.deserializeBytes(val, clazz));
 			}else{
@@ -218,13 +219,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public V convert(final RedisConnection connection, final String value){
+		public V convert(final RedisConnection connection, final String value) {
 			if(isTransactionOrPipeline(connection)){
 				return addConverter(index, (val)->serializer.deserialize(val, typeReference));
 			}else{
@@ -238,13 +239,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public V convert(final RedisConnection connection, final byte[] value){
+		public V convert(final RedisConnection connection, final byte[] value) {
 			if(isTransactionOrPipeline(connection)){
 				return addBinaryConverter(index, (val)->serializer.deserializeBytes(val, typeReference));
 			}else{
@@ -256,7 +257,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractListStringConverter<V> extends AbstractConverter<List<String>, List<V>> {
 
-		public AbstractListStringConverter(final RedisAccessor accessor){
+		public AbstractListStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -264,7 +265,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractListBinaryConverter<V> extends AbstractConverter<List<byte[]>, List<V>> {
 
-		public AbstractListBinaryConverter(final RedisAccessor accessor){
+		public AbstractListBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -272,12 +273,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleListStringConverter<V> extends AbstractListStringConverter<V> {
 
-		public SimpleListStringConverter(final RedisAccessor accessor){
+		public SimpleListStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public List<V> convert(final RedisConnection connection, final List<String> value){
+		public List<V> convert(final RedisConnection connection, final List<String> value) {
 			final Function<List<String>, List<V>> function = (data)->{
 				if(data != null){
 					final List<V> result = new ArrayList<>(data.size());
@@ -303,12 +304,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleListBinaryConverter<V> extends AbstractListBinaryConverter<V> {
 
-		public SimpleListBinaryConverter(final RedisAccessor accessor){
+		public SimpleListBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public List<V> convert(final RedisConnection connection, final List<byte[]> value){
+		public List<V> convert(final RedisConnection connection, final List<byte[]> value) {
 			final Function<List<byte[]>, List<V>> function = (data)->{
 				if(data != null){
 					final List<V> result = new ArrayList<>(data.size());
@@ -336,13 +337,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzListStringConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public List<V> convert(final RedisConnection connection, final List<String> value){
+		public List<V> convert(final RedisConnection connection, final List<String> value) {
 			final Function<List<String>, List<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserialize(val, clazz)).collect(Collectors.toList());
 
@@ -359,13 +360,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public List<V> convert(final RedisConnection connection, final List<byte[]> value){
+		public List<V> convert(final RedisConnection connection, final List<byte[]> value) {
 			final Function<List<byte[]>, List<V>> function = (data)->
 					data == null ? null : data.stream().map((val)->serializer.deserializeBytes(val, clazz))
 							.collect(Collectors.toList());
@@ -383,13 +384,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public List<V> convert(final RedisConnection connection, final List<String> value){
+		public List<V> convert(final RedisConnection connection, final List<String> value) {
 			final Function<List<String>, List<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserialize(val, typeReference)).collect(Collectors.toList());
 
@@ -406,13 +407,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public List<V> convert(final RedisConnection connection, final List<byte[]> value){
+		public List<V> convert(final RedisConnection connection, final List<byte[]> value) {
 			final Function<List<byte[]>, List<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserializeBytes(val, typeReference))
 							.collect(Collectors.toList());
@@ -428,7 +429,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractSetStringConverter<V> extends AbstractConverter<Set<String>, Set<V>> {
 
-		public AbstractSetStringConverter(final RedisAccessor accessor){
+		public AbstractSetStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -436,7 +437,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractSetBinaryConverter<V> extends AbstractConverter<Set<byte[]>, Set<V>> {
 
-		public AbstractSetBinaryConverter(final RedisAccessor accessor){
+		public AbstractSetBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -444,12 +445,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleSetStringConverter<V> extends AbstractSetStringConverter<V> {
 
-		public SimpleSetStringConverter(final RedisAccessor accessor){
+		public SimpleSetStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public Set<V> convert(final RedisConnection connection, final Set<String> value){
+		public Set<V> convert(final RedisConnection connection, final Set<String> value) {
 			final Function<Set<String>, Set<V>> function = (data)->{
 				if(data != null){
 					final Set<V> result = new LinkedHashSet<>(data.size());
@@ -475,12 +476,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleSetBinaryConverter<V> extends AbstractSetBinaryConverter<V> {
 
-		public SimpleSetBinaryConverter(final RedisAccessor accessor){
+		public SimpleSetBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value){
+		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value) {
 			final Function<Set<byte[]>, Set<V>> function = (data)->{
 				if(data != null){
 					final Set<V> result = new LinkedHashSet<>(data.size());
@@ -508,13 +509,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzSetStringConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzSetStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public Set<V> convert(final RedisConnection connection, final Set<String> value){
+		public Set<V> convert(final RedisConnection connection, final Set<String> value) {
 			final Function<Set<String>, Set<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserialize(val, clazz))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
@@ -532,13 +533,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzSetBinaryConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzSetBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value){
+		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value) {
 			final Function<Set<byte[]>, Set<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserializeBytes(val, clazz))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
@@ -556,13 +557,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeSetStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeSetStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public Set<V> convert(final RedisConnection connection, final Set<String> value){
+		public Set<V> convert(final RedisConnection connection, final Set<String> value) {
 			final Function<Set<String>, Set<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserialize(val, typeReference))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
@@ -580,13 +581,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeSetBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeSetBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value){
+		public Set<V> convert(final RedisConnection connection, final Set<byte[]> value) {
 			final Function<Set<byte[]>, Set<V>> function = (data)->data == null ? null :
 					data.stream().map((val)->serializer.deserializeBytes(val, typeReference))
 							.collect(Collectors.toCollection(LinkedHashSet::new));
@@ -602,7 +603,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractMapStringConverter<V> extends AbstractConverter<Map<String, String>, Map<String, V>> {
 
-		public AbstractMapStringConverter(final RedisAccessor accessor){
+		public AbstractMapStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -610,7 +611,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractMapBinaryConverter<V> extends AbstractConverter<Map<byte[], byte[]>, Map<byte[], V>> {
 
-		public AbstractMapBinaryConverter(final RedisAccessor accessor){
+		public AbstractMapBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -618,12 +619,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleMapStringConverter<V> extends AbstractMapStringConverter<V> {
 
-		public SimpleMapStringConverter(final RedisAccessor accessor){
+		public SimpleMapStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value){
+		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value) {
 			final Function<Map<String, String>, Map<String, V>> function = (data)->data == null ? null :
 					Maps.map(data, (key)->key, serializer::deserialize);
 
@@ -638,12 +639,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleMapBinaryConverter<V> extends AbstractMapBinaryConverter<V> {
 
-		public SimpleMapBinaryConverter(final RedisAccessor accessor){
+		public SimpleMapBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value){
+		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value) {
 			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->data == null ? null :
 					Maps.map(data, (key)->key, serializer::deserializeBytes);
 
@@ -660,13 +661,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzMapStringConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzMapStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value){
+		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value) {
 			final Function<Map<String, String>, Map<String, V>> function = (data)->data == null ? null :
 					Maps.map(data, (key)->key, (val)->serializer.deserialize(val, clazz));
 
@@ -683,13 +684,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzMapBinaryConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzMapBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value){
+		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value) {
 			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->data == null ? null :
 					Maps.map(data, (key)->key, (val)->serializer.deserializeBytes(val, clazz));
 
@@ -706,13 +707,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeMapStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeMapStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value){
+		public Map<String, V> convert(final RedisConnection connection, final Map<String, String> value) {
 			final Function<Map<String, String>, Map<String, V>> function = (data)->data == null ? null :
 					Maps.map(data, (key)->key, (val)->serializer.deserialize(val, typeReference));
 
@@ -729,13 +730,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeMapBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeMapBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value){
+		public Map<byte[], V> convert(final RedisConnection connection, final Map<byte[], byte[]> value) {
 			final Function<Map<byte[], byte[]>, Map<byte[], V>> function = (data)->data == null ? null :
 					Maps.map(data, (key)->key, (val)->serializer.deserializeBytes(val, typeReference));
 
@@ -750,7 +751,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractScanResultConverter<SV, TV> extends AbstractConverter<ScanResult<SV>, ScanResult<TV>> {
 
-		public AbstractScanResultConverter(final RedisAccessor accessor){
+		public AbstractScanResultConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -759,7 +760,7 @@ interface Converter<SV, TV> {
 	abstract class AbstractScanResultMapStringConverter<V>
 			extends AbstractScanResultConverter<Map<String, String>, Map<String, V>> {
 
-		public AbstractScanResultMapStringConverter(final RedisAccessor accessor){
+		public AbstractScanResultMapStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -767,7 +768,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractScanResultListStringConverter<V> extends AbstractScanResultConverter<List<String>, List<V>> {
 
-		public AbstractScanResultListStringConverter(final RedisAccessor accessor){
+		public AbstractScanResultListStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -775,7 +776,7 @@ interface Converter<SV, TV> {
 
 	abstract class AbstractScanResultListBinaryConverter<V> extends AbstractScanResultConverter<List<byte[]>, List<V>> {
 
-		public AbstractScanResultListBinaryConverter(final RedisAccessor accessor){
+		public AbstractScanResultListBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -783,12 +784,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleScanResultListStringConverter<V> extends AbstractScanResultListStringConverter<V> {
 
-		public SimpleScanResultListStringConverter(final RedisAccessor accessor){
+		public SimpleScanResultListStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value){
+		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value) {
 			final Function<ScanResult<List<String>>, ScanResult<List<V>>> function = (scanResult)->{
 				if(scanResult.getResults() == null){
 					return new ScanResult<>(scanResult.getCursor(), null);
@@ -814,12 +815,12 @@ interface Converter<SV, TV> {
 
 	final class SimpleScanResultListBinaryConverter<V> extends AbstractScanResultListBinaryConverter<V> {
 
-		public SimpleScanResultListBinaryConverter(final RedisAccessor accessor){
+		public SimpleScanResultListBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
-		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value){
+		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value) {
 			final Function<ScanResult<List<byte[]>>, ScanResult<List<V>>> function = (scanResult)->{
 				if(scanResult.getResults() == null){
 					return new ScanResult<>(scanResult.getCursor(), null);
@@ -847,13 +848,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzScanResultListStringConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzScanResultListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value){
+		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value) {
 			final Function<ScanResult<List<String>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
 						.map((val)->serializer.deserialize(val, clazz)).collect(Collectors.toList());
@@ -873,13 +874,13 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzScanResultListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzScanResultListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
-		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value){
+		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value) {
 			final Function<ScanResult<List<byte[]>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
 						.map((val)->serializer.deserializeBytes(val, clazz)).collect(Collectors.toList());
@@ -899,13 +900,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeScanResultListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeScanResultListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value){
+		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<String>> value) {
 			final Function<ScanResult<List<String>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
 						.map((val)->serializer.deserialize(val, typeReference)).collect(Collectors.toList());
@@ -925,13 +926,13 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeScanResultListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeScanResultListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
-		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value){
+		public ScanResult<List<V>> convert(final RedisConnection connection, final ScanResult<List<byte[]>> value) {
 			final Function<ScanResult<List<byte[]>>, ScanResult<List<V>>> function = (scanResult)->{
 				final List<V> result = value.getResults() == null ? null : value.getResults().stream()
 						.map((val)->serializer.deserializeBytes(val, typeReference)).collect(Collectors.toList());
@@ -950,7 +951,7 @@ interface Converter<SV, TV> {
 	abstract class AbstractScanResultMapBinaryConverter<V>
 			extends AbstractScanResultConverter<Map<byte[], byte[]>, Map<byte[], V>> {
 
-		public AbstractScanResultMapBinaryConverter(final RedisAccessor accessor){
+		public AbstractScanResultMapBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
@@ -958,13 +959,13 @@ interface Converter<SV, TV> {
 
 	final class SimpleScanResultMapStringConverter<V> extends AbstractScanResultMapStringConverter<V> {
 
-		public SimpleScanResultMapStringConverter(final RedisAccessor accessor){
+		public SimpleScanResultMapStringConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
 		public ScanResult<Map<String, V>> convert(final RedisConnection connection,
-												  final ScanResult<Map<String, String>> value){
+												  final ScanResult<Map<String, String>> value) {
 			final Function<ScanResult<Map<String, String>>, ScanResult<Map<String, V>>> function = (scanResult)->{
 				if(scanResult.getResults() == null){
 					return new ScanResult<>(scanResult.getCursor(), null);
@@ -990,13 +991,13 @@ interface Converter<SV, TV> {
 
 	final class SimpleScanResultMapBinaryConverter<V> extends AbstractScanResultMapBinaryConverter<V> {
 
-		public SimpleScanResultMapBinaryConverter(final RedisAccessor accessor){
+		public SimpleScanResultMapBinaryConverter(final RedisAccessor accessor) {
 			super(accessor);
 		}
 
 		@Override
 		public ScanResult<Map<byte[], V>> convert(final RedisConnection connection,
-												  final ScanResult<Map<byte[], byte[]>> value){
+												  final ScanResult<Map<byte[], byte[]>> value) {
 			final Function<ScanResult<Map<byte[], byte[]>>, ScanResult<Map<byte[], V>>> function = (scanResult)->{
 				if(scanResult.getResults() == null){
 					return new ScanResult<>(scanResult.getCursor(), null);
@@ -1024,14 +1025,14 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzScanResultMapStringConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzScanResultMapStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
 		public ScanResult<Map<String, V>> convert(final RedisConnection connection,
-												  final ScanResult<Map<String, String>> value){
+												  final ScanResult<Map<String, String>> value) {
 			final Function<ScanResult<Map<String, String>>, ScanResult<Map<String, V>>> function = (scanResult)->{
 				final Map<String, V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
 						(key)->key, (val)->serializer.deserialize(val, clazz));
@@ -1051,14 +1052,14 @@ interface Converter<SV, TV> {
 
 		private final Class<V> clazz;
 
-		public ClazzScanResultMapBinaryConverter(final RedisAccessor accessor, final Class<V> clazz){
+		public ClazzScanResultMapBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
 			super(accessor);
 			this.clazz = clazz;
 		}
 
 		@Override
 		public ScanResult<Map<byte[], V>> convert(final RedisConnection connection,
-												  final ScanResult<Map<byte[], byte[]>> value){
+												  final ScanResult<Map<byte[], byte[]>> value) {
 			final Function<ScanResult<Map<byte[], byte[]>>, ScanResult<Map<byte[], V>>> function = (scanResult)->{
 				final Map<byte[], V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
 						(key)->key, (val)->serializer.deserializeBytes(val, clazz));
@@ -1078,14 +1079,14 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeScanResultMapStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeScanResultMapStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
 		public ScanResult<Map<String, V>> convert(final RedisConnection connection,
-												  final ScanResult<Map<String, String>> value){
+												  final ScanResult<Map<String, String>> value) {
 			final Function<ScanResult<Map<String, String>>, ScanResult<Map<String, V>>> function = (scanResult)->{
 				final Map<String, V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
 						(key)->key, (val)->serializer.deserialize(val, typeReference));
@@ -1105,14 +1106,14 @@ interface Converter<SV, TV> {
 
 		private final TypeReference<V> typeReference;
 
-		public TypeScanResultMapBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference){
+		public TypeScanResultMapBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
 			super(accessor);
 			this.typeReference = typeReference;
 		}
 
 		@Override
 		public ScanResult<Map<byte[], V>> convert(final RedisConnection connection,
-												  final ScanResult<Map<byte[], byte[]>> value){
+												  final ScanResult<Map<byte[], byte[]>> value) {
 			final Function<ScanResult<Map<byte[], byte[]>>, ScanResult<Map<byte[], V>>> function = (scanResult)->{
 				final Map<byte[], V> result = scanResult.getResults() == null ? null : Maps.map(value.getResults(),
 						(key)->key, (val)->serializer.deserializeBytes(val, typeReference));

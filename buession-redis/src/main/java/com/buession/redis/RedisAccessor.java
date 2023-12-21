@@ -239,10 +239,8 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected final void checkInitialized() {
-		if(connectionFactory == null){
-			throw new RedisException(
-					"RedisConnectionFactory is not initialized. You can call the afterPropertiesSet method for initialize.");
-		}
+		Assert.isNull(connectionFactory, ()->new RedisException(
+				"RedisConnectionFactory is not initialized. You can call the afterPropertiesSet method for initialize."));
 	}
 
 	protected boolean isTransaction(final RedisConnection connection) {

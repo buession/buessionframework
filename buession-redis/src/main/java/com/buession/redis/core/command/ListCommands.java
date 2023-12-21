@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -732,25 +732,25 @@ public interface ListCommands extends RedisCommands {
 	 */
 	Long rPushX(final byte[] key, final byte[]... values);
 
-	class LPosArgument {
+	final class LPosArgument {
 
 		private Integer rank;
 
 		private Integer maxLen;
 
-		private LPosArgument(){
+		private LPosArgument() {
 		}
 
-		public Integer getRank(){
+		public Integer getRank() {
 			return rank;
 		}
 
-		public Integer getMaxLen(){
+		public Integer getMaxLen() {
 			return maxLen;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().add("rank", rank).add("maxLen", maxLen).build();
 		}
 
@@ -758,24 +758,24 @@ public interface ListCommands extends RedisCommands {
 
 			private final LPosArgument lPosArgument = new LPosArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
-			public Builder rank(int rank){
+			public Builder rank(int rank) {
 				lPosArgument.rank = rank;
 				return this;
 			}
 
-			public Builder maxLen(int maxLen){
+			public Builder maxLen(int maxLen) {
 				lPosArgument.maxLen = maxLen;
 				return this;
 			}
 
-			public LPosArgument build(){
+			public LPosArgument build() {
 				return lPosArgument;
 			}
 
