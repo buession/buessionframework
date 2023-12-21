@@ -33,13 +33,23 @@ import java.util.regex.Pattern;
  * @author Yong.Teng
  * @since 2.3.1
  */
-public class MobileSensitiveStrategy implements ISensitiveStrategy {
+public class MobileSensitiveStrategy extends AbstractSensitiveStrategy {
 
 	private final static Pattern PATTERN = Pattern.compile("(1\\d{2})\\d{4}(\\d{4})");
 
+	/**
+	 * 构造函数
+	 *
+	 * @param replacement
+	 * 		脱敏替换内容
+	 */
+	public MobileSensitiveStrategy(final String replacement) {
+		super(replacement);
+	}
+
 	@Override
 	public Function<String, String> getFunction() {
-		return str->PATTERN.matcher(str).replaceAll("$1****$2");
+		return str->PATTERN.matcher(str).replaceAll("$1" + getReplacement() + "$2");
 	}
 
 }

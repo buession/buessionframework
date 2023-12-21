@@ -58,6 +58,11 @@ public enum SensitiveStrategy {
 	MOBILE(MobileSensitiveStrategy.class),
 
 	/**
+	 * E-mail 脱敏策略
+	 */
+	EMAIL(EmailSensitiveStrategy.class),
+
+	/**
 	 * QQ 号码脱敏策略
 	 */
 	QQ(QqSensitiveStrategy.class),

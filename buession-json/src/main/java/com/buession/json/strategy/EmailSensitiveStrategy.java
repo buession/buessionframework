@@ -25,21 +25,35 @@
 package com.buession.json.strategy;
 
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 /**
- * 手机号码脱敏策略
+ * E-mail 脱敏策略
  *
  * @author Yong.Teng
- * @since 2.3.1
+ * @since 2.3.2
  */
-public class MobileSensitiveStrategy implements ISensitiveStrategy {
+public class EmailSensitiveStrategy extends AbstractSensitiveStrategy {
 
-	private final static Pattern PATTERN = Pattern.compile("(1\\d{2})\\d{4}(\\d{4})");
+	/**
+	 * 构造函数
+	 *
+	 * @param replacement
+	 * 		脱敏替换内容
+	 */
+	public EmailSensitiveStrategy(final String replacement) {
+		super(replacement);
+	}
 
 	@Override
 	public Function<String, String> getFunction() {
-		return str->PATTERN.matcher(str).replaceAll("$1****$2");
+		return (str)->{
+			int at = str.indexOf('@');
+			if(at == -1){
+				return str;
+			}
+
+			return str.substring(0, Math.min(3, at)) + getReplacement() + str.substring(at);
+		};
 	}
 
 }

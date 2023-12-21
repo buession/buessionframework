@@ -21,10 +21,37 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.json.strategy;/**
- * 
+ */
+package com.buession.json.strategy;
+
+import com.buession.core.validator.Validate;
+import com.buession.json.annotation.Sensitive;
+
+/**
+ * 脱敏策略基类
  *
  * @author Yong.Teng
  * @since 2.3.2
- */public class AbstractSensitiveStrategy {
+ */
+public abstract class AbstractSensitiveStrategy implements ISensitiveStrategy {
+
+	/**
+	 * 脱敏替换内容
+	 */
+	private final String replacement;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replacement
+	 * 		脱敏替换内容
+	 */
+	public AbstractSensitiveStrategy(final String replacement) {
+		this.replacement = Validate.hasText(replacement) ? replacement : Sensitive.DEFAULT_REPLACEMENT;
+	}
+
+	protected String getReplacement() {
+		return replacement;
+	}
+
 }
