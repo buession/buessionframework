@@ -61,7 +61,7 @@ public class File extends java.io.File {
 	 * @param child
 	 * 		子文件
 	 */
-	public File(java.io.File parent, String child){
+	public File(java.io.File parent, String child) {
 		super(parent, child);
 	}
 
@@ -69,7 +69,7 @@ public class File extends java.io.File {
 	 * @param path
 	 * 		文件路径
 	 */
-	public File(String path){
+	public File(String path) {
 		super(path);
 	}
 
@@ -77,7 +77,7 @@ public class File extends java.io.File {
 	 * @param file
 	 * 		java.io.File
 	 */
-	public File(java.io.File file){
+	public File(java.io.File file) {
 		super(file.getPath());
 	}
 
@@ -87,7 +87,7 @@ public class File extends java.io.File {
 	 * @param child
 	 * 		子文件
 	 */
-	public File(String parent, String child){
+	public File(String parent, String child) {
 		super(parent, child);
 	}
 
@@ -95,7 +95,7 @@ public class File extends java.io.File {
 	 * @param uri
 	 * 		URI
 	 */
-	public File(URI uri){
+	public File(URI uri) {
 		super(uri);
 	}
 
@@ -106,7 +106,7 @@ public class File extends java.io.File {
 	 *
 	 * @since 1.2.0
 	 */
-	public MimeType getMimeType(){
+	public MimeType getMimeType() {
 		if(mimeType == null){
 			if(mimeTypeDetector == null){
 				mimeTypeDetector = new DefaultMimeTypeDetector();
@@ -126,7 +126,7 @@ public class File extends java.io.File {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public byte[] read() throws IOException{
+	public byte[] read() throws IOException {
 		int size = 4096;
 		BufferedInputStream bis = new FileBufferedInputStream(this);
 		byte[] tempChars = new byte[size];
@@ -159,7 +159,7 @@ public class File extends java.io.File {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public void write(final String str) throws IOException{
+	public void write(final String str) throws IOException {
 		write(str.getBytes());
 	}
 
@@ -172,7 +172,7 @@ public class File extends java.io.File {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public void write(final char[] chars) throws IOException{
+	public void write(final char[] chars) throws IOException {
 		BufferedOutputStream bos = new FileBufferedOutputStream(this);
 
 		for(char c : chars){
@@ -196,7 +196,7 @@ public class File extends java.io.File {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public void write(final byte[] bytes) throws IOException{
+	public void write(final byte[] bytes) throws IOException {
 		BufferedOutputStream bos = new FileBufferedOutputStream(this);
 
 		bos.write(bytes);
@@ -216,7 +216,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public void write(final String str, boolean append) throws IOException{
+	public void write(final String str, boolean append) throws IOException {
 		write(str.getBytes(), append);
 	}
 
@@ -232,7 +232,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public void write(final char[] chars, boolean append) throws IOException{
+	public void write(final char[] chars, boolean append) throws IOException {
 		BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
 
 		for(char c : chars){
@@ -259,7 +259,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public void write(final byte[] bytes, boolean append) throws IOException{
+	public void write(final byte[] bytes, boolean append) throws IOException {
 		BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
 
 		bos.write(bytes);
@@ -278,7 +278,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public String getMd5() throws IOException{
+	public String getMd5() throws IOException {
 		if(exists() == false){
 			throw new FileNotFoundException(getPath() + " not found.");
 		}
@@ -306,7 +306,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public String getSha1() throws IOException{
+	public String getSha1() throws IOException {
 		if(exists() == false){
 			throw new FileNotFoundException(getPath() + " not found.");
 		}
@@ -332,7 +332,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public String getExtension() throws IOException{
+	public String getExtension() throws IOException {
 		if(isFile() == false){
 			throw new IOException(getPath() + " is not a file.");
 		}
@@ -352,9 +352,23 @@ public class File extends java.io.File {
 		return extension;
 	}
 
+	/**
+	 * 重命名文件
+	 *
+	 * @param newName
+	 * 		新文件名
+	 *
+	 * @return true / false
+	 *
+	 * @since 2.3.2
+	 */
+	public boolean rename(String newName) {
+		return super.renameTo(new File(this.getParent() + '/' + newName));
+	}
+
 	private final static class FileBufferedInputStream extends BufferedInputStream {
 
-		public FileBufferedInputStream(java.io.File file) throws FileNotFoundException{
+		public FileBufferedInputStream(java.io.File file) throws FileNotFoundException {
 			super(new DataInputStream(new FileInputStream(file)));
 		}
 
@@ -362,11 +376,11 @@ public class File extends java.io.File {
 
 	private final static class FileBufferedOutputStream extends BufferedOutputStream {
 
-		public FileBufferedOutputStream(java.io.File file) throws FileNotFoundException{
+		public FileBufferedOutputStream(java.io.File file) throws FileNotFoundException {
 			super(new DataOutputStream(new FileOutputStream(file)));
 		}
 
-		public FileBufferedOutputStream(java.io.File file, boolean append) throws FileNotFoundException{
+		public FileBufferedOutputStream(java.io.File file, boolean append) throws FileNotFoundException {
 			super(new DataOutputStream(new FileOutputStream(file, append)));
 		}
 
