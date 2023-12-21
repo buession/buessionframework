@@ -28,6 +28,7 @@ import com.buession.core.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -135,7 +136,8 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 	protected static ObjectMapper getObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 		return objectMapper;
 	}

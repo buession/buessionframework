@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -34,19 +34,24 @@ import java.util.regex.Pattern;
  */
 public class TelValidator {
 
-	private final static String AREA_ACODE_PATTERN = "(86-?)|0)\\d{2,3}";
+	private final static String AREA_CODE_REGEX = "(86-?)|0)\\d{2,3}";
 
-	private final static String TEL_PATTERN = "[1-9]\\d{6,7}";
+	private final static String TEL_REGEX = "[1-9]\\d{6,7}";
 
-	private final static String WITH_AREA_CODE_PATTERN =
-			"^(((" + AREA_ACODE_PATTERN + "-?)|(（(" + AREA_ACODE_PATTERN + "）)|(\\((" + AREA_ACODE_PATTERN + "\\)))" + TEL_PATTERN + "$";
+	private final static String WITH_AREA_CODE_REGEX =
+			"^(((" + AREA_CODE_REGEX + "-?)|(（(" + AREA_CODE_REGEX + "）)|(\\((" + AREA_CODE_REGEX + "\\)))" +
+					TEL_REGEX + "$";
 
-	private final static String WITHOUT_AREA_CODE_PATTERN = "^" + TEL_PATTERN + "$";
+	private final static String WITHOUT_AREA_CODE_REGEX = "^" + TEL_REGEX + "$";
 
-	private TelValidator(){
+	private final static Pattern WITH_AREA_CODE_PATTERN = Pattern.compile(WITH_AREA_CODE_REGEX);
+
+	private final static Pattern WITHOUT_AREA_CODE_PATTERN = Pattern.compile(WITHOUT_AREA_CODE_REGEX);
+
+	private TelValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence, final AreaCodeType areaCodeType){
+	public static boolean isValid(final CharSequence charSequence, final AreaCodeType areaCodeType) {
 		if(charSequence == null || charSequence.length() < 7){
 			return false;
 		}
@@ -61,13 +66,13 @@ public class TelValidator {
 		}
 	}
 
-	private static boolean validHasAreaCode(final CharSequence charSequence){
-		Matcher matcher = Pattern.compile(WITH_AREA_CODE_PATTERN).matcher(charSequence);
+	private static boolean validHasAreaCode(final CharSequence charSequence) {
+		Matcher matcher = WITH_AREA_CODE_PATTERN.matcher(charSequence);
 		return matcher.matches();
 	}
 
-	private static boolean validNotHasAreaCode(final CharSequence charSequence){
-		Matcher matcher = Pattern.compile(WITHOUT_AREA_CODE_PATTERN).matcher(charSequence);
+	private static boolean validNotHasAreaCode(final CharSequence charSequence) {
+		Matcher matcher = WITHOUT_AREA_CODE_PATTERN.matcher(charSequence);
 		return matcher.matches();
 	}
 

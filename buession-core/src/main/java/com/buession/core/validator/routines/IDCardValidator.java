@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -41,10 +41,10 @@ public class IDCardValidator {
 
 	private final static char[] CHECK_CODES = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
 
-	private IDCardValidator(){
+	private IDCardValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday){
+	public static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday) {
 		if(charSequence == null || charSequence.length() != IDCARD_LENGTH){
 			return false;
 		}else if(strict && birthday == null){
@@ -63,9 +63,9 @@ public class IDCardValidator {
 		}
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-		char check_code = CHECK_CODES[sum % 11];
+		char checkCode = CHECK_CODES[sum % 11];
 
-		if(check_code == charSequence.charAt(IDCARD_LENGTH - 1)){
+		if(checkCode == charSequence.charAt(IDCARD_LENGTH - 1)){
 			if(strict){
 				String s = charSequence.subSequence(6, 14).toString();
 

@@ -482,6 +482,28 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
+	/**
+	 * 取前 N 个字符，如字符总数大于 N，则会在字符末尾添加省略号
+	 *
+	 * @param str
+	 * 		原始字符串
+	 * @param length
+	 * 		截取长度
+	 *
+	 * @return 截取后的字符串
+	 *
+	 * @since 2.3.2
+	 */
+	public static String formatEllipsis(String str, int length) {
+		if(str != null){
+			if(str.length() > length){
+				return str.substring(0, length) + "...";
+			}
+		}
+
+		return str;
+	}
+
 	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart,
 										final CharSequence substring, final int start, final int length) {
 		if(cs instanceof String && substring instanceof String){

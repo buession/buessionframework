@@ -28,6 +28,8 @@ package com.buession.core.utils;
 
 import com.buession.core.exception.ClassInstantiationException;
 import com.buession.lang.Primitive;
+import org.springframework.core.KotlinDetector;
+import org.springframework.lang.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -37,7 +39,16 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import kotlin.jvm.JvmClassMappingKt;
+import kotlin.reflect.KFunction;
+import kotlin.reflect.KParameter;
+import kotlin.reflect.full.KClasses;
+import kotlin.reflect.jvm.KCallablesJvm;
+import kotlin.reflect.jvm.ReflectJvmMapping;
 
 /**
  * 类工具类
@@ -50,47 +61,119 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 
 	public static <T> T instantiate(Class<T> clazz, Object... args) throws ClassInstantiationException {
 		Assert.isNull(clazz, "Class cloud not be null");
-
-		if(clazz.isInterface()){
-			throw new ClassInstantiationException(clazz, "Specified class is an interface");
-		}
+		Assert.isTrue(clazz.isInterface(),
+				()->new ClassInstantiationException(clazz, "Specified class is an interface"));
 
 		try{
-			Constructor<T> constructor = clazz.getDeclaredConstructor();
+			if(args == null){
+				return instantiate(clazz.getDeclaredConstructor());
+			}else{
+				Class<?>[] ctorTypes = new Class[args.length];
 
-			if((Modifier.isPublic(constructor.getModifiers()) == false ||
-					Modifier.isPublic(constructor.getDeclaringClass().getModifiers()) == false) &&
-					constructor.isAccessible() == false){
-				constructor.setAccessible(true);
-			}
-
-			Class<?>[] parameterTypes = constructor.getParameterTypes();
-			Assert.isTrue(args.length < parameterTypes.length,
-					"Can't specify more arguments than constructor parameters");
-
-			Object[] argsWithDefaultValues = new Object[args.length];
-			for(int i = 0; i < args.length; i++){
-				if(args[i] == null){
-					Class<?> parameterType = parameterTypes[i];
-					argsWithDefaultValues[i] = (parameterType.isPrimitive() ? Primitive.DEFAULT_TYPE_VALUES.get(
-							parameterType) : null);
-				}else{
-					argsWithDefaultValues[i] = args[i];
+				for(int i = 0; i < args.length; i++){
+					if(args[i] == null){
+						//
+					}else{
+						ctorTypes[i] = args[i].getClass();
+					}
 				}
-			}
 
-			return constructor.newInstance(argsWithDefaultValues);
+				return instantiate(clazz.getDeclaredConstructor(ctorTypes), args);
+			}
 		}catch(NoSuchMethodException e){
+			Constructor<T> ctor = findPrimaryConstructor(clazz);
+			if(ctor != null){
+				return instantiate(ctor);
+			}
 			throw new ClassInstantiationException(clazz, "No default constructor found", e);
 		}catch(LinkageError err){
 			throw new ClassInstantiationException(clazz, "Unresolvable class definition", err);
-		}catch(InvocationTargetException e){
-			throw new ClassInstantiationException(clazz, "Constructor threw exception", e.getTargetException());
-		}catch(InstantiationException e){
-			throw new ClassInstantiationException(clazz, "Is it an abstract class?", e);
-		}catch(IllegalAccessException e){
-			throw new ClassInstantiationException(clazz, "Is the constructor accessible?", e);
 		}
+	}
+
+	/**
+	 * Convenience method to instantiate a class using the given constructor.
+	 * <p>Note that this method tries to set the constructor accessible if given a
+	 * non-accessible (that is, non-public) constructor, and supports Kotlin classes
+	 * with optional parameters and default values.
+	 *
+	 * @param ctor
+	 * 		the constructor to instantiate
+	 * @param args
+	 * 		the constructor arguments to apply (use {@code null} for an unspecified parameter,
+	 * 		Kotlin optional parameters and Java primitive types are supported)
+	 * @param <T>
+	 * 		实例类型
+	 *
+	 * @return The new instance
+	 *
+	 * @throws ClassInstantiationException
+	 * 		if the bean cannot be instantiated
+	 * @see Constructor#newInstance
+	 * @since 2.3.2
+	 */
+	public static <T> T instantiate(Constructor<T> ctor, Object... args) throws ClassInstantiationException {
+		Assert.isNull(ctor, "Constructor cloud not be null");
+
+		try{
+			ReflectionUtils.makeAccessible(ctor);
+
+			if(KotlinDetector.isKotlinReflectPresent() && KotlinDetector.isKotlinType(ctor.getDeclaringClass())){
+				return KotlinDelegate.instantiateClass(ctor, args);
+			}else{
+				Class<?>[] parameterTypes = ctor.getParameterTypes();
+				Assert.isFalse(args.length <= parameterTypes.length,
+						"Can't specify more arguments than constructor parameters");
+				Object[] argsWithDefaultValues = new Object[args.length];
+
+				for(int i = 0; i < args.length; i++){
+					if(args[i] == null){
+						Class<?> parameterType = parameterTypes[i];
+						argsWithDefaultValues[i] = parameterType.isPrimitive() ? Primitive.DEFAULT_TYPE_VALUES.get(
+								parameterType) : null;
+					}else{
+						argsWithDefaultValues[i] = args[i];
+					}
+				}
+
+				return ctor.newInstance(argsWithDefaultValues);
+			}
+		}catch(InstantiationException e){
+			throw new ClassInstantiationException(ctor, "Is it an abstract class?", e);
+		}catch(IllegalAccessException e){
+			throw new ClassInstantiationException(ctor, "Is the constructor accessible?", e);
+		}catch(IllegalArgumentException e){
+			throw new ClassInstantiationException(ctor, "Illegal arguments for constructor", e);
+		}catch(InvocationTargetException e){
+			throw new ClassInstantiationException(ctor, "Constructor threw exception", e.getTargetException());
+		}
+	}
+
+	/**
+	 * Return the primary constructor of the provided class. For Kotlin classes, this
+	 * returns the Java constructor corresponding to the Kotlin primary constructor
+	 * (as defined in the Kotlin specification). Otherwise, in particular for non-Kotlin
+	 * classes, this simply returns {@code null}.
+	 *
+	 * @param clazz
+	 * 		the class to check
+	 * @param <T>
+	 * 		实例类型
+	 *
+	 * @return The primary constructor of the provided class
+	 *
+	 * @see <a href="https://kotlinlang.org/docs/reference/classes.html#constructors">Kotlin docs</a>
+	 * @since 2.3.2
+	 */
+	@Nullable
+	public static <T> Constructor<T> findPrimaryConstructor(Class<T> clazz) {
+		Assert.isNull(clazz, "Class must not be null");
+
+		if(KotlinDetector.isKotlinReflectPresent() && KotlinDetector.isKotlinType(clazz)){
+			return KotlinDelegate.findPrimaryConstructor(clazz);
+		}
+
+		return null;
 	}
 
 	/**
@@ -193,6 +276,78 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 		MethodUtils.setAccessible(method);
 
 		return method.invoke(object, arguments);
+	}
+
+	/**
+	 * Inner class to avoid a hard dependency on Kotlin at runtime.
+	 *
+	 * @since 2.3.2
+	 */
+	private final static class KotlinDelegate {
+
+		/**
+		 * Retrieve the Java constructor corresponding to the Kotlin primary constructor, if any.
+		 *
+		 * @param clazz
+		 * 		the {@link Class} of the Kotlin class
+		 *
+		 * @see <a href="https://kotlinlang.org/docs/reference/classes.html#constructors">
+		 * https://kotlinlang.org/docs/reference/classes.html#constructors</a>
+		 */
+		@Nullable
+		public static <T> Constructor<T> findPrimaryConstructor(Class<T> clazz) {
+			try{
+				KFunction<T> primaryCtor = KClasses.getPrimaryConstructor(JvmClassMappingKt.getKotlinClass(clazz));
+				if(primaryCtor == null){
+					return null;
+				}
+				Constructor<T> constructor = ReflectJvmMapping.getJavaConstructor(primaryCtor);
+				Assert.isNull(constructor, ()->new IllegalStateException(
+						"Failed to find Java constructor for Kotlin primary constructor: " + clazz.getName()));
+				return constructor;
+			}catch(UnsupportedOperationException e){
+				return null;
+			}
+		}
+
+		/**
+		 * Instantiate a Kotlin class using the provided constructor.
+		 *
+		 * @param ctor
+		 * 		the constructor of the Kotlin class to instantiate
+		 * @param args
+		 * 		the constructor arguments to apply
+		 * 		(use {@code null} for unspecified parameter if needed)
+		 */
+		public static <T> T instantiateClass(Constructor<T> ctor, Object... args)
+				throws IllegalAccessException, InvocationTargetException, InstantiationException {
+			KFunction<T> kotlinConstructor = ReflectJvmMapping.getKotlinFunction(ctor);
+
+			if(kotlinConstructor == null){
+				return ctor.newInstance(args);
+			}
+
+			if(Modifier.isPublic(ctor.getModifiers()) == false ||
+					Modifier.isPublic(ctor.getDeclaringClass().getModifiers()) == false){
+				KCallablesJvm.setAccessible(kotlinConstructor, true);
+			}
+
+			List<KParameter> parameters = kotlinConstructor.getParameters();
+
+			Assert.isFalse(args.length <= parameters.size(),
+					"Number of provided arguments should be less of equals than number of constructor parameters");
+
+			Map<KParameter, Object> argParameters = new HashMap<>(parameters.size());
+
+			for(int i = 0; i < args.length; i++){
+				if(!(parameters.get(i).isOptional() && args[i] == null)){
+					argParameters.put(parameters.get(i), args[i]);
+				}
+			}
+
+			return kotlinConstructor.callBy(argParameters);
+		}
+
 	}
 
 }

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
@@ -39,6 +39,6 @@ public final class Framework {
 	/**
 	 * 框架版本
 	 */
-	public final static String VERSION = BuesssionFrameworkVersion.getVersion();
+	public final static String VERSION = BuessionFrameworkVersion.getVersion();
 
 }
