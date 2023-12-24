@@ -16,12 +16,18 @@
 - **buession-core：** 断言 Assert 可指定异常
 - **buession-core：** 新增对象工具类 ObjectUtils
 - **buession-core：** AbstractBeanConverter 新增支持 String 转枚举
+- **buession-core：** 新增反射工具类 ReflectionUtils
+- **buession-json：** 注解 @Sensitive 增加支持邮箱脱敏
 - **buession-httpclient：** OKHTTP client 增加可设置 maxRequests
+- **buession-velocity：** 新增验证工具 ValidateTool
 
 
 ### 🔔 变化
 
 - **buession-core：** 废弃 JsonSerializer 和 JsonDeserializer
+- **buession-core：** ListConverter、SetConverter、MapConverter 默认返回原始类型
+- **buession-core：** 移除 spring-beans 依赖
+- **buession-json：** 注解 @Sensitive 内容替换策略，替换符可通过属性 replacement 设置
 
 
 ### 🐞 Bug 修复
