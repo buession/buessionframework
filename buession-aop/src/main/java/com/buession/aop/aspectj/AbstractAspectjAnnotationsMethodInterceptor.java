@@ -46,6 +46,15 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 		super();
 	}
 
+	/**
+	 * 切点方法之前执行
+	 *
+	 * @param joinPoint
+	 *        {@link JoinPoint}
+	 *
+	 * @throws Throwable
+	 * 		异常
+	 */
 	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable {
 		if(logger.isDebugEnabled()){
 			performInterceptionDebug(joinPoint);
@@ -57,6 +66,15 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 		super.invoke(mi);
 	}
 
+	/**
+	 * 切点方法之后执行
+	 *
+	 * @param joinPoint
+	 *        {@link JoinPoint}
+	 *
+	 * @throws Throwable
+	 * 		异常
+	 */
 	public void performAfterInterception(JoinPoint joinPoint) throws Throwable {
 		if(logger.isDebugEnabled()){
 			performInterceptionDebug(joinPoint);
@@ -69,6 +87,13 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	}
 
 	/**
+	 * 切点方法的返回值并进行增强
+	 *
+	 * @param joinPoint
+	 *        {@link JoinPoint}
+	 *
+	 * @throws Throwable
+	 * 		异常
 	 * @since 2.3.0
 	 */
 	public void performAfterReturningInterception(JoinPoint joinPoint) throws Throwable {
@@ -84,6 +109,13 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	}
 
 	/**
+	 * 切点方法的返回值后执行
+	 *
+	 * @param joinPoint
+	 *        {@link JoinPoint}
+	 *
+	 * @throws Throwable
+	 * 		异常
 	 * @since 2.3.0
 	 */
 	public void performAfterThrowingInterception(JoinPoint joinPoint) throws Throwable {
@@ -99,6 +131,8 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	}
 
 	/**
+	 * 点方法抛出异常时会执行
+	 *
 	 * @since 2.3.0
 	 */
 	public void performAroundInterception(JoinPoint joinPoint) throws Throwable {

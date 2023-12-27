@@ -31,6 +31,7 @@ import com.buession.web.reactive.aop.interceptor.ReactiveDocumentMetaDataAnnotat
 import com.buession.web.reactive.aop.interceptor.ReactiveHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
+import org.springframework.util.StringValueResolver;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -41,7 +42,11 @@ import java.util.Collection;
  */
 public class ReactiveWebAspectAnnotationsMethodInterceptor extends AbstractAspectjAnnotationsMethodInterceptor {
 
-	public ReactiveWebAspectAnnotationsMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ReactiveWebAspectAnnotationsMethodInterceptor() {
 		super();
 
 		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
@@ -51,6 +56,28 @@ public class ReactiveWebAspectAnnotationsMethodInterceptor extends AbstractAspec
 		methodInterceptors.add(new ReactiveHttpCacheAnnotationMethodInterceptor());
 		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor());
 		methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor());
+
+		setMethodInterceptors(methodInterceptors);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveWebAspectAnnotationsMethodInterceptor(StringValueResolver stringValueResolver) {
+		super();
+
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
+
+		methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ReactiveHttpCacheAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor(stringValueResolver));
 
 		setMethodInterceptors(methodInterceptors);
 	}

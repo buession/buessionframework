@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.aopalliance.interceptor;
@@ -28,6 +28,7 @@ import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.aop.resolver.SpringAnnotationResolver;
 import com.buession.aop.aopalliance.AbstractAopAllianceAnnotationsMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.*;
+import org.springframework.util.StringValueResolver;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -38,7 +39,11 @@ import java.util.Collection;
  */
 public class ServletAopAllianceAnnotationsMethodInterceptor extends AbstractAopAllianceAnnotationsMethodInterceptor {
 
-	public ServletAopAllianceAnnotationsMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ServletAopAllianceAnnotationsMethodInterceptor() {
 		super();
 
 		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
@@ -49,6 +54,34 @@ public class ServletAopAllianceAnnotationsMethodInterceptor extends AbstractAopA
 		methodInterceptors.add(new ServletHttpCacheAnnotationMethodInterceptor(springAnnotationResolver));
 		methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor(springAnnotationResolver));
 		methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor(springAnnotationResolver));
+
+		setMethodInterceptors(methodInterceptors);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletAopAllianceAnnotationsMethodInterceptor(StringValueResolver stringValueResolver) {
+		super();
+
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
+		final SpringAnnotationResolver springAnnotationResolver = new SpringAnnotationResolver();
+
+		methodInterceptors.add(
+				new ServletContentTypeAnnotationMethodInterceptor(springAnnotationResolver, stringValueResolver));
+		methodInterceptors.add(
+				new ServletDocumentMetaDataAnnotationMethodInterceptor(springAnnotationResolver, stringValueResolver));
+		methodInterceptors.add(
+				new ServletHttpCacheAnnotationMethodInterceptor(springAnnotationResolver, stringValueResolver));
+		methodInterceptors.add(
+				new ServletResponseHeaderAnnotationMethodInterceptor(springAnnotationResolver, stringValueResolver));
+		methodInterceptors.add(
+				new ServletResponseHeadersAnnotationMethodInterceptor(springAnnotationResolver, stringValueResolver));
 
 		setMethodInterceptors(methodInterceptors);
 	}

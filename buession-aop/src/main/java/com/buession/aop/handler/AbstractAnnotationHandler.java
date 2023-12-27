@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.handler;
 
 import com.buession.core.utils.Assert;
+import org.springframework.util.StringValueResolver;
 
 import java.lang.annotation.Annotation;
 
@@ -44,22 +45,45 @@ public abstract class AbstractAnnotationHandler<A extends Annotation> implements
 	protected Class<A> annotationClass;
 
 	/**
+	 * 占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	protected StringValueResolver stringValueResolver;
+
+	/**
 	 * 构造函数
 	 *
 	 * @param annotationClass
 	 * 		注解类
 	 */
-	public AbstractAnnotationHandler(Class<A> annotationClass){
+	@Deprecated
+	public AbstractAnnotationHandler(Class<A> annotationClass) {
 		setAnnotationClass(annotationClass);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param annotationClass
+	 * 		注解类
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public AbstractAnnotationHandler(Class<A> annotationClass, StringValueResolver stringValueResolver) {
+		setAnnotationClass(annotationClass);
+		this.stringValueResolver = stringValueResolver;
+	}
+
 	@Override
-	public Class<A> getAnnotationClass(){
+	public Class<A> getAnnotationClass() {
 		return annotationClass;
 	}
 
 	@Override
-	public void setAnnotationClass(Class<A> annotationClass){
+	public void setAnnotationClass(Class<A> annotationClass) {
 		Assert.isNull(annotationClass, "Annotation class argument could not be null");
 		this.annotationClass = annotationClass;
 	}

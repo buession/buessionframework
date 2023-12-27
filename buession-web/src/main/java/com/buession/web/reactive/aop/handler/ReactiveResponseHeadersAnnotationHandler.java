@@ -36,16 +36,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * Reactive 模式注解 {@link ResponseHeaders} 处理器
+ *
  * @author Yong.Teng
  */
 public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHeadersAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveResponseHeadersAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ReactiveResponseHeadersAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveResponseHeadersAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -65,6 +84,10 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 				final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name());
 
 				for(String value : header.value()){
+					if(stringValueResolver != null){
+						value = stringValueResolver.resolveStringValue(value);
+					}
+
 					if(isExpires){
 						if(Validate.isNumeric(value)){
 							ResponseUtils.httpCache(response, Integer.parseInt(value));

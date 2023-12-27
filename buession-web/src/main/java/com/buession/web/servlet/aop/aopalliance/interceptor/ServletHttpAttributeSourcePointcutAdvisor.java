@@ -25,6 +25,7 @@
 package com.buession.web.servlet.aop.aopalliance.interceptor;
 
 import com.buession.web.aop.aopalliance.AbstractWebAttributeSourcePointcutAdvisor;
+import org.springframework.util.StringValueResolver;
 
 /**
  * @author Yong.Teng
@@ -34,8 +35,20 @@ public class ServletHttpAttributeSourcePointcutAdvisor extends AbstractWebAttrib
 
 	private final static long serialVersionUID = 8267117305963633132L;
 
-	public ServletHttpAttributeSourcePointcutAdvisor(){
+	public ServletHttpAttributeSourcePointcutAdvisor() {
 		super(new ServletAopAllianceAnnotationsMethodInterceptor());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletHttpAttributeSourcePointcutAdvisor(StringValueResolver stringValueResolver) {
+		super(new ServletAopAllianceAnnotationsMethodInterceptor(stringValueResolver));
 	}
 
 }

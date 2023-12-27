@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.interceptor;
@@ -28,6 +28,7 @@ import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.reactive.aop.handler.ReactiveHttpCacheAnnotationHandler;
+import org.springframework.util.StringValueResolver;
 
 /**
  * {@link HttpCache} 注解拦截器
@@ -37,12 +38,50 @@ import com.buession.web.reactive.aop.handler.ReactiveHttpCacheAnnotationHandler;
  */
 public class ReactiveHttpCacheAnnotationMethodInterceptor extends AbstractHttpCacheAnnotationMethodInterceptor {
 
-	public ReactiveHttpCacheAnnotationMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ReactiveHttpCacheAnnotationMethodInterceptor() {
 		super(new ReactiveHttpCacheAnnotationHandler());
 	}
 
-	public ReactiveHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver){
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 */
+	@Deprecated
+	public ReactiveHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver) {
 		super(new ReactiveHttpCacheAnnotationHandler(), resolver);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveHttpCacheAnnotationMethodInterceptor(StringValueResolver stringValueResolver) {
+		super(new ReactiveHttpCacheAnnotationHandler(stringValueResolver));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver,
+														StringValueResolver stringValueResolver) {
+		super(new ReactiveHttpCacheAnnotationHandler(stringValueResolver), resolver);
 	}
 
 }

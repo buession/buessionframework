@@ -31,6 +31,7 @@ import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotatio
 import com.buession.web.servlet.aop.interceptor.ServletHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
+import org.springframework.util.StringValueResolver;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -41,7 +42,11 @@ import java.util.Collection;
  */
 public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspectjAnnotationsMethodInterceptor {
 
-	public ServletWebAspectAnnotationsMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ServletWebAspectAnnotationsMethodInterceptor() {
 		super();
 
 		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
@@ -51,6 +56,28 @@ public class ServletWebAspectAnnotationsMethodInterceptor extends AbstractAspect
 		methodInterceptors.add(new ServletHttpCacheAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor());
 		methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor());
+
+		setMethodInterceptors(methodInterceptors);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletWebAspectAnnotationsMethodInterceptor(StringValueResolver stringValueResolver) {
+		super();
+
+		final Collection<AnnotationMethodInterceptor> methodInterceptors = new ArrayDeque<>(5);
+
+		methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ServletHttpCacheAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor(stringValueResolver));
+		methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor(stringValueResolver));
 
 		setMethodInterceptors(methodInterceptors);
 	}

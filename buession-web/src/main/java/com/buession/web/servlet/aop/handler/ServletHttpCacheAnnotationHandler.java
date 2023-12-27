@@ -32,18 +32,37 @@ import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.servlet.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringValueResolver;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Servlet 模式注解 {@link HttpCache} 处理器
+ *
  * @author Yong.Teng
  */
 public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletHttpCacheAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ServletHttpCacheAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletHttpCacheAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -57,20 +76,35 @@ public class ServletHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotati
 		boolean isSetCacheControl = false;
 
 		if(Validate.hasText(httpCache.cacheControl())){
-			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), httpCache.cacheControl());
+			if(stringValueResolver == null){
+				response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), httpCache.cacheControl());
+			}else{
+				response.setHeader(HttpHeader.CACHE_CONTROL.getValue(),
+						stringValueResolver.resolveStringValue(httpCache.cacheControl()));
+			}
 			isSetCacheControl = true;
 		}
 
-		if(Validate.hasText(httpCache.expires()) && Validate.isNumeric(httpCache.expires())){
-			response.setHeader(HttpHeader.EXPIRES.getValue(), httpCache.expires());
+		if(Validate.hasText(httpCache.expires())){
+			String expires = stringValueResolver == null ? httpCache.expires() :
+					stringValueResolver.resolveStringValue(httpCache.expires());
 
-			if(isSetCacheControl == false){
-				response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), "max-age=" + httpCache.expires());
+			if(Validate.isNumeric(expires)){
+				response.setHeader(HttpHeader.EXPIRES.getValue(), expires);
+
+				if(isSetCacheControl == false){
+					response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), "max-age=" + expires);
+				}
 			}
 		}
 
 		if(Validate.hasText(httpCache.pragma())){
-			response.setHeader(HttpHeader.PRAGMA.getValue(), httpCache.pragma());
+			if(stringValueResolver == null){
+				response.setHeader(HttpHeader.PRAGMA.getValue(), httpCache.pragma());
+			}else{
+				response.setHeader(HttpHeader.PRAGMA.getValue(),
+						stringValueResolver.resolveStringValue(httpCache.pragma()));
+			}
 		}
 	}
 
