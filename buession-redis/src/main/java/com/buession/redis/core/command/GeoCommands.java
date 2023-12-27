@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -569,7 +569,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * GEO 参数
 	 */
-	class GeoRadiusArgument {
+	final class GeoRadiusArgument {
 
 		private Boolean withCoord;
 
@@ -581,7 +581,7 @@ public interface GeoCommands extends RedisCommands {
 
 		private Integer count;
 
-		private GeoRadiusArgument(){
+		private GeoRadiusArgument() {
 		}
 
 		/**
@@ -589,7 +589,7 @@ public interface GeoCommands extends RedisCommands {
 		 *
 		 * @return 是否将位置元素的经度和维度也一并返回
 		 */
-		public Boolean isWithCoord(){
+		public Boolean isWithCoord() {
 			return withCoord;
 		}
 
@@ -598,7 +598,7 @@ public interface GeoCommands extends RedisCommands {
 		 *
 		 * @return 是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
 		 */
-		public Boolean isWithDist(){
+		public Boolean isWithDist() {
 			return withDist;
 		}
 
@@ -607,7 +607,7 @@ public interface GeoCommands extends RedisCommands {
 		 *
 		 * @return 是否返回位置元素经过原始 geohash 编码的有序集合分值
 		 */
-		public Boolean isWithHash(){
+		public Boolean isWithHash() {
 			return withHash;
 		}
 
@@ -616,7 +616,7 @@ public interface GeoCommands extends RedisCommands {
 		 *
 		 * @return 排序方式
 		 */
-		public Order getOrder(){
+		public Order getOrder() {
 			return order;
 		}
 
@@ -625,12 +625,12 @@ public interface GeoCommands extends RedisCommands {
 		 *
 		 * @return 返回数量
 		 */
-		public Integer getCount(){
+		public Integer getCount() {
 			return count;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().
 					add("withCoord", withCoord).
 					add("withDist", withDist).
@@ -643,10 +643,10 @@ public interface GeoCommands extends RedisCommands {
 
 			private final GeoRadiusArgument geoRadiusArgument = new GeoRadiusArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
@@ -655,7 +655,7 @@ public interface GeoCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder withCoord(){
+			public Builder withCoord() {
 				geoRadiusArgument.withCoord = true;
 				return this;
 			}
@@ -665,7 +665,7 @@ public interface GeoCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder withDist(){
+			public Builder withDist() {
 				geoRadiusArgument.withDist = true;
 				return this;
 			}
@@ -675,7 +675,7 @@ public interface GeoCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder withHash(){
+			public Builder withHash() {
 				geoRadiusArgument.withHash = true;
 				return this;
 			}
@@ -688,7 +688,7 @@ public interface GeoCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder order(Order order){
+			public Builder order(Order order) {
 				geoRadiusArgument.order = order;
 				return this;
 			}
@@ -701,12 +701,12 @@ public interface GeoCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder count(Integer count){
+			public Builder count(Integer count) {
 				geoRadiusArgument.count = count;
 				return this;
 			}
 
-			public GeoRadiusArgument build(){
+			public GeoRadiusArgument build() {
 				return geoRadiusArgument;
 			}
 

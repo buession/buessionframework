@@ -38,7 +38,7 @@ public final class InformixDialect implements Dialect {
 	}
 
 	@Override
-	public String buildPaginationSql(final String sql, final long offset, final long limit) {
+	public String buildPaginationSql(final String sql, final int offset, final int limit) {
 		final StringBuilder sb = new StringBuilder();
 
 		sb.append("SELECT SKIP ").append(offset).append(" FIRST ").append(limit);

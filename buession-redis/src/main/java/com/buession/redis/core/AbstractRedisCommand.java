@@ -25,10 +25,8 @@
 package com.buession.redis.core;
 
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -47,33 +45,27 @@ public abstract class AbstractRedisCommand<C extends RedisClient, R> implements 
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected AbstractRedisCommand(final C client, final ProtocolCommand command){
+	protected AbstractRedisCommand(final C client, final ProtocolCommand command) {
 		this.client = client;
 		this.command = command;
 	}
 
 	@Override
-	public ProtocolCommand getCommand(){
+	public ProtocolCommand getCommand() {
 		return command;
 	}
 
 	@Override
-	public R run(final CommandArguments arguments) throws RedisException{
+	public R run(final CommandArguments arguments) throws RedisException {
 		return client.execute(this, arguments);
 	}
 
-	protected Pipeline pipeline(){
+	protected Pipeline pipeline() {
 		return client.getConnection().openPipeline();
 	}
 
-	protected Transaction transaction(){
+	protected Transaction transaction() {
 		return client.getConnection().multi();
-	}
-
-	protected NotSupportedCommandException throwNotSupportedCommandException(
-			final NotSupportedCommandException.Type type){
-		return new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(client.getConnection()),
-				type, getCommand());
 	}
 
 }

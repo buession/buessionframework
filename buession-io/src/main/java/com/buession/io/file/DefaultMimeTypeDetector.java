@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -50,18 +50,18 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 	/**
 	 * 构造函数
 	 */
-	public DefaultMimeTypeDetector(){
+	public DefaultMimeTypeDetector() {
 		initialize();
 	}
 
 	@Override
-	protected void initialize(){
+	protected void initialize() {
 
 	}
 
 	@Override
-	protected MimeType implProbeMimeType(final String path){
-		if(Validate.hasText(path) == false){
+	protected MimeType implProbeMimeType(final String path) {
+		if(Validate.isBlank(path)){
 			return null;
 		}
 
@@ -89,7 +89,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 	}
 
 	@Override
-	protected MimeType implProbeMimeType(final Path path){
+	protected MimeType implProbeMimeType(final Path path) {
 		Path fn = path.getFileName();
 
 		if(fn == null){
@@ -99,7 +99,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		return implProbeMimeType(fn.toString());
 	}
 
-	private void loadMimetypes(){
+	private void loadMimetypes() {
 		if(initialized == false){
 			synchronized(this){
 				if(initialized == false){
@@ -150,7 +150,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		}
 	}
 
-	private void parseMimeEntry(String entry){
+	private void parseMimeEntry(String entry) {
 		entry = entry.trim();
 		if(entry.isEmpty() || entry.charAt(0) == '#'){
 			return;

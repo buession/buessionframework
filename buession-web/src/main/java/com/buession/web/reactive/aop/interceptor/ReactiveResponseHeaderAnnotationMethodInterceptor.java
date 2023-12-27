@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.interceptor;
@@ -28,6 +28,7 @@ import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractResponseHeaderAnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.reactive.aop.handler.ReactiveResponseHeaderAnnotationHandler;
+import org.springframework.util.StringValueResolver;
 
 /**
  * {@link ResponseHeader} 注解拦截器
@@ -38,12 +39,50 @@ import com.buession.web.reactive.aop.handler.ReactiveResponseHeaderAnnotationHan
 public class ReactiveResponseHeaderAnnotationMethodInterceptor
 		extends AbstractResponseHeaderAnnotationMethodInterceptor {
 
-	public ReactiveResponseHeaderAnnotationMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ReactiveResponseHeaderAnnotationMethodInterceptor() {
 		super(new ReactiveResponseHeaderAnnotationHandler());
 	}
 
-	public ReactiveResponseHeaderAnnotationMethodInterceptor(AnnotationResolver resolver){
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 */
+	@Deprecated
+	public ReactiveResponseHeaderAnnotationMethodInterceptor(AnnotationResolver resolver) {
 		super(new ReactiveResponseHeaderAnnotationHandler(), resolver);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveResponseHeaderAnnotationMethodInterceptor(StringValueResolver stringValueResolver) {
+		super(new ReactiveResponseHeaderAnnotationHandler(stringValueResolver));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveResponseHeaderAnnotationMethodInterceptor(AnnotationResolver resolver,
+															 StringValueResolver stringValueResolver) {
+		super(new ReactiveResponseHeaderAnnotationHandler(stringValueResolver), resolver);
 	}
 
 }

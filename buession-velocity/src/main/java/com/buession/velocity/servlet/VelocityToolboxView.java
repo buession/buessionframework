@@ -24,6 +24,7 @@
  */
 package com.buession.velocity.servlet;
 
+import com.buession.core.utils.ObjectUtils;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.Scope;
 import org.apache.velocity.tools.ToolManager;
@@ -80,9 +81,7 @@ public class VelocityToolboxView extends VelocityView {
 	@Override
 	protected void initTool(Object tool, Context velocityContext) throws Exception {
 		Method initMethod = ClassUtils.getMethodIfAvailable(tool.getClass(), "init", Object.class);
-		if(initMethod != null){
-			ReflectionUtils.invokeMethod(initMethod, tool, velocityContext);
-		}
+		ObjectUtils.invokeIfAvailable(initMethod, m->ReflectionUtils.invokeMethod(m, tool, velocityContext));
 	}
 
 	protected static void addToolbox(final ViewToolContext velocityContext, final ToolboxFactory toolboxFactory,

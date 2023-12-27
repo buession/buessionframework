@@ -28,6 +28,8 @@ import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 
 /**
+ * 命令不支持异常
+ *
  * @author Yong.Teng
  */
 public class NotSupportedCommandException extends RedisException {
@@ -36,35 +38,35 @@ public class NotSupportedCommandException extends RedisException {
 
 	private Type type;
 
-	public NotSupportedCommandException(){
+	public NotSupportedCommandException() {
 		super();
 	}
 
-	public NotSupportedCommandException(ProtocolCommand command){
+	public NotSupportedCommandException(ProtocolCommand command) {
 		super("Not supported command: " + command);
 	}
 
-	public NotSupportedCommandException(Type type, ProtocolCommand command){
+	public NotSupportedCommandException(Type type, ProtocolCommand command) {
 		super("Not supported command: " + command + " in " + type);
 	}
 
-	public NotSupportedCommandException(RedisMode mode, ProtocolCommand command){
+	public NotSupportedCommandException(RedisMode mode, ProtocolCommand command) {
 		super("Not supported command: " + command + " with " + mode + " mode");
 	}
 
-	public NotSupportedCommandException(RedisMode mode, Type type, ProtocolCommand command){
+	public NotSupportedCommandException(RedisMode mode, Type type, ProtocolCommand command) {
 		super("Not supported command: " + command + " in " + type + " with " + mode + " mode");
 	}
 
-	public NotSupportedCommandException(String message){
+	public NotSupportedCommandException(String message) {
 		super(message);
 	}
 
-	public NotSupportedCommandException(String message, Throwable cause){
+	public NotSupportedCommandException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public NotSupportedCommandException(Throwable cause){
+	public NotSupportedCommandException(Throwable cause) {
 		super(cause);
 	}
 
@@ -80,11 +82,11 @@ public class NotSupportedCommandException extends RedisException {
 
 		private final int code;
 
-		Type(final int code){
+		Type(final int code) {
 			this.code = code;
 		}
 
-		public int getCode(){
+		public int getCode() {
 			return code;
 		}
 

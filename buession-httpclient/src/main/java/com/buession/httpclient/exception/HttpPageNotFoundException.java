@@ -19,35 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
 
 /**
+ * 页面不存在异常
+ *
  * @author Yong.Teng
  */
 public class HttpPageNotFoundException extends RequestException {
 
-    public HttpPageNotFoundException(){
+    private final static long serialVersionUID = 4933289098901209551L;
+
+    public HttpPageNotFoundException() {
         super();
     }
 
-    public HttpPageNotFoundException(String url){
+    public HttpPageNotFoundException(String url) {
         super("The requested URL " + url + " was not found on this server.");
     }
 
-    public HttpPageNotFoundException(String url, Throwable cause){
+    public HttpPageNotFoundException(String url, Throwable cause) {
         super("The requested URL " + url + " was not found on this server.", cause);
     }
 
-    public HttpPageNotFoundException(Throwable cause){
+    public HttpPageNotFoundException(Throwable cause) {
         super(cause);
     }
 
     public HttpPageNotFoundException(String url, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
+            writableStackTrace) {
         super("The requested URL " + url + " was not found on this server.", cause, enableSuppression,
                 writableStackTrace);
     }
+
 }

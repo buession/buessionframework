@@ -45,4 +45,10 @@ public final class BigIntegerPropertyConverter extends NumberPropertyConverter<B
 		}
 	}
 
+	@Override
+	protected BigInteger strToNumber(final Class<?> sourceType, final Class<BigInteger> targetType,
+									 final String value) {
+		return new BigInteger(value);
+	}
+
 }

@@ -40,8 +40,10 @@ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Yong.Teng
@@ -57,6 +59,9 @@ public class SensitiveSerializer extends StdScalarSerializer<CharSequence> imple
 	private String format;
 
 	private String replacement;
+
+	private final static Map<String, ISensitiveStrategy> SENSITIVE_STRATEGY_CACHE = new ConcurrentHashMap<>(
+			8);
 
 	public SensitiveSerializer() {
 		super(CharSequence.class);
@@ -91,13 +96,21 @@ public class SensitiveSerializer extends StdScalarSerializer<CharSequence> imple
 		if(Objects.nonNull(annotation) && CharSequence.class.isAssignableFrom(property.getType().getRawClass())){
 			this.format = annotation.format();
 			this.replacement = annotation.replacement();
+
 			if(Validate.isEmpty(this.format)){
 				if(annotation.strategyType() != NoneSensitiveStrategy.class){
-					this.strategy = ClassUtils.instantiate(annotation.strategyType());
+					this.strategy =
+							SENSITIVE_STRATEGY_CACHE.computeIfAbsent(
+									annotation.strategyType().getName() + '@' + replacement,
+									(key)->ClassUtils.instantiate(annotation.strategyType(), replacement));
 				}else{
-					this.strategy = ClassUtils.instantiate(annotation.strategy().getStrategy());
+					this.strategy =
+							SENSITIVE_STRATEGY_CACHE.computeIfAbsent(
+									annotation.strategy().getStrategy().getName() + '@' + replacement,
+									(key)->ClassUtils.instantiate(annotation.strategy().getStrategy(), replacement));
 				}
 			}
+			
 			return this;
 		}
 

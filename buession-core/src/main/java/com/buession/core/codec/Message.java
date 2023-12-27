@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -39,23 +39,25 @@ import java.lang.annotation.Target;
  *
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Message {
 
-    String DEFAULT_CODE_FIELD = "code";
+	String DEFAULT_CODE_FIELD = "code";
 
-    String DEFAULT_TEXT_FIELD = "message";
+	String DEFAULT_TEXT_FIELD = "message";
 
-    @AliasFor("value") String name() default "";
+	@AliasFor("value")
+	String name() default "";
 
-    @AliasFor("name") String value() default "";
+	@AliasFor("name")
+	String value() default "";
 
-    boolean required() default true;
+	boolean required() default true;
 
-    String codeField() default DEFAULT_CODE_FIELD;
+	String codeField() default DEFAULT_CODE_FIELD;
 
-    String textField() default DEFAULT_TEXT_FIELD;
+	String textField() default DEFAULT_TEXT_FIELD;
 
 }

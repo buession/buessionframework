@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline.jedis;
@@ -36,33 +36,33 @@ import java.util.List;
  */
 public class JedisPipeline implements Pipeline {
 
-	private redis.clients.jedis.Pipeline delegate;
+	private final redis.clients.jedis.Pipeline delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
 
-	public JedisPipeline(redis.clients.jedis.Pipeline pipeline){
+	public JedisPipeline(redis.clients.jedis.Pipeline pipeline) {
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
 		this.delegate = pipeline;
 	}
 
-	public redis.clients.jedis.Pipeline primitive(){
+	public redis.clients.jedis.Pipeline primitive() {
 		return delegate;
 	}
 
 	@Override
-	public void sync(){
+	public void sync() {
 		logger.info("Redis pipeline sync.");
 		delegate.sync();
 	}
 
 	@Override
-	public List<Object> syncAndReturnAll(){
+	public List<Object> syncAndReturnAll() {
 		logger.info("Redis pipeline syncAndReturnAll.");
 		return delegate.syncAndReturnAll();
 	}
 
 	@Override
-	public void close(){
+	public void close() {
 		logger.info("Redis pipeline close.");
 		delegate.close();
 	}

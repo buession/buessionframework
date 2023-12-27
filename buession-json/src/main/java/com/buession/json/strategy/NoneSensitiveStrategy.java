@@ -32,7 +32,17 @@ import java.util.function.Function;
  * @author Yong.Teng
  * @since 2.3.1
  */
-public class NoneSensitiveStrategy implements ISensitiveStrategy {
+public class NoneSensitiveStrategy extends AbstractSensitiveStrategy {
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replacement
+	 * 		脱敏替换内容
+	 */
+	public NoneSensitiveStrategy(final String replacement) {
+		super(replacement);
+	}
 
 	@Override
 	public Function<String, String> getFunction() {

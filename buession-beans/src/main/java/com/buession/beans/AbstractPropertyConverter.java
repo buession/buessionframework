@@ -71,9 +71,7 @@ public abstract class AbstractPropertyConverter<T> implements BeanPropertyConver
 
 	@SuppressWarnings("unchecked")
 	private Class<T> getType() {
-		final Class<T> clazz =
-				(Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		return clazz;
+		return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
 	protected static String toString(final Class<?> type) {

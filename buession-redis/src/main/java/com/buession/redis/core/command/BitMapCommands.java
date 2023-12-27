@@ -398,7 +398,7 @@ public interface BitMapCommands extends RedisCommands {
 	 * @author Yong.Teng
 	 * @since 2.3.0
 	 */
-	class BitFieldArgument {
+	final class BitFieldArgument {
 
 		private Op set;
 
@@ -408,28 +408,28 @@ public interface BitMapCommands extends RedisCommands {
 
 		private Overflow overflow;
 
-		private BitFieldArgument(){
+		private BitFieldArgument() {
 
 		}
 
-		public Op getSet(){
+		public Op getSet() {
 			return set;
 		}
 
-		public Op getGet(){
+		public Op getGet() {
 			return get;
 		}
 
-		public Op getIncrBy(){
+		public Op getIncrBy() {
 			return incrBy;
 		}
 
-		public Overflow getOverflow(){
+		public Overflow getOverflow() {
 			return overflow;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			final StringBuilder builder = new StringBuilder();
 
 			if(set != null){
@@ -455,58 +455,58 @@ public interface BitMapCommands extends RedisCommands {
 
 			private final BitFieldArgument bitFieldArgument = new BitFieldArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
-			public Builder set(BitFieldType bitFieldType, long value){
+			public Builder set(BitFieldType bitFieldType, long value) {
 				return set(bitFieldType, 0, value);
 			}
 
-			public Builder set(BitFieldType bitFieldType, int offset, long value){
+			public Builder set(BitFieldType bitFieldType, int offset, long value) {
 				return set(bitFieldType, false, offset, value);
 			}
 
-			public Builder set(BitFieldType bitFieldType, boolean bitOffset, int offset, long value){
+			public Builder set(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
 				bitFieldArgument.set = new Op("SET", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
-			public Builder get(BitFieldType bitFieldType, long value){
+			public Builder get(BitFieldType bitFieldType, long value) {
 				return get(bitFieldType, 0, value);
 			}
 
-			public Builder get(BitFieldType bitFieldType, int offset, long value){
+			public Builder get(BitFieldType bitFieldType, int offset, long value) {
 				return get(bitFieldType, false, offset, value);
 			}
 
-			public Builder get(BitFieldType bitFieldType, boolean bitOffset, int offset, long value){
+			public Builder get(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
 				bitFieldArgument.get = new Op("GET", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
-			public Builder incrBy(BitFieldType bitFieldType, long value){
+			public Builder incrBy(BitFieldType bitFieldType, long value) {
 				return incrBy(bitFieldType, 0, value);
 			}
 
-			public Builder incrBy(BitFieldType bitFieldType, int offset, long value){
+			public Builder incrBy(BitFieldType bitFieldType, int offset, long value) {
 				return incrBy(bitFieldType, false, offset, value);
 			}
 
-			public Builder incrBy(BitFieldType bitFieldType, boolean bitOffset, int offset, long value){
+			public Builder incrBy(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
 				bitFieldArgument.get = new Op("INCRBY", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
-			public Builder overflow(Overflow overflow){
+			public Builder overflow(Overflow overflow) {
 				bitFieldArgument.overflow = overflow;
 				return this;
 			}
 
-			public BitFieldArgument build(){
+			public BitFieldArgument build() {
 				return bitFieldArgument;
 			}
 
@@ -518,21 +518,21 @@ public interface BitMapCommands extends RedisCommands {
 
 			private final int bits;
 
-			private BitFieldType(final boolean signed, final int bits){
+			private BitFieldType(final boolean signed, final int bits) {
 				this.signed = signed;
 				this.bits = bits;
 			}
 
-			public boolean isSigned(){
+			public boolean isSigned() {
 				return signed;
 			}
 
-			public int getBits(){
+			public int getBits() {
 				return bits;
 			}
 
 			@Override
-			public String toString(){
+			public String toString() {
 				return (signed ? "i" : "u") + bits;
 			}
 
@@ -551,7 +551,7 @@ public interface BitMapCommands extends RedisCommands {
 			private final long value;
 
 			public Op(final String commandType, final BitFieldType bitFieldType, final boolean bitOffset,
-					  final int offset, final long value){
+					  final int offset, final long value) {
 				this.commandType = commandType;
 				this.bitFieldType = bitFieldType;
 				this.bitOffset = bitOffset;
@@ -559,24 +559,24 @@ public interface BitMapCommands extends RedisCommands {
 				this.value = value;
 			}
 
-			public BitFieldType getBitFieldType(){
+			public BitFieldType getBitFieldType() {
 				return bitFieldType;
 			}
 
-			public boolean isBitOffset(){
+			public boolean isBitOffset() {
 				return bitOffset;
 			}
 
-			public int getOffset(){
+			public int getOffset() {
 				return offset;
 			}
 
-			public long getValue(){
+			public long getValue() {
 				return value;
 			}
 
 			@Override
-			public String toString(){
+			public String toString() {
 				final StringBuilder sb = new StringBuilder(commandType);
 
 				sb.append(" ").append(bitFieldType);

@@ -34,40 +34,20 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class PoolConfigConverter<T> implements Converter<PoolConfig, GenericObjectPoolConfig<T>> {
 
 	private final GenericObjectPoolConfig<T> poolConfig;
 
-	public PoolConfigConverter(final GenericObjectPoolConfig<T> poolConfig){
+	public PoolConfigConverter(final GenericObjectPoolConfig<T> poolConfig) {
 		Assert.isNull(poolConfig, "GenericObjectPoolConfig cloud not be null.");
 		this.poolConfig = poolConfig;
 	}
 
 	@Nullable
 	@Override
-	public GenericObjectPoolConfig<T> convert(PoolConfig config){
-		poolConfig.setLifo(config.getLifo());
-		poolConfig.setFairness(config.getFairness());
-		poolConfig.setMaxWait(config.getMaxWait());
-		poolConfig.setMinEvictableIdleTime(config.getMinEvictableIdleTime());
-		poolConfig.setSoftMinEvictableIdleTime(config.getSoftMinEvictableIdleTime());
-		poolConfig.setEvictionPolicyClassName(config.getEvictionPolicyClassName());
-		poolConfig.setEvictorShutdownTimeout(config.getEvictorShutdownTimeout());
-		poolConfig.setNumTestsPerEvictionRun(config.getNumTestsPerEvictionRun());
-		poolConfig.setTestOnCreate(config.getTestOnCreate());
-		poolConfig.setTestOnBorrow(config.getTestOnBorrow());
-		poolConfig.setTestOnReturn(config.getTestOnReturn());
-		poolConfig.setTestWhileIdle(config.getTestWhileIdle());
-		poolConfig.setTimeBetweenEvictionRuns(config.getTimeBetweenEvictionRuns());
-		poolConfig.setBlockWhenExhausted(config.getBlockWhenExhausted());
-		poolConfig.setJmxEnabled(config.getJmxEnabled());
-		poolConfig.setJmxNamePrefix(config.getJmxNamePrefix());
-		poolConfig.setJmxNameBase(config.getJmxNameBase());
-		poolConfig.setMaxTotal(config.getMaxTotal());
-		poolConfig.setMinIdle(config.getMinIdle());
-		poolConfig.setMaxIdle(config.getMaxIdle());
-		
-		return poolConfig;
+	public GenericObjectPoolConfig<T> convert(PoolConfig config) {
+		return config.toGenericObjectPoolConfig(poolConfig);
 	}
 
 }

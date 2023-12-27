@@ -34,18 +34,37 @@ import com.buession.web.servlet.http.request.RequestUtils;
 import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringValueResolver;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Servlet 模式注解 {@link ResponseHeaders} 处理器
+ *
  * @author Yong.Teng
  */
 public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHeadersAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeadersAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ServletResponseHeadersAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletResponseHeadersAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -65,6 +84,10 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
 			final boolean isExpires = HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name());
 
 			for(String value : header.value()){
+				if(stringValueResolver != null){
+					value = stringValueResolver.resolveStringValue(value);
+				}
+
 				if(isExpires){
 					if(Validate.isNumeric(value)){
 						ResponseUtils.httpCache(response, Integer.parseInt(value));

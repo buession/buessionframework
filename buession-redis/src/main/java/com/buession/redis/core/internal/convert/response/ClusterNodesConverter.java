@@ -25,9 +25,9 @@
 package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.RedisClusterServer;
-import com.buession.redis.utils.ResponseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +43,8 @@ public final class ClusterNodesConverter implements Converter<String, List<Clust
 	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
 
 	@Override
-	public List<ClusterRedisNode> convert(final String source){
-		String[] rows = ResponseUtils.parseRows(source);
+	public List<ClusterRedisNode> convert(final String source) {
+		String[] rows = StringUtils.split(source, "\r\n");
 
 		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
 

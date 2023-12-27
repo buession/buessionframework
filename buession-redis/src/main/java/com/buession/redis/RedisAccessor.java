@@ -81,7 +81,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	protected final static ThreadLocal<Integer> index = new ThreadLocal<>();
 
-	static{
+	static {
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
 		index.set(-1);
 	}
@@ -89,7 +89,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	/**
 	 * 构造函数
 	 */
-	public RedisAccessor(){
+	public RedisAccessor() {
 	}
 
 	/**
@@ -98,34 +98,34 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 * @param dataSource
 	 * 		数据源
 	 */
-	public RedisAccessor(DataSource dataSource){
+	public RedisAccessor(DataSource dataSource) {
 		setDataSource(dataSource);
 	}
 
-	public Options getOptions(){
+	public Options getOptions() {
 		return options;
 	}
 
-	public void setOptions(Options options){
+	public void setOptions(Options options) {
 		this.options = options;
 	}
 
 	@Nullable
-	public RedisConnectionFactory getConnectionFactory(){
+	public RedisConnectionFactory getConnectionFactory() {
 		return connectionFactory;
 	}
 
 	@Nullable
-	public DataSource getDataSource(){
+	public DataSource getDataSource() {
 		return dataSource;
 	}
 
-	public void setDataSource(DataSource dataSource){
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	@Override
-	public void afterPropertiesSet() throws RedisException{
+	public void afterPropertiesSet() throws RedisException {
 		Assert.isNull(getDataSource(), "DataSource is required");
 
 		Options options = getOptions();
@@ -137,10 +137,12 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 			serializer = DEFAULT_SERIALIZER;
 		}
 
-		connectionFactory = new RedisConnectionFactory(getDataSource());
+		if(connectionFactory == null){
+			connectionFactory = new RedisConnectionFactory(getDataSource());
+		}
 	}
 
-	public void pipeline(){
+	public void pipeline() {
 		RedisConnection connection = fetchConnection();
 
 		RedisClient client = doGetRedisClient();
@@ -148,24 +150,24 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		client.execute(new Command<Pipeline>() {
 
 			@Override
-			public ProtocolCommand getCommand(){
+			public ProtocolCommand getCommand() {
 				return null;
 			}
 
 			@Override
-			public Pipeline execute() throws RedisException{
+			public Pipeline execute() throws RedisException {
 				return client.getConnection().openPipeline();
 			}
 
 			@Override
-			public Pipeline run(final CommandArguments arguments) throws RedisException{
+			public Pipeline run(final CommandArguments arguments) throws RedisException {
 				return client.getConnection().openPipeline();
 			}
 
 		});
 	}
 
-	public <R> R execute(final SessionCallback<R> callback) throws RedisException{
+	public <R> R execute(final SessionCallback<R> callback) throws RedisException {
 		Assert.isNull(callback, "callback cloud not be null.");
 		checkInitialized();
 
@@ -188,7 +190,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	public <SR, TR> TR execute(final SessionCallback<SR> callback, final Converter<SR, TR> converter)
-			throws RedisException{
+			throws RedisException {
 		Assert.isNull(callback, "callback cloud not be null.");
 		checkInitialized();
 
@@ -211,11 +213,11 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception{
+	public void close() throws Exception {
 		// empty
 	}
 
-	protected RedisConnection fetchConnection(){
+	protected RedisConnection fetchConnection() {
 		if(enableTransactionSupport){
 			return RedisConnectionUtils.bindConnection(connectionFactory, true);
 		}else{
@@ -223,7 +225,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		}
 	}
 
-	protected RedisClient doGetRedisClient() throws RedisException{
+	protected RedisClient doGetRedisClient() throws RedisException {
 		DataSource dataSource = getDataSource();
 		if(dataSource instanceof JedisDataSource){
 			return new JedisStandaloneClient();
@@ -236,26 +238,24 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		}
 	}
 
-	protected final void checkInitialized(){
-		if(connectionFactory == null){
-			throw new RedisException(
-					"RedisConnectionFactory is not initialized. You can call the afterPropertiesSet method for initialize.");
-		}
+	protected final void checkInitialized() {
+		Assert.isNull(connectionFactory, ()->new RedisException(
+				"RedisConnectionFactory is not initialized. You can call the afterPropertiesSet method for initialize."));
 	}
 
-	protected boolean isTransaction(final RedisConnection connection){
+	protected boolean isTransaction(final RedisConnection connection) {
 		return connection.isTransaction();
 	}
 
-	protected boolean isPipeline(final RedisConnection connection){
+	protected boolean isPipeline(final RedisConnection connection) {
 		return connection.isPipeline();
 	}
 
-	protected boolean isTransactionOrPipeline(final RedisConnection connection){
+	protected boolean isTransactionOrPipeline(final RedisConnection connection) {
 		return isTransaction(connection) || isPipeline(connection);
 	}
 
-	protected static Map<Integer, Function<?, ?>> getTxConverters(){
+	protected static Map<Integer, Function<?, ?>> getTxConverters() {
 		Map<Integer, Function<?, ?>> txResult = txConverters.get();
 
 		if(txResult == null){
@@ -266,7 +266,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		return txResult;
 	}
 
-	protected void resetTransactionOrPipeline(){
+	protected void resetTransactionOrPipeline() {
 		index.remove();
 		txConverters.remove();
 	}

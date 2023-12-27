@@ -26,8 +26,8 @@ package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.KeyValueParser;
+import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.ClusterInfo;
-import com.buession.redis.utils.ResponseUtils;
 
 /**
  * Cluster Info 命令结果转换为 {@link ClusterInfo}
@@ -40,8 +40,8 @@ public final class ClusterInfoConverter implements Converter<String, ClusterInfo
 	public final static ClusterInfoConverter INSTANCE = new ClusterInfoConverter();
 
 	@Override
-	public ClusterInfo convert(final String source){
-		String[] rows = ResponseUtils.parseRows(source);
+	public ClusterInfo convert(final String source) {
+		String[] rows = StringUtils.split(source, "\r\n");
 		KeyValueParser keyValueParser;
 		ClusterInfo.State state = null;
 		int slotsAssigned = 0;

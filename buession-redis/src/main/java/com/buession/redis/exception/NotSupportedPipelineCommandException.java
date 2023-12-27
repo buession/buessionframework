@@ -24,32 +24,39 @@
  */
 package com.buession.redis.exception;
 
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 
 /**
+ * 不支持管道异常
+ *
  * @author Yong.Teng
  */
 public class NotSupportedPipelineCommandException extends NotSupportedCommandException {
 
 	private final static long serialVersionUID = -3574152755807717655L;
 
-	public NotSupportedPipelineCommandException(){
+	public NotSupportedPipelineCommandException() {
 		super();
 	}
 
-	public NotSupportedPipelineCommandException(ProtocolCommand command){
-		super("Not supported command: " + command + " in pipeline.");
+	public NotSupportedPipelineCommandException(ProtocolCommand command) {
+		super(Type.PIPELINE, command);
 	}
 
-	public NotSupportedPipelineCommandException(String message){
+	public NotSupportedPipelineCommandException(RedisMode mode, ProtocolCommand command) {
+		super(mode, command);
+	}
+
+	public NotSupportedPipelineCommandException(String message) {
 		super(message);
 	}
 
-	public NotSupportedPipelineCommandException(String message, Throwable cause){
+	public NotSupportedPipelineCommandException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public NotSupportedPipelineCommandException(Throwable cause){
+	public NotSupportedPipelineCommandException(Throwable cause) {
 		super(cause);
 	}
 

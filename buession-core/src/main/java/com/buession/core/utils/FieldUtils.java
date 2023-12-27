@@ -26,7 +26,9 @@
  */
 package com.buession.core.utils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -63,6 +65,22 @@ public class FieldUtils extends org.apache.commons.lang3.reflect.FieldUtils {
 		if(MemberUtils.isNotAccessible(field) && field.isAccessible() == false){
 			field.setAccessible(true);
 		}
+	}
+
+	/**
+	 * 检测一个属性是否含有 annotations 中的任意一个注解
+	 *
+	 * @param field
+	 * 		待验证的属性
+	 * @param annotations
+	 * 		检测是否含有的注解
+	 *
+	 * @return 属性包含有 annotations 中的任意一个注解返回 true；否则返回 false
+	 *
+	 * @since 2.3.2
+	 */
+	public static boolean hasAnnotation(final Field field, final Class<? extends Annotation>[] annotations) {
+		return AnnotationUtils.hasFieldAnnotationPresent(field, annotations);
 	}
 
 }

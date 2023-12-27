@@ -19,33 +19,37 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
 
 /**
+ * 请求异常
+ *
  * @author Yong.Teng
  */
 public class RequestException extends Exception {
 
-    public RequestException(){
-        super();
-    }
+	private final static long serialVersionUID = 7886645715323998024L;
 
-    public RequestException(String message){
-        super(message);
-    }
+	public RequestException() {
+		super();
+	}
 
-    public RequestException(String message, Throwable cause){
-        super(message, cause);
-    }
+	public RequestException(String message) {
+		super(message);
+	}
 
-    public RequestException(Throwable cause){
-        super(cause);
-    }
+	public RequestException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public RequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public RequestException(Throwable cause) {
+		super(cause);
+	}
+
+	public RequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 }

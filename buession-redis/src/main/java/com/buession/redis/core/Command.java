@@ -64,7 +64,7 @@ public interface Command<R> {
 	 * @throws RedisException
 	 * 		Redis 命令运行异常
 	 */
-	default R run() throws RedisException{
+	default R run() throws RedisException {
 		return run(null);
 	}
 

@@ -19,22 +19,41 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
 
 import com.buession.aop.handler.AbstractAnnotationHandler;
 import com.buession.web.http.response.annotation.HttpCache;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * 注解 {@link HttpCache} 处理器抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractHttpCacheAnnotationHandler extends AbstractAnnotationHandler<HttpCache>
 		implements HttpCacheAnnotationHandler {
 
-	public AbstractHttpCacheAnnotationHandler(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public AbstractHttpCacheAnnotationHandler() {
 		super(HttpCache.class);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public AbstractHttpCacheAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(HttpCache.class, stringValueResolver);
 	}
 
 }

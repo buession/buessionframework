@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -44,7 +44,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return short 类型字符串值
 	 */
-	public static String setProperty(final String name, final short value){
+	public static String setProperty(final String name, final short value) {
 		return setProperty(name, Short.toString(value));
 	}
 
@@ -58,7 +58,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return int 类型字符串值
 	 */
-	public static String setProperty(final String name, final int value){
+	public static String setProperty(final String name, final int value) {
 		return setProperty(name, Integer.toString(value));
 	}
 
@@ -72,7 +72,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return long 类型字符串值
 	 */
-	public static String setProperty(final String name, final long value){
+	public static String setProperty(final String name, final long value) {
 		return setProperty(name, Long.toString(value));
 	}
 
@@ -86,7 +86,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return 布尔型字符串值
 	 */
-	public static String setProperty(final String name, final boolean value){
+	public static String setProperty(final String name, final boolean value) {
 		return setProperty(name, Boolean.toString(value));
 	}
 
@@ -100,7 +100,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return char 类型字符串值
 	 */
-	public static String setProperty(final String name, final char value){
+	public static String setProperty(final String name, final char value) {
 		return setProperty(name, Character.toString(value));
 	}
 
@@ -114,7 +114,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return 属性值
 	 */
-	public static String setProperty(final String name, final String value){
+	public static String setProperty(final String name, final String value) {
 		return System.setProperty(name, value);
 	}
 
@@ -128,7 +128,7 @@ public class SystemPropertyUtils {
 	 *
 	 * @return 属性值
 	 */
-	public static String setPropertyIfPresent(final String name, final String value){
+	public static String setPropertyIfPresent(final String name, final String value) {
 		if(value != null){
 			return System.setProperty(name, value);
 		}
@@ -144,14 +144,14 @@ public class SystemPropertyUtils {
 	 *
 	 * @return 属性值
 	 */
-	public static String getProperty(final String name){
+	public static String getProperty(final String name) {
 		String value = System.getProperty(name);
 
-		if(Validate.hasText(value) == false){
-			value = System.getenv(name);
+		if(Validate.hasText(value)){
+			return value;
 		}
 
-		return value;
+		return System.getenv(name);
 	}
 
 }

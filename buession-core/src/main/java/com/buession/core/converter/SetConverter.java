@@ -19,15 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import org.springframework.beans.BeanUtils;
+
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Set 转换器
@@ -53,16 +54,24 @@ public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 	 * @param itemConverter
 	 * 		Set item 转换器
 	 */
-	public SetConverter(final Converter<S, T> itemConverter){
+	public SetConverter(final Converter<S, T> itemConverter) {
 		this.itemConverter = itemConverter;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Set<T> convert(final Set<S> source){
+	public Set<T> convert(final Set<S> source) {
 		if(source == null){
 			return null;
 		}else{
-			return source.stream().map(itemConverter::convert).collect(Collectors.toCollection(source instanceof LinkedHashSet ? LinkedHashSet::new : HashSet::new));
+			Stream<T> stream = source.stream().map(itemConverter::convert);
+
+			try{
+				return stream.collect(
+						Collectors.toCollection(()->(Set<T>) BeanUtils.instantiateClass(source.getClass())));
+			}catch(Exception e){
+				return stream.collect(Collectors.toSet());
+			}
 		}
 	}
 

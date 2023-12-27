@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -72,27 +72,27 @@ public interface RedisClusterConnection extends RedisConnection {
 	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
 
 	@Override
-	default Pipeline openPipeline(){
+	default Pipeline openPipeline() {
 		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
 	}
 
 	@Override
-	default void closePipeline(){
+	default void closePipeline() {
 		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
 	}
 
 	@Override
-	default Transaction multi(){
+	default Transaction multi() {
 		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.MULTI);
 	}
 
 	@Override
-	default List<Object> exec() throws RedisException{
+	default List<Object> exec() throws RedisException {
 		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.EXEC);
 	}
 
 	@Override
-	default void discard() throws RedisException{
+	default void discard() throws RedisException {
 		throw new NotSupportedCommandException(RedisMode.CLUSTER, ProtocolCommand.DISCARD);
 	}
 

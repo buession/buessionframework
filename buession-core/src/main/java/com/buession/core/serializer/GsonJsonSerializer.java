@@ -37,10 +37,11 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Override
-	public <V> String serialize(final V object) throws SerializerException{
+	public <V> String serialize(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		Gson gson = new Gson();
@@ -48,18 +49,18 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException {
 		return serializeAsBytes(object, Charset.defaultCharset());
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
 		return serialize(object).getBytes(charset);
 	}
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str) throws SerializerException{
+	public <V> V deserialize(final String str) throws SerializerException {
 		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str);
@@ -70,7 +71,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
+	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException {
 		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str, clazz);
@@ -81,7 +82,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(String str, TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(String str, TypeReference<V> type) throws SerializerException {
 		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(str, type);
@@ -92,7 +93,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes) throws SerializerException {
 		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes);
@@ -103,7 +104,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException {
 		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes, clazz);
@@ -114,7 +115,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws SerializerException {
 		GsonJsonDeserializer deserializer = new GsonJsonDeserializer();
 		try{
 			return deserializer.deserialize(bytes, type);

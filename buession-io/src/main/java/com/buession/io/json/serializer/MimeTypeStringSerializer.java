@@ -44,17 +44,19 @@ import java.io.IOException;
  */
 public class MimeTypeStringSerializer extends StdScalarSerializer<MimeType> implements ContextualSerializer {
 
-	public MimeTypeStringSerializer(){
+	private final static long serialVersionUID = 6096763941152821826L;
+
+	public MimeTypeStringSerializer() {
 		super(MimeType.class, false);
 	}
 
-	public MimeTypeStringSerializer(Class<? extends MimeType> clazz){
+	public MimeTypeStringSerializer(Class<? extends MimeType> clazz) {
 		super(clazz, false);
 	}
 
 	@Override
 	public void serialize(MimeType value, JsonGenerator jsonGenerator, SerializerProvider serializers)
-			throws IOException{
+			throws IOException {
 		if(value == null){
 			jsonGenerator.writeNull();
 		}else{
@@ -65,7 +67,7 @@ public class MimeTypeStringSerializer extends StdScalarSerializer<MimeType> impl
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property)
-			throws JsonMappingException{
+			throws JsonMappingException {
 		JsonFormat.Value format = findFormatOverrides(provider, property, handledType());
 
 		if(format != null){

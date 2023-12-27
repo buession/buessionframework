@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -30,58 +30,59 @@ import com.buession.lang.Constants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Yong.Teng
  */
-public class CommandArguments {
+public final class CommandArguments {
 
 	private final static String NIL = "<nil>";
 
 	private final Map<String, Object> parameters = new LinkedHashMap<>();
 
-	private CommandArguments(){
+	private CommandArguments() {
 	}
 
-	private CommandArguments(final String key, final Object value){
+	private CommandArguments(final String key, final Object value) {
 		put(key, value);
 	}
 
-	private CommandArguments(final String key, final Object... values){
+	private CommandArguments(final String key, final Object... values) {
 		put(key, values);
 	}
 
-	public static CommandArguments create(){
+	public static CommandArguments create() {
 		return new CommandArguments();
 	}
 
-	public static CommandArguments create(final String key, final Object value){
+	public static CommandArguments create(final String key, final Object value) {
 		return new CommandArguments(key, value);
 	}
 
-	public static CommandArguments create(final String key, final Object... values){
+	public static CommandArguments create(final String key, final Object... values) {
 		return new CommandArguments(key, values);
 	}
 
-	public CommandArguments put(final String key, final Object value){
-		parameters.put(key, value == null ? NIL : value.toString());
+	public CommandArguments put(final String key, final Object value) {
+		parameters.put(key, Optional.ofNullable(value).orElse(NIL));
 		return this;
 	}
 
-	public CommandArguments put(final String key, final Object... values){
+	public CommandArguments put(final String key, final Object... values) {
 		parameters.put(key, values == null ? NIL : Arrays.toString(values));
 		return this;
 	}
 
-	public Map<String, Object> getParameters(){
+	public Map<String, Object> getParameters() {
 		return parameters;
 	}
 
-	public Map<String, Object> build(){
+	public Map<String, Object> build() {
 		return getParameters();
 	}
 
-	public String asString(){
+	public String asString() {
 		if(Validate.isEmpty(getParameters())){
 			return Constants.EMPTY_STRING;
 		}else{
@@ -100,7 +101,7 @@ public class CommandArguments {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return asString();
 	}
 

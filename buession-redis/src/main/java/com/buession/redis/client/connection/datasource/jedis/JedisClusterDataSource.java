@@ -24,21 +24,19 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
-import redis.clients.jedis.Connection;
 import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
 
 import java.time.Duration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Jedis 集群模式数据源
@@ -69,37 +67,37 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	private JedisCluster cluster;
 
 	@Override
-	public List<RedisNode> getNodes(){
+	public List<RedisNode> getNodes() {
 		return nodes;
 	}
 
 	@Override
-	public void setNodes(List<RedisNode> nodes){
+	public void setNodes(List<RedisNode> nodes) {
 		this.nodes = nodes;
 	}
 
 	@Override
-	public int getMaxRedirects(){
+	public int getMaxRedirects() {
 		return maxRedirects;
 	}
 
 	@Override
-	public void setMaxRedirects(int maxRedirects){
+	public void setMaxRedirects(int maxRedirects) {
 		this.maxRedirects = maxRedirects;
 	}
 
 	@Override
-	public int getMaxTotalRetriesDuration(){
+	public int getMaxTotalRetriesDuration() {
 		return maxTotalRetriesDuration;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration){
+	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
 
 	@Override
-	public RedisConnection getConnection(){
+	public RedisConnection getConnection() {
 		if(cluster == null){
 			cluster = createJedisCluster();
 		}
@@ -108,16 +106,14 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 				getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
 	}
 
-	protected JedisCluster createJedisCluster(){
+	protected JedisCluster createJedisCluster() {
 		int maxRedirects = getMaxRedirects() < 0 ? DEFAULT_MAX_REDIRECTS : getMaxRedirects();
 		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
 
 		if(isUsePool()){
 			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
-			final PoolConfigConverter<Connection> poolConfigConverter = new PoolConfigConverter<>(
-					connectionPoolConfig);
 
-			poolConfigConverter.convert(getPoolConfig());
+			getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
 
 			if(getMaxTotalRetriesDuration() > 0){
 				cluster = new JedisCluster(createHostAndPorts(), builder.build(), maxRedirects,
@@ -137,15 +133,11 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 		return cluster;
 	}
 
-	private Set<HostAndPort> createHostAndPorts(){
-		final Set<HostAndPort> hostAndPorts = new HashSet<>(getNodes().size());
-
-		for(RedisNode node : getNodes()){
+	private Set<HostAndPort> createHostAndPorts() {
+		return getNodes().stream().map((node)->{
 			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			hostAndPorts.add(new HostAndPort(node.getHost(), port));
-		}
-
-		return hostAndPorts;
+			return new HostAndPort(node.getHost(), port);
+		}).collect(Collectors.toSet());
 	}
 
 }

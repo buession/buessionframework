@@ -26,6 +26,7 @@
  */
 package com.buession.core.codec;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.ClassUtils;
 import com.buession.core.utils.FieldUtils;
 import org.slf4j.Logger;
@@ -50,24 +51,24 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 
 	private final static Logger logger = LoggerFactory.getLogger(MessagePropertyBeanPostProcessor.class);
 
-	public MessagePropertyBeanPostProcessor(){
+	public MessagePropertyBeanPostProcessor() {
 	}
 
-	public MessagePropertyBeanPostProcessor(Environment environment){
+	public MessagePropertyBeanPostProcessor(Environment environment) {
 		this.environment = environment;
 	}
 
-	public Environment getEnvironment(){
+	public Environment getEnvironment() {
 		return environment;
 	}
 
-	public void setEnvironment(Environment environment){
+	public void setEnvironment(Environment environment) {
 		this.environment = environment;
 	}
 
 	@Nullable
 	@Override
-	public Object postProcessAfterInitialization(Object bean, @Nullable String beanName) throws BeansException{
+	public Object postProcessAfterInitialization(Object bean, @Nullable String beanName) throws BeansException {
 		Class<?> clazz = bean.getClass();
 		Field[] fields = ClassUtils.getAllFields(clazz);
 		Message message;
@@ -91,15 +92,13 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 	}
 
 	private void handleMessageInjected(final Class<?> clazz, final Object bean, final String beanName,
-									   final Field field, final Message message) throws BeansException{
+									   final Field field, final Message message) throws BeansException {
 		final String key = message.value();
 		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 
-		if(message.required() && text == null){
-			throw new IllegalArgumentException(
-					"Could not resolve placeholder '" + key + "' in value \"${" + key + "}\", on: " + beanName + "(" +
-							bean.getClass().getName() + ").");
-		}
+		Assert.isTrue(message.required() && text == null,
+				"Could not resolve placeholder '" + key + "' in value \"${" + key + "}\", on: " + beanName + "(" +
+						bean.getClass().getName() + ").");
 
 		final Integer code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
 
@@ -117,7 +116,7 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 		logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
 	}
 
-	private static Object getCglibProxyTargetObject(Object proxy) throws Exception{
+	private static Object getCglibProxyTargetObject(Object proxy) throws Exception {
 		Field field = proxy.getClass().getDeclaredField("CGLIB$CALLBACK_0");
 
 		field.setAccessible(true);
@@ -129,7 +128,7 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 		return ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
 	}
 
-	private static String buildProperty(final String prefix, final String value){
+	private static String buildProperty(final String prefix, final String value) {
 		return prefix + '.' + value;
 	}
 

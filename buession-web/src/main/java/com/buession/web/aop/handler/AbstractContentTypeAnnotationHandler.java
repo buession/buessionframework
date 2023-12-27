@@ -19,22 +19,41 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
 
 import com.buession.aop.handler.AbstractAnnotationHandler;
 import com.buession.web.http.response.annotation.ContentType;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * 注解 {@link ContentType} 处理器抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractContentTypeAnnotationHandler extends AbstractAnnotationHandler<ContentType>
 		implements ContentTypeAnnotationHandler {
 
-	public AbstractContentTypeAnnotationHandler(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public AbstractContentTypeAnnotationHandler() {
 		super(ContentType.class);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public AbstractContentTypeAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(ContentType.class, stringValueResolver);
 	}
 
 }

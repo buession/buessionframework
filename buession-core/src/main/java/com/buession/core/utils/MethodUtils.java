@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -62,6 +63,22 @@ public class MethodUtils extends org.apache.commons.lang3.reflect.MethodUtils {
 		if(MemberUtils.isNotAccessible(method) && method.isAccessible() == false){
 			method.setAccessible(true);
 		}
+	}
+
+	/**
+	 * 检测一个方法是否含有 annotations 中的任意一个注解
+	 *
+	 * @param method
+	 * 		待验证的方法
+	 * @param annotations
+	 * 		检测是否含有的注解
+	 *
+	 * @return 方法包含有 annotations 中的任意一个注解返回 true；否则返回 false
+	 *
+	 * @since 2.3.2
+	 */
+	public static boolean hasAnnotation(final Method method, final Class<? extends Annotation>[] annotations) {
+		return AnnotationUtils.hasMethodAnnotationPresent(method, annotations);
 	}
 
 }

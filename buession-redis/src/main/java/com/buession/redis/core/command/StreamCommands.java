@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -173,8 +173,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
-													 final String consumerName,
-													 final int minIdleTime, final StreamEntryId start);
+													 final String consumerName, final int minIdleTime,
+													 final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -195,8 +195,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-													 final byte[] consumerName,
-													 final int minIdleTime, final StreamEntryId start);
+													 final byte[] consumerName, final int minIdleTime,
+													 final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -1772,7 +1772,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit);
 
-	class XAddArgument {
+	final class XAddArgument {
 
 		private Long maxLen;
 
@@ -1786,35 +1786,35 @@ public interface StreamCommands extends RedisCommands {
 
 		private Long limit;
 
-		private XAddArgument(){
+		private XAddArgument() {
 		}
 
-		public Long getMaxLen(){
+		public Long getMaxLen() {
 			return maxLen;
 		}
 
-		public Boolean isApproximateTrimming(){
+		public Boolean isApproximateTrimming() {
 			return approximateTrimming;
 		}
 
-		public Boolean isExactTrimming(){
+		public Boolean isExactTrimming() {
 			return exactTrimming;
 		}
 
-		public Boolean isNoMkStream(){
+		public Boolean isNoMkStream() {
 			return noMkStream;
 		}
 
-		public String getMinId(){
+		public String getMinId() {
 			return minId;
 		}
 
-		public Long getLimit(){
+		public Long getLimit() {
 			return limit;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().
 					add("maxLen", maxLen).
 					add("approximateTrimming", approximateTrimming).
@@ -1828,44 +1828,44 @@ public interface StreamCommands extends RedisCommands {
 
 			private final XAddArgument xAddArgument = new XAddArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
-			public Builder maxLen(long maxLen){
+			public Builder maxLen(long maxLen) {
 				xAddArgument.maxLen = maxLen;
 				return this;
 			}
 
-			public Builder approximateTrimming(Boolean approximateTrimming){
+			public Builder approximateTrimming(Boolean approximateTrimming) {
 				xAddArgument.approximateTrimming = approximateTrimming;
 				return this;
 			}
 
-			public Builder exactTrimming(boolean exactTrimming){
+			public Builder exactTrimming(boolean exactTrimming) {
 				xAddArgument.exactTrimming = exactTrimming;
 				return this;
 			}
 
-			public Builder noMkStream(boolean noMkStream){
+			public Builder noMkStream(boolean noMkStream) {
 				xAddArgument.noMkStream = noMkStream;
 				return this;
 			}
 
-			public Builder minId(String minId){
+			public Builder minId(String minId) {
 				xAddArgument.minId = minId;
 				return this;
 			}
 
-			public Builder limit(Long limit){
+			public Builder limit(Long limit) {
 				xAddArgument.limit = limit;
 				return this;
 			}
 
-			public XAddArgument build(){
+			public XAddArgument build() {
 				return xAddArgument;
 			}
 
@@ -1873,7 +1873,7 @@ public interface StreamCommands extends RedisCommands {
 
 	}
 
-	class XClaimArgument {
+	final class XClaimArgument {
 
 		private Long idleTime;
 
@@ -1883,27 +1883,27 @@ public interface StreamCommands extends RedisCommands {
 
 		private Boolean force;
 
-		private XClaimArgument(){
+		private XClaimArgument() {
 		}
 
-		public Long getIdleTime(){
+		public Long getIdleTime() {
 			return idleTime;
 		}
 
-		public Long getIdleUnixTime(){
+		public Long getIdleUnixTime() {
 			return idleUnixTime;
 		}
 
-		public Integer getRetryCount(){
+		public Integer getRetryCount() {
 			return retryCount;
 		}
 
-		public Boolean isForce(){
+		public Boolean isForce() {
 			return force;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().
 					add("idleTime", idleTime).
 					add("idleUnixTime", idleUnixTime).
@@ -1915,34 +1915,34 @@ public interface StreamCommands extends RedisCommands {
 
 			private final XClaimArgument xClaimArgument = new XClaimArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
-			public Builder idleTime(long idleTime){
+			public Builder idleTime(long idleTime) {
 				xClaimArgument.idleTime = idleTime;
 				return this;
 			}
 
-			public Builder idleUnixTime(long idleUnixTime){
+			public Builder idleUnixTime(long idleUnixTime) {
 				xClaimArgument.idleUnixTime = idleUnixTime;
 				return this;
 			}
 
-			public Builder retryCount(int retryCount){
+			public Builder retryCount(int retryCount) {
 				xClaimArgument.retryCount = retryCount;
 				return this;
 			}
 
-			public Builder force(boolean force){
+			public Builder force(boolean force) {
 				xClaimArgument.force = force;
 				return this;
 			}
 
-			public XClaimArgument build(){
+			public XClaimArgument build() {
 				return xClaimArgument;
 			}
 
@@ -1960,27 +1960,27 @@ public interface StreamCommands extends RedisCommands {
 
 		private String minId;
 
-		private XTrimArgument(){
+		private XTrimArgument() {
 		}
 
-		public Long getMaxLen(){
+		public Long getMaxLen() {
 			return maxLen;
 		}
 
-		public Boolean isApproximateTrimming(){
+		public Boolean isApproximateTrimming() {
 			return approximateTrimming;
 		}
 
-		public Boolean isExactTrimming(){
+		public Boolean isExactTrimming() {
 			return exactTrimming;
 		}
 
-		public String getMinId(){
+		public String getMinId() {
 			return minId;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().
 					add("maxLen", maxLen).
 					add("approximateTrimming", approximateTrimming).
@@ -1992,34 +1992,34 @@ public interface StreamCommands extends RedisCommands {
 
 			private final XTrimArgument xTrimArgument = new XTrimArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
-			public Builder maxLen(long maxLen){
+			public Builder maxLen(long maxLen) {
 				xTrimArgument.maxLen = maxLen;
 				return this;
 			}
 
-			public Builder approximateTrimming(boolean approximateTrimming){
+			public Builder approximateTrimming(boolean approximateTrimming) {
 				xTrimArgument.approximateTrimming = approximateTrimming;
 				return this;
 			}
 
-			public Builder exactTrimming(boolean exactTrimming){
+			public Builder exactTrimming(boolean exactTrimming) {
 				xTrimArgument.exactTrimming = exactTrimming;
 				return this;
 			}
 
-			public Builder minId(String minId){
+			public Builder minId(String minId) {
 				xTrimArgument.minId = minId;
 				return this;
 			}
 
-			public XTrimArgument build(){
+			public XTrimArgument build() {
 				return xTrimArgument;
 			}
 

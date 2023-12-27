@@ -39,12 +39,12 @@ public abstract class AbstractHttpCacheAnnotationMethodInterceptor
 		extends AbstractAnnotationMethodInterceptor<HttpCache>
 		implements HttpCacheAnnotationMethodInterceptor {
 
-	public AbstractHttpCacheAnnotationMethodInterceptor(AnnotationHandler<HttpCache> handler){
+	public AbstractHttpCacheAnnotationMethodInterceptor(AnnotationHandler<HttpCache> handler) {
 		super(handler);
 	}
 
 	public AbstractHttpCacheAnnotationMethodInterceptor(AnnotationHandler<HttpCache> handler,
-														AnnotationResolver resolver){
+														AnnotationResolver resolver) {
 		super(handler, resolver);
 	}
 

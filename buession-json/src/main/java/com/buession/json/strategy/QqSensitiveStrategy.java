@@ -33,13 +33,23 @@ import java.util.regex.Pattern;
  * @author Yong.Teng
  * @since 2.3.1
  */
-public class QqSensitiveStrategy implements ISensitiveStrategy {
+public class QqSensitiveStrategy extends AbstractSensitiveStrategy {
 
 	private final static Pattern PATTERN = Pattern.compile("(([1-9]\\d{2})\\d{2,5}(\\d{2}))|(([1-9]\\d)\\d{2,3}(\\d))");
 
+	/**
+	 * 构造函数
+	 *
+	 * @param replacement
+	 * 		脱敏替换内容
+	 */
+	public QqSensitiveStrategy(final String replacement) {
+		super(replacement);
+	}
+
 	@Override
 	public Function<String, String> getFunction() {
-		return str->PATTERN.matcher(str).replaceAll("$2$5****$3$6");
+		return str->PATTERN.matcher(str).replaceAll("$2$5" + getReplacement() + "$3$6");
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.interceptor;
@@ -28,6 +28,7 @@ import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractHttpCacheAnnotationMethodInterceptor;
 import com.buession.web.http.response.annotation.HttpCache;
 import com.buession.web.servlet.aop.handler.ServletHttpCacheAnnotationHandler;
+import org.springframework.util.StringValueResolver;
 
 /**
  * {@link HttpCache} 注解拦截器
@@ -37,12 +38,50 @@ import com.buession.web.servlet.aop.handler.ServletHttpCacheAnnotationHandler;
  */
 public class ServletHttpCacheAnnotationMethodInterceptor extends AbstractHttpCacheAnnotationMethodInterceptor {
 
-	public ServletHttpCacheAnnotationMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ServletHttpCacheAnnotationMethodInterceptor() {
 		super(new ServletHttpCacheAnnotationHandler());
 	}
 
-	public ServletHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver){
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 */
+	@Deprecated
+	public ServletHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver) {
 		super(new ServletHttpCacheAnnotationHandler(), resolver);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletHttpCacheAnnotationMethodInterceptor(StringValueResolver stringValueResolver) {
+		super(new ServletHttpCacheAnnotationHandler(stringValueResolver));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletHttpCacheAnnotationMethodInterceptor(AnnotationResolver resolver,
+													   StringValueResolver stringValueResolver) {
+		super(new ServletHttpCacheAnnotationHandler(stringValueResolver), resolver);
 	}
 
 }

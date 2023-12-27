@@ -27,7 +27,6 @@
 package com.buession.velocity.tools;
 
 import com.buession.core.validator.Validate;
-import com.buession.lang.Constants;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.PrettyPrinter;
@@ -44,6 +43,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 /**
+ * JSON 工具
+ *
  * @author Yong.Teng
  */
 @DefaultKey("json")
@@ -269,37 +270,12 @@ public class JsonTool extends SafeConfig {
 
 	private static PrettyPrinter getPrettyPrinter() {
 		if(prettyPrinter == null){
-			prettyPrinter = new VelocityPrettyPrinter();
+			final Separators separators =
+					DefaultPrettyPrinter.DEFAULT_SEPARATORS.withObjectFieldValueSpacing(Separators.Spacing.AFTER);
+			prettyPrinter = new DefaultPrettyPrinter(separators);
 		}
 
 		return prettyPrinter;
-	}
-
-	private final static class VelocityPrettyPrinter extends DefaultPrettyPrinter {
-
-		private final static long serialVersionUID = -2266232157759904063L;
-
-		public VelocityPrettyPrinter() {
-			super(Constants.EMPTY_STRING);
-		}
-
-		public VelocityPrettyPrinter(DefaultPrettyPrinter base) {
-			super(base);
-		}
-
-		@Override
-		public DefaultPrettyPrinter withSeparators(Separators separators) {
-			_separators = separators;
-			_objectFieldValueSeparatorWithSpaces =
-					separators.getObjectFieldValueSeparator() + Constants.SPACING_STRING;
-			return this;
-		}
-
-		@Override
-		public DefaultPrettyPrinter createInstance() {
-			return new VelocityPrettyPrinter(this);
-		}
-
 	}
 
 }

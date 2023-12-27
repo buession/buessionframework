@@ -34,10 +34,11 @@ import com.buession.core.utils.Assert;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class FastJsonJsonDeserializer extends AbstractJsonDeserializer {
 
 	@Override
-	public <V> V deserialize(final String str) throws DeserializerException{
+	public <V> V deserialize(final String str) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 		return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
 
@@ -45,19 +46,19 @@ public class FastJsonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException{
+	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 		return JSON.parseObject(str, clazz);
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException{
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 		return JSON.parseObject(str, type.getType());
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
 
@@ -65,13 +66,13 @@ public class FastJsonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException{
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return JSON.parseObject(bytes, clazz);
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return deserialize(new String(bytes), type);
 	}

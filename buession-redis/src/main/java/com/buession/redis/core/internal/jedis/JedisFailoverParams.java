@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -32,35 +32,35 @@ import redis.clients.jedis.params.FailoverParams;
  */
 public final class JedisFailoverParams extends FailoverParams {
 
-	public JedisFailoverParams(final String host, final int port){
+	public JedisFailoverParams(final String host, final int port) {
 		super();
 		to(host, port);
 	}
 
-	public JedisFailoverParams(final String host, final int port, final int timeout){
+	public JedisFailoverParams(final String host, final int port, final int timeout) {
 		this(host, port);
 		timeout(timeout);
 	}
 
-	public JedisFailoverParams(final String host, final int port, final boolean force){
+	public JedisFailoverParams(final String host, final int port, final boolean force) {
 		this(host, port);
-
-		if(force){
-			force();
-		}
+		force(force);
 	}
 
-	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force){
+	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force) {
 		this(host, port, timeout);
-
-		if(force){
-			force();
-		}
+		force(force);
 	}
 
-	public JedisFailoverParams(final int timeout){
+	public JedisFailoverParams(final int timeout) {
 		super();
 		timeout(timeout);
+	}
+
+	private void force(boolean force) {
+		if(force){
+			force();
+		}
 	}
 
 }

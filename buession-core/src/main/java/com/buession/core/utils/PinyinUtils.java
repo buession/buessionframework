@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -50,7 +50,7 @@ public class PinyinUtils {
 	 * @throws BadHanyuPinyinOutputFormatCombination
 	 * 		异常
 	 */
-	public static String getPinyin(final String str) throws BadHanyuPinyinOutputFormatCombination{
+	public static String getPinyin(final String str) throws BadHanyuPinyinOutputFormatCombination {
 		return getPinyin(str, false, CaseType.LOWERCASE);
 	}
 
@@ -69,7 +69,8 @@ public class PinyinUtils {
 	 * @throws net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
 	 * 		异常
 	 */
-	public static String getPinyin(final String str, final boolean hasTone, final CaseType caseType) throws BadHanyuPinyinOutputFormatCombination{
+	public static String getPinyin(final String str, final boolean hasTone, final CaseType caseType)
+			throws BadHanyuPinyinOutputFormatCombination {
 		if(Validate.isEmpty(str)){
 			return str;
 		}
@@ -89,7 +90,7 @@ public class PinyinUtils {
 		StringBuilder sb = new StringBuilder(str.length());
 
 		try{
-			char chars[] = str.toCharArray();
+			char[] chars = str.toCharArray();
 
 			for(char c : chars){
 				// 如果包含有中文标点除号，需要使用正则表达式
@@ -114,12 +115,12 @@ public class PinyinUtils {
 	 *
 	 * @return 拼音首字母集合
 	 */
-	public static String getPinYinFirstChar(final String str){
+	public static String getPinYinFirstChar(final String str) {
 		if(Validate.isEmpty(str)){
 			return str;
 		}
 
-		char chars[] = str.toCharArray();
+		char[] chars = str.toCharArray();
 		String[] pinyinArray;
 		StringBuilder sb = new StringBuilder(chars.length);
 

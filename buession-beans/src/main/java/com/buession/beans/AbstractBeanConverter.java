@@ -26,11 +26,10 @@ package com.buession.beans;
 
 import com.buession.beans.converters.*;
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Primitive;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.beans.BeanMap;
 
@@ -58,11 +57,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 
 	private final static Map<String, BeanCopier> BEAN_COPIERS = new ConcurrentHashMap<>(32);
 
-	private final static Map<String, BeanMap> BEAN_MAPS = new ConcurrentHashMap<>(32);
-
 	private final static Map<Class<?>, BeanPropertyConverter<?>> converters = new ConcurrentHashMap<>(24);
-
-	private final static Logger logger = LoggerFactory.getLogger(AbstractBeanConverter.class);
 
 	/**
 	 * 构造函数
@@ -109,6 +104,24 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 		return beanToBean(source, target);
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	protected static Object convertValue(final Object value, final Class<?> targetType) {
+		if(value == null){
+			return null;
+		}else if(targetType.isEnum()){
+			return EnumUtils.getEnumIgnoreCase((Class) targetType, value.toString());
+		}else{
+			final Class<?> targetWrapperType = Primitive.primitiveToWrapper(targetType);
+
+			if(targetWrapperType == value.getClass()){
+				return value;
+			}else{
+				final BeanPropertyConverter<?> propertyConverter = converters.get(targetWrapperType);
+				return propertyConverter == null ? value : propertyConverter.convert(value);
+			}
+		}
+	}
+
 	@SuppressWarnings({"unchecked"})
 	protected <S, T> T mapToMap(final S source, final T target) {
 		Map<Object, Object> sourceMap = (Map<Object, Object>) source;
@@ -122,8 +135,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 	@SuppressWarnings({"unchecked"})
 	protected <S, T> T mapToBean(final S source, final T target) {
 		final Map<Object, Object> sourceMap = (Map<Object, Object>) source;
-		final String cacheKey = buildCacheKey(source, target);
-		final BeanMap beanMap = BEAN_MAPS.computeIfAbsent(cacheKey, (key)->BeanMap.create(target));
+		final BeanMap beanMap = BeanMap.create(target);
 
 		sourceMap.forEach((key, value)->{
 			if(key instanceof CharSequence){
@@ -152,21 +164,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 				Field field = FieldUtils.getField(target.getClass(), propertyName, true);
 
 				if(field != null){
-					Class<?> fieldType = field.getType();
-					final BeanPropertyConverter<?> propertyConverter = converters.get(
-							Primitive.primitiveToWrapper(fieldType));
-
-					try{
-						if(propertyConverter == null){
-							beanMap.put(propertyName, value);
-						}else{
-							beanMap.put(propertyName, propertyConverter.convert(value));
-						}
-					}catch(Exception e){
-						if(logger.isWarnEnabled()){
-							logger.warn(e.getMessage());
-						}
-					}
+					beanMap.put(propertyName, convertValue(value, field.getType()));
 				}
 			}
 		});
@@ -176,8 +174,7 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 
 	@SuppressWarnings({"unchecked"})
 	protected <S, T> T beanToMap(final S source, final T target) {
-		final String cacheKey = buildCacheKey(source, target);
-		final BeanMap beanMap = BEAN_MAPS.computeIfAbsent(cacheKey, (key)->BeanMap.create(source));
+		final BeanMap beanMap = BeanMap.create(source);
 		final Map<Object, Object> targetMap = (Map<Object, Object>) target;
 
 		targetMap.putAll(beanMap);
@@ -185,28 +182,13 @@ public abstract class AbstractBeanConverter implements BeanConverter {
 		return target;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtype"})
+	@SuppressWarnings({"rawtype"})
 	protected <S, T> T beanToBean(final S source, final T target) {
 		final String cacheKey = buildCacheKey(source, target);
 		final BeanCopier beanCopier = BEAN_COPIERS.computeIfAbsent(cacheKey,
 				(key)->BeanCopier.create(source.getClass(), target.getClass(), true));
 
-		beanCopier.copy(source, target, (value, targetType, setter)->{
-			if(value == null){
-				return null;
-			}else if(targetType.equals(value.getClass())){
-				return value;
-			}else{
-				final BeanPropertyConverter<?> propertyConverter = converters.get(
-						Primitive.primitiveToWrapper(targetType));
-
-				if(propertyConverter == null){
-					return value;
-				}else{
-					return propertyConverter.convert(value);
-				}
-			}
-		});
+		beanCopier.copy(source, target, (value, targetType, setter)->convertValue(value, targetType));
 
 		return target;
 	}

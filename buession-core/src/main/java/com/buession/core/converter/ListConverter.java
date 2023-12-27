@@ -24,10 +24,11 @@
  */
 package com.buession.core.converter;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import org.springframework.beans.BeanUtils;
+
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * List 转换器
@@ -53,17 +54,24 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 	 * @param itemConverter
 	 * 		List item 转换器
 	 */
-	public ListConverter(final Converter<S, T> itemConverter){
+	public ListConverter(final Converter<S, T> itemConverter) {
 		this.itemConverter = itemConverter;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public List<T> convert(final List<S> source){
+	public List<T> convert(final List<S> source) {
 		if(source == null){
 			return null;
 		}else{
-			return source.stream().map(itemConverter::convert)
-					.collect(Collectors.toCollection(source instanceof LinkedList ? LinkedList::new : ArrayList::new));
+			Stream<T> stream = source.stream().map(itemConverter::convert);
+
+			try{
+				return stream.collect(
+						Collectors.toCollection(()->(List<T>) BeanUtils.instantiateClass(source.getClass())));
+			}catch(Exception e){
+				return stream.collect(Collectors.toList());
+			}
 		}
 	}
 

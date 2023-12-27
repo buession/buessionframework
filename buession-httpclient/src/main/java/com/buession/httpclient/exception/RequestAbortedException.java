@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
@@ -27,15 +27,19 @@ package com.buession.httpclient.exception;
 import java.io.InterruptedIOException;
 
 /**
+ * 请求终止异常
+ *
  * @author Yong.Teng
  */
 public class RequestAbortedException extends InterruptedIOException {
 
-    public RequestAbortedException(){
-        super();
-    }
+	private final static long serialVersionUID = 3374619693511102599L;
 
-    public RequestAbortedException(String message){
-        super(message);
-    }
+	public RequestAbortedException() {
+		super();
+	}
+
+	public RequestAbortedException(String message) {
+		super(message);
+	}
 }

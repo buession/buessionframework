@@ -30,19 +30,38 @@ import com.buession.core.validator.Validate;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.mvc.view.document.MetaData;
 import org.springframework.ui.Model;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * 注解 {@link DocumentMetaData} 处理器抽象类
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData>
 		implements DocumentMetaDataAnnotationHandler {
 
-	public AbstractDocumentMetaDataAnnotationHandler(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public AbstractDocumentMetaDataAnnotationHandler() {
 		super(DocumentMetaData.class);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public AbstractDocumentMetaDataAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(DocumentMetaData.class, stringValueResolver);
+	}
+
 	@Override
-	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+	public void execute(MethodInvocation mi, DocumentMetaData documentMetaData) {
 		if(Validate.isNotEmpty(mi.getArguments())){
 			for(Object argument : mi.getArguments()){
 				if(argument instanceof Model){
@@ -53,22 +72,32 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
 		}
 	}
 
-	protected static void addModelAttribute(final Model model, final DocumentMetaData metaData){
+	protected void addModelAttribute(final Model model, final DocumentMetaData metaData) {
 		final String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() :
 				DocumentMetaData.DEFAULT_ATTR_NAME;
 		model.addAttribute(attrName, metaDataConvert(metaData));
 	}
 
-	private static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
+	private MetaData metaDataConvert(final DocumentMetaData documentMetaData) {
 		final MetaData metaData = new MetaData();
 
-		metaData.setTitle(documentMetaData.title());
-		metaData.setAuthor(documentMetaData.author());
-		metaData.setCharset(documentMetaData.charset());
-		metaData.setKeywords(documentMetaData.keywords());
-		metaData.setDescription(documentMetaData.description());
-		metaData.setAuthor(documentMetaData.author());
-		metaData.setCopyright(documentMetaData.copyright());
+		if(stringValueResolver == null){
+			metaData.setTitle(documentMetaData.title());
+			metaData.setAuthor(documentMetaData.author());
+			metaData.setCharset(documentMetaData.charset());
+			metaData.setKeywords(documentMetaData.keywords());
+			metaData.setDescription(documentMetaData.description());
+			metaData.setAuthor(documentMetaData.author());
+			metaData.setCopyright(documentMetaData.copyright());
+		}else{
+			metaData.setTitle(stringValueResolver.resolveStringValue(documentMetaData.title()));
+			metaData.setAuthor(stringValueResolver.resolveStringValue(documentMetaData.author()));
+			metaData.setCharset(stringValueResolver.resolveStringValue(documentMetaData.charset()));
+			metaData.setKeywords(stringValueResolver.resolveStringValue(documentMetaData.keywords()));
+			metaData.setDescription(stringValueResolver.resolveStringValue(documentMetaData.description()));
+			metaData.setAuthor(stringValueResolver.resolveStringValue(documentMetaData.author()));
+			metaData.setCopyright(stringValueResolver.resolveStringValue(documentMetaData.copyright()));
+		}
 
 		return metaData;
 	}

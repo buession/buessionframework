@@ -25,14 +25,34 @@
 package com.buession.web.servlet.aop.handler;
 
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
+import com.buession.web.mvc.view.document.DocumentMetaData;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * Servlet 模式注解 {@link DocumentMetaData} 处理器
+ *
  * @author Yong.Teng
  */
 public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
 
-	public ServletDocumentMetaDataAnnotationHandler(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ServletDocumentMetaDataAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletDocumentMetaDataAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 }

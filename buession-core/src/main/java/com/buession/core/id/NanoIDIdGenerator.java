@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.id;
@@ -72,7 +72,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	/**
 	 * 构造函数
 	 */
-	public NanoIDIdGenerator(){
+	public NanoIDIdGenerator() {
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param random
 	 * 		随机生成器
 	 */
-	public NanoIDIdGenerator(final Random random){
+	public NanoIDIdGenerator(final Random random) {
 		setRandom(random);
 	}
 
@@ -91,7 +91,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param alphabet
 	 * 		字符
 	 */
-	public NanoIDIdGenerator(final char[] alphabet){
+	public NanoIDIdGenerator(final char[] alphabet) {
 		setAlphabet(alphabet);
 	}
 
@@ -101,7 +101,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param length
 	 * 		生成长度
 	 */
-	public NanoIDIdGenerator(final int length){
+	public NanoIDIdGenerator(final int length) {
 		setLength(length);
 	}
 
@@ -113,7 +113,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param alphabet
 	 * 		字符
 	 */
-	public NanoIDIdGenerator(final Random random, final char[] alphabet){
+	public NanoIDIdGenerator(final Random random, final char[] alphabet) {
 		this(random);
 		setAlphabet(alphabet);
 	}
@@ -126,7 +126,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param length
 	 * 		生成长度
 	 */
-	public NanoIDIdGenerator(final Random random, final int length){
+	public NanoIDIdGenerator(final Random random, final int length) {
 		this(random);
 		setLength(length);
 	}
@@ -139,7 +139,7 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param length
 	 * 		生成长度
 	 */
-	public NanoIDIdGenerator(final char[] alphabet, final int length){
+	public NanoIDIdGenerator(final char[] alphabet, final int length) {
 		this(alphabet);
 		setLength(length);
 	}
@@ -154,13 +154,13 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 	 * @param length
 	 * 		生成长度
 	 */
-	public NanoIDIdGenerator(final Random random, final char[] alphabet, final int length){
+	public NanoIDIdGenerator(final Random random, final char[] alphabet, final int length) {
 		this(random, alphabet);
 		setLength(length);
 	}
 
 	@Override
-	public String nextId(){
+	public String nextId() {
 		int mask = (2 << (int) Math.floor(Math.log((alphabet.length - 1)) / Math.log(2.0D))) - 1;
 		int step = (int) Math.ceil(1.6D * (double) mask * (double) length / (double) alphabet.length);
 		StringBuilder idBuilder = new StringBuilder();
@@ -182,22 +182,20 @@ public class NanoIDIdGenerator implements IdGenerator<String> {
 		}
 	}
 
-	private void setRandom(final Random random){
+	private void setRandom(final Random random) {
 		Assert.isNull(random, "Random cloud not be null.");
 		this.random = random;
 	}
 
-	private void setAlphabet(final char[] alphabet){
+	private void setAlphabet(final char[] alphabet) {
 		Assert.isNull(alphabet, "Alphabet cloud not be null.");
-
-		if(alphabet.length <= 0 || alphabet.length > 255){
-			throw new IllegalArgumentException("Alphabet must contain between 1 and 255 symbols.");
-		}
+		Assert.isTrue(alphabet.length <= 0 || alphabet.length > 255,
+				"Alphabet must contain between 1 and 255 symbols.");
 
 		this.alphabet = alphabet;
 	}
 
-	private void setLength(final int length){
+	private void setLength(final int length) {
 		Assert.isZeroNegative(length, "Size must be greater than zero.");
 		this.length = length;
 	}

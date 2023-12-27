@@ -31,49 +31,50 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public abstract class AbstractJsonSerializer extends AbstractSerializer implements JsonSerializer {
 
 	@Override
-	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
+	public <V> String serialize(final V object, final String charsetName) throws SerializerException {
 		return serialize(object);
 	}
 
 	@Override
-	public <V> String serialize(final V object, final Charset charset) throws SerializerException{
+	public <V> String serialize(final V object, final Charset charset) throws SerializerException {
 		return serialize(object);
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException {
 		return serializeAsBytes(object);
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
 		return serializeAsBytes(object);
 	}
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str, final String charsetName) throws SerializerException{
+	public <V> V deserialize(final String str, final String charsetName) throws SerializerException {
 		return deserialize(str);
 	}
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
+	public <V> V deserialize(final String str, final Charset charset) throws SerializerException {
 		return deserialize(str);
 	}
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException {
 		return deserialize(bytes);
 	}
 
 	@Deprecated
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException {
 		return deserialize(bytes);
 	}
 

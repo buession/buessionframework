@@ -19,13 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.config;
 
 import com.buession.web.servlet.OnServletCondition;
 import com.buession.web.servlet.aop.aopalliance.interceptor.ServletHttpAttributeSourcePointcutAdvisor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.EmbeddedValueResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +44,10 @@ import org.springframework.context.annotation.Configuration;
 public class ServletAnnotationProcessorConfiguration {
 
 	@Bean
-	public ServletHttpAttributeSourcePointcutAdvisor httpAttributeSourcePointcutAdvisor(){
-		return new ServletHttpAttributeSourcePointcutAdvisor();
+	public ServletHttpAttributeSourcePointcutAdvisor httpAttributeSourcePointcutAdvisor(
+			ObjectProvider<ConfigurableBeanFactory> configurableBeanFactory) {
+		return new ServletHttpAttributeSourcePointcutAdvisor(
+				new EmbeddedValueResolver(configurableBeanFactory.getIfAvailable()));
 	}
 
 }

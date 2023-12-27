@@ -61,7 +61,7 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 	 * @param deserializer
 	 * 		反序列化器
 	 */
-	protected AbstractSerializer(final S serializer, final D deserializer){
+	protected AbstractSerializer(final S serializer, final D deserializer) {
 		Assert.isNull(serializer, "original serializer object cloud not be null.");
 		Assert.isNull(deserializer, "original deserializer object cloud not be null.");
 		this.serializer = serializer;
@@ -69,7 +69,7 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 	}
 
 	@Override
-	public <V> String serialize(final V object){
+	public <V> String serialize(final V object) {
 		if(object != null){
 			try{
 				return serializer.serialize(object);
@@ -80,14 +80,14 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 
 		return null;
 	}
-
+	
 	@Override
-	public <V> String[] serialize(final V... objects){
+	public final <V> String[] serialize(final V[] objects) {
 		return Arrays.map(objects, String.class, this::serialize);
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object){
+	public <V> byte[] serializeAsBytes(final V object) {
 		if(object != null){
 			try{
 				return serializer.serializeAsBytes(object);
@@ -100,12 +100,12 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 	}
 
 	@Override
-	public <V> byte[][] serializeAsBytes(final V... objects){
+	public <V> byte[][] serializeAsBytes(final V[] objects) {
 		return Arrays.map(objects, byte[].class, this::serializeAsBytes);
 	}
 
 	@Override
-	public <V> V deserialize(final String str){
+	public <V> V deserialize(final String str) {
 		if(str != null){
 			try{
 				return deserializer.deserialize(str);
@@ -118,7 +118,7 @@ public abstract class AbstractSerializer<S extends com.buession.core.serializer.
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes){
+	public <V> V deserializeBytes(final byte[] bytes) {
 		if(bytes != null){
 			try{
 				return deserializer.deserialize(bytes);

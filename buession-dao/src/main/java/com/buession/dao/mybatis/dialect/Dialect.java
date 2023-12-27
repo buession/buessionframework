@@ -60,7 +60,7 @@ public interface Dialect {
 	 *
 	 * @return 分页 SQL
 	 */
-	default String buildPaginationSql(final String sql, final long offset, final long limit) {
+	default String buildPaginationSql(final String sql, final int offset, final int limit) {
 		return null;
 	}
 

@@ -49,12 +49,12 @@ import java.util.Map;
  */
 public final class JedisClusterGeoOperations extends AbstractGeoOperations<JedisClusterClient> {
 
-	public JedisClusterGeoOperations(final JedisClusterClient client){
+	public JedisClusterGeoOperations(final JedisClusterClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.GEOADD)
@@ -65,7 +65,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.GEOADD)
@@ -76,7 +76,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
 		final Map<String, GeoCoordinate> geoCoordinates = GeoConverter.STRING_MAP_CONVERTER.convert(
 				memberCoordinates);
@@ -88,7 +88,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
 		final Map<byte[], GeoCoordinate> geoCoordinates = GeoConverter.BINARY_MAP_CONVERTER.convert(
 				memberCoordinates);
@@ -100,7 +100,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public List<String> geoHash(final String key, final String... members){
+	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.GEOHASH)
 				.general((cmd)->cmd.geohash(key, members))
@@ -110,7 +110,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
+	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.GEOHASH)
 				.general((cmd)->cmd.geohash(key, members))
@@ -120,7 +120,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public List<Geo> geoPos(final String key, final String... members){
+	public List<Geo> geoPos(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<List<Geo>>(client, ProtocolCommand.GEOPOS)
 				.general((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
@@ -130,7 +130,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public List<Geo> geoPos(final byte[] key, final byte[]... members){
+	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<List<Geo>>(client, ProtocolCommand.GEOPOS)
 				.general((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
@@ -140,7 +140,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Double geoDist(final String key, final String member1, final String member2){
+	public Double geoDist(final String key, final String member1, final String member2) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.GEODIST)
@@ -151,7 +151,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.GEODIST)
@@ -162,7 +162,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -174,7 +174,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	}
 
 	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -187,7 +187,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit){
+									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -203,7 +203,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit){
+									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -220,7 +220,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument){
+									 final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
@@ -239,7 +239,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument){
+									 final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
@@ -257,7 +257,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit){
+									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -273,7 +273,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit){
+									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -290,7 +290,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument){
+									   final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
@@ -309,7 +309,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument){
+									   final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
@@ -327,7 +327,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoUnit unit){
+											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -343,7 +343,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit){
+											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -359,7 +359,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -376,7 +376,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -393,7 +393,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit){
+											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -409,7 +409,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit){
+											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -425,7 +425,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
@@ -442,7 +442,7 @@ public final class JedisClusterGeoOperations extends AbstractGeoOperations<Jedis
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);

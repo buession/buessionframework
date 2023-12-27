@@ -25,17 +25,15 @@
 package com.buession.httpclient.core.utils;
 
 import com.buession.core.builder.ListBuilder;
+import com.buession.core.datetime.TimeZone;
 import com.buession.core.utils.Assert;
 import com.buession.httpclient.core.Header;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * HTTP 头构建器
@@ -52,7 +50,7 @@ public class HeadersBuilder {
 	/**
 	 * 构造函数
 	 */
-	public HeadersBuilder(){
+	public HeadersBuilder() {
 	}
 
 	/**
@@ -63,7 +61,7 @@ public class HeadersBuilder {
 	 * @param value
 	 * 		HTTP 头值
 	 */
-	public HeadersBuilder(final String name, final String value){
+	public HeadersBuilder(final String name, final String value) {
 		add(name, value);
 	}
 
@@ -75,7 +73,7 @@ public class HeadersBuilder {
 	 * @param value
 	 * 		HTTP 头值
 	 */
-	public HeadersBuilder(final String name, final short value){
+	public HeadersBuilder(final String name, final short value) {
 		add(name, value);
 	}
 
@@ -87,7 +85,7 @@ public class HeadersBuilder {
 	 * @param value
 	 * 		HTTP 头值
 	 */
-	public HeadersBuilder(final String name, final int value){
+	public HeadersBuilder(final String name, final int value) {
 		add(name, value);
 	}
 
@@ -99,7 +97,7 @@ public class HeadersBuilder {
 	 * @param value
 	 * 		HTTP 头值
 	 */
-	public HeadersBuilder(final String name, final long value){
+	public HeadersBuilder(final String name, final long value) {
 		add(name, value);
 	}
 
@@ -111,7 +109,7 @@ public class HeadersBuilder {
 	 * @param value
 	 * 		HTTP 头值
 	 */
-	public HeadersBuilder(final String name, final Date value){
+	public HeadersBuilder(final String name, final Date value) {
 		add(name, value);
 	}
 
@@ -121,7 +119,7 @@ public class HeadersBuilder {
 	 * @param headers
 	 * 		HTTP 头
 	 */
-	public HeadersBuilder(final List<Header> headers){
+	public HeadersBuilder(final List<Header> headers) {
 		add(headers);
 	}
 
@@ -135,7 +133,7 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头构建器
 	 */
-	public HeadersBuilder add(final String name, final String value){
+	public HeadersBuilder add(final String name, final String value) {
 		builder.add(new Header(name, value));
 		return this;
 	}
@@ -150,7 +148,7 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头构建器
 	 */
-	public HeadersBuilder add(final String name, final short value){
+	public HeadersBuilder add(final String name, final short value) {
 		builder.add(new Header(name, Short.toString(value)));
 		return this;
 	}
@@ -165,7 +163,7 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头构建器
 	 */
-	public HeadersBuilder add(final String name, final int value){
+	public HeadersBuilder add(final String name, final int value) {
 		builder.add(new Header(name, Integer.toString(value)));
 		return this;
 	}
@@ -180,7 +178,7 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头构建器
 	 */
-	public HeadersBuilder add(final String name, final long value){
+	public HeadersBuilder add(final String name, final long value) {
 		builder.add(new Header(name, Long.toString(value)));
 		return this;
 	}
@@ -195,7 +193,7 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头构建器
 	 */
-	public HeadersBuilder add(final String name, final Date value){
+	public HeadersBuilder add(final String name, final Date value) {
 		Assert.isNull(value, "Date cloud not be null.");
 
 		final Instant instant = Instant.ofEpochMilli(value.getTime());
@@ -210,7 +208,7 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头构建器
 	 */
-	public HeadersBuilder add(final List<Header> headers){
+	public HeadersBuilder add(final List<Header> headers) {
 		if(headers != null){
 			builder.addAll(headers);
 		}
@@ -223,15 +221,14 @@ public class HeadersBuilder {
 	 *
 	 * @return HTTP 头
 	 */
-	public List<Header> build(){
+	public List<Header> build() {
 		return builder.build();
 	}
 
-	protected static DateTimeFormatter createDateTimeFormatter(){
+	protected static DateTimeFormatter createDateTimeFormatter() {
 		if(dateTimeFormatter == null){
 			dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss GMT", Locale.US);
-
-			dateTimeFormatter.withZone(TimeZone.getTimeZone("GMT").toZoneId());
+			dateTimeFormatter.withZone(TimeZone.GMT.toZoneId());
 		}
 
 		return dateTimeFormatter;

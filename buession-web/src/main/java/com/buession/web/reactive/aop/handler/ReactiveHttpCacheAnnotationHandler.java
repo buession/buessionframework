@@ -33,16 +33,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * Reactive 模式注解 {@link HttpCache} 处理器
+ *
  * @author Yong.Teng
  */
 public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveHttpCacheAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ReactiveHttpCacheAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveHttpCacheAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -57,20 +76,33 @@ public class ReactiveHttpCacheAnnotationHandler extends AbstractHttpCacheAnnotat
 		boolean isSetCacheControl = false;
 
 		if(Validate.hasText(httpCache.cacheControl())){
-			httpHeaders.setCacheControl(httpCache.cacheControl());
+			if(stringValueResolver == null){
+				httpHeaders.setCacheControl(httpCache.cacheControl());
+			}else{
+				httpHeaders.setCacheControl(stringValueResolver.resolveStringValue(httpCache.cacheControl()));
+			}
 			isSetCacheControl = true;
 		}
 
-		if(Validate.hasText(httpCache.expires()) && Validate.isNumeric(httpCache.expires())){
-			httpHeaders.setExpires(Long.parseLong(httpCache.expires()));
+		if(Validate.hasText(httpCache.expires())){
+			String expires = stringValueResolver == null ? httpCache.expires() :
+					stringValueResolver.resolveStringValue(httpCache.expires());
 
-			if(isSetCacheControl == false){
-				httpHeaders.setCacheControl("max-age=" + httpCache.expires());
+			if(Validate.isNumeric(expires)){
+				httpHeaders.setExpires(Long.parseLong(expires));
+
+				if(isSetCacheControl == false){
+					httpHeaders.setCacheControl("max-age=" + expires);
+				}
 			}
 		}
 
 		if(Validate.hasText(httpCache.pragma())){
-			httpHeaders.setPragma(httpCache.pragma());
+			if(stringValueResolver == null){
+				httpHeaders.setPragma(httpCache.pragma());
+			}else{
+				httpHeaders.setPragma(stringValueResolver.resolveStringValue(httpCache.pragma()));
+			}
 		}
 	}
 

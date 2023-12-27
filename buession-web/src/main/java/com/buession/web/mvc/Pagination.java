@@ -49,6 +49,7 @@ public class Pagination extends com.buession.core.Pagination<Object> {
 	 */
 	public Pagination(int page, int pagesize) {
 		super(page, pagesize);
+		setNextPage(getPage() + 1);
 	}
 
 	/**
@@ -63,6 +64,7 @@ public class Pagination extends com.buession.core.Pagination<Object> {
 	 */
 	public Pagination(int page, int pagesize, long totalRecords) {
 		super(page, pagesize, totalRecords);
+		setNextPage(getPage() + 1);
 	}
 
 }

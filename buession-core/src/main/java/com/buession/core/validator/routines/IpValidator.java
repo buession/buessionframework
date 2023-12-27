@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://buession.buession.com.cn/LICENSE 												|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -44,10 +44,10 @@ public class IpValidator {
 
 	private final static int IPV6_MAX_GROUP_SIZE = 8;
 
-	private IpValidator(){
+	private IpValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence) {
 		if(charSequence == null || charSequence.length() == 0){
 			return false;
 		}
@@ -56,7 +56,7 @@ public class IpValidator {
 		return isIpv4(str) || isIpv6(str);
 	}
 
-	public static boolean isValid(final CharSequence charSequence, final IpType type){
+	public static boolean isValid(final CharSequence charSequence, final IpType type) {
 		if(charSequence == null || charSequence.length() == 0){
 			return false;
 		}
@@ -70,7 +70,7 @@ public class IpValidator {
 		}
 	}
 
-	private static boolean isIpv4(final String str){
+	private static boolean isIpv4(final String str) {
 		if(str == null){
 			return false;
 		}
@@ -99,7 +99,7 @@ public class IpValidator {
 		return true;
 	}
 
-	private static boolean IPV4_group_valid(final char[] digits, final int digitSize){
+	private static boolean IPV4_group_valid(final char[] digits, final int digitSize) {
 		switch(digitSize){
 			case 1:
 				return digits[0] >= '0' && digits[0] <= '9';
@@ -122,7 +122,7 @@ public class IpValidator {
 		}
 	}
 
-	private static boolean isIpv6(final String str){
+	private static boolean isIpv6(final String str) {
 		if(str == null){
 			return false;
 		}
@@ -143,7 +143,7 @@ public class IpValidator {
 		}
 	}
 
-	private static boolean isIpv6(final String str, final int minGroup, final int maxGroup){
+	private static boolean isIpv6(final String str, final int minGroup, final int maxGroup) {
 		if("::".equals(str)){
 			return true;
 		}
@@ -179,14 +179,13 @@ public class IpValidator {
 		return true;
 	}
 
-	private static boolean IPV6_group_valid(final char[] digits, final int digitSize){
+	private static boolean IPV6_group_valid(final char[] digits, final int digitSize) {
 		if(digitSize < 1 || digitSize > 4){
 			return false;
 		}
 
 		for(char c : digits){
 			if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')){
-				continue;
 			}else{
 				return false;
 			}

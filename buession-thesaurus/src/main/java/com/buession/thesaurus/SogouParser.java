@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus;
@@ -55,15 +55,16 @@ public class SogouParser extends AbstractParser {
 	private final static Logger logger = LoggerFactory.getLogger(SogouParser.class);
 
 	@Override
-	public Type getType(){
+	public Type getType() {
 		return Type.SOGOU;
 	}
 
 	@Override
-	protected Set<Word> doParse(InputStream inputStream) throws IOException{
+	protected Set<Word> doParse(InputStream inputStream) throws IOException {
 		SogouScelModel model = read(inputStream);
 
-		logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName(), model.getType(), model.getDescription(), model.getSample());
+		logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName(),
+				model.getType(), model.getDescription(), model.getSample());
 
 		Map<String, Set<String>> tempWords = model.getWordMap();
 
@@ -104,7 +105,7 @@ public class SogouParser extends AbstractParser {
 		return words;
 	}
 
-	private SogouScelModel read(InputStream inputStream) throws IOException{
+	private SogouScelModel read(InputStream inputStream) throws IOException {
 		SogouScelModel model = new SogouScelModel();
 		DataInputStream input = new DataInputStream(inputStream);
 		byte[] bytes = new byte[4];
@@ -190,11 +191,7 @@ public class SogouParser extends AbstractParser {
 				buffer.setLength(buffer.length() - 1);
 				String pinyin = buffer.toString();
 
-				Set<String> list = wordMap.get(pinyin);
-				if(list == null){
-					list = new LinkedHashSet<>();
-					wordMap.put(pinyin, list);
-				}
+				Set<String> list = wordMap.computeIfAbsent(pinyin, k->new LinkedHashSet<>());
 
 				for(int i = 0; i < size; i++){
 					count = readUnsignedShort(input);
@@ -221,7 +218,7 @@ public class SogouParser extends AbstractParser {
 		}
 	}
 
-	protected final String readString(DataInputStream input, int pos, int[] reads) throws IOException{
+	protected final String readString(DataInputStream input, int pos, int[] reads) throws IOException {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		int read = reads[0];
 
@@ -247,7 +244,7 @@ public class SogouParser extends AbstractParser {
 		return new String(output.toByteArray(), ENCODING);
 	}
 
-	protected static int readUnsignedShort(InputStream in) throws IOException{
+	protected static int readUnsignedShort(InputStream in) throws IOException {
 		int ch1 = in.read();
 		int ch2 = in.read();
 
@@ -268,43 +265,43 @@ public class SogouParser extends AbstractParser {
 
 		private Map<String, Set<String>> wordMap;
 
-		public String getName(){
+		public String getName() {
 			return name;
 		}
 
-		public void setName(String name){
+		public void setName(String name) {
 			this.name = name;
 		}
 
-		public String getType(){
+		public String getType() {
 			return type;
 		}
 
-		public void setType(String type){
+		public void setType(String type) {
 			this.type = type;
 		}
 
-		public String getDescription(){
+		public String getDescription() {
 			return description;
 		}
 
-		public void setDescription(String description){
+		public void setDescription(String description) {
 			this.description = description;
 		}
 
-		public String getSample(){
+		public String getSample() {
 			return sample;
 		}
 
-		public void setSample(String sample){
+		public void setSample(String sample) {
 			this.sample = sample;
 		}
 
-		public Map<String, Set<String>> getWordMap(){
+		public Map<String, Set<String>> getWordMap() {
 			return wordMap;
 		}
 
-		public void setWordMap(Map<String, Set<String>> wordMap){
+		public void setWordMap(Map<String, Set<String>> wordMap) {
 			this.wordMap = wordMap;
 		}
 

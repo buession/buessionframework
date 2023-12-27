@@ -19,15 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
-import com.buession.core.validator.Validate;
-
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * 注解工具类
@@ -49,19 +50,10 @@ public class AnnotationUtils extends org.springframework.core.annotation.Annotat
 	 * @return 类包含有 annotations 中的任意一个注解返回 true；否则返回 false
 	 */
 	public static boolean hasClassAnnotationPresent(final Class<?> clazz,
-													final Class<? extends Annotation>[] annotations){
+													final Class<? extends Annotation>[] annotations) {
 		Assert.isNull(clazz, "Find annotation class cloud not be null.");
-
-		if(Validate.isNotEmpty(annotations)){
-			for(Class<? extends Annotation> annotationClazz : annotations){
-				Annotation annotation = findAnnotation(clazz, annotationClazz);
-				if(annotation != null){
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return annotations != null &&
+				Arrays.stream(annotations).anyMatch((annotation)->findAnnotation(clazz, annotation) != null);
 	}
 
 	/**
@@ -74,19 +66,49 @@ public class AnnotationUtils extends org.springframework.core.annotation.Annotat
 	 *
 	 * @return 方法包含有 annotations 中的任意一个注解返回 true；否则返回 false
 	 */
-	public static boolean hasMethodAnnotationPresent(Method method, final Class<? extends Annotation>[] annotations){
+	public static boolean hasMethodAnnotationPresent(final Method method,
+													 final Class<? extends Annotation>[] annotations) {
 		Assert.isNull(method, "Find annotation method cloud not be null.");
+		return annotations != null &&
+				Arrays.stream(annotations).anyMatch((annotation)->findAnnotation(method, annotation) != null);
+	}
 
-		if(Validate.isNotEmpty(annotations)){
-			for(Class<? extends Annotation> annotationClazz : annotations){
-				Annotation annotation = findAnnotation(method, annotationClazz);
-				if(annotation != null){
-					return true;
-				}
-			}
-		}
+	/**
+	 * 检测一个属性是否含有 annotations 中的任意一个注解
+	 *
+	 * @param field
+	 * 		待验证的属性
+	 * @param annotations
+	 * 		检测是否含有的注解
+	 *
+	 * @return 属性包含有 annotations 中的任意一个注解返回 true；否则返回 false
+	 *
+	 * @since 2.3.2
+	 */
+	public static boolean hasFieldAnnotationPresent(final Field field,
+													final Class<? extends Annotation>[] annotations) {
+		Assert.isNull(field, "Find annotation field cloud not be null.");
+		return annotations != null &&
+				Arrays.stream(annotations).anyMatch((annotation)->findAnnotation(field, annotation) != null);
+	}
 
-		return false;
+	/**
+	 * 检测一个 {@link AnnotatedElement} 是否含有 annotations 中的任意一个注解
+	 *
+	 * @param annotatedElement
+	 * 		待验证的 {@link AnnotatedElement}
+	 * @param annotations
+	 * 		检测是否含有的注解
+	 *
+	 * @return {@link AnnotatedElement} 包含有 annotations 中的任意一个注解返回 true；否则返回 false
+	 *
+	 * @since 2.3.2
+	 */
+	public static boolean hasAnnotatedElementAnnotationPresent(final AnnotatedElement annotatedElement,
+															   final Class<? extends Annotation>[] annotations) {
+		Assert.isNull(annotatedElement, "AnnotatedElement cloud not be null.");
+		return annotations != null && Arrays.stream(annotations)
+				.anyMatch((annotation)->findAnnotation(annotatedElement, annotation) != null);
 	}
 
 }

@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
 
+import com.buession.core.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
@@ -46,49 +47,49 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
 
 	private final static Logger logger = LoggerFactory.getLogger(VelocityViewResolver.class);
 
-	public VelocityViewResolver(){
+	public VelocityViewResolver() {
 		setViewClass(requiredViewClass());
 	}
 
-	public String getEncoding(){
+	public String getEncoding() {
 		return encoding;
 	}
 
-	public void setEncoding(String encoding){
+	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
 
-	public String getToolboxConfigLocation(){
+	public String getToolboxConfigLocation() {
 		return toolboxConfigLocation;
 	}
 
-	public void setToolboxConfigLocation(String toolboxConfigLocation){
+	public void setToolboxConfigLocation(String toolboxConfigLocation) {
 		this.toolboxConfigLocation = toolboxConfigLocation;
 	}
 
-	public String getDateToolAttribute(){
+	public String getDateToolAttribute() {
 		return dateToolAttribute;
 	}
 
-	public void setDateToolAttribute(String dateToolAttribute){
+	public void setDateToolAttribute(String dateToolAttribute) {
 		this.dateToolAttribute = dateToolAttribute;
 	}
 
-	public String getNumberToolAttribute(){
+	public String getNumberToolAttribute() {
 		return numberToolAttribute;
 	}
 
-	public void setNumberToolAttribute(String numberToolAttribute){
+	public void setNumberToolAttribute(String numberToolAttribute) {
 		this.numberToolAttribute = numberToolAttribute;
 	}
 
 	@Override
-	protected Class<?> requiredViewClass(){
+	protected Class<?> requiredViewClass() {
 		return VelocityView.class;
 	}
 
 	@Override
-	protected void initApplicationContext(){
+	protected void initApplicationContext() {
 		super.initApplicationContext();
 
 		if(toolboxConfigLocation == null){
@@ -109,15 +110,14 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
 	}
 
 	@Override
-	protected AbstractUrlBasedView buildView(String viewName) throws Exception{
+	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 		VelocityView view = (VelocityView) super.buildView(viewName);
 
 		view.setDateToolAttribute(dateToolAttribute);
 		view.setNumberToolAttribute(numberToolAttribute);
 
-		if(toolboxConfigLocation != null){
-			((VelocityToolboxView) view).setToolboxConfigLocation(toolboxConfigLocation);
-		}
+		ObjectUtils.invokeIfAvailable(toolboxConfigLocation,
+				((VelocityToolboxView) view)::setToolboxConfigLocation);
 
 		return view;
 	}
