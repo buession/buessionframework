@@ -30,12 +30,20 @@ import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
 
 /**
+ * Tool for working with {@link Date} and {@link Calendar}
+ * with request locale in Velocity templates.
+ *
  * @author Yong.Teng
+ * @see DateTool
+ * @see Locale
+ * @see HttpServletRequest
  */
 public class LocaleAwareDateTool extends DateTool {
 

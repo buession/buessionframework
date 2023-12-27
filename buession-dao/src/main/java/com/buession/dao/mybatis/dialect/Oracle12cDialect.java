@@ -38,7 +38,7 @@ public final class Oracle12cDialect implements Dialect {
 	}
 
 	@Override
-	public String buildPaginationSql(final String sql, final long offset, final long limit) {
+	public String buildPaginationSql(final String sql, final int offset, final int limit) {
 		final StringBuilder sb = new StringBuilder(sql);
 
 		sb.append(" OFFSET ").append(offset).append(" ROWS FETCH NEXT ").append(limit)

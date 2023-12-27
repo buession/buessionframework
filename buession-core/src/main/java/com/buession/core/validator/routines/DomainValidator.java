@@ -51,10 +51,12 @@ public class DomainValidator {
 			// Also widely used as localhost.localdomain
 			"localdomain"};
 
-	private DomainValidator(){
+	private final static Pattern DOMAIN_NAME_REGEX_PATTERN = Pattern.compile(DOMAIN_NAME_REGEX);
+
+	private DomainValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence) {
 		if(charSequence == null){
 			return false;
 		}
@@ -65,11 +67,11 @@ public class DomainValidator {
 			}
 		}
 
-		Matcher matcher = Pattern.compile(DOMAIN_NAME_REGEX).matcher(charSequence);
+		Matcher matcher = DOMAIN_NAME_REGEX_PATTERN.matcher(charSequence);
 		return matcher.matches() && isValidTld(matcher.group(1));
 	}
 
-	private static boolean isValidTld(final String tld){
+	private static boolean isValidTld(final String tld) {
 		try{
 			return EnumUtils.getEnumIgnoreCase(DomainTLD.class, chompLeadingDot(tld.toLowerCase())) != null;
 		}catch(IllegalArgumentException e){
@@ -77,7 +79,7 @@ public class DomainValidator {
 		}
 	}
 
-	private static String chompLeadingDot(final String str){
+	private static String chompLeadingDot(final String str) {
 		return str.startsWith(".") ? str.substring(1) : str;
 	}
 

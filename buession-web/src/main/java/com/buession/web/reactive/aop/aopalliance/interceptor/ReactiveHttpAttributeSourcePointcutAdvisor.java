@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.aopalliance.interceptor;
 
 import com.buession.web.aop.aopalliance.AbstractWebAttributeSourcePointcutAdvisor;
+import org.springframework.util.StringValueResolver;
 
 /**
  * @author Yong.Teng
@@ -34,8 +35,24 @@ public class ReactiveHttpAttributeSourcePointcutAdvisor extends AbstractWebAttri
 
 	private final static long serialVersionUID = 8267117305963633132L;
 
-	public ReactiveHttpAttributeSourcePointcutAdvisor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ReactiveHttpAttributeSourcePointcutAdvisor() {
 		super(new ReactiveAopAllianceAnnotationsMethodInterceptor());
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveHttpAttributeSourcePointcutAdvisor(StringValueResolver stringValueResolver) {
+		super(new ReactiveAopAllianceAnnotationsMethodInterceptor(stringValueResolver));
 	}
 
 }

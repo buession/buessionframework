@@ -33,14 +33,24 @@ import java.util.regex.Pattern;
  * @author Yong.Teng
  * @since 2.3.1
  */
-public class IpSensitiveStrategy implements ISensitiveStrategy {
+public class IpSensitiveStrategy extends AbstractSensitiveStrategy {
 
 	private final static Pattern PATTERN = Pattern.compile(
 			"((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}");
 
+	/**
+	 * 构造函数
+	 *
+	 * @param replacement
+	 * 		脱敏替换内容
+	 */
+	public IpSensitiveStrategy(final String replacement) {
+		super(replacement);
+	}
+
 	@Override
 	public Function<String, String> getFunction() {
-		return str->PATTERN.matcher(str).replaceAll("$1.****.$2");
+		return str->PATTERN.matcher(str).replaceAll("$1." + getReplacement() + ".$2");
 	}
 
 }

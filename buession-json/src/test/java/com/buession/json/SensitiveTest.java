@@ -37,7 +37,7 @@ import org.junit.Test;
 public class SensitiveTest {
 
 	@Test
-	public void sensitive(){
+	public void sensitive() {
 		User user = new User();
 
 		user.setUsername("github");
@@ -50,6 +50,7 @@ public class SensitiveTest {
 		user.setAddress1(new StringBuilder("四川省成都市锦江区东大路"));
 		user.setPrice(100);
 		user.setFormat("eduosi@163.com");
+		user.setEmail("ed@163.com");
 		user.setQq("10000");
 		user.setQq1("251329");
 		user.setQq2("2513290410");
@@ -67,7 +68,7 @@ public class SensitiveTest {
 		@Sensitive(strategy = SensitiveStrategy.USERNAME)
 		private String username;
 
-		@Sensitive(strategy = SensitiveStrategy.ID_CARD)
+		@Sensitive(strategy = SensitiveStrategy.ID_CARD, replacement = "----")
 		private String idCard;
 
 		@Sensitive(strategy = SensitiveStrategy.TEL)
@@ -94,6 +95,9 @@ public class SensitiveTest {
 		@Sensitive(format = "@", replacement = "at")
 		private String format;
 
+		@Sensitive(strategy = SensitiveStrategy.EMAIL)
+		private String email;
+
 		@Sensitive(strategy = SensitiveStrategy.QQ)
 		private String qq;
 
@@ -103,107 +107,115 @@ public class SensitiveTest {
 		@Sensitive(strategy = SensitiveStrategy.QQ)
 		private String qq2;
 
-		public String getUsername(){
+		public String getUsername() {
 			return username;
 		}
 
-		public void setUsername(String username){
+		public void setUsername(String username) {
 			this.username = username;
 		}
 
-		public String getIdCard(){
+		public String getIdCard() {
 			return idCard;
 		}
 
-		public void setIdCard(String idCard){
+		public void setIdCard(String idCard) {
 			this.idCard = idCard;
 		}
 
-		public String getTel(){
+		public String getTel() {
 			return tel;
 		}
 
-		public void setTel(String tel){
+		public void setTel(String tel) {
 			this.tel = tel;
 		}
 
-		public String getMobile(){
+		public String getMobile() {
 			return mobile;
 		}
 
-		public void setMobile(String mobile){
+		public void setMobile(String mobile) {
 			this.mobile = mobile;
 		}
 
-		public String getIpV4(){
+		public String getIpV4() {
 			return ipV4;
 		}
 
-		public void setIpV4(String ipV4){
+		public void setIpV4(String ipV4) {
 			this.ipV4 = ipV4;
 		}
 
-		public String getIpV6(){
+		public String getIpV6() {
 			return ipV6;
 		}
 
-		public void setIpV6(String ipV6){
+		public void setIpV6(String ipV6) {
 			this.ipV6 = ipV6;
 		}
 
-		public String getAddress(){
+		public String getAddress() {
 			return address;
 		}
 
-		public void setAddress(String address){
+		public void setAddress(String address) {
 			this.address = address;
 		}
 
-		public StringBuilder getAddress1(){
+		public StringBuilder getAddress1() {
 			return address1;
 		}
 
-		public void setAddress1(StringBuilder address1){
+		public void setAddress1(StringBuilder address1) {
 			this.address1 = address1;
 		}
 
-		public Integer getPrice(){
+		public Integer getPrice() {
 			return price;
 		}
 
-		public void setPrice(Integer price){
+		public void setPrice(Integer price) {
 			this.price = price;
 		}
 
-		public String getFormat(){
+		public String getFormat() {
 			return format;
 		}
 
-		public void setFormat(String format){
+		public void setFormat(String format) {
 			this.format = format;
 		}
 
-		public String getQq(){
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public String getQq() {
 			return qq;
 		}
 
-		public void setQq(String qq){
+		public void setQq(String qq) {
 			this.qq = qq;
 		}
 
-		public String getQq1(){
+		public String getQq1() {
 			return qq1;
 		}
 
-		public void setQq1(String qq1){
+		public void setQq1(String qq1) {
 			this.qq1 = qq1;
 		}
 
-		public String getQq2(){
+		public String getQq2() {
 			return qq2;
 		}
 
-		public void setQq2(String qq2){
+		public void setQq2(String qq2) {
 			this.qq2 = qq2;
 		}
 	}

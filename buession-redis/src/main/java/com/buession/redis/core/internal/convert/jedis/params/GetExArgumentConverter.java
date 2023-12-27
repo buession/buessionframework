@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.command.StringCommands;
 import redis.clients.jedis.params.GetExParams;
 
@@ -39,24 +40,14 @@ public final class GetExArgumentConverter implements Converter<StringCommands.Ge
 	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
 
 	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source){
+	public GetExParams convert(final StringCommands.GetExArgument source) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final GetExParams getExParams = new GetExParams();
 
-		if(source.getEx() != null){
-			getExParams.ex(source.getEx());
-		}
-
-		if(source.getPx() != null){
-			getExParams.px(source.getPx());
-		}
-
-		if(source.getExAt() != null){
-			getExParams.exAt(source.getEx());
-		}
-
-		if(source.getPxAt() != null){
-			getExParams.pxAt(source.getPx());
-		}
+		propertyMapper.from(source.getEx()).to(getExParams::ex);
+		propertyMapper.from(source.getPx()).to(getExParams::px);
+		propertyMapper.from(source.getExAt()).to(getExParams::exAt);
+		propertyMapper.from(source.getPxAt()).to(getExParams::pxAt);
 
 		if(Boolean.TRUE.equals(source.isPersist())){
 			getExParams.persist();

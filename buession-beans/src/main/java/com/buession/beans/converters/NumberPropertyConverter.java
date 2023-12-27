@@ -94,9 +94,16 @@ public abstract class NumberPropertyConverter<T extends Number> extends Abstract
 			return targetType.cast(((Instant) value).toEpochMilli());
 		}
 
+		// Handle CharSequence --> Long
+		if(value instanceof CharSequence){
+			return targetType.cast(strToNumber(sourceType, targetType, value.toString()));
+		}
+
 		return null;
 	}
 
 	protected abstract T toNumber(final Class<?> sourceType, final Class<T> targetType, final Number value);
+
+	protected abstract T strToNumber(final Class<?> sourceType, final Class<T> targetType, final String value);
 
 }

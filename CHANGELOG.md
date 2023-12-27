@@ -2,6 +2,71 @@
 ===========================
 
 
+## [2.3.2](https://github.com/buession/buessionframework/releases/tag/v2.3.2) (2023-12-27)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.2)
+
+
+### ⭐ 新特性
+
+- **buession-core：** ClassUtils、MethodUtils、FieldUtils 增加检测是否含义任意注解的方法
+- **buession-core：** AnnotationUtils 增加检测属性是否含义任意注解的方法
+- **buession-core：** 断言 Assert 可指定异常
+- **buession-core：** 新增对象工具类 ObjectUtils
+- **buession-core：** AbstractBeanConverter 新增支持 String 转枚举
+- **buession-core：** 新增反射工具类 ReflectionUtils
+- **buession-aop：** 新增注解处理器支持解析注解属性中的变量
+- **buession-json：** 注解 @Sensitive 增加支持邮箱脱敏
+- **buession-httpclient：** OKHTTP client 增加可设置 maxRequests
+- **buession-velocity：** 新增验证工具 ValidateTool
+- **buession-web：** 新增注解处理器支持解析注解属性中的变量
+
+
+### 🔔 变化
+
+- **buession-core：** 废弃 JsonSerializer 和 JsonDeserializer
+- **buession-core：** ListConverter、SetConverter、MapConverter 默认返回原始类型
+- **buession-core：** 移除 spring-beans 依赖
+- **buession-json：** 注解 @Sensitive 内容替换策略，替换符可通过属性 replacement 设置
+
+
+### 🐞 Bug 修复
+
+- **buession-core：** 修改错误的类名 BuesssionFrameworkVersion 为 BuessionFrameworkVersion
+- **buession-beans：** 修复 NumberPropertyConverter 字符串转换为数字时异常的 BUG
+- **buession-beans：** 修复 Map 转换为 bean 时字段为 null 值的 BUG
+- **buession-beans：** 修复 Map 转换为 bean 或 bean 转换为 map 时缓存导致的异常
+- **buession-dao：** 修复分页插件 PaginationInterceptor 当页码大于等于 2 时，无法返回数据的 BUG
+- **buession-dao：** 修复分页对象下一页值错误的 BUG
+- **buession-git：** 修复无法解析 git 信息时，空指针异常
+- **buession-web：** 修复分页对象下一页值错误的 BUG
+
+
+### ⏪ 优化
+
+- **buession-beans：** 代码优化
+- **buession-httpclient：** 代码优化
+- **buession-redis：** 代码优化
+- **buession-redis：** 优化 RedisAccessor 多次调用 afterPropertiesSet 时，重复初始化 RedisConnectionFactory
+- **buession-geoip：** 优化 GeoIPResolverFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 DatabaseResolver
+- **buession-thesaurus：** 优化 ThesaurusFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 Parser
+- **buession-velocity：** 优化 VelocityEngineFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 VelocityEngine
+
+
+### 📔 文档
+
+- **buession-aop：** 完善注释
+- **buession-httpclient：** 完善注释
+- **buession-redis：** 完善注释
+- **buession-velocity：** 完善注释
+- **buession-web：** 完善注释
+
+
+---
+
+
 ## [2.3.1](https://github.com/buession/buessionframework/releases/tag/v2.3.1) (2023-11-17)
 
 ### 🔨依赖升级

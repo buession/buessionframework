@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -48,7 +48,7 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 	public final static ListConverter<String, ClusterRedisNode> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public ClusterRedisNode convert(final String source){
+	public ClusterRedisNode convert(final String source) {
 		String[] values = StringUtils.split(source, " ");
 		String[] hostAndPort = StringUtils.split(values[1], ":");
 		String host = hostAndPort[0];
@@ -64,7 +64,7 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 		SlotRange slotRange = null;
 
 		if(values.length == 9){
-			String[] slotRangeValues = StringUtils.split(values[8], "-");
+			String[] slotRangeValues = StringUtils.split(values[8], '-');
 			slotRange = new SlotRange(Integer.parseInt(slotRangeValues[0]), Integer.parseInt(slotRangeValues[1]));
 		}
 

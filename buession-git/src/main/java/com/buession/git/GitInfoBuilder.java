@@ -43,19 +43,19 @@ class GitInfoBuilder {
 
 	private int i = 0;
 
-	private GitInfoBuilder(final String group){
+	private GitInfoBuilder(final String group) {
 		this.group = group;
 	}
 
-	public static GitInfoBuilder getInstance(){
+	public static GitInfoBuilder getInstance() {
 		return getInstance(null);
 	}
 
-	public static GitInfoBuilder getInstance(final String group){
+	public static GitInfoBuilder getInstance(final String group) {
 		return new GitInfoBuilder(group);
 	}
 
-	public GitInfoBuilder append(final String name, final String value){
+	public GitInfoBuilder append(final String name, final String value) {
 		ensure();
 		ensurePrefix();
 
@@ -72,7 +72,7 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final Integer value){
+	public GitInfoBuilder append(final String name, final Integer value) {
 		ensure();
 		ensurePrefix();
 
@@ -87,7 +87,7 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final Boolean value){
+	public GitInfoBuilder append(final String name, final Boolean value) {
 		ensure();
 		ensurePrefix();
 
@@ -102,7 +102,7 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final Set<String> value){
+	public GitInfoBuilder append(final String name, final Set<String> value) {
 		if(value != null){
 			ensure();
 			ensurePrefix();
@@ -113,9 +113,7 @@ class GitInfoBuilder {
 				endDotReplaceToEqualsSign();
 			}
 
-			if(value == null){
-				sb.append(Constants.EMPTY_STRING);
-			}else{
+			if(value != null){
 				sb.append(String.join(",", value));
 			}
 		}
@@ -123,7 +121,7 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final ZonedDateTime value){
+	public GitInfoBuilder append(final String name, final ZonedDateTime value) {
 		ensure();
 		ensurePrefix();
 
@@ -138,11 +136,11 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public GitInfoBuilder append(final String name, final Info value){
+	public GitInfoBuilder append(final String name, final Info value) {
 		return append(name, value, false);
 	}
 
-	public GitInfoBuilder append(final String name, final Info value, final boolean containName){
+	public GitInfoBuilder append(final String name, final Info value, final boolean containName) {
 		if(value != null){
 			ensure();
 
@@ -156,24 +154,24 @@ class GitInfoBuilder {
 		return this;
 	}
 
-	public String build(){
+	public String build() {
 		return sb.toString();
 	}
 
-	private void ensurePrefix(){
+	private void ensurePrefix() {
 		sb.append(PREFIX).append('.');
 		if(group != null){
 			sb.append(group).append('.');
 		}
 	}
 
-	private void ensure(){
+	private void ensure() {
 		if(i++ > 0){
 			sb.append(System.lineSeparator());
 		}
 	}
 
-	private void endDotReplaceToEqualsSign(){
+	private void endDotReplaceToEqualsSign() {
 		sb.setCharAt(sb.length() - 1, '=');
 	}
 

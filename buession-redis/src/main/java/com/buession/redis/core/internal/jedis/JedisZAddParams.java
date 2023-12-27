@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -36,7 +36,7 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	/**
 	 * 构造函数
 	 */
-	public JedisZAddParams(){
+	public JedisZAddParams() {
 		super();
 	}
 
@@ -46,7 +46,7 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param nxXx
 	 * 		更新成员方式
 	 */
-	public JedisZAddParams(final NxXx nxXx){
+	public JedisZAddParams(final NxXx nxXx) {
 		super();
 		nxXx(nxXx);
 	}
@@ -57,7 +57,7 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param gtLt
 	 *        {@link GtLt}
 	 */
-	public JedisZAddParams(final GtLt gtLt){
+	public JedisZAddParams(final GtLt gtLt) {
 		super();
 		gtLt(gtLt);
 	}
@@ -68,12 +68,9 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param ch
 	 * 		是否返回变更成员的数量
 	 */
-	public JedisZAddParams(final boolean ch){
+	public JedisZAddParams(final boolean ch) {
 		super();
-
-		if(ch){
-			ch();
-		}
+		ch(ch);
 	}
 
 	/**
@@ -84,7 +81,7 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param gtLt
 	 * 		更新新的分值方式
 	 */
-	public JedisZAddParams(final NxXx nxXx, final GtLt gtLt){
+	public JedisZAddParams(final NxXx nxXx, final GtLt gtLt) {
 		super();
 		nxXx(nxXx);
 		gtLt(gtLt);
@@ -98,13 +95,10 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param ch
 	 * 		是否返回变更成员的数量
 	 */
-	public JedisZAddParams(final NxXx nxXx, final boolean ch){
+	public JedisZAddParams(final NxXx nxXx, final boolean ch) {
 		super();
 		nxXx(nxXx);
-
-		if(ch){
-			ch();
-		}
+		ch(ch);
 	}
 
 	/**
@@ -115,13 +109,10 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param ch
 	 * 		是否返回变更成员的数量
 	 */
-	public JedisZAddParams(final GtLt gtLt, final boolean ch){
+	public JedisZAddParams(final GtLt gtLt, final boolean ch) {
 		super();
 		gtLt(gtLt);
-
-		if(ch){
-			ch();
-		}
+		ch(ch);
 	}
 
 	/**
@@ -134,14 +125,11 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param ch
 	 * 		是否返回变更成员的数量
 	 */
-	public JedisZAddParams(final NxXx nxXx, final GtLt gtLt, final boolean ch){
+	public JedisZAddParams(final NxXx nxXx, final GtLt gtLt, final boolean ch) {
 		super();
 		nxXx(nxXx);
 		gtLt(gtLt);
-
-		if(ch){
-			ch();
-		}
+		ch(ch);
 	}
 
 	/**
@@ -150,7 +138,7 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param nxXx
 	 * 		更新成员方式
 	 */
-	private void nxXx(final NxXx nxXx){
+	private void nxXx(final NxXx nxXx) {
 		switch(nxXx){
 			case NX:
 				nx();
@@ -169,7 +157,7 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * @param gtLt
 	 * 		更新新的分值方式
 	 */
-	private void gtLt(final GtLt gtLt){
+	private void gtLt(final GtLt gtLt) {
 		switch(gtLt){
 			case GT:
 				gt();
@@ -179,6 +167,12 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 				break;
 			default:
 				break;
+		}
+	}
+
+	private void ch(boolean ch) {
+		if(ch){
+			ch();
 		}
 	}
 

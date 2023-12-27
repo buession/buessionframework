@@ -19,34 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
 
 /**
+ * 网络不可用异常
+ *
  * @author Yong.Teng
  */
 public class NetworkUnreachableException extends Exception {
 
-    public NetworkUnreachableException(){
+    private final static long serialVersionUID = 65978971232751573L;
+
+    public NetworkUnreachableException() {
         super();
     }
 
-    public NetworkUnreachableException(String message){
+    public NetworkUnreachableException(String message) {
         super(message);
     }
 
-    public NetworkUnreachableException(String message, Throwable cause){
+    public NetworkUnreachableException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NetworkUnreachableException(Throwable cause){
+    public NetworkUnreachableException(Throwable cause) {
         super(cause);
     }
 
     public NetworkUnreachableException(String message, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
+            writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
 }

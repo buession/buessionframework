@@ -40,18 +40,20 @@ public class VelocityEngineFactoryBean extends VelocityEngineFactory implements 
 	private VelocityEngine velocityEngine;
 
 	@Override
-	public VelocityEngine getObject(){
+	public VelocityEngine getObject() {
 		return velocityEngine;
 	}
 
 	@Override
-	public Class<? extends VelocityEngine> getObjectType(){
+	public Class<? extends VelocityEngine> getObjectType() {
 		return VelocityEngine.class;
 	}
 
 	@Override
-	public void afterPropertiesSet() throws IOException, VelocityException{
-		this.velocityEngine = createVelocityEngine();
+	public void afterPropertiesSet() throws IOException, VelocityException {
+		if(velocityEngine == null){
+			velocityEngine = createVelocityEngine();
+		}
 	}
 
 }

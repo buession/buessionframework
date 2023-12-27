@@ -32,18 +32,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.StringValueResolver;
 
 import java.nio.charset.Charset;
 
 /**
+ * Reactive 模式注解 {@link ContentType} 处理器
+ *
  * @author Yong.Teng
  */
 public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ReactiveContentTypeAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ReactiveContentTypeAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveContentTypeAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -54,9 +73,12 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 			return;
 		}
 
-		String mime = contentType.mime();
+		String mime = stringValueResolver == null ? contentType.mime() : stringValueResolver.resolveStringValue(
+				contentType.mime());
 		int i = mime.indexOf('/');
-		Charset charset = Charset.forName(contentType.charset());
+		Charset charset = Charset.forName(
+				stringValueResolver == null ? contentType.charset() : stringValueResolver.resolveStringValue(
+						contentType.charset()));
 		String type = mime.substring(0, i - 1);
 		String subType = mime.substring(i);
 

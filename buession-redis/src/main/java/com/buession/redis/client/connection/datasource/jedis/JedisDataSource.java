@@ -26,14 +26,12 @@ package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.lang.Constants;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.PoolConfigConverter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.core.RedisNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -64,37 +62,37 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	private final static Logger logger = LoggerFactory.getLogger(JedisDataSource.class);
 
 	@Override
-	public String getHost(){
+	public String getHost() {
 		return host;
 	}
 
 	@Override
-	public void setHost(String host){
+	public void setHost(String host) {
 		this.host = host;
 	}
 
 	@Override
-	public int getPort(){
+	public int getPort() {
 		return port;
 	}
 
 	@Override
-	public void setPort(int port){
+	public void setPort(int port) {
 		this.port = port;
 	}
 
 	@Override
-	public int getDatabase(){
+	public int getDatabase() {
 		return database;
 	}
 
 	@Override
-	public void setDatabase(int database){
+	public void setDatabase(int database) {
 		this.database = database;
 	}
 
 	@Override
-	public RedisConnection getConnection(){
+	public RedisConnection getConnection() {
 		if(isUsePool()){
 			if(pool == null){
 				pool = createPool();
@@ -105,13 +103,11 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 				getSslConfiguration());
 	}
 
-	protected JedisPool createPool(){
+	protected JedisPool createPool() {
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		final PoolConfigConverter<Jedis> poolConfigConverter = new PoolConfigConverter<>(
-				jedisPoolConfig);
 
-		poolConfigConverter.convert(getPoolConfig());
+		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
 
 		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
 		if(sslConfiguration == null){

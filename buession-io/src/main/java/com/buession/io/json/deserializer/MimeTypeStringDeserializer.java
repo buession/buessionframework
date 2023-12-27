@@ -45,17 +45,19 @@ import java.io.IOException;
  */
 public class MimeTypeStringDeserializer extends StdScalarDeserializer<MimeType> implements ContextualDeserializer {
 
-	public MimeTypeStringDeserializer(){
+	private final static long serialVersionUID = 2065725897002881112L;
+
+	public MimeTypeStringDeserializer() {
 		super(MimeType.class);
 	}
 
-	public MimeTypeStringDeserializer(Class<? extends MimeType> clazz){
+	public MimeTypeStringDeserializer(Class<? extends MimeType> clazz) {
 		super(clazz);
 	}
 
 	@Override
 	public MimeType deserialize(JsonParser jsonParser, DeserializationContext context)
-			throws IOException, JacksonException{
+			throws IOException, JacksonException {
 		Object currentValue = jsonParser.getCurrentValue();
 		Class<?> clazz = currentValue.getClass();
 
@@ -75,7 +77,7 @@ public class MimeTypeStringDeserializer extends StdScalarDeserializer<MimeType> 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public JsonDeserializer<?> createContextual(DeserializationContext context, BeanProperty property)
-			throws JsonMappingException{
+			throws JsonMappingException {
 		return new MimeTypeStringDeserializer((Class<MimeType>) property.getType().getRawClass());
 	}
 

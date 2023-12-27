@@ -32,25 +32,26 @@ import java.nio.charset.Charset;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public abstract class AbstractJsonDeserializer extends AbstractDeserializer implements JsonDeserializer {
 
 	@Override
-	public <V> V deserialize(final String str, final String charsetName) throws DeserializerException{
+	public <V> V deserialize(final String str, final String charsetName) throws DeserializerException {
 		return deserialize(str);
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Charset charset) throws DeserializerException{
+	public <V> V deserialize(final String str, final Charset charset) throws DeserializerException {
 		return deserialize(str);
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final String charsetName) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes, final String charsetName) throws DeserializerException {
 		return deserialize(bytes);
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Charset charset) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes, final Charset charset) throws DeserializerException {
 		return deserialize(bytes);
 	}
 

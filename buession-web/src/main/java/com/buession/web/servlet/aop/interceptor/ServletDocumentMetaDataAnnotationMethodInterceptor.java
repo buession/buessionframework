@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.interceptor;
@@ -28,6 +28,7 @@ import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractDocumentMetaDataAnnotationMethodInterceptor;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.servlet.aop.handler.ServletDocumentMetaDataAnnotationHandler;
+import org.springframework.util.StringValueResolver;
 
 /**
  * {@link DocumentMetaData} 注解拦截器
@@ -38,12 +39,50 @@ import com.buession.web.servlet.aop.handler.ServletDocumentMetaDataAnnotationHan
 public class ServletDocumentMetaDataAnnotationMethodInterceptor
 		extends AbstractDocumentMetaDataAnnotationMethodInterceptor {
 
-	public ServletDocumentMetaDataAnnotationMethodInterceptor(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ServletDocumentMetaDataAnnotationMethodInterceptor() {
 		super(new ServletDocumentMetaDataAnnotationHandler());
 	}
 
-	public ServletDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver resolver){
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 */
+	@Deprecated
+	public ServletDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver resolver) {
 		super(new ServletDocumentMetaDataAnnotationHandler(), resolver);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletDocumentMetaDataAnnotationMethodInterceptor(StringValueResolver stringValueResolver) {
+		super(new ServletDocumentMetaDataAnnotationHandler(stringValueResolver));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletDocumentMetaDataAnnotationMethodInterceptor(AnnotationResolver resolver,
+															  StringValueResolver stringValueResolver) {
+		super(new ServletDocumentMetaDataAnnotationHandler(stringValueResolver), resolver);
 	}
 
 }

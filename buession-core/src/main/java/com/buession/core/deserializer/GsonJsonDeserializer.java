@@ -34,10 +34,11 @@ import com.google.gson.Gson;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class GsonJsonDeserializer extends AbstractJsonDeserializer {
 
 	@Override
-	public <V> V deserialize(final String str) throws DeserializerException{
+	public <V> V deserialize(final String str) throws DeserializerException {
 		Gson gson = new Gson();
 		return gson.fromJson(str, new TypeReference<V>() {
 
@@ -45,7 +46,7 @@ public class GsonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException{
+	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 
 		Gson gson = new Gson();
@@ -53,7 +54,7 @@ public class GsonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(String str, TypeReference<V> type) throws DeserializerException{
+	public <V> V deserialize(String str, TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 
 		Gson gson = new Gson();
@@ -61,19 +62,19 @@ public class GsonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return deserialize(new String(bytes));
 	}
 
 	@Override
-	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException{
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return deserialize(new String(bytes), clazz);
 	}
 
 	@Override
-	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws DeserializerException{
+	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return deserialize(new String(bytes), type);
 	}

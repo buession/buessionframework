@@ -46,23 +46,25 @@ public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements Fa
 	private DatabaseResolver resolver;
 
 	@Override
-	public DatabaseResolver getObject() throws Exception{
+	public DatabaseResolver getObject() throws Exception {
 		return resolver;
 	}
 
 	@Override
-	public Class<? extends DatabaseResolver> getObjectType(){
+	public Class<? extends DatabaseResolver> getObjectType() {
 		return DatabaseResolver.class;
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception{
-		resolver = isEnableCache() ? new CacheDatabaseResolver(getStream(), getAsnStream()) : new DatabaseResolver(
-				getStream(), getAsnStream());
+	public void afterPropertiesSet() throws Exception {
+		if(resolver == null){
+			resolver = isEnableCache() ? new CacheDatabaseResolver(getStream(),
+					getAsnStream()) : new DatabaseResolver(getStream(), getAsnStream());
+		}
 	}
 
 	@Override
-	public void close() throws IOException{
+	public void close() throws IOException {
 		resolver.close();
 	}
 

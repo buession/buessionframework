@@ -19,20 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
+import com.buession.web.mvc.view.document.DocumentMetaData;
+import org.springframework.util.StringValueResolver;
 
 /**
+ * Reactive 模式注解 {@link DocumentMetaData} 处理器
+ *
  * @author Yong.Teng
  */
 public class ReactiveDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
 
-	public ReactiveDocumentMetaDataAnnotationHandler(){
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
+	public ReactiveDocumentMetaDataAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ReactiveDocumentMetaDataAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 }

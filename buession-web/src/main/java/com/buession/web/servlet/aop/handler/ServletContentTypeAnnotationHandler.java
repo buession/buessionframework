@@ -32,18 +32,37 @@ import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.servlet.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringValueResolver;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Servlet 模式注解 {@link ContentType} 处理器
+ *
  * @author Yong.Teng
  */
 public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletContentTypeAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ServletContentTypeAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletContentTypeAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -56,10 +75,19 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 
 		StringBuilder sb = new StringBuilder(contentType.mime().length() + 24);
 
-		sb.append(contentType.mime());
+		if(stringValueResolver == null){
+			sb.append(contentType.mime());
+		}else{
+			sb.append(stringValueResolver.resolveStringValue(contentType.mime()));
+		}
 
 		if(Validate.isNotEmpty(contentType.encoding())){
-			sb.append("; charset=").append(contentType.encoding());
+			sb.append("; charset=");
+			if(stringValueResolver == null){
+				sb.append(contentType.encoding());
+			}else{
+				sb.append(stringValueResolver.resolveStringValue(contentType.encoding()));
+			}
 		}
 
 		response.addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());

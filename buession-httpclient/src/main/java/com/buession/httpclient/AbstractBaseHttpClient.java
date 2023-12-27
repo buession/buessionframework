@@ -27,9 +27,7 @@ package com.buession.httpclient;
 import com.buession.core.utils.Assert;
 import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.exception.RequestException;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -85,36 +83,6 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	protected static URI URL2URI(final URL url) throws URISyntaxException {
 		Assert.isNull(url, "Request URL cloud not be null.");
 		return url.toURI();
-	}
-
-	protected static <T> T execute(Execute<T> execute) throws IOException, RequestException {
-		try{
-			return execute.exec();
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	protected static void asyncExecute(AsyncExecute execute) throws IOException, RequestException {
-		try{
-			execute.exec();
-		}catch(URISyntaxException e){
-			throw new IllegalArgumentException(e.getMessage(), e);
-		}
-	}
-
-	@FunctionalInterface
-	protected interface Execute<T> {
-
-		T exec() throws URISyntaxException, IOException, RequestException;
-
-	}
-
-	@FunctionalInterface
-	protected interface AsyncExecute {
-
-		void exec() throws URISyntaxException, IOException, RequestException;
-
 	}
 
 }

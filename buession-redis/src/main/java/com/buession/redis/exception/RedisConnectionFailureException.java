@@ -19,34 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
 
 /**
+ * Redis 连接失败异常
+ *
  * @author Yong.Teng
  */
 public class RedisConnectionFailureException extends RedisException {
 
-    public RedisConnectionFailureException(){
+    private final static long serialVersionUID = 4668151372471360713L;
+
+    public RedisConnectionFailureException() {
         super("Could not connect");
     }
 
-    public RedisConnectionFailureException(String message){
+    public RedisConnectionFailureException(String message) {
         super(message);
     }
 
-    public RedisConnectionFailureException(String message, Throwable cause){
+    public RedisConnectionFailureException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public RedisConnectionFailureException(Throwable cause){
+    public RedisConnectionFailureException(Throwable cause) {
         super(cause);
     }
 
     public RedisConnectionFailureException(String message, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
+            writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
 }

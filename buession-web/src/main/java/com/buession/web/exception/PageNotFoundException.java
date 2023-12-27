@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.exception;
@@ -29,24 +29,27 @@ package com.buession.web.exception;
  */
 public class PageNotFoundException extends Exception {
 
-    public PageNotFoundException(){
+    private final static long serialVersionUID = -9088756918218101398L;
+
+    public PageNotFoundException() {
         super();
     }
 
-    public PageNotFoundException(String message){
+    public PageNotFoundException(String message) {
         super(message);
     }
 
-    public PageNotFoundException(String message, Throwable cause){
+    public PageNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public PageNotFoundException(Throwable cause){
+    public PageNotFoundException(Throwable cause) {
         super(cause);
     }
 
     public PageNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
+            writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
 }

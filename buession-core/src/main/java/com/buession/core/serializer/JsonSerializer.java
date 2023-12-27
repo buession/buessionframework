@@ -31,6 +31,7 @@ import com.buession.core.type.TypeReference;
  *
  * @author Yong.Teng
  */
+@Deprecated
 public interface JsonSerializer extends Serializer {
 
 	/**
@@ -121,7 +122,7 @@ public interface JsonSerializer extends Serializer {
 	 * 		反序列化异常
 	 */
 	@Deprecated
-	default <V> V unserialize(final String str, final Class<V> clazz) throws SerializerException{
+	default <V> V unserialize(final String str, final Class<V> clazz) throws SerializerException {
 		return deserialize(str, clazz);
 	}
 
@@ -141,7 +142,7 @@ public interface JsonSerializer extends Serializer {
 	 * 		反序列化异常
 	 */
 	@Deprecated
-	default <V> V unserialize(final String str, final TypeReference<V> type) throws SerializerException{
+	default <V> V unserialize(final String str, final TypeReference<V> type) throws SerializerException {
 		return deserialize(str, type);
 	}
 
@@ -161,7 +162,7 @@ public interface JsonSerializer extends Serializer {
 	 * 		反序列化异常
 	 */
 	@Deprecated
-	default <V> V unserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException {
 		return deserialize(bytes, clazz);
 	}
 
@@ -181,7 +182,7 @@ public interface JsonSerializer extends Serializer {
 	 * 		反序列化异常
 	 */
 	@Deprecated
-	default <V> V unserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+	default <V> V unserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException {
 		return deserialize(bytes, type);
 	}
 

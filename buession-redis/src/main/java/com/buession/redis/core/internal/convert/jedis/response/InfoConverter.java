@@ -37,7 +37,6 @@ import com.buession.redis.core.MaxMemoryPolicy;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.Role;
-import com.buession.redis.utils.ResponseUtils;
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class InfoConverter implements Converter<String, Info> {
 	public final static InfoConverter INSTANCE = new InfoConverter();
 
 	@Override
-	public Info convert(final String source){
+	public Info convert(final String source) {
 		Info.Server server = null;
 		Info.Clients clients = null;
 		Info.Memory memory = null;
@@ -119,14 +118,18 @@ public class InfoConverter implements Converter<String, Info> {
 		@Nullable
 		V parse(final String str);
 
+		default String[] parseRows(final String str) {
+			return StringUtils.split(str, "\r\n");
+		}
+
 	}
 
 	private final static class ServerParser implements Parser<Info.Server> {
 
 		@Override
-		public Info.Server parse(final String str){
+		public Info.Server parse(final String str) {
 			Uptime uptime = new Uptime();
-			String[] rows = ResponseUtils.parseRows(str);
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -169,8 +172,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class ClientsParser implements Parser<Info.Clients> {
 
 		@Override
-		public Info.Clients parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Clients parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -187,8 +190,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class MemoryParser implements Parser<Info.Memory> {
 
 		@Override
-		public Info.Memory parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Memory parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -211,8 +214,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class PersistenceParser implements Parser<Info.Persistence> {
 
 		@Override
-		public Info.Persistence parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Persistence parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -238,8 +241,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class StatsParser implements Parser<Info.Stats> {
 
 		@Override
-		public Info.Stats parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Stats parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -258,8 +261,8 @@ public class InfoConverter implements Converter<String, Info> {
 		private final static Pattern SLAVE_PATTERN = Pattern.compile("slave\\d");
 
 		@Override
-		public Info.Replication parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Replication parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			Properties replBackLogProperties = null;
 			String masterHost = null;
@@ -331,7 +334,7 @@ public class InfoConverter implements Converter<String, Info> {
 			return new Info.Replication(properties);
 		}
 
-		private static Info.Replication.Slave parseSlave(final String str){
+		private static Info.Replication.Slave parseSlave(final String str) {
 			String[] groups = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
@@ -355,8 +358,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class CpuParser implements Parser<Info.Cpu> {
 
 		@Override
-		public Info.Cpu parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Cpu parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -373,8 +376,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class ClusterParser implements Parser<Info.Cluster> {
 
 		@Override
-		public Info.Cluster parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Cluster parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
 
@@ -393,8 +396,8 @@ public class InfoConverter implements Converter<String, Info> {
 		private final static Pattern MASTER_PATTERN = Pattern.compile("master\\d");
 
 		@Override
-		public Info.Sentinel parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public Info.Sentinel parse(final String str) {
+			String[] rows = parseRows(str);
 			Properties properties = new Properties();
 			List<Info.Sentinel.Master> masters = null;
 			KeyValueParser keyValueParser;
@@ -415,7 +418,7 @@ public class InfoConverter implements Converter<String, Info> {
 			return new Info.Sentinel(properties);
 		}
 
-		private static Info.Sentinel.Master parseMaster(final String str){
+		private static Info.Sentinel.Master parseMaster(final String str) {
 			String[] groups = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
@@ -443,8 +446,8 @@ public class InfoConverter implements Converter<String, Info> {
 	private final static class KeyspaceParser implements Parser<List<Info.Keyspace>> {
 
 		@Override
-		public List<Info.Keyspace> parse(final String str){
-			String[] rows = ResponseUtils.parseRows(str);
+		public List<Info.Keyspace> parse(final String str) {
+			String[] rows = parseRows(str);
 			KeyValueParser paramKeyValueParser;
 			Properties properties;
 			List<Info.Keyspace> keyspaces = new ArrayList<>(rows.length);

@@ -30,12 +30,13 @@ import com.buession.core.utils.StringUtils;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public class ResponseUtils {
 
 	public final static String ROW_SEPARATOR = "\r\n";
 
-	public static String[] parseRows(final String str){
-		return StringUtils.split(str, ROW_SEPARATOR);
+	public static String[] parseRows(final String str) {
+		return StringUtils.split(str, "\r\n");
 	}
 
 }

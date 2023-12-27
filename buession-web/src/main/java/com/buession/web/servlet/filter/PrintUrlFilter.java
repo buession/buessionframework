@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -46,7 +46,7 @@ public class PrintUrlFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException{
+			throws ServletException, IOException {
 		if(logger.isInfoEnabled()){
 			String url = parseFullUrl(request);
 
@@ -58,18 +58,18 @@ public class PrintUrlFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	protected String parseUrl(final HttpServletRequest request){
+	protected String parseUrl(final HttpServletRequest request) {
 		return request.getRequestURL().toString();
 	}
 
-	protected String parseFullUrl(final HttpServletRequest request){
+	protected String parseFullUrl(final HttpServletRequest request) {
 		String url = parseUrl(request);
 
 		if(Validate.hasText(url)){
 			String queryString = request.getQueryString();
 
 			if(Validate.hasText(queryString)){
-				url += "?" + queryString;
+				url += '?' + queryString;
 			}
 		}
 

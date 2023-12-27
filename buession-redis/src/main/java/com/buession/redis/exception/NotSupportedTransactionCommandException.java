@@ -24,31 +24,39 @@
  */
 package com.buession.redis.exception;
 
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 
 /**
+ * 不支持事务异常
+ *
  * @author Yong.Teng
  */
 public class NotSupportedTransactionCommandException extends NotSupportedCommandException {
 
 	private final static long serialVersionUID = -3940419124680209461L;
 
-	public NotSupportedTransactionCommandException(){
+	public NotSupportedTransactionCommandException() {
+		super();
 	}
 
-	public NotSupportedTransactionCommandException(ProtocolCommand command){
-		super("Not supported command: " + command + " in transaction.");
+	public NotSupportedTransactionCommandException(ProtocolCommand command) {
+		super(Type.TRANSACTION, command);
 	}
 
-	public NotSupportedTransactionCommandException(String message){
+	public NotSupportedTransactionCommandException(RedisMode mode, ProtocolCommand command) {
+		super(mode, command);
+	}
+
+	public NotSupportedTransactionCommandException(String message) {
 		super(message);
 	}
 
-	public NotSupportedTransactionCommandException(String message, Throwable cause){
+	public NotSupportedTransactionCommandException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public NotSupportedTransactionCommandException(Throwable cause){
+	public NotSupportedTransactionCommandException(Throwable cause) {
 		super(cause);
 	}
 

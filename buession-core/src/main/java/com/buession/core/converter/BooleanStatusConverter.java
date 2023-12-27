@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
 import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
+
+import java.util.Objects;
 
 /**
  * 布尔值 {@link Boolean} 到 {@link Status} 转换器
@@ -36,8 +38,8 @@ import com.buession.lang.Status;
 public class BooleanStatusConverter implements Converter<Boolean, Status> {
 
 	@Override
-	public Status convert(final Boolean source){
-		return source == null ? Status.FAILURE : StatusUtils.valueOf(source);
+	public Status convert(final Boolean source) {
+		return StatusUtils.valueOf(Objects.equals(source, Boolean.TRUE));
 	}
 
 }

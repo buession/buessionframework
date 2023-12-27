@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.tools;
@@ -33,7 +33,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 /**
+ * Tool for working with {@link Number} with request locale in Velocity templates.
+ *
  * @author Yong.Teng
+ * @see NumberTool
+ * @see Locale
+ * @see HttpServletRequest
  */
 public class LocaleAwareNumberTool extends NumberTool {
 
@@ -41,12 +46,12 @@ public class LocaleAwareNumberTool extends NumberTool {
 
 	private final HttpServletRequest request;
 
-	public LocaleAwareNumberTool(HttpServletRequest request){
+	public LocaleAwareNumberTool(HttpServletRequest request) {
 		this.request = request;
 	}
 
 	@Override
-	public Locale getLocale(){
+	public Locale getLocale() {
 		return RequestContextUtils.getLocale(request);
 	}
 

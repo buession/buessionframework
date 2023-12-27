@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.command.ListCommands;
 import redis.clients.jedis.params.LPosParams;
 
@@ -39,16 +40,12 @@ public final class LPosArgumentConverter implements Converter<ListCommands.LPosA
 	public final static LPosArgumentConverter INSTANCE = new LPosArgumentConverter();
 
 	@Override
-	public LPosParams convert(final ListCommands.LPosArgument source){
+	public LPosParams convert(final ListCommands.LPosArgument source) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final LPosParams lPosParams = new LPosParams();
 
-		if(source.getRank() != null){
-			lPosParams.rank(source.getRank());
-		}
-
-		if(source.getMaxLen() != null){
-			lPosParams.maxlen(source.getMaxLen());
-		}
+		propertyMapper.from(source.getRank()).to(lPosParams::rank);
+		propertyMapper.from(source.getMaxLen()).to(lPosParams::maxlen);
 
 		return lPosParams;
 	}

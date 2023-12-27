@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -36,14 +36,14 @@ import com.buession.lang.ISBNType;
  */
 public class ISBNValidator {
 
-	private ISBNValidator(){
+	private ISBNValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence, final char separator){
+	public static boolean isValid(final CharSequence charSequence, final char separator) {
 		return isIsbn10(charSequence, separator) || isIsbn13(charSequence, separator);
 	}
 
-	public static boolean isValid(final CharSequence charSequence, final char separator, final ISBNType type){
+	public static boolean isValid(final CharSequence charSequence, final char separator, final ISBNType type) {
 		if(ISBNType.ISBN_TYPE_10.equals(type)){
 			return isIsbn10(charSequence, separator);
 		}else if(ISBNType.ISBN_TYPE_13.equals(type)){
@@ -53,7 +53,7 @@ public class ISBNValidator {
 		}
 	}
 
-	public static boolean isIsbn10(final CharSequence charSequence, final char separator){
+	public static boolean isIsbn10(final CharSequence charSequence, final char separator) {
 		if(charSequence == null || validSeparator(separator) == false){
 			return false;
 		}
@@ -98,7 +98,6 @@ public class ISBNValidator {
 
 					++sl;
 					gl = 0;
-					continue;
 				}else if(c < '0' || c > '9'){
 					return false;
 				}else{
@@ -144,7 +143,7 @@ public class ISBNValidator {
 		return ch == lash_ch;
 	}
 
-	public static boolean isIsbn13(final CharSequence charSequence, final char separator){
+	public static boolean isIsbn13(final CharSequence charSequence, final char separator) {
 		if(charSequence == null || validSeparator(separator) == false){
 			return false;
 		}
@@ -185,7 +184,6 @@ public class ISBNValidator {
 
 					++sl;
 					gl = 0;
-					continue;
 				}else if(c < '0' || c > '9'){
 					return false;
 				}else{
@@ -219,11 +217,11 @@ public class ISBNValidator {
 		return (checksum == 10 ? '0' : checksum + '0') == lash_ch;
 	}
 
-	private static boolean validSeparator(final char separator){
+	private static boolean validSeparator(final char separator) {
 		return separator == '\0' || separator == '-' || separator == ' ';
 	}
 
-	private static boolean validLastCharacter(final char ch){
+	private static boolean validLastCharacter(final char ch) {
 		return (ch < '0' || ch > '9') && ch != 'X';
 	}
 

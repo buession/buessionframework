@@ -28,6 +28,7 @@ import com.buession.core.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -39,10 +40,11 @@ import java.util.Arrays;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 
 	@Override
-	public <V> V deserialize(final String str) throws DeserializerException{
+	public <V> V deserialize(final String str) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 
 		try{
@@ -55,7 +57,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException{
+	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 
 		try{
@@ -67,14 +69,14 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException{
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 
 		try{
 			return getObjectMapper().readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
 				@Override
-				public Type getType(){
+				public Type getType() {
 					return type.getType();
 				}
 
@@ -86,7 +88,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 
 		try{
@@ -99,7 +101,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 
 		try{
@@ -112,14 +114,14 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException{
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 
 		try{
 			return getObjectMapper().readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
 				@Override
-				public Type getType(){
+				public Type getType() {
 					return type.getType();
 				}
 
@@ -131,10 +133,11 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 		}
 	}
 
-	protected static ObjectMapper getObjectMapper(){
+	protected static ObjectMapper getObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 		return objectMapper;
 	}

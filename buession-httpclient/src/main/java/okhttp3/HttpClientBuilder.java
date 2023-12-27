@@ -24,6 +24,8 @@
  */
 package okhttp3;
 
+import com.buession.core.utils.ObjectUtils;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -39,14 +41,14 @@ public class HttpClientBuilder {
 
 	private HttpClientConnectionManager connectionManager;
 
-	protected HttpClientBuilder(){
+	protected HttpClientBuilder() {
 	}
 
-	public static HttpClientBuilder create(){
+	public static HttpClientBuilder create() {
 		return new HttpClientBuilder();
 	}
 
-	public HttpClientBuilder setRetryOnConnectionFailure(Boolean retryOnConnectionFailure){
+	public HttpClientBuilder setRetryOnConnectionFailure(Boolean retryOnConnectionFailure) {
 		if(retryOnConnectionFailure != null){
 			builder.retryOnConnectionFailure(retryOnConnectionFailure);
 		}
@@ -54,7 +56,7 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setConnectTimeout(long connectTimeout){
+	public HttpClientBuilder setConnectTimeout(long connectTimeout) {
 		if(connectTimeout > -1){
 			builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
 		}
@@ -62,7 +64,7 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setReadTimeout(long readTimeout){
+	public HttpClientBuilder setReadTimeout(long readTimeout) {
 		if(readTimeout > 0){
 			builder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
 		}
@@ -70,7 +72,7 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setWriteTimeout(long writeTimeout){
+	public HttpClientBuilder setWriteTimeout(long writeTimeout) {
 		if(writeTimeout > 0){
 			builder.writeTimeout(writeTimeout, TimeUnit.MILLISECONDS);
 		}
@@ -78,7 +80,7 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setFollowRedirects(Boolean followRedirects){
+	public HttpClientBuilder setFollowRedirects(Boolean followRedirects) {
 		if(followRedirects != null){
 			builder.followRedirects(followRedirects);
 		}
@@ -86,7 +88,7 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory){
+	public HttpClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
 		if(sslSocketFactory != null){
 			builder.sslSocketFactory(sslSocketFactory);
 		}
@@ -94,7 +96,7 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier){
+	public HttpClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier) {
 		if(hostnameVerifier != null){
 			builder.hostnameVerifier(hostnameVerifier);
 		}
@@ -102,22 +104,21 @@ public class HttpClientBuilder {
 		return this;
 	}
 
-	public HttpClientBuilder setSSLContext(SSLContext sslContext){
+	public HttpClientBuilder setSSLContext(SSLContext sslContext) {
 		if(sslContext != null){
 		}
 
 		return this;
 	}
 
-	public HttpClientBuilder setConnectionManager(HttpClientConnectionManager connectionManager){
+	public HttpClientBuilder setConnectionManager(HttpClientConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
 		return this;
 	}
 
-	public OkHttpClient build(){
-		if(connectionManager != null){
-			builder.connectionPool(connectionManager.getConnectionPool());
-		}
+	public OkHttpClient build() {
+		ObjectUtils.invokeIfAvailable(connectionManager,
+				(connectionManager)->builder.connectionPool(connectionManager.getConnectionPool()));
 
 		OkHttpClient client = builder.build();
 

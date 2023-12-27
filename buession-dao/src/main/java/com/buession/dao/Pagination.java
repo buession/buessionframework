@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -44,7 +44,7 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
 	/**
 	 * Constructs with default configuration.
 	 */
-	public Pagination(){
+	public Pagination() {
 		super();
 	}
 
@@ -56,8 +56,9 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
 	 * @param pagesize
 	 * 		每页大小
 	 */
-	public Pagination(int page, int pagesize){
+	public Pagination(int page, int pagesize) {
 		super(page, pagesize);
+		setNextPage(getPage() + 1);
 	}
 
 	/**
@@ -70,8 +71,9 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
 	 * @param totalRecords
 	 * 		总记录数
 	 */
-	public Pagination(int page, int pagesize, long totalRecords){
+	public Pagination(int page, int pagesize, long totalRecords) {
 		super(page, pagesize, totalRecords);
+		setNextPage(getPage() + 1);
 	}
 
 	/**
@@ -79,7 +81,7 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
 	 *
 	 * @return 查询偏移量
 	 */
-	public int getOffset(){
+	public int getOffset() {
 		if(offset == null){
 			if(getPage() > 1){
 				setOffset((getPage() - 1) * getPagesize());
@@ -97,7 +99,7 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
 	 * @param offset
 	 * 		查询偏移量
 	 */
-	public void setOffset(int offset){
+	public void setOffset(int offset) {
 		this.offset = Math.max(offset, 0);
 	}
 

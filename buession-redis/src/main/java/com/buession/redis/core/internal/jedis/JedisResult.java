@@ -35,16 +35,16 @@ import redis.clients.jedis.Response;
  */
 public class JedisResult<SV, TV> extends FutureResult<Response<SV>, SV, TV> {
 
-	public JedisResult(final Response<SV> resultHolder){
+	public JedisResult(final Response<SV> resultHolder) {
 		super(resultHolder);
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, TV> converter){
+	public JedisResult(final Response<SV> resultHolder, final Converter<SV, TV> converter) {
 		super(resultHolder, converter);
 	}
 
 	@Override
-	public SV get(){
+	public SV get() {
 		return getHolder().get();
 	}
 
@@ -54,22 +54,27 @@ public class JedisResult<SV, TV> extends FutureResult<Response<SV>, SV, TV> {
 
 		private Converter<SV, TV> converter;
 
-		private Builder(final Response<SV> response, final Converter<SV, TV> converter){
+		private Builder(final Response<SV> response, final Converter<SV, TV> converter) {
 			this.response = response;
 			this.converter = converter;
 		}
 
+		@Deprecated
+		public static <SV, TV> Builder<SV, TV> forResponse(Response<SV> response) {
+			return fromResponse(response);
+		}
+
 		@SuppressWarnings("unchecked")
-		public static <SV, TV> Builder<SV, TV> forResponse(Response<SV> response){
+		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
 			return new Builder<>(response, (source)->(TV) source);
 		}
 
-		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter){
+		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
 			this.converter = converter;
 			return this;
 		}
 
-		public JedisResult<SV, TV> build(){
+		public JedisResult<SV, TV> build() {
 			return new JedisResult<>(response, converter);
 		}
 

@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.StringCommands;
 import redis.clients.jedis.params.SetParams;
@@ -42,24 +43,14 @@ public final class SetArgumentConverter implements Converter<StringCommands.SetA
 	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
 
 	@Override
-	public SetParams convert(final StringCommands.SetArgument source){
+	public SetParams convert(final StringCommands.SetArgument source) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final SetParams setParams = new SetParams();
 
-		if(source.getEx() != null){
-			setParams.ex(source.getEx());
-		}
-
-		if(source.getExAt() != null){
-			setParams.exAt(source.getExAt());
-		}
-
-		if(source.getPx() != null){
-			setParams.px(source.getPx());
-		}
-
-		if(source.getPxAt() != null){
-			setParams.pxAt(source.getPxAt());
-		}
+		propertyMapper.from(source.getEx()).to(setParams::ex);
+		propertyMapper.from(source.getExAt()).to(setParams::exAt);
+		propertyMapper.from(source.getPx()).to(setParams::px);
+		propertyMapper.from(source.getPxAt()).to(setParams::pxAt);
 
 		if(source.getNxXx() == NxXx.NX){
 			setParams.nx();

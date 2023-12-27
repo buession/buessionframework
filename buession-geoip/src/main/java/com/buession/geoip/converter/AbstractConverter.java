@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2023 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -48,7 +48,7 @@ import java.util.Map;
 public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse>
 		implements Converter<M, S, R> {
 
-	protected static String getName(final Map<String, String> names, Locale locale){
+	protected static String getName(final Map<String, String> names, Locale locale) {
 		if(Validate.isEmpty(names)){
 			return null;
 		}
@@ -72,14 +72,11 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
 		return result;
 	}
 
-	private static String getLanguageTag(final Locale locale, final char separator){
+	private static String getLanguageTag(final Locale locale, final char separator) {
 		final String language = locale.getLanguage();
 		final String country = locale.getCountry();
-		final StringBuilder sb = new StringBuilder(language.length() + country.length() + 1);
 
-		sb.append(language).append(separator).append(country);
-
-		return sb.toString();
+		return language + separator + country;
 	}
 
 }

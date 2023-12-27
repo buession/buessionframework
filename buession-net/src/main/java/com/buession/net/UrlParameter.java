@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -55,7 +55,7 @@ public class UrlParameter {
 	/**
 	 * 构造函数
 	 */
-	public UrlParameter(){
+	public UrlParameter() {
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class UrlParameter {
 	 * @param value
 	 * 		参数值
 	 */
-	public UrlParameter(@NotNull final String name, final String value){
+	public UrlParameter(@NotNull final String name, final String value) {
 		setName(name);
 		setValue(value);
 	}
@@ -81,7 +81,7 @@ public class UrlParameter {
 	 * @param encode
 	 * 		是否编码
 	 */
-	public UrlParameter(@NotNull final String name, final String value, final boolean encode){
+	public UrlParameter(@NotNull final String name, final String value, final boolean encode) {
 		setName(name);
 		setValue(value, encode);
 	}
@@ -92,7 +92,7 @@ public class UrlParameter {
 	 * @param name
 	 * 		参数名称
 	 */
-	public void setName(@NotNull final String name){
+	public void setName(@NotNull final String name) {
 		Assert.isBlank(name, "Parameter name cloud not be null or empty.");
 		this.name = name;
 	}
@@ -103,7 +103,7 @@ public class UrlParameter {
 	 * @param value
 	 * 		参数值
 	 */
-	public void setValue(final String value){
+	public void setValue(final String value) {
 		setValue(value, true);
 	}
 
@@ -115,7 +115,7 @@ public class UrlParameter {
 	 * @param encode
 	 * 		是否编码
 	 */
-	public void setValue(final String value, final boolean encode){
+	public void setValue(final String value, final boolean encode) {
 		if(encode){
 			try{
 				this.value = value == null ? Constants.EMPTY_STRING : URLEncoder.encode(value, "UTF-8");
@@ -128,17 +128,12 @@ public class UrlParameter {
 	}
 
 	@Override
-	public String toString(){
-		return Validate.hasText(name) ? name + '=' + value : Constants.EMPTY_STRING;
-	}
-
-	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(name, value);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
@@ -149,6 +144,11 @@ public class UrlParameter {
 		}
 
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return Validate.hasText(name) ? name + '=' + value : Constants.EMPTY_STRING;
 	}
 
 }

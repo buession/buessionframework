@@ -33,18 +33,37 @@ import com.buession.web.servlet.http.request.RequestUtils;
 import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringValueResolver;
 
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Servlet 模式注解 {@link ResponseHeader} 处理器
+ *
  * @author Yong.Teng
  */
 public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHeaderAnnotationHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeaderAnnotationHandler.class);
 
+	/**
+	 * 构造函数
+	 */
+	@Deprecated
 	public ServletResponseHeaderAnnotationHandler() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param stringValueResolver
+	 * 		占位符解析器
+	 *
+	 * @since 2.3.2
+	 */
+	public ServletResponseHeaderAnnotationHandler(StringValueResolver stringValueResolver) {
+		super(stringValueResolver);
 	}
 
 	@Override
@@ -59,6 +78,10 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
 
 		for(String value : responseHeader.value()){
 			if(isExpires){
+				if(stringValueResolver != null){
+					value = stringValueResolver.resolveStringValue(value);
+				}
+
 				if(Validate.isNumeric(value)){
 					ResponseUtils.httpCache(response, Integer.parseInt(value));
 				}else{

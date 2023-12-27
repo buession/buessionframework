@@ -45,7 +45,7 @@ public abstract class AbstractGitParser implements GitParser {
 	/**
 	 * 构造函数
 	 */
-	public AbstractGitParser(){
+	public AbstractGitParser() {
 
 	}
 
@@ -55,7 +55,7 @@ public abstract class AbstractGitParser implements GitParser {
 	 * @param resource
 	 * 		文件资源
 	 */
-	public AbstractGitParser(final Resource resource){
+	public AbstractGitParser(final Resource resource) {
 		Assert.isNull(resource, "Git properties resource cloud not be null.");
 		this.resource = resource;
 	}
@@ -66,16 +66,21 @@ public abstract class AbstractGitParser implements GitParser {
 	 * @param path
 	 * 		Git 信息文件路径
 	 */
-	public AbstractGitParser(final String path){
+	public AbstractGitParser(final String path) {
 		Assert.isBlank(path, "Git properties path cloud not be empty or null.");
 		this.resource = new ClassPathResource(path);
 	}
 
 	@Nullable
 	@Override
-	public Git parse(){
-		final Git git = new Git();
+	public Git parse() {
 		final Properties properties = loadData();
+
+		if(properties == null){
+			return null;
+		}
+
+		final Git git = new Git();
 		final GitInfoParser infoParser = new GitInfoParser(properties);
 
 		git.setBranch(properties.getProperty("git.branch"));

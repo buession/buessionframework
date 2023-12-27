@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.interceptor;
 
+import com.buession.core.utils.AnnotationUtils;
 import com.buession.core.utils.Assert;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -42,7 +42,7 @@ public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcher
 	private final Class<? extends Annotation>[] annotations;
 
 	public AbstractAttributeSourceAdvisor(final AnnotationsMethodInterceptor annotationsMethodInterceptor,
-										  final Class<? extends Annotation>[] annotations){
+										  final Class<? extends Annotation>[] annotations) {
 		Assert.isNull(annotationsMethodInterceptor, "AnnotationsMethodInterceptor cloud not be null.");
 		Assert.isNull(annotations, "Annotations cloud not be null.");
 
@@ -51,7 +51,7 @@ public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcher
 	}
 
 	@Override
-	public boolean matches(Method method, Class<?> targetClass){
+	public boolean matches(Method method, Class<?> targetClass) {
 		Method m = method;
 
 		if(isAnnotationPresent(m)){
@@ -70,26 +70,12 @@ public abstract class AbstractAttributeSourceAdvisor extends StaticMethodMatcher
 		return false;
 	}
 
-	private boolean isAnnotationPresent(final Class<?> targetClazz){
-		for(Class<? extends Annotation> annotationClass : annotations){
-			Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, annotationClass);
-			if(annotation != null){
-				return true;
-			}
-		}
-
-		return false;
+	private boolean isAnnotationPresent(final Class<?> targetClazz) {
+		return AnnotationUtils.hasClassAnnotationPresent(targetClazz, annotations);
 	}
 
-	private boolean isAnnotationPresent(final Method method){
-		for(Class<? extends Annotation> annotationClass : annotations){
-			Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClass);
-			if(annotation != null){
-				return true;
-			}
-		}
-
-		return false;
+	private boolean isAnnotationPresent(final Method method) {
+		return AnnotationUtils.hasMethodAnnotationPresent(method, annotations);
 	}
 
 }

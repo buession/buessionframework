@@ -25,29 +25,31 @@
 package com.buession.redis.exception;
 
 /**
+ * 连接池异常
+ *
  * @author Yong.Teng
  */
 public class PoolException extends RedisConnectionFailureException {
 
 	private final static long serialVersionUID = 6014038319970079646L;
 
-	public PoolException(){
+	public PoolException() {
 		super();
 	}
 
-	public PoolException(String message){
+	public PoolException(String message) {
 		super(message);
 	}
 
-	public PoolException(String message, Throwable cause){
+	public PoolException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public PoolException(Throwable cause){
+	public PoolException(Throwable cause) {
 		super(cause);
 	}
 
-	public PoolException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+	public PoolException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

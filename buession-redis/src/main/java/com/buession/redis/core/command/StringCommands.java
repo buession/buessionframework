@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -640,7 +640,7 @@ public interface StringCommands extends RedisCommands {
 	 */
 	byte[] substr(final byte[] key, final long start, final long end);
 
-	class SetArgument {
+	final class SetArgument {
 
 		private Long ex;
 
@@ -654,7 +654,7 @@ public interface StringCommands extends RedisCommands {
 
 		private Boolean keepTtl;
 
-		private SetArgument(){
+		private SetArgument() {
 		}
 
 		/**
@@ -662,7 +662,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间
 		 */
-		public Long getEx(){
+		public Long getEx() {
 			return ex;
 		}
 
@@ -671,7 +671,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间戳
 		 */
-		public Long getExAt(){
+		public Long getExAt() {
 			return exAt;
 		}
 
@@ -680,7 +680,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间
 		 */
-		public Long getPx(){
+		public Long getPx() {
 			return px;
 		}
 
@@ -689,7 +689,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间戳
 		 */
-		public Long getPxAt(){
+		public Long getPxAt() {
 			return pxAt;
 		}
 
@@ -698,7 +698,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置键的条件
 		 */
-		public NxXx getNxXx(){
+		public NxXx getNxXx() {
 			return nxXx;
 		}
 
@@ -707,7 +707,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return the time to live associated with the key
 		 */
-		public Boolean isKeepTtl(){
+		public Boolean isKeepTtl() {
 			return keepTtl;
 		}
 
@@ -715,10 +715,10 @@ public interface StringCommands extends RedisCommands {
 
 			private final SetArgument setArgument = new SetArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
@@ -730,7 +730,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder ex(long lifetime){
+			public Builder ex(long lifetime) {
 				setArgument.ex = lifetime;
 				return this;
 			}
@@ -743,7 +743,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder exAt(long seconds){
+			public Builder exAt(long seconds) {
 				setArgument.exAt = seconds;
 				return this;
 			}
@@ -756,7 +756,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder exAt(Date date){
+			public Builder exAt(Date date) {
 				if(date != null){
 					setArgument.exAt = date.getTime() / 1000;
 				}
@@ -772,7 +772,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder px(long lifetime){
+			public Builder px(long lifetime) {
 				setArgument.px = lifetime;
 				return this;
 			}
@@ -785,7 +785,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder pxAt(long milliseconds){
+			public Builder pxAt(long milliseconds) {
 				setArgument.pxAt = milliseconds;
 				return this;
 			}
@@ -798,7 +798,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder pxAt(Date date){
+			public Builder pxAt(Date date) {
 				if(date != null){
 					setArgument.exAt = date.getTime();
 				}
@@ -814,7 +814,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder nxXX(NxXx nxXx){
+			public Builder nxXX(NxXx nxXx) {
 				setArgument.nxXx = nxXx;
 				return this;
 			}
@@ -822,12 +822,12 @@ public interface StringCommands extends RedisCommands {
 			/**
 			 * @return Builder
 			 */
-			public Builder keepTtl(){
+			public Builder keepTtl() {
 				setArgument.keepTtl = true;
 				return this;
 			}
 
-			public SetArgument build(){
+			public SetArgument build() {
 				return setArgument;
 			}
 
@@ -835,7 +835,7 @@ public interface StringCommands extends RedisCommands {
 
 	}
 
-	class GetExArgument {
+	final class GetExArgument {
 
 		private Long ex;
 
@@ -847,7 +847,7 @@ public interface StringCommands extends RedisCommands {
 
 		private Boolean persist;
 
-		private GetExArgument(){
+		private GetExArgument() {
 		}
 
 		/**
@@ -855,7 +855,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间
 		 */
-		public Long getEx(){
+		public Long getEx() {
 			return ex;
 		}
 
@@ -864,7 +864,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间戳
 		 */
-		public Long getExAt(){
+		public Long getExAt() {
 			return exAt;
 		}
 
@@ -873,7 +873,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间
 		 */
-		public Long getPx(){
+		public Long getPx() {
 			return px;
 		}
 
@@ -882,7 +882,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置的键过期时间戳
 		 */
-		public Long getPxAt(){
+		public Long getPxAt() {
 			return pxAt;
 		}
 
@@ -891,12 +891,12 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置键是否持久化
 		 */
-		public Boolean isPersist(){
+		public Boolean isPersist() {
 			return persist;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return ObjectStringBuilder.create().
 					add("ex", ex).
 					add("exAt", exAt).
@@ -909,10 +909,10 @@ public interface StringCommands extends RedisCommands {
 
 			private final GetExArgument getExArgument = new GetExArgument();
 
-			private Builder(){
+			private Builder() {
 			}
 
-			public static Builder create(){
+			public static Builder create() {
 				return new Builder();
 			}
 
@@ -924,7 +924,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder ex(long lifetime){
+			public Builder ex(long lifetime) {
 				getExArgument.ex = lifetime;
 				return this;
 			}
@@ -937,7 +937,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder exAt(long lifetime){
+			public Builder exAt(long lifetime) {
 				getExArgument.exAt = lifetime;
 				return this;
 			}
@@ -950,7 +950,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder exAt(Date date){
+			public Builder exAt(Date date) {
 				if(date != null){
 					getExArgument.exAt = date.getTime() / 1000;
 				}
@@ -966,7 +966,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder px(long lifetime){
+			public Builder px(long lifetime) {
 				getExArgument.px = lifetime;
 				return this;
 			}
@@ -979,7 +979,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder pxAt(long lifetime){
+			public Builder pxAt(long lifetime) {
 				getExArgument.pxAt = lifetime;
 				return this;
 			}
@@ -992,7 +992,7 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder pxAt(Date date){
+			public Builder pxAt(Date date) {
 				if(date != null){
 					getExArgument.pxAt = date.getTime();
 				}
@@ -1008,12 +1008,12 @@ public interface StringCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public Builder persist(Boolean persist){
+			public Builder persist(Boolean persist) {
 				getExArgument.persist = persist;
 				return this;
 			}
 
-			public GetExArgument build(){
+			public GetExArgument build() {
 				return getExArgument;
 			}
 

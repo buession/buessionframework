@@ -37,7 +37,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public OkHttpClientConnectionManager(){
+	public OkHttpClientConnectionManager() {
 		super();
 	}
 
@@ -47,7 +47,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param configuration
 	 * 		连接对象
 	 */
-	public OkHttpClientConnectionManager(Configuration configuration){
+	public OkHttpClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -57,7 +57,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public OkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager){
+	public OkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -70,7 +70,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * 		驱动连接管理器
 	 */
 	public OkHttpClientConnectionManager(Configuration configuration,
-										 HttpClientConnectionManager clientConnectionManager){
+										 HttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 
@@ -80,13 +80,13 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * @return 连接管理器
 	 */
 	@Override
-	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
+	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
 		//最大连接数
 		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
 		// 默认的最大并发请求数量
-		//connectionManager.setMaxRequests(getConfiguration().getMaxPerRoute());
+		connectionManager.setMaxRequests(getConfiguration().getMaxRequests());
 		// 同时请求相同主机的请求数量最大值
 		connectionManager.setMaxRequestsPerHost(getConfiguration().getMaxPerRoute());
 		// 空闲连接存活时长
