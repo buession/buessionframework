@@ -2,7 +2,7 @@
 ===========================
 
 
-## [2.3.2](https://github.com/buession/buessionframework/releases/tag/v2.3.2) (2023-xx-xx)
+## [2.3.2](https://github.com/buession/buessionframework/releases/tag/v2.3.2) (2023-12-27)
 
 ### 🔨依赖升级
 
@@ -17,9 +17,11 @@
 - **buession-core：** 新增对象工具类 ObjectUtils
 - **buession-core：** AbstractBeanConverter 新增支持 String 转枚举
 - **buession-core：** 新增反射工具类 ReflectionUtils
+- **buession-aop：** 新增注解处理器支持解析注解属性中的变量
 - **buession-json：** 注解 @Sensitive 增加支持邮箱脱敏
 - **buession-httpclient：** OKHTTP client 增加可设置 maxRequests
 - **buession-velocity：** 新增验证工具 ValidateTool
+- **buession-web：** 新增注解处理器支持解析注解属性中的变量
 
 
 ### 🔔 变化
@@ -55,9 +57,11 @@
 
 ### 📔 文档
 
+- **buession-aop：** 完善注释
 - **buession-httpclient：** 完善注释
 - **buession-redis：** 完善注释
 - **buession-velocity：** 完善注释
+- **buession-web：** 完善注释
 
 
 ---
