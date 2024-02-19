@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.interceptor;
@@ -60,7 +60,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	 * @param handler
 	 * 		JSR-175 注解读取和处理器
 	 */
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
+	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler) {
 		this(handler, new DefaultAnnotationResolver());
 	}
 
@@ -72,46 +72,68 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 	 * @param resolver
 	 * 		注解解析器
 	 */
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
+	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver) {
 		Assert.isNull(handler, "AnnotationHandler cloud not be null.");
 
 		setHandler(handler);
 		setResolver(Optional.of(resolver).orElse(new DefaultAnnotationResolver()));
 	}
 
-	public AnnotationHandler<A> getHandler(){
+	/**
+	 * 返回 JSR-175 注解读取和处理器
+	 *
+	 * @return JSR-175 注解读取和处理器
+	 */
+	public AnnotationHandler<A> getHandler() {
 		return handler;
 	}
 
-	public void setHandler(AnnotationHandler<A> handler){
+	/**
+	 * 设置 JSR-175 注解读取和处理器
+	 *
+	 * @param handler
+	 * 		JSR-175 注解读取和处理器
+	 */
+	public void setHandler(AnnotationHandler<A> handler) {
 		this.handler = handler;
 	}
 
-	public AnnotationResolver getResolver(){
+	/**
+	 * 返回注解解析器
+	 *
+	 * @return 注解解析器
+	 */
+	public AnnotationResolver getResolver() {
 		return resolver;
 	}
 
-	public void setResolver(AnnotationResolver resolver){
+	/**
+	 * 设置注解解析器
+	 *
+	 * @param resolver
+	 * 		注解解析器
+	 */
+	public void setResolver(AnnotationResolver resolver) {
 		this.resolver = resolver;
 	}
 
 	@Override
-	public boolean isSupport(MethodInvocation mi){
+	public boolean isSupport(MethodInvocation mi) {
 		return getAnnotation(mi) != null;
 	}
 
 	@Override
-	public Object invoke(MethodInvocation mi) throws Throwable{
+	public Object invoke(MethodInvocation mi) throws Throwable {
 		execute(mi);
 		return mi.proceed();
 	}
 
 	@Override
-	public void execute(MethodInvocation mi) throws Throwable{
+	public void execute(MethodInvocation mi) throws Throwable {
 		getHandler().execute(mi, getAnnotation(mi));
 	}
 
-	protected A getAnnotation(MethodInvocation mi){
+	protected A getAnnotation(MethodInvocation mi) {
 		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
 	}
 

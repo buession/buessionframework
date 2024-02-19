@@ -5,6 +5,11 @@
 ## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-xx-xx)
 
 
+### 🐞 Bug 修复
+
+- **buession-dao：** 修复 MongoDBDao 处理 in、nin 条件值错误传递问题
+
+
 ---
 
 
