@@ -21,16 +21,15 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
 
 import com.buession.core.Pagination;
+import com.buession.core.builder.ListBuilder;
 import com.buession.core.builder.MapBuilder;
-import com.buession.core.exception.OperationException;
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.RandomUtils;
 import com.buession.core.validator.Validate;
 import com.buession.dao.mongodb.MongoDBOperatorUtils;
 import com.buession.dao.mongodb.OrderToMongoDBSortDirectionConverter;
@@ -67,14 +66,22 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	/**
 	 * master MongoTemplate
 	 */
-	@Resource
+	@Deprecated
 	private MongoTemplate masterMongoTemplate;
 
 	/**
 	 * slave MongoTemplate
 	 */
-	@Resource
+	@Deprecated
 	private List<MongoTemplate> slaveMongoTemplates;
+
+	/**
+	 * {@link MongoTemplate}
+	 *
+	 * @since 2.3.3
+	 */
+	@Resource
+	private MongoTemplate mongoTemplate;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -83,6 +90,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 *
 	 * @return master MongoTemplate
 	 */
+	@Deprecated
 	public MongoTemplate getMasterMongoTemplate() {
 		return masterMongoTemplate;
 	}
@@ -93,8 +101,10 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 * @param masterMongoTemplate
 	 * 		master MongoTemplate
 	 */
+	@Deprecated
 	public void setMasterMongoTemplate(MongoTemplate masterMongoTemplate) {
 		this.masterMongoTemplate = masterMongoTemplate;
+		this.mongoTemplate = masterMongoTemplate;
 	}
 
 	/**
@@ -102,6 +112,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 *
 	 * @return slave MongoTemplate
 	 */
+	@Deprecated
 	public List<MongoTemplate> getSlaveMongoTemplates() {
 		return slaveMongoTemplates;
 	}
@@ -112,8 +123,34 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 * @param slaveMongoTemplates
 	 * 		slave MongoTemplate
 	 */
+	@Deprecated
 	public void setSlaveMongoTemplates(List<MongoTemplate> slaveMongoTemplates) {
 		this.slaveMongoTemplates = slaveMongoTemplates;
+	}
+
+	/**
+	 * 返回 {@link MongoTemplate} 实例
+	 *
+	 * @return {@link MongoTemplate}
+	 *
+	 * @since 2.3.3
+	 */
+	public MongoTemplate getMongoTemplate() {
+		return mongoTemplate;
+	}
+
+	/**
+	 * 设置 {@link MongoTemplate}
+	 *
+	 * @param mongoTemplate
+	 *        {@link MongoTemplate}
+	 *
+	 * @since 2.3.3
+	 */
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+		this.masterMongoTemplate = mongoTemplate;
+		this.slaveMongoTemplates = ListBuilder.of(mongoTemplate);
 	}
 
 	/**
@@ -126,13 +163,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 */
 	@Override
 	public int insert(E e) {
-		try{
-			masterMongoTemplate.insert(e);
-			return 1;
-		}catch(Exception ex){
-			logger.error("Insert data failure.", ex);
-			return 0;
-		}
+		getMongoTemplate().insert(e);
+		return 1;
 	}
 
 	@Override
@@ -143,13 +175,10 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 		if(e != null){
 			BasicDBObject data = toDbObject(e);
-
-			for(String key : data.keySet()){
-				update.set(key, data.get(key));
-			}
+			data.keySet().forEach((key)->update.set(key, data.get(key)));
 		}
 
-		UpdateResult writeResult = masterMongoTemplate.updateFirst(query, update, getStatement());
+		UpdateResult writeResult = getMongoTemplate().updateFirst(query, update, getStatement());
 		return (int) writeResult.getModifiedCount();
 	}
 
@@ -172,13 +201,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 		query.skip(offset);
 
-		try{
-			return getSlaveMongoTemplate().findOne(query, getStatement());
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getMongoTemplate().findOne(query, getStatement());
 	}
 
 	@Override
@@ -188,13 +211,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 		buildSort(query, orders);
 
-		try{
-			return getSlaveMongoTemplate().find(query, getStatement());
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getMongoTemplate().find(query, getStatement());
 	}
 
 	@Override
@@ -211,13 +228,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		buildSort(query, orders);
 		query.limit(size).skip(offset);
 
-		try{
-			return getSlaveMongoTemplate().find(query, getStatement());
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getMongoTemplate().find(query, getStatement());
 	}
 
 	@Override
@@ -246,13 +257,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public List<E> getAll() {
-		try{
-			return getSlaveMongoTemplate().findAll(getStatement());
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getMongoTemplate().findAll(getStatement());
 	}
 
 	@Override
@@ -270,14 +275,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	public long count(Query query) {
 		Assert.isNull(query, "Query Argument could not be null");
-
-		try{
-			return getSlaveMongoTemplate().count(query, getStatement());
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return 0L;
+		return getMongoTemplate().count(query, getStatement());
 	}
 
 	@Override
@@ -300,39 +298,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		final Criteria criteria = Criteria.where(PRIMARY_FIELD).is(primary);
 		final Query query = new Query(criteria);
 
-		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
+		DeleteResult writeResult = getMongoTemplate().remove(query, getStatement());
 		return (int) writeResult.getDeletedCount();
 	}
 
 	@Override
 	public int clear() {
-		DeleteResult writeResult = getMasterMongoTemplate().remove(new Query(), getStatement());
+		DeleteResult writeResult = getMongoTemplate().remove(new Query(), getStatement());
 		return (int) writeResult.getDeletedCount();
-	}
-
-	protected final MongoTemplate getSlaveMongoTemplate(final int index) throws OperationException {
-		if(Validate.isEmpty(slaveMongoTemplates)){
-			return getMasterMongoTemplate();
-		}else{
-			MongoTemplate mongoTemplate = slaveMongoTemplates.get(index);
-
-			if(mongoTemplate == null){
-				throw new OperationException("Could not find the \"" + index + "\" slave MongoTemplate.");
-			}
-
-			return mongoTemplate;
-		}
-	}
-
-	protected final MongoTemplate getSlaveMongoTemplate() throws OperationException {
-		if(Validate.isEmpty(slaveMongoTemplates)){
-			return getMasterMongoTemplate();
-		}else if(slaveMongoTemplates.size() == 1){
-			return getSlaveMongoTemplate(0);
-		}else{
-			int index = RandomUtils.nextInt(slaveMongoTemplates.size());
-			return getSlaveMongoTemplate(index);
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -386,7 +359,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	private BasicDBObject toDbObject(E e) {
 		BasicDBObject doc = new BasicDBObject();
-		masterMongoTemplate.getConverter().write(e, doc);
+		getMongoTemplate().getConverter().write(e, doc);
 		return doc;
 	}
 
