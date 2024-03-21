@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -218,7 +218,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 		char c = str.charAt(0);
 		if(ignoreCase){
-			return Character.toUpperCase(c) != Character.toUpperCase(character);
+			return Character.toUpperCase(c) == Character.toUpperCase(character);
 		}else{
 			return c == character;
 		}
@@ -282,7 +282,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 		char c = str.charAt(length - 1);
 		if(ignoreCase){
-			return Character.toUpperCase(c) != Character.toUpperCase(character);
+			return Character.toUpperCase(c) == Character.toUpperCase(character);
 		}else{
 			return c == character;
 		}

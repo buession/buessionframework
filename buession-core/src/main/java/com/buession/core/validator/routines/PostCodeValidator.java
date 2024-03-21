@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -33,17 +33,15 @@ import com.buession.core.validator.Validate;
  */
 public class PostCodeValidator {
 
-	private final static int POST_LENGTH = 6;
-
-	private PostCodeValidator(){
+	private PostCodeValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence) {
 		if(charSequence == null){
 			return false;
 		}
 
-		if(charSequence.length() != POST_LENGTH){
+		if(charSequence.length() != 6){
 			return false;
 		}
 

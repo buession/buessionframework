@@ -7,7 +7,13 @@
 
 ### 🐞 Bug 修复
 
+- **buession-core：** 修复 StringUtils 类忽略大小写判断是否以字符开头或结尾，错误判断的 BUG
 - **buession-dao：** 修复 MongoDBDao 处理 in、nin 条件值错误传递问题
+
+
+### ⏪ 优化
+
+- **buession-core：** 优化数据验证，减少内存占用
 
 
 ---

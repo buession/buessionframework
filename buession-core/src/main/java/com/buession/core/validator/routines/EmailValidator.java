@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -37,39 +37,29 @@ import java.util.regex.Pattern;
  */
 public class EmailValidator {
 
-	private final static String SPECIAL_CHARS = "\\p{Cntrl}\\(\\)<>@,;:'\\\\\\\"\\.\\[\\]";
+	private final static String WORD = "(([^\\s\\p{Cntrl}\\(\\)<>@,;:'\\\\\\\"\\.\\[\\]]|')+|(\"[^\"]*\"))";
 
-	private final static String VALID_CHARS = "[^\\s" + SPECIAL_CHARS + "]";
+	private final static Pattern MATCH_ASCII_PATTERN = Pattern.compile("^\\p{ASCII}+$");
 
-	private final static String QUOTED_USER = "(\"[^\"]*\")";
+	private final static Pattern EMAIL_PATTERN = Pattern.compile("^\\s*?(.+)@(.+?)\\s*$");
 
-	private final static String WORD = "((" + VALID_CHARS + "|')+|" + QUOTED_USER + ")";
+	private final static Pattern IP_DOMAIN_PATTERN = Pattern.compile("^\\[(.*)\\]$");
 
-	private final static String LEGAL_ASCII_REGEX = "^\\p{ASCII}+$";
+	private final static Pattern USER_PATTERN = Pattern.compile("^\\s*" + WORD + "(\\." + WORD + ")*$");
 
-	private final static String EMAIL_REGEX = "^\\s*?(.+)@(.+?)\\s*$";
-
-	private final static String IP_DOMAIN_REGEX = "^\\[(.*)\\]$";
-
-	private final static String USER_REGEX = "^\\s*" + WORD + "(\\." + WORD + ")*$";
-
-	private final static Pattern MATCH_ASCII_PATTERN = Pattern.compile(LEGAL_ASCII_REGEX);
-
-	private final static Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-
-	private final static Pattern IP_DOMAIN_PATTERN = Pattern.compile(IP_DOMAIN_REGEX);
-
-	private final static Pattern USER_PATTERN = Pattern.compile(USER_REGEX);
-
-	private EmailValidator(){
+	private EmailValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence) {
 		if(Validate.isBlank(charSequence)){
 			return false;
 		}
 
 		if(StringUtils.endsWith(charSequence, '.')){
+			return false;
+		}
+
+		if(StringUtils.contains(charSequence, '@') == false){
 			return false;
 		}
 
@@ -87,11 +77,11 @@ public class EmailValidator {
 		return isValidUser(emailMatcher.group(1)) && isValidDomain(emailMatcher.group(2));
 	}
 
-	protected static boolean isValidUser(final String user){
+	protected static boolean isValidUser(final String user) {
 		return USER_PATTERN.matcher(user).matches();
 	}
 
-	protected static boolean isValidDomain(final String domain){
+	protected static boolean isValidDomain(final String domain) {
 		// see if domain is an IP address in brackets
 		Matcher ipDomainMatcher = IP_DOMAIN_PATTERN.matcher(domain);
 		return ipDomainMatcher.matches() ? IpValidator.isValid(ipDomainMatcher.group(1)) :

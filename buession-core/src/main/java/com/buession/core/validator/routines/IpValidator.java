@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://buession.buession.com.cn/LICENSE 												|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -35,14 +35,6 @@ import com.buession.lang.IpType;
  * @author Yong.Teng
  */
 public class IpValidator {
-
-	private final static int IPV4_MIN_LENGTH = 7;
-
-	private final static int IPV4_MAX_LENGTH = 15;
-
-	private final static int IPV6_MIN_GROUP_SIZE = 2;
-
-	private final static int IPV6_MAX_GROUP_SIZE = 8;
 
 	private IpValidator() {
 	}
@@ -80,7 +72,7 @@ public class IpValidator {
 		}
 
 		int len = str.length();
-		if(len < IPV4_MIN_LENGTH || len > IPV4_MAX_LENGTH){
+		if(len < 7 || len > 15){
 			return false;
 		}
 
@@ -139,7 +131,7 @@ public class IpValidator {
 			int colonIndex = str.lastIndexOf(':');
 			return isIpv6(str.substring(0, colonIndex + 1), 1, 6) && isIpv4(str.substring(colonIndex + 1));
 		}else{
-			return isIpv6(str, IPV6_MIN_GROUP_SIZE, IPV6_MAX_GROUP_SIZE);
+			return isIpv6(str, 2, 8);
 		}
 	}
 

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -33,20 +33,16 @@ import com.buession.core.validator.Validate;
  */
 public class QQValidator {
 
-	private final static int MIN_LENGTH = 5;
-
-	private final static int MAX_LENGTH = 10;
-
-	private QQValidator(){
+	private QQValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence) {
 		if(charSequence == null){
 			return false;
 		}
 
 		int length = charSequence.length();
-		if(length < MIN_LENGTH || length > MAX_LENGTH){
+		if(length < 5 || length > 10){
 			return false;
 		}
 

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -35,8 +35,6 @@ import java.util.Date;
  */
 public class IDCardValidator {
 
-	private final static int IDCARD_LENGTH = 18;
-
 	private final static int[] DIVISORS = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
 
 	private final static char[] CHECK_CODES = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
@@ -45,14 +43,16 @@ public class IDCardValidator {
 	}
 
 	public static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday) {
-		if(charSequence == null || charSequence.length() != IDCARD_LENGTH){
+		final int idCardLength = 18;
+
+		if(charSequence == null || charSequence.length() != idCardLength){
 			return false;
 		}else if(strict && birthday == null){
 			return false;
 		}
 
 		int sum = 0;
-		for(int i = 0; i < IDCARD_LENGTH - 1; i++){
+		for(int i = 0; i < idCardLength - 1; i++){
 			char c = charSequence.charAt(i);
 
 			if(c < '0' || c > '9'){
@@ -65,7 +65,7 @@ public class IDCardValidator {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 		char checkCode = CHECK_CODES[sum % 11];
 
-		if(checkCode == charSequence.charAt(IDCARD_LENGTH - 1)){
+		if(checkCode == charSequence.charAt(idCardLength - 1)){
 			if(strict){
 				String s = charSequence.subSequence(6, 14).toString();
 
