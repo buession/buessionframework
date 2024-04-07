@@ -40,7 +40,15 @@ public class ThreadPoolConfiguration {
 	/**
 	 * 线程名称，当设置了 {@link #threadFactory} 时无效
 	 */
+	@Deprecated
 	private String name;
+
+	/**
+	 * 线程名称前缀，当设置了 {@link #threadFactory} 时无效
+	 *
+	 * @since 2.3.3
+	 */
+	private String namePrefix;
 
 	/**
 	 * 线程池核心线程大小
@@ -60,7 +68,15 @@ public class ThreadPoolConfiguration {
 	/**
 	 * {@link #keepAliveTime} 的计量单位
 	 */
+	@Deprecated
 	private TimeUnit timeUnit;
+
+	/**
+	 * {@link #keepAliveTime} 的计量单位
+	 *
+	 * @since 2.3.3
+	 */
+	private TimeUnit keepAliveTimeUnit;
 
 	/**
 	 * 空闲线程超过 keepAliveTime 后是否直接停掉
@@ -97,7 +113,8 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 线程名称
 	 */
-	public String getName(){
+	@Deprecated
+	public String getName() {
 		return name;
 	}
 
@@ -107,8 +124,32 @@ public class ThreadPoolConfiguration {
 	 * @param name
 	 * 		线程名称
 	 */
-	public void setName(String name){
+	@Deprecated
+	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * 返回线程名称前缀，当设置了 {@link #threadFactory} 时无效
+	 *
+	 * @return 线程名称前缀
+	 *
+	 * @since 2.3.3
+	 */
+	public String getNamePrefix() {
+		return namePrefix;
+	}
+
+	/**
+	 * 返回线程名称前缀，当设置了 {@link #threadFactory} 时无效
+	 *
+	 * @param namePrefix
+	 * 		线程名称前缀
+	 *
+	 * @since 2.3.3
+	 */
+	public void setNamePrefix(String namePrefix) {
+		this.namePrefix = namePrefix;
 	}
 
 	/**
@@ -117,7 +158,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 线程池核心线程大小
 	 */
-	public int getCorePoolSize(){
+	public int getCorePoolSize() {
 		return corePoolSize;
 	}
 
@@ -128,7 +169,7 @@ public class ThreadPoolConfiguration {
 	 * @param corePoolSize
 	 * 		线程池核心线程大小
 	 */
-	public void setCorePoolSize(int corePoolSize){
+	public void setCorePoolSize(int corePoolSize) {
 		this.corePoolSize = corePoolSize;
 	}
 
@@ -141,7 +182,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 线程池最大线程数量
 	 */
-	public int getMaximumPoolSize(){
+	public int getMaximumPoolSize() {
 		return maximumPoolSize;
 	}
 
@@ -155,7 +196,7 @@ public class ThreadPoolConfiguration {
 	 * @param maximumPoolSize
 	 * 		线程池最大线程数量
 	 */
-	public void setMaximumPoolSize(int maximumPoolSize){
+	public void setMaximumPoolSize(int maximumPoolSize) {
 		this.maximumPoolSize = maximumPoolSize;
 	}
 
@@ -166,7 +207,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 空闲线程存活时间
 	 */
-	public long getKeepAliveTime(){
+	public long getKeepAliveTime() {
 		return keepAliveTime;
 	}
 
@@ -178,7 +219,7 @@ public class ThreadPoolConfiguration {
 	 * @param keepAliveTime
 	 * 		空闲线程存活时间
 	 */
-	public void setKeepAliveTime(long keepAliveTime){
+	public void setKeepAliveTime(long keepAliveTime) {
 		this.keepAliveTime = keepAliveTime;
 	}
 
@@ -187,7 +228,8 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return {@link #keepAliveTime} 的计量单位
 	 */
-	public TimeUnit getTimeUnit(){
+	@Deprecated
+	public TimeUnit getTimeUnit() {
 		return timeUnit;
 	}
 
@@ -197,8 +239,34 @@ public class ThreadPoolConfiguration {
 	 * @param timeUnit
 	 *        {@link #keepAliveTime} 的计量单位
 	 */
-	public void setTimeUnit(TimeUnit timeUnit){
+	@Deprecated
+	public void setTimeUnit(TimeUnit timeUnit) {
 		this.timeUnit = timeUnit;
+		this.keepAliveTimeUnit = timeUnit;
+	}
+
+	/**
+	 * 返回 {@link #keepAliveTime} 的计量单位
+	 *
+	 * @return {@link #keepAliveTime} 的计量单位
+	 *
+	 * @since 2.3.3
+	 */
+	public TimeUnit getKeepAliveTimeUnit() {
+		return keepAliveTimeUnit;
+	}
+
+	/**
+	 * 设置 {@link #keepAliveTime} 的计量单位
+	 *
+	 * @param keepAliveTimeUnit
+	 *        {@link #keepAliveTime} 的计量单位
+	 *
+	 * @since 2.3.3
+	 */
+	public void setKeepAliveTimeTimeUnit(TimeUnit keepAliveTimeUnit) {
+		this.keepAliveTimeUnit = keepAliveTimeUnit;
+		this.timeUnit = keepAliveTimeUnit;
 	}
 
 	/**
@@ -206,7 +274,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 空闲线程超过 keepAliveTime 后是否直接停掉
 	 */
-	public Boolean getAllowCoreThreadTimeOut(){
+	public Boolean getAllowCoreThreadTimeOut() {
 		return allowCoreThreadTimeOut;
 	}
 
@@ -216,7 +284,7 @@ public class ThreadPoolConfiguration {
 	 * @param allowCoreThreadTimeOut
 	 * 		空闲线程超过 keepAliveTime 后是否直接停掉
 	 */
-	public void setAllowCoreThreadTimeOut(Boolean allowCoreThreadTimeOut){
+	public void setAllowCoreThreadTimeOut(Boolean allowCoreThreadTimeOut) {
 		this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
 	}
 
@@ -226,7 +294,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 工作队列 {@link BlockingQueue}
 	 */
-	public BlockingQueue<Runnable> getWorkQueue(){
+	public BlockingQueue<Runnable> getWorkQueue() {
 		return workQueue;
 	}
 
@@ -237,7 +305,7 @@ public class ThreadPoolConfiguration {
 	 * @param workQueue
 	 * 		工作队列 {@link BlockingQueue}
 	 */
-	public void setWorkQueue(BlockingQueue<Runnable> workQueue){
+	public void setWorkQueue(BlockingQueue<Runnable> workQueue) {
 		this.workQueue = workQueue;
 	}
 
@@ -247,7 +315,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 创建线程的工厂 {@link ThreadFactory}
 	 */
-	public ThreadFactory getThreadFactory(){
+	public ThreadFactory getThreadFactory() {
 		return threadFactory;
 	}
 
@@ -258,7 +326,7 @@ public class ThreadPoolConfiguration {
 	 * @param threadFactory
 	 * 		创建线程的工厂 {@link ThreadFactory}
 	 */
-	public void setThreadFactory(ThreadFactory threadFactory){
+	public void setThreadFactory(ThreadFactory threadFactory) {
 		this.threadFactory = threadFactory;
 	}
 
@@ -269,7 +337,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 拒绝策略 {@link RejectedExecutionHandler}
 	 */
-	public RejectedExecutionHandler getRejectedHandler(){
+	public RejectedExecutionHandler getRejectedHandler() {
 		return rejectedHandler;
 	}
 
@@ -281,7 +349,7 @@ public class ThreadPoolConfiguration {
 	 * @param rejectedHandler
 	 * 		拒绝策略 {@link RejectedExecutionHandler}
 	 */
-	public void setRejectedHandler(RejectedExecutionHandler rejectedHandler){
+	public void setRejectedHandler(RejectedExecutionHandler rejectedHandler) {
 		this.rejectedHandler = rejectedHandler;
 	}
 
@@ -290,7 +358,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 是否后台运行
 	 */
-	public Boolean getDaemon(){
+	public Boolean getDaemon() {
 		return daemon;
 	}
 
@@ -300,7 +368,7 @@ public class ThreadPoolConfiguration {
 	 * @param daemon
 	 * 		是否后台运行
 	 */
-	public void setDaemon(Boolean daemon){
+	public void setDaemon(Boolean daemon) {
 		this.daemon = daemon;
 	}
 
@@ -309,7 +377,7 @@ public class ThreadPoolConfiguration {
 	 *
 	 * @return 优先级
 	 */
-	public Integer getPriority(){
+	public Integer getPriority() {
 		return priority;
 	}
 
@@ -319,7 +387,7 @@ public class ThreadPoolConfiguration {
 	 * @param priority
 	 * 		优先级
 	 */
-	public void setPriority(Integer priority){
+	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
 

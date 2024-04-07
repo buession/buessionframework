@@ -5,6 +5,18 @@
 ## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-xx-xx)
 
 
+### ⭐ 新特性
+
+- **buession-core：** 新增默认线程工厂 DefaultThreadFactory
+- **buession-core：** 新增默认线程池执行器 DefaultThreadPoolExecutor
+
+
+### 🔔 变化
+
+- **buession-core：** 废弃 ThreadPoolConfiguration name 属性
+- **buession-core：** 废弃 ThreadPoolConfiguration timeUnit 属性，使用 keepAliveTimeUnit 替代
+
+
 ### 🐞 Bug 修复
 
 - **buession-core：** 修复 StringUtils 类忽略大小写判断是否以字符开头或结尾，错误判断的 BUG
