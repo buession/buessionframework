@@ -57,8 +57,10 @@ public class DefaultThreadPoolExecutor extends ThreadPoolExecutor {
 	 */
 	public DefaultThreadPoolExecutor(final ThreadPoolConfiguration configuration) {
 		super(initValue(configuration.getCorePoolSize(), Runtime.getRuntime().availableProcessors() << 1),
-				initValue(configuration.getMaximumPoolSize(), Runtime.getRuntime().availableProcessors() << 1),
-				initValue(configuration.getKeepAliveTime(), DEFAULT_KEEP_ALIVE_TIME), configuration.getTimeUnit(),
+				configuration.getMaximumPoolSize() > 0 ? configuration.getMaximumPoolSize() :
+						Runtime.getRuntime().availableProcessors() << 1,
+				initValue(configuration.getKeepAliveTime(), DEFAULT_KEEP_ALIVE_TIME),
+				configuration.getKeepAliveTimeUnit(),
 				initValue(configuration.getWorkQueue(), new LinkedBlockingQueue<>()),
 				initValue(configuration.getThreadFactory(), createDefaultThreadFactory(configuration)));
 
