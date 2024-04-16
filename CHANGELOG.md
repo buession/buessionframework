@@ -9,6 +9,7 @@
 
 - **buession-core：** 新增默认线程工厂 DefaultThreadFactory
 - **buession-core：** 新增默认线程池执行器 DefaultThreadPoolExecutor
+- **buession-core：** File 新增创建软链接方法
 
 
 ### 🔔 变化
