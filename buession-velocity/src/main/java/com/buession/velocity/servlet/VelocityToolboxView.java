@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
 
-import com.buession.core.utils.ObjectUtils;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.Scope;
 import org.apache.velocity.tools.ToolManager;
@@ -38,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Yong.Teng
@@ -81,7 +81,7 @@ public class VelocityToolboxView extends VelocityView {
 	@Override
 	protected void initTool(Object tool, Context velocityContext) throws Exception {
 		Method initMethod = ClassUtils.getMethodIfAvailable(tool.getClass(), "init", Object.class);
-		ObjectUtils.invokeIfAvailable(initMethod, m->ReflectionUtils.invokeMethod(m, tool, velocityContext));
+		Optional.of(initMethod).ifPresent((m)->ReflectionUtils.invokeMethod(m, tool, velocityContext));
 	}
 
 	protected static void addToolbox(final ViewToolContext velocityContext, final ToolboxFactory toolboxFactory,

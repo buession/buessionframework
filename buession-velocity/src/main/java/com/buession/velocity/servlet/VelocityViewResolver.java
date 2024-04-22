@@ -21,16 +21,17 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
 
-import com.buession.core.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
+
+import java.util.Optional;
 
 /**
  * @author Yong.Teng
@@ -116,8 +117,7 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
 		view.setDateToolAttribute(dateToolAttribute);
 		view.setNumberToolAttribute(numberToolAttribute);
 
-		ObjectUtils.invokeIfAvailable(toolboxConfigLocation,
-				((VelocityToolboxView) view)::setToolboxConfigLocation);
+		Optional.of(toolboxConfigLocation).ifPresent(((VelocityToolboxView) view)::setToolboxConfigLocation);
 
 		return view;
 	}

@@ -19,16 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3;
 
-import com.buession.core.utils.ObjectUtils;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -117,8 +116,8 @@ public class HttpClientBuilder {
 	}
 
 	public OkHttpClient build() {
-		ObjectUtils.invokeIfAvailable(connectionManager,
-				(connectionManager)->builder.connectionPool(connectionManager.getConnectionPool()));
+		Optional.of(connectionManager)
+				.ifPresent((connectionManager)->builder.connectionPool(connectionManager.getConnectionPool()));
 
 		OkHttpClient client = builder.build();
 

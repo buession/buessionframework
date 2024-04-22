@@ -21,16 +21,16 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.http.response;
 
-import com.buession.core.utils.ObjectUtils;
 import com.buession.web.http.HttpHeader;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author Yong.Teng
@@ -42,18 +42,18 @@ public class ResponseUtils {
 	}
 
 	public static void httpCache(final HttpServletResponse response, final String value) {
-		ObjectUtils.invokeIfAvailable(response, res->res.setHeader(HttpHeader.CACHE_CONTROL.getValue(), value));
+		Optional.of(response).ifPresent((res)->res.setHeader(HttpHeader.CACHE_CONTROL.getValue(), value));
 	}
 
 	public static void httpCache(final HttpServletResponse response, final int lifetime) {
-		ObjectUtils.invokeIfAvailable(response, res->{
+		Optional.of(response).ifPresent((res)->{
 			Date date = new Date(System.currentTimeMillis() + lifetime * 1000L);
 			httpCache(res, lifetime, date);
 		});
 	}
 
 	public static void httpCache(final HttpServletResponse response, final Date date) {
-		ObjectUtils.invokeIfAvailable(response, res->{
+		Optional.of(response).ifPresent((res)->{
 			long maxAge = date.getTime() - System.currentTimeMillis();
 			httpCache(res, maxAge, date);
 		});
