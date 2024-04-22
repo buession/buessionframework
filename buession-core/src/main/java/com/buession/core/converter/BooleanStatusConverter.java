@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
 
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class BooleanStatusConverter implements Converter<Boolean, Status> {
 
 	@Override
 	public Status convert(final Boolean source) {
-		return StatusUtils.valueOf(Objects.equals(source, Boolean.TRUE));
+		return Status.valueOf(Objects.equals(source, Boolean.TRUE));
 	}
 
 }

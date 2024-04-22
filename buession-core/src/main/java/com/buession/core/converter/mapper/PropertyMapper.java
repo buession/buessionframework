@@ -153,6 +153,14 @@ public class PropertyMapper {
 		return source.whenHasText();
 	}
 
+	private <T> Source<T> whenTrue(Source<T> source) {
+		return source.whenTrue();
+	}
+
+	private <T> Source<T> whenFalse(Source<T> source) {
+		return source.whenFalse();
+	}
+
 	/**
 	 * An operation that can be applied to a {@link Source}.
 	 */

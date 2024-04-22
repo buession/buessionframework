@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -257,7 +257,7 @@ public class KeyValueParser {
 	public Status getStatusValue() {
 		if(statusValue == null){
 			statusValue =
-					StatusUtils.valueOf("OK".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) ||
+					Status.valueOf("OK".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) ||
 							"on".equalsIgnoreCase(value) || getBooleanValue());
 		}
 

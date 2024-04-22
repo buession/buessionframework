@@ -16,6 +16,8 @@
 
 - **buession-core：** 废弃 ThreadPoolConfiguration name 属性
 - **buession-core：** 废弃 ThreadPoolConfiguration timeUnit 属性，使用 keepAliveTimeUnit 替代
+- **buession-core：** 废弃 ObjectUtils 使用 java 原生 API Optional
+- **buession-core：** 废弃 StatusUtils ，迁移至枚举 Status 本身
 
 
 ### 🐞 Bug 修复
@@ -27,6 +29,7 @@
 ### ⏪ 优化
 
 - **buession-core：** 优化数据验证，减少内存占用
+- **buession-json：** 数据脱敏，性能优化
 
 
 ---

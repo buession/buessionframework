@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
 
 import java.util.function.Predicate;
@@ -44,14 +43,14 @@ public class PredicateStatusConverter<T> implements Converter<T, Status> {
 
 	private final Predicate<T> predicate;
 
-	public PredicateStatusConverter(final Predicate<T> predicate){
+	public PredicateStatusConverter(final Predicate<T> predicate) {
 		Assert.isNull(predicate, "Predicate cloud not be null.");
 		this.predicate = predicate;
 	}
 
 	@Override
-	public Status convert(final T source){
-		return StatusUtils.valueOf(predicate.test(source));
+	public Status convert(final T source) {
+		return Status.valueOf(predicate.test(source));
 	}
 
 }

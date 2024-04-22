@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -36,5 +36,61 @@ public enum Status {
 	SUCCESS,
 
 	FAILURE;
+
+	/**
+	 * {@link Boolean} 转换为 {@link Status}
+	 *
+	 * @param v
+	 *        {@link Boolean} 值
+	 *
+	 * @return 当 {@link Boolean} 为 true 时，返回 {@link #SUCCESS}；否则，返回 {@link #FAILURE}
+	 *
+	 * @since 2.3.3
+	 */
+	public static Status valueOf(final boolean v) {
+		return v ? Status.SUCCESS : Status.FAILURE;
+	}
+
+	/**
+	 * {@link Short} 转换为 {@link Status}
+	 *
+	 * @param v
+	 *        {@link Short} 值
+	 *
+	 * @return 当 {@link Short} 为 0 时，返回 {@link #FAILURE}；否则，返回 {@link #SUCCESS}
+	 *
+	 * @since 2.3.3
+	 */
+	public static Status valueOf(final short v) {
+		return (short) 0 == v ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	/**
+	 * {@link Integer} 转换为 {@link Status}
+	 *
+	 * @param v
+	 *        {@link Integer} 值
+	 *
+	 * @return 当 {@link Integer} 为 0 时，返回 {@link #FAILURE}；否则，返回 {@link #SUCCESS}
+	 *
+	 * @since 2.3.3
+	 */
+	public static Status valueOf(final int v) {
+		return v == 0 ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	/**
+	 * {@link Long} 转换为 {@link Status}
+	 *
+	 * @param v
+	 *        {@link Long} 值
+	 *
+	 * @return 当 {@link Long} 为 0 时，返回 {@link #FAILURE}；否则，返回 {@link #SUCCESS}
+	 *
+	 * @since 2.3.3
+	 */
+	public static Status valueOf(final long v) {
+		return v == 0 ? Status.FAILURE : Status.SUCCESS;
+	}
 
 }

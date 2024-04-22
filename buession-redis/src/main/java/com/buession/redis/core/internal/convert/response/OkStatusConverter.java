@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
 import com.buession.redis.core.Constants;
 
@@ -40,8 +39,8 @@ public final class OkStatusConverter implements Converter<String, Status> {
 	public final static OkStatusConverter INSTANCE = new OkStatusConverter();
 
 	@Override
-	public Status convert(final String source){
-		return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(source));
+	public Status convert(final String source) {
+		return Status.valueOf(Constants.OK.equalsIgnoreCase(source));
 	}
 
 }
