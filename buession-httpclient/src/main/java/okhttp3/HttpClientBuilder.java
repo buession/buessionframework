@@ -116,7 +116,7 @@ public class HttpClientBuilder {
 	}
 
 	public OkHttpClient build() {
-		Optional.of(connectionManager)
+		Optional.ofNullable(connectionManager)
 				.ifPresent((connectionManager)->builder.connectionPool(connectionManager.getConnectionPool()));
 
 		OkHttpClient client = builder.build();

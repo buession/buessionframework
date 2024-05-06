@@ -117,7 +117,7 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
 		view.setDateToolAttribute(dateToolAttribute);
 		view.setNumberToolAttribute(numberToolAttribute);
 
-		Optional.of(toolboxConfigLocation).ifPresent(((VelocityToolboxView) view)::setToolboxConfigLocation);
+		Optional.ofNullable(toolboxConfigLocation).ifPresent(((VelocityToolboxView) view)::setToolboxConfigLocation);
 
 		return view;
 	}

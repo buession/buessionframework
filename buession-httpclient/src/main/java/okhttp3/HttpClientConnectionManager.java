@@ -178,7 +178,7 @@ public class HttpClientConnectionManager implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		Optional.of(connectionPool).ifPresent(ConnectionPool::evictAll);
+		Optional.ofNullable(connectionPool).ifPresent(ConnectionPool::evictAll);
 	}
 
 }

@@ -81,7 +81,7 @@ public class VelocityToolboxView extends VelocityView {
 	@Override
 	protected void initTool(Object tool, Context velocityContext) throws Exception {
 		Method initMethod = ClassUtils.getMethodIfAvailable(tool.getClass(), "init", Object.class);
-		Optional.of(initMethod).ifPresent((m)->ReflectionUtils.invokeMethod(m, tool, velocityContext));
+		Optional.ofNullable(initMethod).ifPresent((m)->ReflectionUtils.invokeMethod(m, tool, velocityContext));
 	}
 
 	protected static void addToolbox(final ViewToolContext velocityContext, final ToolboxFactory toolboxFactory,

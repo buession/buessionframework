@@ -42,18 +42,18 @@ public class ResponseUtils {
 	}
 
 	public static void httpCache(final HttpServletResponse response, final String value) {
-		Optional.of(response).ifPresent((res)->res.setHeader(HttpHeader.CACHE_CONTROL.getValue(), value));
+		Optional.ofNullable(response).ifPresent((res)->res.setHeader(HttpHeader.CACHE_CONTROL.getValue(), value));
 	}
 
 	public static void httpCache(final HttpServletResponse response, final int lifetime) {
-		Optional.of(response).ifPresent((res)->{
+		Optional.ofNullable(response).ifPresent((res)->{
 			Date date = new Date(System.currentTimeMillis() + lifetime * 1000L);
 			httpCache(res, lifetime, date);
 		});
 	}
 
 	public static void httpCache(final HttpServletResponse response, final Date date) {
-		Optional.of(response).ifPresent((res)->{
+		Optional.ofNullable(response).ifPresent((res)->{
 			long maxAge = date.getTime() - System.currentTimeMillis();
 			httpCache(res, maxAge, date);
 		});
