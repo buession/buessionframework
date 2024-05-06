@@ -2,7 +2,11 @@
 ===========================
 
 
-## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-xx-xx)
+## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-05-06)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.3)
 
 
 ### ⭐ 新特性
@@ -10,6 +14,7 @@
 - **buession-core：** 新增默认线程工厂 DefaultThreadFactory
 - **buession-core：** 新增默认线程池执行器 DefaultThreadPoolExecutor
 - **buession-core：** File 新增创建软链接方法
+- **buession-core：** PropertyMapper 新增 alwaysApplyingWhenNull 条件为 null 时，alwaysApplyingWhenNonText 条件为 null 或无字符串（不含空格、换行符、制表位）时
 
 
 ### 🔔 变化
