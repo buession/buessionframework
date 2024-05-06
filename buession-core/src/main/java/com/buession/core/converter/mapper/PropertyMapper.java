@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter.mapper;
@@ -67,12 +67,36 @@ public class PropertyMapper {
 
 	/**
 	 * Return a new {@link PropertyMapper} instance that applies
+	 * {@link Source#whenNull() whenNull} to every source.
+	 *
+	 * @return a new property mapper instance
+	 *
+	 * @since 2.3.3
+	 */
+	public PropertyMapper alwaysApplyingWhenNull() {
+		return alwaysApplying(this::whenNull);
+	}
+
+	/**
+	 * Return a new {@link PropertyMapper} instance that applies
 	 * {@link Source#whenHasText() whenHasText} to every source.
 	 *
 	 * @return a new property mapper instance
 	 */
 	public PropertyMapper alwaysApplyingWhenHasText() {
 		return alwaysApplying(this::whenHasText);
+	}
+
+	/**
+	 * Return a new {@link PropertyMapper} instance that applies
+	 * {@link Source#whenNonText() whenHasText} to every source.
+	 *
+	 * @return a new property mapper instance
+	 *
+	 * @since 2.3.3
+	 */
+	public PropertyMapper alwaysApplyingWhenNonText() {
+		return alwaysApplying(this::whenNonText);
 	}
 
 	/**
@@ -149,8 +173,16 @@ public class PropertyMapper {
 		return source.whenNonNull();
 	}
 
+	private <T> Source<T> whenNull(Source<T> source) {
+		return source.whenNull();
+	}
+
 	private <T> Source<T> whenHasText(Source<T> source) {
 		return source.whenHasText();
+	}
+
+	private <T> Source<T> whenNonText(Source<T> source) {
+		return source.whenNonText();
 	}
 
 	private <T> Source<T> whenTrue(Source<T> source) {
@@ -340,6 +372,17 @@ public class PropertyMapper {
 		}
 
 		/**
+		 * Return a filtered version of the source that won't map null values.
+		 *
+		 * @return a new filtered source instance
+		 *
+		 * @since 2.3.3
+		 */
+		public Source<T> whenNull() {
+			return new Source<>(new NullPointerExceptionSafeSupplier<>(this.supplier), Objects::isNull);
+		}
+
+		/**
 		 * Return a filtered version of the source that will only map values that are {@code true}.
 		 *
 		 * @return a new filtered source instance
@@ -364,7 +407,19 @@ public class PropertyMapper {
 		 * @return a new filtered source instance
 		 */
 		public Source<T> whenHasText() {
-			return when((value)->Validate.hasText(Objects.toString(value, null)));
+			return when((value)->Validate.isNotBlank(Objects.toString(value, null)));
+		}
+
+		/**
+		 * Return a filtered version of the source that will only map values that have a
+		 * {@code toString()} containing actual text.
+		 *
+		 * @return a new filtered source instance
+		 *
+		 * @since 2.3.3
+		 */
+		public Source<T> whenNonText() {
+			return when((value)->value == null || Validate.isBlank(Objects.toString(value, null)));
 		}
 
 		/**
