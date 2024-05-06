@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -65,7 +65,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	/**
 	 * 构造函数
 	 */
-	public JedisConnection(){
+	public JedisConnection() {
 		super();
 	}
 
@@ -75,7 +75,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public JedisConnection(JedisDataSource dataSource){
+	public JedisConnection(JedisDataSource dataSource) {
 		super(dataSource);
 	}
 
@@ -89,7 +89,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout){
+	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 	}
 
@@ -107,7 +107,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 *
 	 * @since 2.0.0
 	 */
-	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout){
+	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -119,7 +119,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, SslConfiguration sslConfiguration){
+	public JedisConnection(JedisDataSource dataSource, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
 	}
 
@@ -136,7 +136,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout,
-						   SslConfiguration sslConfiguration){
+						   SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -157,7 +157,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @since 2.0.0
 	 */
 	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout,
-						   SslConfiguration sslConfiguration){
+						   SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -169,7 +169,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param pool
 	 * 		连接池
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool){
+	public JedisConnection(JedisDataSource dataSource, JedisPool pool) {
 		super(dataSource);
 		this.pool = pool;
 	}
@@ -186,7 +186,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout){
+	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 		this.pool = pool;
 	}
@@ -206,7 +206,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
-						   int infiniteSoTimeout){
+						   int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.pool = pool;
 	}
@@ -221,7 +221,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, SslConfiguration sslConfiguration){
+	public JedisConnection(JedisDataSource dataSource, JedisPool pool, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
 		this.pool = pool;
 	}
@@ -241,7 +241,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
-						   SslConfiguration sslConfiguration){
+						   SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.pool = pool;
 	}
@@ -263,17 +263,17 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
-						   int infiniteSoTimeout, SslConfiguration sslConfiguration){
+						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.pool = pool;
 	}
 
-	public Jedis getJedis(){
+	public Jedis getJedis() {
 		return jedis;
 	}
 
 	@Override
-	public Pipeline openPipeline(){
+	public Pipeline openPipeline() {
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());
 		}
@@ -282,13 +282,13 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public void closePipeline(){
+	public void closePipeline() {
 		pipeline.close();
 		pipeline = null;
 	}
 
 	@Override
-	public Transaction multi(){
+	public Transaction multi() {
 		if(transaction == null){
 			transaction = new JedisTransaction(jedis.multi());
 		}
@@ -297,7 +297,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public List<Object> exec() throws RedisException{
+	public List<Object> exec() throws RedisException {
 		if(transaction != null){
 			final List<Object> result = transaction.exec();
 
@@ -311,7 +311,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public void discard() throws RedisException{
+	public void discard() throws RedisException {
 		if(transaction != null){
 			transaction.discard();
 			transaction = null;
@@ -321,25 +321,25 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public boolean isConnect(){
+	public boolean isConnect() {
 		return jedis != null && jedis.isConnected();
 	}
 
 	@Override
-	public boolean isClosed(){
+	public boolean isClosed() {
 		return jedis == null || jedis.isConnected() == false;
 	}
 
 	@Override
-	protected void internalInit(){
+	protected void internalInit() {
 	}
 
-	protected boolean isUsePool(){
+	protected boolean isUsePool() {
 		return pool != null;
 	}
 
 	@Override
-	protected void doConnect() throws RedisConnectionFailureException{
+	protected void doConnect() throws RedisConnectionFailureException {
 		if(isUsePool()){
 			try{
 				jedis = pool.getResource();
@@ -365,12 +365,14 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	protected void doDestroy() throws IOException{
+	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
 		logger.info("Jedis destroy.");
 		if(pool != null){
-			logger.info("Jedis pool for {} destroy.", pool.getClass().getName());
+			if(logger.isInfoEnabled()){
+				logger.info("Jedis pool for {} destroy.", pool.getClass().getName());
+			}
 
 			try{
 				pool.destroy();
@@ -383,10 +385,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	protected void doClose() throws IOException{
+	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Jedis close.");
 		if(isUsePool()){
 			logger.info("Jedis close.");
 
@@ -394,7 +395,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 				jedis.close();
 			}
 		}else{
-			logger.info("Jedis quit.");
+			logger.info("Jedis quit and disconnect.");
 
 			if(jedis != null){
 				Exception ex = null;
