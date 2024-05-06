@@ -37,13 +37,15 @@ import java.lang.reflect.Method;
 public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
 
 	@Override
-	public <A extends Annotation> A getAnnotation(MethodInvocation mi, Class<A> clazz){
+	public <A extends Annotation> A getAnnotation(MethodInvocation mi, Class<A> clazz) {
 		Method method = preGetAnnotation(mi, clazz);
 
 		A annotation = method.getAnnotation(clazz);
 		if(annotation == null){
 			Object miThis = mi.getThis();
-			annotation = miThis == null ? null : miThis.getClass().getAnnotation(clazz);
+			if(miThis != null){
+				annotation = miThis.getClass().getAnnotation(clazz);
+			}
 		}
 
 		return annotation;

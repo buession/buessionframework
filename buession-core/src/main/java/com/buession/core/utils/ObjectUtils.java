@@ -24,6 +24,7 @@
  */
 package com.buession.core.utils;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -32,6 +33,7 @@ import java.util.function.Consumer;
  * @author Yong.Teng
  * @since 2.3.2
  */
+@Deprecated
 public class ObjectUtils {
 
 	private ObjectUtils() {
@@ -49,9 +51,7 @@ public class ObjectUtils {
 	 * 		对象引用类型
 	 */
 	public static <T> void invokeIfAvailable(final T object, final Consumer<T> consumer) {
-		if(object != null){
-			consumer.accept(object);
-		}
+		Optional.ofNullable(object).ifPresent(consumer);
 	}
 
 }

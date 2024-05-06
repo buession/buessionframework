@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -38,15 +38,11 @@ public class TelValidator {
 
 	private final static String TEL_REGEX = "[1-9]\\d{6,7}";
 
-	private final static String WITH_AREA_CODE_REGEX =
+	private final static Pattern WITH_AREA_CODE_PATTERN = Pattern.compile(
 			"^(((" + AREA_CODE_REGEX + "-?)|(（(" + AREA_CODE_REGEX + "）)|(\\((" + AREA_CODE_REGEX + "\\)))" +
-					TEL_REGEX + "$";
+					TEL_REGEX + "$");
 
-	private final static String WITHOUT_AREA_CODE_REGEX = "^" + TEL_REGEX + "$";
-
-	private final static Pattern WITH_AREA_CODE_PATTERN = Pattern.compile(WITH_AREA_CODE_REGEX);
-
-	private final static Pattern WITHOUT_AREA_CODE_PATTERN = Pattern.compile(WITHOUT_AREA_CODE_REGEX);
+	private final static Pattern WITHOUT_AREA_CODE_PATTERN = Pattern.compile("^" + TEL_REGEX + "$");
 
 	private TelValidator() {
 	}

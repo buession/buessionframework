@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.StringUtils;
 import com.buession.io.MimeType;
 import com.buession.lang.Constants;
@@ -40,6 +41,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -364,6 +367,56 @@ public class File extends java.io.File {
 	 */
 	public boolean rename(String newName) {
 		return super.renameTo(new File(this.getParent() + '/' + newName));
+	}
+
+	/**
+	 * 创建软连接
+	 *
+	 * @param dest
+	 * 		软连接目标地址
+	 *
+	 * @throws IOException
+	 * 		if an I/O error occurs
+	 * @since 2.3.3
+	 */
+	public void createSymbolicLink(final java.io.File dest) throws IOException {
+		createSymbolicLink(dest, false);
+	}
+
+	/**
+	 * 创建软连接
+	 *
+	 * @param dest
+	 * 		软连接目标地址
+	 * @param overwrite
+	 * 		如果软连接目录路径存在，且为软连接，是否进行覆盖操作
+	 *
+	 * @throws IOException
+	 * 		if an I/O error occurs
+	 * @since 2.3.3
+	 */
+	public void createSymbolicLink(final java.io.File dest, final boolean overwrite) throws IOException {
+		Assert.isNull(dest, "Dest path cloud not be null.");
+
+		final Path destPath = dest.toPath();
+
+		if(overwrite){
+			if(java.nio.file.Files.exists(destPath) && java.nio.file.Files.isSymbolicLink(destPath)){
+				java.nio.file.Files.delete(destPath);
+				Files.createSymbolicLink(destPath, this.toPath());
+				return;
+			}
+		}
+
+		if(Files.exists(destPath) && Files.isSymbolicLink(destPath)){
+			Path realDestPath = Files.readSymbolicLink(destPath);
+
+			if(realDestPath != null && realDestPath.getFileName().equals(this.toPath().getFileName())){
+				return;
+			}
+		}
+
+		Files.createSymbolicLink(destPath, this.toPath());
 	}
 
 	private final static class FileBufferedInputStream extends BufferedInputStream {

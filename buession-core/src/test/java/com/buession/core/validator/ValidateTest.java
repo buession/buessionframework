@@ -34,7 +34,7 @@ import org.junit.Test;
 public class ValidateTest {
 
 	@Test
-	public void isBlank(){
+	public void isBlank() {
 		Assert.assertEquals(true, Validate.isBlank(""));
 		Assert.assertEquals(true, Validate.isBlank(null));
 		Assert.assertEquals(true, Validate.isBlank("\r\n"));
@@ -43,7 +43,7 @@ public class ValidateTest {
 	}
 
 	@Test
-	public void isNotBlank(){
+	public void isNotBlank() {
 		Assert.assertEquals(false, Validate.isNotBlank(""));
 		Assert.assertEquals(false, Validate.isNotBlank(null));
 		Assert.assertEquals(false, Validate.isNotBlank("\r\n"));
@@ -52,7 +52,13 @@ public class ValidateTest {
 	}
 
 	@Test
-	public void isMimeType(){
+	public void isEmail() {
+		Assert.assertFalse(Validate.isEmail(""));
+		Assert.assertTrue(Validate.isEmail("webmaster@buession.com"));
+	}
+
+	@Test
+	public void isMimeType() {
 		Assert.assertEquals(true, Validate.isMimeType("application/rtf"));
 		Assert.assertEquals(true, Validate.isMimeType("application/vnd.wap.wmlc"));
 		Assert.assertEquals(true, Validate.isMimeType("application/x-rar-compressed"));

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -39,19 +39,14 @@ import java.util.regex.Pattern;
  */
 public class DomainValidator {
 
-	private final static String DOMAIN_LABEL_REGEX = "\\p{Alnum}(?>[\\p{Alnum}-]*\\p{Alnum})*";
-
-	private final static String TOP_LABEL_REGEX = "\\p{Alpha}{2,}";
-
-	private final static String DOMAIN_NAME_REGEX = "^(?:" + DOMAIN_LABEL_REGEX + "\\.)+(" + TOP_LABEL_REGEX + ")$";
-
 	private final static String[] LOCAL_TLDS = new String[]{
 			// RFC2606 defined
 			"localhost",
 			// Also widely used as localhost.localdomain
 			"localdomain"};
 
-	private final static Pattern DOMAIN_NAME_REGEX_PATTERN = Pattern.compile(DOMAIN_NAME_REGEX);
+	private final static Pattern DOMAIN_NAME_REGEX_PATTERN = Pattern.compile(
+			"^(?:\\p{Alnum}(?>[\\p{Alnum}-]*\\p{Alnum})*\\.)+(\\p{Alpha}{2,})$");
 
 	private DomainValidator() {
 	}
