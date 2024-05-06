@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao.mongodb;
@@ -27,6 +27,8 @@ package com.buession.dao.mongodb;
 import com.buession.core.utils.Assert;
 import com.buession.dao.MongoOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+
+import java.util.Collection;
 
 /**
  * MongoDB Operator 工具类
@@ -46,7 +48,7 @@ public class MongoDBOperatorUtils {
 	 * @param mongoOperation
 	 *        {@link MongoOperation}
 	 */
-	public static void operator(final Criteria criteria, final String field, final MongoOperation mongoOperation){
+	public static void operator(final Criteria criteria, final String field, final MongoOperation mongoOperation) {
 		Assert.isNull(criteria, "Criteria cloud not be null.");
 		Assert.isBlank(field, "Field cloud not be null or empty.");
 		Assert.isNull(mongoOperation, "MongoOperation cloud not be null.");
@@ -66,7 +68,8 @@ public class MongoDBOperatorUtils {
 	 * @param value
 	 * 		运算值
 	 */
-	public static void operator(final Criteria criteria, final String field, final MongoOperation.Operator operator, final Object value){
+	public static void operator(final Criteria criteria, final String field, final MongoOperation.Operator operator,
+								final Object value) {
 		Assert.isNull(criteria, "Criteria cloud not be null.");
 		Assert.isBlank(field, "Field cloud not be null or empty.");
 		Assert.isNull(operator, "MongoOperation Operator cloud not be null.");
@@ -102,11 +105,23 @@ public class MongoDBOperatorUtils {
 				break;
 			/* IN */
 			case IN:
-				criteria.and(field).in(value);
+				if(value instanceof Collection){
+					criteria.and(field).in((Collection<?>) value);
+				}else if(value.getClass().isArray()){
+					criteria.and(field).in((Object[]) value);
+				}else{
+					criteria.and(field).in(value);
+				}
 				break;
 			/* NOT IN */
 			case NIN:
-				criteria.and(field).nin(value);
+				if(value instanceof Collection){
+					criteria.and(field).nin((Collection<?>) value);
+				}else if(value.getClass().isArray()){
+					criteria.and(field).nin((Object[]) value);
+				}else{
+					criteria.and(field).nin(value);
+				}
 				break;
 			/* 正则 */
 			case LIKE:

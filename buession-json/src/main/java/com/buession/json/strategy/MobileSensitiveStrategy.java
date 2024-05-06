@@ -19,10 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.strategy;
+
+import com.buession.core.utils.StringUtils;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -34,8 +36,6 @@ import java.util.regex.Pattern;
  * @since 2.3.1
  */
 public class MobileSensitiveStrategy extends AbstractSensitiveStrategy {
-
-	private final static Pattern PATTERN = Pattern.compile("(1\\d{2})\\d{4}(\\d{4})");
 
 	/**
 	 * 构造函数
@@ -49,7 +49,7 @@ public class MobileSensitiveStrategy extends AbstractSensitiveStrategy {
 
 	@Override
 	public Function<String, String> getFunction() {
-		return str->PATTERN.matcher(str).replaceAll("$1" + getReplacement() + "$2");
+		return (str)->StringUtils.left(str, 3) + getReplacement() + StringUtils.right(str, 4);
 	}
 
 }

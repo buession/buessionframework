@@ -19,16 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.http.response;
 
-import com.buession.core.utils.ObjectUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author Yong.Teng
@@ -40,18 +40,18 @@ public class ResponseUtils {
 	}
 
 	public static void httpCache(final ServerHttpResponse response, final String value) {
-		ObjectUtils.invokeIfAvailable(response, res->res.getHeaders().setCacheControl(value));
+		Optional.ofNullable(response).ifPresent((res)->res.getHeaders().setCacheControl(value));
 	}
 
 	public static void httpCache(final ServerHttpResponse response, final int lifetime) {
-		ObjectUtils.invokeIfAvailable(response, res->{
+		Optional.ofNullable(response).ifPresent((res)->{
 			long expiresAt = System.currentTimeMillis() + lifetime * 1000L;
 			httpCache(res, lifetime, expiresAt);
 		});
 	}
 
 	public static void httpCache(final ServerHttpResponse response, final Date date) {
-		ObjectUtils.invokeIfAvailable(response, res->{
+		Optional.ofNullable(response).ifPresent((res)->{
 			long maxAge = date.getTime() - System.currentTimeMillis();
 			httpCache(res, maxAge, date.getTime());
 		});

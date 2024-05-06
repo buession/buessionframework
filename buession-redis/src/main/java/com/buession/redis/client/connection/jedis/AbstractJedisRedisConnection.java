@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -30,9 +30,7 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.DefaultJedisClientConfig;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
 
@@ -56,7 +54,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	/**
 	 * 构造函数
 	 */
-	public AbstractJedisRedisConnection(){
+	public AbstractJedisRedisConnection() {
 		super();
 	}
 
@@ -66,7 +64,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource){
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource) {
 		super(dataSource);
 	}
 
@@ -80,7 +78,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout){
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 	}
 
@@ -99,7 +97,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @since 2.0.0
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout){
+										int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -111,7 +109,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, SslConfiguration sslConfiguration){
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
 	}
 
@@ -128,7 +126,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * 		SSL 配置
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										SslConfiguration sslConfiguration){
+										SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -149,24 +147,24 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	 * @since 2.0.0
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout, SslConfiguration sslConfiguration){
+										int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	@Override
-	public boolean isPipeline(){
+	public boolean isPipeline() {
 		return pipeline != null;
 	}
 
 	@Override
-	public boolean isTransaction(){
+	public boolean isTransaction() {
 		return transaction != null;
 	}
 
 	protected DefaultJedisClientConfig.Builder createJedisClientConfigBuilder(final JedisRedisDataSource dataSource,
 																			  final int connectTimeout,
 																			  final int soTimeout,
-																			  final int infiniteSoTimeout){
+																			  final int infiniteSoTimeout) {
 		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder()
 				.connectionTimeoutMillis(connectTimeout)
 				.socketTimeoutMillis(soTimeout)
@@ -187,7 +185,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	}
 
 	@Override
-	protected void doDestroy() throws IOException{
+	protected void doDestroy() throws IOException {
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
@@ -195,7 +193,7 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	}
 
 	@Override
-	protected void doClose() throws IOException{
+	protected void doClose() throws IOException {
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;

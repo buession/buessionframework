@@ -24,8 +24,9 @@
  */
 package com.buession.json.strategy;
 
+import com.buession.core.utils.StringUtils;
+
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 /**
  * 座机号码脱敏策略
@@ -34,8 +35,6 @@ import java.util.regex.Pattern;
  * @since 2.3.1
  */
 public class TelSensitiveStrategy extends AbstractSensitiveStrategy {
-
-	private final static Pattern PATTERN = Pattern.compile("(\\d{3})\\d{2,3}(\\d{2})");
 
 	/**
 	 * 构造函数
@@ -49,7 +48,7 @@ public class TelSensitiveStrategy extends AbstractSensitiveStrategy {
 
 	@Override
 	public Function<String, String> getFunction() {
-		return str->PATTERN.matcher(str).replaceAll("$1" + getReplacement() + "$2");
+		return (str)->StringUtils.left(str, 3) + getReplacement() + StringUtils.right(str, 2);
 	}
 
 }

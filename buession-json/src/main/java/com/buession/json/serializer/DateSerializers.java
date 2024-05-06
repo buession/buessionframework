@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.serializer;
@@ -43,29 +43,37 @@ import java.util.Date;
  */
 public abstract class DateSerializers extends DateTimeSerializerBase<Date> {
 
-	protected DateSerializers(Class<Date> type, Boolean useTimestamp, DateFormat customFormat){
+	private final static long serialVersionUID = -8938527999507846087L;
+
+	protected DateSerializers(Class<Date> type, Boolean useTimestamp, DateFormat customFormat) {
 		super(type, useTimestamp, customFormat);
+	}
+
+	protected static long toUnixTimestamp(final long milliseconds) {
+		return milliseconds / 1000L;
 	}
 
 	@JacksonStdImpl
 	public static class DateUnixTimestampSerializer extends DateSerializer {
 
-		public DateUnixTimestampSerializer(){
+		private final static long serialVersionUID = 2504203219658968035L;
+
+		public DateUnixTimestampSerializer() {
 			super();
 		}
 
-		public DateUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat){
+		public DateUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat) {
 			super(useTimestamp, customFormat);
 		}
 
 		@Override
-		public DateUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat){
+		public DateUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat) {
 			return new DateUnixTimestampSerializer(timestamp, customFormat);
 		}
 
 		@Override
-		protected long _timestamp(Date value){
-			return value == null ? 0L : value.getTime() / 1000L;
+		protected long _timestamp(Date value) {
+			return value == null ? 0L : toUnixTimestamp(value.getTime());
 		}
 
 	}
@@ -73,22 +81,24 @@ public abstract class DateSerializers extends DateTimeSerializerBase<Date> {
 	@JacksonStdImpl
 	public static class SqlDateUnixTimestampSerializer extends SqlDateSerializer {
 
-		public SqlDateUnixTimestampSerializer(){
+		private final static long serialVersionUID = -3824050561583196936L;
+
+		public SqlDateUnixTimestampSerializer() {
 			super();
 		}
 
-		public SqlDateUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat){
+		public SqlDateUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat) {
 			super(useTimestamp, customFormat);
 		}
 
 		@Override
-		public SqlDateUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat){
+		public SqlDateUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat) {
 			return new SqlDateUnixTimestampSerializer(timestamp, customFormat);
 		}
 
 		@Override
-		protected long _timestamp(java.sql.Date value){
-			return value == null ? 0L : value.getTime() / 1000L;
+		protected long _timestamp(java.sql.Date value) {
+			return value == null ? 0L : toUnixTimestamp(value.getTime());
 		}
 
 	}
@@ -96,22 +106,24 @@ public abstract class DateSerializers extends DateTimeSerializerBase<Date> {
 	@JacksonStdImpl
 	public static class CalendarUnixTimestampSerializer extends CalendarSerializer {
 
-		public CalendarUnixTimestampSerializer(){
+		private final static long serialVersionUID = -5324440667812086058L;
+
+		public CalendarUnixTimestampSerializer() {
 			super();
 		}
 
-		public CalendarUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat){
+		public CalendarUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat) {
 			super(useTimestamp, customFormat);
 		}
 
 		@Override
-		public CalendarUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat){
+		public CalendarUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat) {
 			return new CalendarUnixTimestampSerializer(timestamp, customFormat);
 		}
 
 		@Override
-		protected long _timestamp(Calendar value){
-			return value == null ? 0L : value.getTimeInMillis() / 1000L;
+		protected long _timestamp(Calendar value) {
+			return value == null ? 0L : toUnixTimestamp(value.getTimeInMillis());
 		}
 
 	}
@@ -119,22 +131,24 @@ public abstract class DateSerializers extends DateTimeSerializerBase<Date> {
 	@JacksonStdImpl
 	public static class TimestampUnixTimestampSerializer extends DateTimeSerializerBase<Timestamp> {
 
-		public TimestampUnixTimestampSerializer(){
+		private final static long serialVersionUID = -7692464161183919456L;
+
+		public TimestampUnixTimestampSerializer() {
 			this(null, null);
 		}
 
-		public TimestampUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat){
+		public TimestampUnixTimestampSerializer(Boolean useTimestamp, DateFormat customFormat) {
 			super(Timestamp.class, useTimestamp, customFormat);
 		}
 
 		@Override
-		public TimestampUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat){
+		public TimestampUnixTimestampSerializer withFormat(Boolean timestamp, DateFormat customFormat) {
 			return new TimestampUnixTimestampSerializer(timestamp, customFormat);
 		}
 
 		@Override
 		public void serialize(Timestamp value, JsonGenerator generator, SerializerProvider provider) throws
-				IOException{
+				IOException {
 			if(_asTimestamp(provider)){
 				generator.writeNumber(_timestamp(value));
 				return;
@@ -144,8 +158,8 @@ public abstract class DateSerializers extends DateTimeSerializerBase<Date> {
 		}
 
 		@Override
-		protected long _timestamp(Timestamp value){
-			return value == null ? 0L : value.getTime() / 1000L;
+		protected long _timestamp(Timestamp value) {
+			return value == null ? 0L : toUnixTimestamp(value.getTime());
 		}
 
 	}

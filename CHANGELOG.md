@@ -2,6 +2,44 @@
 ===========================
 
 
+## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-05-06)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.3)
+
+
+### ⭐ 新特性
+
+- **buession-core：** 新增默认线程工厂 DefaultThreadFactory
+- **buession-core：** 新增默认线程池执行器 DefaultThreadPoolExecutor
+- **buession-core：** File 新增创建软链接方法
+- **buession-core：** PropertyMapper 新增 alwaysApplyingWhenNull 条件为 null 时，alwaysApplyingWhenNonText 条件为 null 或无字符串（不含空格、换行符、制表位）时
+
+
+### 🔔 变化
+
+- **buession-core：** 废弃 ThreadPoolConfiguration name 属性
+- **buession-core：** 废弃 ThreadPoolConfiguration timeUnit 属性，使用 keepAliveTimeUnit 替代
+- **buession-core：** 废弃 ObjectUtils 使用 java 原生 API Optional
+- **buession-core：** 废弃 StatusUtils ，迁移至枚举 Status 本身
+
+
+### 🐞 Bug 修复
+
+- **buession-core：** 修复 StringUtils 类忽略大小写判断是否以字符开头或结尾，错误判断的 BUG
+- **buession-dao：** 修复 MongoDBDao 处理 in、nin 条件值错误传递问题
+
+
+### ⏪ 优化
+
+- **buession-core：** 优化数据验证，减少内存占用
+- **buession-json：** 数据脱敏，性能优化
+
+
+---
+
+
 ## [2.3.2](https://github.com/buession/buessionframework/releases/tag/v2.3.2) (2023-12-27)
 
 ### 🔨依赖升级

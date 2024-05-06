@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 /**
  * Aspectj 方法注解拦截器抽象类
@@ -56,9 +57,7 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	 * 		异常
 	 */
 	public void performBeforeInterception(JoinPoint joinPoint) throws Throwable {
-		if(logger.isDebugEnabled()){
-			performInterceptionDebug(joinPoint);
-		}
+		performInterceptionDebug(joinPoint);
 
 		// 1. Adapt the join point into a method invocation
 		BeforeAdviceMethodInvocationAdapter mi = BeforeAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
@@ -76,9 +75,7 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	 * 		异常
 	 */
 	public void performAfterInterception(JoinPoint joinPoint) throws Throwable {
-		if(logger.isDebugEnabled()){
-			performInterceptionDebug(joinPoint);
-		}
+		performInterceptionDebug(joinPoint);
 
 		// 1. Adapt the join point into a method invocation
 		AfterAdviceMethodInvocationAdapter mi = AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint);
@@ -97,9 +94,7 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	 * @since 2.3.0
 	 */
 	public void performAfterReturningInterception(JoinPoint joinPoint) throws Throwable {
-		if(logger.isDebugEnabled()){
-			performInterceptionDebug(joinPoint);
-		}
+		performInterceptionDebug(joinPoint);
 
 		// 1. Adapt the join point into a method invocation
 		AfterReturningAdviceMethodInvocationAdapter mi = AfterReturningAdviceMethodInvocationAdapter.createFromJoinPoint(
@@ -119,9 +114,7 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	 * @since 2.3.0
 	 */
 	public void performAfterThrowingInterception(JoinPoint joinPoint) throws Throwable {
-		if(logger.isDebugEnabled()){
-			performInterceptionDebug(joinPoint);
-		}
+		performInterceptionDebug(joinPoint);
 
 		// 1. Adapt the join point into a method invocation
 		AfterThrowingAdviceMethodInvocationAdapter mi = AfterThrowingAdviceMethodInvocationAdapter.createFromJoinPoint(
@@ -133,12 +126,15 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	/**
 	 * 点方法抛出异常时会执行
 	 *
+	 * @param joinPoint
+	 *        {@link JoinPoint}
+	 *
+	 * @throws Throwable
+	 * 		异常
 	 * @since 2.3.0
 	 */
 	public void performAroundInterception(JoinPoint joinPoint) throws Throwable {
-		if(logger.isDebugEnabled()){
-			performInterceptionDebug(joinPoint);
-		}
+		performInterceptionDebug(joinPoint);
 
 		// 1. Adapt the join point into a method invocation
 		AroundAdviceMethodInvocationAdapter mi = AroundAdviceMethodInvocationAdapter.createFromJoinPoint(
@@ -148,17 +144,18 @@ public abstract class AbstractAspectjAnnotationsMethodInterceptor extends Abstra
 	}
 
 	protected void performInterceptionDebug(final JoinPoint joinPoint) {
-		final StringBuilder message = new StringBuilder(255);
+		if(logger.isDebugEnabled()){
+			StringJoiner joiner = new StringJoiner(System.lineSeparator());
 
-		message.append("Invoking a method decorated with a annotation").append(System.lineSeparator());
-		message.append("\tkind       : ").append(joinPoint.getKind()).append(System.lineSeparator());
-		message.append("\tjoinPoint  : ").append(joinPoint).append(System.lineSeparator());
-		message.append("\tannotations: ")
-				.append(Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()))
-				.append(System.lineSeparator());
-		message.append("\ttarget     : ").append(joinPoint.getTarget());
+			joiner.add("Invoking a method decorated with a annotation");
+			joiner.add("\tkind       : " + joinPoint.getKind());
+			joiner.add("\tjoinPoint  : " + joinPoint);
+			joiner.add("\tannotations: " +
+					Arrays.toString(((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()));
+			joiner.add("\ttarget     : " + joinPoint.getTarget());
 
-		logger.debug(message.toString());
+			logger.debug(joiner.toString());
+		}
 	}
 
 }

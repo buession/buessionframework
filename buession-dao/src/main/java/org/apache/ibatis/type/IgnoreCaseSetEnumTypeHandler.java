@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -31,6 +31,8 @@ import com.buession.core.validator.Validate;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 忽略大小写 Enum 型 Set {@link TypeHandler}，将值忽略大小写转换为枚举字段作为 Set 的元素
@@ -51,13 +53,8 @@ public class IgnoreCaseSetEnumTypeHandler<E extends Enum<E>> extends AbstractSet
 	protected Set<E> parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
 			String[] elements = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER);
-			Set<E> result = new LinkedHashSet<>(elements.length);
-
-			for(String element : elements){
-				result.add(EnumUtils.getEnumIgnoreCase(type, element));
-			}
-
-			return result;
+			return Stream.of(elements).map((element)->EnumUtils.getEnumIgnoreCase(type, element))
+					.collect(Collectors.toCollection(LinkedHashSet::new));
 		}
 
 		return null;

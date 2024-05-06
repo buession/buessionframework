@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -33,24 +33,20 @@ import com.buession.core.validator.Validate;
  */
 public class MobileValidator {
 
-	private final static int MOBILE_LENGTH = 11;
-
-	private final static char FIRST_CHAR = '1';
-
-	private MobileValidator(){
+	private MobileValidator() {
 	}
 
-	public static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence) {
 		if(charSequence == null){
 			return false;
 		}
 
 		int len = charSequence.length();
-		if(len != MOBILE_LENGTH){
+		if(len != 11){
 			return false;
 		}
 
-		if(charSequence.charAt(0) != FIRST_CHAR){
+		if(charSequence.charAt(0) != '1'){
 			return false;
 		}
 
