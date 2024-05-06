@@ -51,7 +51,7 @@ public class ObjectUtils {
 	 * 		对象引用类型
 	 */
 	public static <T> void invokeIfAvailable(final T object, final Consumer<T> consumer) {
-		Optional.of(object).ifPresent(consumer);
+		Optional.ofNullable(object).ifPresent(consumer);
 	}
 
 }
