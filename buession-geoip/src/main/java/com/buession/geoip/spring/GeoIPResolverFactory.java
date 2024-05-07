@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
@@ -30,7 +30,6 @@ import com.buession.geoip.Resolver;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -85,7 +84,7 @@ public class GeoIPResolverFactory {
 	 * @throws IOException
 	 * 		数据库文件不存在时
 	 */
-	public File getDbPath() throws IOException{
+	public File getDbPath() throws IOException {
 		if(dbPath == null){
 			dbPath = new File(DatabaseResolver.class.getResource(DatabaseResolver.DEFAULT_CITY_DB).getFile());
 		}
@@ -102,7 +101,7 @@ public class GeoIPResolverFactory {
 	 * @throws IOException
 	 * 		数据库文件不存在时
 	 */
-	public void setDbPath(Resource dbPath) throws IOException{
+	public void setDbPath(Resource dbPath) throws IOException {
 		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 		this.dbPath = dbPath.getFile();
 	}
@@ -116,7 +115,7 @@ public class GeoIPResolverFactory {
 	 * @throws IOException
 	 * 		数据库文件不存在时
 	 */
-	public void setDbPath(File dbPath) throws IOException{
+	public void setDbPath(File dbPath) throws IOException {
 		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 		this.dbPath = dbPath;
 	}
@@ -130,7 +129,7 @@ public class GeoIPResolverFactory {
 	 * @throws IOException
 	 * 		数据库文件不存在时
 	 */
-	public void setDbPath(Path dbPath) throws IOException{
+	public void setDbPath(Path dbPath) throws IOException {
 		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 		this.dbPath = dbPath.toFile();
 	}
@@ -144,7 +143,7 @@ public class GeoIPResolverFactory {
 	 * @throws IOException
 	 * 		数据库文件不存在时
 	 */
-	public void setDbPath(String dbPath) throws IOException{
+	public void setDbPath(String dbPath) throws IOException {
 		Assert.isBlank(dbPath, "Ip database path cloud not be null or empty.");
 		setDbPath(new File(dbPath));
 	}
@@ -158,7 +157,7 @@ public class GeoIPResolverFactory {
 	 * 		ASN 库文件不存在时
 	 * @since 2.2.0
 	 */
-	public File getAsnDbPath() throws IOException{
+	public File getAsnDbPath() throws IOException {
 		if(asnDbPath == null){
 			asnDbPath = new File(DatabaseResolver.class.getResource(DatabaseResolver.DEFAULT_ASN_DB).getFile());
 		}
@@ -176,7 +175,7 @@ public class GeoIPResolverFactory {
 	 * 		ASN 库文件不存在时
 	 * @since 2.2.0
 	 */
-	public void setAsnDbPath(Resource asnDbPath) throws IOException{
+	public void setAsnDbPath(Resource asnDbPath) throws IOException {
 		Assert.isNull(asnDbPath, "Ip asn database path cloud not be null.");
 		this.asnDbPath = asnDbPath.getFile();
 	}
@@ -191,7 +190,7 @@ public class GeoIPResolverFactory {
 	 * 		ASN 库文件不存在时
 	 * @since 2.2.0
 	 */
-	public void setAsnDbPath(File asnDbPath) throws IOException{
+	public void setAsnDbPath(File asnDbPath) throws IOException {
 		Assert.isNull(asnDbPath, "Ip asn database path cloud not be null.");
 		this.asnDbPath = asnDbPath;
 	}
@@ -206,7 +205,7 @@ public class GeoIPResolverFactory {
 	 * 		数据库文件不存在时
 	 * @since 2.2.0
 	 */
-	public void setAsnDbPath(Path asnDbPath) throws IOException{
+	public void setAsnDbPath(Path asnDbPath) throws IOException {
 		Assert.isNull(asnDbPath, "Ip asn database path cloud not be null.");
 		this.asnDbPath = asnDbPath.toFile();
 	}
@@ -221,7 +220,7 @@ public class GeoIPResolverFactory {
 	 * 		数据库文件不存在时
 	 * @since 2.2.0
 	 */
-	public void setAsnDbPath(String asnDbPath) throws IOException{
+	public void setAsnDbPath(String asnDbPath) throws IOException {
 		Assert.isBlank(asnDbPath, "Ip asn database path cloud not be null or empty.");
 		setAsnDbPath(new File(asnDbPath));
 	}
@@ -234,7 +233,7 @@ public class GeoIPResolverFactory {
 	 * @throws IOException
 	 * 		数据库文件不存在时
 	 */
-	public InputStream getStream() throws IOException{
+	public InputStream getStream() throws IOException {
 		if(stream == null){
 			stream = DatabaseResolver.class.getResourceAsStream(DatabaseResolver.DEFAULT_CITY_DB);
 		}
@@ -248,7 +247,7 @@ public class GeoIPResolverFactory {
 	 * @param stream
 	 * 		IP 库文件流
 	 */
-	public void setStream(InputStream stream){
+	public void setStream(InputStream stream) {
 		Assert.isNull(stream, "Ip database stream cloud not be null.");
 		this.stream = stream;
 	}
@@ -262,7 +261,7 @@ public class GeoIPResolverFactory {
 	 * 		ASN 库文件不存在时
 	 * @since 2.2.0
 	 */
-	public InputStream getAsnStream() throws IOException{
+	public InputStream getAsnStream() throws IOException {
 		if(asnStream == null){
 			asnStream = DatabaseResolver.class.getResourceAsStream(DatabaseResolver.DEFAULT_ASN_DB);
 		}
@@ -278,7 +277,7 @@ public class GeoIPResolverFactory {
 	 *
 	 * @since 2.2.0
 	 */
-	public void setAsnStream(InputStream asnStream){
+	public void setAsnStream(InputStream asnStream) {
 		Assert.isNull(asnStream, "Ip asn database stream cloud not be null.");
 		this.asnStream = asnStream;
 	}
@@ -289,7 +288,7 @@ public class GeoIPResolverFactory {
 	 * @return IP 库加载模式
 	 */
 	@Deprecated
-	public LoadMode getLoadMode(){
+	public LoadMode getLoadMode() {
 		return loadMode;
 	}
 
@@ -298,7 +297,7 @@ public class GeoIPResolverFactory {
 	 *
 	 * @return 是否开启缓存
 	 */
-	public boolean isEnableCache(){
+	public boolean isEnableCache() {
 		return enableCache;
 	}
 
@@ -308,7 +307,7 @@ public class GeoIPResolverFactory {
 	 * @param enableCache
 	 * 		是否开启缓存
 	 */
-	public void setEnableCache(boolean enableCache){
+	public void setEnableCache(boolean enableCache) {
 		this.enableCache = enableCache;
 	}
 
