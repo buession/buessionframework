@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io;
@@ -30,7 +30,6 @@ import com.buession.core.validator.Validate;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * MimeType
@@ -58,7 +57,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public MimeType(@NotEmpty String mimeType){
+	public MimeType(@NotEmpty String mimeType) {
 		Assert.isBlank(mimeType, "MimeType string cloud empty or null.");
 
 		if(Validate.isMimeType(mimeType)){
@@ -79,7 +78,7 @@ public final class MimeType {
 	 * @param subtype
 	 * 		子 Type
 	 */
-	public MimeType(@NotEmpty String type, @NotEmpty String subtype){
+	public MimeType(@NotEmpty String type, @NotEmpty String subtype) {
 		this.type = type.toLowerCase();
 		this.subtype = subtype.toLowerCase();
 	}
@@ -96,7 +95,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public MimeType(@NotEmpty String type, @NotEmpty String subtype, String description){
+	public MimeType(@NotEmpty String type, @NotEmpty String subtype, String description) {
 		this(type, subtype);
 		this.description = description;
 	}
@@ -109,17 +108,17 @@ public final class MimeType {
 	 *
 	 * @return MimeType
 	 */
-	public static MimeType parse(String mimeType){
+	public static MimeType parse(String mimeType) {
 		Assert.isBlank(mimeType, "MimeType string cloud empty or null.");
 		KeyValueParser keyValueParser = new KeyValueParser(mimeType, '/');
 		return new MimeType(keyValueParser.getKey(), keyValueParser.getValue());
 	}
 
-	public String getType(){
+	public String getType() {
 		return type;
 	}
 
-	public String getSubtype(){
+	public String getSubtype() {
 		return subtype;
 	}
 
@@ -130,7 +129,7 @@ public final class MimeType {
 	 *
 	 * @since 1.3.2
 	 */
-	public String getDescription(){
+	public String getDescription() {
 		return description;
 	}
 
@@ -140,17 +139,17 @@ public final class MimeType {
 	 * @param description
 	 * 		MimeType 描述
 	 */
-	public void setDescription(String description){
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return 16 * (type.hashCode() + subtype.hashCode());
 	}
 
 	@Override
-	public boolean equals(Object object){
+	public boolean equals(Object object) {
 		if(this == object){
 			return true;
 		}
@@ -164,8 +163,8 @@ public final class MimeType {
 	}
 
 	@Override
-	public String toString(){
-		return new StringJoiner("/").add(type).add(subtype).toString();
+	public String toString() {
+		return type + '/' + subtype;
 	}
 
 }

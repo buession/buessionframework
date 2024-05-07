@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.io.MimeType;
 
@@ -48,40 +49,31 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 	/**
 	 * 构造函数
 	 */
-	public AbstractMimeTypeDetector(){
+	public AbstractMimeTypeDetector() {
 		initialize();
 	}
 
 	@Override
-	public final MimeType probe(String path) throws IOException{
-		if(Validate.hasText(path)){
-			return implProbeMimeType(path);
-		}else{
-			throw new NullPointerException("File path is null or empty.");
-		}
+	public final MimeType probe(String path) throws IOException {
+		Assert.isBlank(path, ()->new NullPointerException("File path is null or empty"));
+		return implProbeMimeType(path);
 	}
 
 	@Override
-	public final MimeType probe(File file) throws IOException{
-		if(file == null){
-			throw new NullPointerException("'file' is null");
-		}else{
-			return probe(file.toPath());
-		}
+	public final MimeType probe(File file) throws IOException {
+		Assert.isNull(file, ()->new NullPointerException("'file' is null"));
+		return probe(file.toPath());
 	}
 
 	@Override
-	public final MimeType probe(Path path){
-		if(path == null){
-			throw new NullPointerException("'file' is null");
-		}else{
-			return implProbeMimeType(path);
-		}
+	public final MimeType probe(Path path) {
+		Assert.isNull(path, ()->new NullPointerException("'file' is null"));
+		return implProbeMimeType(path);
 	}
 
 	protected abstract void initialize();
 
-	protected static String getExtension(String path){
+	protected static String getExtension(String path) {
 		String extension = "";
 
 		if(Validate.isNotEmpty(path)){
@@ -98,7 +90,7 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 
 	protected abstract MimeType implProbeMimeType(final Path path);
 
-	protected void putIfAbsent(final String extension, final String contentType, final String description){
+	protected void putIfAbsent(final String extension, final String contentType, final String description) {
 		if(Validate.isNotEmpty(extension) && Validate.isNotEmpty(contentType) &&
 				internalMimetypes.containsKey(extension) == false){
 			MimeType mimeType = MimeType.parse(contentType);
@@ -108,7 +100,7 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 		}
 	}
 
-	protected static MimeType parse(final String s, final String description){
+	protected static MimeType parse(final String s, final String description) {
 		int slash = s.indexOf('/');
 		int semicolon = s.indexOf(';');
 
@@ -129,15 +121,15 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 		return new MimeType(type, subtype, description);
 	}
 
-	private static String parseType(final String type){
+	private static String parseType(final String type) {
 		return type.trim().toLowerCase(Locale.ENGLISH);
 	}
 
-	private static boolean isTokenChar(char c){
-		return c > ' ' && c < 127 && "()<>@,;:/[]?=\\\"" .indexOf(c) < 0;
+	private static boolean isTokenChar(char c) {
+		return c > ' ' && c < 127 && "()<>@,;:/[]?=\\\"".indexOf(c) < 0;
 	}
 
-	private static boolean isValidToken(String str){
+	private static boolean isValidToken(String str) {
 		int strLength = str.length();
 
 		if(strLength == 0){
