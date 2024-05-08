@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package org.apache.hc.client5.http.classic.methods;
+package org.apache.hc.core5.http.io.entity;
