@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -51,7 +51,6 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * 构造函数，创建驱动默认连接管理器
 	 */
 	public AbstractConnectionManager() {
-		clientConnectionManager = createDefaultClientConnectionManager();
 	}
 
 	/**
@@ -62,7 +61,6 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 */
 	public AbstractConnectionManager(Configuration configuration) {
 		this.configuration = configuration;
-		clientConnectionManager = createDefaultClientConnectionManager();
 	}
 
 	/**
@@ -115,6 +113,10 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @return 连接管理器
 	 */
 	public CM getClientConnectionManager() {
+		if(clientConnectionManager == null){
+			clientConnectionManager = createDefaultClientConnectionManager();
+		}
+		
 		return clientConnectionManager;
 	}
 
