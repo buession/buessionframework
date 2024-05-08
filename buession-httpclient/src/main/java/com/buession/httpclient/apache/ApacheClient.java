@@ -21,10 +21,150 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient.apache;/**
- * 
- *
+ */
+package com.buession.httpclient.apache;
+
+import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.RequestBody;
+import com.buession.httpclient.core.Response;
+import com.buession.httpclient.exception.RequestException;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
+/**
  * @author Yong.Teng
  * @since 2.4.0
- */public interface ApacheClient {
+ */
+public interface ApacheClient {
+
+	Response get(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response get(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response post(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+				  final RequestBody<?> body) throws IOException, RequestException;
+
+	Response post(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException;
+
+	Response patch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+				   final RequestBody<?> body) throws IOException, RequestException;
+
+	Response patch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				   final List<Header> headers,
+				   final RequestBody<?> body) throws IOException, RequestException;
+
+	Response put(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+				 final RequestBody<?> body) throws IOException, RequestException;
+
+	Response put(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				 final RequestBody<?> body) throws IOException, RequestException;
+
+	Response delete(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response delete(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					final List<Header> headers) throws IOException, RequestException;
+
+	Response connect(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response connect(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					 final List<Header> headers) throws IOException, RequestException;
+
+	Response trace(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response trace(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				   final List<Header> headers) throws IOException, RequestException;
+
+	Response copy(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response copy(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers) throws IOException, RequestException;
+
+	Response move(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response move(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers) throws IOException, RequestException;
+
+	Response head(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response head(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers) throws IOException, RequestException;
+
+	Response options(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response options(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					 final List<Header> headers) throws IOException, RequestException;
+
+	Response link(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response link(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers) throws IOException, RequestException;
+
+	Response unlink(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response unlink(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					final List<Header> headers) throws IOException, RequestException;
+
+	Response purge(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response purge(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				   final List<Header> headers) throws IOException, RequestException;
+
+	Response lock(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response lock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers) throws IOException, RequestException;
+
+	Response unlock(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response unlock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					final List<Header> headers) throws IOException, RequestException;
+
+	Response propfind(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response propfind(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					  final List<Header> headers) throws IOException, RequestException;
+
+	Response proppatch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+					   final RequestBody<?> body) throws IOException, RequestException;
+
+	Response proppatch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					   final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException;
+
+	Response report(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+					final RequestBody<?> body) throws IOException, RequestException;
+
+	Response report(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException;
+
+	Response view(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response view(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+				  final List<Header> headers) throws IOException, RequestException;
+
+	Response wrapped(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException;
+
+	Response wrapped(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+					 final List<Header> headers) throws IOException, RequestException;
+
 }

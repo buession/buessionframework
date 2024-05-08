@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
+@Deprecated
 public class Request {
 
 	private RequestMethod method;
@@ -43,51 +44,51 @@ public class Request {
 
 	private RequestBody<?> requestBody;
 
-	public RequestMethod getMethod(){
+	public RequestMethod getMethod() {
 		return method;
 	}
 
-	public void setMethod(RequestMethod method){
+	public void setMethod(RequestMethod method) {
 		this.method = method;
 	}
 
-	public String getUrl(){
+	public String getUrl() {
 		return url;
 	}
 
 	@Deprecated
-	public void setUrl(String url){
+	public void setUrl(String url) {
 		this.url = url;
 		this.uri = URI.create(url);
 	}
 
-	public URI getUri(){
+	public URI getUri() {
 		return uri;
 	}
 
-	public void setUri(URI uri){
+	public void setUri(URI uri) {
 		this.uri = uri;
 		this.url = uri.toString();
 	}
 
-	public List<Header> getHeaders(){
+	public List<Header> getHeaders() {
 		return headers;
 	}
 
-	public void setHeaders(List<Header> headers){
+	public void setHeaders(List<Header> headers) {
 		this.headers = headers;
 	}
 
-	public RequestBody<?> getRequestBody(){
+	public RequestBody<?> getRequestBody() {
 		return requestBody;
 	}
 
-	public void setRequestBody(RequestBody<?> requestBody){
+	public void setRequestBody(RequestBody<?> requestBody) {
 		this.requestBody = requestBody;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Request{" + "method=" + method + ", url='" + uri + '\'' + ", headers=" + headers + ", requestBody=" +
 				requestBody + '}';
 	}

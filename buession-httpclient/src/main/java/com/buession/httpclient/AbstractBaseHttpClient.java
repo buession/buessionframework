@@ -19,18 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
-import com.buession.core.utils.Assert;
 import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.ProtocolVersion;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * HttpClient 基类
@@ -78,11 +73,6 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	@Override
 	public void setHttpVersion(ProtocolVersion httpVersion) {
 		this.httpVersion = httpVersion;
-	}
-
-	protected static URI URL2URI(final URL url) throws URISyntaxException {
-		Assert.isNull(url, "Request URL cloud not be null.");
-		return url.toURI();
 	}
 
 }

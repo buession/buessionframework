@@ -21,10 +21,514 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient.apache;/**
- * 
- *
+ */
+package com.buession.httpclient.apache;
+
+import com.buession.httpclient.apache.convert.*;
+import com.buession.httpclient.conn.ApacheClientConnectionManager;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.Configuration;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.HtmlRawRequestBody;
+import com.buession.httpclient.core.InputStreamRequestBody;
+import com.buession.httpclient.core.JavaScriptRawRequestBody;
+import com.buession.httpclient.core.JsonRawRequestBody;
+import com.buession.httpclient.core.MultipartFormRequestBody;
+import com.buession.httpclient.core.ProtocolVersion;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
+import com.buession.httpclient.core.RequestBody;
+import com.buession.httpclient.core.RequestBodyConverter;
+import com.buession.httpclient.core.Response;
+import com.buession.httpclient.core.TextRawRequestBody;
+import com.buession.httpclient.core.XmlRawRequestBody;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
+import com.buession.net.ssl.SslConfiguration;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.*;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
  * @author Yong.Teng
  * @since 2.4.0
- */public class Apache4Client {
+ */
+public class Apache4Client extends AbstractApacheClient {
+
+	private final static Map<Class<? extends RequestBody>, RequestBodyConverter> REQUEST_BODY_CONVERTS =
+			new HashMap<>(10, 0.8F);
+
+	static {
+		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
+				new RepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+	}
+
+	private final RequestConfig requestConfig;
+
+	private final HttpClient httpClient;
+
+	private final org.apache.http.ProtocolVersion protocolVersion;
+
+	private final static Logger logger = LoggerFactory.getLogger(Apache4Client.class);
+
+	public Apache4Client(final HttpClient httpClient, final ApacheClientConnectionManager connectionManager,
+						 final ProtocolVersion protocolVersion) {
+		super();
+		this.requestConfig = createRequestConfig(connectionManager.getConfiguration());
+		this.httpClient = httpClient;
+		this.protocolVersion = createProtocolVersion(protocolVersion);
+	}
+
+	public Apache4Client(final HttpClient httpClient, final RequestConfig requestConfig,
+						 final ProtocolVersion protocolVersion) {
+		super();
+		this.requestConfig = requestConfig;
+		this.httpClient = httpClient;
+		this.protocolVersion = createProtocolVersion(protocolVersion);
+	}
+
+	public Apache4Client(final ApacheClientConnectionManager connectionManager,
+						 final ProtocolVersion protocolVersion) {
+		super();
+		this.requestConfig = createRequestConfig(connectionManager.getConfiguration());
+		this.httpClient = createHttpClient(connectionManager);
+		this.protocolVersion = createProtocolVersion(protocolVersion);
+	}
+
+	public Apache4Client(final RequestConfig requestConfig, final ApacheClientConnectionManager connectionManager,
+						 final ProtocolVersion protocolVersion) {
+		super();
+		this.requestConfig = requestConfig;
+		this.httpClient = createHttpClient(connectionManager);
+		this.protocolVersion = createProtocolVersion(protocolVersion);
+	}
+
+	@Override
+	public Response get(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpGet(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response get(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpGet(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response post(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+						 final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPost(determineRequestUri(uri, parameters)), requestConfig, headers, body);
+	}
+
+	@Override
+	public Response post(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPost(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
+				body);
+	}
+
+	@Override
+	public Response patch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+						  final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPatch(determineRequestUri(uri, parameters)), requestConfig, headers, body);
+	}
+
+	@Override
+	public Response patch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						  final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPatch(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
+				body);
+	}
+
+	@Override
+	public Response put(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+						final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPut(determineRequestUri(uri, parameters)), requestConfig, headers, body);
+	}
+
+	@Override
+	public Response put(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPut(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers, body);
+	}
+
+	@Override
+	public Response delete(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpDelete(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response delete(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						   final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpDelete(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response connect(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpConnect(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response connect(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+							final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpConnect(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response trace(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpTrace(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response trace(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						  final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpTrace(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response copy(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpCopy(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response copy(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpCopy(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response move(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpMove(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response move(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpMove(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response head(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpHead(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response head(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpHead(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response options(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpOptions(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response options(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+							final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpOptions(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response link(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpLink(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response link(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpLink(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response unlink(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpUnlink(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response unlink(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						   final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpUnlink(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response purge(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpPurge(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response purge(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						  final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpPurge(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response lock(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpLock(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response lock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpLock(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response unlock(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpUnlock(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response unlock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						   final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpUnlock(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response propfind(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpPropfind(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response propfind(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+							 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpPropfind(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response proppatch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+							  final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpPropPatch(determineRequestUri(uri, parameters)), requestConfig, headers, body);
+	}
+
+	@Override
+	public Response proppatch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+							  final List<Header> headers, final RequestBody<?> body)
+			throws IOException, RequestException {
+		return doRequest(new HttpPropPatch(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
+				body);
+	}
+
+	@Override
+	public Response report(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
+						   final RequestBody<?> body) throws IOException, RequestException {
+		return doRequest(new HttpReport(determineRequestUri(uri, parameters)), requestConfig, headers, body);
+	}
+
+	@Override
+	public Response report(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						   final List<Header> headers, final RequestBody<?> body)
+			throws IOException, RequestException {
+		return doRequest(new HttpReport(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers,
+				body);
+	}
+
+	@Override
+	public Response view(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpView(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response view(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+						 final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpView(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	@Override
+	public Response wrapped(final URI uri, final Map<String, Object> parameters, final List<Header> headers)
+			throws IOException, RequestException {
+		return doRequest(new HttpWrapped(determineRequestUri(uri, parameters)), requestConfig, headers);
+	}
+
+	@Override
+	public Response wrapped(final URI uri, final int readTimeout, final Map<String, Object> parameters,
+							final List<Header> headers) throws IOException, RequestException {
+		return doRequest(new HttpWrapped(determineRequestUri(uri, parameters)), requestConfig, readTimeout, headers);
+	}
+
+	protected RequestConfig createRequestConfig(final Configuration configuration) {
+		final RequestConfig.Builder builder = RequestConfig.custom()
+				.setConnectTimeout(configuration.getConnectTimeout())
+				.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
+				.setSocketTimeout(configuration.getReadTimeout())
+				.setAuthenticationEnabled(configuration.isAuthenticationEnabled())
+				.setContentCompressionEnabled(configuration.isContentCompressionEnabled())
+				.setNormalizeUri(configuration.isNormalizeUri());
+
+		propertyMapper.from(configuration.isExpectContinueEnabled()).to(builder::setExpectContinueEnabled);
+		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setRedirectsEnabled);
+		propertyMapper.from(configuration.getMaxRedirects()).to(builder::setMaxRedirects);
+		propertyMapper.from(configuration.isCircularRedirectsAllowed()).to(builder::setCircularRedirectsAllowed);
+		propertyMapper.from(configuration.isRelativeRedirectsAllowed()).to(builder::setRelativeRedirectsAllowed);
+
+		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getTargetPreferredAuthSchemes())
+				.to(builder::setTargetPreferredAuthSchemes);
+		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getProxyPreferredAuthSchemes())
+				.to(builder::setProxyPreferredAuthSchemes);
+
+		propertyMapper.from(configuration.getCookieSpec()).to(builder::setCookieSpec);
+
+		final Configuration.Proxy proxy = configuration.getProxy();
+		if(proxy != null){
+			final String scheme = proxy.getScheme() == null ? null : proxy.getScheme().name();
+			final HttpHost proxyHttpHost = proxy.getAddress() == null ? new HttpHost(proxy.getHostname(),
+					proxy.getPort(), scheme) : new HttpHost(proxy.getAddress(), proxy.getHostname(), proxy.getPort(),
+					scheme);
+
+			builder.setProxy(proxyHttpHost);
+		}
+
+		return builder.build();
+	}
+
+	protected org.apache.http.ProtocolVersion createProtocolVersion(final ProtocolVersion protocolVersion) {
+		if(protocolVersion != null){
+			return new org.apache.http.ProtocolVersion(protocolVersion.getProtocol(),
+					protocolVersion.getMajor(), protocolVersion.getMinor());
+		}else{
+			return null;
+		}
+	}
+
+	protected HttpClient createHttpClient(final ApacheClientConnectionManager connectionManager) {
+		final SslConfiguration sslConfiguration = connectionManager.getConfiguration().getSslConfiguration();
+		final HttpClientBuilder builder = HttpClientBuilder.create()
+				.setConnectionManager(connectionManager.getClientConnectionManager());
+
+		propertyMapper.from(connectionManager.getConnectionManagerShared()).to(builder::setConnectionManagerShared);
+
+		if(sslConfiguration != null){
+			propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
+			propertyMapper.from(sslConfiguration.getSslContext()).to(builder::setSSLContext);
+
+			if(sslConfiguration.getSslSocketFactory() != null){
+				builder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslConfiguration.getSslSocketFactory(),
+						sslConfiguration.getHostnameVerifier()));
+			}
+		}
+
+		return builder.build();
+	}
+
+	protected HttpEntity buildHttpEntity(final RequestBody<?> body) {
+		final RequestBodyConverter<RequestBody<?>, HttpEntity> converter = findBodyConverter(REQUEST_BODY_CONVERTS,
+				body);
+		return converter == null ? new UrlEncodedFormEntity(new ArrayList<>(), StandardCharsets.ISO_8859_1) :
+				converter.convert(body);
+	}
+
+	protected Response doRequest(final HttpRequestBase request, final RequestConfig requestConfig,
+								 final List<Header> headers) throws IOException, RequestException {
+		if(headers != null){
+			for(Header header : headers){
+				request.setHeader(header.getName(), header.getValue());
+			}
+		}
+
+		Optional.ofNullable(requestConfig).ifPresent(request::setConfig);
+		Optional.ofNullable(protocolVersion).ifPresent(request::setProtocolVersion);
+
+		return doRequest(request);
+	}
+
+	protected Response doRequest(final HttpRequestBase request, final RequestConfig requestConfig,
+								 final int readTimeout, final List<Header> headers) throws IOException,
+			RequestException {
+		final RequestConfig.Builder requestConfigBuilder = RequestConfig.copy(requestConfig)
+				.setSocketTimeout(readTimeout);
+		return doRequest(request, requestConfigBuilder.build(), headers);
+	}
+
+	protected Response doRequest(final HttpEntityEnclosingRequestBase request, final RequestConfig requestConfig,
+								 final List<Header> headers, final RequestBody<?> body)
+			throws IOException, RequestException {
+		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
+		return doRequest(request, requestConfig, headers);
+	}
+
+	protected Response doRequest(final HttpEntityEnclosingRequestBase request, final RequestConfig requestConfig,
+								 final int readTimeout, final List<Header> headers, final RequestBody<?> body)
+			throws IOException, RequestException {
+		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
+		return doRequest(request, requestConfig, readTimeout, headers);
+	}
+
+	protected Response doRequest(final HttpRequestBase request) throws IOException, RequestException {
+		final ApacheResponseBuilder apacheResponseBuilder = new ApacheResponseBuilder();
+
+		try{
+			HttpResponse httpResponse = httpClient.execute(request);
+			return apacheResponseBuilder.build(httpResponse);
+		}catch(IOException e){
+			if(logger.isErrorEnabled()){
+				logger.error("Request({}) url: {} error.", request.getMethod(), request.getURI(), e);
+			}
+
+			if(e instanceof org.apache.http.conn.ConnectionPoolTimeoutException){
+				throw new ConnectionPoolTimeoutException(e.getMessage());
+			}else if(e instanceof org.apache.http.conn.ConnectTimeoutException){
+				throw new ConnectTimeoutException(e.getMessage());
+			}else if(e instanceof SocketTimeoutException){
+				throw new ReadTimeoutException(e.getMessage());
+			}else if(e instanceof org.apache.http.impl.execchain.RequestAbortedException){
+				throw new RequestAbortedException(e.getMessage());
+			}else if(e instanceof ClientProtocolException){
+				throw new RequestException(e.getMessage(), e);
+			}else if(e instanceof UnknownHostException){
+				throw e;
+			}else{
+				throw new RequestException(e.getMessage(), e);
+			}
+		}finally{
+			request.releaseConnection();
+		}
+	}
+
 }

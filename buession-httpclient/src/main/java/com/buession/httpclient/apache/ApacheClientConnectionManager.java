@@ -21,10 +21,15 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient.apache;/**
- * 
- *
+ */
+package com.buession.httpclient.apache;
+
+import com.buession.httpclient.conn.ConnectionManager;
+
+/**
  * @author Yong.Teng
  * @since 2.4.0
- */public interface ApacheClientConnectionManager {
+ */
+public interface ApacheClientConnectionManager extends ConnectionManager {
+
 }

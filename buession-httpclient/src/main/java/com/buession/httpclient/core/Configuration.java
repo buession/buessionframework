@@ -524,6 +524,18 @@ public class Configuration {
 	 * @Return true / false
 	 * @since 2.4.0
 	 */
+	public Boolean isHardCancellationEnabled() {
+		return getHardCancellationEnabled();
+	}
+
+	/**
+	 * Return determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @Return true / false
+	 * @since 2.4.0
+	 */
 	public Boolean getHardCancellationEnabled() {
 		return hardCancellationEnabled;
 	}

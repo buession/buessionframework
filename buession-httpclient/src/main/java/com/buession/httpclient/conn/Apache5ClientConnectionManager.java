@@ -19,28 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-
-import java.util.concurrent.TimeUnit;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.core5.util.Timeout;
 
 /**
- * Apache HttpComponents 连接管理器
+ * Apache HttpComponents Client 5 连接管理器
  *
  * @author Yong.Teng
  */
-public class ApacheClientConnectionManager extends ApacheBaseClientConnectionManager<HttpClientConnectionManager> {
+public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionManager<HttpClientConnectionManager>
+		implements com.buession.httpclient.apache.ApacheClientConnectionManager {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public ApacheClientConnectionManager(){
+	public Apache5ClientConnectionManager() {
 		super();
 	}
 
@@ -48,9 +49,9 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
-	public ApacheClientConnectionManager(Configuration configuration){
+	public Apache5ClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -60,7 +61,7 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheClientConnectionManager(HttpClientConnectionManager clientConnectionManager){
+	public Apache5ClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -68,12 +69,12 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheClientConnectionManager(Configuration configuration,
-										 HttpClientConnectionManager clientConnectionManager){
+	public Apache5ClientConnectionManager(Configuration configuration,
+										  HttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 
@@ -83,7 +84,7 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * @return 连接管理器
 	 */
 	@Override
-	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
+	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
 		//最大连接数
@@ -91,7 +92,15 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 		//并发数
 		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
 		// 空闲连接存活时长
-		connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		connectionManager.closeIdle(Timeout.ofMilliseconds(getConfiguration().getIdleConnectionTime()));
+
+		final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
+
+		connectionConfigBuilder.setConnectTimeout(Timeout.ofMilliseconds(getConfiguration().getConnectTimeout()));
+		connectionConfigBuilder.setSocketTimeout(Timeout.ofMilliseconds(getConfiguration().getReadTimeout()));
+		//connectionConfigBuilder.setTimeToLive();
+
+		connectionManager.setDefaultConnectionConfig(connectionConfigBuilder.build());
 
 		return connectionManager;
 	}
