@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
 import com.buession.net.ssl.SslConfiguration;
 
+import java.net.InetAddress;
+import java.util.Collection;
 import java.util.StringJoiner;
 
 /**
@@ -90,6 +92,13 @@ public class Configuration {
 	private int writeTimeout = -1;
 
 	/**
+	 * Determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @since 2.4.0
+	 */
+	private Boolean expectContinueEnabled;
+
+	/**
 	 * 是否允许重定向
 	 */
 	private Boolean allowRedirects;
@@ -110,9 +119,32 @@ public class Configuration {
 	private Integer maxRedirects;
 
 	/**
+	 * Determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @since 2.4.0
+	 */
+	private Boolean hardCancellationEnabled;
+
+	/**
 	 * 是否开启 Http Basic 认证
 	 */
 	private boolean authenticationEnabled;
+
+	/**
+	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
+	 *
+	 * @since 2.4.0
+	 */
+	private Collection<String> targetPreferredAuthSchemes;
+
+	/**
+	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
+	 *
+	 * @since 2.4.0
+	 */
+	private Collection<String> proxyPreferredAuthSchemes;
 
 	/**
 	 * 是否启用内容压缩
@@ -125,11 +157,25 @@ public class Configuration {
 	private boolean normalizeUri;
 
 	/**
+	 * Determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @since 2.4.0
+	 */
+	private String cookieSpec;
+
+	/**
 	 * SSL 配置
 	 *
 	 * @since 2.3.0
 	 */
 	private SslConfiguration sslConfiguration;
+
+	/**
+	 * 代理配置
+	 *
+	 * @since 2.4.0
+	 */
+	private Proxy proxy;
 
 	/**
 	 * 返回链接管理器是否共享
@@ -334,6 +380,40 @@ public class Configuration {
 	}
 
 	/**
+	 * Return determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @return true / false
+	 *
+	 * @since 2.4.0
+	 */
+	public Boolean isExpectContinueEnabled() {
+		return getExpectContinueEnabled();
+	}
+
+	/**
+	 * Return determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @return true / false
+	 *
+	 * @since 2.4.0
+	 */
+	public Boolean getExpectContinueEnabled() {
+		return expectContinueEnabled;
+	}
+
+	/**
+	 * Sets determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @param expectContinueEnabled
+	 * 		true / false
+	 *
+	 * @since 2.4.0
+	 */
+	public void setExpectContinueEnabled(Boolean expectContinueEnabled) {
+		this.expectContinueEnabled = expectContinueEnabled;
+	}
+
+	/**
 	 * 获取是否允许重定向
 	 *
 	 * @return 是否允许重定向
@@ -437,6 +517,32 @@ public class Configuration {
 	}
 
 	/**
+	 * Return determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @Return true / false
+	 * @since 2.4.0
+	 */
+	public Boolean getHardCancellationEnabled() {
+		return hardCancellationEnabled;
+	}
+
+	/**
+	 * Sets determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @param hardCancellationEnabled
+	 * 		Enabled hard cancellation
+	 *
+	 * @since 2.4.0
+	 */
+	public void setHardCancellationEnabled(Boolean hardCancellationEnabled) {
+		this.hardCancellationEnabled = hardCancellationEnabled;
+	}
+
+	/**
 	 * 获取是否开启 Http Basic 认证
 	 *
 	 * @return 是否开启 Http Basic 认证
@@ -462,6 +568,56 @@ public class Configuration {
 	 */
 	public void setAuthenticationEnabled(boolean authenticationEnabled) {
 		this.authenticationEnabled = authenticationEnabled;
+	}
+
+	/**
+	 * Return determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the target host.
+	 *
+	 * @return Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
+	 *
+	 * @since 2.4.0
+	 */
+	public Collection<String> getTargetPreferredAuthSchemes() {
+		return targetPreferredAuthSchemes;
+	}
+
+	/**
+	 * Sets determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the target host.
+	 *
+	 * @param targetPreferredAuthSchemes
+	 * 		Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
+	 *
+	 * @since 2.4.0
+	 */
+	public void setTargetPreferredAuthSchemes(Collection<String> targetPreferredAuthSchemes) {
+		this.targetPreferredAuthSchemes = targetPreferredAuthSchemes;
+	}
+
+	/**
+	 * Return determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the proxy host.
+	 *
+	 * @return Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
+	 *
+	 * @since 2.4.0
+	 */
+	public Collection<String> getProxyPreferredAuthSchemes() {
+		return proxyPreferredAuthSchemes;
+	}
+
+	/**
+	 * Sets determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the proxy host.
+	 *
+	 * @param proxyPreferredAuthSchemes
+	 * 		Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
+	 *
+	 * @since 2.4.0
+	 */
+	public void setProxyPreferredAuthSchemes(Collection<String> proxyPreferredAuthSchemes) {
+		this.proxyPreferredAuthSchemes = proxyPreferredAuthSchemes;
 	}
 
 	/**
@@ -521,6 +677,29 @@ public class Configuration {
 	}
 
 	/**
+	 * Return determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @return Determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @since 2.4.0
+	 */
+	public String getCookieSpec() {
+		return cookieSpec;
+	}
+
+	/**
+	 * Sets determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @param cookieSpec
+	 * 		Determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @since 2.4.0
+	 */
+	public void setCookieSpec(String cookieSpec) {
+		this.cookieSpec = cookieSpec;
+	}
+
+	/**
 	 * 返回 SSL 配置
 	 *
 	 * @return SSL 配置
@@ -539,6 +718,29 @@ public class Configuration {
 		this.sslConfiguration = sslConfiguration;
 	}
 
+	/**
+	 * 返回代理配置
+	 *
+	 * @return 代理配置
+	 *
+	 * @since 2.4.0
+	 */
+	public Proxy getProxy() {
+		return proxy;
+	}
+
+	/**
+	 * 设置代理配置
+	 *
+	 * @param proxy
+	 * 		代理配置
+	 *
+	 * @since 2.4.0
+	 */
+	public void setProxy(Proxy proxy) {
+		this.proxy = proxy;
+	}
+
 	@Override
 	public String toString() {
 		return new StringJoiner(", ")
@@ -552,15 +754,145 @@ public class Configuration {
 				.add("connectionRequestTimeout: " + connectionRequestTimeout)
 				.add("readTimeout: " + readTimeout)
 				.add("writeTimeout: " + writeTimeout)
+				.add("expectContinueEnabled: " + expectContinueEnabled)
 				.add("allowRedirects: " + allowRedirects)
 				.add("relativeRedirectsAllowed: " + relativeRedirectsAllowed)
 				.add("circularRedirectsAllowed: " + circularRedirectsAllowed)
 				.add("maxRedirects: " + maxRedirects)
+				.add("hardCancellationEnabled: " + hardCancellationEnabled)
 				.add("authenticationEnabled: " + authenticationEnabled)
+				.add("targetPreferredAuthSchemes: " + targetPreferredAuthSchemes)
+				.add("proxyPreferredAuthSchemes: " + proxyPreferredAuthSchemes)
 				.add("contentCompressionEnabled: " + contentCompressionEnabled)
 				.add("normalizeUri: " + normalizeUri)
+				.add("cookieSpec: " + cookieSpec)
 				.add("sslConfiguration: " + sslConfiguration)
+				.add("proxy: " + proxy)
 				.toString();
+	}
+
+	/**
+	 * 代理配置
+	 *
+	 * @author yong.teng
+	 * @since 2.4.0
+	 */
+	public final static class Proxy {
+
+		/**
+		 * The name of the scheme.
+		 */
+		private Scheme scheme;
+
+		/**
+		 * The inet address.
+		 */
+		private InetAddress address;
+
+		/**
+		 * The hostname (IP or DNS name).
+		 */
+		private String hostname;
+
+		/**
+		 * The port number. {@code -1} indicates the scheme default port.
+		 */
+		private int port;
+
+		/**
+		 * Return the name of the scheme.
+		 *
+		 * @return The name of the scheme.
+		 */
+		public Scheme getScheme() {
+			return scheme;
+		}
+
+		/**
+		 * Sets the name of the scheme.
+		 *
+		 * @param scheme
+		 * 		The name of the scheme.
+		 */
+		public void setScheme(Scheme scheme) {
+			this.scheme = scheme;
+		}
+
+		/**
+		 * Return the inet address.
+		 *
+		 * @return The inet address.
+		 */
+		public InetAddress getAddress() {
+			return address;
+		}
+
+		/**
+		 * Sets the inet address.
+		 *
+		 * @param address
+		 * 		The inet address.
+		 */
+		public void setAddress(InetAddress address) {
+			this.address = address;
+		}
+
+		/**
+		 * Return the hostname (IP or DNS name).
+		 *
+		 * @return The hostname (IP or DNS name).
+		 */
+		public String getHostname() {
+			return hostname;
+		}
+
+		/**
+		 * Sets the hostname (IP or DNS name).
+		 *
+		 * @param hostname
+		 * 		The hostname (IP or DNS name).
+		 */
+		public void setHostname(String hostname) {
+			this.hostname = hostname;
+		}
+
+		/**
+		 * Return the port number. {@code -1} indicates the scheme default port.
+		 *
+		 * @return The port number.
+		 */
+		public int getPort() {
+			return port;
+		}
+
+		/**
+		 * Sets the port number. {@code -1} indicates the scheme default port.
+		 *
+		 * @param port
+		 * 		The port number.
+		 */
+		public void setPort(int port) {
+			this.port = port;
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ")
+					.add("scheme: " + scheme)
+					.add("address: " + address)
+					.add("hostname: " + hostname)
+					.add("port: " + port)
+					.toString();
+		}
+
+		public enum Scheme {
+
+			HTTP,
+
+			HTTPS
+
+		}
+
 	}
 
 }
