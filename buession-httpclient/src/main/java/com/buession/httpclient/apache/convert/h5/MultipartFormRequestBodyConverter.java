@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert.h5;
@@ -28,17 +28,17 @@ import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.MultipartRequestBodyElement;
 import com.buession.io.MimeType;
 import com.buession.io.file.File;
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
 
 import java.nio.charset.Charset;
 
 /**
  * @author Yong.Teng
  */
-public class MultipartForm5RequestBodyConverter implements Apache5RequestBodyConverter<MultipartFormRequestBody> {
+public class MultipartFormRequestBodyConverter implements Apache5RequestBodyConverter<MultipartFormRequestBody> {
 
 	@Override
 	public HttpEntity convert(final MultipartFormRequestBody source) {
@@ -50,7 +50,7 @@ public class MultipartForm5RequestBodyConverter implements Apache5RequestBodyCon
 
 		builder.setContentType(ContentType.MULTIPART_FORM_DATA);
 		builder.setCharset(source.getContentType().getCharset());
-		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+		builder.setMode(HttpMultipartMode.LEGACY);
 
 		for(MultipartRequestBodyElement element : source.getContent()){
 			addBody(source, builder, element);

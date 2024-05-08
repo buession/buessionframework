@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert.h5;
 
 import com.buession.httpclient.core.EncodedFormRequestBody;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 /**
  * @author Yong.Teng
  */
-public class EncodedForm5RequestBodyConverter implements Apache5RequestBodyConverter<EncodedFormRequestBody> {
+public class EncodedFormRequestBodyConverter implements Apache5RequestBodyConverter<EncodedFormRequestBody> {
 
 	@Override
 	public UrlEncodedFormEntity convert(final EncodedFormRequestBody source) {

@@ -19,26 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert.h5;
 
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.ChunkedInputStreamEntity;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
 
 /**
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class ChunkedInputStream5RequestBodyConverter
-		extends BaseInputStream5RequestBodyConverter<ChunkedInputStreamRequestBody> {
+public class ChunkedInputStreamRequestBodyConverter
+		implements Apache5RequestBodyConverter<ChunkedInputStreamRequestBody> {
 
 	@Override
-	protected HttpEntity afterConvert(final InputStreamEntity streamEntity) {
-		streamEntity.setChunked(true);
-		return streamEntity;
+	public HttpEntity convert(final ChunkedInputStreamRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return new ChunkedInputStreamEntity(source.getContent(), source.getContentLength(),
+				ContentType.create(source.getContentType().getMimeType(), source.getContentType().getCharset()));
 	}
 
 }

@@ -36,7 +36,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class BaseRaw5RequestBodyConverter<S extends AbstractRawRequestBody<String>>
+public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<String>>
 		implements Apache5RequestBodyConverter<S> {
 
 	@Override

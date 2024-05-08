@@ -19,20 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert.h5;
 
 import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.RequestBodyConverters;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 /**
  * @author Yong.Teng
  */
-public class JsonRaw5RequestBodyConverter implements Apache5RequestBodyConverter<JsonRawRequestBody<?>> {
+public class JsonRawRequestBodyConverter implements Apache5RequestBodyConverter<JsonRawRequestBody<?>> {
 
 	@Override
 	public StringEntity convert(final JsonRawRequestBody<?> source) {

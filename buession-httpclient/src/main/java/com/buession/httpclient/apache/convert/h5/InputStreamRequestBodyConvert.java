@@ -19,24 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert.h5;
 
 import com.buession.httpclient.core.InputStreamRequestBody;
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
 
 /**
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class InputStream5RequestBodyConvert extends BaseInputStream5RequestBodyConverter<InputStreamRequestBody> {
+public class InputStreamRequestBodyConvert implements Apache5RequestBodyConverter<InputStreamRequestBody> {
 
 	@Override
-	protected HttpEntity afterConvert(final InputStreamEntity streamEntity) {
-		return streamEntity;
+	public HttpEntity convert(final InputStreamRequestBody source) {
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return new InputStreamEntity(source.getContent(), source.getContentLength(),
+				ContentType.create(source.getContentType().getMimeType(), source.getContentType().getCharset()));
 	}
 
 }

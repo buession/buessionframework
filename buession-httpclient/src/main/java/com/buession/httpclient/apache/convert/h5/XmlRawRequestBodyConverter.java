@@ -31,7 +31,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 /**
  * @author Yong.Teng
  */
-public class XmlRaw5RequestBodyConverter implements Apache5RequestBodyConverter<XmlRawRequestBody> {
+public class XmlRawRequestBodyConverter implements Apache5RequestBodyConverter<XmlRawRequestBody> {
 
 	@Override
 	public StringEntity convert(final XmlRawRequestBody source) {
