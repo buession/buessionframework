@@ -26,6 +26,8 @@ package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
 
+import java.util.Optional;
+
 /**
  * 连接管理器抽象类
  *
@@ -134,7 +136,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @since 2.3.0
 	 */
 	public Boolean getConnectionManagerShared() {
-		return connectionManagerShared;
+		return Optional.ofNullable(connectionManagerShared).orElse(getConfiguration().getConnectionManagerShared());
 	}
 
 	/**
