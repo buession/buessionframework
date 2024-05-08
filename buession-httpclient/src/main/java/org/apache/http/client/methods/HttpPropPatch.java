@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.http.client.methods;
@@ -29,6 +29,8 @@ import com.buession.httpclient.core.RequestMethod;
 import java.net.URI;
 
 /**
+ * PropPatch 请求
+ *
  * @author Yong.Teng
  */
 public class HttpPropPatch extends HttpEntityEnclosingRequestBase {
@@ -38,7 +40,7 @@ public class HttpPropPatch extends HttpEntityEnclosingRequestBase {
 	/**
 	 * 构造函数
 	 */
-	public HttpPropPatch(){
+	public HttpPropPatch() {
 		super();
 	}
 
@@ -48,7 +50,7 @@ public class HttpPropPatch extends HttpEntityEnclosingRequestBase {
 	 * @param uri
 	 * 		URL {@link URI}
 	 */
-	public HttpPropPatch(final URI uri){
+	public HttpPropPatch(final URI uri) {
 		super();
 		setURI(uri);
 	}
@@ -62,13 +64,13 @@ public class HttpPropPatch extends HttpEntityEnclosingRequestBase {
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */
-	public HttpPropPatch(final String uri){
+	public HttpPropPatch(final String uri) {
 		super();
 		setURI(URI.create(uri));
 	}
 
 	@Override
-	public String getMethod(){
+	public String getMethod() {
 		return METHOD_NAME;
 	}
 
