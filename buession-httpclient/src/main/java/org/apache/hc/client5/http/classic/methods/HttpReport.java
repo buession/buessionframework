@@ -19,57 +19,47 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package org.apache.http.client.methods;
+package org.apache.hc.client5.http.classic.methods;
 
 import com.buession.httpclient.core.RequestMethod;
 
 import java.net.URI;
 
 /**
+ * Report 请求
+ *
  * @author Yong.Teng
  */
-public class HttpReport extends HttpEntityEnclosingRequestBase {
+public class HttpReport extends HttpUriRequestBase {
+
+	private final static long serialVersionUID = -8544688758355815948L;
 
 	public final static String METHOD_NAME = RequestMethod.REPORT.name();
 
 	/**
 	 * 构造函数
-	 */
-	public HttpReport(){
-		super();
-	}
-
-	/**
-	 * 构造函数
 	 *
 	 * @param uri
 	 * 		URL {@link URI}
 	 */
-	public HttpReport(final URI uri){
-		super();
-		setURI(uri);
+	public HttpReport(final URI uri) {
+		super(METHOD_NAME, uri);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param uri
+	 * @param url
 	 * 		URL {@link URI}
 	 *
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */
-	public HttpReport(final String uri){
-		super();
-		setURI(URI.create(uri));
-	}
-
-	@Override
-	public String getMethod(){
-		return METHOD_NAME;
+	public HttpReport(final String url) {
+		this(URI.create(url));
 	}
 
 }

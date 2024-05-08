@@ -19,57 +19,47 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package org.apache.http.client.methods;
+package org.apache.hc.client5.http.classic.methods;
 
 import com.buession.httpclient.core.RequestMethod;
 
 import java.net.URI;
 
 /**
+ * Purge 请求
+ *
  * @author Yong.Teng
  */
-public class HttpPurge extends HttpRequestBase {
+public class HttpPurge extends HttpUriRequestBase {
+
+	private final static long serialVersionUID = 6052904597397464895L;
 
 	public final static String METHOD_NAME = RequestMethod.PURGE.name();
 
 	/**
 	 * 构造函数
-	 */
-	public HttpPurge(){
-		super();
-	}
-
-	/**
-	 * 构造函数
 	 *
 	 * @param uri
 	 * 		URL {@link URI}
 	 */
-	public HttpPurge(final URI uri){
-		super();
-		setURI(uri);
+	public HttpPurge(final URI uri) {
+		super(METHOD_NAME, uri);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param uri
+	 * @param url
 	 * 		URL {@link URI}
 	 *
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */
-	public HttpPurge(final String uri){
-		super();
-		setURI(URI.create(uri));
-	}
-
-	@Override
-	public String getMethod(){
-		return METHOD_NAME;
+	public HttpPurge(final String url) {
+		this(URI.create(url));
 	}
 
 }

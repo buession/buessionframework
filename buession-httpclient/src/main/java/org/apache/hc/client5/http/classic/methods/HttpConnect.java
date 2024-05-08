@@ -22,54 +22,45 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package org.apache.http.client.methods;
+package org.apache.hc.client5.http.classic.methods;
 
 import com.buession.httpclient.core.RequestMethod;
 
 import java.net.URI;
 
 /**
+ * Connect 请求
+ *
  * @author Yong.Teng
+ * @since 2.4.0
  */
-public class HttpConnect extends HttpRequestBase {
+public class HttpConnect extends HttpUriRequestBase {
+
+	private final static long serialVersionUID = -2937305426353458488L;
 
 	public final static String METHOD_NAME = RequestMethod.CONNECT.name();
 
 	/**
 	 * 构造函数
-	 */
-	public HttpConnect(){
-		super();
-	}
-
-	/**
-	 * 构造函数
 	 *
 	 * @param uri
 	 * 		URL {@link URI}
 	 */
-	public HttpConnect(final URI uri){
-		super();
-		setURI(uri);
+	public HttpConnect(final URI uri) {
+		super(METHOD_NAME, uri);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param uri
+	 * @param url
 	 * 		URL {@link URI}
 	 *
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */
-	public HttpConnect(final String uri){
-		super();
-		setURI(URI.create(uri));
-	}
-
-	@Override
-	public String getMethod(){
-		return METHOD_NAME;
+	public HttpConnect(final String url) {
+		this(URI.create(url));
 	}
 
 }
