@@ -19,15 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
 
-import com.buession.httpclient.apache.convert.ChunkedInputStreamRequestBodyConverter;
-import com.buession.httpclient.apache.convert.InputStreamRequestBodyConvert;
-import com.buession.httpclient.apache.convert.MultipartFormRequestBodyConverter;
-import com.buession.httpclient.apache.convert.RepeatableInputStreamRequestBodyConvert;
+import com.buession.httpclient.apache.convert.*;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
@@ -44,12 +41,6 @@ import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.core.AbstractRequestBuilder;
-import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConverter;
-import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.JavaScriptRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.JsonRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.TextRawRequestBodyConverter;
-import com.buession.httpclient.apache.convert.XmlRawRequestBodyConverter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -63,8 +54,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * {@link ApacheRequest} 构建器
+ *
  * @author Yong.Teng
  */
+@Deprecated
 public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> {
 
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
@@ -73,7 +67,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	private final static Map<Class<? extends RequestBody>, RequestBodyConverter> REQUEST_BODY_CONVERTS =
 			new HashMap<>(16, 0.8F);
 
-	static{
+	static {
 		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
@@ -87,7 +81,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
 	}
 
-	private ApacheRequestBuilder(){
+	private ApacheRequestBuilder() {
 		request = new ApacheRequest();
 	}
 
@@ -96,7 +90,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 *
 	 * @return {@link ApacheRequestBuilder} 实例
 	 */
-	public static ApacheRequestBuilder create(){
+	public static ApacheRequestBuilder create() {
 		return new ApacheRequestBuilder();
 	}
 
@@ -109,7 +103,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 * @return {@link ApacheRequestBuilder} 实例
 	 */
 	@Deprecated
-	public static ApacheRequestBuilder create(String url){
+	public static ApacheRequestBuilder create(String url) {
 		final ApacheRequestBuilder builder = create();
 		builder.setUrl(url);
 		return builder;
@@ -126,7 +120,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 * @return {@link ApacheRequestBuilder} 实例
 	 */
 	@Deprecated
-	public static ApacheRequestBuilder create(String url, Map<String, Object> parameters){
+	public static ApacheRequestBuilder create(String url, Map<String, Object> parameters) {
 		return create(url).setParameters(parameters);
 	}
 
@@ -141,7 +135,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 * @return {@link ApacheRequestBuilder} 实例
 	 */
 	@Deprecated
-	public static ApacheRequestBuilder create(String url, List<Header> headers){
+	public static ApacheRequestBuilder create(String url, List<Header> headers) {
 		return create(url).setHeaders(headers);
 	}
 
@@ -158,7 +152,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 * @return {@link ApacheRequestBuilder} 实例
 	 */
 	@Deprecated
-	public static ApacheRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
+	public static ApacheRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers) {
 		return create(url, parameters).setHeaders(headers);
 	}
 
@@ -172,7 +166,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 *
 	 * @since 2.3.0
 	 */
-	public static ApacheRequestBuilder create(URI uri){
+	public static ApacheRequestBuilder create(URI uri) {
 		final ApacheRequestBuilder builder = create();
 		builder.setUri(uri);
 		return builder;
@@ -190,7 +184,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 *
 	 * @since 2.3.0
 	 */
-	public static ApacheRequestBuilder create(URI uri, Map<String, Object> parameters){
+	public static ApacheRequestBuilder create(URI uri, Map<String, Object> parameters) {
 		return create(uri).setParameters(parameters);
 	}
 
@@ -206,7 +200,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 *
 	 * @since 2.3.0
 	 */
-	public static ApacheRequestBuilder create(URI uri, List<Header> headers){
+	public static ApacheRequestBuilder create(URI uri, List<Header> headers) {
 		return create(uri).setHeaders(headers);
 	}
 
@@ -224,12 +218,12 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	 *
 	 * @since 2.3.0
 	 */
-	public static ApacheRequestBuilder create(URI uri, Map<String, Object> parameters, List<Header> headers){
+	public static ApacheRequestBuilder create(URI uri, Map<String, Object> parameters, List<Header> headers) {
 		return create(uri, parameters).setHeaders(headers);
 	}
 
 	@Override
-	public ApacheRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
+	public ApacheRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion) {
 		if(protocolVersion != null){
 			request.getHttpRequest().setProtocolVersion(
 					new org.apache.http.ProtocolVersion(protocolVersion.getProtocol(), protocolVersion.getMajor(),
@@ -240,129 +234,129 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 	}
 
 	@Override
-	public ApacheRequestBuilder setHeaders(List<Header> headers){
+	public ApacheRequestBuilder setHeaders(List<Header> headers) {
 		request.setHeaders(headers);
 		return this;
 	}
 
 	@Override
-	public ApacheRequestBuilder setParameters(Map<String, Object> parameters){
+	public ApacheRequestBuilder setParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
 		return this;
 	}
 
-	public ApacheRequestBuilder setRequestConfig(RequestConfig config){
+	public ApacheRequestBuilder setRequestConfig(RequestConfig config) {
 		this.request.getHttpRequest().setConfig(config);
 		return this;
 	}
 
 	@Override
-	public ApacheRequestBuilder get(){
+	public ApacheRequestBuilder get() {
 		return setRequest(new HttpGet(), RequestMethod.GET);
 	}
 
 	@Override
-	public ApacheRequestBuilder post(RequestBody<?> body){
+	public ApacheRequestBuilder post(RequestBody<?> body) {
 		return setRequest(new HttpPost(), RequestMethod.POST, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder patch(RequestBody<?> body){
+	public ApacheRequestBuilder patch(RequestBody<?> body) {
 		return setRequest(new HttpPatch(), RequestMethod.PATCH, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder put(RequestBody<?> body){
+	public ApacheRequestBuilder put(RequestBody<?> body) {
 		return setRequest(new HttpPut(), RequestMethod.PUT, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder delete(){
+	public ApacheRequestBuilder delete() {
 		return setRequest(new HttpDelete(), RequestMethod.DELETE);
 	}
 
 	@Override
-	public ApacheRequestBuilder connect(){
+	public ApacheRequestBuilder connect() {
 		return setRequest(new HttpConnect(), RequestMethod.CONNECT);
 	}
 
 	@Override
-	public ApacheRequestBuilder trace(){
+	public ApacheRequestBuilder trace() {
 		return setRequest(new HttpTrace(), RequestMethod.TRACE);
 	}
 
 	@Override
-	public ApacheRequestBuilder copy(){
+	public ApacheRequestBuilder copy() {
 		return setRequest(new HttpCopy(), RequestMethod.COPY);
 	}
 
 	@Override
-	public ApacheRequestBuilder move(){
+	public ApacheRequestBuilder move() {
 		return setRequest(new HttpMove(), RequestMethod.MOVE);
 	}
 
 	@Override
-	public ApacheRequestBuilder head(){
+	public ApacheRequestBuilder head() {
 		return setRequest(new HttpHead(), RequestMethod.HEAD);
 	}
 
 	@Override
-	public ApacheRequestBuilder options(){
+	public ApacheRequestBuilder options() {
 		return setRequest(new HttpOptions(), RequestMethod.OPTIONS);
 	}
 
 	@Override
-	public ApacheRequestBuilder link(){
+	public ApacheRequestBuilder link() {
 		return setRequest(new HttpLink(), RequestMethod.LINK);
 	}
 
 	@Override
-	public ApacheRequestBuilder unlink(){
+	public ApacheRequestBuilder unlink() {
 		return setRequest(new HttpUnlink(), RequestMethod.UNLINK);
 	}
 
 	@Override
-	public ApacheRequestBuilder purge(){
+	public ApacheRequestBuilder purge() {
 		return setRequest(new HttpPurge(), RequestMethod.PURGE);
 	}
 
 	@Override
-	public ApacheRequestBuilder lock(){
+	public ApacheRequestBuilder lock() {
 		return setRequest(new HttpLock(), RequestMethod.LOCK);
 	}
 
 	@Override
-	public ApacheRequestBuilder unlock(){
+	public ApacheRequestBuilder unlock() {
 		return setRequest(new HttpUnlock(), RequestMethod.UNLOCK);
 	}
 
 	@Override
-	public ApacheRequestBuilder propfind(){
+	public ApacheRequestBuilder propfind() {
 		return setRequest(new HttpPropfind(), RequestMethod.PROPFIND);
 	}
 
 	@Override
-	public ApacheRequestBuilder proppatch(RequestBody<?> body){
+	public ApacheRequestBuilder proppatch(RequestBody<?> body) {
 		return setRequest(new HttpPropPatch(), RequestMethod.PROPPATCH, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder report(RequestBody<?> body){
+	public ApacheRequestBuilder report(RequestBody<?> body) {
 		return setRequest(new HttpReport(), RequestMethod.REPORT, body);
 	}
 
 	@Override
-	public ApacheRequestBuilder view(){
+	public ApacheRequestBuilder view() {
 		return setRequest(new HttpView(), RequestMethod.VIEW);
 	}
 
 	@Override
-	public ApacheRequestBuilder wrapped(){
+	public ApacheRequestBuilder wrapped() {
 		return setRequest(new HttpWrapped(), RequestMethod.WRAPPED);
 	}
 
 	@Override
-	public ApacheRequest build(){
+	public ApacheRequest build() {
 		ApacheRequest request = super.build();
 
 		if(request.getHeaders() != null){
@@ -376,14 +370,14 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequest> 
 		return request;
 	}
 
-	protected ApacheRequestBuilder setRequest(final HttpRequestBase httpRequest, final RequestMethod method){
+	protected ApacheRequestBuilder setRequest(final HttpRequestBase httpRequest, final RequestMethod method) {
 		request.setHttpRequest(httpRequest);
 		request.setMethod(method);
 		return this;
 	}
 
 	protected ApacheRequestBuilder setRequest(final HttpEntityEnclosingRequestBase httpRequest,
-											  final RequestMethod method, final RequestBody<?> body){
+											  final RequestMethod method, final RequestBody<?> body) {
 		setRequest(httpRequest, method);
 
 		if(body != null){

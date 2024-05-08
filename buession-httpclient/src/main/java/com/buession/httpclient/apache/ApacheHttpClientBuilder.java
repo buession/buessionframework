@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
@@ -40,15 +40,16 @@ import java.util.function.Consumer;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class ApacheHttpClientBuilder extends AbstractHttpClientBuilder<HttpClientBuilder, ApacheClientConnectionManager,
 		HttpClient> {
 
-	public ApacheHttpClientBuilder(final ApacheClientConnectionManager connectionManager){
+	public ApacheHttpClientBuilder(final ApacheClientConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
 	@Override
-	public HttpClient build(Consumer<HttpClientBuilder> consumer){
+	public HttpClient build(Consumer<HttpClientBuilder> consumer) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final SslConfiguration sslConfiguration = connectionManager.getConfiguration().getSslConfiguration();
 		final HttpClientBuilder builder = HttpClientBuilder.create()
