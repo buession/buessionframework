@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.nio.protocol;
@@ -46,6 +46,7 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Response> {
 
 	private final static int MAX_INITIAL_BUFFER_SIZE = 262144;
@@ -56,21 +57,21 @@ public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Re
 
 	private volatile SimpleInputBuffer buffer;
 
-	public BasicAsyncResponseConsumer(HttpRequestBase request){
+	public BasicAsyncResponseConsumer(HttpRequestBase request) {
 		this.request = request;
 	}
 
 	@Override
-	protected void onResponseReceived(HttpResponse response) throws IOException{
+	protected void onResponseReceived(HttpResponse response) throws IOException {
 		this.response = response;
 	}
 
 	@Override
-	protected void onEntityEnclosed(HttpEntity entity, ContentType contentType) throws IOException{
+	protected void onEntityEnclosed(HttpEntity entity, ContentType contentType) throws IOException {
 		long contentLength = entity.getContentLength();
 
 		if(contentLength > 2147483647L){
-			throw new ContentTooLongException("Entity content is too long: %,d", new Object[]{contentLength});
+			throw new ContentTooLongException("Entity content is too long: " + contentLength);
 		}else{
 			if(contentLength < 0L){
 				contentLength = 4096L;
@@ -83,13 +84,13 @@ public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Re
 	}
 
 	@Override
-	protected void onContentReceived(ContentDecoder decoder, IOControl ioControl) throws IOException{
+	protected void onContentReceived(ContentDecoder decoder, IOControl ioControl) throws IOException {
 		Asserts.notNull(buffer, "Content buffer");
 		buffer.consumeContent(decoder);
 	}
 
 	@Override
-	protected void releaseResources(){
+	protected void releaseResources() {
 		if(request != null){
 			request.releaseConnection();
 		}
@@ -98,7 +99,7 @@ public class BasicAsyncResponseConsumer extends AbstractAsyncResponseConsumer<Re
 	}
 
 	@Override
-	protected Response buildResult(HttpContext context){
+	protected Response buildResult(HttpContext context) {
 		final ApacheResponseBuilder apacheResponseBuilder = new ApacheResponseBuilder();
 		return apacheResponseBuilder.build(this.response);
 	}

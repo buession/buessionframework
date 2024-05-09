@@ -22,36 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.nio;
-
-import com.buession.httpclient.core.Response;
-import com.buession.httpclient.core.concurrent.BaseCallback;
-import com.buession.httpclient.core.concurrent.Callback;
-import org.apache.http.concurrent.FutureCallback;
-
 /**
  * @author Yong.Teng
- * @since 2.3.0
  */
-public class DefaultCallback extends BaseCallback implements FutureCallback<Response> {
-
-	public DefaultCallback(final Callback delegate){
-		super(delegate);
-	}
-
-	@Override
-	public void completed(Response response){
-		delegate.completed(response);
-	}
-
-	@Override
-	public void failed(Exception ex){
-		delegate.failed(ex);
-	}
-
-	@Override
-	public void cancelled(){
-		delegate.cancelled();
-	}
-
-}
+package org.apache.hc.client5.http.async.methods;

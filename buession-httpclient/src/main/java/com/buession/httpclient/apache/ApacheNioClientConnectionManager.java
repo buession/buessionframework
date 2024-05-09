@@ -22,36 +22,15 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.nio;
+package com.buession.httpclient.apache;
 
-import com.buession.httpclient.core.Response;
-import com.buession.httpclient.core.concurrent.BaseCallback;
-import com.buession.httpclient.core.concurrent.Callback;
-import org.apache.http.concurrent.FutureCallback;
+import com.buession.httpclient.conn.ConnectionManager;
+import com.buession.httpclient.conn.NioConnectionManager;
 
 /**
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 2.4.0
  */
-public class DefaultCallback extends BaseCallback implements FutureCallback<Response> {
-
-	public DefaultCallback(final Callback delegate){
-		super(delegate);
-	}
-
-	@Override
-	public void completed(Response response){
-		delegate.completed(response);
-	}
-
-	@Override
-	public void failed(Exception ex){
-		delegate.failed(ex);
-	}
-
-	@Override
-	public void cancelled(){
-		delegate.cancelled();
-	}
+public interface ApacheNioClientConnectionManager extends NioConnectionManager, ConnectionManager {
 
 }

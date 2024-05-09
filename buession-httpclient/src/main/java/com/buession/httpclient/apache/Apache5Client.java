@@ -24,24 +24,14 @@
  */
 package com.buession.httpclient.apache;
 
-import com.buession.httpclient.apache.convert.h5.*;
+import com.buession.httpclient.apache.convert.utils.ApacheRequestBodyConverterUtils;
 import com.buession.httpclient.conn.Apache5ClientConnectionManager;
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.Configuration;
-import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.HtmlRawRequestBody;
-import com.buession.httpclient.core.InputStreamRequestBody;
-import com.buession.httpclient.core.JavaScriptRawRequestBody;
-import com.buession.httpclient.core.JsonRawRequestBody;
-import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.Response;
-import com.buession.httpclient.core.TextRawRequestBody;
-import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestAbortedException;
@@ -67,7 +57,6 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,21 +69,7 @@ import java.util.concurrent.TimeUnit;
 public class Apache5Client extends AbstractApacheClient {
 
 	private final static Map<Class<? extends RequestBody>, RequestBodyConverter> REQUEST_BODY_CONVERTS =
-			new HashMap<>(10, 0.8F);
-
-	static {
-		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
-				new RepeatableInputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
-	}
+			ApacheRequestBodyConverterUtils.createApache5ClientRequestBodyConverter();
 
 	private final RequestConfig requestConfig;
 

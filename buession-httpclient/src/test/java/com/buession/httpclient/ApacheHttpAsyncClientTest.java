@@ -41,24 +41,24 @@ public class ApacheHttpAsyncClientTest {
 	private static ApacheHttpAsyncClient httpClient = new ApacheHttpAsyncClient();
 
 	@Test
-	public void responseHeaders() throws IOException, RequestException{
+	public void responseHeaders() throws IOException, RequestException {
 		httpClient.get("https://www.baidu.com",
 				new Callback() {
 
 					@Override
-					public void completed(Response response){
+					public void completed(Response response) {
 						for(Header header : response.getHeaders()){
 							System.out.println(header.toString());
 						}
 					}
 
 					@Override
-					public void failed(Exception ex){
+					public void failed(Exception ex) {
 
 					}
 
 					@Override
-					public void cancelled(){
+					public void cancelled() {
 
 					}
 				});
@@ -69,23 +69,45 @@ public class ApacheHttpAsyncClientTest {
 				new Callback() {
 
 					@Override
-					public void completed(Response response){
+					public void completed(Response response) {
 						for(Header header : response.getHeaders()){
 							System.out.println(header.toString());
 						}
 					}
 
 					@Override
-					public void failed(Exception ex){
+					public void failed(Exception ex) {
 
 					}
 
 					@Override
-					public void cancelled(){
+					public void cancelled() {
 
 					}
 				});
 		//response.get();
+	}
+
+	@Test
+	public void body() throws IOException, RequestException {
+		httpClient.get("https://www.baidu.com",
+				new Callback() {
+
+					@Override
+					public void completed(Response response) {
+						System.out.println(response.getBody());
+					}
+
+					@Override
+					public void failed(Exception ex) {
+
+					}
+
+					@Override
+					public void cancelled() {
+
+					}
+				});
 	}
 
 }

@@ -56,8 +56,7 @@ public interface ApacheClient {
 				   final RequestBody<?> body) throws IOException, RequestException;
 
 	Response patch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				   final List<Header> headers,
-				   final RequestBody<?> body) throws IOException, RequestException;
+				   final List<Header> headers, final RequestBody<?> body) throws IOException, RequestException;
 
 	Response put(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				 final RequestBody<?> body) throws IOException, RequestException;

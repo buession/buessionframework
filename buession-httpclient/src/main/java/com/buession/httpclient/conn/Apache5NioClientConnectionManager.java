@@ -27,22 +27,23 @@ package com.buession.httpclient.conn;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.nio.IOReactorConfig;
 import com.buession.httpclient.core.Configuration;
-import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
-import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
-import org.apache.http.nio.conn.NHttpClientConnectionManager;
-import org.apache.http.nio.reactor.ConnectingIOReactor;
-import org.apache.http.nio.reactor.IOReactorException;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
+import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
+import org.apache.hc.core5.reactor.DefaultConnectingIOReactor;
+import org.apache.hc.core5.reactor.IOReactor;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Apache HttpComponents 4 异步连接管理器
+ * Apache HttpComponents 5 异步连接管理器
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 2.4.0
  */
-public class ApacheNioClientConnectionManager extends ApacheBaseClientConnectionManager<NHttpClientConnectionManager>
+public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectionManager<AsyncClientConnectionManager>
 		implements com.buession.httpclient.apache.ApacheNioClientConnectionManager {
 
 	private IOReactorConfig ioReactorConfig;
@@ -55,7 +56,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public ApacheNioClientConnectionManager() {
+	public Apache5NioClientConnectionManager() {
 		this(new IOReactorConfig());
 	}
 
@@ -65,7 +66,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param configuration
 	 * 		连接对象
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration) {
+	public Apache5NioClientConnectionManager(Configuration configuration) {
 		this(configuration, new IOReactorConfig());
 	}
 
@@ -75,7 +76,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheNioClientConnectionManager(NHttpClientConnectionManager clientConnectionManager) {
+	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager) {
 		this(clientConnectionManager, new IOReactorConfig());
 	}
 
@@ -87,8 +88,8 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param clientConnectionManager
 	 * 		驱动连接管理器
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration,
-											NHttpClientConnectionManager clientConnectionManager) {
+	public Apache5NioClientConnectionManager(Configuration configuration,
+											 AsyncClientConnectionManager clientConnectionManager) {
 		this(configuration, clientConnectionManager, new IOReactorConfig());
 	}
 
@@ -98,7 +99,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param ioReactorConfig
 	 *        {@link IOReactorConfig}
 	 */
-	public ApacheNioClientConnectionManager(IOReactorConfig ioReactorConfig) {
+	public Apache5NioClientConnectionManager(IOReactorConfig ioReactorConfig) {
 		super();
 		this.ioReactorConfig = ioReactorConfig;
 	}
@@ -111,7 +112,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param ioReactorConfig
 	 *        {@link IOReactorConfig}
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration, IOReactorConfig ioReactorConfig) {
+	public Apache5NioClientConnectionManager(Configuration configuration, IOReactorConfig ioReactorConfig) {
 		super(configuration);
 		this.ioReactorConfig = ioReactorConfig;
 	}
@@ -124,8 +125,8 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param ioReactorConfig
 	 *        {@link IOReactorConfig}
 	 */
-	public ApacheNioClientConnectionManager(NHttpClientConnectionManager clientConnectionManager,
-											IOReactorConfig ioReactorConfig) {
+	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager,
+											 IOReactorConfig ioReactorConfig) {
 		super(clientConnectionManager);
 		this.ioReactorConfig = ioReactorConfig;
 	}
@@ -140,9 +141,9 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param ioReactorConfig
 	 *        {@link IOReactorConfig}
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration,
-											NHttpClientConnectionManager clientConnectionManager,
-											IOReactorConfig ioReactorConfig) {
+	public Apache5NioClientConnectionManager(Configuration configuration,
+											 AsyncClientConnectionManager clientConnectionManager,
+											 IOReactorConfig ioReactorConfig) {
 		super(configuration, clientConnectionManager);
 		this.ioReactorConfig = ioReactorConfig;
 	}
@@ -153,7 +154,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(ThreadFactory threadFactory) {
 		super();
 		this.threadFactory = threadFactory;
 	}
@@ -166,7 +167,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration, ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(Configuration configuration, ThreadFactory threadFactory) {
 		super(configuration);
 		this.threadFactory = threadFactory;
 	}
@@ -179,8 +180,8 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(NHttpClientConnectionManager clientConnectionManager,
-											ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager,
+											 ThreadFactory threadFactory) {
 		super(clientConnectionManager);
 		this.threadFactory = threadFactory;
 	}
@@ -195,9 +196,9 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration,
-											NHttpClientConnectionManager clientConnectionManager,
-											ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(Configuration configuration,
+											 AsyncClientConnectionManager clientConnectionManager,
+											 ThreadFactory threadFactory) {
 		super(configuration, clientConnectionManager);
 		this.threadFactory = threadFactory;
 	}
@@ -210,7 +211,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(IOReactorConfig ioReactorConfig, ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(IOReactorConfig ioReactorConfig, ThreadFactory threadFactory) {
 		super();
 		this.ioReactorConfig = ioReactorConfig;
 		this.threadFactory = threadFactory;
@@ -226,8 +227,8 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration, IOReactorConfig ioReactorConfig,
-											ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(Configuration configuration, IOReactorConfig ioReactorConfig,
+											 ThreadFactory threadFactory) {
 		this(configuration, ioReactorConfig);
 		this.threadFactory = threadFactory;
 	}
@@ -242,8 +243,8 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(NHttpClientConnectionManager clientConnectionManager,
-											IOReactorConfig ioReactorConfig, ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager,
+											 IOReactorConfig ioReactorConfig, ThreadFactory threadFactory) {
 		this(clientConnectionManager, ioReactorConfig);
 		this.threadFactory = threadFactory;
 	}
@@ -260,9 +261,9 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public ApacheNioClientConnectionManager(Configuration configuration,
-											NHttpClientConnectionManager clientConnectionManager,
-											IOReactorConfig ioReactorConfig, ThreadFactory threadFactory) {
+	public Apache5NioClientConnectionManager(Configuration configuration,
+											 AsyncClientConnectionManager clientConnectionManager,
+											 IOReactorConfig ioReactorConfig, ThreadFactory threadFactory) {
 		this(configuration, clientConnectionManager, ioReactorConfig);
 		this.threadFactory = threadFactory;
 	}
@@ -302,40 +303,45 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 * @return 连接管理器
 	 */
 	@Override
-	protected NHttpClientConnectionManager createDefaultClientConnectionManager() {
-		final PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(
-				createConnectingIOReactor());
+	protected AsyncClientConnectionManager createDefaultClientConnectionManager() {
+		final PoolingAsyncClientConnectionManager connectionManager = new PoolingAsyncClientConnectionManager();
 
 		//最大连接数
 		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
 		//并发数
 		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
 		// 空闲连接存活时长
-		connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		connectionManager.closeIdle(Timeout.ofMilliseconds(getConfiguration().getIdleConnectionTime()));
+
+		final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
+
+		connectionConfigBuilder.setConnectTimeout(Timeout.ofMilliseconds(getConfiguration().getConnectTimeout()));
+		connectionConfigBuilder.setSocketTimeout(Timeout.ofMilliseconds(getConfiguration().getReadTimeout()));
+		//connectionConfigBuilder.setTimeToLive();
+
+		connectionManager.setDefaultConnectionConfig(connectionConfigBuilder.build());
 
 		return connectionManager;
 	}
 
-	protected ConnectingIOReactor createConnectingIOReactor() {
-		org.apache.http.impl.nio.reactor.IOReactorConfig ioReactorConfig = null;
+	protected IOReactor createConnectingIOReactor() {
+		org.apache.hc.core5.reactor.IOReactorConfig ioReactorConfig = null;
 
 		if(getIoReactorConfig() != null){
 			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-			final org.apache.http.impl.nio.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
-					org.apache.http.impl.nio.reactor.IOReactorConfig.custom();
+			final org.apache.hc.core5.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
+					org.apache.hc.core5.reactor.IOReactorConfig.custom();
 
-			propertyMapper.from(getIoReactorConfig().getSelectInterval()).to(ioReactorConfigBuilder::setSelectInterval);
-			propertyMapper.from(getIoReactorConfig().getShutdownGracePeriod())
-					.to(ioReactorConfigBuilder::setShutdownGracePeriod);
-			propertyMapper.from(getIoReactorConfig().isInterestOpQueued())
-					.to(ioReactorConfigBuilder::setInterestOpQueued);
+			propertyMapper.from(getIoReactorConfig().getSelectInterval()).as(TimeValue::ofMilliseconds)
+					.to(ioReactorConfigBuilder::setSelectInterval);
 			propertyMapper.from(getIoReactorConfig().getIoThreadCount()).to(ioReactorConfigBuilder::setIoThreadCount);
-			propertyMapper.from(getIoReactorConfig().getSoTimeout()).to(ioReactorConfigBuilder::setSoTimeout);
+			propertyMapper.from(getIoReactorConfig().getSoTimeout()).as(Timeout::ofMilliseconds)
+					.to(ioReactorConfigBuilder::setSoTimeout);
 			propertyMapper.from(getIoReactorConfig().isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
-			propertyMapper.from(getIoReactorConfig().getSoLinger()).to(ioReactorConfigBuilder::setSoLinger);
+			propertyMapper.from(getIoReactorConfig().getSoLinger()).as(Timeout::ofMilliseconds)
+					.to(ioReactorConfigBuilder::setSoLinger);
 			propertyMapper.from(getIoReactorConfig().isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
 			propertyMapper.from(getIoReactorConfig().isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
-			propertyMapper.from(getIoReactorConfig().getConnectTimeout()).to(ioReactorConfigBuilder::setConnectTimeout);
 			propertyMapper.from(getIoReactorConfig().getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);
 			propertyMapper.from(getIoReactorConfig().getRcvBufSize()).to(ioReactorConfigBuilder::setRcvBufSize);
 			propertyMapper.from(getIoReactorConfig().getBacklogSize()).to(ioReactorConfigBuilder::setBacklogSize);
@@ -343,11 +349,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 			ioReactorConfig = ioReactorConfigBuilder.build();
 		}
 
-		try{
-			return new DefaultConnectingIOReactor(ioReactorConfig, getThreadFactory());
-		}catch(IOReactorException e){
-			throw new IllegalStateException(e);
-		}
+		return new DefaultConnectingIOReactor(null, ioReactorConfig, null);
 	}
 
 }

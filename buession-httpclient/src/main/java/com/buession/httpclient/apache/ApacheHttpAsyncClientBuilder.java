@@ -40,16 +40,17 @@ import java.util.function.Consumer;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class ApacheHttpAsyncClientBuilder
 		extends AbstractHttpClientBuilder<HttpAsyncClientBuilder, ApacheNioClientConnectionManager,
 		HttpAsyncClient> {
 
-	public ApacheHttpAsyncClientBuilder(final ApacheNioClientConnectionManager connectionManager){
+	public ApacheHttpAsyncClientBuilder(final ApacheNioClientConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
 	@Override
-	public HttpAsyncClient build(Consumer<HttpAsyncClientBuilder> consumer){
+	public HttpAsyncClient build(Consumer<HttpAsyncClientBuilder> consumer) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final SslConfiguration sslConfiguration = connectionManager.getConfiguration().getSslConfiguration();
 		final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()

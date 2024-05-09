@@ -48,8 +48,7 @@ import java.util.Map;
  */
 public class ApacheHttpClient extends AbstractHttpClient {
 
-	private final static boolean V5 = ClassUtils.isPresent(
-			"org.apache.hc.client5.http.classic.HttpClient1111");
+	private final static boolean V5 = ClassUtils.isPresent("org.apache.hc.client5.http.classic.HttpClient");
 
 	private ApacheClient httpClient;
 

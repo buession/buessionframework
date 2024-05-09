@@ -27,30 +27,30 @@ package com.buession.httpclient.apache.nio;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.BaseCallback;
 import com.buession.httpclient.core.concurrent.Callback;
-import org.apache.http.concurrent.FutureCallback;
+import org.apache.hc.core5.concurrent.FutureCallback;
 
 /**
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 2.4.0
  */
-public class DefaultCallback extends BaseCallback implements FutureCallback<Response> {
+public class Default5Callback extends BaseCallback implements FutureCallback<Response> {
 
-	public DefaultCallback(final Callback delegate){
+	public Default5Callback(final Callback delegate) {
 		super(delegate);
 	}
 
 	@Override
-	public void completed(Response response){
+	public void completed(Response response) {
 		delegate.completed(response);
 	}
 
 	@Override
-	public void failed(Exception ex){
+	public void failed(Exception ex) {
 		delegate.failed(ex);
 	}
 
 	@Override
-	public void cancelled(){
+	public void cancelled() {
 		delegate.cancelled();
 	}
 
