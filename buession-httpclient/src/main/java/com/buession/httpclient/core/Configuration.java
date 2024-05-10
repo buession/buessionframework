@@ -82,6 +82,13 @@ public class Configuration {
 	private int connectionRequestTimeout = 5000;
 
 	/**
+	 * The maximum time to live for persistent connections.
+	 *
+	 * @since 2.4.0
+	 */
+	private int connectionTimeToLive = -1;
+
+	/**
 	 * 读取超时时间，单位：毫秒
 	 */
 	private int readTimeout = 5000;
@@ -335,6 +342,29 @@ public class Configuration {
 	 */
 	public void setConnectionRequestTimeout(int connectionRequestTimeout) {
 		this.connectionRequestTimeout = connectionRequestTimeout;
+	}
+
+	/**
+	 * Return maximum time to live for persistent connections.
+	 *
+	 * @return The maximum time to live for persistent connections.
+	 *
+	 * @since 2.4.0
+	 */
+	public int getConnectionTimeToLive() {
+		return connectionTimeToLive;
+	}
+
+	/**
+	 * Sets maximum time to live for persistent connections.
+	 *
+	 * @param connectionTimeToLive
+	 * 		The maximum time to live for persistent connections.
+	 *
+	 * @since 2.4.0
+	 */
+	public void setConnectionTimeToLive(int connectionTimeToLive) {
+		this.connectionTimeToLive = connectionTimeToLive;
 	}
 
 	/**
@@ -764,6 +794,7 @@ public class Configuration {
 				.add("idleConnectionTime: " + idleConnectionTime)
 				.add("connectTimeout: " + connectTimeout)
 				.add("connectionRequestTimeout: " + connectionRequestTimeout)
+				.add("connectionTimeToLive: " + connectionTimeToLive)
 				.add("readTimeout: " + readTimeout)
 				.add("writeTimeout: " + writeTimeout)
 				.add("expectContinueEnabled: " + expectContinueEnabled)

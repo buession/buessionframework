@@ -85,7 +85,8 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 */
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
-		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
+				getConfiguration().getConnectionTimeToLive(), TimeUnit.MILLISECONDS);
 
 		//最大连接数
 		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());

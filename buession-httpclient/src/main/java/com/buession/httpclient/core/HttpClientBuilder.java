@@ -37,6 +37,7 @@ import java.util.function.Consumer;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public interface HttpClientBuilder<B, C> {
 
 	/**

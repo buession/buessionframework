@@ -24,14 +24,11 @@
  */
 package com.buession.httpclient.conn;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.nio.IOReactorConfig;
 import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.nio.AsyncClientConnectionManager;
-import org.apache.hc.core5.reactor.DefaultConnectingIOReactor;
-import org.apache.hc.core5.reactor.IOReactor;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
@@ -317,39 +314,15 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 
 		connectionConfigBuilder.setConnectTimeout(Timeout.ofMilliseconds(getConfiguration().getConnectTimeout()));
 		connectionConfigBuilder.setSocketTimeout(Timeout.ofMilliseconds(getConfiguration().getReadTimeout()));
-		//connectionConfigBuilder.setTimeToLive();
+
+		if(getConfiguration().getConnectionTimeToLive() > -1){
+			connectionConfigBuilder.setTimeToLive(
+					TimeValue.ofMilliseconds(getConfiguration().getConnectionTimeToLive()));
+		}
 
 		connectionManager.setDefaultConnectionConfig(connectionConfigBuilder.build());
 
 		return connectionManager;
-	}
-
-	protected IOReactor createConnectingIOReactor() {
-		org.apache.hc.core5.reactor.IOReactorConfig ioReactorConfig = null;
-
-		if(getIoReactorConfig() != null){
-			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-			final org.apache.hc.core5.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
-					org.apache.hc.core5.reactor.IOReactorConfig.custom();
-
-			propertyMapper.from(getIoReactorConfig().getSelectInterval()).as(TimeValue::ofMilliseconds)
-					.to(ioReactorConfigBuilder::setSelectInterval);
-			propertyMapper.from(getIoReactorConfig().getIoThreadCount()).to(ioReactorConfigBuilder::setIoThreadCount);
-			propertyMapper.from(getIoReactorConfig().getSoTimeout()).as(Timeout::ofMilliseconds)
-					.to(ioReactorConfigBuilder::setSoTimeout);
-			propertyMapper.from(getIoReactorConfig().isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
-			propertyMapper.from(getIoReactorConfig().getSoLinger()).as(Timeout::ofMilliseconds)
-					.to(ioReactorConfigBuilder::setSoLinger);
-			propertyMapper.from(getIoReactorConfig().isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
-			propertyMapper.from(getIoReactorConfig().isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
-			propertyMapper.from(getIoReactorConfig().getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);
-			propertyMapper.from(getIoReactorConfig().getRcvBufSize()).to(ioReactorConfigBuilder::setRcvBufSize);
-			propertyMapper.from(getIoReactorConfig().getBacklogSize()).to(ioReactorConfigBuilder::setBacklogSize);
-
-			ioReactorConfig = ioReactorConfigBuilder.build();
-		}
-
-		return new DefaultConnectingIOReactor(null, ioReactorConfig, null);
 	}
 
 }

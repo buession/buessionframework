@@ -27,9 +27,14 @@ package com.buession.httpclient.conn;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.nio.IOReactorConfig;
 import com.buession.httpclient.core.Configuration;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.nio.conn.NHttpClientConnectionManager;
+import org.apache.http.nio.conn.NoopIOSessionStrategy;
+import org.apache.http.nio.conn.SchemeIOSessionStrategy;
+import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 
@@ -303,8 +308,13 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 */
 	@Override
 	protected NHttpClientConnectionManager createDefaultClientConnectionManager() {
+		final Registry<SchemeIOSessionStrategy> ioSessionStrategyRegistry = RegistryBuilder.<SchemeIOSessionStrategy>create()
+				.register("http", NoopIOSessionStrategy.INSTANCE)
+				.register("https", SSLIOSessionStrategy.getDefaultStrategy())
+				.build();
 		final PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(
-				createConnectingIOReactor());
+				createConnectingIOReactor(), null, ioSessionStrategyRegistry, null, null,
+				getConfiguration().getConnectionTimeToLive(), TimeUnit.MILLISECONDS);
 
 		//最大连接数
 		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());

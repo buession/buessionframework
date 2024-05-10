@@ -28,6 +28,7 @@ import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
 /**
@@ -98,7 +99,11 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 
 		connectionConfigBuilder.setConnectTimeout(Timeout.ofMilliseconds(getConfiguration().getConnectTimeout()));
 		connectionConfigBuilder.setSocketTimeout(Timeout.ofMilliseconds(getConfiguration().getReadTimeout()));
-		//connectionConfigBuilder.setTimeToLive();
+
+		if(getConfiguration().getConnectionTimeToLive() > -1){
+			connectionConfigBuilder.setTimeToLive(
+					TimeValue.ofMilliseconds(getConfiguration().getConnectionTimeToLive()));
+		}
 
 		connectionManager.setDefaultConnectionConfig(connectionConfigBuilder.build());
 

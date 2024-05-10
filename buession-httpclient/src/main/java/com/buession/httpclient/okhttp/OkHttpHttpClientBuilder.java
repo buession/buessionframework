@@ -40,15 +40,16 @@ import java.util.function.Consumer;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class OkHttpHttpClientBuilder extends AbstractHttpClientBuilder<HttpClientBuilder, OkHttpClientConnectionManager,
 		OkHttpClient> {
 
-	public OkHttpHttpClientBuilder(final OkHttpClientConnectionManager connectionManager){
+	public OkHttpHttpClientBuilder(final OkHttpClientConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
 	@Override
-	public OkHttpClient build(Consumer<HttpClientBuilder> consumer){
+	public OkHttpClient build(Consumer<HttpClientBuilder> consumer) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final Configuration configuration = connectionManager.getConfiguration();
 		final SslConfiguration sslConfiguration = configuration.getSslConfiguration();

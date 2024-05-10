@@ -19,23 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.conn.OkHttpClientConnectionManager;
+import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestException;
-import com.buession.httpclient.okhttp.OkHttpHttpClientBuilder;
 import com.buession.httpclient.okhttp.OkHttpRequest;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
+import com.buession.net.ssl.SslConfiguration;
+import okhttp3.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,11 +90,27 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 
 	public okhttp3.OkHttpClient getHttpClient() {
 		if(httpClient == null){
-			final OkHttpHttpClientBuilder httpClientBuilder = new OkHttpHttpClientBuilder(
-					(OkHttpClientConnectionManager) getConnectionManager());
+			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+			final OkHttpClientConnectionManager okHttpClientConnectionManager =
+					(OkHttpClientConnectionManager) getConnectionManager();
+			final Configuration configuration = okHttpClientConnectionManager.getConfiguration();
+			final SslConfiguration sslConfiguration = configuration.getSslConfiguration();
+			final HttpClientBuilder builder = HttpClientBuilder.create()
+					.setConnectionManager(okHttpClientConnectionManager.getClientConnectionManager())
+					.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure())
+					.setConnectTimeout(configuration.getConnectTimeout())
+					.setReadTimeout(configuration.getReadTimeout())
+					.setWriteTimeout(configuration.getWriteTimeout());
 
-			httpClient = httpClientBuilder.build((builder)->{
-			});
+			propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
+
+			if(sslConfiguration != null){
+				propertyMapper.from(sslConfiguration.getSslSocketFactory()).to(builder::setSSLSocketFactory);
+				propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
+				propertyMapper.from(sslConfiguration.getSslContext()).to(builder::setSSLContext);
+			}
+
+			httpClient = builder.build();
 		}
 
 		return httpClient;

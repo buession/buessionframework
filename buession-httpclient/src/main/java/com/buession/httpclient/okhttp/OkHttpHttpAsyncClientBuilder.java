@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -40,21 +40,23 @@ import java.util.function.Consumer;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public class OkHttpHttpAsyncClientBuilder
 		extends AbstractHttpClientBuilder<HttpAsyncClientBuilder, OkHttpNioClientConnectionManager,
 		OkHttpClient> {
 
-	public OkHttpHttpAsyncClientBuilder(final OkHttpNioClientConnectionManager connectionManager){
+	public OkHttpHttpAsyncClientBuilder(final OkHttpNioClientConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
 	@Override
-	public OkHttpClient build(Consumer<HttpAsyncClientBuilder> consumer){
+	public OkHttpClient build(Consumer<HttpAsyncClientBuilder> consumer) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final Configuration configuration = connectionManager.getConfiguration();
 		final SslConfiguration sslConfiguration = configuration.getSslConfiguration();
 		final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
 				.setConnectionManager(connectionManager.getClientConnectionManager())
+				.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure())
 				.setConnectTimeout(configuration.getConnectTimeout())
 				.setReadTimeout(configuration.getReadTimeout())
 				.setWriteTimeout(configuration.getWriteTimeout());

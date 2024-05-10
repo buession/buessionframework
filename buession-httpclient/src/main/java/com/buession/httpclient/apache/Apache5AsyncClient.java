@@ -24,9 +24,11 @@
  */
 package com.buession.httpclient.apache;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.apache.convert.utils.ApacheRequestBodyConverterUtils;
 import com.buession.httpclient.apache.nio.Default5Callback;
 import com.buession.httpclient.conn.Apache5NioClientConnectionManager;
+import com.buession.httpclient.conn.nio.IOReactorConfig;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.ProtocolVersion;
@@ -52,6 +54,7 @@ import org.apache.hc.core5.http.nio.entity.BasicAsyncEntityConsumer;
 import org.apache.hc.core5.http.nio.support.AbstractAsyncResponseConsumer;
 import org.apache.hc.core5.http.nio.support.BasicRequestProducer;
 import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
 import java.io.ByteArrayInputStream;
@@ -64,6 +67,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
@@ -411,6 +415,35 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 		}
 	}
 
+	protected org.apache.hc.core5.reactor.IOReactorConfig createConnectingIOReactor(
+			final Apache5NioClientConnectionManager connectionManager) {
+		IOReactorConfig ioReactorConfig = connectionManager.getIoReactorConfig();
+
+		if(ioReactorConfig != null){
+			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+			final org.apache.hc.core5.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
+					org.apache.hc.core5.reactor.IOReactorConfig.custom();
+
+			propertyMapper.from(ioReactorConfig.getSelectInterval()).as(TimeValue::ofMilliseconds)
+					.to(ioReactorConfigBuilder::setSelectInterval);
+			propertyMapper.from(ioReactorConfig.getIoThreadCount()).to(ioReactorConfigBuilder::setIoThreadCount);
+			propertyMapper.from(ioReactorConfig.getSoTimeout()).as(Timeout::ofMilliseconds)
+					.to(ioReactorConfigBuilder::setSoTimeout);
+			propertyMapper.from(ioReactorConfig.isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
+			propertyMapper.from(ioReactorConfig.getSoLinger()).as(Timeout::ofMilliseconds)
+					.to(ioReactorConfigBuilder::setSoLinger);
+			propertyMapper.from(ioReactorConfig.isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
+			propertyMapper.from(ioReactorConfig.isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
+			propertyMapper.from(ioReactorConfig.getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);
+			propertyMapper.from(ioReactorConfig.getRcvBufSize()).to(ioReactorConfigBuilder::setRcvBufSize);
+			propertyMapper.from(ioReactorConfig.getBacklogSize()).to(ioReactorConfigBuilder::setBacklogSize);
+
+			return ioReactorConfigBuilder.build();
+		}
+
+		return null;
+	}
+
 	protected HttpAsyncClient createHttpClient(final Apache5NioClientConnectionManager connectionManager) {
 		final SslConfiguration sslConfiguration = connectionManager.getConfiguration().getSslConfiguration();
 		final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
@@ -420,6 +453,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 		propertyMapper.alwaysApplyingWhenNonNull().from(connectionManager.getConfiguration().getProxy())
 				.as((v)->new HttpHost(v.getScheme() == null ? null : v.getScheme().name(), v.getAddress(),
 						v.getHostname(), v.getPort())).to(builder::setProxy);
+
+		builder.setIOReactorConfig(createConnectingIOReactor(connectionManager));
 
 		if(sslConfiguration != null){
 			//propertyMapper.from(sslConfiguration.getHostnameVerifier()).to(builder::setSSLHostnameVerifier);
@@ -453,8 +488,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	protected void doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
 							 final int readTimeout, final List<Header> headers, final Callback callback)
 			throws IOException, RequestException {
-		final RequestConfig.Builder requestConfigBuilder = RequestConfig.copy(requestConfig);
-		//.setSocketTimeout(readTimeout);
+		final RequestConfig.Builder requestConfigBuilder = RequestConfig.copy(requestConfig)
+				.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
 		doRequest(request, requestConfigBuilder.build(), headers, callback);
 	}
 

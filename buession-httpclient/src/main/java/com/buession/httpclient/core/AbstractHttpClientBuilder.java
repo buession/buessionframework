@@ -40,11 +40,12 @@ import com.buession.httpclient.conn.ConnectionManager;
  * @author Yong.Teng
  * @since 2.3.0
  */
+@Deprecated
 public abstract class AbstractHttpClientBuilder<B, CM extends ConnectionManager, C> implements HttpClientBuilder<B, C> {
 
 	protected final CM connectionManager;
 
-	public AbstractHttpClientBuilder(final CM connectionManager){
+	public AbstractHttpClientBuilder(final CM connectionManager) {
 		Assert.isNull(connectionManager, "Connection manager cloud not be null.");
 		this.connectionManager = connectionManager;
 	}
