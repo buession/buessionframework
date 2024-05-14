@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -29,16 +29,18 @@ import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.MigrateParams;
 
 /**
+ * Jedis {@link MigrateParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class JedisMigrateParams extends MigrateParams {
 
-	public JedisMigrateParams(){
+	public JedisMigrateParams() {
 		super();
 	}
 
-	public JedisMigrateParams(final MigrateOperation migrateOperation){
+	public JedisMigrateParams(final MigrateOperation migrateOperation) {
 		super();
 		switch(migrateOperation){
 			case COPY:
@@ -52,39 +54,39 @@ public final class JedisMigrateParams extends MigrateParams {
 		}
 	}
 
-	public JedisMigrateParams(final String password){
+	public JedisMigrateParams(final String password) {
 		super();
 		auth(password);
 	}
 
-	public JedisMigrateParams(final byte[] password){
+	public JedisMigrateParams(final byte[] password) {
 		this(SafeEncoder.encode(password));
 	}
 
-	public JedisMigrateParams(final String username, final String password){
+	public JedisMigrateParams(final String username, final String password) {
 		super();
 		auth2(username, password);
 	}
 
-	public JedisMigrateParams(final byte[] username, final byte[] password){
+	public JedisMigrateParams(final byte[] username, final byte[] password) {
 		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final String password){
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final String password) {
 		this(migrateOperation);
 		auth(password);
 	}
 
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] password){
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(password));
 	}
 
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final String username, final String password){
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final String username, final String password) {
 		this(migrateOperation);
 		auth2(username, password);
 	}
 
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] username, final byte[] password){
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] username, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 

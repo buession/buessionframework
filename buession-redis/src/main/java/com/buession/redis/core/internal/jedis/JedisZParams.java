@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -34,7 +34,7 @@ public final class JedisZParams extends ZParams {
 	/**
 	 * 构造函数
 	 */
-	public JedisZParams(){
+	public JedisZParams() {
 		super();
 	}
 
@@ -44,7 +44,7 @@ public final class JedisZParams extends ZParams {
 	 * @param aggregate
 	 *        {@link Aggregate}
 	 */
-	public JedisZParams(final com.buession.redis.core.Aggregate aggregate){
+	public JedisZParams(final com.buession.redis.core.Aggregate aggregate) {
 		aggregate(aggregate);
 	}
 
@@ -54,7 +54,7 @@ public final class JedisZParams extends ZParams {
 	 * @param weights
 	 * 		权重
 	 */
-	public JedisZParams(final double... weights){
+	public JedisZParams(final double... weights) {
 		weights(weights);
 	}
 
@@ -66,12 +66,12 @@ public final class JedisZParams extends ZParams {
 	 * @param weights
 	 * 		权重
 	 */
-	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights){
+	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
 		aggregate(aggregate);
 		weights(weights);
 	}
 
-	private void aggregate(final com.buession.redis.core.Aggregate aggregate){
+	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
 		switch(aggregate){
 			case MIN:
 				aggregate(Aggregate.MIN);

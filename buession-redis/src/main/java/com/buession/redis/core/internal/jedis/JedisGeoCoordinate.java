@@ -21,10 +21,26 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.lang.Geo;
+import redis.clients.jedis.GeoCoordinate;
+
+/**
+ * Jedis {@link GeoCoordinate} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisGeoCoordinate {
+ */
+public class JedisGeoCoordinate extends GeoCoordinate {
+
+	public JedisGeoCoordinate(final double longitude, final double latitude) {
+		super(longitude, latitude);
+	}
+
+	public static JedisGeoCoordinate from(final Geo geo) {
+		return new JedisGeoCoordinate(geo.getLongitude(), geo.getLatitude());
+	}
+
 }

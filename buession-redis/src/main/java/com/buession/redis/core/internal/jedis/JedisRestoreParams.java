@@ -21,10 +21,62 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.command.KeyCommands;
+import redis.clients.jedis.params.RestoreParams;
+
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * Jedis {@link RestoreParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisRestoreParams {
+ */
+public class JedisRestoreParams extends RestoreParams {
+
+	public JedisRestoreParams() {
+	}
+
+	public JedisRestoreParams(final boolean replace) {
+		if(replace){
+			replace();
+		}
+	}
+
+	public JedisRestoreParams(final boolean replace, final boolean ttl) {
+		this(replace);
+		if(ttl){
+			absTtl();
+		}
+	}
+
+	public JedisRestoreParams(final boolean replace, final boolean ttl, final long idleTime, final long frequency) {
+		this(replace, ttl);
+		idleTime(idleTime);
+		frequency(frequency);
+		Optional.ofNullable(idleTime).ifPresent(this::idleTime);
+		Optional.ofNullable(frequency).ifPresent(this::frequency);
+	}
+
+	public static JedisRestoreParams from(final KeyCommands.RestoreArgument argument) {
+		final JedisRestoreParams restoreParams = new JedisRestoreParams();
+
+		if(argument != null){
+			if(Objects.equals(argument.isReplace(), Boolean.TRUE)){
+				restoreParams.replace();
+			}
+			if(Objects.equals(argument.isAbsTtl(), Boolean.TRUE)){
+				restoreParams.absTtl();
+			}
+			Optional.ofNullable(argument.getIdleTime()).ifPresent(restoreParams::idleTime);
+			Optional.ofNullable(argument.getFrequency()).ifPresent(restoreParams::frequency);
+		}
+
+		return restoreParams;
+	}
+
 }

@@ -21,10 +21,100 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.lang.Order;
+import com.buession.redis.core.command.GeoCommands;
+import redis.clients.jedis.params.GeoRadiusParam;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link GeoRadiusParam} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisGeoRadiusParam {
+ */
+public class JedisGeoRadiusParam extends GeoRadiusParam {
+
+	public JedisGeoRadiusParam() {
+		super();
+	}
+
+	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash) {
+		if(withCoord){
+			withCoord();
+		}
+		if(withDist){
+			withDist();
+		}
+		if(withHash){
+			withHash();
+		}
+	}
+
+	public JedisGeoRadiusParam(final Order order) {
+		sort(order);
+	}
+
+	public JedisGeoRadiusParam(final int count) {
+		count(count);
+	}
+
+	public JedisGeoRadiusParam(final Order order, final int count) {
+		this(order);
+		count(count);
+	}
+
+	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
+							   final Order order) {
+		this(withCoord, withDist, withHash);
+		sort(order);
+	}
+
+	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
+							   final int count) {
+		this(withCoord, withDist, withHash);
+		count(count);
+	}
+
+	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
+							   final Order order, final int count) {
+		this(withCoord, withDist, withHash, order);
+		count(count);
+	}
+
+	public static JedisGeoRadiusParam from(final GeoCommands.GeoRadiusArgument geoRadiusArgument) {
+		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
+
+		if(geoRadiusArgument != null){
+			if(Boolean.TRUE.equals(geoRadiusArgument.isWithCoord())){
+				geoRadiusParam.withCoord();
+			}
+			if(Boolean.TRUE.equals(geoRadiusArgument.isWithDist())){
+				geoRadiusParam.withDist();
+			}
+			if(Boolean.TRUE.equals(geoRadiusArgument.isWithHash())){
+				geoRadiusParam.withHash();
+			}
+			if(geoRadiusArgument.getOrder() == Order.ASC){
+				geoRadiusParam.sortAscending();
+			}else if(geoRadiusArgument.getOrder() == Order.DESC){
+				geoRadiusParam.sortDescending();
+			}
+			Optional.ofNullable(geoRadiusArgument.getCount()).ifPresent(geoRadiusParam::count);
+		}
+
+		return geoRadiusParam;
+	}
+
+	protected void sort(final Order order) {
+		if(order == Order.ASC){
+			sortAscending();
+		}else if(order == Order.DESC){
+			sortDescending();
+		}
+	}
+
 }

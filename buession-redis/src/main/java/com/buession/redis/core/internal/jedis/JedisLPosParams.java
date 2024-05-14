@@ -21,10 +21,44 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.command.ListCommands;
+import redis.clients.jedis.params.LPosParams;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link LPosParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisLPosParams {
+ */
+public class JedisLPosParams extends LPosParams {
+
+	public JedisLPosParams() {
+		super();
+	}
+
+	public JedisLPosParams(final int rank) {
+		rank(rank);
+	}
+
+	public JedisLPosParams(final int rank, final int maxLen) {
+		rank(rank);
+		maxlen(maxLen);
+	}
+
+	public static JedisLPosParams from(final ListCommands.LPosArgument lPosArgument) {
+		final JedisLPosParams lPosParams = new JedisLPosParams();
+
+		if(lPosArgument != null){
+			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
+			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
+		}
+
+		return lPosParams;
+	}
+
 }

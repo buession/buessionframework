@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -27,6 +27,8 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.FailoverParams;
 
 /**
+ * Jedis {@link FailoverParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */

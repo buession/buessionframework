@@ -21,10 +21,138 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.lang.Order;
+import com.buession.redis.core.Limit;
+import com.buession.redis.core.command.KeyCommands;
+import redis.clients.jedis.params.SortingParams;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link SortingParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisSortingParams {
+ */
+public class JedisSortingParams extends SortingParams {
+
+	public JedisSortingParams(final String by) {
+		by(by);
+	}
+
+	public JedisSortingParams(final byte[] by) {
+		by(by);
+	}
+
+	public JedisSortingParams(final String by, final String[] gets) {
+		by(by);
+		get(gets);
+	}
+
+	public JedisSortingParams(final byte[] by, final byte[][] gets) {
+		by(by);
+		get(gets);
+	}
+
+	public JedisSortingParams(final String by, final Order order) {
+		this(by);
+		order(order);
+	}
+
+	public JedisSortingParams(final byte[] by, final Order order) {
+		this(by);
+		order(order);
+	}
+
+	public JedisSortingParams(final String by, final String[] gets, final Order order) {
+		this(by, gets);
+		order(order);
+	}
+
+	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order) {
+		this(by, gets);
+		order(order);
+	}
+
+	public JedisSortingParams(final String by, final String[] gets, final Limit limit) {
+		this(by, gets);
+		if(limit != null){
+			limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+	}
+
+	public JedisSortingParams(final byte[] by, final byte[][] gets, final Limit limit) {
+		this(by, gets);
+		if(limit != null){
+			limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+	}
+
+	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit) {
+		this(by, gets, order);
+		if(limit != null){
+			limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+	}
+
+	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
+		this(by, gets, order);
+		if(limit != null){
+			limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+	}
+
+	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit,
+							  final boolean alpha) {
+		this(by, gets, order, limit);
+		if(alpha){
+			alpha();
+		}
+	}
+
+	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
+							  final boolean alpha) {
+		this(by, gets, order, limit);
+		if(alpha){
+			alpha();
+		}
+	}
+
+	public static JedisSortingParams from(final KeyCommands.SortArgument sortArgument) {
+		final JedisSortingParams sortingParams = new JedisSortingParams(sortArgument.getBy(),
+				sortArgument.getGetPatterns(),
+				sortArgument.getOrder(),
+				sortArgument.getLimit(), sortArgument.isAlpha());
+
+		if(sortArgument != null){
+			Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
+			Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
+			if(sortArgument.getOrder() == Order.ASC){
+				sortingParams.asc();
+			}else if(sortArgument.getOrder() == Order.DESC){
+				sortingParams.desc();
+			}
+			if(sortArgument.getLimit() != null){
+				sortingParams.limit((int) sortArgument.getLimit().getOffset(),
+						(int) sortArgument.getLimit().getCount());
+			}
+			if(sortArgument.isAlpha()){
+				sortingParams.alpha();
+			}
+		}
+
+		return sortingParams;
+	}
+
+	protected void order(final Order order) {
+		if(order == Order.ASC){
+			asc();
+		}else if(order == Order.DESC){
+			desc();
+		}
+	}
+
 }
