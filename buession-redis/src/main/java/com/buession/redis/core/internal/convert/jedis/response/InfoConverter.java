@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class InfoConverter implements Converter<String, Info> {
+public final class InfoConverter implements Converter<String, Info> {
 
 	private final static Pattern PATTERN = Pattern.compile("# (\\S+)[\\s]+([^#]+)");
 

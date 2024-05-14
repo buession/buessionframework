@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -60,6 +60,12 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	abstract class AbstractJedisCommand<CLIENT extends JedisRedisClient, CONN extends JedisRedisConnection, R>
 			extends AbstractRedisOperationsCommand<CLIENT, CONN, R> {
+
+		protected Runner runner;
+
+		protected Runner pipelineRunner;
+
+		protected Runner transactionRunner;
 
 		protected AbstractJedisCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);

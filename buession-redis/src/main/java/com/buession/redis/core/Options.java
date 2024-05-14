@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -29,6 +29,8 @@ import com.buession.redis.serializer.ByteArraySerializer;
 import com.buession.redis.serializer.FastJsonJsonSerializer;
 import com.buession.redis.serializer.GsonJsonSerializer;
 import com.buession.redis.serializer.JacksonJsonSerializer;
+
+import java.util.Optional;
 
 /**
  * @author Yong.Teng
@@ -61,7 +63,7 @@ public class Options {
 	 *
 	 * @return Key 前缀
 	 */
-	public String getPrefix(){
+	public String getPrefix() {
 		return prefix;
 	}
 
@@ -71,7 +73,7 @@ public class Options {
 	 * @param prefix
 	 * 		Key 前缀
 	 */
-	public void setPrefix(String prefix){
+	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
 
@@ -86,7 +88,7 @@ public class Options {
 	 * @see GsonJsonSerializer
 	 * @see JacksonJsonSerializer
 	 */
-	public Serializer getSerializer(){
+	public Serializer getSerializer() {
 		return serializer;
 	}
 
@@ -102,7 +104,7 @@ public class Options {
 	 * @see GsonJsonSerializer
 	 * @see JacksonJsonSerializer
 	 */
-	public void setSerializer(Serializer serializer){
+	public void setSerializer(Serializer serializer) {
 		this.serializer = serializer;
 	}
 
@@ -111,7 +113,7 @@ public class Options {
 	 *
 	 * @return 是否开启事务支持
 	 */
-	public boolean isEnableTransactionSupport(){
+	public boolean isEnableTransactionSupport() {
 		return getEnableTransactionSupport();
 	}
 
@@ -120,7 +122,7 @@ public class Options {
 	 *
 	 * @return 是否开启事务支持
 	 */
-	public boolean getEnableTransactionSupport(){
+	public boolean getEnableTransactionSupport() {
 		return enableTransactionSupport;
 	}
 
@@ -130,7 +132,7 @@ public class Options {
 	 * @param enableTransactionSupport
 	 * 		是否开启事务支持
 	 */
-	public void setEnableTransactionSupport(boolean enableTransactionSupport){
+	public void setEnableTransactionSupport(boolean enableTransactionSupport) {
 		this.enableTransactionSupport = enableTransactionSupport;
 	}
 
@@ -144,7 +146,7 @@ public class Options {
 
 		private final Options options = new Options();
 
-		private Builder(){
+		private Builder() {
 
 		}
 
@@ -153,7 +155,7 @@ public class Options {
 		 *
 		 * @return {@link Builder} 实例
 		 */
-		public static Builder getInstance(){
+		public static Builder getInstance() {
 			return new Builder();
 		}
 
@@ -165,7 +167,7 @@ public class Options {
 		 *
 		 * @return {@link Builder} 实例
 		 */
-		public Builder prefix(String prefix){
+		public Builder prefix(String prefix) {
 			options.setPrefix(prefix);
 			return this;
 		}
@@ -184,7 +186,7 @@ public class Options {
 		 * @see GsonJsonSerializer
 		 * @see JacksonJsonSerializer
 		 */
-		public Builder serializer(Serializer serializer){
+		public Builder serializer(Serializer serializer) {
 			options.setSerializer(serializer);
 			return this;
 		}
@@ -197,11 +199,8 @@ public class Options {
 		 *
 		 * @return {@link Builder} 实例
 		 */
-		public Builder enableTransactionSupport(Boolean enableTransactionSupport){
-			if(enableTransactionSupport != null){
-				options.setEnableTransactionSupport(enableTransactionSupport);
-			}
-
+		public Builder enableTransactionSupport(Boolean enableTransactionSupport) {
+			Optional.ofNullable(enableTransactionSupport).ifPresent(options::setEnableTransactionSupport);
 			return this;
 		}
 
@@ -210,7 +209,7 @@ public class Options {
 		 *
 		 * @return {@link Options} 实例
 		 */
-		public Options build(){
+		public Options build() {
 			return options;
 		}
 

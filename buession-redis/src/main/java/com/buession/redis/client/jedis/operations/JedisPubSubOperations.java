@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -45,12 +45,12 @@ import java.util.Map;
  */
 public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisStandaloneClient> {
 
-	public JedisPubSubOperations(final JedisStandaloneClient client){
+	public JedisPubSubOperations(final JedisStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
 		new JedisCommand<Void>(client, ProtocolCommand.PSUBSCRIBE)
@@ -62,7 +62,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
 		new JedisCommand<Void>(client, ProtocolCommand.PSUBSCRIBE)
@@ -74,7 +74,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Long publish(final String channel, final String message){
+	public Long publish(final String channel, final String message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 		return new JedisCommand<Long>(client, ProtocolCommand.PUBLISH)
 				.general((cmd)->cmd.publish(channel, message))
@@ -84,7 +84,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Long publish(final byte[] channel, final byte[] message){
+	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 		return new JedisCommand<Long>(client, ProtocolCommand.PUBLISH)
 				.general((cmd)->cmd.publish(channel, message))
@@ -94,14 +94,14 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public List<String> pubsubChannels(){
+	public List<String> pubsubChannels() {
 		return new JedisCommand<List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 				.general((cmd)->cmd.pubsubChannels())
 				.run();
 	}
 
 	@Override
-	public List<String> pubsubChannels(final String pattern){
+	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		return new JedisCommand<List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 				.general((cmd)->cmd.pubsubChannels(pattern))
@@ -109,7 +109,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public List<byte[]> pubsubChannels(final byte[] pattern){
+	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 				.general((cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
@@ -118,14 +118,14 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Long pubsubNumPat(){
+	public Long pubsubNumPat() {
 		return new JedisCommand<Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 				.general((cmd)->cmd.pubsubNumPat())
 				.run();
 	}
 
 	@Override
-	public Map<String, Long> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		return new JedisCommand<Map<String, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 				.general((cmd)->cmd.pubsubNumSub(channels))
@@ -133,7 +133,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		return new JedisCommand<Map<byte[], Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 				.general((cmd)->{
@@ -145,30 +145,30 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Object pUnSubscribe(){
+	public Object pUnSubscribe() {
 		return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 				.run();
 	}
 
 	@Override
-	public Object pUnSubscribe(final String... patterns){
+	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
 		return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public Object pUnSubscribe(final byte[]... patterns){
+	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
 		return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new JedisCommand<String>(client, ProtocolCommand.PUBLISH)
+		new JedisCommand<String>(client, ProtocolCommand.SUBSCRIBE)
 				.general((cmd)->{
 					cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
 					return null;
@@ -177,10 +177,10 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new JedisCommand<String>(client, ProtocolCommand.PUBLISH)
+		new JedisCommand<String>(client, ProtocolCommand.SUBSCRIBE)
 				.general((cmd)->{
 					cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
 					return null;
@@ -189,20 +189,20 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Object unSubscribe(){
+	public Object unSubscribe() {
 		return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 				.run();
 	}
 
 	@Override
-	public Object unSubscribe(final String... channels){
+	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public Object unSubscribe(final byte[]... channels){
+	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 				.run(args);

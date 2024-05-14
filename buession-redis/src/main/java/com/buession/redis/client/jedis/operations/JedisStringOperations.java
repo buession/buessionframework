@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -29,11 +29,9 @@ import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import redis.clients.jedis.params.GetExParams;
-import redis.clients.jedis.params.SetParams;
+import com.buession.redis.core.internal.jedis.JedisGetExParams;
+import com.buession.redis.core.internal.jedis.JedisSetParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +45,12 @@ import java.util.Map;
  */
 public final class JedisStringOperations extends AbstractStringOperations<JedisStandaloneClient> {
 
-	public JedisStringOperations(final JedisStandaloneClient client){
+	public JedisStringOperations(final JedisStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long append(final String key, final String value){
+	public Long append(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.APPEND)
 				.general((cmd)->cmd.append(key, value))
@@ -62,7 +60,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long append(final byte[] key, final byte[] value){
+	public Long append(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.APPEND)
 				.general((cmd)->cmd.append(key, value))
@@ -72,7 +70,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long incr(final String key){
+	public Long incr(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.INCR)
 				.general((cmd)->cmd.incr(key))
@@ -82,7 +80,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long incr(final byte[] key){
+	public Long incr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.INCR)
 				.general((cmd)->cmd.incr(key))
@@ -92,7 +90,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long incrBy(final String key, final long value){
+	public Long incrBy(final String key, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.INCRBY)
 				.general((cmd)->cmd.incrBy(key, value))
@@ -102,7 +100,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long incrBy(final byte[] key, final long value){
+	public Long incrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.INCRBY)
 				.general((cmd)->cmd.incrBy(key, value))
@@ -112,7 +110,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Double incrByFloat(final String key, final double value){
+	public Double incrByFloat(final String key, final double value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
 				.general((cmd)->cmd.incrByFloat(key, value))
@@ -122,7 +120,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Double incrByFloat(final byte[] key, final double value){
+	public Double incrByFloat(final byte[] key, final double value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
 				.general((cmd)->cmd.incrByFloat(key, value))
@@ -132,7 +130,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long decr(final String key){
+	public Long decr(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.DECR)
 				.general((cmd)->cmd.decr(key))
@@ -142,7 +140,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long decr(final byte[] key){
+	public Long decr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.DECR)
 				.general((cmd)->cmd.decr(key))
@@ -152,7 +150,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long decrBy(final String key, final long value){
+	public Long decrBy(final String key, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.DECRBY)
 				.general((cmd)->cmd.decrBy(key, value))
@@ -162,7 +160,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long decrBy(final byte[] key, final long value){
+	public Long decrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.DECRBY)
 				.general((cmd)->cmd.decrBy(key, value))
@@ -172,7 +170,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String get(final String key){
+	public String get(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<String>(client, ProtocolCommand.GET)
 				.general((cmd)->cmd.get(key))
@@ -182,7 +180,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public byte[] get(final byte[] key){
+	public byte[] get(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.GET)
 				.general((cmd)->cmd.get(key))
@@ -192,9 +190,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String getEx(final String key, final GetExArgument getExArgument){
+	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
+		final JedisGetExParams params = JedisGetExParams.from(getExArgument);
 		return new JedisCommand<String>(client, ProtocolCommand.GETEX)
 				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
 				.transaction((cmd)->cmd.getEx(key, params))
@@ -202,9 +200,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
+	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
+		final JedisGetExParams params = JedisGetExParams.from(getExArgument);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.GETEX)
 				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
 				.transaction((cmd)->cmd.getEx(key, params))
@@ -212,7 +210,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String getSet(final String key, final String value){
+	public String getSet(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<String>(client, ProtocolCommand.GETSET)
 				.general((cmd)->cmd.getSet(key, value)).pipeline((cmd)->cmd.getSet(key, value))
@@ -221,7 +219,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public byte[] getSet(final byte[] key, final byte[] value){
+	public byte[] getSet(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.GETSET)
 				.general((cmd)->cmd.getSet(key, value)).pipeline((cmd)->cmd.getSet(key, value))
@@ -230,7 +228,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String getDel(final String key){
+	public String getDel(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<String>(client, ProtocolCommand.GETDEL)
 				.general((cmd)->cmd.getDel(key))
@@ -240,7 +238,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public byte[] getDel(final byte[] key){
+	public byte[] getDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.GETDEL)
 				.general((cmd)->cmd.getDel(key))
@@ -250,7 +248,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public List<String> mGet(final String... keys){
+	public List<String> mGet(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisCommand<List<String>>(client, ProtocolCommand.MGET)
 				.general((cmd)->cmd.mget(keys))
@@ -260,7 +258,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public List<byte[]> mGet(final byte[]... keys){
+	public List<byte[]> mGet(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.MGET)
 				.general((cmd)->cmd.mget(keys))
@@ -270,7 +268,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status mSet(final Map<String, String> values){
+	public Status mSet(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
 		final List<String> temp = new ArrayList<>(values.size() * 2);
 
@@ -288,7 +286,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status mSetNx(final Map<String, String> values){
+	public Status mSetNx(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
 		final List<String> temp = new ArrayList<>(values.size() * 2);
 
@@ -306,7 +304,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status pSetEx(final String key, final String value, final int lifetime){
+	public Status pSetEx(final String key, final String value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		return new JedisCommand<Status>(client, ProtocolCommand.PSETEX)
 				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
@@ -316,7 +314,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
+	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		return new JedisCommand<Status>(client, ProtocolCommand.PSETEX)
 				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
@@ -326,7 +324,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status set(final String key, final String value){
+	public Status set(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
@@ -336,7 +334,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status set(final byte[] key, final byte[] value){
+	public Status set(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
@@ -346,9 +344,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status set(final String key, final String value, final SetArgument setArgument){
+	public Status set(final String key, final String value, final SetArgument setArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
+		final JedisSetParams params = JedisSetParams.from(setArgument);
 		return new JedisCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
@@ -357,9 +355,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
+	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
+		final JedisSetParams params = JedisSetParams.from(setArgument);
 		return new JedisCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
@@ -368,7 +366,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status setEx(final String key, final String value, final int lifetime){
+	public Status setEx(final String key, final String value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
@@ -378,7 +376,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
+	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
@@ -388,7 +386,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status setNx(final String key, final String value){
+	public Status setNx(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
@@ -398,7 +396,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Status setNx(final byte[] key, final byte[] value){
+	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
@@ -408,7 +406,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long setRange(final String key, final long offset, final String value){
+	public Long setRange(final String key, final long offset, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setrange(key, offset, value))
@@ -417,7 +415,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long setRange(final byte[] key, final long offset, final byte[] value){
+	public Long setRange(final byte[] key, final long offset, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 		return new JedisCommand<Long>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setrange(key, offset, value))
@@ -426,7 +424,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String getRange(final String key, final long start, final long end){
+	public String getRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisCommand<String>(client, ProtocolCommand.GETRANGE)
 				.general((cmd)->cmd.getrange(key, start, end))
@@ -436,7 +434,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public byte[] getRange(final byte[] key, final long start, final long end){
+	public byte[] getRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.GETRANGE)
 				.general((cmd)->cmd.getrange(key, start, end))
@@ -446,7 +444,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long strlen(final String key){
+	public Long strlen(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.STRLEN)
 				.general((cmd)->cmd.strlen(key))
@@ -456,7 +454,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public Long strlen(final byte[] key){
+	public Long strlen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.STRLEN)
 				.general((cmd)->cmd.strlen(key))
@@ -466,7 +464,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String substr(final String key, final long start, final long end){
+	public String substr(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisCommand<String>(client, ProtocolCommand.SUBSTR)
 				.general((cmd)->cmd.substr(key, (int) start, (int) end))
@@ -476,7 +474,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
+	public byte[] substr(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.SUBSTR)
 				.general((cmd)->cmd.substr(key, (int) start, (int) end))

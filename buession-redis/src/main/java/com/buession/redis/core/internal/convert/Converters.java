@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert;
@@ -30,11 +30,17 @@ import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.EnumConverter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.PredicateConverter;
 import com.buession.core.converter.PredicateStatusConverter;
+import com.buession.core.converter.SetConverter;
+import com.buession.core.converter.SetListConverter;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.Type;
 import com.buession.redis.utils.SafeEncoder;
+
+import java.util.HashSet;
 
 /**
  * @author Yong.Teng
@@ -48,13 +54,25 @@ public interface Converters {
 
 	PredicateStatusConverter<Long> ONE_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val == 1L);
 
-	Converter<Long, Boolean> LONG_BOOLEAN_CONVERTER = (val)->val == 1L;
+	PredicateConverter<Long> ONE_BOOLEAN_CONVERTER = new PredicateConverter<>((val)->val == 1L);
 
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
 
 	ListConverter<String, byte[]> STRING_LIST_TO_BINARY_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
 
 	ListConverter<byte[], String> BINARY_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+
+	ListSetConverter<String, byte[]> STRING_LIST_TO_BINARY_SET_CONVERTER = new ListSetConverter<>(SafeEncoder::encode);
+
+	ListSetConverter<byte[], String> BINARY_LIST_TO_STRING_SET_CONVERTER = new ListSetConverter<>(SafeEncoder::encode);
+
+	SetConverter<String, byte[]> STRING_SET_TO_BINARY_SET_CONVERTER = new SetConverter<>(SafeEncoder::encode);
+
+	SetConverter<byte[], String> BINARY_SET_TO_STRING_SET_CONVERTER = new SetConverter<>(SafeEncoder::encode);
+
+	SetListConverter<String, byte[]> STRING_SET_TO_BINARY_LIST_CONVERTER = new SetListConverter<>(SafeEncoder::encode);
+
+	SetListConverter<byte[], String> BINARY_SET_TO_STRING_LIST_CONVERTER = new SetListConverter<>(SafeEncoder::encode);
 
 	MapConverter<String, String, byte[], byte[]> STRING_MAP_TO_BINARY_MAP_CONVERTER = new MapConverter<>(
 			SafeEncoder::encode, SafeEncoder::encode);
@@ -72,7 +90,7 @@ public interface Converters {
 
 	EnumConverter<ObjectEncoding> STRING_OBJECT_ENCODING_RESULT_CONVERTER = new EnumConverter<>(ObjectEncoding.class);
 
-	Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = new BinaryEnumConverter<>(
+	BinaryEnumConverter<ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = new BinaryEnumConverter<>(
 			ObjectEncoding.class);
 
 }

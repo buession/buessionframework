@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
 import com.buession.core.collect.Arrays;
-import com.buession.core.utils.Assert;
 
 import java.nio.charset.StandardCharsets;
 
@@ -34,25 +33,26 @@ import java.nio.charset.StandardCharsets;
  */
 public class SafeEncoder {
 
-	private SafeEncoder(){
+	private SafeEncoder() {
 
 	}
 
-	public static byte[] encode(final String str){
-		Assert.isNull(str, "Value cloud not be null.");
-		return str.getBytes(StandardCharsets.UTF_8);
+	public static byte[] encode(final String str) {
+		return str == null ? null : str.getBytes(StandardCharsets.UTF_8);
 	}
 
-	public static byte[][] encode(final String... strs){
-		return Arrays.map(strs, byte[].class, (v)->v.getBytes(StandardCharsets.UTF_8));
+	public static byte[][] encode(final String... strs) {
+		return strs == null ? null : Arrays.map(strs, byte[].class, (v)->v == null ? null :
+				v.getBytes(StandardCharsets.UTF_8));
 	}
 
-	public static String encode(final byte[] data){
-		return new String(data, StandardCharsets.UTF_8);
+	public static String encode(final byte[] data) {
+		return data == null ? null : new String(data, StandardCharsets.UTF_8);
 	}
 
-	public static String[] encode(final byte[]... data){
-		return Arrays.map(data, String.class, (v)->new String(v, StandardCharsets.UTF_8));
+	public static String[] encode(final byte[]... data) {
+		return data == null ? null : Arrays.map(data, String.class, (v)->v == null ? null : new String(v,
+				StandardCharsets.UTF_8));
 	}
 
 }
