@@ -21,51 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.core.internal.convert.jedis.params;
-
-import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
-import com.buession.redis.core.command.GeoCommands;
-import redis.clients.jedis.params.GeoRadiusParam;
-
-/**
- * {@link GeoCommands.GeoRadiusArgument} 转换为 jedis {@link GeoRadiusParam}
+ */package com.buession.redis.core.internal.lettuce;/**
+ * 
  *
  * @author Yong.Teng
- * @since 2.0.0
- */
-public final class GeoRadiusArgumentConverter implements Converter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> {
-
-	public final static GeoRadiusArgumentConverter INSTANCE = new GeoRadiusArgumentConverter();
-
-	@Override
-	public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source){
-		final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
-
-		if(Boolean.TRUE.equals(source.isWithCoord())){
-			geoRadiusParam.withCoord();
-		}
-
-		if(Boolean.TRUE.equals(source.isWithDist())){
-			geoRadiusParam.withDist();
-		}
-
-		if(Boolean.TRUE.equals(source.isWithHash())){
-			geoRadiusParam.withHash();
-		}
-
-		if(source.getOrder() == Order.ASC){
-			geoRadiusParam.sortAscending();
-		}else if(source.getOrder() == Order.DESC){
-			geoRadiusParam.sortDescending();
-		}
-
-		if(source.getCount() != null){
-			geoRadiusParam.count(source.getCount());
-		}
-
-		return geoRadiusParam;
-	}
-
+ * @since 2.4.0
+ */public class LettuceBitFieldArgs {
 }

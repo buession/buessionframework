@@ -26,5 +26,5 @@
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceRange {
+ */public class LettuceScanCursor {
 }

@@ -22,28 +22,35 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce;
+package com.buession.core.converter;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.BitMapCommands;
-import io.lettuce.core.BitFieldArgs;
-import org.springframework.lang.Nullable;
+import com.buession.core.utils.Assert;
+import com.buession.lang.Status;
+
+import java.util.function.Predicate;
 
 /**
- * {@link BitMapCommands.BitFieldArgument} 转换为 Lettuce bitfield 参数
+ * 通过 {@link Predicate} 比较参数值转换为 {@link Status}
+ *
+ * @param <T>
+ * 		谓词的输入类型
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @see Predicate
+ * @since 1.2.1
  */
-public class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, BitFieldArgs> {
+public class PredicateStatusConverter<T> implements Converter<T, Status> {
 
-	public final static BitFieldArgumentConverter INSTANCE = new BitFieldArgumentConverter();
+	private final Predicate<T> predicate;
 
-	@Nullable
+	public PredicateStatusConverter(final Predicate<T> predicate) {
+		Assert.isNull(predicate, "Predicate cloud not be null.");
+		this.predicate = predicate;
+	}
+
 	@Override
-	public BitFieldArgs convert(final BitMapCommands.BitFieldArgument source) {
-		BitFieldArgs.Builder builder;
-		return builder;
+	public Status convert(final T source) {
+		return Status.valueOf(predicate.test(source));
 	}
 
 }

@@ -22,68 +22,48 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.collect;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.core.utils.StringUtils;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.internal.convert.Converters;
+import io.lettuce.core.MapScanCursor;
+import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
- * Set 工具类
+ * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public class Sets {
+public final class MapScanCursorConverter<K, V>
+		implements Converter<MapScanCursor<K, V>, ScanResult<Map<K, V>>> {
 
-	public final static String DEFAULT_GLUE = ", ";
-
-	/**
-	 * 将 O 型 Set 拼接成字符串
-	 *
-	 * @param data
-	 * 		需要拼接的 Set
-	 * @param <O>
-	 * 		Set 类型
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public static <O> String toString(final Set<O> data) {
-		return StringUtils.join(data, DEFAULT_GLUE);
+	@Nullable
+	@Override
+	public ScanResult<Map<K, V>> convert(final MapScanCursor<K, V> source) {
+		return new ScanResult<>(source.getCursor(), source.getMap());
 	}
 
-	/**
-	 * 将 O 型 Set 拼接成字符串
-	 *
-	 * @param data
-	 * 		需要拼接的 Set
-	 * @param glue
-	 * 		拼接字符串
-	 * @param <O>
-	 * 		Set 类型
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public static <O> String toString(final Set<O> data, final String glue) {
-		return StringUtils.join(data, glue);
-	}
+	public final static class BvSvMapScanCursorConverter
+			implements Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<String, String>>> {
 
-	/**
-	 * 将 O 型 Set 转换成 {@link List}
-	 *
-	 * @param data
-	 * 		待转换的 Set
-	 * @param <O>
-	 * 		Set 类型
-	 *
-	 * @return 当 data 为 null 时，返回 null；否则，返回 O 类型的 {@link List}
-	 */
-	public static <O> List<O> toList(final Set<O> data) {
-		return data == null ? null : (data instanceof LinkedHashSet ? new LinkedList<>(data) : new ArrayList<>(data));
+		public final static BvSvMapScanCursorConverter INSTANCE = new BvSvMapScanCursorConverter();
+
+		@Nullable
+		@Override
+		public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
+			return new ScanResult<>(source.getCursor(),
+					Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(source.getMap()));
+		}
+
 	}
 
 }
