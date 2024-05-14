@@ -30,27 +30,27 @@ import com.buession.lang.Status;
 import java.util.function.Predicate;
 
 /**
- * 通过 {@link Predicate} 比较参数值转换为 {@link Status}
+ * 通过 {@link Predicate} 比较参数值转换为 {@link Boolean}
  *
  * @param <T>
  * 		谓词的输入类型
  *
  * @author Yong.Teng
  * @see Predicate
- * @since 1.2.1
+ * @since 2.4.0
  */
-public class PredicateStatusConverter<T> implements Converter<T, Status> {
+public class PredicateConverter<T> implements Converter<T, Boolean> {
 
 	private final Predicate<T> predicate;
 
-	public PredicateStatusConverter(final Predicate<T> predicate) {
+	public PredicateConverter(final Predicate<T> predicate) {
 		Assert.isNull(predicate, "Predicate cloud not be null.");
 		this.predicate = predicate;
 	}
 
 	@Override
-	public Status convert(final T source) {
-		return Status.valueOf(predicate.test(source));
+	public Boolean convert(final T source) {
+		return predicate.test(source);
 	}
 
 }
