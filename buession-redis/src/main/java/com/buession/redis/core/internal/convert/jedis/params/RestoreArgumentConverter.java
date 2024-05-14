@@ -35,6 +35,7 @@ import redis.clients.jedis.params.RestoreParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public final class RestoreArgumentConverter implements Converter<KeyCommands.RestoreArgument, RestoreParams> {
 
 	public final static RestoreArgumentConverter INSTANCE = new RestoreArgumentConverter();

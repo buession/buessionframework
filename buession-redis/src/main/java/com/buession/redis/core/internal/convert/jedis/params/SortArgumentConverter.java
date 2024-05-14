@@ -37,6 +37,7 @@ import redis.clients.jedis.params.SortingParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public final class SortArgumentConverter implements Converter<KeyCommands.SortArgument, SortingParams> {
 
 	public final static SortArgumentConverter INSTANCE = new SortArgumentConverter();

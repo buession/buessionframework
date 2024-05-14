@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -46,7 +46,7 @@ public final class TupleConverter implements Converter<redis.clients.jedis.resps
 			INSTANCE);
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source){
+	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
 		return new Tuple(source.getBinaryElement(), source.getScore());
 	}
 
