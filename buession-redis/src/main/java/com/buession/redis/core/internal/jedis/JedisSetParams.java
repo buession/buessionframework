@@ -21,10 +21,96 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.StringCommands;
+import redis.clients.jedis.params.SetParams;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link SetParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisSetParams {
+ */
+public final class JedisSetParams extends SetParams {
+
+	public JedisSetParams() {
+		super();
+	}
+
+	public JedisSetParams(final NxXx nx) {
+		super();
+		nx(nx);
+	}
+
+	public JedisSetParams(final boolean keepTtl) {
+		super();
+		keepTtl(keepTtl);
+	}
+
+	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt) {
+		super();
+		ex(ex);
+		exAt(exAt);
+		px(px);
+		pxAt(pxAt);
+	}
+
+	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx) {
+		this(ex, exAt, px, pxAt);
+		nx(nx);
+	}
+
+	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final boolean keepTtl) {
+		this(ex, exAt, px, pxAt);
+		keepTtl(keepTtl);
+	}
+
+	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx,
+						  final boolean keepTtl) {
+		this(ex, exAt, px, pxAt, nx);
+		keepTtl(keepTtl);
+	}
+
+	public static JedisSetParams from(final StringCommands.SetArgument setArgument) {
+		final JedisSetParams setParams = new JedisSetParams();
+
+		if(setArgument != null){
+			Optional.ofNullable(setArgument.getEx()).ifPresent(setParams::ex);
+			Optional.ofNullable(setArgument.getExAt()).ifPresent(setParams::exAt);
+			Optional.ofNullable(setArgument.getPx()).ifPresent(setParams::px);
+			Optional.ofNullable(setArgument.getPxAt()).ifPresent(setParams::pxAt);
+
+			if(setArgument.getNxXx() == NxXx.NX){
+				setParams.nx();
+			}else if(setArgument.getNxXx() == NxXx.XX){
+				setParams.xx();
+			}
+
+			if(Boolean.TRUE.equals(setArgument.isKeepTtl())){
+				setParams.keepttl();
+			}
+		}
+
+		return setParams;
+	}
+
+	private void nx(final NxXx nx) {
+		if(nx == NxXx.NX){
+			nx();
+		}else if(nx == NxXx.XX){
+			xx();
+		}
+	}
+
+	private void keepTtl(final boolean keepTtl) {
+		if(keepTtl){
+			keepttl();
+		}
+	}
+
 }

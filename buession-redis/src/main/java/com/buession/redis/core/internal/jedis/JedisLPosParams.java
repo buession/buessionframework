@@ -35,7 +35,7 @@ import java.util.Optional;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class JedisLPosParams extends LPosParams {
+public final class JedisLPosParams extends LPosParams {
 
 	public JedisLPosParams() {
 		super();

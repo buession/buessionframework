@@ -21,10 +21,59 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.command.StringCommands;
+import redis.clients.jedis.params.GetExParams;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link GetExParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisGetExParams {
+ */
+public final class JedisGetExParams extends GetExParams {
+
+	public JedisGetExParams() {
+		super();
+	}
+
+	public JedisGetExParams(final boolean persist) {
+		super();
+		if(persist){
+			persist();
+		}
+	}
+
+	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt) {
+		super();
+		ex(ex);
+		exAt(exAt);
+		px(px);
+		pxAt(pxAt);
+	}
+
+	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt, final boolean persist) {
+		this(ex, exAt, px, pxAt);
+		if(persist){
+			persist();
+		}
+	}
+
+	public static JedisGetExParams from(final StringCommands.GetExArgument getExArgument) {
+		final JedisGetExParams getExParams = new JedisGetExParams();
+
+		if(getExArgument != null){
+			Optional.ofNullable(getExArgument.getEx()).ifPresent(getExParams::ex);
+			Optional.ofNullable(getExArgument.getExAt()).ifPresent(getExParams::exAt);
+			Optional.ofNullable(getExArgument.getPx()).ifPresent(getExParams::px);
+			Optional.ofNullable(getExArgument.getPxAt()).ifPresent(getExParams::pxAt);
+		}
+
+		return getExParams;
+	}
+
 }

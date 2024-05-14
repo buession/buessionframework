@@ -33,12 +33,28 @@ import redis.clients.jedis.GeoCoordinate;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class JedisGeoCoordinate extends GeoCoordinate {
+public final class JedisGeoCoordinate extends GeoCoordinate {
 
+	/**
+	 * 构造函数
+	 *
+	 * @param longitude
+	 * 		精度
+	 * @param latitude
+	 * 		纬度
+	 */
 	public JedisGeoCoordinate(final double longitude, final double latitude) {
 		super(longitude, latitude);
 	}
 
+	/**
+	 * 从 {@link Geo} 创建 {@link JedisGeoCoordinate} 对象实例
+	 *
+	 * @param geo
+	 *        {@link Geo}
+	 *
+	 * @return {@link JedisGeoCoordinate} 实例
+	 */
 	public static JedisGeoCoordinate from(final Geo geo) {
 		return new JedisGeoCoordinate(geo.getLongitude(), geo.getLatitude());
 	}

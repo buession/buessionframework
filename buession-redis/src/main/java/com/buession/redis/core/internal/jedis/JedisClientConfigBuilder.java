@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
@@ -37,21 +38,17 @@ public class JedisClientConfigBuilder {
 
 	private final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
 
-	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource, final SslConfiguration sslConfiguration){
+	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource, final SslConfiguration sslConfiguration) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
 				.blockingSocketTimeoutMillis(dataSource.getInfiniteSoTimeout())
 				.ssl(sslConfiguration != null);
 
-		if(Validate.hasText(dataSource.getClientName())){
-			builder.clientName(dataSource.getClientName());
-		}
+		propertyMapper.from(dataSource.getClientName()).to(builder::clientName);
 
 		if(Validate.hasText(dataSource.getPassword())){
-			if(Validate.hasText(dataSource.getUsername())){
-				builder.user(dataSource.getUsername());
-			}
-
+			propertyMapper.from(dataSource.getUsername()).to(builder::user);
 			builder.password(dataSource.getPassword());
 		}
 
@@ -63,31 +60,31 @@ public class JedisClientConfigBuilder {
 	}
 
 	public static JedisClientConfigBuilder create(final JedisRedisDataSource dataSource,
-												  final SslConfiguration sslConfiguration){
+												  final SslConfiguration sslConfiguration) {
 		return new JedisClientConfigBuilder(dataSource, sslConfiguration);
 	}
 
-	public JedisClientConfigBuilder user(final String user){
+	public JedisClientConfigBuilder user(final String user) {
 		builder.user(user);
 		return this;
 	}
 
-	public JedisClientConfigBuilder password(final String password){
+	public JedisClientConfigBuilder password(final String password) {
 		builder.password(password);
 		return this;
 	}
 
-	public JedisClientConfigBuilder database(final int database){
+	public JedisClientConfigBuilder database(final int database) {
 		builder.database(database);
 		return this;
 	}
 
-	public JedisClientConfigBuilder clientName(final String clientName){
+	public JedisClientConfigBuilder clientName(final String clientName) {
 		builder.clientName(clientName);
 		return this;
 	}
 
-	public DefaultJedisClientConfig build(){
+	public DefaultJedisClientConfig build() {
 		return builder.build();
 	}
 

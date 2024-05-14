@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -30,43 +30,43 @@ import redis.clients.jedis.params.XReadGroupParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisXReadGroupParams extends XReadGroupParams {
+public final class JedisXReadGroupParams extends XReadGroupParams {
 
-	public JedisXReadGroupParams(){
+	public JedisXReadGroupParams() {
 		super();
 	}
 
-	public JedisXReadGroupParams(final long count){
+	public JedisXReadGroupParams(final long count) {
 		super();
 		count((int) count);
 	}
 
-	public JedisXReadGroupParams(final long count, final int block){
+	public JedisXReadGroupParams(final long count, final int block) {
 		this(count);
 		block(block);
 	}
 
-	public JedisXReadGroupParams(final long count, final boolean noAck){
+	public JedisXReadGroupParams(final long count, final boolean noAck) {
 		this(noAck);
 		count((int) count);
 	}
 
-	public JedisXReadGroupParams(final long count, final int block, final boolean noAck){
+	public JedisXReadGroupParams(final long count, final int block, final boolean noAck) {
 		this(count, noAck);
 		block(block);
 	}
 
-	public JedisXReadGroupParams(final int block){
+	public JedisXReadGroupParams(final int block) {
 		super();
 		block(block);
 	}
 
-	public JedisXReadGroupParams(final int block, final boolean noAck){
+	public JedisXReadGroupParams(final int block, final boolean noAck) {
 		this(noAck);
 		block(block);
 	}
 
-	public JedisXReadGroupParams(final boolean noAck){
+	public JedisXReadGroupParams(final boolean noAck) {
 		super();
 
 		if(noAck){

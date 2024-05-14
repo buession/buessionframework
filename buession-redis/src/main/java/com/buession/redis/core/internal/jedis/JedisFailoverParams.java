@@ -34,26 +34,72 @@ import redis.clients.jedis.params.FailoverParams;
  */
 public final class JedisFailoverParams extends FailoverParams {
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 */
 	public JedisFailoverParams(final String host, final int port) {
 		super();
 		to(host, port);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param timeout
+	 * 		超时
+	 */
 	public JedisFailoverParams(final String host, final int port, final int timeout) {
 		this(host, port);
 		timeout(timeout);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisFailoverParams(final String host, final int port, final boolean force) {
 		this(host, port);
 		force(force);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param timeout
+	 * 		超时
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force) {
 		this(host, port, timeout);
 		force(force);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param timeout
+	 * 		超时
+	 */
 	public JedisFailoverParams(final int timeout) {
 		super();
 		timeout(timeout);

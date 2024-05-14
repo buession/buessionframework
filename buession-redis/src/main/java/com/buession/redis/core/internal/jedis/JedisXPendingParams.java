@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -32,46 +32,46 @@ import redis.clients.jedis.params.XPendingParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisXPendingParams extends XPendingParams {
+public final class JedisXPendingParams extends XPendingParams {
 
-	public JedisXPendingParams(){
+	public JedisXPendingParams() {
 		super();
 	}
 
-	public JedisXPendingParams(final long minIdleTime){
+	public JedisXPendingParams(final long minIdleTime) {
 		this();
 		idle(minIdleTime);
 	}
 
 	public JedisXPendingParams(final long minIdleTime, final StreamEntryId start, final StreamEntryId end,
-							   final long count){
+							   final long count) {
 		this(start, end, count);
 		idle(minIdleTime);
 	}
 
-	public JedisXPendingParams(final long minIdleTime, final String consumer){
+	public JedisXPendingParams(final long minIdleTime, final String consumer) {
 		this(minIdleTime);
 		consumer(consumer);
 	}
 
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count){
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count) {
 		super(StreamEntryIdConverter.INSTANCE.convert(start), StreamEntryIdConverter.INSTANCE.convert(end),
 				(int) count);
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count,
-							   final String consumer){
+							   final String consumer) {
 		this(start, end, count);
 		consumer(consumer);
 	}
 
 	public JedisXPendingParams(final long minIdleTime, final StreamEntryId start, final StreamEntryId end,
-							   final long count, final String consumer){
+							   final long count, final String consumer) {
 		this(minIdleTime, start, end, count);
 		consumer(consumer);
 	}
 
-	public JedisXPendingParams(final String consumer){
+	public JedisXPendingParams(final String consumer) {
 		this();
 		consumer(consumer);
 	}

@@ -37,7 +37,7 @@ import java.util.Optional;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class JedisSortingParams extends SortingParams {
+public final class JedisSortingParams extends SortingParams {
 
 	public JedisSortingParams(final String by) {
 		by(by);

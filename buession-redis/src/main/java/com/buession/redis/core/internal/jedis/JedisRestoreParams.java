@@ -36,9 +36,10 @@ import java.util.Optional;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class JedisRestoreParams extends RestoreParams {
+public final class JedisRestoreParams extends RestoreParams {
 
 	public JedisRestoreParams() {
+		super();
 	}
 
 	public JedisRestoreParams(final boolean replace) {
@@ -58,8 +59,6 @@ public class JedisRestoreParams extends RestoreParams {
 		this(replace, ttl);
 		idleTime(idleTime);
 		frequency(frequency);
-		Optional.ofNullable(idleTime).ifPresent(this::idleTime);
-		Optional.ofNullable(frequency).ifPresent(this::frequency);
 	}
 
 	public static JedisRestoreParams from(final KeyCommands.RestoreArgument argument) {

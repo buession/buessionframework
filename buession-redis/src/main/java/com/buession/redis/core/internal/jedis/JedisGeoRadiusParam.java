@@ -36,7 +36,7 @@ import java.util.Optional;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class JedisGeoRadiusParam extends GeoRadiusParam {
+public final class JedisGeoRadiusParam extends GeoRadiusParam {
 
 	public JedisGeoRadiusParam() {
 		super();
