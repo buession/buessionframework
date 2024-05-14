@@ -19,19 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import org.springframework.beans.BeanUtils;
-
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * Set 转换器
+ * Set =&gt; List 转换器
  *
  * @param <S>
  * 		原类型
@@ -39,9 +40,9 @@ import java.util.stream.Stream;
  * 		目标类型
  *
  * @author Yong.Teng
- * @since 1.3.0
+ * @since 2.4.0
  */
-public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
+public class SetListConverter<S, T> implements Converter<Set<S>, List<T>> {
 
 	/**
 	 * Set item 转换器
@@ -54,24 +55,18 @@ public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 	 * @param itemConverter
 	 * 		Set item 转换器
 	 */
-	public SetConverter(final Converter<S, T> itemConverter) {
+	public SetListConverter(final Converter<S, T> itemConverter) {
 		this.itemConverter = itemConverter;
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Set<T> convert(final Set<S> source) {
+	public List<T> convert(final Set<S> source) {
 		if(source == null){
 			return null;
 		}else{
-			Stream<T> stream = source.stream().map(itemConverter::convert);
-
-			try{
-				return stream.collect(
-						Collectors.toCollection(()->(Set<T>) BeanUtils.instantiateClass(source.getClass())));
-			}catch(Exception e){
-				return stream.collect(Collectors.toSet());
-			}
+			return source.stream().map(itemConverter::convert).collect(
+					Collectors.toCollection(source instanceof LinkedHashSet ? LinkedList::new : ArrayList::new));
 		}
 	}
 
