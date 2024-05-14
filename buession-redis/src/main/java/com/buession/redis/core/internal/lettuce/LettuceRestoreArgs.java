@@ -21,10 +21,49 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.command.KeyCommands;
+import io.lettuce.core.RestoreArgs;
+
+import java.util.Objects;
+
+/**
+ * Lettuce {@link RestoreArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceRestoreArgs {
+ */
+public final class LettuceRestoreArgs extends RestoreArgs {
+
+	public LettuceRestoreArgs() {
+	}
+
+	public LettuceRestoreArgs(final boolean replace) {
+		if(replace){
+			replace();
+		}
+	}
+
+	public LettuceRestoreArgs(final boolean replace, final boolean ttl) {
+		this(replace);
+	}
+
+	public LettuceRestoreArgs(final boolean replace, final boolean ttl, final Long idleTime, final Long frequency) {
+		this(replace, ttl);
+	}
+
+	public static LettuceRestoreArgs from(final KeyCommands.RestoreArgument restoreArgument) {
+		final LettuceRestoreArgs instance = new LettuceRestoreArgs();
+
+		if(restoreArgument != null){
+			if(Boolean.TRUE.equals(restoreArgument.isReplace())){
+				instance.replace();
+			}
+		}
+
+		return instance;
+	}
+
 }

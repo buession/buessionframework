@@ -26,4 +26,4 @@
  * @author Yong.Teng
  * @since 2.4.0
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce;

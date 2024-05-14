@@ -21,10 +21,58 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ScanArgs;
+
+/**
+ * Lettuce {@link ScanArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceScanArgs {
+ */
+public final class LettuceScanArgs extends ScanArgs {
+
+	public LettuceScanArgs() {
+		super();
+	}
+
+	public LettuceScanArgs(final String pattern) {
+		super();
+		match(pattern);
+	}
+
+	public LettuceScanArgs(final byte[] pattern) {
+		this(SafeEncoder.encode(pattern));
+	}
+
+	public LettuceScanArgs(final int count) {
+		super();
+		limit(count);
+	}
+
+	public LettuceScanArgs(final String pattern, final int count) {
+		this(pattern);
+		limit(count);
+	}
+
+	public LettuceScanArgs(final byte[] pattern, final int count) {
+		this(pattern);
+		limit(count);
+	}
+
+	public LettuceScanArgs(final long count) {
+		this((int) count);
+	}
+
+	public LettuceScanArgs(final String pattern, final long count) {
+		this(pattern, (int) count);
+	}
+
+	public LettuceScanArgs(final byte[] pattern, final long count) {
+		this(pattern, (int) count);
+	}
+
 }

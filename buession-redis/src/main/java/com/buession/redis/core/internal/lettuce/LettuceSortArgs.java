@@ -21,10 +21,138 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.lang.Order;
+import com.buession.redis.core.Limit;
+import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.SortArgs;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+/**
+ * Lettuce {@link SortArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceSortArgs {
+ */
+public final class LettuceSortArgs extends SortArgs {
+
+	public LettuceSortArgs() {
+		super();
+	}
+
+	public LettuceSortArgs(final String by) {
+		by(by);
+	}
+
+	public LettuceSortArgs(final byte[] by) {
+		by(SafeEncoder.encode(by));
+	}
+
+	public LettuceSortArgs(final String by, final String[] gets) {
+		this(by);
+		if(gets != null){
+			Arrays.stream(gets).map(this::get);
+		}
+	}
+
+	public LettuceSortArgs(final byte[] by, final byte[][] gets) {
+		this(by);
+		if(gets != null){
+			Arrays.stream(gets).map((v)->this.get(SafeEncoder.encode(v)));
+		}
+	}
+
+	public LettuceSortArgs(final String by, final Order order) {
+		this(by);
+		order(this, order);
+	}
+
+	public LettuceSortArgs(final byte[] by, final Order order) {
+		this(by);
+		order(this, order);
+	}
+
+	public LettuceSortArgs(final String by, final String[] gets, final Order order) {
+		this(by, gets);
+		order(this, order);
+	}
+
+	public LettuceSortArgs(final byte[] by, final byte[][] gets, final Order order) {
+		this(by, gets);
+		order(this, order);
+	}
+
+	public LettuceSortArgs(final String by, final String[] gets, final Limit limit) {
+		this(by, gets);
+		limit(this, limit);
+	}
+
+	public LettuceSortArgs(final byte[] by, final byte[][] gets, final Limit limit) {
+		this(by, gets);
+		limit(this, limit);
+	}
+
+	public LettuceSortArgs(final String by, final String[] gets, final Order order, final Limit limit) {
+		this(by, gets, order);
+		limit(this, limit);
+	}
+
+	public LettuceSortArgs(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
+		this(by, gets, order);
+		limit(this, limit);
+	}
+
+	public LettuceSortArgs(final String by, final String[] gets, final Order order, final Limit limit,
+						   final Boolean alpha) {
+		this(by, gets, order, limit);
+		alpha(this, alpha);
+	}
+
+	public LettuceSortArgs(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
+						   final Boolean alpha) {
+		this(by, gets, order, limit);
+		alpha(this, alpha);
+	}
+
+	public static LettuceSortArgs from(final KeyCommands.SortArgument sortArgument) {
+		final LettuceSortArgs sortArgs = new LettuceSortArgs();
+
+		if(sortArgument != null){
+			Optional.ofNullable(sortArgument.getBy()).ifPresent((v)->sortArgs.by(SafeEncoder.encode(v)));
+			if(sortArgument.getGetPatterns() != null){
+				Arrays.stream(sortArgument.getGetPatterns()).map((v)->sortArgs.get(SafeEncoder.encode(v)));
+			}
+			order(sortArgs, sortArgument.getOrder());
+			limit(sortArgs, sortArgument.getLimit());
+			alpha(sortArgs, sortArgument.isAlpha());
+		}
+
+		return sortArgs;
+	}
+
+	private static void alpha(final LettuceSortArgs sortArgs, final Boolean alpha) {
+		if(Boolean.TRUE.equals(alpha)){
+			sortArgs.alpha();
+		}
+	}
+
+	private static void limit(final LettuceSortArgs sortArgs, final Limit limit) {
+		if(limit != null){
+			sortArgs.limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+	}
+
+	private static void order(final LettuceSortArgs sortArgs, final Order order) {
+		if(order == Order.ASC){
+			sortArgs.asc();
+		}else if(order == Order.DESC){
+			sortArgs.desc();
+		}
+	}
+
 }

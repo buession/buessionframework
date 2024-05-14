@@ -21,10 +21,76 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import io.lettuce.core.ZStoreArgs;
+import redis.clients.jedis.params.ZParams;
+
+/**
+ * Lettuce {@link ZStoreArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceZStoreArgs {
+ */
+public final class LettuceZStoreArgs extends ZStoreArgs {
+
+	/**
+	 * 构造函数
+	 */
+	public LettuceZStoreArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link ZParams.Aggregate}
+	 */
+	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
+		aggregate(aggregate);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZStoreArgs(final double... weights) {
+		weights(weights);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link ZParams.Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+		aggregate(aggregate);
+		weights(weights);
+	}
+
+	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
+		if(aggregate != null){
+			switch(aggregate){
+				case MIN:
+					min();
+					break;
+				case MAX:
+					max();
+					break;
+				case SUM:
+					sum();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
 }

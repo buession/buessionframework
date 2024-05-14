@@ -21,10 +21,76 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.MigrateArgs;
+
+/**
+ * Lettuce {@link MigrateArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceMigrateArgs {
+ */
+public final class LettuceMigrateArgs<T> extends MigrateArgs<T> {
+
+	public LettuceMigrateArgs() {
+		super();
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation) {
+		super();
+
+		if(migrateOperation != null){
+			switch(migrateOperation){
+				case COPY:
+					copy();
+					break;
+				case REPLACE:
+					replace();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	public LettuceMigrateArgs(final String password) {
+		super();
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final byte[] password) {
+		this(SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final String username, final String password) {
+		super();
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final byte[] username, final byte[] password) {
+		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final String password) {
+		this(migrateOperation);
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final byte[] password) {
+		this(migrateOperation, SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final String username, final String password) {
+		this(migrateOperation);
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final byte[] username, final byte[] password) {
+		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
+
 }

@@ -21,10 +21,44 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.command.ListCommands;
+import io.lettuce.core.LPosArgs;
+
+import java.util.Optional;
+
+/**
+ * Lettuce {@link LPosArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceLPosArgs {
+ */
+public final class LettuceLPosArgs extends LPosArgs {
+
+	public LettuceLPosArgs() {
+		super();
+	}
+
+	public LettuceLPosArgs(final int rank) {
+		rank(rank);
+	}
+
+	public LettuceLPosArgs(final int rank, final int maxLen) {
+		rank(rank);
+		maxlen(maxLen);
+	}
+
+	public static LettuceLPosArgs from(final ListCommands.LPosArgument lPosArgument) {
+		final LettuceLPosArgs lPosArgs = new LettuceLPosArgs();
+
+		if(lPosArgument != null){
+			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosArgs::rank);
+			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosArgs::maxlen);
+		}
+
+		return lPosArgs;
+	}
+
 }

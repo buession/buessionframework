@@ -21,10 +21,30 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ScanCursor;
+
+/**
+ * Lettuce {@link ScanCursor} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceScanCursor {
+ */
+public class LettuceScanCursor extends ScanCursor {
+
+	public LettuceScanCursor() {
+		super();
+	}
+
+	public LettuceScanCursor(final String pattern) {
+		super(pattern, false);
+	}
+
+	public LettuceScanCursor(final byte[] pattern) {
+		this(SafeEncoder.encode(pattern));
+	}
+
 }
