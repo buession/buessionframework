@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
-import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 
@@ -167,40 +166,6 @@ public interface BitMapCommands extends RedisCommands {
 	 * @since 2.3.0
 	 */
 	List<Long> bitField(final byte[] key, final BitFieldArgument argument);
-
-	/**
-	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
-	 * 可以在一次调用中同时对多个位范围进行操作，
-	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitfield.html" target="_blank">http://redisdoc.com/bitmap/bitfield.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param arguments
-	 * 		命令参数
-	 *
-	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
-	 */
-	@Deprecated
-	List<Long> bitField(final String key, final String... arguments);
-
-	/**
-	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
-	 * 可以在一次调用中同时对多个位范围进行操作，
-	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitfield.html" target="_blank">http://redisdoc.com/bitmap/bitfield.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param arguments
-	 * 		命令参数
-	 *
-	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
-	 */
-	@Deprecated
-	List<Long> bitField(final byte[] key, final byte[]... arguments);
 
 	/**
 	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
