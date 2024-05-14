@@ -22,32 +22,33 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.GeoUnit;
+import io.lettuce.core.GeoArgs;
 
 /**
- * {@link GeoUnit} 转换为 jedis {@link redis.clients.jedis.args.GeoUnit}
+ * {@link GeoUnit} 转换为 Lettuce {@link GeoArgs.Unit}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class GeoUnitConverter implements Converter<GeoUnit, redis.clients.jedis.args.GeoUnit> {
+public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> {
 
 	public final static GeoUnitConverter INSTANCE = new GeoUnitConverter();
 
 	@Override
-	public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source){
+	public GeoArgs.Unit convert(final GeoUnit source) {
 		switch(source){
 			case M:
-				return redis.clients.jedis.args.GeoUnit.M;
+				return GeoArgs.Unit.m;
 			case KM:
-				return redis.clients.jedis.args.GeoUnit.KM;
+				return GeoArgs.Unit.km;
 			case MI:
-				return redis.clients.jedis.args.GeoUnit.MI;
+				return GeoArgs.Unit.mi;
 			case FT:
-				return redis.clients.jedis.args.GeoUnit.FT;
+				return GeoArgs.Unit.ft;
 			default:
 				return null;
 		}
