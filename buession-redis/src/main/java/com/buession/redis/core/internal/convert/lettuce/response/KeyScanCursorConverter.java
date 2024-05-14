@@ -27,41 +27,39 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.internal.convert.Converters;
-import io.lettuce.core.MapScanCursor;
+import io.lettuce.core.KeyScanCursor;
 import org.springframework.lang.Nullable;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
+ * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
  *
  * @param <K>
  * 		Key 类型
- * @param <V>
- * 		值类型
  *
  * @author Yong.Teng
  * @since 2.4.0
  */
-public final class MapScanCursorConverter<K, V>
-		implements Converter<MapScanCursor<K, V>, ScanResult<Map<K, V>>> {
+public final class KeyScanCursorConverter<K>
+		implements Converter<KeyScanCursor<K>, ScanResult<List<K>>> {
 
 	@Nullable
 	@Override
-	public ScanResult<Map<K, V>> convert(final MapScanCursor<K, V> source) {
-		return new ScanResult<>(source.getCursor(), source.getMap());
+	public ScanResult<List<K>> convert(final KeyScanCursor<K> source) {
+		return new ScanResult<>(source.getCursor(), source.getKeys());
 	}
 
-	public final static class BvSvMapScanCursorConverter
-			implements Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<String, String>>> {
+	public final static class BSKeyScanCursorConverter
+			implements Converter<KeyScanCursor<byte[]>, ScanResult<List<String>>> {
 
-		public final static BvSvMapScanCursorConverter INSTANCE = new BvSvMapScanCursorConverter();
+		public final static BSKeyScanCursorConverter INSTANCE = new BSKeyScanCursorConverter();
 
 		@Nullable
 		@Override
-		public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
+		public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
 			return new ScanResult<>(source.getCursor(),
-					Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(source.getMap()));
+					Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER.convert(source.getKeys()));
 		}
 
 	}

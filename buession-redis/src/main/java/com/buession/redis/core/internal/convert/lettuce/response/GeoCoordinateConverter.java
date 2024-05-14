@@ -22,28 +22,28 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
-import redis.clients.jedis.GeoCoordinate;
+import io.lettuce.core.GeoCoordinates;
 
 /**
- * jedis {@link GeoCoordinate} 转换为 {@link Geo}
+ * Lettuce {@link GeoCoordinates} 转换为 {@link Geo}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class GeoCoordinateConverter implements Converter<GeoCoordinate, Geo> {
+public final class GeoCoordinateConverter implements Converter<GeoCoordinates, Geo> {
 
 	public final static GeoCoordinateConverter INSTANCE = new GeoCoordinateConverter();
 
-	public final static ListConverter<GeoCoordinate, Geo> LIST_CONVERTER = new ListConverter<>(INSTANCE);
+	public final static ListConverter<GeoCoordinates, Geo> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public Geo convert(final GeoCoordinate source){
-		return new Geo(source.getLongitude(), source.getLatitude());
+	public Geo convert(final GeoCoordinates source) {
+		return new Geo(source.getX().doubleValue(), source.getY().doubleValue());
 	}
 
 }

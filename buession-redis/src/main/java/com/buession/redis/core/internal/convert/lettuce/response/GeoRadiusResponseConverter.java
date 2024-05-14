@@ -25,8 +25,9 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.SetListConverter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.GeoRadius;
+import io.lettuce.core.GeoWithin;
 
 /**
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
@@ -34,17 +35,17 @@ import com.buession.redis.core.GeoRadius;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class GeoRadiusGeneralResultConverter implements Converter<byte[], GeoRadius> {
+public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byte[]>, GeoRadius> {
 
-	public final static GeoRadiusGeneralResultConverter INSTANCE = new GeoRadiusGeneralResultConverter();
+	public final static GeoRadiusResponseConverter INSTANCE = new GeoRadiusResponseConverter();
 
-	public final static SetListConverter<byte[], GeoRadius> LIST_CONVERTER = new SetListConverter<>(INSTANCE);
+	public final static ListConverter<GeoWithin<byte[]>, GeoRadius> LIST_CONVERTER =
+			new ListConverter<>(INSTANCE);
 
 	@Override
-	public GeoRadius convert(final byte[] source) {
-		//return new GeoRadius(source.getMember(), source.getDistance(),
-		//GeoCoordinateConverter.INSTANCE.convert(source.getCoordinate()));
-		return null;
+	public GeoRadius convert(final GeoWithin<byte[]> source) {
+		return new GeoRadius(source.getMember(), source.getDistance(),
+				GeoCoordinateConverter.INSTANCE.convert(source.getCoordinates()));
 	}
 
 }

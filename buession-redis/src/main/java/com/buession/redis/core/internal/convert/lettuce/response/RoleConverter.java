@@ -22,14 +22,14 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Role;
 
 /**
- * Jedis 角色信息 转换为 {@link Role}
+ * Lettuce 角色信息 转换为 {@link Role}
  *
  * @author Yong.Teng
  * @since 2.0.0
@@ -41,7 +41,7 @@ public final class RoleConverter implements Converter<Object, Role> {
 	public final static ListConverter<Object, Role> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public Role convert(final Object source){
+	public Role convert(final Object source) {
 		return null;
 	}
 

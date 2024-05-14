@@ -21,10 +21,49 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.internal.convert.Converters;
+import io.lettuce.core.MapScanCursor;
+import org.springframework.lang.Nullable;
+
+import java.util.Map;
+
+/**
+ * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class MapScanCursorConverter {
+ */
+public final class MapScanCursorConverter<K, V>
+		implements Converter<MapScanCursor<K, V>, ScanResult<Map<K, V>>> {
+
+	@Nullable
+	@Override
+	public ScanResult<Map<K, V>> convert(final MapScanCursor<K, V> source) {
+		return new ScanResult<>(source.getCursor(), source.getMap());
+	}
+
+	public final static class BvSvMapScanCursorConverter
+			implements Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<String, String>>> {
+
+		public final static BvSvMapScanCursorConverter INSTANCE = new BvSvMapScanCursorConverter();
+
+		@Nullable
+		@Override
+		public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
+			return new ScanResult<>(source.getCursor(),
+					Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(source.getMap()));
+		}
+
+	}
+
 }

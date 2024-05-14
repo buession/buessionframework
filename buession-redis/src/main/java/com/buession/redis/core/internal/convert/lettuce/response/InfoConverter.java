@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.EnumUtils;
@@ -46,12 +46,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Info 转换
+ * Lettuce Info 转换
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public class InfoConverter implements Converter<String, Info> {
+public final class InfoConverter implements Converter<String, Info> {
 
 	private final static Pattern PATTERN = Pattern.compile("# (\\S+)[\\s]+([^#]+)");
 

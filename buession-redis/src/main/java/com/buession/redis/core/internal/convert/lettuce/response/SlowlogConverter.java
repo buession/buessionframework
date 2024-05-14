@@ -22,28 +22,27 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.Client;
 import com.buession.redis.core.SlowLog;
-import redis.clients.jedis.resps.Slowlog;
 
 /**
- * jedis {@link Slowlog} 转换为 {@link SlowLog}
+ * Lettuce 慢日志对象转换为 {@link SlowLog}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
+public final class SlowlogConverter implements Converter<Object, SlowLog> {
 
 	public final static SlowlogConverter INSTANCE = new SlowlogConverter();
 
-	public final static ListConverter<Slowlog, SlowLog> LIST_CONVERTER = new ListConverter<>(INSTANCE);
+	public final static ListConverter<Object, SlowLog> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public SlowLog convert(final Slowlog source){
+	public SlowLog convert(final Object source) {
+		/*
 		final Client client = new Client();
 
 		client.setHost(source.getClientIpPort().getHost());
@@ -51,6 +50,9 @@ public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 
 		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
 				client, source.getClientName());
+
+		 */
+		return null;
 	}
 
 }

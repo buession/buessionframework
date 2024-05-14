@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.RedisServerTime;
@@ -31,21 +31,25 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Jedis 返回的服务器时间转换为 {@link RedisServerTime}
+ * Lettuce 返回的服务器时间转换为 {@link RedisServerTime}
  *
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 2.4.0
  */
-public final class RedisServerTimeConverter implements Converter<List<String>, RedisServerTime> {
+public final class RedisServerTimeConverter implements Converter<List<byte[]>, RedisServerTime> {
 
 	public final static RedisServerTimeConverter INSTANCE = new RedisServerTimeConverter();
 
 	@Override
-	public RedisServerTime convert(final List<String> source){
+	public RedisServerTime convert(final List<byte[]> source) {
+		/*
 		Date date = new Date();
 		date.setTime(Long.parseLong(source.get(0)) * 1000L);
 
 		return new RedisServerTime(date, Long.parseLong(source.get(1)));
+
+		 */
+		return null;
 	}
 
 }

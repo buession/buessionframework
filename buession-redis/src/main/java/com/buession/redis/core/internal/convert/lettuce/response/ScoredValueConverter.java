@@ -21,10 +21,34 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.SetConverter;
+import com.buession.redis.core.Tuple;
+import io.lettuce.core.ScoredValue;
+
+/**
+ * Lettuce {@link ScoredValue} 转换为 {@link Tuple}
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class SscredValueConverter {
+ */
+public final class ScoredValueConverter implements Converter<ScoredValue<byte[]>, Tuple> {
+
+	public final static ScoredValueConverter INSTANCE = new ScoredValueConverter();
+
+	public final static SetConverter<ScoredValue<byte[]>, Tuple> SET_CONVERTER = new SetConverter<>(
+			INSTANCE);
+
+	public final static ListConverter<ScoredValue<byte[]>, Tuple> LIST_CONVERTER = new ListConverter<>(
+			INSTANCE);
+
+	@Override
+	public Tuple convert(final ScoredValue<byte[]> source) {
+		return new Tuple(source.getValue(), source.getScore());
+	}
+
 }

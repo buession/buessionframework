@@ -34,9 +34,9 @@ import com.buession.redis.core.GeoRadius;
  * @author Yong.Teng
  * @since 2.4.0
  */
-public class GeoRadiusResponseConverter implements Converter<byte[], GeoRadius> {
+public final class GeoRadiusGeneralResultConverter implements Converter<byte[], GeoRadius> {
 
-	public final static GeoRadiusResponseConverter INSTANCE = new GeoRadiusResponseConverter();
+	public final static GeoRadiusGeneralResultConverter INSTANCE = new GeoRadiusGeneralResultConverter();
 
 	public final static SetListConverter<byte[], GeoRadius> LIST_CONVERTER = new SetListConverter<>(INSTANCE);
 
