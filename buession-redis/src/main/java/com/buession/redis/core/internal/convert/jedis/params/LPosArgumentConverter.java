@@ -35,6 +35,7 @@ import redis.clients.jedis.params.LPosParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public final class LPosArgumentConverter implements Converter<ListCommands.LPosArgument, LPosParams> {
 
 	public final static LPosArgumentConverter INSTANCE = new LPosArgumentConverter();

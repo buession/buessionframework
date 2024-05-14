@@ -38,6 +38,7 @@ import java.util.Objects;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
 
 	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
