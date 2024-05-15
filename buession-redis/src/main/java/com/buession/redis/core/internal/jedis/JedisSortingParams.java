@@ -39,6 +39,10 @@ import java.util.Optional;
  */
 public final class JedisSortingParams extends SortingParams {
 
+	public JedisSortingParams() {
+		super();
+	}
+
 	public JedisSortingParams(final String by) {
 		by(by);
 	}
@@ -59,99 +63,87 @@ public final class JedisSortingParams extends SortingParams {
 
 	public JedisSortingParams(final String by, final Order order) {
 		this(by);
-		order(order);
+		order(this, order);
 	}
 
 	public JedisSortingParams(final byte[] by, final Order order) {
 		this(by);
-		order(order);
+		order(this, order);
 	}
 
 	public JedisSortingParams(final String by, final String[] gets, final Order order) {
 		this(by, gets);
-		order(order);
+		order(this, order);
 	}
 
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order) {
 		this(by, gets);
-		order(order);
+		order(this, order);
 	}
 
 	public JedisSortingParams(final String by, final String[] gets, final Limit limit) {
 		this(by, gets);
-		if(limit != null){
-			limit((int) limit.getOffset(), (int) limit.getCount());
-		}
+		limit(this, limit);
 	}
 
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Limit limit) {
 		this(by, gets);
-		if(limit != null){
-			limit((int) limit.getOffset(), (int) limit.getCount());
-		}
+		limit(this, limit);
 	}
 
 	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit) {
 		this(by, gets, order);
-		if(limit != null){
-			limit((int) limit.getOffset(), (int) limit.getCount());
-		}
+		limit(this, limit);
 	}
 
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
 		this(by, gets, order);
-		if(limit != null){
-			limit((int) limit.getOffset(), (int) limit.getCount());
-		}
+		limit(this, limit);
 	}
 
 	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit,
 							  final boolean alpha) {
 		this(by, gets, order, limit);
-		if(alpha){
-			alpha();
-		}
+		alpha(this, alpha);
 	}
 
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
 							  final boolean alpha) {
 		this(by, gets, order, limit);
-		if(alpha){
-			alpha();
-		}
+		alpha(this, alpha);
 	}
 
 	public static JedisSortingParams from(final KeyCommands.SortArgument sortArgument) {
-		final JedisSortingParams sortingParams = new JedisSortingParams(sortArgument.getBy(),
-				sortArgument.getGetPatterns(),
-				sortArgument.getOrder(),
-				sortArgument.getLimit(), sortArgument.isAlpha());
+		final JedisSortingParams sortingParams = new JedisSortingParams();
 
 		if(sortArgument != null){
 			Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
 			Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
-			if(sortArgument.getOrder() == Order.ASC){
-				sortingParams.asc();
-			}else if(sortArgument.getOrder() == Order.DESC){
-				sortingParams.desc();
-			}
-			if(sortArgument.getLimit() != null){
-				sortingParams.limit((int) sortArgument.getLimit().getOffset(),
-						(int) sortArgument.getLimit().getCount());
-			}
-			if(sortArgument.isAlpha()){
-				sortingParams.alpha();
-			}
+			order(sortingParams, sortArgument.getOrder());
+			limit(sortingParams, sortArgument.getLimit());
+			alpha(sortingParams, sortArgument.isAlpha());
 		}
 
 		return sortingParams;
 	}
 
-	protected void order(final Order order) {
+	private static void alpha(final JedisSortingParams sortingParams, final Boolean alpha) {
+		if(Boolean.TRUE.equals(alpha)){
+			sortingParams.alpha();
+		}
+	}
+
+	private static void limit(final JedisSortingParams sortingParams, final Limit limit) {
+		if(limit != null){
+			sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+	}
+
+	private static void order(final JedisSortingParams sortingParams, final Order order) {
 		if(order == Order.ASC){
-			asc();
+			sortingParams.asc();
 		}else if(order == Order.DESC){
-			desc();
+			sortingParams.desc();
 		}
 	}
 

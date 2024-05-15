@@ -27,8 +27,6 @@ package com.buession.redis.core.internal.lettuce;
 import com.buession.redis.core.command.KeyCommands;
 import io.lettuce.core.RestoreArgs;
 
-import java.util.Objects;
-
 /**
  * Lettuce {@link RestoreArgs} 扩展
  *
@@ -38,32 +36,37 @@ import java.util.Objects;
 public final class LettuceRestoreArgs extends RestoreArgs {
 
 	public LettuceRestoreArgs() {
+		super();
 	}
 
 	public LettuceRestoreArgs(final boolean replace) {
-		if(replace){
-			replace();
-		}
+		super();
+		replace(this, replace);
 	}
 
-	public LettuceRestoreArgs(final boolean replace, final boolean ttl) {
+	public LettuceRestoreArgs(final boolean replace, final long ttl) {
 		this(replace);
+		ttl(ttl);
 	}
 
-	public LettuceRestoreArgs(final boolean replace, final boolean ttl, final Long idleTime, final Long frequency) {
+	public LettuceRestoreArgs(final boolean replace, final long ttl, final long idleTime, final long frequency) {
 		this(replace, ttl);
 	}
 
 	public static LettuceRestoreArgs from(final KeyCommands.RestoreArgument restoreArgument) {
-		final LettuceRestoreArgs instance = new LettuceRestoreArgs();
+		final LettuceRestoreArgs restoreArgs = new LettuceRestoreArgs();
 
 		if(restoreArgument != null){
-			if(Boolean.TRUE.equals(restoreArgument.isReplace())){
-				instance.replace();
-			}
+			replace(restoreArgs, restoreArgument.isReplace());
 		}
 
-		return instance;
+		return restoreArgs;
+	}
+
+	private static void replace(final LettuceRestoreArgs restoreArgs, final Boolean replace) {
+		if(Boolean.TRUE.equals(replace)){
+			restoreArgs.replace();
+		}
 	}
 
 }

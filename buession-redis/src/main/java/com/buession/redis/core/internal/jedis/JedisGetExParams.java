@@ -43,9 +43,7 @@ public final class JedisGetExParams extends GetExParams {
 
 	public JedisGetExParams(final boolean persist) {
 		super();
-		if(persist){
-			persist();
-		}
+		persist(this, persist);
 	}
 
 	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt) {
@@ -58,9 +56,7 @@ public final class JedisGetExParams extends GetExParams {
 
 	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt, final boolean persist) {
 		this(ex, exAt, px, pxAt);
-		if(persist){
-			persist();
-		}
+		persist(this, persist);
 	}
 
 	public static JedisGetExParams from(final StringCommands.GetExArgument getExArgument) {
@@ -71,9 +67,16 @@ public final class JedisGetExParams extends GetExParams {
 			Optional.ofNullable(getExArgument.getExAt()).ifPresent(getExParams::exAt);
 			Optional.ofNullable(getExArgument.getPx()).ifPresent(getExParams::px);
 			Optional.ofNullable(getExArgument.getPxAt()).ifPresent(getExParams::pxAt);
+			persist(getExParams, getExArgument.isPersist());
 		}
 
 		return getExParams;
+	}
+
+	private static void persist(final JedisGetExParams getExParams, final Boolean persist) {
+		if(Boolean.TRUE.equals(persist)){
+			getExParams.persist();
+		}
 	}
 
 }

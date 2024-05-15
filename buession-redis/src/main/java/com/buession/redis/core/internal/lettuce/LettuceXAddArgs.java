@@ -21,10 +21,17 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import io.lettuce.core.XAddArgs;
+
+/**
+ * Lettuce {@link XAddArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceXAddArgs {
+ */
+public final class LettuceXAddArgs extends XAddArgs {
+
 }

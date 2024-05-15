@@ -21,10 +21,85 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.command.StreamCommands;
+import redis.clients.jedis.params.XTrimParams;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link XTrimParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisXTrimParams {
+ */
+public final class JedisXTrimParams extends XTrimParams {
+
+	public JedisXTrimParams() {
+		super();
+	}
+
+	public JedisXTrimParams(final long maxLen) {
+		super();
+		maxLen(maxLen);
+	}
+
+	public JedisXTrimParams(final long maxLen, final String minId) {
+		this(maxLen);
+		minId(minId);
+	}
+
+	public JedisXTrimParams(final long maxLen, final long limit) {
+		this(maxLen);
+		limit(limit);
+	}
+
+	public JedisXTrimParams(final long maxLen, final String minId, final long limit) {
+		this(maxLen, minId);
+		limit(limit);
+	}
+
+	public JedisXTrimParams(final long maxLen, final boolean approximateTrimming, final boolean exactTrimming) {
+		this(maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+	}
+
+	public JedisXTrimParams(final long maxLen, final String minId, final long limit, final boolean approximateTrimming,
+							final boolean exactTrimming) {
+		this(maxLen, approximateTrimming, exactTrimming);
+		maxLen(maxLen);
+		minId(minId);
+		limit(limit);
+	}
+
+	public static JedisXTrimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
+		final JedisXTrimParams xTrimParams = new JedisXTrimParams();
+
+		if(xTrimArgument != null){
+			Optional.ofNullable(xTrimArgument.getMaxLen()).ifPresent(xTrimParams::maxLen);
+			Optional.ofNullable(xTrimArgument.getMinId()).ifPresent(xTrimParams::minId);
+			Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimParams::limit);
+
+			approximateTrimming(xTrimParams, xTrimArgument.isApproximateTrimming());
+			exactTrimming(xTrimParams, xTrimArgument.isExactTrimming());
+		}
+
+		return xTrimParams;
+	}
+
+	private static void approximateTrimming(final JedisXTrimParams xTrimParams, final Boolean approximateTrimming) {
+		if(Boolean.TRUE.equals(approximateTrimming)){
+			xTrimParams.approximateTrimming();
+		}
+	}
+
+	private static void exactTrimming(final JedisXTrimParams xTrimParams, final Boolean exactTrimming) {
+		if(Boolean.TRUE.equals(exactTrimming)){
+			xTrimParams.exactTrimming();
+		}
+	}
+
 }

@@ -43,22 +43,19 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	}
 
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash) {
-		if(withCoord){
-			withCoord();
-		}
-		if(withDist){
-			withDist();
-		}
-		if(withHash){
-			withHash();
-		}
+		super();
+		withCoord(this, withCoord);
+		withDist(this, withDist);
+		withHash(this, withHash);
 	}
 
 	public JedisGeoRadiusParam(final Order order) {
-		sort(order);
+		super();
+		sort(this, order);
 	}
 
 	public JedisGeoRadiusParam(final int count) {
+		super();
 		count(count);
 	}
 
@@ -70,7 +67,7 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
 							   final Order order) {
 		this(withCoord, withDist, withHash);
-		sort(order);
+		sort(this, order);
 	}
 
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
@@ -89,31 +86,39 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
 
 		if(geoRadiusArgument != null){
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithCoord())){
-				geoRadiusParam.withCoord();
-			}
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithDist())){
-				geoRadiusParam.withDist();
-			}
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithHash())){
-				geoRadiusParam.withHash();
-			}
-			if(geoRadiusArgument.getOrder() == Order.ASC){
-				geoRadiusParam.sortAscending();
-			}else if(geoRadiusArgument.getOrder() == Order.DESC){
-				geoRadiusParam.sortDescending();
-			}
+			withCoord(geoRadiusParam, geoRadiusArgument.isWithCoord());
+			withDist(geoRadiusParam, geoRadiusArgument.isWithDist());
+			withHash(geoRadiusParam, geoRadiusArgument.isWithHash());
+			sort(geoRadiusParam, geoRadiusArgument.getOrder());
 			Optional.ofNullable(geoRadiusArgument.getCount()).ifPresent(geoRadiusParam::count);
 		}
 
 		return geoRadiusParam;
 	}
 
-	protected void sort(final Order order) {
+	private static void withCoord(final JedisGeoRadiusParam geoRadiusParam, final Boolean withCoord) {
+		if(Boolean.TRUE.equals(withCoord)){
+			geoRadiusParam.withCoord();
+		}
+	}
+
+	private static void withDist(final JedisGeoRadiusParam geoRadiusParam, final Boolean withDist) {
+		if(Boolean.TRUE.equals(withDist)){
+			geoRadiusParam.withDist();
+		}
+	}
+
+	private static void withHash(final JedisGeoRadiusParam geoRadiusParam, final Boolean withHash) {
+		if(Boolean.TRUE.equals(withHash)){
+			geoRadiusParam.withHash();
+		}
+	}
+
+	private static void sort(final JedisGeoRadiusParam geoRadiusParam, final Order order) {
 		if(order == Order.ASC){
-			sortAscending();
+			geoRadiusParam.sortAscending();
 		}else if(order == Order.DESC){
-			sortDescending();
+			geoRadiusParam.sortDescending();
 		}
 	}
 

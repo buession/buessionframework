@@ -46,10 +46,12 @@ public final class LettuceSortArgs extends SortArgs {
 	}
 
 	public LettuceSortArgs(final String by) {
+		super();
 		by(by);
 	}
 
 	public LettuceSortArgs(final byte[] by) {
+		super();
 		by(SafeEncoder.encode(by));
 	}
 

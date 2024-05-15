@@ -44,12 +44,12 @@ public final class JedisSetParams extends SetParams {
 
 	public JedisSetParams(final NxXx nx) {
 		super();
-		nx(nx);
+		nxxx(this, nx);
 	}
 
 	public JedisSetParams(final boolean keepTtl) {
 		super();
-		keepTtl(keepTtl);
+		keepTtl(this, keepTtl);
 	}
 
 	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt) {
@@ -62,18 +62,18 @@ public final class JedisSetParams extends SetParams {
 
 	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx) {
 		this(ex, exAt, px, pxAt);
-		nx(nx);
+		nxxx(this, nx);
 	}
 
 	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final boolean keepTtl) {
 		this(ex, exAt, px, pxAt);
-		keepTtl(keepTtl);
+		keepTtl(this, keepTtl);
 	}
 
 	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx,
 						  final boolean keepTtl) {
 		this(ex, exAt, px, pxAt, nx);
-		keepTtl(keepTtl);
+		keepTtl(this, keepTtl);
 	}
 
 	public static JedisSetParams from(final StringCommands.SetArgument setArgument) {
@@ -85,31 +85,24 @@ public final class JedisSetParams extends SetParams {
 			Optional.ofNullable(setArgument.getPx()).ifPresent(setParams::px);
 			Optional.ofNullable(setArgument.getPxAt()).ifPresent(setParams::pxAt);
 
-			if(setArgument.getNxXx() == NxXx.NX){
-				setParams.nx();
-			}else if(setArgument.getNxXx() == NxXx.XX){
-				setParams.xx();
-			}
-
-			if(Boolean.TRUE.equals(setArgument.isKeepTtl())){
-				setParams.keepttl();
-			}
+			nxxx(setParams, setArgument.getNxXx());
+			keepTtl(setParams, setArgument.isKeepTtl());
 		}
 
 		return setParams;
 	}
 
-	private void nx(final NxXx nx) {
+	private static void nxxx(final JedisSetParams setParams, final NxXx nx) {
 		if(nx == NxXx.NX){
-			nx();
+			setParams.nx();
 		}else if(nx == NxXx.XX){
-			xx();
+			setParams.xx();
 		}
 	}
 
-	private void keepTtl(final boolean keepTtl) {
-		if(keepTtl){
-			keepttl();
+	private static void keepTtl(final JedisSetParams setParams, final Boolean keepTtl) {
+		if(Boolean.TRUE.equals(keepTtl)){
+			setParams.keepttl();
 		}
 	}
 

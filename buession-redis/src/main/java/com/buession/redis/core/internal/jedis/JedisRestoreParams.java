@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.jedis;
 import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.params.RestoreParams;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -43,20 +42,17 @@ public final class JedisRestoreParams extends RestoreParams {
 	}
 
 	public JedisRestoreParams(final boolean replace) {
-		if(replace){
-			replace();
-		}
+		super();
+		replace(this, replace);
 	}
 
-	public JedisRestoreParams(final boolean replace, final boolean ttl) {
+	public JedisRestoreParams(final boolean replace, final boolean absTtl) {
 		this(replace);
-		if(ttl){
-			absTtl();
-		}
+		absTtl(this, absTtl);
 	}
 
-	public JedisRestoreParams(final boolean replace, final boolean ttl, final long idleTime, final long frequency) {
-		this(replace, ttl);
+	public JedisRestoreParams(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
+		this(replace, absTtl);
 		idleTime(idleTime);
 		frequency(frequency);
 	}
@@ -65,17 +61,25 @@ public final class JedisRestoreParams extends RestoreParams {
 		final JedisRestoreParams restoreParams = new JedisRestoreParams();
 
 		if(argument != null){
-			if(Objects.equals(argument.isReplace(), Boolean.TRUE)){
-				restoreParams.replace();
-			}
-			if(Objects.equals(argument.isAbsTtl(), Boolean.TRUE)){
-				restoreParams.absTtl();
-			}
+			replace(restoreParams, argument.isReplace());
+			absTtl(restoreParams, argument.isAbsTtl());
 			Optional.ofNullable(argument.getIdleTime()).ifPresent(restoreParams::idleTime);
 			Optional.ofNullable(argument.getFrequency()).ifPresent(restoreParams::frequency);
 		}
 
 		return restoreParams;
+	}
+
+	private static void replace(final JedisRestoreParams restoreParams, final Boolean replace) {
+		if(Boolean.TRUE.equals(replace)){
+			restoreParams.replace();
+		}
+	}
+
+	private static void absTtl(final JedisRestoreParams restoreParams, final Boolean absTtl) {
+		if(Boolean.TRUE.equals(absTtl)){
+			restoreParams.absTtl();
+		}
 	}
 
 }

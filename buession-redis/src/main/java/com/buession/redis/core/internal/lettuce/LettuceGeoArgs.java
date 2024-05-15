@@ -43,15 +43,9 @@ public final class LettuceGeoArgs extends GeoArgs {
 	}
 
 	public LettuceGeoArgs(final boolean withCoord, final boolean withDist, final boolean withHash) {
-		if(withCoord){
-			withCoordinates();
-		}
-		if(withDist){
-			withDistance();
-		}
-		if(withHash){
-			withHash();
-		}
+		withCoordinates(this, withCoord);
+		withDistance(this, withDist);
+		withHash(this, withHash);
 	}
 
 	public LettuceGeoArgs(final Order order) {
@@ -89,20 +83,32 @@ public final class LettuceGeoArgs extends GeoArgs {
 		final LettuceGeoArgs geoArgs = new LettuceGeoArgs();
 
 		if(geoRadiusArgument != null){
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithCoord())){
-				geoArgs.withCoordinates();
-			}
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithDist())){
-				geoArgs.withDistance();
-			}
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithHash())){
-				geoArgs.withHash();
-			}
+			withCoordinates(geoArgs, geoRadiusArgument.isWithCoord());
+			withDistance(geoArgs, geoRadiusArgument.isWithDist());
+			withHash(geoArgs, geoRadiusArgument.isWithHash());
 			sort(geoArgs, geoRadiusArgument.getOrder());
 			Optional.ofNullable(geoRadiusArgument.getCount()).ifPresent(geoArgs::withCount);
 		}
 
 		return geoArgs;
+	}
+
+	private static void withCoordinates(final LettuceGeoArgs geoArgs, final Boolean withCoord) {
+		if(Boolean.TRUE.equals(withCoord)){
+			geoArgs.withCoordinates();
+		}
+	}
+
+	private static void withDistance(final LettuceGeoArgs geoArgs, final Boolean withDist) {
+		if(Boolean.TRUE.equals(withDist)){
+			geoArgs.withDistance();
+		}
+	}
+
+	private static void withHash(final LettuceGeoArgs geoArgs, final Boolean withHash) {
+		if(Boolean.TRUE.equals(withHash)){
+			geoArgs.withHash();
+		}
 	}
 
 	private static void sort(final LettuceGeoArgs geoArgs, final Order order) {

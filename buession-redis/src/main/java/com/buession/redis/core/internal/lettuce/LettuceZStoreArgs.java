@@ -49,33 +49,8 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 	 *        {@link ZParams.Aggregate}
 	 */
 	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
-		aggregate(aggregate);
-	}
+		super();
 
-	/**
-	 * 构造函数
-	 *
-	 * @param weights
-	 * 		权重
-	 */
-	public LettuceZStoreArgs(final double... weights) {
-		weights(weights);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param aggregate
-	 *        {@link ZParams.Aggregate}
-	 * @param weights
-	 * 		权重
-	 */
-	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
-		aggregate(aggregate);
-		weights(weights);
-	}
-
-	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
 		if(aggregate != null){
 			switch(aggregate){
 				case MIN:
@@ -91,6 +66,30 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 					break;
 			}
 		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZStoreArgs(final double... weights) {
+		super();
+		weights(weights);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link ZParams.Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+		this(aggregate);
+		weights(weights);
 	}
 
 }

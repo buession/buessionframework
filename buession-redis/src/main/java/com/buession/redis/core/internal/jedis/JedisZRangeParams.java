@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
 
+import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.ZRangeBy;
 import redis.clients.jedis.Protocol;
 import redis.clients.jedis.params.ZRangeParams;
@@ -43,11 +44,11 @@ public final class JedisZRangeParams extends ZRangeParams {
 	}
 
 	public JedisZRangeParams(final ZRangeBy by, final int min, final int max) {
-		super(byKeyword(by), Integer.toString(min), Integer.toString(max));
+		super(byKeyword(by), NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
 	}
 
 	public JedisZRangeParams(final ZRangeBy by, final long min, final long max) {
-		super(byKeyword(by), Long.toString(min), Long.toString(max));
+		super(byKeyword(by), NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
 	}
 
 	public JedisZRangeParams(final ZRangeBy by, final int min, final int max, final boolean rev) {
@@ -111,14 +112,18 @@ public final class JedisZRangeParams extends ZRangeParams {
 	}
 
 	private static Protocol.Keyword byKeyword(final ZRangeBy by) {
-		switch(by){
-			case BYLEX:
-				return Protocol.Keyword.BYLEX;
-			case BYSCORE:
-				return Protocol.Keyword.BYSCORE;
-			default:
-				return null;
+		if(by != null){
+			switch(by){
+				case BYLEX:
+					return Protocol.Keyword.BYLEX;
+				case BYSCORE:
+					return Protocol.Keyword.BYSCORE;
+				default:
+					break;
+			}
 		}
+
+		return null;
 	}
 
 	private void rev(boolean rev) {

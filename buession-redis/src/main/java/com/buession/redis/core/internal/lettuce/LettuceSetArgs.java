@@ -21,10 +21,88 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.internal.jedis.JedisSetParams;
+import io.lettuce.core.SetArgs;
+
+import java.util.Optional;
+
+/**
+ * Lettuce {@link SetArgs} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class LettuceSetArgs {
+ */
+public class LettuceSetArgs extends SetArgs {
+
+	public LettuceSetArgs() {
+		super();
+	}
+
+	public LettuceSetArgs(final NxXx nx) {
+		super();
+		nxxx(this, nx);
+	}
+
+	public LettuceSetArgs(final boolean keepTtl) {
+		super();
+		keepTtl(this, keepTtl);
+	}
+
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt) {
+		super();
+		ex(ex);
+		px(px);
+	}
+
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx) {
+		this(ex, exAt, px, pxAt);
+		nxxx(this, nx);
+	}
+
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt, final boolean keepTtl) {
+		this(ex, exAt, px, pxAt);
+		keepTtl(this, keepTtl);
+	}
+
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx,
+						  final boolean keepTtl) {
+		this(ex, exAt, px, pxAt, nx);
+		keepTtl(this, keepTtl);
+	}
+
+	public static LettuceSetArgs from(final StringCommands.SetArgument setArgument) {
+		final LettuceSetArgs setArgs = new LettuceSetArgs();
+
+		if(setArgument != null){
+			Optional.ofNullable(setArgument.getEx()).ifPresent(setArgs::ex);
+			//Optional.ofNullable(setArgument.getExAt()).ifPresent(setArgs::exAt);
+			Optional.ofNullable(setArgument.getPx()).ifPresent(setArgs::px);
+			//Optional.ofNullable(setArgument.getPxAt()).ifPresent(setArgs::pxAt);
+
+			nxxx(setArgs, setArgument.getNxXx());
+			keepTtl(setArgs, setArgument.isKeepTtl());
+		}
+
+		return setArgs;
+	}
+
+	private static void nxxx(final LettuceSetArgs setArgs, final NxXx nx) {
+		if(nx == NxXx.NX){
+			setArgs.nx();
+		}else if(nx == NxXx.XX){
+			setArgs.xx();
+		}
+	}
+
+	private static void keepTtl(final LettuceSetArgs setArgs, final Boolean keepTtl) {
+		if(Boolean.TRUE.equals(keepTtl)){
+			setArgs.keepttl();
+		}
+	}
+
 }

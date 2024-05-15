@@ -21,10 +21,43 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
+import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.params.XAddParams;
+
+/**
+ * Jedis {@link XAddParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.4.0
- */public class JedisXAddParams {
+ */
+public final class JedisXAddParams extends XAddParams {
+
+	public JedisXAddParams() {
+		super();
+	}
+
+	public JedisXAddParams(final String id) {
+		super();
+		id(id);
+	}
+
+	public JedisXAddParams(final byte[] id) {
+		super();
+		id(id);
+	}
+
+	public JedisXAddParams(final StreamEntryID id) {
+		super();
+		id(id);
+	}
+
+	public JedisXAddParams(final StreamEntryId id) {
+		this(StreamEntryIdConverter.INSTANCE.convert(id));
+	}
+
 }

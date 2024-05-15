@@ -57,6 +57,11 @@ public final class LettuceMigrateArgs<T> extends MigrateArgs<T> {
 		}
 	}
 
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys) {
+		this(migrateOperation);
+		keys(keys);
+	}
+
 	public LettuceMigrateArgs(final String password) {
 		super();
 		auth(password);
@@ -75,6 +80,23 @@ public final class LettuceMigrateArgs<T> extends MigrateArgs<T> {
 		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
+	public LettuceMigrateArgs(final T[] keys, final String password) {
+		this(keys);
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final T[] keys, final byte[] password) {
+		this(keys, SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final T[] keys, final String username, final String password) {
+		this(keys, password);
+	}
+
+	public LettuceMigrateArgs(final T[] keys, final byte[] username, final byte[] password) {
+		this(keys, SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
+
 	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final String password) {
 		this(migrateOperation);
 		auth(password);
@@ -91,6 +113,31 @@ public final class LettuceMigrateArgs<T> extends MigrateArgs<T> {
 
 	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final byte[] username, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final String password) {
+		this(migrateOperation, keys);
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final byte[] password) {
+		this(migrateOperation, keys, SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final String username,
+							  final String password) {
+		this(migrateOperation, keys);
+		auth(password);
+	}
+
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final byte[] username,
+							  final byte[] password) {
+		this(migrateOperation, keys, SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
+
+	public LettuceMigrateArgs(final T[] keys) {
+		super();
+		keys(keys);
 	}
 
 }
