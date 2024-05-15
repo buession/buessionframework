@@ -388,7 +388,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	@Override
 	public Status setNx(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
+		return new JedisCommand<Status>(client, ProtocolCommand.SETNX)
 				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
@@ -398,7 +398,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
+		return new JedisCommand<Status>(client, ProtocolCommand.SETNX)
 				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
@@ -408,7 +408,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	@Override
 	public Long setRange(final String key, final long offset, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.SETEX)
+		return new JedisCommand<Long>(client, ProtocolCommand.SETRANGE)
 				.general((cmd)->cmd.setrange(key, offset, value))
 				.pipeline((cmd)->cmd.setrange(key, offset, value))
 				.run(args);
@@ -417,7 +417,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.SETEX)
+		return new JedisCommand<Long>(client, ProtocolCommand.SETRANGE)
 				.general((cmd)->cmd.setrange(key, offset, value))
 				.pipeline((cmd)->cmd.setrange(key, offset, value))
 				.run(args);
