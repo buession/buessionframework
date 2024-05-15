@@ -22,10 +22,10 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
@@ -35,53 +35,58 @@ import com.buession.redis.utils.SafeEncoder;
 import java.util.List;
 
 /**
- * Jedis 集群命令操作抽象类
+ * Lettuce 集群命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractClusterOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractClusterOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements ClusterOperations {
 
-	public AbstractClusterOperations(final C client){
+	public AbstractClusterOperations(final C client) {
 		super(client);
 	}
 
 	@Override
-	public Status clusterForget(final byte[] nodeId){
+	public Integer clusterCountFailureReports(final byte[] nodeId) {
+		return clusterCountFailureReports(SafeEncoder.encode(nodeId));
+	}
+
+	@Override
+	public Status clusterForget(final byte[] nodeId) {
 		return clusterForget(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public Long clusterKeySlot(final byte[] key){
+	public Long clusterKeySlot(final String key) {
 		return clusterKeySlot(SafeEncoder.encode(key));
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
 		return clusterSlaves(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
 		return clusterReplicas(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public Status clusterReplicate(final byte[] nodeId){
+	public Status clusterReplicate(final byte[] nodeId) {
 		return clusterReplicate(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public Status clusterReset(){
+	public Status clusterReset() {
 		return clusterReset(ClusterResetOption.SOFT);
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
 		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
 	}
 
