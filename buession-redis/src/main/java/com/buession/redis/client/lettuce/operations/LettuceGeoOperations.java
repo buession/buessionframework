@@ -22,436 +22,211 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.builder.ListBuilder;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.params.GeoConverter;
-import com.buession.redis.core.internal.convert.jedis.params.GeoRadiusArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.GeoUnitConverter;
-import com.buession.redis.core.internal.convert.jedis.response.GeoCoordinateConverter;
-import com.buession.redis.core.internal.convert.jedis.response.GeoRadiusResponseConverter;
-import redis.clients.jedis.GeoCoordinate;
-import redis.clients.jedis.params.GeoRadiusParam;
+import com.buession.redis.core.internal.convert.lettuce.params.GeoUnitConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.GeoCoordinateConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusGeneralResultConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusResponseConverter;
+import com.buession.redis.core.internal.lettuce.LettuceGeoArgs;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.GeoArgs;
+import io.lettuce.core.Value;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Jedis 单机模式地理位置命令操作
+ * Lettuce 单机模式地理位置命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisGeoOperations extends AbstractGeoOperations<JedisStandaloneClient> {
+public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceStandaloneClient> {
 
-	public JedisGeoOperations(final JedisStandaloneClient client){
+	public LettuceGeoOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
-		return new JedisCommand<Long>(client, ProtocolCommand.GEOADD)
-				.general((cmd)->cmd.geoadd(key, longitude, latitude, member))
-				.pipeline((cmd)->cmd.geoadd(key, longitude, latitude, member))
-				.transaction((cmd)->cmd.geoadd(key, longitude, latitude, member))
+		return new LettuceCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, longitude, latitude,
+				member), (value)->value)
 				.run(args);
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
-				.put("longitude", longitude).put("latitude", latitude);
-		return new JedisCommand<Long>(client, ProtocolCommand.GEOADD)
-				.general((cmd)->cmd.geoadd(key, longitude, latitude, member))
-				.pipeline((cmd)->cmd.geoadd(key, longitude, latitude, member))
-				.transaction((cmd)->cmd.geoadd(key, longitude, latitude, member))
-				.run(args);
-	}
-
-	@Override
-	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<String, GeoCoordinate> geoCoordinates = GeoConverter.STRING_MAP_CONVERTER.convert(memberCoordinates);
-		return new JedisCommand<Long>(client, ProtocolCommand.GEOADD)
-				.general((cmd)->cmd.geoadd(key, geoCoordinates))
-				.pipeline((cmd)->cmd.geoadd(key, geoCoordinates))
-				.transaction((cmd)->cmd.geoadd(key, geoCoordinates))
+		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
+				memberCoordinates.size() * 3);
+
+		if(memberCoordinates != null){
+			memberCoordinates.forEach((k, v)->{
+				lngLatMemberBuilder.
+						add(v.getLongitude()).
+						add(v.getLatitude()).
+						add(SafeEncoder.encode(k));
+			});
+		}
+
+		return new LettuceCommand<>(client, ProtocolCommand.GEOADD,
+				(cmd)->cmd.geoadd(SafeEncoder.encode(key), lngLatMemberBuilder.build().toArray(new Object[]{})), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<byte[], GeoCoordinate> geoCoordinates = GeoConverter.BINARY_MAP_CONVERTER.convert(memberCoordinates);
-		return new JedisCommand<Long>(client, ProtocolCommand.GEOADD)
-				.general((cmd)->cmd.geoadd(key, geoCoordinates))
-				.pipeline((cmd)->cmd.geoadd(key, geoCoordinates))
-				.transaction((cmd)->cmd.geoadd(key, geoCoordinates))
+		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
+				memberCoordinates.size() * 3);
+
+		if(memberCoordinates != null){
+			memberCoordinates.forEach((k, v)->{
+				lngLatMemberBuilder.
+						add(v.getLongitude()).
+						add(v.getLatitude()).
+						add(k);
+			});
+		}
+
+		return new LettuceCommand<>(client, ProtocolCommand.GEOADD,
+				(cmd)->cmd.geoadd(key, lngLatMemberBuilder.build().toArray(new Object[]{})), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public List<String> geoHash(final String key, final String... members){
+	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.GEOHASH)
-				.general((cmd)->cmd.geohash(key, members))
-				.pipeline((cmd)->cmd.geohash(key, members))
-				.transaction((cmd)->cmd.geohash(key, members))
+		return new LettuceCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(SafeEncoder.encode(key),
+				SafeEncoder.encode(members)), new ListConverter<>(Value::getValue))
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
+	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.GEOHASH)
-				.general((cmd)->cmd.geohash(key, members))
-				.pipeline((cmd)->cmd.geohash(key, members))
-				.transaction((cmd)->cmd.geohash(key, members))
+		return new LettuceCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
+				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())))
 				.run(args);
 	}
 
 	@Override
-	public List<Geo> geoPos(final String key, final String... members){
+	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new JedisCommand<List<Geo>>(client, ProtocolCommand.GEOPOS)
-				.general((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
+				GeoCoordinateConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new JedisCommand<List<Geo>>(client, ProtocolCommand.GEOPOS)
-				.general((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.geopos(key, members), GeoCoordinateConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Double geoDist(final String key, final String member1, final String member2){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
-		return new JedisCommand<Double>(client, ProtocolCommand.GEODIST)
-				.general((cmd)->cmd.geodist(key, member1, member2))
-				.pipeline((cmd)->cmd.geodist(key, member1, member2))
-				.transaction((cmd)->cmd.geodist(key, member1, member2))
+		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
+				GeoArgs.Unit.m), (value)->value)
 				.run(args);
 	}
 
 	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
-				.put("member2", member2);
-		return new JedisCommand<Double>(client, ProtocolCommand.GEODIST)
-				.general((cmd)->cmd.geodist(key, member1, member2))
-				.pipeline((cmd)->cmd.geodist(key, member1, member2))
-				.transaction((cmd)->cmd.geodist(key, member1, member2))
-				.run(args);
-	}
-
-	@Override
-	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<Double>(client, ProtocolCommand.GEODIST)
-				.general((cmd)->cmd.geodist(key, member1, member2, geoUnit))
-				.pipeline((cmd)->cmd.geodist(key, member1, member2, geoUnit))
-				.transaction((cmd)->cmd.geodist(key, member1, member2, geoUnit))
-				.run(args);
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
-				.put("member2", member2).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<Double>(client, ProtocolCommand.GEODIST)
-				.general((cmd)->cmd.geodist(key, member1, member2, geoUnit))
-				.pipeline((cmd)->cmd.geodist(key, member1, member2, geoUnit))
-				.transaction((cmd)->cmd.geodist(key, member1, member2, geoUnit))
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
-				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS)
-				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
+				GeoUnitConverter.INSTANCE.convert(unit)), (value)->value)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit){
+									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS)
-				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
-				.put("latitude", latitude).put("radius", radius).put("unit", unit)
-				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS)
-				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS, (cmd)->cmd.georadius(key, longitude, latitude,
+				radius, GeoUnitConverter.INSTANCE.convert(unit)), GeoRadiusGeneralResultConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument){
+									 final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS)
-				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
-				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS, (cmd)->cmd.georadius(key, longitude, latitude,
+				radius, GeoUnitConverter.INSTANCE.convert(unit), LettuceGeoArgs.from(geoRadiusArgument)),
+				GeoRadiusResponseConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit){
+									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
-				.put("latitude", latitude).put("radius", radius).put("unit", unit)
-				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument){
+									   final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoUnit unit){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
-				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit){
+											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
-				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+				(cmd)->cmd.georadiusbymember(key, member, radius, GeoUnitConverter.INSTANCE.convert(unit)),
+				GeoRadiusGeneralResultConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
-				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+				(cmd)->cmd.georadiusbymember(key, member, radius, GeoUnitConverter.INSTANCE.convert(unit),
+						LettuceGeoArgs.from(geoRadiusArgument)), GeoRadiusResponseConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit){
+											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
-				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER_RO)
 				.run(args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
-		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
-		return new JedisCommand<List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
-						GeoRadiusResponseConverter.LIST_CONVERTER)
+		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER_RO)
 				.run(args);
 	}
 
