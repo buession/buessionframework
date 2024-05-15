@@ -22,10 +22,11 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.collect.Lists;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
@@ -34,979 +35,489 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.RestoreArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.SortArgumentConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.KeyScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
-import com.buession.redis.core.internal.jedis.JedisMigrateParams;
-import com.buession.redis.core.internal.jedis.JedisScanParams;
-import redis.clients.jedis.args.ExpiryOption;
-import redis.clients.jedis.params.RestoreParams;
-import redis.clients.jedis.params.SortingParams;
+import com.buession.redis.core.internal.lettuce.LettuceMigrateArgs;
+import com.buession.redis.core.internal.lettuce.LettuceRestoreArgs;
+import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
+import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
+import com.buession.redis.core.internal.lettuce.LettuceSortArgs;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis 单机模式 Key 命令操作
+ * Lettuce 单机模式 Key 命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandaloneClient> {
+public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceStandaloneClient> {
 
-	public JedisKeyOperations(final JedisStandaloneClient client){
+	public LettuceKeyOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long del(final String... keys){
+	public Long del(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.DEL)
-				.general((cmd)->cmd.del(keys))
-				.pipeline((cmd)->cmd.del(keys))
-				.transaction((cmd)->cmd.del(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long del(final byte[]... keys){
+	public byte[] dump(final byte[] key) {
+		final CommandArguments args = CommandArguments.create("key", key);
+		return new LettuceCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+				.run(args);
+	}
+
+	@Override
+	public Boolean exists(final byte[] key) {
+		final CommandArguments args = CommandArguments.create("key", key);
+		return new LettuceCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key),
+				(v)->v == 1L)
+				.run(args);
+	}
+
+	@Override
+	public Long exists(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.DEL)
-				.general((cmd)->cmd.del(keys))
-				.pipeline((cmd)->cmd.del(keys))
-				.transaction((cmd)->cmd.del(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public String dump(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.DUMP)
-				.general((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
-				.pipeline((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
-				.transaction((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public byte[] dump(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.DUMP)
-				.general((cmd)->cmd.dump(key))
-				.pipeline((cmd)->cmd.dump(key))
-				.transaction((cmd)->cmd.dump(key))
-				.run(args);
-	}
-
-	@Override
-	public Boolean exists(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(key))
-				.pipeline((cmd)->cmd.exists(key))
-				.transaction((cmd)->cmd.exists(key))
-				.run(args);
-	}
-
-	@Override
-	public Boolean exists(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(key))
-				.pipeline((cmd)->cmd.exists(key))
-				.transaction((cmd)->cmd.exists(key))
-				.run(args);
-	}
-
-	@Override
-	public Long exists(final String... keys){
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(keys))
-				.pipeline((cmd)->cmd.exists(keys))
-				.transaction((cmd)->cmd.exists(keys))
-				.run(args);
-	}
-
-	@Override
-	public Long exists(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(keys))
-				.pipeline((cmd)->cmd.exists(keys))
-				.transaction((cmd)->cmd.exists(keys))
-				.run(args);
-	}
-
-	@Override
-	public Status expire(final String key, final int lifetime){
+	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status expire(final byte[] key, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
+	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
-		return new JedisCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
-		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
-				.put("expireOption", expireOption);
-		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
-		return new JedisCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status expireAt(final String key, final long unixTimestamp){
+	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireat(key, unixTimestamp),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status expireAt(final byte[] key, final long unixTimestamp){
-		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status pExpire(final String key, final int lifetime){
+	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status pExpire(final byte[] key, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status pExpireAt(final String key, final long unixTimestamp){
+	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.pexpireat(key, unixTimestamp),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status persist(final String key){
+	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status persist(final byte[] key){
+	public Long ttl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long ttl(final String key){
+	public Long pTtl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.TTL)
-				.general((cmd)->cmd.ttl(key))
-				.pipeline((cmd)->cmd.ttl(key))
-				.transaction((cmd)->cmd.ttl(key))
+		return new LettuceCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long ttl(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.TTL)
-				.general((cmd)->cmd.ttl(key))
-				.pipeline((cmd)->cmd.ttl(key))
-				.transaction((cmd)->cmd.ttl(key))
-				.run(args);
-	}
-
-	@Override
-	public Long pTtl(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.PTTL)
-				.general((cmd)->cmd.pttl(key))
-				.pipeline((cmd)->cmd.pttl(key))
-				.transaction((cmd)->cmd.pttl(key))
-				.run(args);
-	}
-
-	@Override
-	public Long pTtl(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.PTTL)
-				.general((cmd)->cmd.pttl(key))
-				.pipeline((cmd)->cmd.pttl(key))
-				.transaction((cmd)->cmd.pttl(key))
-				.run(args);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey){
+	public Status copy(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 				.run(args);
 	}
 
 	@Override
-	public Status copy(final byte[] key, final byte[] destKey){
+	public Status copy(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 				.run(args);
 	}
 
 	@Override
-	public Status copy(final String key, final String destKey, final int db){
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status copy(final byte[] key, final byte[] destKey, final int db){
+	public Status copy(final String key, final String destKey, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("db", db);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 				.run(args);
 	}
 
 	@Override
-	public Status copy(final String key, final String destKey, final boolean replace){
+	public Status copy(final byte[] key, final byte[] destKey, final int db) {
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("db", db);
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
+				.run(args);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 				.run(args);
 	}
 
 	@Override
-	public Status copy(final byte[] key, final byte[] destKey, final boolean replace){
+	public Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 				.run(args);
 	}
 
 	@Override
-	public Status copy(final String key, final String destKey, final int db, final boolean replace){
+	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("replace", replace);
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
+				.run(args);
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 				.run(args);
 	}
 
 	@Override
-	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace){
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
-				.put("replace", replace);
-		return new JedisCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status move(final String key, final int db){
+	public Status move(final byte[] key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
-		return new JedisCommand<Status>(client, ProtocolCommand.MOVE)
-				.general((cmd)->cmd.move(key, db), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.move(key, db), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status move(final byte[] key, final int db){
-		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
-		return new JedisCommand<Status>(client, ProtocolCommand.MOVE)
-				.general((cmd)->cmd.move(key, db), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.move(key, db), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
+	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams();
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams();
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
+				new LettuceMigrateArgs<>(keys)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation, final String... keys){
+						  final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(operation);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(operation);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
-						  final String... keys){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
+				new LettuceMigrateArgs<>(operation, keys)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
-						  final byte[]... keys){
+						  final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
-						  final MigrateOperation operation, final String... keys){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
+				new LettuceMigrateArgs<>(keys, password)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
-						  final MigrateOperation operation, final byte[]... keys){
+						  final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final String user, final String password,
-						  final int timeout, final String... keys){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(user, password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
+				new LettuceMigrateArgs<>(operation, keys, password)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
-						  final int timeout, final byte[]... keys){
+						  final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(user, password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status migrate(final String host, final int port, final int db, final String user, final String password,
-						  final int timeout, final MigrateOperation operation, final String... keys){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
+				new LettuceMigrateArgs<>(keys, user, password)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
-						  final int timeout, final MigrateOperation operation, final byte[]... keys){
+						  final int timeout, final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
-		return new JedisCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.migrate(host, port, db, timeout,
+				new LettuceMigrateArgs<>(operation, keys, user, password)), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Set<String> keys(final String pattern){
+	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisCommand<Set<String>>(client, ProtocolCommand.KEYS)
-				.general((cmd)->cmd.keys(pattern))
-				.pipeline((cmd)->cmd.keys(pattern))
-				.transaction((cmd)->cmd.keys(pattern))
+		return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(SafeEncoder.encode(pattern)),
+				Converters.BINARY_LIST_TO_STRING_SET_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Set<byte[]> keys(final byte[] pattern){
+	public Set<byte[]> keys(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisCommand<Set<byte[]>>(client, ProtocolCommand.KEYS)
-				.general((cmd)->cmd.keys(pattern))
-				.pipeline((cmd)->cmd.keys(pattern))
-				.transaction((cmd)->cmd.keys(pattern))
+		return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), Lists::toSet)
 				.run(args);
 	}
 
 	@Override
-	public String randomKey(){
-		return new JedisCommand<String>(client, ProtocolCommand.RANDOMKEY)
-				.general((cmd)->cmd.randomKey())
-				.pipeline((cmd)->cmd.randomKey())
-				.transaction((cmd)->cmd.randomKey())
+	public String randomKey() {
+		return new LettuceCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
+				Converters.BINARY_TO_STRING_CONVERTER)
 				.run();
 	}
 
 	@Override
-	public Status rename(final String key, final String newKey){
+	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status rename(final byte[] key, final byte[] newKey){
+	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status renameNx(final String key, final String newKey){
-		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisCommand<Status>(client, ProtocolCommand.RENAMENX)
-				.general((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status renameNx(final byte[] key, final byte[] newKey){
-		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisCommand<Status>(client, ProtocolCommand.RENAMENX)
-				.general((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status restore(final String key, final byte[] serializedValue, final int ttl){
+	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
-		return new JedisCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
-				.put("ttl", ttl);
-		return new JedisCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status restore(final String key, final byte[] serializedValue, final int ttl,
-						  final RestoreArgument argument){
-		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
-				.put("ttl", ttl).put("argument", argument);
-		final RestoreParams params = RestoreArgumentConverter.INSTANCE.convert(argument);
-		return new JedisCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
-						  final RestoreArgument argument){
+						  final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final RestoreParams params = RestoreArgumentConverter.INSTANCE.convert(argument);
-		return new JedisCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.RESTORE,
+				(cmd)->cmd.restore(key, serializedValue, LettuceRestoreArgs.from(argument).ttl(ttl)),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor){
+	public ScanResult<List<String>> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
+				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor){
+	public ScanResult<List<byte[]>> scan(final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
+				new KeyScanCursorConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final String pattern){
+	public ScanResult<List<String>> scan(final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
+				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
+				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
+				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
+				new KeyScanCursorConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final long count){
+	public ScanResult<List<String>> scan(final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
-		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
+				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
+				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count){
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
-		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
+				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
+				new KeyScanCursorConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count){
+	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
+				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
+				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count){
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
+				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
+				new KeyScanCursorConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public List<String> sort(final String key){
+	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key))
-				.pipeline((cmd)->cmd.sort(key))
-				.transaction((cmd)->cmd.sort(key))
+		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(SafeEncoder.encode(key)),
+				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> sort(final byte[] key){
+	public List<byte[]> sort(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key))
-				.pipeline((cmd)->cmd.sort(key))
-				.transaction((cmd)->cmd.sort(key))
+		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public List<String> sort(final String key, final SortArgument sortArgument){
+	public List<String> sort(final String key, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params))
-				.pipeline((cmd)->cmd.sort(key, params))
-				.transaction((cmd)->cmd.sort(key, params))
+		return new LettuceCommand<>(client, ProtocolCommand.SORT,
+				(cmd)->cmd.sort(SafeEncoder.encode(key), LettuceSortArgs.from(sortArgument)),
+				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
+	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params))
-				.pipeline((cmd)->cmd.sort(key, params))
-				.transaction((cmd)->cmd.sort(key, params))
+		return new LettuceCommand<>(client, ProtocolCommand.SORT,
+				(cmd)->cmd.sort(key, LettuceSortArgs.from(sortArgument)), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long sort(final String key, final String destKey){
+	public Long sort(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, destKey))
-				.pipeline((cmd)->cmd.sort(key, destKey))
-				.transaction((cmd)->cmd.sort(key, destKey))
+		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sortStore(key,
+				new LettuceSortArgs((String) null), destKey), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long sort(final byte[] key, final byte[] destKey){
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, destKey))
-				.pipeline((cmd)->cmd.sort(key, destKey))
-				.transaction((cmd)->cmd.sort(key, destKey))
-				.run(args);
-	}
-
-	@Override
-	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
+	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		return new JedisCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params, destKey))
-				.pipeline((cmd)->cmd.sort(key, params, destKey))
-				.transaction((cmd)->cmd.sort(key, params, destKey))
+		return new LettuceCommand<>(client, ProtocolCommand.SORT,
+				(cmd)->cmd.sortStore(key, LettuceSortArgs.from(sortArgument), destKey),
+				(v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("sortArgument", sortArgument);
-		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		return new JedisCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params, destKey))
-				.pipeline((cmd)->cmd.sort(key, params, destKey))
-				.transaction((cmd)->cmd.sort(key, params, destKey))
-				.run(args);
-	}
-
-	@Override
-	public Long touch(final String... keys){
+	public Long touch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.TOUCH)
-				.general((cmd)->cmd.touch(keys))
-				.pipeline((cmd)->cmd.touch(keys))
-				.transaction((cmd)->cmd.touch(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long touch(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.TOUCH)
-				.general((cmd)->cmd.touch(keys))
-				.pipeline((cmd)->cmd.touch(keys))
-				.transaction((cmd)->cmd.touch(keys))
-				.run(args);
-	}
-
-	@Override
-	public Type type(final String key){
+	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Type>(client, ProtocolCommand.TYPE)
-				.general((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key),
+				Converters.TYPE_RESULT_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Type type(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Type>(client, ProtocolCommand.TYPE)
-				.general((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Long unlink(final String... keys){
+	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.UNLINK)
-				.general((cmd)->cmd.unlink(keys))
-				.pipeline((cmd)->cmd.unlink(keys))
-				.transaction((cmd)->cmd.unlink(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long unlink(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.UNLINK)
-				.general((cmd)->cmd.unlink(keys))
-				.pipeline((cmd)->cmd.unlink(keys))
-				.transaction((cmd)->cmd.unlink(keys))
-				.run(args);
-	}
-
-	@Override
-	public Long wait(final int replicas, final int timeout){
+	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
-		return new JedisCommand<Long>(client, ProtocolCommand.WAIT)
-				.general((cmd)->cmd.waitReplicas(replicas, timeout))
-				.pipeline((cmd)->cmd.waitReplicas(replicas, timeout))
-				.transaction((cmd)->cmd.waitReplicas(replicas, timeout))
+		return new LettuceCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitForReplication(replicas, timeout),
+				(v)->v)
 				.run(args);
 	}
 
 	@Override
-	public ObjectEncoding objectEncoding(final String key){
+	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<ObjectEncoding>(client, ProtocolCommand.OBJECT_ENCODING)
-				.general((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+				Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public ObjectEncoding objectEncoding(final byte[] key){
+	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<ObjectEncoding>(client, ProtocolCommand.OBJECT_ENCODING)
-				.general((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
+		return new LettuceCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
 				.run(args);
 	}
 
 	@Override
-	public Long objectFreq(final String key){
+	public Long objectIdleTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
-				.general((cmd)->cmd.objectFreq(key))
-				.pipeline((cmd)->cmd.objectFreq(key))
-				.transaction((cmd)->cmd.objectFreq(key))
+		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long objectFreq(final byte[] key){
+	public Long objectRefcount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
-				.general((cmd)->cmd.objectFreq(key))
-				.pipeline((cmd)->cmd.objectFreq(key))
-				.transaction((cmd)->cmd.objectFreq(key))
-				.run(args);
-	}
-
-	@Override
-	public Long objectIdleTime(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
-				.general((cmd)->cmd.objectIdletime(key))
-				.pipeline((cmd)->cmd.objectIdletime(key))
-				.transaction((cmd)->cmd.objectIdletime(key))
-				.run(args);
-	}
-
-	@Override
-	public Long objectIdleTime(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
-				.general((cmd)->cmd.objectIdletime(key)).
-				pipeline((cmd)->cmd.objectIdletime(key))
-				.transaction((cmd)->cmd.objectIdletime(key))
-				.run(args);
-	}
-
-	@Override
-	public Long objectRefcount(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
-				.general((cmd)->cmd.objectRefcount(key))
-				.pipeline((cmd)->cmd.objectRefcount(key))
-				.transaction((cmd)->cmd.objectRefcount(key))
-				.run(args);
-	}
-
-	@Override
-	public Long objectRefcount(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
-				.general((cmd)->cmd.objectRefcount(key))
-				.pipeline((cmd)->cmd.objectRefcount(key))
-				.transaction((cmd)->cmd.objectRefcount(key))
+		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key), (v)->v)
 				.run(args);
 	}
 
