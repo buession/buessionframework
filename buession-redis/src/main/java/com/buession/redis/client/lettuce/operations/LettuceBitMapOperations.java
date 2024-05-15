@@ -19,272 +19,118 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.BitFieldArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.args.BitOP;
-import redis.clients.jedis.params.BitPosParams;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
 
 import java.util.List;
 
 /**
- * Jedis 单机模式 BitMap 命令操作抽象类
+ * Lettuce 单机模式 BitMap 命令操作抽象类
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisBitMapOperations extends AbstractBitMapOperations<JedisStandaloneClient> {
+public final class LettuceBitMapOperations extends AbstractBitMapOperations<LettuceStandaloneClient> {
 
-	public JedisBitMapOperations(final JedisStandaloneClient client){
+	public LettuceBitMapOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long bitCount(final String key){
+	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key))
-				.pipeline((cmd)->cmd.bitcount(key))
-				.transaction((cmd)->cmd.bitcount(key))
+		return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long bitCount(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key))
-				.pipeline((cmd)->cmd.bitcount(key))
-				.transaction((cmd)->cmd.bitcount(key))
-				.run(args);
-	}
-
-	@Override
-	public Long bitCount(final String key, final long start, final long end){
+	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key, start, end))
-				.pipeline((cmd)->cmd.bitcount(key, start, end))
-				.transaction((cmd)->cmd.bitcount(key, start, end))
+		return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key, start, end))
-				.pipeline((cmd)->cmd.bitcount(key, start, end))
-				.transaction((cmd)->cmd.bitcount(key, start, end))
-				.run(args);
-	}
-
-	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption){
+	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
-				bitCountOption);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key, start, end, option))
-				.pipeline((cmd)->cmd.bitcount(key, start, end, option))
-				.transaction((cmd)->cmd.bitcount(key, start, end, option))
+		return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
-				.put("bitCountOption", bitCountOption);
-		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
-				bitCountOption);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key, start, end, option))
-				.pipeline((cmd)->cmd.bitcount(key, start, end, option))
-				.transaction((cmd)->cmd.bitcount(key, start, end, option))
-				.run(args);
-	}
-
-	@Override
-	public List<Long> bitField(final String key, final BitFieldArgument argument){
+	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		final String[] arguments = BitFieldArgumentConverter.INSTANCE.convert(argument);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
-				.general((cmd)->cmd.bitfield(key, arguments))
-				.pipeline((cmd)->cmd.bitfield(key, arguments))
-				.transaction((cmd)->cmd.bitfield(key, arguments))
+		return new LettuceCommand<>(client, ProtocolCommand.BITFIELD,
+				(cmd)->cmd.bitfield(key, LettuceBitFieldArgs.from(argument)), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public List<Long> bitField(final byte[] key, final BitFieldArgument argument){
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		final byte[][] arguments = SafeEncoder.encode(BitFieldArgumentConverter.INSTANCE.convert(argument));
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
-				.general((cmd)->cmd.bitfield(key, arguments))
-				.pipeline((cmd)->cmd.bitfield(key, arguments))
-				.transaction((cmd)->cmd.bitfield(key, arguments))
-				.run(args);
-	}
-
-	@Deprecated
-	@Override
-	public List<Long> bitField(final String key, final String... arguments){
+	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
-				.general((cmd)->cmd.bitfield(key, arguments))
-				.pipeline((cmd)->cmd.bitfield(key, arguments))
-				.transaction((cmd)->cmd.bitfield(key, arguments))
-				.run(args);
-	}
-
-	@Deprecated
-	@Override
-	public List<Long> bitField(final byte[] key, final byte[]... arguments){
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
-				.general((cmd)->cmd.bitfield(key, arguments))
-				.pipeline((cmd)->cmd.bitfield(key, arguments))
-				.transaction((cmd)->cmd.bitfield(key, arguments))
+		return new LettuceCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
 				.run(args);
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final String key, final String... arguments){
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-				.general((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.pipeline((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.transaction((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.run(args);
-	}
-
-	@Override
-	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments){
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return new JedisCommand<List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-				.general((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.pipeline((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.transaction((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.run(args);
-	}
-
-	@Override
-	public Long bitOp(final BitOperation operation, final String destKey, final String... keys){
+	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
-		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITOP)
-				.general((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys))
+		return new LettuceCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			if(operation == BitOperation.AND){
+				return cmd.bitopAnd(destKey, keys);
+			}else if(operation == BitOperation.OR){
+				return cmd.bitopOr(destKey, keys);
+			}else if(operation == BitOperation.NOT){
+				return cmd.bitopNot(destKey, keys[0]);
+			}else if(operation == BitOperation.XOR){
+				return cmd.bitopXor(destKey, keys);
+			}else{
+				return null;
+			}
+		}, (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
-				.put("keys", (Object[]) keys);
-		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITOP)
-				.general((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.run(args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value){
+	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value))
-				.pipeline((cmd)->cmd.bitpos(key, value))
-				.transaction((cmd)->cmd.bitpos(key, value))
+		return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long bitPos(final byte[] key, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value))
-				.pipeline((cmd)->cmd.bitpos(key, value))
-				.transaction((cmd)->cmd.bitpos(key, value))
-				.run(args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final long end){
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		final BitPosParams params = new BitPosParams(start, end);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value, params))
-				.pipeline((cmd)->cmd.bitpos(key, value, params))
-				.transaction((cmd)->cmd.bitpos(key, value, params))
+		return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
-				.put("end", end);
-		final BitPosParams params = new BitPosParams(start, end);
-		return new JedisCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value, params))
-				.pipeline((cmd)->cmd.bitpos(key, value, params))
-				.transaction((cmd)->cmd.bitpos(key, value, params))
-				.run(args);
-	}
-
-	@Override
-	public Boolean getBit(final String key, final long offset){
+	public Boolean getBit(final byte[] key, final long offset) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.GETBIT)
-				.general((cmd)->cmd.getbit(key, offset))
-				.pipeline((cmd)->cmd.getbit(key, offset))
-				.transaction((cmd)->cmd.getbit(key, offset))
+		return new LettuceCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+				Converters.ONE_BOOLEAN_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Boolean getBit(final byte[] key, final long offset){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.GETBIT)
-				.general((cmd)->cmd.getbit(key, offset))
-				.pipeline((cmd)->cmd.getbit(key, offset))
-				.transaction((cmd)->cmd.getbit(key, offset))
-				.run(args);
-	}
-
-	@Override
-	public Boolean setBit(final String key, final long offset, final boolean value){
+	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.SETBIT)
-				.general((cmd)->cmd.setbit(key, offset, value))
-				.pipeline((cmd)->cmd.setbit(key, offset, value))
-				.transaction((cmd)->cmd.setbit(key, offset, value))
-				.run(args);
-	}
-
-	@Override
-	public Boolean setBit(final byte[] key, final long offset, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new JedisCommand<Boolean>(client, ProtocolCommand.SETBIT)
-				.general((cmd)->cmd.setbit(key, offset, value))
-				.pipeline((cmd)->cmd.setbit(key, offset, value))
-				.transaction((cmd)->cmd.setbit(key, offset, value))
+		return new LettuceCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, value ? 1 : 0),
+				Converters.ONE_BOOLEAN_CONVERTER)
 				.run(args);
 	}
 
