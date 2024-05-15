@@ -22,25 +22,42 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.lang.Status;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Jedis HyperLogLog 命令操作抽象类
+ * Lettuce HyperLogLog 命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractHyperLogLogOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements HyperLogLogOperations {
+public abstract class AbstractHyperLogLogOperations<C extends LettuceRedisClient>
+		extends AbstractLettuceRedisOperations<C> implements HyperLogLogOperations {
 
-	public AbstractHyperLogLogOperations(final C client){
+	public AbstractHyperLogLogOperations(final C client) {
 		super(client);
+	}
+
+	@Override
+	public Status pfAdd(final String key, final String... elements) {
+		return pfAdd(SafeEncoder.encode(key), SafeEncoder.encode(elements));
+	}
+
+	@Override
+	public Status pfMerge(final String destKey, final String... keys) {
+		return pfMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+	}
+
+	@Override
+	public Long pfCount(final String... keys) {
+		return pfCount(SafeEncoder.encode(keys));
 	}
 
 }

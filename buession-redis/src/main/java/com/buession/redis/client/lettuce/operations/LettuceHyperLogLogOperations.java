@@ -22,84 +22,47 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 /**
- * Jedis 单机模式 HyperLogLog 命令操作
+ * Lettuce 单机模式 HyperLogLog 命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<JedisStandaloneClient> {
+public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOperations<LettuceStandaloneClient> {
 
-	public JedisHyperLogLogOperations(final JedisStandaloneClient client){
+	public LettuceHyperLogLogOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Status pfAdd(final String key, final String... elements){
+	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFADD)
-				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
+				Converters.ONE_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status pfAdd(final byte[] key, final byte[]... elements){
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFADD)
-				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status pfMerge(final String destKey, final String... keys){
+	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFMERGE)
-				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.PFMERGE)
-				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Long pfCount(final String... keys){
+	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.PFCOUNT)
-				.general((cmd)->cmd.pfcount(keys))
-				.pipeline((cmd)->cmd.pfcount(keys))
-				.transaction((cmd)->cmd.pfcount(keys))
-				.run(args);
-	}
-
-	@Override
-	public Long pfCount(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Long>(client, ProtocolCommand.PFCOUNT)
-				.general((cmd)->cmd.pfcount(keys))
-				.pipeline((cmd)->cmd.pfcount(keys))
-				.transaction((cmd)->cmd.pfcount(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
 				.run(args);
 	}
 

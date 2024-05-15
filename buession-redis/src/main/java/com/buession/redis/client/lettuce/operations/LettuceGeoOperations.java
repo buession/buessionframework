@@ -61,7 +61,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
 		return new LettuceCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, longitude, latitude,
-				member), (value)->value)
+				member), (v)->v)
 				.run(args);
 	}
 
@@ -134,7 +134,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
 		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
-				GeoArgs.Unit.m), (value)->value)
+				GeoArgs.Unit.m), (v)->v)
 				.run(args);
 	}
 
@@ -143,7 +143,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
-				GeoUnitConverter.INSTANCE.convert(unit)), (value)->value)
+				GeoUnitConverter.INSTANCE.convert(unit)), (v)->v)
 				.run(args);
 	}
 
