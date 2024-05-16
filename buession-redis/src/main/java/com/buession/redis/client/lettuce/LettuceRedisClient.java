@@ -19,10 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis;
+package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.FutureResult;
@@ -31,11 +31,12 @@ import redis.clients.jedis.Response;
 import java.util.Queue;
 
 /**
- * Jedis Redis 客户端
+ * Lettuce Redis 客户端
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public interface JedisRedisClient extends RedisClient {
+public interface LettuceRedisClient extends RedisClient {
 
 	Queue<FutureResult<Response<Object>, Object, Object>> getTxResults();
 

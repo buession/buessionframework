@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.redis.client.connection.datasource.lettuce;
+package com.buession.redis.client.lettuce;
