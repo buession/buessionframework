@@ -22,466 +22,244 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import redis.clients.jedis.params.GetExParams;
-import redis.clients.jedis.params.SetParams;
+import com.buession.redis.core.internal.lettuce.LettuceSetArgs;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.Value;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Jedis 单机模式字符串命令操作
+ * Lettuce 单机模式字符串命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisStringOperations extends AbstractStringOperations<JedisStandaloneClient> {
+public final class LettuceStringOperations extends AbstractStringOperations<LettuceStandaloneClient> {
 
-	public JedisStringOperations(final JedisStandaloneClient client){
+	public LettuceStringOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long append(final String key, final String value){
+	public Long append(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.APPEND)
-				.general((cmd)->cmd.append(key, value))
-				.pipeline((cmd)->cmd.append(key, value))
-				.transaction((cmd)->cmd.append(key, value))
+		return new LettuceCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long append(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.APPEND)
-				.general((cmd)->cmd.append(key, value))
-				.pipeline((cmd)->cmd.append(key, value))
-				.transaction((cmd)->cmd.append(key, value))
-				.run(args);
-	}
-
-	@Override
-	public Long incr(final String key){
+	public Long incr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.INCR)
-				.general((cmd)->cmd.incr(key))
-				.pipeline((cmd)->cmd.incr(key))
-				.transaction((cmd)->cmd.incr(key))
+		return new LettuceCommand<>(client, ProtocolCommand.INCR, (cmd)->cmd.incr(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long incr(final byte[] key){
+	public Long incrBy(final byte[] key, final long value) {
+		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		return new LettuceCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrby(key, value), (v)->v)
+				.run(args);
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final double value) {
+		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		return new LettuceCommand<>(client, ProtocolCommand.INCRBYFLOAT, (cmd)->cmd.incrbyfloat(key, value), (v)->v)
+				.run(args);
+	}
+
+	@Override
+	public Long decr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.INCR)
-				.general((cmd)->cmd.incr(key))
-				.pipeline((cmd)->cmd.incr(key))
-				.transaction((cmd)->cmd.incr(key))
+		return new LettuceCommand<>(client, ProtocolCommand.DECR, (cmd)->cmd.decr(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long incrBy(final String key, final long value){
+	public Long decrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.INCRBY)
-				.general((cmd)->cmd.incrBy(key, value))
-				.pipeline((cmd)->cmd.incrBy(key, value))
-				.transaction((cmd)->cmd.incrBy(key, value))
+		return new LettuceCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrby(key, value), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long incrBy(final byte[] key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.INCRBY)
-				.general((cmd)->cmd.incrBy(key, value))
-				.pipeline((cmd)->cmd.incrBy(key, value))
-				.transaction((cmd)->cmd.incrBy(key, value))
-				.run(args);
-	}
-
-	@Override
-	public Double incrByFloat(final String key, final double value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
-				.general((cmd)->cmd.incrByFloat(key, value))
-				.pipeline((cmd)->cmd.incrByFloat(key, value))
-				.transaction((cmd)->cmd.incrByFloat(key, value))
-				.run(args);
-	}
-
-	@Override
-	public Double incrByFloat(final byte[] key, final double value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
-				.general((cmd)->cmd.incrByFloat(key, value))
-				.pipeline((cmd)->cmd.incrByFloat(key, value))
-				.transaction((cmd)->cmd.incrByFloat(key, value))
-				.run(args);
-	}
-
-	@Override
-	public Long decr(final String key){
+	public String get(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.DECR)
-				.general((cmd)->cmd.decr(key))
-				.pipeline((cmd)->cmd.decr(key))
-				.transaction((cmd)->cmd.decr(key))
+		return new LettuceCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(SafeEncoder.encode(key)),
+				Converters.BINARY_TO_STRING_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Long decr(final byte[] key){
+	public byte[] get(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.DECR)
-				.general((cmd)->cmd.decr(key))
-				.pipeline((cmd)->cmd.decr(key))
-				.transaction((cmd)->cmd.decr(key))
+		return new LettuceCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long decrBy(final String key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.DECRBY)
-				.general((cmd)->cmd.decrBy(key, value))
-				.pipeline((cmd)->cmd.decrBy(key, value))
-				.transaction((cmd)->cmd.decrBy(key, value))
-				.run(args);
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.DECRBY)
-				.general((cmd)->cmd.decrBy(key, value))
-				.pipeline((cmd)->cmd.decrBy(key, value))
-				.transaction((cmd)->cmd.decrBy(key, value))
-				.run(args);
-	}
-
-	@Override
-	public String get(final String key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.GET)
-				.general((cmd)->cmd.get(key))
-				.pipeline((cmd)->cmd.get(key))
-				.transaction((cmd)->cmd.get(key))
-				.run(args);
-	}
-
-	@Override
-	public byte[] get(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.GET)
-				.general((cmd)->cmd.get(key))
-				.pipeline((cmd)->cmd.get(key))
-				.transaction((cmd)->cmd.get(key))
-				.run(args);
-	}
-
-	@Override
-	public String getEx(final String key, final GetExArgument getExArgument){
+	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
-		return new JedisCommand<String>(client, ProtocolCommand.GETEX)
-				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
-				.transaction((cmd)->cmd.getEx(key, params))
+		return new LettuceCommand<String, String>(client, ProtocolCommand.GETEX)
 				.run(args);
 	}
 
 	@Override
-	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
+	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.GETEX)
-				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
-				.transaction((cmd)->cmd.getEx(key, params))
+		return new LettuceCommand<byte[], byte[]>(client, ProtocolCommand.GETEX)
 				.run(args);
 	}
 
 	@Override
-	public String getSet(final String key, final String value){
+	public String getSet(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<String>(client, ProtocolCommand.GETSET)
-				.general((cmd)->cmd.getSet(key, value)).pipeline((cmd)->cmd.getSet(key, value))
-				.transaction((cmd)->cmd.getSet(key, value))
+		return new LettuceCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getset(SafeEncoder.encode(key),
+				SafeEncoder.encode(value)), Converters.BINARY_TO_STRING_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public byte[] getSet(final byte[] key, final byte[] value){
+	public byte[] getSet(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.GETSET)
-				.general((cmd)->cmd.getSet(key, value)).pipeline((cmd)->cmd.getSet(key, value))
-				.transaction((cmd)->cmd.getSet(key, value))
+		return new LettuceCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getset(key, value), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public String getDel(final String key){
+	public String getDel(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<String>(client, ProtocolCommand.GETDEL)
-				.general((cmd)->cmd.getDel(key))
-				.pipeline((cmd)->cmd.getDel(key))
-				.transaction((cmd)->cmd.getDel(key))
+		return new LettuceCommand<String, String>(client, ProtocolCommand.GETDEL)
 				.run(args);
 	}
 
 	@Override
-	public byte[] getDel(final byte[] key){
+	public byte[] getDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.GETDEL)
-				.general((cmd)->cmd.getDel(key))
-				.pipeline((cmd)->cmd.getDel(key))
-				.transaction((cmd)->cmd.getDel(key))
+		return new LettuceCommand<byte[], byte[]>(client, ProtocolCommand.GETDEL)
 				.run(args);
 	}
 
 	@Override
-	public List<String> mGet(final String... keys){
+	public List<String> mGet(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.MGET)
-				.general((cmd)->cmd.mget(keys))
-				.pipeline((cmd)->cmd.mget(keys))
-				.transaction((cmd)->cmd.mget(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(SafeEncoder.encode(keys)),
+				(v)->v.stream().map((r)->SafeEncoder.encode(r.getValue())).collect(Collectors.toList()))
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> mGet(final byte[]... keys){
+	public List<byte[]> mGet(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.MGET)
-				.general((cmd)->cmd.mget(keys))
-				.pipeline((cmd)->cmd.mget(keys))
-				.transaction((cmd)->cmd.mget(keys))
+		return new LettuceCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(keys),
+				(v)->v.stream().map(Value::getValue).collect(Collectors.toList()))
 				.run(args);
 	}
 
 	@Override
-	public Status mSet(final Map<String, String> values){
+	public Status mSet(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
-		final List<String> temp = new ArrayList<>(values.size() * 2);
-
-		values.forEach((key, value)->{
-			temp.add(key);
-			temp.add(value);
-		});
-
-		final String[] keysValues = temp.toArray(new String[0]);
-		return new JedisCommand<Status>(client, ProtocolCommand.MSET)
-				.general((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MSET,
+				(cmd)->cmd.mset(Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(values)),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status mSetNx(final Map<String, String> values){
+	public Status mSetNx(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
-		final List<String> temp = new ArrayList<>(values.size() * 2);
-
-		values.forEach((key, value)->{
-			temp.add(key);
-			temp.add(value);
-		});
-
-		final String[] keysValues = temp.toArray(new String[0]);
-		return new JedisCommand<Status>(client, ProtocolCommand.MSETNX)
-				.general((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.MSETNX,
+				(cmd)->cmd.msetnx(Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(values)),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status pSetEx(final String key, final String value, final int lifetime){
+	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.PSETEX)
-				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
+	public Status set(final byte[] key, final byte[] value) {
+		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		return new LettuceCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.run(args);
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
+		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		return new LettuceCommand<>(client, ProtocolCommand.SET,
+				(cmd)->cmd.set(key, value, LettuceSetArgs.from(setArgument)), OkStatusConverter.INSTANCE)
+				.run(args);
+	}
+
+	@Override
+	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.PSETEX)
-				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SETEX, (cmd)->cmd.setex(key, lifetime, value),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status set(final String key, final String value){
+	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SETNX, (cmd)->cmd.setnx(key, value),
+				Converters.BOOLEAN_STATUS_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status set(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status set(final String key, final String value, final SetArgument setArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
-		return new JedisCommand<Status>(client, ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
-		return new JedisCommand<Status>(client, ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status setEx(final String key, final String value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status setNx(final String key, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Status setNx(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.run(args);
-	}
-
-	@Override
-	public Long setRange(final String key, final long offset, final String value){
+	public Long setRange(final byte[] key, final long offset, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setrange(key, offset, value))
-				.pipeline((cmd)->cmd.setrange(key, offset, value))
+		return new LettuceCommand<>(client, ProtocolCommand.SETRANGE, (cmd)->cmd.setrange(key, offset, value), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long setRange(final byte[] key, final long offset, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new JedisCommand<Long>(client, ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setrange(key, offset, value))
-				.pipeline((cmd)->cmd.setrange(key, offset, value))
-				.run(args);
-	}
-
-	@Override
-	public String getRange(final String key, final long start, final long end){
+	public byte[] getRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<String>(client, ProtocolCommand.GETRANGE)
-				.general((cmd)->cmd.getrange(key, start, end))
-				.pipeline((cmd)->cmd.getrange(key, start, end))
-				.transaction((cmd)->cmd.getrange(key, start, end))
+		return new LettuceCommand<>(client, ProtocolCommand.GETRANGE, (cmd)->cmd.getrange(key, start, end), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public byte[] getRange(final byte[] key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.GETRANGE)
-				.general((cmd)->cmd.getrange(key, start, end))
-				.pipeline((cmd)->cmd.getrange(key, start, end))
-				.transaction((cmd)->cmd.getrange(key, start, end))
-				.run(args);
-	}
-
-	@Override
-	public Long strlen(final String key){
+	public Long strlen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.STRLEN)
-				.general((cmd)->cmd.strlen(key))
-				.pipeline((cmd)->cmd.strlen(key))
-				.transaction((cmd)->cmd.strlen(key))
+		return new LettuceCommand<>(client, ProtocolCommand.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long strlen(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.STRLEN)
-				.general((cmd)->cmd.strlen(key))
-				.pipeline((cmd)->cmd.strlen(key))
-				.transaction((cmd)->cmd.strlen(key))
-				.run(args);
-	}
-
-	@Override
-	public String substr(final String key, final long start, final long end){
+	public String substr(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<String>(client, ProtocolCommand.SUBSTR)
-				.general((cmd)->cmd.substr(key, (int) start, (int) end))
-				.pipeline((cmd)->cmd.substr(key, (int) start, (int) end))
-				.transaction((cmd)->cmd.substr(key, (int) start, (int) end))
+		return new LettuceCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.get(SafeEncoder.encode(key)),
+				(value)->StringUtils.substring(SafeEncoder.encode(value), (int) start, (int) end))
 				.run(args);
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
+	public byte[] substr(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.SUBSTR)
-				.general((cmd)->cmd.substr(key, (int) start, (int) end))
-				.pipeline((cmd)->cmd.substr(key, (int) start, (int) end))
-				.transaction((cmd)->cmd.substr(key, (int) start, (int) end))
+		return new LettuceCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.get(key),
+				(value)->StringUtils.substring(SafeEncoder.encode(value), (int) start, (int) end)
+						.getBytes(StandardCharsets.UTF_8))
 				.run(args);
 	}
 

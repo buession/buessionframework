@@ -22,25 +22,97 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.lang.Status;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.StringOperations;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Jedis 字符串命令操作抽象类
+ * Lettuce 字符串命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractStringOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractStringOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements StringOperations {
 
-	public AbstractStringOperations(final C client){
+	public AbstractStringOperations(final C client) {
 		super(client);
+	}
+
+	@Override
+	public Long append(final String key, final String value) {
+		return append(SafeEncoder.encode(key), SafeEncoder.encode(value));
+	}
+
+	@Override
+	public Long incr(final String key) {
+		return incr(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long incrBy(final String key, final long value) {
+		return incrBy(SafeEncoder.encode(key), value);
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final double value) {
+		return incrByFloat(SafeEncoder.encode(key), value);
+	}
+
+	@Override
+	public Long decr(final String key) {
+		return decr(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long decrBy(final String key, final long value) {
+		return decrBy(SafeEncoder.encode(key), value);
+	}
+
+	@Override
+	public Status pSetEx(final String key, final String value, final int lifetime) {
+		return pSetEx(SafeEncoder.encode(key), SafeEncoder.encode(value), lifetime);
+	}
+
+	@Override
+	public Status set(final String key, final String value) {
+		return set(SafeEncoder.encode(key), SafeEncoder.encode(value));
+	}
+
+	@Override
+	public Status set(final String key, final String value, final SetArgument setArgument) {
+		return set(SafeEncoder.encode(key), SafeEncoder.encode(value), setArgument);
+	}
+
+	@Override
+	public Status setEx(final String key, final String value, final int lifetime) {
+		return setEx(SafeEncoder.encode(key), SafeEncoder.encode(value), lifetime);
+	}
+
+	@Override
+	public Status setNx(final String key, final String value) {
+		return setNx(SafeEncoder.encode(key), SafeEncoder.encode(value));
+	}
+
+	@Override
+	public Long setRange(final String key, final long offset, final String value) {
+		return setRange(SafeEncoder.encode(key), offset, SafeEncoder.encode(value));
+	}
+
+	@Override
+	public String getRange(final String key, final long start, final long end) {
+		return SafeEncoder.encode(getRange(SafeEncoder.encode(key), start, end));
+	}
+
+	@Override
+	public Long strlen(final String key) {
+		return strlen(SafeEncoder.encode(key));
 	}
 
 }
