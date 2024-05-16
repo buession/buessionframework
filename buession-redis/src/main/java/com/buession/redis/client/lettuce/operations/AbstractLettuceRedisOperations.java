@@ -19,29 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
 
 /**
- * Jedis Redis 命令操作抽象类
+ * Lettuce Redis 命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> extends AbstractRedisOperations<C>
-		implements JedisRedisOperations {
+public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClient> extends AbstractRedisOperations<C>
+		implements LettuceRedisOperations {
 
 	protected C client;
 
-	public AbstractJedisRedisOperations(final C client){
+	public AbstractLettuceRedisOperations(final C client) {
 		this.client = client;
 	}
 

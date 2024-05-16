@@ -19,54 +19,54 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
-import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
-import com.buession.redis.client.jedis.JedisClusterClient;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.jedis.JedisSentinelClient;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
-import com.buession.redis.core.internal.jedis.JedisResult;
-import com.buession.redis.exception.NotSupportedCommandException;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.transaction.jedis.JedisTransaction;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.Transaction;
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
- * Jedis Redis 命令操作接口
+ * Lettuce Redis 命令操作接口
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public interface JedisRedisOperations extends RedisOperations {
+public interface LettuceRedisOperations extends RedisOperations {
 
-	abstract class AbstractJedisCommand<CLIENT extends JedisRedisClient, CONN extends JedisRedisConnection, R>
+	abstract class AbstractLettuceCommand<CLIENT extends LettuceRedisClient, CONN extends LettuceRedisConnection, SR, R>
 			extends AbstractRedisOperationsCommand<CLIENT, CONN, R> {
 
-		protected AbstractJedisCommand(final CLIENT client, final ProtocolCommand command) {
+		protected final Executor<RedisCommands<byte[], byte[]>, SR> executor;
+
+		protected final Converter<SR, R> converter;
+
+		protected AbstractLettuceCommand(final CLIENT client, final ProtocolCommand command,
+										 final Executor<RedisCommands<byte[], byte[]>, SR> executor) {
+			this(client, command, executor, null);
+		}
+
+		protected AbstractLettuceCommand(final CLIENT client, final ProtocolCommand command,
+										 final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+										 final Converter<SR, R> converter) {
 			super(client, command);
+			this.executor = executor;
+			this.converter = converter;
 		}
 
 		@Override
 		public R execute() throws RedisException {
+			/*
 			if(connection.isPipeline()){
 				if(pipelineRunner == null){
 					throw new NotSupportedPipelineCommandException(
@@ -102,16 +102,19 @@ public interface JedisRedisOperations extends RedisOperations {
 					}
 				}
 			}
+
+			 */
 			return null;
 		}
 
+		/*
 		protected Runner createPipelineRunner(final Executor<Pipeline, Response<R>> executor) {
 			return new Runner() {
 
 				@SuppressWarnings({"unchecked"})
 				@Override
 				public JedisResult<R, R> run() throws Exception {
-					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
+					final Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline));
 				}
 
@@ -125,7 +128,7 @@ public interface JedisRedisOperations extends RedisOperations {
 				@SuppressWarnings({"unchecked"})
 				@Override
 				public JedisResult<SR, R> run() throws Exception {
-					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
+					final Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
 					return newJedisResult(executor.execute(jedisPipeline), converter);
 				}
 
@@ -138,7 +141,7 @@ public interface JedisRedisOperations extends RedisOperations {
 				@SuppressWarnings({"unchecked"})
 				@Override
 				public JedisResult<R, R> run() throws Exception {
-					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
+					final Transaction transaction = ((JedisTransaction) transaction()).primitive();
 					return newJedisResult(executor.execute(transaction));
 				}
 
@@ -152,7 +155,7 @@ public interface JedisRedisOperations extends RedisOperations {
 				@SuppressWarnings({"unchecked"})
 				@Override
 				public JedisResult<SR, R> run() throws Exception {
-					final redis.clients.jedis.Transaction transaction = ((JedisTransaction) transaction()).primitive();
+					final Transaction transaction = ((JedisTransaction) transaction()).primitive();
 					return newJedisResult(executor.execute(transaction), converter);
 				}
 
@@ -168,21 +171,40 @@ public interface JedisRedisOperations extends RedisOperations {
 			return JedisResult.Builder.<SV, TV>fromResponse(response).mappedWith(converter).build();
 		}
 
+		 */
+
 	}
 
-	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, JedisConnection, R> {
+	class LettuceCommand<SR, R> extends AbstractLettuceCommand<LettuceStandaloneClient, LettuceConnection, SR, R> {
 
-		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
-			super(client, command);
+		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+			super(client, command, null, (value)->(R) value);
 		}
 
-		public JedisCommand<R> general(final Executor<Jedis, R> executor) {
+		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+							  final Converter<SR, R> converter) {
+			super(client, command, null, converter);
+		}
+
+		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+							  final Executor<RedisCommands<byte[], byte[]>, SR> executor) {
+			super(client, command, executor);
+		}
+
+		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+							  final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		/*
+		public LettuceCommand<R> general(final Executor<RedisCommands<byte[], byte[]>, R> executor) {
 			this.runner = new Runner() {
 
 				@SuppressWarnings({"unchecked"})
 				@Override
 				public R run() throws Exception {
-					return executor.execute(connection.getJedis());
+					return executor.execute(connection.getStatefulConnection().sync());
 				}
 
 			};
@@ -190,13 +212,14 @@ public interface JedisRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public <SR> JedisCommand<R> general(final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
+		public <SR> LettuceCommand<R> general(final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+											  final Converter<SR, R> converter) {
 			this.runner = new Runner() {
 
 				@SuppressWarnings({"unchecked"})
 				@Override
 				public R run() throws Exception {
-					return converter.convert(executor.execute(connection.getJedis()));
+					return converter.convert(executor.execute(connection.getStatefulConnection().sync()));
 				}
 
 			};
@@ -204,33 +227,37 @@ public interface JedisRedisOperations extends RedisOperations {
 			return this;
 		}
 
-		public JedisCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
+		public LettuceCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
 			this.pipelineRunner = createPipelineRunner(executor);
 			return this;
 		}
 
-		public <SR> JedisCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-											 final Converter<SR, R> converter) {
+		public <SR> LettuceCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
+											   final Converter<SR, R> converter) {
 			this.pipelineRunner = createPipelineRunner(executor, converter);
 			return this;
 		}
 
-		public JedisCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
+		public LettuceCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
 			this.transactionRunner = createTransactionRunner(executor);
 			return this;
 		}
 
-		public <SR> JedisCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-												final Converter<SR, R> converter) {
+		public <SR> LettuceCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
+												  final Converter<SR, R> converter) {
 			this.transactionRunner = createTransactionRunner(executor, converter);
 			return this;
 		}
 
+		 */
+
 	}
 
+	/*
 	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, JedisSentinelConnection, R> {
 
-		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command) {
+		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command,
+									   final Executor<RedisCommands<byte[], byte[]>, R> executor) {
 			super(client, command);
 		}
 
@@ -345,5 +372,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 	}
+
+	 */
 
 }

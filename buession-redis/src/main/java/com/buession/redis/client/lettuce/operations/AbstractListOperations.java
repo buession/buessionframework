@@ -39,7 +39,7 @@ import java.util.List;
  * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public abstract class AbstractListOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements ListOperations {

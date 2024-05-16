@@ -55,7 +55,7 @@ import java.util.Set;
  * Lettuce 单机模式模式有序集合命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceSortedSetOperations extends AbstractSortedSetOperations<LettuceStandaloneClient> {
 

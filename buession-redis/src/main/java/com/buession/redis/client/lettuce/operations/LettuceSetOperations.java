@@ -42,7 +42,7 @@ import java.util.Set;
  * Lettuce 单机模式集合命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceSetOperations extends AbstractSetOperations<LettuceStandaloneClient> {
 

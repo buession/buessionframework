@@ -51,7 +51,7 @@ import java.util.Set;
  * Lettuce 单机模式 Key 命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceStandaloneClient> {
 

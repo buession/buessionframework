@@ -48,7 +48,7 @@ import java.util.Map;
  * Lettuce 单机模式地理位置命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceStandaloneClient> {
 

@@ -51,7 +51,7 @@ import java.util.List;
  * Lettuce 单机模式集群命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceClusterOperations extends AbstractClusterOperations<LettuceStandaloneClient> {
 

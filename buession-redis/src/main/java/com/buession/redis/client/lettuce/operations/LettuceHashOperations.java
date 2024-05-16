@@ -47,7 +47,7 @@ import java.util.Set;
  * Lettuce 单机模式模式哈希表命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceHashOperations extends AbstractHashOperations<LettuceStandaloneClient> {
 

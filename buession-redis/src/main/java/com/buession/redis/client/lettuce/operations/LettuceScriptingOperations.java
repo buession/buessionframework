@@ -39,7 +39,7 @@ import java.util.List;
  * Lettuce 单机模式 Script 命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceScriptingOperations extends AbstractScriptingOperations<LettuceStandaloneClient> {
 

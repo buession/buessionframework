@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * Lettuce 单机模式事务命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceTransactionOperations extends AbstractTransactionOperations<LettuceStandaloneClient> {
 

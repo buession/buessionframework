@@ -41,7 +41,7 @@ import java.util.Map;
  * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
 public abstract class AbstractHashOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements HashOperations {

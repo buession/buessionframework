@@ -22,12 +22,12 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.collect.Maps;
 import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.StreamOperations;
 import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamConsumer;
@@ -45,15 +45,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Jedis Stream 命令操作抽象类
+ * Lettuce Stream 命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public abstract class AbstractStreamOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractStreamOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements StreamOperations {
 
 	public AbstractStreamOperations(final C client) {
@@ -61,62 +61,37 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	}
 
 	@Override
-	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
+	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
 		return xAck(SafeEncoder.encode(key), SafeEncoder.encode(groupName), ids);
 	}
 
 	@Override
-	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
-		return xAdd(SafeEncoder.encode(key), id,
-				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(hash));
+	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
+		return xAdd(SafeEncoder.encode(key), id, Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(hash));
 	}
 
 	@Override
-	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
-		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start, count);
+	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
+							  final XAddArgument xAddArgument) {
+		return xAdd(SafeEncoder.encode(key), id, Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(hash),
+				xAddArgument);
 	}
 
 	@Override
-	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start) {
-		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start);
-	}
-
-	@Override
-	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
-																	final byte[] consumerName, final int minIdleTime,
-																	final StreamEntryId start) {
-		return xAutoClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
-				SafeEncoder.encode(consumerName), minIdleTime, start);
-	}
-
-	@Override
-	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
-																	final byte[] consumerName, final int minIdleTime,
-																	final StreamEntryId start, final long count) {
-		return xAutoClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
-				SafeEncoder.encode(consumerName), minIdleTime, start, count);
-	}
-
-	@Override
-	public List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									final int minIdleTime, final StreamEntryId... ids) {
 		return xClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 				minIdleTime, ids);
 	}
 
 	@Override
-	public List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									final int minIdleTime, final StreamEntryId[] ids,
 									final XClaimArgument xClaimArgument) {
 		return xClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 				minIdleTime, ids, xClaimArgument);
 	}
+
 
 	@Override
 	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
@@ -357,6 +332,16 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
 									   final long count) {
 		return xRevRange(SafeEncoder.encode(key), end, start, count);
+	}
+
+	@Override
+	public Long xTrim(final String key, final XTrimArgument xTrimArgument) {
+		return xTrim(SafeEncoder.encode(key), xTrimArgument);
+	}
+
+	@Override
+	public Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit) {
+		return xTrim(SafeEncoder.encode(key), xTrimArgument, limit);
 	}
 
 	protected static List<Map<byte[], List<StreamEntry>>> afterBianryXReadGroup(

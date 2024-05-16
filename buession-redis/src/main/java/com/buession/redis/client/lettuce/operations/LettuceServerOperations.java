@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  * Lettuce 单机模式服务端命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceServerOperations extends AbstractServerOperations<LettuceStandaloneClient> {
 

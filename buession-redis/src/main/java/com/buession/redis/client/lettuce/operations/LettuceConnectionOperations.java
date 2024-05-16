@@ -46,7 +46,7 @@ import java.util.List;
  * Lettuce 单机模式连接命令操作
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceConnectionOperations extends AbstractConnectionOperations<LettuceStandaloneClient> {
 

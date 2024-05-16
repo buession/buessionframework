@@ -35,7 +35,7 @@ import com.buession.redis.utils.SafeEncoder;
  * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public abstract class AbstractPubSubOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements PubSubOperations {

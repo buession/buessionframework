@@ -38,7 +38,7 @@ import java.util.List;
  * Lettuce 单机模式 BitMap 命令操作抽象类
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceBitMapOperations extends AbstractBitMapOperations<LettuceStandaloneClient> {
 
