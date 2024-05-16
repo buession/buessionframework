@@ -29,7 +29,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Map;
@@ -77,7 +77,7 @@ public abstract class AbstractHashOperations<C extends LettuceRedisClient> exten
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data) {
-		return hMSet(SafeEncoder.encode(key), Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(data));
+		return hMSet(SafeEncoder.encode(key), (new MapConverter.StringToBinaryMapConverter()).convert(data));
 	}
 
 	@Override

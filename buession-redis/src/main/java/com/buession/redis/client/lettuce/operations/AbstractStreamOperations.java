@@ -25,7 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.collect.Maps;
-import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.StreamOperations;
@@ -37,12 +37,11 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce Stream 命令操作抽象类
@@ -67,13 +66,13 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
-		return xAdd(SafeEncoder.encode(key), id, Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(hash));
+		return xAdd(SafeEncoder.encode(key), id, (new MapConverter.StringToBinaryMapConverter()).convert(hash));
 	}
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument) {
-		return xAdd(SafeEncoder.encode(key), id, Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(hash),
+		return xAdd(SafeEncoder.encode(key), id, (new MapConverter.StringToBinaryMapConverter()).convert(hash),
 				xAddArgument);
 	}
 
@@ -349,9 +348,9 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 		if(data == null){
 			return null;
 		}else{
-			final MapConverter<String, List<StreamEntry>, byte[], List<StreamEntry>> converter = new MapConverter<>(
-					SafeEncoder::encode, (value)->value);
-			return data.stream().map(converter::convert).collect(Collectors.toList());
+			final ListConverter<Map<String, List<StreamEntry>>, Map<byte[], List<StreamEntry>>> converter =
+					new ListConverter<>(new MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<>());
+			return converter.convert(data);
 		}
 	}
 

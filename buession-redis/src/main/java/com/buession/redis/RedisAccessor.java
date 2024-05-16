@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.JedisConnectionFactory;
+import com.buession.redis.client.connection.LettuceConnectionFactory;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
@@ -33,9 +35,11 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
@@ -138,7 +142,15 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		}
 
 		if(connectionFactory == null){
-			connectionFactory = new RedisConnectionFactory(getDataSource());
+			DataSource dataSource = getDataSource();
+
+			if(dataSource instanceof LettuceDataSource){
+				connectionFactory = new LettuceConnectionFactory((LettuceDataSource) dataSource);
+			}else if(dataSource instanceof JedisDataSource){
+				connectionFactory = new JedisConnectionFactory((JedisDataSource) dataSource);
+			}else{
+				Assert.isNull(getDataSource(), "DataSource is required");
+			}
 		}
 	}
 
@@ -227,12 +239,15 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	protected RedisClient doGetRedisClient() throws RedisException {
 		DataSource dataSource = getDataSource();
+
 		if(dataSource instanceof JedisDataSource){
 			return new JedisStandaloneClient();
 		}else if(dataSource instanceof JedisSentinelDataSource){
 			return new JedisSentinelClient();
 		}else if(dataSource instanceof JedisClusterDataSource){
 			return new JedisClusterClient();
+		}else if(dataSource instanceof LettuceDataSource){
+			return new LettuceStandaloneClient();
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
 		}

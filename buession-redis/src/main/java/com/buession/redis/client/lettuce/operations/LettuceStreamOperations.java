@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Stream;
@@ -294,11 +295,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 				.put("consumerName", consumerName);
 		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.transaction((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -308,11 +309,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 				.put("consumerName", consumerName);
 		return new JedisCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.transaction((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.run(args);
 	}
 

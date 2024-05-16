@@ -72,7 +72,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create("str", str);
 		return new LettuceCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.echo(SafeEncoder.encode(str)),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -135,7 +135,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public String clientGetName() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run();
 	}
 

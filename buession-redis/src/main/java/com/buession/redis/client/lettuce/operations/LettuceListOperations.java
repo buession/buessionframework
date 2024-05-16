@@ -54,7 +54,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public String lIndex(final String key, final long index) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
 		return new LettuceCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(SafeEncoder.encode(key), index),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -214,7 +214,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("timeout", timeout);
 		return new LettuceCommand<>(client, ProtocolCommand.BRPOPLPUSH, (cmd)->cmd.brpoplpush(timeout,
-				SafeEncoder.encode(key), SafeEncoder.encode(destKey)), Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder.encode(key), SafeEncoder.encode(destKey)), SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -231,7 +231,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public String lPop(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(SafeEncoder.encode(key)),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -260,7 +260,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public String rPop(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(SafeEncoder.encode(key)),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -275,8 +275,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public String rPoplPush(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 		return new LettuceCommand<>(client, ProtocolCommand.RPOPLPUSH,
-				(cmd)->cmd.rpoplpush(SafeEncoder.encode(key), SafeEncoder.encode(destKey)),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				(cmd)->cmd.rpoplpush(SafeEncoder.encode(key), SafeEncoder.encode(destKey)), SafeEncoder::encode)
 				.run(args);
 	}
 

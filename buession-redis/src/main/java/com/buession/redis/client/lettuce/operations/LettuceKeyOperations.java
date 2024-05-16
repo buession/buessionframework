@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.collect.Lists;
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ExpireOption;
@@ -36,7 +37,10 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.ListSetConverter;
+import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.lettuce.LettuceMigrateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceRestoreArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
@@ -92,7 +96,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -101,7 +105,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
 		return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -109,7 +113,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireat(key, unixTimestamp),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -117,7 +121,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new LettuceCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -125,7 +129,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.pexpireat(key, unixTimestamp),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -133,7 +137,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -217,7 +221,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status move(final byte[] key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -286,7 +290,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(SafeEncoder.encode(pattern)),
-				Converters.BINARY_LIST_TO_STRING_SET_CONVERTER)
+				new ListSetConverter.BinaryToStringListSetConverter())
 				.run(args);
 	}
 
@@ -299,8 +303,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public String randomKey() {
-		return new LettuceCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
-				Converters.BINARY_TO_STRING_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(), SafeEncoder::encode)
 				.run();
 	}
 
@@ -316,7 +319,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new LettuceCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -473,7 +476,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key),
-				Converters.TYPE_RESULT_CONVERTER)
+				new TypeConverter())
 				.run(args);
 	}
 
@@ -496,7 +499,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
-				Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
+				new ObjectEncodingConverter())
 				.run(args);
 	}
 

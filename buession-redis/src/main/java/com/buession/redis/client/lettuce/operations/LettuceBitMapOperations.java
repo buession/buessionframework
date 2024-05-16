@@ -29,7 +29,7 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
 import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
 
 import java.util.List;
@@ -122,7 +122,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 	public Boolean getBit(final byte[] key, final long offset) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 		return new LettuceCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
-				Converters.ONE_BOOLEAN_CONVERTER)
+				new OneBooleanConverter())
 				.run(args);
 	}
 
@@ -130,7 +130,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, value ? 1 : 0),
-				Converters.ONE_BOOLEAN_CONVERTER)
+				new OneBooleanConverter())
 				.run(args);
 	}
 

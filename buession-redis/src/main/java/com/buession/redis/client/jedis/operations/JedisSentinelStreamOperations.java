@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.Stream;
@@ -314,12 +315,10 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
-				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), new BooleanStatusConverter())
 				.transaction((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -328,12 +327,10 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
-				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), new BooleanStatusConverter())
 				.transaction((cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
-						Converters.BOOLEAN_STATUS_CONVERTER)
+						new BooleanStatusConverter())
 				.run(args);
 	}
 

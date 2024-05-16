@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.collect.Maps;
-import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.StreamOperations;
@@ -37,12 +37,11 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Jedis Stream 命令操作抽象类
@@ -68,7 +67,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		return xAdd(SafeEncoder.encode(key), id,
-				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(hash));
+				(new MapConverter.BinaryToStringMapConverter()).convert(hash));
 	}
 
 	@Override
@@ -364,9 +363,9 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 		if(data == null){
 			return null;
 		}else{
-			final MapConverter<String, List<StreamEntry>, byte[], List<StreamEntry>> converter = new MapConverter<>(
-					SafeEncoder::encode, (value)->value);
-			return data.stream().map(converter::convert).collect(Collectors.toList());
+			final ListConverter<Map<String, List<StreamEntry>>, Map<byte[], List<StreamEntry>>> converter =
+					new ListConverter<>(new MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<>());
+			return converter.convert(data);
 		}
 	}
 

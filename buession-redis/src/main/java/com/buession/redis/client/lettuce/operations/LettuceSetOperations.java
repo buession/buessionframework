@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
@@ -31,6 +32,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ValueScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.SetConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
@@ -68,7 +70,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(SafeEncoder.encode(keys)),
-				Converters.BINARY_SET_TO_STRING_SET_CONVERTER)
+				new SetConverter.BinaryToStringSetConverter())
 				.run(args);
 	}
 
@@ -90,7 +92,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(SafeEncoder.encode(keys)),
-				Converters.BINARY_SET_TO_STRING_SET_CONVERTER)
+				new SetConverter.BinaryToStringSetConverter())
 				.run(args);
 	}
 
@@ -133,7 +135,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(SafeEncoder.encode(key)),
-				Converters.BINARY_SET_TO_STRING_SET_CONVERTER)
+				new SetConverter.BinaryToStringSetConverter())
 				.run(args);
 	}
 
@@ -148,7 +150,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		return new LettuceCommand<>(client, ProtocolCommand.SMOVE, (cmd)->cmd.smove(key, destKey, member),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -156,7 +158,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public String sPop(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(SafeEncoder.encode(key)),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -171,7 +173,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public Set<String> sPop(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(SafeEncoder.encode(key), count),
-				Converters.BINARY_SET_TO_STRING_SET_CONVERTER)
+				new SetConverter.BinaryToStringSetConverter())
 				.run(args);
 	}
 
@@ -186,7 +188,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public String sRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.SRANDMEMBER,
-				(cmd)->cmd.srandmember(SafeEncoder.encode(key)), Converters.BINARY_TO_STRING_CONVERTER)
+				(cmd)->cmd.srandmember(SafeEncoder.encode(key)), SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -298,7 +300,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(SafeEncoder.encode(keys)),
-				Converters.BINARY_SET_TO_STRING_SET_CONVERTER)
+				new SetConverter.BinaryToStringSetConverter())
 				.run(args);
 	}
 

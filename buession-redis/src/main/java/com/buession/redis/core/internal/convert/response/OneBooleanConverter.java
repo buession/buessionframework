@@ -22,23 +22,20 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XClaimParams;
+import com.buession.core.converter.PredicateConverter;
 
 /**
- * Jedis {@link XClaimParams} 扩展类
+ * "1" 到 {@link Boolean} 转换
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisXClaimParams extends XClaimParams {
+public final class OneBooleanConverter extends PredicateConverter<Long> {
 
-	public static JedisXClaimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
-		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
-
-		return xClaimParams;
+	public OneBooleanConverter() {
+		super((val)->val == 1L);
 	}
 
 }

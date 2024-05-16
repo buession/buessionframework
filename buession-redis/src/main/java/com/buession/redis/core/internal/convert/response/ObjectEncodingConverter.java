@@ -22,23 +22,21 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XClaimParams;
+import com.buession.core.converter.EnumConverter;
+import com.buession.redis.core.ObjectEncoding;
 
 /**
- * Jedis {@link XClaimParams} 扩展类
+ * 字符串形式的 ObjectEncoding 转换为 {@link ObjectEncoding}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisXClaimParams extends XClaimParams {
+public final class ObjectEncodingConverter extends EnumConverter<ObjectEncoding> {
 
-	public static JedisXClaimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
-		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
-
-		return xClaimParams;
+	public ObjectEncodingConverter() {
+		super(ObjectEncoding.class);
 	}
 
 }

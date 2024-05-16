@@ -28,7 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
 
@@ -47,7 +47,7 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 	@Override
 	public StreamEntry convert(final StreamMessage<byte[], byte[]> source) {
 		return new StreamEntry(new StreamEntryId(source.getId()),
-				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(source.getBody()));
+				(new MapConverter.BinaryToStringMapConverter()).convert(source.getBody()));
 	}
 
 }

@@ -29,7 +29,6 @@ import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -130,7 +129,7 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
 		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
-				Converters.STRING_TO_BINARY_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 

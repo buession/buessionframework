@@ -24,12 +24,13 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.LettuceSetArgs;
 import com.buession.redis.utils.SafeEncoder;
@@ -98,7 +99,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public String get(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(SafeEncoder.encode(key)),
-				Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -127,7 +128,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public String getSet(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getset(SafeEncoder.encode(key),
-				SafeEncoder.encode(value)), Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder.encode(value)), SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -172,7 +173,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public Status mSet(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
 		return new LettuceCommand<>(client, ProtocolCommand.MSET,
-				(cmd)->cmd.mset(Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(values)),
+				(cmd)->cmd.mset((new MapConverter.StringToBinaryMapConverter()).convert(values)),
 				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
@@ -181,8 +182,8 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public Status mSetNx(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
 		return new LettuceCommand<>(client, ProtocolCommand.MSETNX,
-				(cmd)->cmd.msetnx(Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(values)),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				(cmd)->cmd.msetnx((new MapConverter.StringToBinaryMapConverter()).convert(values)),
+				new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -221,7 +222,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.SETNX, (cmd)->cmd.setnx(key, value),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 

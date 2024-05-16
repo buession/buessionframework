@@ -22,23 +22,35 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XClaimParams;
+import com.buession.core.converter.Converter;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Jedis {@link XClaimParams} 扩展类
+ * {@link java.lang.reflect.Array} 转换器
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisXClaimParams extends XClaimParams {
+public interface ArrayConverter<S, T> extends Converter<S[], T[]> {
 
-	public static JedisXClaimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
-		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
+	class StringToBinaryArrayConverter extends com.buession.core.converter.ArrayConverter<String, byte[]>
+			implements ArrayConverter<String, byte[]> {
 
-		return xClaimParams;
+		public StringToBinaryArrayConverter() {
+			super(SafeEncoder::encode, byte[].class);
+		}
+
+	}
+
+	class BinaryToStringArrayConverter extends com.buession.core.converter.ArrayConverter<byte[], String>
+			implements ArrayConverter<byte[], String> {
+
+		public BinaryToStringArrayConverter() {
+			super(SafeEncoder::encode, String.class);
+		}
+
 	}
 
 }

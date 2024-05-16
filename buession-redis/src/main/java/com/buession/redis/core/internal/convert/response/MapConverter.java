@@ -22,23 +22,56 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XClaimParams;
+import com.buession.core.converter.Converter;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.Map;
 
 /**
- * Jedis {@link XClaimParams} 扩展类
+ * {@link Map} 转换器
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisXClaimParams extends XClaimParams {
+public interface MapConverter<SK, SV, TK, TV> extends Converter<Map<SK, SV>, Map<TK, TV>> {
 
-	public static JedisXClaimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
-		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
+	class StringToBinaryMapConverter extends com.buession.core.converter.MapConverter<String, String, byte[], byte[]>
+			implements MapConverter<String, String, byte[], byte[]> {
 
-		return xClaimParams;
+		public StringToBinaryMapConverter() {
+			super(SafeEncoder::encode, SafeEncoder::encode);
+		}
+
+	}
+
+	class BinaryToStringMapConverter extends com.buession.core.converter.MapConverter<byte[], byte[], String, String>
+			implements MapConverter<byte[], byte[], String, String> {
+
+		public BinaryToStringMapConverter() {
+			super(SafeEncoder::encode, SafeEncoder::encode);
+		}
+
+	}
+
+	class StringToBinaryKeyPrimitiveValueMapConverter<V> extends com.buession.core.converter.MapConverter<String, V,
+			byte[], V> implements MapConverter<String, V, byte[], V> {
+
+		public StringToBinaryKeyPrimitiveValueMapConverter() {
+			super(SafeEncoder::encode, (v)->v);
+		}
+
+	}
+
+	class BinaryToStringKeyPrimitiveValueMapConverter<V>
+			extends com.buession.core.converter.MapConverter<byte[], V, String, V>
+			implements MapConverter<byte[], V, String, V> {
+
+		public BinaryToStringKeyPrimitiveValueMapConverter() {
+			super(SafeEncoder::encode, (v)->v);
+		}
+
 	}
 
 }

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.ExpireOption;
@@ -35,12 +36,16 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
+import com.buession.redis.core.internal.convert.response.BinaryObjectEncodingConverter;
+import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
+import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.jedis.JedisMigrateParams;
 import com.buession.redis.core.internal.jedis.JedisRestoreParams;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisSortingParams;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.ExpiryOption;
 
 import java.util.List;
@@ -82,9 +87,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public String dump(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<String>(client, ProtocolCommand.DUMP)
-				.general((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
-				.pipeline((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
-				.transaction((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
+				.general((cmd)->cmd.dump(key), SafeEncoder::encode)
+				.pipeline((cmd)->cmd.dump(key), SafeEncoder::encode)
+				.transaction((cmd)->cmd.dump(key), SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -306,9 +311,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status copy(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
+				.transaction((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -316,9 +321,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status copy(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
+				.transaction((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -326,8 +331,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status copy(final String key, final String destKey, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, db, false), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, db, false), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -336,8 +341,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("db", db);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, false), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, db, false), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, db, false), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -346,9 +351,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
+				.transaction((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -357,9 +362,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
+				.transaction((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -368,8 +373,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, db, replace), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, db, replace), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -378,8 +383,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.copy(key, destKey, db, replace), Converters.BOOLEAN_STATUS_CONVERTER)
+				.general((cmd)->cmd.copy(key, destKey, db, replace), new BooleanStatusConverter())
+				.pipeline((cmd)->cmd.copy(key, destKey, db, replace), new BooleanStatusConverter())
 				.run(args);
 	}
 
@@ -878,9 +883,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Type type(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Type>(client, ProtocolCommand.TYPE)
-				.general((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
+				.general((cmd)->cmd.type(key), new TypeConverter())
+				.pipeline((cmd)->cmd.type(key), new TypeConverter())
+				.transaction((cmd)->cmd.type(key), new TypeConverter())
 				.run(args);
 	}
 
@@ -888,9 +893,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Type>(client, ProtocolCommand.TYPE)
-				.general((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
+				.general((cmd)->cmd.type(key), new TypeConverter())
+				.pipeline((cmd)->cmd.type(key), new TypeConverter())
+				.transaction((cmd)->cmd.type(key), new TypeConverter())
 				.run(args);
 	}
 
@@ -926,9 +931,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public ObjectEncoding objectEncoding(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<ObjectEncoding>(client, ProtocolCommand.OBJECT_ENCODING)
-				.general((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
+				.general((cmd)->cmd.objectEncoding(key), new ObjectEncodingConverter())
+				.pipeline((cmd)->cmd.objectEncoding(key), new ObjectEncodingConverter())
+				.transaction((cmd)->cmd.objectEncoding(key), new ObjectEncodingConverter())
 				.run(args);
 	}
 
@@ -936,9 +941,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<ObjectEncoding>(client, ProtocolCommand.OBJECT_ENCODING)
-				.general((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
+				.general((cmd)->cmd.objectEncoding(key), new BinaryObjectEncodingConverter())
+				.pipeline((cmd)->cmd.objectEncoding(key), new BinaryObjectEncodingConverter())
+				.transaction((cmd)->cmd.objectEncoding(key), new BinaryObjectEncodingConverter())
 				.run(args);
 	}
 

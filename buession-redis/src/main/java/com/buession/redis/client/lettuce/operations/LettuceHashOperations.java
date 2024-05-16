@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
@@ -32,6 +33,8 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.MapScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.ListSetConverter;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
@@ -73,7 +76,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public String hGet(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new LettuceCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(SafeEncoder.encode(key),
-				SafeEncoder.encode(field)), Converters.BINARY_TO_STRING_CONVERTER)
+				SafeEncoder.encode(field)), SafeEncoder::encode)
 				.run(args);
 	}
 
@@ -88,7 +91,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(SafeEncoder.encode(key)),
-				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER)
+				(new MapConverter.BinaryToStringMapConverter()))
 				.run(args);
 	}
 
@@ -118,7 +121,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(SafeEncoder.encode(key)),
-				Converters.BINARY_LIST_TO_STRING_SET_CONVERTER)
+				new ListSetConverter.BinaryToStringListSetConverter())
 				.run(args);
 	}
 
@@ -283,7 +286,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
-				Converters.BOOLEAN_STATUS_CONVERTER)
+				new BooleanStatusConverter())
 				.run(args);
 	}
 

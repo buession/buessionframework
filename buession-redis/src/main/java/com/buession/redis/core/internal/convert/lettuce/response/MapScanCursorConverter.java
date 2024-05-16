@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.MapConverter;
 import io.lettuce.core.MapScanCursor;
 
 import java.util.Map;
@@ -58,7 +58,7 @@ public final class MapScanCursorConverter<K, V>
 		@Override
 		public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
 			return new ScanResult<>(source.getCursor(),
-					Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(source.getMap()));
+					(new MapConverter.BinaryToStringMapConverter()).convert(source.getMap()));
 		}
 
 	}
