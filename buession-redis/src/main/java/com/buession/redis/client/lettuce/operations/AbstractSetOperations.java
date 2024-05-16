@@ -22,69 +22,111 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.lang.Status;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
 /**
- * Jedis 集合命令操作抽象类
+ * Lettuce 集合命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractSetOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractSetOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements SetOperations {
 
-	public AbstractSetOperations(final C client){
+	public AbstractSetOperations(final C client) {
 		super(client);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor){
+	public Long sAdd(final String key, final String... members) {
+		return sAdd(SafeEncoder.encode(key), SafeEncoder.encode(members));
+	}
+
+	@Override
+	public Long sCard(final String key) {
+		return sCard(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String... keys) {
+		return sDiffStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String... keys) {
+		return sInterStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+	}
+
+	@Override
+	public Boolean sIsMember(final String key, final String member) {
+		return sIsMember(SafeEncoder.encode(key), SafeEncoder.encode(member));
+	}
+
+	@Override
+	public Status sMove(final String key, final String destKey, final String member) {
+		return sMove(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member));
+	}
+
+	@Override
+	public Long sRem(final String key, final String... members) {
+		return sRem(SafeEncoder.encode(key), SafeEncoder.encode(members));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor) {
 		return sScan(key, Long.toString(cursor));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor) {
 		return sScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern) {
 		return sScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count) {
 		return sScan(key, Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count) {
 		return sScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String... keys) {
+		return sUnionStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}
 
 }

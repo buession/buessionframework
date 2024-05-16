@@ -22,47 +22,42 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Jedis 服务端命令操作抽象类
+ * Lettuce 服务端命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractServerOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractServerOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
 		implements ServerOperations {
 
-	public AbstractServerOperations(final C client){
+	public AbstractServerOperations(final C client) {
 		super(client);
 	}
 
 	@Override
-	public Status moduleLoad(final byte[] path, final byte[]... arguments){
-		if(arguments == null){
-			return moduleLoad(SafeEncoder.encode(path));
-		}else{
-			final String[] args = new String[arguments.length];
-
-			for(int i = 0; i < arguments.length; i++){
-				args[i] = SafeEncoder.encode(arguments[i]);
-			}
-
-			return moduleLoad(SafeEncoder.encode(path), args);
-		}
+	public Status configSet(final byte[] parameter, final byte[] value) {
+		return configSet(SafeEncoder.encode(parameter), SafeEncoder.encode(value));
 	}
 
 	@Override
-	public Status moduleUnLoad(final byte[] name){
-		return moduleUnLoad(SafeEncoder.encode(name));
+	public Long memoryUsage(final String key) {
+		return memoryUsage(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long memoryUsage(final String key, final int samples) {
+		return memoryUsage(SafeEncoder.encode(key), samples);
 	}
 
 }

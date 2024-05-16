@@ -22,11 +22,10 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Arrays;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.FlushMode;
@@ -39,561 +38,465 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogEntryConverter;
-import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
-import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.InfoConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.InfoConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.RedisServerTimeConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.RoleConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.SlowlogConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.SlowlogConverter;
-import com.buession.redis.core.internal.convert.jedis.response.RoleConverter;
-import com.buession.redis.core.internal.jedis.JedisFailoverParams;
-import redis.clients.jedis.JedisMonitor;
-import redis.clients.jedis.args.SaveMode;
+import com.buession.redis.utils.SafeEncoder;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Jedis 单机模式服务端命令操作
+ * Lettuce 单机模式服务端命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisServerOperations extends AbstractServerOperations<JedisStandaloneClient> {
+public final class LettuceServerOperations extends AbstractServerOperations<LettuceStandaloneClient> {
 
-	public JedisServerOperations(final JedisStandaloneClient client){
+	public LettuceServerOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public List<String> aclCat(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
-				.general((cmd)->cmd.aclCat())
+	public List<String> aclCat() {
+		return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
 				.run();
 	}
 
 	@Override
-	public List<String> aclCat(final String categoryName){
+	public List<String> aclCat(final String categoryName) {
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
-				.general((cmd)->cmd.aclCat(categoryName))
+		return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> aclCat(final byte[] categoryName){
+	public List<byte[]> aclCat(final byte[] categoryName) {
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ACL_CAT)
-				.general((cmd)->cmd.aclCat(categoryName))
+		return new LettuceCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
 				.run(args);
 	}
 
 	@Override
-	public Status aclSetUser(final String username, final String... rules){
+	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
-				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
 				.run(args);
 	}
 
 	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules){
+	public Status aclSetUser(final byte[] username, final byte[]... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
-				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
 				.run(args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final String username){
+	public AclUser aclGetUser(final String username) {
 		final CommandArguments args = CommandArguments.create("username", username);
-		return new JedisCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
-				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE)
+		return new LettuceCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
 				.run(args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final byte[] username){
+	public AclUser aclGetUser(final byte[] username) {
 		final CommandArguments args = CommandArguments.create("username", username);
-		return new JedisCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
-				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE)
+		return new LettuceCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
 				.run(args);
 	}
 
 	@Override
-	public List<String> aclUsers(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_USERS)
-				.general((cmd)->cmd.aclUsers())
+	public List<String> aclUsers() {
+		return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
 				.run();
 	}
 
 	@Override
-	public String aclWhoAmI(){
-		return new JedisCommand<String>(client, ProtocolCommand.ACL_WHOAMI)
-				.general((cmd)->cmd.aclWhoAmI())
+	public String aclWhoAmI() {
+		return new LettuceCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
 				.run();
 	}
 
 	@Override
-	public Long aclDelUser(final String... usernames){
+	public Long aclDelUser(final String... usernames) {
 		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return new JedisCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
-				.general((cmd)->{
-					if(usernames.length > 1){
-						return cmd.aclDelUser(usernames[0], Arrays.subarray(usernames, 1, usernames.length - 1));
-					}else{
-						return cmd.aclDelUser(usernames[0]);
-					}
-				})
+		return new LettuceCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
 				.run(args);
 	}
 
 	@Override
-	public Long aclDelUser(final byte[]... usernames){
+	public Long aclDelUser(final byte[]... usernames) {
 		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return new JedisCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
-				.general((cmd)->{
-					if(usernames.length > 1){
-						return cmd.aclDelUser(usernames[0], Arrays.subarray(usernames, 1, usernames.length - 1));
-					}else{
-						return cmd.aclDelUser(usernames[0]);
-					}
-				})
+		return new LettuceCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
 				.run(args);
 	}
 
 	@Override
-	public String aclGenPass(){
-		return new JedisCommand<String>(client, ProtocolCommand.ACL_GENPASS)
-				.general((cmd)->cmd.aclGenPass())
+	public String aclGenPass() {
+		return new LettuceCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
 				.run();
 	}
 
 	@Override
-	public List<String> aclList(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_LIST)
-				.general((cmd)->cmd.aclList())
+	public List<String> aclList() {
+		return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
 				.run();
 	}
 
 	@Override
-	public Status aclLoad(){
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOAD)
-				.general((cmd)->cmd.aclLoad(), OkStatusConverter.INSTANCE)
+	public Status aclLoad() {
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
 				.run();
 	}
 
 	@Override
-	public List<AclLog> aclLog(){
-		return new JedisCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog(), AccessControlLogEntryConverter.LIST_CONVERTER)
+	public List<AclLog> aclLog() {
+		return new LettuceCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
 				.run();
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count){
+	public List<AclLog> aclLog(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
-		return new JedisCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog((int) count), AccessControlLogEntryConverter.LIST_CONVERTER)
+		return new LettuceCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
 				.run(args);
 	}
 
 	@Override
-	public Status aclLogReset(){
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGREST)
-				.general((cmd)->cmd.aclLogReset(), OkStatusConverter.INSTANCE)
+	public Status aclLogReset() {
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
 				.run();
 	}
 
 	@Override
-	public Status aclLogSave(){
-		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGSAVE)
+	public Status aclLogSave() {
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
 				.run();
 	}
 
 	@Override
-	public String bgRewriteAof(){
-		return new JedisCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
-				.general((cmd)->cmd.bgrewriteaof())
+	public String bgRewriteAof() {
+		return new LettuceCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
 				.run();
 	}
 
 	@Override
-	public String bgSave(){
-		return new JedisCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
-				.general((cmd)->cmd.bgsave())
+	public String bgSave() {
+		return new LettuceCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
 				.run();
 	}
 
 	@Override
-	public Status configSet(final String parameter, final String value){
+	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
-				.general((cmd)->cmd.configSet(parameter, value), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status configSet(final byte[] parameter, final byte[] value){
-		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
-				.general((cmd)->cmd.configSet(parameter, value), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public List<String> configGet(final String parameter){
+	public List<String> configGet(final String parameter) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.CONFIG_GET)
-				.general((cmd)->cmd.configGet(parameter))
+		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),
+				(value)->new ArrayList<>(value.values()))
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter){
+	public List<byte[]> configGet(final byte[] parameter) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.CONFIG_GET)
-				.general((cmd)->cmd.configGet(parameter))
+		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_GET,
+				(cmd)->cmd.configGet(SafeEncoder.encode(parameter)),
+				(v)->v.values().stream().map(SafeEncoder::encode).collect(Collectors.toList()))
 				.run(args);
 	}
 
 	@Override
-	public Status configResetStat(){
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
-				.general((cmd)->cmd.configResetStat(), OkStatusConverter.INSTANCE)
+	public Status configResetStat() {
+		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(),
+				OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Status configRewrite(){
-		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_REWRITE)
-				.general((cmd)->cmd.configRewrite(), OkStatusConverter.INSTANCE)
+	public Status configRewrite() {
+		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
+				OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Long dbSize(){
-		return new JedisCommand<Long>(client, ProtocolCommand.DBSIZE)
-				.general((cmd)->cmd.dbSize()).pipeline((cmd)->cmd.dbSize())
+	public Long dbSize() {
+		return new LettuceCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbsize(), (v)->v)
 				.run();
 	}
 
 	@Override
-	public Status failover(){
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(), OkStatusConverter.INSTANCE)
+	public Status failover() {
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 				.run();
 	}
 
 	@Override
-	public Status failover(final String host, final int port){
+	public Status failover(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		final JedisFailoverParams params = new JedisFailoverParams(host, port);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 				.run(args);
 	}
 
 	@Override
-	public Status failover(final String host, final int port, final int timeout){
+	public Status failover(final String host, final int port, final int timeout) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
-		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 				.run(args);
 	}
 
 	@Override
-	public Status failover(final String host, final int port, final boolean isForce, final int timeout){
+	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("isForce", isForce)
 				.put("timeout", timeout);
-		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout, isForce);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 				.run(args);
 	}
 
 	@Override
-	public Status failover(final int timeout){
+	public Status failover(final int timeout) {
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		final JedisFailoverParams params = new JedisFailoverParams(timeout);
-		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 				.run(args);
 	}
 
 	@Override
-	public Status flushAll(){
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
-				.general((cmd)->cmd.flushAll(), OkStatusConverter.INSTANCE)
+	public Status flushAll() {
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Status flushAll(final FlushMode mode){
+	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
-				.general((cmd)->cmd.flushAll(FlushModeConverter.INSTANCE.convert(mode)), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status flushDb(){
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.general((cmd)->cmd.flushDB(), OkStatusConverter.INSTANCE)
+	public Status flushDb() {
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Status flushDb(final FlushMode mode){
+	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.general((cmd)->cmd.flushDB(FlushModeConverter.INSTANCE.convert(mode)), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Info info(){
-		return new JedisCommand<Info>(client, ProtocolCommand.INFO)
-				.general((cmd)->cmd.info(), InfoConverter.INSTANCE)
+	public Info info() {
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), InfoConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Info info(final Info.Section section){
+	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create("section", section);
-		return new JedisCommand<Info>(client, ProtocolCommand.INFO)
-				.general((cmd)->cmd.info(section.name().toLowerCase()), InfoConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(section.name().toLowerCase()),
+				InfoConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Long lastSave(){
-		return new JedisCommand<Long>(client, ProtocolCommand.LASTSAVE)
-				.general((cmd)->cmd.lastsave())
+	public Long lastSave() {
+		return new LettuceCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(), Date::getTime)
 				.run();
 	}
 
 	@Override
-	public String memoryDoctor(){
-		return new JedisCommand<String>(client, ProtocolCommand.MEMORY_DOCTOR)
-				.general((cmd)->cmd.memoryDoctor())
+	public String memoryDoctor() {
+		return new LettuceCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
 				.run();
 	}
 
 	@Override
-	public Status memoryPurge(){
-		return new JedisCommand<Status>(client, ProtocolCommand.MEMORY_PURGE)
+	public Status memoryPurge() {
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
 				.run();
 	}
 
 	@Override
-	public MemoryStats memoryStats(){
-		return new JedisCommand<MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
+	public MemoryStats memoryStats() {
+		return new LettuceCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
 				.run();
 	}
 
 	@Override
-	public Long memoryUsage(final String key){
+	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
-				.general((cmd)->cmd.memoryUsage(key))
-				.pipeline((cmd)->cmd.memoryUsage(key))
-				.transaction((cmd)->cmd.memoryUsage(key))
+		return new LettuceCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long memoryUsage(final byte[] key){
-		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
-				.general((cmd)->cmd.memoryUsage(key))
-				.pipeline((cmd)->cmd.memoryUsage(key))
-				.transaction((cmd)->cmd.memoryUsage(key))
-				.run(args);
-	}
-
-	@Override
-	public Long memoryUsage(final String key, final int samples){
+	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
-				.general((cmd)->cmd.memoryUsage(key, samples))
-				.pipeline((cmd)->cmd.memoryUsage(key, samples))
-				.transaction((cmd)->cmd.memoryUsage(key, samples))
+		return new LettuceCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long memoryUsage(final byte[] key, final int samples){
-		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
-		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
-				.general((cmd)->cmd.memoryUsage(key, samples))
-				.pipeline((cmd)->cmd.memoryUsage(key, samples))
-				.transaction((cmd)->cmd.memoryUsage(key, samples))
-				.run(args);
-	}
-
-	@Override
-	public List<Module> moduleList(){
-		return new JedisCommand<List<Module>>(client, ProtocolCommand.MODULE_LIST)
-				.general((cmd)->cmd.moduleList(), ModuleConverter.LIST_CONVERTER)
+	public List<Module> moduleList() {
+		return new LettuceCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
 				.run();
 	}
 
 	@Override
-	public Status moduleLoad(final String path, final String... arguments){
+	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
-		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_LOAD)
-				.general((cmd)->cmd.moduleLoad(path, arguments), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
 				.run(args);
 	}
 
 	@Override
-	public Status moduleUnLoad(final String name){
+	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
+				.run(args);
+	}
+
+	@Override
+	public Status moduleUnLoad(final String name) {
 		final CommandArguments args = CommandArguments.create("name", name);
-		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_UNLOAD)
-				.general((cmd)->cmd.moduleUnload(name), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
 				.run(args);
 	}
 
 	@Override
-	public void monitor(final RedisMonitor redisMonitor){
+	public Status moduleUnLoad(final byte[] name) {
+		final CommandArguments args = CommandArguments.create("name", name);
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
+				.run(args);
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor) {
 		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
-		new JedisCommand<Status>(client, ProtocolCommand.MONITOR)
-				.general((cmd)->{
-					cmd.monitor(new JedisMonitor() {
-
-						@Override
-						public void onCommand(final String command){
-							redisMonitor.onCommand(command);
-						}
-
-					});
-					return null;
-				})
+		new LettuceCommand<>(client, ProtocolCommand.MONITOR)
 				.run(args);
 	}
 
 	@Override
-	public Object pSync(final String replicationId, final long offset){
+	public Object pSync(final String replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return new JedisCommand<>(client, ProtocolCommand.PSYNC)
+		return new LettuceCommand<>(client, ProtocolCommand.PSYNC)
 				.run(args);
 	}
 
 	@Override
-	public Object pSync(final byte[] replicationId, final long offset){
+	public Object pSync(final byte[] replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return new JedisCommand<>(client, ProtocolCommand.PSYNC)
+		return new LettuceCommand<>(client, ProtocolCommand.PSYNC)
 				.run(args);
 	}
 
 	@Override
-	public void sync(){
-		new JedisCommand<Void>(client, ProtocolCommand.SYNC)
-				.pipeline((cmd)->{
-					cmd.sync();
-					return null;
-				})
+	public void sync() {
+		new LettuceCommand<>(client, ProtocolCommand.SYNC)
 				.run();
 	}
 
 	@Override
-	public Status replicaOf(final String host, final int port){
+	public Status replicaOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return new JedisCommand<Status>(client, ProtocolCommand.REPLICAOF)
-				.general((cmd)->cmd.replicaof(host, port), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
 				.run(args);
 	}
 
 	@Override
-	public Status slaveOf(final String host, final int port){
+	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return new JedisCommand<Status>(client, ProtocolCommand.SLAVEOF)
-				.general((cmd)->cmd.slaveof(host, port), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public List<Role> role(){
-		return new JedisCommand<List<Role>>(client, ProtocolCommand.ROLE)
-				.general((cmd)->cmd.role(), RoleConverter.LIST_CONVERTER)
+	public List<Role> role() {
+		return new LettuceCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(),
+				RoleConverter.LIST_CONVERTER)
 				.run();
 	}
 
 	@Override
-	public Status save(){
-		return new JedisCommand<Status>(client, ProtocolCommand.SAVE)
-				.general((cmd)->cmd.save(), OkStatusConverter.INSTANCE)
+	public Status save() {
+		return new LettuceCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(),
+				OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public void shutdown(){
-		new JedisCommand<Void>(client, ProtocolCommand.SHUTDOWN)
-				.general((cmd)->{
-					cmd.shutdown();
-					return null;
-				})
+	public void shutdown() {
+		new LettuceCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
+			cmd.shutdown(true);
+			return null;
+		}, (v)->v)
 				.run();
 	}
 
 	@Override
-	public void shutdown(final boolean save){
+	public void shutdown(final boolean save) {
 		final CommandArguments args = CommandArguments.create("save", save);
-		new JedisCommand<Void>(client, ProtocolCommand.SHUTDOWN)
-				.general((cmd)->{
-					final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
-					cmd.shutdown(saveMode);
-					return null;
-				})
+		new LettuceCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
+			cmd.shutdown(save);
+			return null;
+		}, (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(){
-		return new JedisCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(), SlowlogConverter.LIST_CONVERTER)
+	public List<SlowLog> slowLogGet() {
+		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
+				SlowlogConverter.LIST_CONVERTER)
 				.run();
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count){
+	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
-		return new JedisCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(count), SlowlogConverter.LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet((int) count),
+				SlowlogConverter.LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Long slowLogLen(){
-		return new JedisCommand<Long>(client, ProtocolCommand.SLOWLOG_LEN)
-				.general((cmd)->cmd.slowlogLen())
+	public Long slowLogLen() {
+		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(), (v)->v)
 				.run();
 	}
 
 	@Override
-	public Status slowLogReset(){
-		return new JedisCommand<Status>(client, ProtocolCommand.SLOWLOG_RESET)
-				.general((cmd)->cmd.slowlogReset(), OkStatusConverter.INSTANCE)
+	public Status slowLogReset() {
+		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
+				OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Status swapdb(final int db1, final int db2){
+	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
-		return new JedisCommand<Status>(client, ProtocolCommand.SWAPDB)
-				.general((cmd)->cmd.swapDB(db1, db2), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.swapDB(db1, db2), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public RedisServerTime time(){
-		return new JedisCommand<RedisServerTime>(client, ProtocolCommand.TIME)
-				.general((cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
-				.pipeline((cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
+	public RedisServerTime time() {
+		return new LettuceCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
 				.run();
 	}
 
