@@ -22,124 +22,58 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.exception.RedisException;
-import redis.clients.jedis.Builder;
-import redis.clients.jedis.Response;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Jedis 单机模式事务命令操作
+ * Lettuce 单机模式事务命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisTransactionOperations extends AbstractTransactionOperations<JedisStandaloneClient> {
+public final class LettuceTransactionOperations extends AbstractTransactionOperations<LettuceStandaloneClient> {
 
-	public JedisTransactionOperations(final JedisStandaloneClient client){
+	public LettuceTransactionOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Status multi(){
-		return new JedisCommand<Status>(client, ProtocolCommand.MULTI)
-				.general((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.multi();
-
-					return Status.SUCCESS;
-				}).transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.multi();
-
-					return new Response<>(new Builder<Status>() {
-
-						@Override
-						public Status build(Object data){
-							return Status.SUCCESS;
-						}
-
-					});
-				})
+	public Status multi() {
+		return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public List<Object> exec(){
-		return new JedisCommand<List<Object>>(client, ProtocolCommand.EXEC) {
-
-			@Override
-			public List<Object> execute() throws RedisException{
-				RedisConnection connection = client.getConnection();
-				return connection.exec();
-			}
-
-		}.run();
-	}
-
-	@Override
-	public void discard(){
-		new JedisCommand<Void>(client, ProtocolCommand.DISCARD)
-				.transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.discard();
-					return null;
-				})
+	public List<Object> exec() {
+		return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(),
+				(value)->value.stream().collect(Collectors.toList()))
 				.run();
 	}
 
 	@Override
-	public Status watch(final String... keys){
+	public void discard() {
+		new LettuceCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (value)->value)
+				.run();
+	}
+
+	@Override
+	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
-
-					@Override
-					public String build(Object data){
-						return cmd.watch(keys);
-					}
-
-				}), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public Status watch(final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
-
-					@Override
-					public String build(Object data){
-						return cmd.watch(keys);
-					}
-
-				}), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
-
-	@Override
-	public Status unwatch(){
-		return new JedisCommand<Status>(client, ProtocolCommand.UNWATCH)
-				.general((cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
-
-					@Override
-					public String build(Object data){
-						return cmd.unwatch();
-					}
-
-				}), OkStatusConverter.INSTANCE)
+	public Status unwatch() {
+		return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
 				.run();
 	}
 

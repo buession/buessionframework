@@ -22,25 +22,32 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.lang.Status;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.TransactionOperations;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Jedis 事务命令操作抽象类
+ * Lettuce 事务命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractTransactionOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements TransactionOperations {
+public abstract class AbstractTransactionOperations<C extends LettuceRedisClient>
+		extends AbstractLettuceRedisOperations<C> implements TransactionOperations {
 
-	public AbstractTransactionOperations(final C client){
+	public AbstractTransactionOperations(final C client) {
 		super(client);
+	}
+
+	@Override
+	public Status watch(final String... keys) {
+		return watch(SafeEncoder.encode(keys));
 	}
 
 }
