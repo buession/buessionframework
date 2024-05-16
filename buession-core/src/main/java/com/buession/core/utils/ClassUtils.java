@@ -64,7 +64,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 默认类加载器
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader classLoader = null;
@@ -98,7 +98,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return true / false
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public static boolean isPresent(String className) {
 		try{
@@ -122,7 +122,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return true / false
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
 		try{

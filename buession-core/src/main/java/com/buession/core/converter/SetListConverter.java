@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * 		目标类型
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class SetListConverter<S, T> implements Converter<Set<S>, List<T>> {
 

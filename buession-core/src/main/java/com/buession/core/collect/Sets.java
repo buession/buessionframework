@@ -83,7 +83,13 @@ public class Sets {
 	 * @return 当 data 为 null 时，返回 null；否则，返回 O 类型的 {@link List}
 	 */
 	public static <O> List<O> toList(final Set<O> data) {
-		return data == null ? null : (data instanceof LinkedHashSet ? new LinkedList<>(data) : new ArrayList<>(data));
+		if(data == null){
+			return null;
+		}else if(data instanceof LinkedHashSet){
+			return new LinkedList<>(data);
+		}else{
+			return new ArrayList<>(data);
+		}
 	}
 
 }

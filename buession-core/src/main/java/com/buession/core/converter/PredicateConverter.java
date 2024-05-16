@@ -37,7 +37,7 @@ import java.util.function.Predicate;
  *
  * @author Yong.Teng
  * @see Predicate
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class PredicateConverter<T> implements Converter<T, Boolean> {
 
