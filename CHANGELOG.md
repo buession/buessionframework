@@ -2,6 +2,51 @@
 ===========================
 
 
+## [3.0.0](https://github.com/buession/buessionframework/releases/tag/v3.0.0) (2024-xx-xx)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v3.0.0)
+
+
+### ⭐ 新特性
+
+- **buession-core：** ClassUtils 新增检测类是否存在方法
+- **buession-core：** 新增 list 到 set 转换器 ListSetConverter，set 到 list 转换器 SetListConverter
+- **buession-core：** Maps.toList 参数为 LinkedHashMap 返回 LinkedList
+- **buession-core：** Lists.toSet 参数为 LinkedList 返回 LinkedHashSet
+- **buession-core：** Sets.toList 参数为 LinkedHashSet 返回 LinkedList
+- **buession-core：** 新增 PredicateConverter
+- **buession-httpclient：** Configuration 新增 expectContinueEnabled、hardCancellationEnabled、targetPreferredAuthSchemes、cookieSpec、proxy 配置
+- **buession-httpclient：** 新增代理支持
+- **buession-httpclient：** 新增支持 apache httpcomponents 5
+- **buession-redis：** 新增支持 Lettuce
+
+
+### 🔔 变化
+
+- **buession-core：** 删除依赖 commons-beanutils
+- **buession-geoip：** 删除依赖 apache httpcomponents
+- **buession-httpclient：** 废弃 ApacheRequest、ApacheRequestBuilder、ApacheHttpClientBuilder
+- **buession-httpclient：** 优化 ConnectionManager 创建默认原生 ConnectionManager，以解决在创建原生 ConnectionManager 之前，更新了 Configuration 不生效的问题
+- **buession-httpclient：** ApacheHttpClient 删除 apache httpcomponents 4 中的特有方法
+- **buession-httpclient：** 参数为 URL 时，不再验证是否为 null
+- **buession-httpclient：** apache httpcomponents 异步请求时 HttpAsyncResponseConsumer 采用 ZeroCopyConsumer
+- **buession-httpclient：** okhttp maxRequestsPerHost 大于 0 时，才会更新 okhttp 原生 maxRequestsPerHost 的值
+- **buession-redis：** 删除参数为字符串数组或 byte[] 数组的方法 bitField
+
+
+### 🐞 Bug 修复
+
+- **buession-httpclient：** 修复 ConnectionManager 未设置 connectionManagerShared 时，无法从 Configuration 中获取 connectionManagerShared 值的 BUG
+- **buession-httpclient：** 修复 okhttp 设置 followRedirects 时，followSslRedirects 未生效的 BUG
+- **buession-redis：** 修复 jedis 模式下 role 命令未返回数据的 BUG
+- **buession-redis：** 修复 jedis 模式下 API 中，“命令”参数设置错误的 BUG
+
+
+---
+
+
 ## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-05-06)
 
 ### 🔨依赖升级
