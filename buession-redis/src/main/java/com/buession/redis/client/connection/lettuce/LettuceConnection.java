@@ -22,50 +22,52 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.jedis;
+package com.buession.redis.client.connection.lettuce;
 
-import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
+import com.buession.redis.client.connection.RedisStandaloneConnection;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisTransaction;
+import io.lettuce.core.LettucePool;
+import io.lettuce.core.api.PipeliningFlushPolicy;
+import io.lettuce.core.api.StatefulRedisConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Jedis 单机模式连接器
+ * Lettuce 单机模式连接器
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public class JedisConnection extends AbstractJedisRedisConnection implements RedisStandaloneConnection {
+public class LettuceConnection extends AbstractLettuceRedisConnection implements RedisStandaloneConnection {
 
 	/**
 	 * 连接池
 	 */
-	private JedisPool pool;
+	private LettucePool pool;
 
 	/**
-	 * Jedis 对象
+	 * StatefulRedisConnection 对象
 	 */
-	private Jedis jedis;
+	private StatefulRedisConnection<byte[], byte[]> delegate;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
+	private PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
+
+	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
 
 	/**
 	 * 构造函数
 	 */
-	public JedisConnection() {
+	public LettuceConnection() {
 		super();
 	}
 
@@ -75,7 +77,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public JedisConnection(JedisDataSource dataSource) {
+	public LettuceConnection(LettuceDataSource dataSource) {
 		super(dataSource);
 	}
 
@@ -89,7 +91,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout) {
+	public LettuceConnection(LettuceDataSource dataSource, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 	}
 
@@ -104,10 +106,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 2.0.0
 	 */
-	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout) {
+	public LettuceConnection(LettuceDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -119,7 +119,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, SslConfiguration sslConfiguration) {
+	public LettuceConnection(LettuceDataSource dataSource, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
 	}
 
@@ -135,8 +135,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout,
-						   SslConfiguration sslConfiguration) {
+	public LettuceConnection(LettuceDataSource dataSource, int connectTimeout, int soTimeout,
+							 SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -153,11 +153,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param sslConfiguration
 	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
 	 */
-	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout,
-						   SslConfiguration sslConfiguration) {
+	public LettuceConnection(LettuceDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout,
+							 SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -169,7 +167,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param pool
 	 * 		连接池
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool) {
+	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool) {
 		super(dataSource);
 		this.pool = pool;
 	}
@@ -186,7 +184,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout) {
+	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 		this.pool = pool;
 	}
@@ -205,8 +203,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
-						   int infiniteSoTimeout) {
+	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout,
+							 int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.pool = pool;
 	}
@@ -221,7 +219,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, SslConfiguration sslConfiguration) {
+	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
 		this.pool = pool;
 	}
@@ -240,8 +238,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
-						   SslConfiguration sslConfiguration) {
+	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout,
+							 SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.pool = pool;
 	}
@@ -262,20 +260,20 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
-						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout,
+							 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.pool = pool;
 	}
 
-	public Jedis getJedis() {
-		return jedis;
+	public StatefulRedisConnection<byte[], byte[]> getStatefulConnection() {
+		return delegate;
 	}
 
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			pipeline = new JedisPipeline(jedis.pipelined());
+			pipeline = new LettucePipeline(pipeliningFlushPolicy.newPipeline());
 		}
 
 		return pipeline;
@@ -290,7 +288,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			transaction = new JedisTransaction(jedis.multi());
+			//transaction = new JedisTransaction(jedis.multi());
 		}
 
 		return transaction;
@@ -322,12 +320,12 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	public boolean isConnect() {
-		return jedis != null && jedis.isConnected();
+		return delegate != null && delegate.isOpen();
 	}
 
 	@Override
 	public boolean isClosed() {
-		return jedis == null || jedis.isConnected() == false;
+		return delegate == null || delegate.isOpen() == false;
 	}
 
 	@Override
@@ -342,25 +340,26 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	protected void doConnect() throws RedisConnectionFailureException {
 		if(isUsePool()){
 			try{
-				jedis = pool.getResource();
+				delegate = pool.getResource();
 
 				if(logger.isInfoEnabled()){
-					logger.info("Jedis initialized with pool success.");
+					logger.info("StatefulConnection initialized with pool success.");
 				}
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
-					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
+					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
 				}
 
 				throw JedisRedisExceptionUtils.convert(e);
 			}
 		}else{
-			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-			final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
+			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+			//final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource,
+			//getSslConfiguration());
 
-			builder.database(dataSource.getDatabase());
+			//builder.database(dataSource.getDatabase());
 
-			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), builder.build());
+			//jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), builder.build());
 		}
 	}
 
@@ -368,16 +367,16 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
-		logger.info("Jedis destroy.");
+		logger.info("Lettuce destroy.");
 		if(pool != null){
 			if(logger.isInfoEnabled()){
-				logger.info("Jedis pool for {} destroy.", pool.getClass().getName());
+				logger.info("Lettuce pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Jedis pool.", ex);
+				logger.warn("Cannot properly close Lettuce pool.", ex);
 			}
 
 			pool = null;
@@ -389,14 +388,15 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		super.doClose();
 
 		if(isUsePool()){
-			logger.info("Jedis close.");
+			logger.info("Lettuce close.");
 
-			if(jedis != null){
-				jedis.close();
-			}
+			//if(jedis != null){
+			//jedis.close();
+			//}
 		}else{
-			logger.info("Jedis quit and disconnect.");
+			logger.info("Lettuce quit and disconnect.");
 
+			/*
 			if(jedis != null){
 				Exception ex = null;
 
@@ -416,6 +416,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 					throw new RedisException(ex);
 				}
 			}
+
+			 */
 		}
 	}
 

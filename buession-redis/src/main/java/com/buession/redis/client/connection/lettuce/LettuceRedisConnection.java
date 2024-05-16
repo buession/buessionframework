@@ -22,15 +22,16 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.jedis;
+package com.buession.redis.client.connection.lettuce;
 
 import com.buession.redis.client.connection.RedisConnection;
 
 /**
- * Jedis Redis 连接对象
+ * Lettuce Redis 连接对象
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public interface JedisRedisConnection extends RedisConnection {
+public interface LettuceRedisConnection extends RedisConnection {
 
 }
