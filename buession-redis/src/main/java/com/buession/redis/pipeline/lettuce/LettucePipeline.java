@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.jedis;
+package com.buession.redis.pipeline.lettuce;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.pipeline.Pipeline;
+import io.lettuce.core.api.PipeliningFlushState;
+import io.lettuce.core.api.StatefulConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,38 +35,63 @@ import java.util.List;
 
 /**
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public class JedisPipeline implements Pipeline {
+public class LettucePipeline implements Pipeline {
 
-	private final redis.clients.jedis.Pipeline delegate;
+	private final PipeliningFlushState flushState;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
+	private StatefulConnection<byte[], byte[]> asyncDedicatedConn;
 
-	public JedisPipeline(redis.clients.jedis.Pipeline pipeline) {
-		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
-		this.delegate = pipeline;
+	private final static Logger logger = LoggerFactory.getLogger(LettucePipeline.class);
+
+	public LettucePipeline(PipeliningFlushState flushState) {
+		Assert.isNull(flushState, "Redis Pipeline cloud not be null.");
+		this.flushState = flushState;
 	}
 
-	public redis.clients.jedis.Pipeline primitive() {
-		return delegate;
+	public PipeliningFlushState primitive() {
+		return flushState;
 	}
 
 	@Override
 	public void sync() {
 		logger.info("Redis pipeline sync.");
-		delegate.sync();
+		//delegate.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll() {
 		logger.info("Redis pipeline syncAndReturnAll.");
-		return delegate.syncAndReturnAll();
+		return null;//delegate.syncAndReturnAll();
 	}
 
 	@Override
 	public void close() {
 		logger.info("Redis pipeline close.");
-		delegate.close();
+		flushState.onClose(this.getOrCreateDedicatedConnection());
+	}
+
+	private StatefulConnection<byte[], byte[]> getOrCreateDedicatedConnection() {
+		if(asyncDedicatedConn == null){
+			asyncDedicatedConn = doGetAsyncDedicatedConnection();
+		}
+
+		return asyncDedicatedConn;
+	}
+
+	protected StatefulConnection<byte[], byte[]> doGetAsyncDedicatedConnection() {
+		/*
+		StatefulConnection connection = connectionProvider.getConnection(StatefulConnection.class);
+
+		if(customizedDatabaseIndex()){
+			potentiallySelectDatabase(dbIndex);
+		}
+
+		return connection;
+
+		 */
+		return null;
 	}
 
 }
