@@ -35,6 +35,7 @@ import redis.clients.jedis.params.XAddParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public final class XAddArgumentConverter implements Converter<StreamCommands.XAddArgument, XAddParams> {
 
 	public final static XAddArgumentConverter INSTANCE = new XAddArgumentConverter();

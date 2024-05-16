@@ -33,7 +33,7 @@ import java.util.Optional;
  * Jedis {@link LPosParams} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class JedisLPosParams extends LPosParams {
 
@@ -42,10 +42,12 @@ public final class JedisLPosParams extends LPosParams {
 	}
 
 	public JedisLPosParams(final int rank) {
+		super();
 		rank(rank);
 	}
 
 	public JedisLPosParams(final int rank, final int maxLen) {
+		super();
 		rank(rank);
 		maxlen(maxLen);
 	}

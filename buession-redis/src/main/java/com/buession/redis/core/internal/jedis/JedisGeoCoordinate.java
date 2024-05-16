@@ -31,7 +31,7 @@ import redis.clients.jedis.GeoCoordinate;
  * Jedis {@link GeoCoordinate} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class JedisGeoCoordinate extends GeoCoordinate {
 

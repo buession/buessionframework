@@ -34,6 +34,10 @@ import redis.clients.jedis.params.FailoverParams;
  */
 public final class JedisFailoverParams extends FailoverParams {
 
+	public JedisFailoverParams() {
+		super();
+	}
+
 	/**
 	 * 构造函数
 	 *

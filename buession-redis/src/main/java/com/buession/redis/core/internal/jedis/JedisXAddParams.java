@@ -25,15 +25,19 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.command.StreamCommands;
 import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XAddParams;
+
+import java.util.Optional;
 
 /**
  * Jedis {@link XAddParams} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class JedisXAddParams extends XAddParams {
 
@@ -58,6 +62,182 @@ public final class JedisXAddParams extends XAddParams {
 
 	public JedisXAddParams(final StreamEntryId id) {
 		this(StreamEntryIdConverter.INSTANCE.convert(id));
+	}
+
+	public JedisXAddParams(final String id, final String minId) {
+		this(id);
+		minId(minId);
+	}
+
+	public JedisXAddParams(final byte[] id, final byte[] minId) {
+		this(id);
+		minId(SafeEncoder.encode(minId));
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final String minId) {
+		this(id);
+		minId(minId);
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final byte[] minId) {
+		this(id);
+		minId(SafeEncoder.encode(minId));
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final String minId) {
+		this(id);
+		minId(minId);
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final byte[] minId) {
+		this(id);
+		minId(SafeEncoder.encode(minId));
+	}
+
+	public JedisXAddParams(final long maxLen) {
+		super();
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final String id, final long maxLen) {
+		this(id);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final byte[] id, final long maxLen) {
+		this(id);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final long maxLen) {
+		this(id);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final long maxLen) {
+		this(id);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final String id, final String minId, final long maxLen) {
+		this(id, minId);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final byte[] id, final byte[] minId, final long maxLen) {
+		this(id, minId);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final String minId, final long maxLen) {
+		this(id, minId);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final byte[] minId, final long maxLen) {
+		this(id, minId);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final String minId, final long maxLen) {
+		this(id, minId);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final byte[] minId, final long maxLen) {
+		this(id, minId);
+		maxLen(maxLen);
+	}
+
+	public JedisXAddParams(final String id, final String minId, final long maxLen, final boolean approximateTrimming,
+						   final boolean exactTrimming, final boolean noMkStream, final long limit) {
+		this(id, minId, maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+		noMkStream(this, noMkStream);
+		limit(limit);
+	}
+
+	public JedisXAddParams(final byte[] id, final byte[] minId, final long maxLen, final boolean approximateTrimming,
+						   final boolean exactTrimming, final boolean noMkStream, final long limit) {
+		this(id, minId, maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+		noMkStream(this, noMkStream);
+		limit(limit);
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final String minId, final long maxLen,
+						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
+						   final long limit) {
+		this(id, minId, maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+		noMkStream(this, noMkStream);
+		limit(limit);
+	}
+
+	public JedisXAddParams(final StreamEntryID id, final byte[] minId, final long maxLen,
+						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
+						   final long limit) {
+		this(id, minId, maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+		noMkStream(this, noMkStream);
+		limit(limit);
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final String minId, final long maxLen,
+						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
+						   final long limit) {
+		this(id, minId, maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+		noMkStream(this, noMkStream);
+		limit(limit);
+	}
+
+	public JedisXAddParams(final StreamEntryId id, final byte[] minId, final long maxLen,
+						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
+						   final long limit) {
+		this(id, minId, maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+		noMkStream(this, noMkStream);
+		limit(limit);
+	}
+
+	public static JedisXAddParams from(final StreamCommands.XAddArgument xAddArgument) {
+		final JedisXAddParams xAddParams = new JedisXAddParams();
+
+		if(xAddArgument != null){
+			Optional.ofNullable(xAddArgument.getMinId()).ifPresent(xAddParams::minId);
+			Optional.ofNullable(xAddArgument.getMaxLen()).ifPresent(xAddParams::maxLen);
+			approximateTrimming(xAddParams, xAddArgument.isApproximateTrimming());
+			exactTrimming(xAddParams, xAddArgument.isExactTrimming());
+			noMkStream(xAddParams, xAddArgument.isNoMkStream());
+			Optional.ofNullable(xAddArgument.getLimit()).ifPresent(xAddParams::limit);
+		}
+
+		return xAddParams;
+	}
+
+	private static void approximateTrimming(final JedisXAddParams xAddParams, final Boolean approximateTrimming) {
+		if(Boolean.TRUE.equals(approximateTrimming)){
+			xAddParams.approximateTrimming();
+		}
+	}
+
+	private static void exactTrimming(final JedisXAddParams xAddParams, final Boolean exactTrimming) {
+		if(Boolean.TRUE.equals(exactTrimming)){
+			xAddParams.exactTrimming();
+		}
+	}
+
+	private static void noMkStream(final JedisXAddParams xAddParams, final Boolean noMkStream) {
+		if(Boolean.TRUE.equals(noMkStream)){
+			xAddParams.noMkStream();
+		}
 	}
 
 }

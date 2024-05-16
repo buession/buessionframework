@@ -35,7 +35,7 @@ import java.util.Optional;
  * Jedis {@link SortingParams} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class JedisSortingParams extends SortingParams {
 
@@ -44,19 +44,23 @@ public final class JedisSortingParams extends SortingParams {
 	}
 
 	public JedisSortingParams(final String by) {
+		super();
 		by(by);
 	}
 
 	public JedisSortingParams(final byte[] by) {
+		super();
 		by(by);
 	}
 
 	public JedisSortingParams(final String by, final String[] gets) {
+		super();
 		by(by);
 		get(gets);
 	}
 
 	public JedisSortingParams(final byte[] by, final byte[][] gets) {
+		super();
 		by(by);
 		get(gets);
 	}
