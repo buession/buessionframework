@@ -19,42 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
-
-import com.buession.redis.client.connection.datasource.DataSource;
 
 /**
  * Redis 连接工厂
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public class RedisConnectionFactory {
-
-	/**
-	 * Redis 数据源
-	 */
-	private final DataSource dataSource;
-
-	/**
-	 * 返回 Redis 数据源
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 */
-	public RedisConnectionFactory(final DataSource dataSource){
-		this.dataSource = dataSource;
-	}
+public interface RedisConnectionFactory {
 
 	/**
 	 * 返回 Redis 连接对象
 	 *
 	 * @return Redis 连接对象
 	 */
-	public RedisConnection getConnection(){
-		return dataSource.getConnection();
-	}
+	RedisConnection getConnection();
+
+	/**
+	 * 返回 Redis 哨兵连接对象
+	 *
+	 * @return Redis 哨兵连接对象
+	 */
+	RedisSentinelConnection getSentinelConnection();
+
+	/**
+	 * 返回 Redis 集群连接对象
+	 *
+	 * @return Redis 集群连接对象
+	 */
+	RedisClusterConnection getClusterConnection();
 
 }

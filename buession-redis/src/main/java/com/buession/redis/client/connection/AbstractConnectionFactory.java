@@ -21,10 +21,33 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection;/**
- * 
+ */
+package com.buession.redis.client.connection;
+
+import com.buession.redis.client.connection.datasource.ClusterDataSource;
+import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.client.connection.datasource.SentinelDataSource;
+
+/**
+ * Redis 连接工厂抽象类
  *
  * @author Yong.Teng
- * @since 2.4.0
- */public class AbstractConnectionFactory {
+ * @since 3.0.0
+ */
+public abstract class AbstractConnectionFactory<DS extends DataSource> implements RedisConnectionFactory {
+
+	protected final DS dataSource;
+
+	public AbstractConnectionFactory(DS dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	public boolean isRedisSentinelAware() {
+		return dataSource instanceof SentinelDataSource;
+	}
+
+	public boolean isRedisClusterAware() {
+		return dataSource instanceof ClusterDataSource;
+	}
+
 }

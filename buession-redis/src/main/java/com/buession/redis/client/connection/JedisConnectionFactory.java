@@ -21,10 +21,51 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection;/**
- * 
+ */
+package com.buession.redis.client.connection;
+
+import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
+import com.buession.redis.exception.RedisConnectionFailureException;
+
+/**
+ * Jedis Redis 连接工厂
  *
  * @author Yong.Teng
- * @since 2.4.0
- */public class JedisConnectionFactory {
+ * @since 3.0.0
+ */
+public class JedisConnectionFactory extends AbstractConnectionFactory<JedisDataSource> {
+
+	public JedisConnectionFactory(final JedisDataSource dataSource) {
+		super(dataSource);
+	}
+
+	@Override
+	public RedisConnection getConnection() {
+		if(isRedisClusterAware()){
+			return getClusterConnection();
+		}else if(isRedisSentinelAware()){
+			return getSentinelConnection();
+		}else{
+			return dataSource.getConnection();
+		}
+	}
+
+	@Override
+	public RedisSentinelConnection getSentinelConnection() {
+		if(isRedisSentinelAware()){
+			return (RedisSentinelConnection) dataSource.getConnection();
+		}
+
+		throw new RedisConnectionFailureException("No Sentinels datasource");
+	}
+
+	@Override
+	public RedisClusterConnection getClusterConnection() {
+		if(isRedisClusterAware()){
+			return (RedisClusterConnection) dataSource.getConnection();
+		}
+
+		throw new RedisConnectionFailureException("No Cluster datasource");
+	}
+
 }

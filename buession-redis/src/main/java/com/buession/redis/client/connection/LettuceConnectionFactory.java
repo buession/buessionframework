@@ -24,12 +24,48 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.exception.RedisConnectionFailureException;
+
 /**
- * Jedis Redis 连接工厂
+ * Lettuce Redis 连接工厂
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
-public class JedisConnectionFactory implements RedisConnectionFactory {
+public class LettuceConnectionFactory extends AbstractConnectionFactory<LettuceDataSource> {
+
+	public LettuceConnectionFactory(final LettuceDataSource dataSource) {
+		super(dataSource);
+	}
+
+	@Override
+	public RedisConnection getConnection() {
+		if(isRedisClusterAware()){
+			return getClusterConnection();
+		}else if(isRedisSentinelAware()){
+			return getSentinelConnection();
+		}else{
+			return dataSource.getConnection();
+		}
+	}
+
+	@Override
+	public RedisSentinelConnection getSentinelConnection() {
+		if(isRedisSentinelAware()){
+			return (RedisSentinelConnection) dataSource.getConnection();
+		}
+
+		throw new RedisConnectionFailureException("No Sentinels datasource");
+	}
+
+	@Override
+	public RedisClusterConnection getClusterConnection() {
+		if(isRedisClusterAware()){
+			return (RedisClusterConnection) dataSource.getConnection();
+		}
+
+		throw new RedisConnectionFailureException("No Cluster datasource");
+	}
 
 }
