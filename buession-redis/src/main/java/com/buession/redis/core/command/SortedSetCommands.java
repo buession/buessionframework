@@ -583,6 +583,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
+	@Deprecated
 	Long zCount(final String key, final String min, final String max);
 
 	/**
@@ -599,6 +600,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
+	@Deprecated
 	Long zCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1107,6 +1109,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
+	@Deprecated
 	Long zLexCount(final String key, final String min, final String max);
 
 	/**
@@ -1123,6 +1126,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
+	@Deprecated
 	Long zLexCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1362,6 +1366,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByLex(final String key, final String min, final String max);
 
 	/**
@@ -1379,6 +1384,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1442,6 +1448,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByLex(final String key, final String min, final String max, final long offset, final long count);
 
 	/**
@@ -1463,6 +1470,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset, final long count);
 
 	/**
@@ -1514,6 +1522,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByScore(final String key, final String min, final String max);
 
 	/**
@@ -1532,6 +1541,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1597,6 +1607,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByScore(final String key, final String min, final String max, final long offset,
 							   final long count);
 
@@ -1619,6 +1630,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
 							   final long count);
 
@@ -1671,6 +1683,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，带有 score 的有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max);
 
 	/**
@@ -1688,6 +1701,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，带有 score 的有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1753,6 +1767,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
 										final long count);
 
@@ -1775,6 +1790,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										final long count);
 
@@ -2244,6 +2260,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
+	@Deprecated
 	Long zRemRangeByLex(final String key, final String min, final String max);
 
 	/**
@@ -2260,6 +2277,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
+	@Deprecated
 	Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2308,6 +2326,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
+	@Deprecated
 	Long zRemRangeByScore(final String key, final String min, final String max);
 
 	/**
@@ -2324,6 +2343,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
+	@Deprecated
 	Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2489,6 +2509,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByLex(final String key, final String min, final String max);
 
 	/**
@@ -2506,6 +2527,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2571,6 +2593,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
 								final long count);
 
@@ -2593,6 +2616,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 								final long count);
 
@@ -2648,6 +2672,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByScore(final String key, final String min, final String max);
 
 	/**
@@ -2666,6 +2691,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2734,6 +2760,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
 								  final long count);
 
@@ -2757,6 +2784,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
 								  final long count);
 
@@ -2812,6 +2840,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max);
 
 	/**
@@ -2830,6 +2859,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2898,6 +2928,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
 										   final long count);
 
@@ -2921,6 +2952,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										   final long count);
 

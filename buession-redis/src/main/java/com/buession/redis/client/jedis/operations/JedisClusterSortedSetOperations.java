@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -56,12 +56,12 @@ import java.util.Set;
  */
 public final class JedisClusterSortedSetOperations extends AbstractSortedSetOperations<JedisClusterClient> {
 
-	public JedisClusterSortedSetOperations(final JedisClusterClient client){
+	public JedisClusterSortedSetOperations(final JedisClusterClient client) {
 		super(client);
 	}
 
 	@Override
-	public Tuple zPopMin(final String key){
+	public Tuple zPopMin(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Tuple>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
@@ -71,7 +71,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Tuple zPopMin(final byte[] key){
+	public Tuple zPopMin(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Tuple>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
@@ -81,7 +81,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final String key, final long count){
+	public List<Tuple> zPopMin(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -91,7 +91,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final byte[] key, final long count){
+	public List<Tuple> zPopMin(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
 				.general((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -101,7 +101,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Tuple zPopMax(final String key){
+	public Tuple zPopMax(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Tuple>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
@@ -111,7 +111,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Tuple zPopMax(final byte[] key){
+	public Tuple zPopMax(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Tuple>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
@@ -121,7 +121,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zPopMax(final String key, final long count){
+	public List<Tuple> zPopMax(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -131,7 +131,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zPopMax(final byte[] key, final long count){
+	public List<Tuple> zPopMax(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
 				.general((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
@@ -141,7 +141,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
+	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisClusterCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
@@ -151,7 +151,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
+	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisClusterCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys),
@@ -164,7 +164,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
+	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisClusterCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMAX)
 				.general((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
@@ -174,7 +174,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
+	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
 		return new JedisClusterCommand<KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmax(timeout, keys),
@@ -187,7 +187,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members){
+	public Long zAdd(final String key, final Map<String, Double> members) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members))
@@ -197,7 +197,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
 				.general((cmd)->cmd.zadd(key, members))
@@ -207,7 +207,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
 		final JedisZAddParams params = new JedisZAddParams(nxXx);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
@@ -218,7 +218,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
 		final JedisZAddParams params = new JedisZAddParams(nxXx);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
@@ -229,7 +229,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt){
+	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(gtLt);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
@@ -240,7 +240,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(gtLt);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
@@ -251,7 +251,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(ch);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
@@ -262,7 +262,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(ch);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZADD)
@@ -273,7 +273,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt);
@@ -285,7 +285,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt);
@@ -297,7 +297,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, ch);
@@ -309,7 +309,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, ch);
@@ -321,7 +321,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch){
+	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(gtLt, ch);
@@ -333,7 +333,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch){
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(gtLt, ch);
@@ -346,7 +346,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
-					 final boolean ch){
+					 final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt, ch);
@@ -359,7 +359,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
-					 final boolean ch){
+					 final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
 		final JedisZAddParams params = new JedisZAddParams(nxXx, gtLt, ch);
@@ -371,7 +371,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zCard(final String key){
+	public Long zCard(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCARD)
 				.general((cmd)->cmd.zcard(key))
@@ -381,7 +381,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zCard(final byte[] key){
+	public Long zCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCARD)
 				.general((cmd)->cmd.zcard(key)).
@@ -391,7 +391,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zCount(final String key, final double min, final double max){
+	public Long zCount(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
@@ -401,7 +401,29 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zCount(final byte[] key, final double min, final double max){
+	public Long zCount(final byte[] key, final double min, final double max) {
+		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCOUNT)
+				.general((cmd)->cmd.zcount(key, min, max))
+				.pipeline((cmd)->cmd.zcount(key, min, max))
+				.transaction((cmd)->cmd.zcount(key, min, max))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
+	public Long zCount(final String key, final String min, final String max) {
+		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCOUNT)
+				.general((cmd)->cmd.zcount(key, min, max))
+				.pipeline((cmd)->cmd.zcount(key, min, max))
+				.transaction((cmd)->cmd.zcount(key, min, max))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
+	public Long zCount(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCOUNT)
 				.general((cmd)->cmd.zcount(key, min, max))
@@ -411,27 +433,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zCount(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCOUNT)
-				.general((cmd)->cmd.zcount(key, min, max))
-				.pipeline((cmd)->cmd.zcount(key, min, max))
-				.transaction((cmd)->cmd.zcount(key, min, max))
-				.run(args);
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZCOUNT)
-				.general((cmd)->cmd.zcount(key, min, max))
-				.pipeline((cmd)->cmd.zcount(key, min, max))
-				.transaction((cmd)->cmd.zcount(key, min, max))
-				.run(args);
-	}
-
-	@Override
-	public Set<String> zDiff(final String... keys){
+	public Set<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiff(keys))
@@ -441,7 +443,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zDiff(final byte[]... keys){
+	public Set<byte[]> zDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiff(keys))
@@ -451,7 +453,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final String... keys){
+	public Set<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
@@ -461,7 +463,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final byte[]... keys){
+	public Set<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZDIFF)
 				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
@@ -471,7 +473,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zDiffStore(final String destKey, final String... keys){
+	public Long zDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys))
@@ -481,7 +483,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
+	public Long zDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZDIFFSTORE)
 				.general((cmd)->cmd.zdiffStore(destKey, keys))
@@ -491,7 +493,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Double zIncrBy(final String key, final double increment, final String member){
+	public Double zIncrBy(final String key, final double increment, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("increment", increment)
 				.put("member", member);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.ZINCRBY)
@@ -502,7 +504,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Double zIncrBy(final byte[] key, final double increment, final byte[] member){
+	public Double zIncrBy(final byte[] key, final double increment, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("increment", increment)
 				.put("member", member);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.ZINCRBY)
@@ -513,7 +515,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zInter(final String... keys){
+	public Set<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZINTER)
@@ -524,7 +526,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[]... keys){
+	public Set<byte[]> zInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
@@ -535,7 +537,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate){
+	public Set<String> zInter(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZINTER)
@@ -546,7 +548,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate){
+	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
@@ -557,7 +559,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final double... weights){
+	public Set<String> zInter(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZINTER)
@@ -568,7 +570,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final double... weights){
+	public Set<byte[]> zInter(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZINTER)
@@ -579,7 +581,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights){
+	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
@@ -591,7 +593,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights){
+	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
@@ -603,7 +605,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String... keys){
+	public Set<Tuple> zInterWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -614,7 +616,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[]... keys){
+	public Set<Tuple> zInterWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -625,7 +627,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate){
+	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -636,7 +638,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate){
+	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -647,7 +649,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights){
+	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -658,7 +660,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights){
+	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZINTER)
@@ -669,7 +671,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights){
+	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
@@ -681,7 +683,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights){
+	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
@@ -693,7 +695,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zInterStore(final String destKey, final String... keys){
+	public Long zInterStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
@@ -703,7 +705,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zInterStore(final byte[] destKey, final byte[]... keys){
+	public Long zInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZINTERSTORE)
 				.general((cmd)->cmd.zinterstore(destKey, keys))
@@ -713,7 +715,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate){
+	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -725,7 +727,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -737,7 +739,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zInterStore(final String destKey, final String[] keys, final double... weights){
+	public Long zInterStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -749,7 +751,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights){
+	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -762,7 +764,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
-							final double... weights){
+							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -775,7 +777,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
-							final double... weights){
+							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -787,7 +789,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zLexCount(final String key, final double min, final double max){
+	public Long zLexCount(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, Double.toString(min), Double.toString(max)))
@@ -797,7 +799,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zLexCount(final byte[] key, final double min, final double max){
+	public Long zLexCount(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
@@ -806,8 +808,20 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public Long zLexCount(final String key, final String min, final String max){
+	public Long zLexCount(final String key, final String min, final String max) {
+		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
+				.general((cmd)->cmd.zlexcount(key, min, max))
+				.pipeline((cmd)->cmd.zlexcount(key, min, max))
+				.transaction((cmd)->cmd.zlexcount(key, min, max))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
+	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
 				.general((cmd)->cmd.zlexcount(key, min, max))
@@ -817,17 +831,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZLEXCOUNT)
-				.general((cmd)->cmd.zlexcount(key, min, max))
-				.pipeline((cmd)->cmd.zlexcount(key, min, max))
-				.transaction((cmd)->cmd.zlexcount(key, min, max))
-				.run(args);
-	}
-
-	@Override
-	public List<Double> zMScore(final String key, final String... members){
+	public List<Double> zMScore(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
 				.general((cmd)->cmd.zmscore(key, members))
@@ -837,7 +841,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Double> zMScore(final byte[] key, final byte[]... members){
+	public List<Double> zMScore(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<List<Double>>(client, ProtocolCommand.ZMSCORE)
 				.general((cmd)->cmd.zmscore(key, members))
@@ -847,7 +851,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public String zRandMember(final String key){
+	public String zRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<String>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key))
@@ -857,7 +861,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public byte[] zRandMember(final byte[] key){
+	public byte[] zRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key))
@@ -867,7 +871,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<String> zRandMember(final String key, final long count){
+	public List<String> zRandMember(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key, count))
@@ -877,7 +881,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<byte[]> zRandMember(final byte[] key, final long count){
+	public List<byte[]> zRandMember(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmember(key, count))
@@ -887,7 +891,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final String key, final long count){
+	public List<Tuple> zRandMemberWithScores(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
@@ -897,7 +901,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count){
+	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANDMEMBER)
 				.general((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
@@ -907,7 +911,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<String> zRange(final String key, final long start, final long end){
+	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrange(key, start, end))
@@ -917,7 +921,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<byte[]> zRange(final byte[] key, final long start, final long end){
+	public List<byte[]> zRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrange(key, start, end))
@@ -927,7 +931,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final String key, final long start, final long end){
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -937,7 +941,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGE)
 				.general((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -947,7 +951,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<String> zRangeByLex(final String key, final double min, final double max){
+	public List<String> zRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)))
@@ -957,7 +961,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
+	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)))
@@ -966,8 +970,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max){
+	public List<String> zRangeByLex(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, min, max))
@@ -976,8 +981,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
 				.general((cmd)->cmd.zrangeByLex(key, min, max))
@@ -988,7 +994,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
-									final long count){
+									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
@@ -1003,7 +1009,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									final long count){
+									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
@@ -1016,9 +1022,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
-									final long count){
+									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYLEX)
@@ -1028,9 +1035,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									final long count){
+									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYLEX)
@@ -1041,7 +1049,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<String> zRangeByScore(final String key, final double min, final double max){
+	public List<String> zRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1051,7 +1059,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
+	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1060,8 +1068,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<String> zRangeByScore(final String key, final String min, final String max){
+	public List<String> zRangeByScore(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1070,8 +1079,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScore(key, min, max))
@@ -1082,7 +1092,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max, final long offset,
-									  final long count){
+									  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1094,7 +1104,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
-									  final long count){
+									  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1104,9 +1114,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRangeByScore(final String key, final String min, final String max, final long offset,
-									  final long count){
+									  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1116,9 +1127,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									  final long count){
+									  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1129,7 +1141,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
+	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1139,7 +1151,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
+	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1148,8 +1160,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
+	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1158,8 +1171,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1170,7 +1184,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
-											   final long count){
+											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1185,7 +1199,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-											   final long count){
+											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1198,9 +1212,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
-											   final long count){
+											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1213,9 +1228,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											   final long count){
+											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1229,7 +1245,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end){
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end);
@@ -1241,7 +1257,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end){
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end);
@@ -1254,7 +1270,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by){
+							final ZRangeBy by) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end);
@@ -1267,7 +1283,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by){
+							final ZRangeBy by) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end);
@@ -1280,7 +1296,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final boolean rev){
+							final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev);
@@ -1293,7 +1309,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final boolean rev){
+							final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev);
@@ -1306,7 +1322,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
-							final long count){
+							final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, offset, count);
@@ -1319,7 +1335,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
-							final long count){
+							final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, offset, count);
@@ -1332,7 +1348,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by, final boolean rev){
+							final ZRangeBy by, final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev);
@@ -1345,7 +1361,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by, final boolean rev){
+							final ZRangeBy by, final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev);
@@ -1358,7 +1374,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by, final long offset, final long count){
+							final ZRangeBy by, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, offset, count);
@@ -1371,7 +1387,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by, final long offset, final long count){
+							final ZRangeBy by, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, offset, count);
@@ -1384,7 +1400,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
-							final long offset, final long count){
+							final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev, offset, count);
@@ -1397,7 +1413,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
-							final long offset, final long count){
+							final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(start, end, rev, offset, count);
@@ -1410,7 +1426,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count){
+							final boolean rev, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev, offset, count);
@@ -1423,7 +1439,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count){
+							final boolean rev, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
 		final JedisZRangeParams params = new JedisZRangeParams(by, start, end, rev, offset, count);
@@ -1435,7 +1451,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRank(final String key, final String member){
+	public Long zRank(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZRANK)
 				.general((cmd)->cmd.zrank(key, member))
@@ -1445,7 +1461,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRank(final byte[] key, final byte[] member){
+	public Long zRank(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZRANK)
 				.general((cmd)->cmd.zrank(key, member))
@@ -1455,7 +1471,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRem(final String key, final String... members){
+	public Long zRem(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
@@ -1465,7 +1481,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRem(final byte[] key, final byte[]... members){
+	public Long zRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREM)
 				.general((cmd)->cmd.zrem(key, members))
@@ -1474,8 +1490,20 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public Long zRemRangeByLex(final String key, final String min, final String max){
+	public Long zRemRangeByLex(final String key, final String min, final String max) {
+		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
+				.general((cmd)->cmd.zremrangeByLex(key, min, max))
+				.pipeline((cmd)->cmd.zremrangeByLex(key, min, max))
+				.transaction((cmd)->cmd.zremrangeByLex(key, min, max))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
 				.general((cmd)->cmd.zremrangeByLex(key, min, max))
@@ -1485,17 +1513,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
-				.general((cmd)->cmd.zremrangeByLex(key, min, max))
-				.pipeline((cmd)->cmd.zremrangeByLex(key, min, max))
-				.transaction((cmd)->cmd.zremrangeByLex(key, min, max))
-				.run(args);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final double min, final double max){
+	public Long zRemRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1505,7 +1523,29 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
+	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
+		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+				.general((cmd)->cmd.zremrangeByScore(key, min, max))
+				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
+				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
+	public Long zRemRangeByScore(final String key, final String min, final String max) {
+		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+				.general((cmd)->cmd.zremrangeByScore(key, min, max))
+				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
+				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
+				.run(args);
+	}
+
+	@Deprecated
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
 				.general((cmd)->cmd.zremrangeByScore(key, min, max))
@@ -1515,27 +1555,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRemRangeByScore(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
-				.general((cmd)->cmd.zremrangeByScore(key, min, max))
-				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
-				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
-				.run(args);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
-				.general((cmd)->cmd.zremrangeByScore(key, min, max))
-				.pipeline((cmd)->cmd.zremrangeByScore(key, min, max))
-				.transaction((cmd)->cmd.zremrangeByScore(key, min, max))
-				.run(args);
-	}
-
-	@Override
-	public Long zRemRangeByRank(final String key, final long start, final long end){
+	public Long zRemRangeByRank(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
 				.general((cmd)->cmd.zremrangeByRank(key, start, end))
@@ -1545,7 +1565,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
+	public Long zRemRangeByRank(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
 				.general((cmd)->cmd.zremrangeByRank(key, start, end))
@@ -1555,7 +1575,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<String> zRevRange(final String key, final long start, final long end){
+	public List<String> zRevRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrange(key, start, end))
@@ -1565,7 +1585,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<byte[]> zRevRange(final byte[] key, final long start, final long end){
+	public List<byte[]> zRevRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrange(key, start, end))
@@ -1575,7 +1595,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
+	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -1585,7 +1605,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
+	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
 				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
@@ -1594,8 +1614,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max){
+	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max))
@@ -1604,8 +1625,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max))
@@ -1614,9 +1636,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
-									   final long count){
+									   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
@@ -1625,9 +1648,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									   final long count){
+									   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYLEX)
 				.general((cmd)->cmd.zrevrangeByLex(key, min, max, (int) offset, (int) count))
@@ -1637,7 +1661,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<String> zRevRangeByScore(final String key, final double min, final double max){
+	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1647,7 +1671,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
+	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1656,8 +1680,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max){
+	public List<String> zRevRangeByScore(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1666,8 +1691,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScore(key, min, max))
@@ -1678,7 +1704,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
-										 final long count){
+										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1690,7 +1716,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
-										 final long count){
+										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1700,9 +1726,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
-										 final long count){
+										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1712,9 +1739,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										 final long count){
+										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1725,7 +1753,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
+	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1735,7 +1763,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
+	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1744,8 +1772,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
+	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1754,8 +1783,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
@@ -1766,7 +1796,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
-												  final long offset, final long count){
+												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1781,7 +1811,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												  final long offset, final long count){
+												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1794,9 +1824,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-												  final long offset, final long count){
+												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1809,9 +1840,10 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-												  final long offset, final long count){
+												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new JedisClusterCommand<List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
@@ -1825,7 +1857,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRevRank(final String key, final String member){
+	public Long zRevRank(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREVRANK)
 				.general((cmd)->cmd.zrevrank(key, member))
@@ -1835,7 +1867,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zRevRank(final byte[] key, final byte[] member){
+	public Long zRevRank(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZREVRANK)
 				.general((cmd)->cmd.zrevrank(key, member))
@@ -1845,7 +1877,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new JedisClusterCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
@@ -1855,7 +1887,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new JedisClusterCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
 				.general((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
@@ -1865,7 +1897,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisClusterCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
@@ -1879,7 +1911,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisClusterCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
@@ -1893,7 +1925,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count){
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisClusterCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
@@ -1907,7 +1939,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisClusterCommand<ScanResult<List<Tuple>>>(client, ProtocolCommand.ZSCAN)
@@ -1921,7 +1953,8 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final long count){
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern,
+										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
@@ -1936,7 +1969,8 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
@@ -1951,7 +1985,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Double zScore(final String key, final String member){
+	public Double zScore(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.ZSCORE)
 				.general((cmd)->cmd.zscore(key, member))
@@ -1961,7 +1995,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Double zScore(final byte[] key, final byte[] member){
+	public Double zScore(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisClusterCommand<Double>(client, ProtocolCommand.ZSCORE)
 				.general((cmd)->cmd.zscore(key, member))
@@ -1971,7 +2005,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zUnion(final String... keys){
+	public Set<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZUNION)
@@ -1982,7 +2016,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[]... keys){
+	public Set<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
@@ -1993,7 +2027,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate){
+	public Set<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZUNION)
@@ -2004,7 +2038,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate){
+	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
@@ -2015,7 +2049,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final double... weights){
+	public Set<String> zUnion(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.ZUNION)
@@ -2026,7 +2060,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final double... weights){
+	public Set<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.ZUNION)
@@ -2037,7 +2071,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights){
+	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -2049,7 +2083,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights){
+	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -2061,7 +2095,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String... keys){
+	public Set<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2072,7 +2106,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[]... keys){
+	public Set<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final JedisZParams params = new JedisZParams();
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2083,7 +2117,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate){
+	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2094,7 +2128,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate){
+	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2105,7 +2139,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights){
+	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2116,7 +2150,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights){
+	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		return new JedisClusterCommand<Set<Tuple>>(client, ProtocolCommand.ZUNION)
@@ -2127,7 +2161,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights){
+	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -2139,7 +2173,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights){
+	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -2151,7 +2185,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zUnionStore(final String destKey, final String... keys){
+	public Long zUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
@@ -2161,7 +2195,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
+	public Long zUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.ZUNIONSTORE)
 				.general((cmd)->cmd.zunionstore(destKey, keys))
@@ -2171,7 +2205,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate){
+	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -2183,7 +2217,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate){
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
@@ -2195,7 +2229,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zUnionStore(final String destKey, final String[] keys, final double... weights){
+	public Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -2207,7 +2241,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	}
 
 	@Override
-	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights){
+	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
@@ -2220,7 +2254,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
-							final double... weights){
+							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
@@ -2233,7 +2267,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
-							final double... weights){
+							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);

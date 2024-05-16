@@ -74,17 +74,17 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
+															final StreamEntryId start) {
 		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start, count);
+				minIdleTime, start);
 	}
 
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start) {
+															final StreamEntryId start, final long count) {
 		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start);
+				minIdleTime, start, count);
 	}
 
 	@Override

@@ -411,6 +411,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zCount(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -421,6 +422,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zCount(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -805,6 +807,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zLexCount(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -815,6 +818,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -965,6 +969,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRangeByLex(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -975,6 +980,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1015,6 +1021,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
 									final long count) {
@@ -1027,6 +1034,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									final long count) {
@@ -1059,6 +1067,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRangeByScore(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1069,6 +1078,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1103,6 +1113,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRangeByScore(final String key, final String min, final String max, final long offset,
 									  final long count) {
@@ -1115,6 +1126,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									  final long count) {
@@ -1147,6 +1159,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1157,6 +1170,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1197,6 +1211,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
 											   final long count) {
@@ -1212,6 +1227,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											   final long count) {
@@ -1473,6 +1489,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zRemRangeByLex(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1483,6 +1500,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1513,6 +1531,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zRemRangeByScore(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1523,6 +1542,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1593,6 +1613,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1603,6 +1624,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1613,6 +1635,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
 									   final long count) {
@@ -1624,6 +1647,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									   final long count) {
@@ -1655,6 +1679,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRevRangeByScore(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1665,6 +1690,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1699,6 +1725,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
 										 final long count) {
@@ -1711,6 +1738,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										 final long count) {
@@ -1743,6 +1771,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1753,6 +1782,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
@@ -1793,6 +1823,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
 												  final long offset, final long count) {
@@ -1808,6 +1839,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 				.run(args);
 	}
 
+	@Deprecated
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
 												  final long offset, final long count) {
