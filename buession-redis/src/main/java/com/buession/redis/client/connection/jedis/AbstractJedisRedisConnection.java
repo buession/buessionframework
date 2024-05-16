@@ -24,10 +24,14 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
+import com.buession.redis.exception.JedisRedisExceptionUtils;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -159,6 +163,16 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	@Override
 	public boolean isTransaction() {
 		return transaction != null;
+	}
+
+	@Override
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
+		try{
+			return executor.execute(this);
+		}catch(Exception e){
+			logger.error("Redis execute command failure: {}", e.getMessage(), e);
+			throw JedisRedisExceptionUtils.convert(e);
+		}
 	}
 
 	protected DefaultJedisClientConfig.Builder createJedisClientConfigBuilder(final JedisRedisDataSource dataSource,

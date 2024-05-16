@@ -19,19 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
-import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.JedisRedisExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,12 +70,12 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	private volatile boolean initialized = false;
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 构造函数
 	 */
-	public AbstractRedisConnection(){
+	public AbstractRedisConnection() {
 	}
 
 	/**
@@ -87,7 +84,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @param dataSource
 	 * 		Redis 数据源
 	 */
-	public AbstractRedisConnection(DataSource dataSource){
+	public AbstractRedisConnection(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
@@ -101,7 +98,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @param soTimeout
 	 * 		读取超时
 	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout){
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout) {
 		this.dataSource = dataSource;
 		this.connectTimeout = connectTimeout;
 		this.soTimeout = soTimeout;
@@ -122,7 +119,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 2.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout){
+								   int infiniteSoTimeout) {
 		this(dataSource, connectTimeout, soTimeout);
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
@@ -135,7 +132,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration){
+	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration) {
 		this.dataSource = dataSource;
 		this.sslConfiguration = sslConfiguration;
 	}
@@ -153,7 +150,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * 		SSL 配置
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration){
+								   SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout);
 		this.sslConfiguration = sslConfiguration;
 	}
@@ -175,68 +172,68 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 2.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration){
+								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	@Override
-	public DataSource getDataSource(){
+	public DataSource getDataSource() {
 		return dataSource;
 	}
 
 	@Override
-	public void setDataSource(DataSource dataSource){
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	@Override
-	public int getConnectTimeout(){
+	public int getConnectTimeout() {
 		return connectTimeout;
 	}
 
 	@Override
-	public void setConnectTimeout(int connectTimeout){
+	public void setConnectTimeout(int connectTimeout) {
 		this.connectTimeout = connectTimeout;
 	}
 
 	@Override
-	public int getSoTimeout(){
+	public int getSoTimeout() {
 		return soTimeout;
 	}
 
 	@Override
-	public void setSoTimeout(int soTimeout){
+	public void setSoTimeout(int soTimeout) {
 		this.soTimeout = soTimeout;
 	}
 
 	@Override
-	public int getInfiniteSoTimeout(){
+	public int getInfiniteSoTimeout() {
 		return infiniteSoTimeout;
 	}
 
 	@Override
-	public void setInfiniteSoTimeout(int infiniteSoTimeout){
+	public void setInfiniteSoTimeout(int infiniteSoTimeout) {
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	@Override
-	public boolean isUseSsl(){
+	public boolean isUseSsl() {
 		return sslConfiguration != null;
 	}
 
 	@Override
-	public SslConfiguration getSslConfiguration(){
+	public SslConfiguration getSslConfiguration() {
 		return sslConfiguration;
 	}
 
 	@Override
-	public void setSslConfiguration(SslConfiguration sslConfiguration){
+	public void setSslConfiguration(SslConfiguration sslConfiguration) {
 		this.sslConfiguration = sslConfiguration;
 	}
 
 	@Override
-	public Status connect() throws RedisConnectionFailureException{
+	public Status connect() throws RedisConnectionFailureException {
 		logger.info("Connection redis server.");
 
 		try{
@@ -251,28 +248,18 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException{
-		try{
-			return executor.execute(this);
-		}catch(Exception e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
-			throw JedisRedisExceptionUtils.convert(e);
-		}
-	}
-
-	@Override
-	public void destroy() throws IOException{
+	public void destroy() throws IOException {
 		logger.info("Destroy redis server.");
 		doDestroy();
 	}
 
 	@Override
-	public void close() throws IOException{
+	public void close() throws IOException {
 		logger.info("Closing redis server.");
 		doClose();
 	}
 
-	protected void initialized(){
+	protected void initialized() {
 		if(initialized == false){
 			synchronized(this){
 				if(initialized == false){
