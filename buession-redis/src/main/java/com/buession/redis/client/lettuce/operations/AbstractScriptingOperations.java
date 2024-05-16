@@ -22,25 +22,64 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
- * Jedis Script 命令操作抽象类
+ * Lettuce Script 命令操作抽象类
  *
  * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public abstract class AbstractScriptingOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractScriptingOperations<C extends LettuceRedisClient>
+		extends AbstractLettuceRedisOperations<C>
 		implements ScriptingOperations {
 
-	public AbstractScriptingOperations(final C client){
+	public AbstractScriptingOperations(final C client) {
 		super(client);
+	}
+
+	@Override
+	public Object eval(final byte[] script) {
+		return eval(SafeEncoder.encode(script));
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[]... params) {
+		return eval(SafeEncoder.encode(script), SafeEncoder.encode(params));
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
+		return eval(SafeEncoder.encode(script), SafeEncoder.encode(keys), SafeEncoder.encode(arguments));
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest) {
+		return evalSha(SafeEncoder.encode(digest));
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[]... params) {
+		return evalSha(SafeEncoder.encode(digest), SafeEncoder.encode(params));
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
+		return evalSha(SafeEncoder.encode(digest), SafeEncoder.encode(keys), SafeEncoder.encode(arguments));
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final byte[]... sha1) {
+		return scriptExists(SafeEncoder.encode(sha1));
 	}
 
 }

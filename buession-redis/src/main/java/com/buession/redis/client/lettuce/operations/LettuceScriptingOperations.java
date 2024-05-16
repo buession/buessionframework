@@ -22,225 +22,122 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.utils.SafeEncoder;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * Jedis 单机模式 Script 命令操作
+ * Lettuce 单机模式 Script 命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisScriptingOperations extends AbstractScriptingOperations<JedisStandaloneClient> {
+public final class LettuceScriptingOperations extends AbstractScriptingOperations<LettuceStandaloneClient> {
 
-	public JedisScriptingOperations(final JedisStandaloneClient client){
+	public LettuceScriptingOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Object eval(final String script){
+	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script))
-				.pipeline((cmd)->cmd.eval(script))
-				.transaction((cmd)->cmd.eval(script))
+		return new LettuceCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, null), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object eval(final byte[] script){
-		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script))
-				.pipeline((cmd)->cmd.eval(script))
-				.transaction((cmd)->cmd.eval(script))
-				.run(args);
-	}
-
-	@Override
-	public Object eval(final String script, final String... params){
+	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
-		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, paramsSize, params))
-				.pipeline((cmd)->cmd.eval(script, paramsSize, params))
-				.transaction((cmd)->cmd.eval(script, paramsSize, params))
+		return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+				(cmd)->cmd.eval(script, null, null, SafeEncoder.encode(params)), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object eval(final byte[] script, final byte[]... params){
-		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
-		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, paramsSize, params))
-				.pipeline((cmd)->cmd.eval(script, paramsSize, params))
-				.transaction((cmd)->cmd.eval(script, paramsSize, params))
-				.run(args);
-	}
-
-	@Override
-	public Object eval(final String script, final String[] keys, final String[] arguments){
+	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new JedisCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
+		return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+				(cmd)->cmd.eval(script, null, SafeEncoder.encode(keys), SafeEncoder.encode(arguments)), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
-		return new JedisCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.run(args);
-	}
-
-	@Override
-	public Object evalSha(final String digest){
+	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest))
-				.pipeline((cmd)->cmd.evalsha(digest))
-				.transaction((cmd)->cmd.evalsha(digest))
+		return new LettuceCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, null), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object evalSha(final byte[] digest){
-		final CommandArguments args = CommandArguments.create("digest", digest);
-		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest))
-				.pipeline((cmd)->cmd.evalsha(digest))
-				.transaction((cmd)->cmd.evalsha(digest))
-				.run(args);
-	}
-
-	@Override
-	public Object evalSha(final String digest, final String... params){
+	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
-		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.pipeline((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params))
+		return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
+				(cmd)->cmd.evalsha(digest, null, null, SafeEncoder.encode(params)), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object evalSha(final byte[] digest, final byte[]... params){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
-		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.pipeline((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.run(args);
-	}
-
-	@Override
-	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
+	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
+		return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
+				(cmd)->cmd.evalsha(digest, null, SafeEncoder.encode(keys), SafeEncoder.encode(arguments)),
+				(v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
-		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.run(args);
-	}
-
-	@Override
-	public List<Boolean> scriptExists(final String... sha1){
+	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return new JedisCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
-				.general((cmd)->cmd.scriptExists(sha1))
-				.pipeline((cmd)->cmd.scriptExists(null, sha1))
-				.transaction((cmd)->cmd.scriptExists(null, sha1))
+		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public List<Boolean> scriptExists(final byte[]... sha1){
-		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return new JedisCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
-				.general((cmd)->cmd.scriptExists(sha1))
-				.pipeline((cmd)->cmd.scriptExists(null, sha1))
-				.transaction((cmd)->cmd.scriptExists(null, sha1))
-				.run(args);
-	}
-
-	@Override
-	public Status scriptFlush(){
-		return new JedisCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
+	public Status scriptFlush() {
+		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+				OkStatusConverter.INSTANCE)
 				.run();
 	}
 
 	@Override
-	public Status scriptFlush(final FlushMode mode){
+	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		final redis.clients.jedis.args.FlushMode flushMode = FlushModeConverter.INSTANCE.convert(mode);
-		return new JedisCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(flushMode), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+				OkStatusConverter.INSTANCE)
 				.run(args);
 	}
 
 	@Override
-	public String scriptLoad(final String script){
+	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisCommand<String>(client, ProtocolCommand.SCRIPT_LOAD)
-				.general((cmd)->cmd.scriptLoad(script))
-				.pipeline((cmd)->cmd.scriptLoad(script, null))
-				.transaction((cmd)->cmd.scriptLoad(script, null))
+		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
+				(cmd)->cmd.scriptLoad(SafeEncoder.encode(script)), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public byte[] scriptLoad(final byte[] script){
+	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisCommand<byte[]>(client, ProtocolCommand.SCRIPT_LOAD)
-				.general((cmd)->cmd.scriptLoad(script))
-				.pipeline((cmd)->cmd.scriptLoad(script, null))
-				.transaction((cmd)->cmd.scriptLoad(script, null))
+		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+				Converters.STRING_TO_BINARY_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public Status scriptKill(){
-		return new JedisCommand<Status>(client, ProtocolCommand.SCRIPT_KILL)
-				.general((cmd)->cmd.scriptKill(), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
+	public Status scriptKill() {
+		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+				OkStatusConverter.INSTANCE)
 				.run();
 	}
 
