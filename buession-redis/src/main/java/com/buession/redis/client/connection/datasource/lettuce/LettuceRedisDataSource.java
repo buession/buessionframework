@@ -21,10 +21,17 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection.datasource.lettuce;/**
- * 
+ */
+package com.buession.redis.client.connection.datasource.lettuce;
+
+import com.buession.redis.client.connection.datasource.DataSource;
+
+/**
+ * Lettuce 数据源
  *
  * @author Yong.Teng
- * @since 2.4.0
- */public interface LettuceRedisDataSource {
+ * @since 3.0.0
+ */
+public interface LettuceRedisDataSource extends DataSource {
+
 }

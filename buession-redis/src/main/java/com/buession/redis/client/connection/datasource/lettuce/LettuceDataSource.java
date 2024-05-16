@@ -21,10 +21,108 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection.datasource.lettuce;/**
- * 
+ */
+package com.buession.redis.client.connection.datasource.lettuce;
+
+import com.buession.lang.Constants;
+import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.datasource.StandaloneDataSource;
+import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.core.RedisNode;
+import io.lettuce.core.LettucePool;
+import io.lettuce.core.LettucePoolConfig;
+import io.lettuce.core.support.ConnectionPoolUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Lettuce 单机模式数据源
  *
  * @author Yong.Teng
- * @since 2.4.0
- */public class LettuceDataSource {
+ * @since 3.0.0
+ */
+public class LettuceDataSource extends AbstractLettuceDataSource implements StandaloneDataSource {
+
+	/**
+	 * Redis 主机地址
+	 */
+	private String host = RedisNode.DEFAULT_HOST;
+
+	/**
+	 * Redis 端口
+	 */
+	private int port = RedisNode.DEFAULT_PORT;
+
+	/**
+	 * 数据库
+	 */
+	private int database = RedisNode.DEFAULT_DATABASE;
+
+	private LettucePool pool;
+
+	private final static Logger logger = LoggerFactory.getLogger(LettuceDataSource.class);
+
+	@Override
+	public String getHost() {
+		return host;
+	}
+
+	@Override
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	@Override
+	public int getPort() {
+		return port;
+	}
+
+	@Override
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	@Override
+	public int getDatabase() {
+		return database;
+	}
+
+	@Override
+	public void setDatabase(int database) {
+		this.database = database;
+	}
+
+	@Override
+	public RedisConnection getConnection() {
+		if(isUsePool()){
+			if(pool == null){
+				pool = createPool();
+			}
+		}
+
+		return new LettuceConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+				getSslConfiguration());
+	}
+
+	private LettucePool createPool() {
+		final SslConfiguration sslConfiguration = getSslConfiguration();
+		final LettucePoolConfig<byte[], byte[]> lettucePoolConfig = new LettucePoolConfig<>();
+
+		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
+
+		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
+		if(sslConfiguration == null){
+			logger.debug("Create lettuce pool.");
+			return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, getHost(), getPort(), getConnectTimeout(),
+					getSoTimeout(), getUsername(), password, getDatabase(), getClientName(), isUseSsl());
+		}else{
+			logger.debug("Create lettuce pool with ssl.");
+			return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, getHost(), getPort(), getConnectTimeout(),
+					getSoTimeout(), getUsername(), password, getDatabase(), getClientName(), isUseSsl(),
+					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+					sslConfiguration.getHostnameVerifier());
+		}
+	}
+
 }
