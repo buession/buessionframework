@@ -19,16 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.mapper.PropertyMapper;
-import com.buession.lang.Order;
-import com.buession.redis.core.Limit;
 import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.internal.jedis.JedisSortingParams;
 import redis.clients.jedis.params.SortingParams;
 
 /**
@@ -44,28 +42,7 @@ public final class SortArgumentConverter implements Converter<KeyCommands.SortAr
 
 	@Override
 	public SortingParams convert(final KeyCommands.SortArgument source) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final SortingParams sortingParams = new SortingParams();
-
-		propertyMapper.from(source.getBy()).to(sortingParams::by);
-		propertyMapper.from(source.getGetPatterns()).to(sortingParams::get);
-
-		if(source.getOrder() == Order.ASC){
-			sortingParams.asc();
-		}else if(source.getOrder() == Order.DESC){
-			sortingParams.desc();
-		}
-
-		if(source.getLimit() != null){
-			Limit limit = source.getLimit();
-			sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
-		}
-
-		if(Boolean.TRUE.equals(source.isAlpha())){
-			sortingParams.alpha();
-		}
-
-		return sortingParams;
+		return JedisSortingParams.from(source);
 	}
 
 }

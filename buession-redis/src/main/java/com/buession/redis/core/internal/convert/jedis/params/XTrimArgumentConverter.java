@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.command.StreamCommands;
+import com.buession.redis.core.internal.jedis.JedisXTrimParams;
 import redis.clients.jedis.params.XTrimParams;
 
 /**
@@ -35,27 +35,14 @@ import redis.clients.jedis.params.XTrimParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public class XTrimArgumentConverter implements Converter<StreamCommands.XTrimArgument, XTrimParams> {
 
 	public final static XTrimArgumentConverter INSTANCE = new XTrimArgumentConverter();
 
 	@Override
 	public XTrimParams convert(final StreamCommands.XTrimArgument source) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final XTrimParams xTrimParams = new XTrimParams();
-
-		propertyMapper.from(source.getMaxLen()).to(xTrimParams::maxLen);
-		propertyMapper.from(source.getMinId()).to(xTrimParams::minId);
-
-		if(Boolean.TRUE.equals(source.isApproximateTrimming())){
-			xTrimParams.approximateTrimming();
-		}
-
-		if(Boolean.TRUE.equals(source.isExactTrimming())){
-			xTrimParams.exactTrimming();
-		}
-
-		return xTrimParams;
+		return JedisXTrimParams.from(source);
 	}
 
 }

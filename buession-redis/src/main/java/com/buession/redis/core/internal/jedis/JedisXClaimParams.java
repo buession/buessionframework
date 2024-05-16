@@ -21,28 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.core.internal.convert.jedis.params;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.internal.jedis.JedisGetExParams;
-import redis.clients.jedis.params.GetExParams;
-
-/**
- * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+ */package com.buession.redis.core.internal.jedis;/**
+ * 
  *
  * @author Yong.Teng
- * @since 2.0.0
- */
-@Deprecated
-public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
-
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
-
-	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source) {
-		return JedisGetExParams.from(source);
-	}
-
+ * @since 2.4.0
+ */public class JedisXClaimParams {
 }

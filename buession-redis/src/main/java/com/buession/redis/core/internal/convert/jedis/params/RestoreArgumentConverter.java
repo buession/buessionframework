@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.internal.jedis.JedisRestoreParams;
 import redis.clients.jedis.params.RestoreParams;
 
 /**
@@ -42,21 +42,7 @@ public final class RestoreArgumentConverter implements Converter<KeyCommands.Res
 
 	@Override
 	public RestoreParams convert(final KeyCommands.RestoreArgument source) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final RestoreParams restoreParams = new RestoreParams();
-
-		if(Boolean.TRUE.equals(source.isReplace())){
-			restoreParams.replace();
-		}
-
-		if(Boolean.TRUE.equals(source.isAbsTtl())){
-			restoreParams.absTtl();
-		}
-
-		propertyMapper.from(source.getIdleTime()).to(restoreParams::idleTime);
-		propertyMapper.from(source.getFrequency()).to(restoreParams::frequency);
-
-		return restoreParams;
+		return JedisRestoreParams.from(source);
 	}
 
 }

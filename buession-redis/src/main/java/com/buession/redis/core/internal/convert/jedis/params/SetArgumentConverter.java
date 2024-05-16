@@ -19,18 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.mapper.PropertyMapper;
-import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.internal.jedis.JedisSetParams;
 import redis.clients.jedis.params.SetParams;
-
-import java.util.Objects;
 
 /**
  * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
@@ -45,25 +42,7 @@ public final class SetArgumentConverter implements Converter<StringCommands.SetA
 
 	@Override
 	public SetParams convert(final StringCommands.SetArgument source) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final SetParams setParams = new SetParams();
-
-		propertyMapper.from(source.getEx()).to(setParams::ex);
-		propertyMapper.from(source.getExAt()).to(setParams::exAt);
-		propertyMapper.from(source.getPx()).to(setParams::px);
-		propertyMapper.from(source.getPxAt()).to(setParams::pxAt);
-
-		if(source.getNxXx() == NxXx.NX){
-			setParams.nx();
-		}else if(source.getNxXx() == NxXx.XX){
-			setParams.xx();
-		}
-
-		if(Boolean.TRUE.equals(source.isKeepTtl())){
-			setParams.keepttl();
-		}
-
-		return setParams;
+		return JedisSetParams.from(source);
 	}
 
 }

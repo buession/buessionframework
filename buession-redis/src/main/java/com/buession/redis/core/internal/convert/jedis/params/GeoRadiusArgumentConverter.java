@@ -25,8 +25,8 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
 import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.internal.jedis.JedisGeoRadiusParam;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 /**
@@ -42,31 +42,7 @@ public final class GeoRadiusArgumentConverter implements Converter<GeoCommands.G
 
 	@Override
 	public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source) {
-		final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
-
-		if(Boolean.TRUE.equals(source.isWithCoord())){
-			geoRadiusParam.withCoord();
-		}
-
-		if(Boolean.TRUE.equals(source.isWithDist())){
-			geoRadiusParam.withDist();
-		}
-
-		if(Boolean.TRUE.equals(source.isWithHash())){
-			geoRadiusParam.withHash();
-		}
-
-		if(source.getOrder() == Order.ASC){
-			geoRadiusParam.sortAscending();
-		}else if(source.getOrder() == Order.DESC){
-			geoRadiusParam.sortDescending();
-		}
-
-		if(source.getCount() != null){
-			geoRadiusParam.count(source.getCount());
-		}
-
-		return geoRadiusParam;
+		return JedisGeoRadiusParam.from(source);
 	}
 
 }
