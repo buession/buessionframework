@@ -32,7 +32,7 @@ import com.buession.redis.core.Role;
  * Lettuce 角色信息 转换为 {@link Role}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
 public final class RoleConverter implements Converter<Object, Role> {
 

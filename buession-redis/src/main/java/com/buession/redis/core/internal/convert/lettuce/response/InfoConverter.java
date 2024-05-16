@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * Lettuce Info 转换
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class InfoConverter implements Converter<String, Info> {
 

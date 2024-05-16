@@ -26,40 +26,57 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Tuple;
 import com.buession.redis.core.internal.convert.Converters;
-import io.lettuce.core.KeyScanCursor;
-import org.springframework.lang.Nullable;
+import io.lettuce.core.ScoredValueScanCursor;
+import io.lettuce.core.ValueScanCursor;
 
 import java.util.List;
 
 /**
- * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
+ * Lettuce {@link ValueScanCursor} 转换为 {@link ScanResult}
  *
  * @param <K>
  * 		Key 类型
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
-public final class KeyScanCursorConverter<K>
-		implements Converter<KeyScanCursor<K>, ScanResult<List<K>>> {
+public final class ValueScanCursorConverter<K> implements Converter<ValueScanCursor<K>, ScanResult<List<K>>> {
 
-	@Nullable
 	@Override
-	public ScanResult<List<K>> convert(final KeyScanCursor<K> source) {
-		return new ScanResult<>(source.getCursor(), source.getKeys());
+	public ScanResult<List<K>> convert(final ValueScanCursor<K> source) {
+		return new ScanResult<>(source.getCursor(), source.getValues());
 	}
 
 	public final static class BSKeyScanCursorConverter
-			implements Converter<KeyScanCursor<byte[]>, ScanResult<List<String>>> {
+			implements Converter<ValueScanCursor<byte[]>, ScanResult<List<String>>> {
 
 		public final static BSKeyScanCursorConverter INSTANCE = new BSKeyScanCursorConverter();
 
-		@Nullable
 		@Override
-		public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
+		public ScanResult<List<String>> convert(final ValueScanCursor<byte[]> source) {
 			return new ScanResult<>(source.getCursor(),
-					Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER.convert(source.getKeys()));
+					Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER.convert(source.getValues()));
+		}
+
+	}
+
+	/**
+	 * Lettuce {@link ScoredValueScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ScoredValueScanCursorConverter
+			implements Converter<ScoredValueScanCursor<byte[]>, ScanResult<List<Tuple>>> {
+
+		public final static ScoredValueScanCursorConverter INSTANCE = new ScoredValueScanCursorConverter();
+
+		@Override
+		public ScanResult<List<Tuple>> convert(final ScoredValueScanCursor<byte[]> source) {
+			return new ScanResult<>(source.getCursor(),
+					ScoredValueConverter.LIST_CONVERTER.convert(source.getValues()));
 		}
 
 	}

@@ -34,7 +34,7 @@ import java.util.List;
  * Lettuce 返回的服务器时间转换为 {@link RedisServerTime}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class RedisServerTimeConverter implements Converter<List<byte[]>, RedisServerTime> {
 

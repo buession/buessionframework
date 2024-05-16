@@ -33,7 +33,7 @@ import io.lettuce.core.GeoCoordinates;
  * Lettuce {@link GeoCoordinates} 转换为 {@link Geo}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class GeoCoordinateConverter implements Converter<GeoCoordinates, Geo> {
 

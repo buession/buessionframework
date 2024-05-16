@@ -22,34 +22,33 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntryId;
-import redis.clients.jedis.StreamEntryID;
 
 /**
- * {@link StreamEntryId} 转换为 jedis {@link StreamEntryID}
+ * {@link StreamEntryId} 转换为 Lettuce Stream MessageId
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class StreamEntryIdConverter implements Converter<StreamEntryId, StreamEntryID> {
+public final class StreamEntryIdConverter implements Converter<StreamEntryId, String> {
 
 	public final static StreamEntryIdConverter INSTANCE = new StreamEntryIdConverter();
 
-	public final static ArrayConverter<StreamEntryId, StreamEntryID> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE,
-			StreamEntryID.class);
+	public final static ArrayConverter<StreamEntryId, String> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE,
+			String.class);
 
 	@Override
-	public StreamEntryID convert(final StreamEntryId source){
-		return new StreamEntryID(source.getTime(), source.getSequence());
+	public String convert(final StreamEntryId source) {
+		return source == null ? null : source.toString();
 	}
 
 	public final static class MapStreamEntryIdConverter<SK, TK>
-			extends MapConverter<SK, StreamEntryId, TK, StreamEntryID> {
+			extends MapConverter<SK, StreamEntryId, TK, String> {
 
 		public final static MapStreamEntryIdConverter<String, String> STRING_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
 				(key)->key);
@@ -57,7 +56,7 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryId, St
 		public final static MapStreamEntryIdConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
 				(key)->key);
 
-		public MapStreamEntryIdConverter(final Converter<SK, TK> keyConverter){
+		public MapStreamEntryIdConverter(final Converter<SK, TK> keyConverter) {
 			super(keyConverter, StreamEntryIdConverter.INSTANCE);
 		}
 

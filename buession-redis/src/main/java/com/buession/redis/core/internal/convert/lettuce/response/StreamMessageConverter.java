@@ -21,10 +21,33 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
- *
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.internal.convert.Converters;
+import io.lettuce.core.StreamMessage;
+import org.springframework.lang.Nullable;
+
+/**
  * @author Yong.Teng
- * @since 2.4.0
- */public class StreamMessageConverter {
+ * @since 3.0.0
+ */
+public class StreamMessageConverter implements Converter<StreamMessage<byte[], byte[]>, StreamEntry> {
+
+	public final static StreamMessageConverter INSTANCE = new StreamMessageConverter();
+
+	public final static ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> LIST_CONVERTER = new ListConverter<>(
+			INSTANCE);
+
+	@Nullable
+	@Override
+	public StreamEntry convert(final StreamMessage<byte[], byte[]> source) {
+		return new StreamEntry(new StreamEntryId(source.getId()),
+				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(source.getBody()));
+	}
+
 }

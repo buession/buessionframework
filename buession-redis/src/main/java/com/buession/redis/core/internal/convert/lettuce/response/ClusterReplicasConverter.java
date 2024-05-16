@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * Lettuce Cluster Replicas 命令结果转换为 {@link RedisClusterServer} 列表
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class ClusterReplicasConverter implements Converter<String, List<ClusterRedisNode>> {
 

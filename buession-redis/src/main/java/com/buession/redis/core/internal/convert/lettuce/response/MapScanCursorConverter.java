@@ -28,7 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.internal.convert.Converters;
 import io.lettuce.core.MapScanCursor;
-import org.springframework.lang.Nullable;
 
 import java.util.Map;
 
@@ -41,12 +40,11 @@ import java.util.Map;
  * 		值类型
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class MapScanCursorConverter<K, V>
 		implements Converter<MapScanCursor<K, V>, ScanResult<Map<K, V>>> {
 
-	@Nullable
 	@Override
 	public ScanResult<Map<K, V>> convert(final MapScanCursor<K, V> source) {
 		return new ScanResult<>(source.getCursor(), source.getMap());
@@ -57,7 +55,6 @@ public final class MapScanCursorConverter<K, V>
 
 		public final static BvSvMapScanCursorConverter INSTANCE = new BvSvMapScanCursorConverter();
 
-		@Nullable
 		@Override
 		public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
 			return new ScanResult<>(source.getCursor(),

@@ -32,7 +32,7 @@ import io.lettuce.core.UnblockType;
  * {@link ClientUnblockType} 转换为 Lettuce {@link UnblockType}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class ClientUnblockTypeConverter implements Converter<ClientUnblockType, UnblockType> {
 

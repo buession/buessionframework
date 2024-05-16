@@ -32,7 +32,7 @@ import com.buession.redis.core.GeoRadius;
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class GeoRadiusGeneralResultConverter implements Converter<byte[], GeoRadius> {
 

@@ -32,7 +32,7 @@ import com.buession.redis.core.SlowLog;
  * Lettuce 慢日志对象转换为 {@link SlowLog}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class SlowlogConverter implements Converter<Object, SlowLog> {
 

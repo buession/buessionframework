@@ -33,7 +33,7 @@ import io.lettuce.core.GeoWithin;
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byte[]>, GeoRadius> {
 

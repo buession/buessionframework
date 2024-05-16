@@ -34,17 +34,15 @@ import io.lettuce.core.ScoredValue;
  * Lettuce {@link ScoredValue} 转换为 {@link Tuple}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class ScoredValueConverter implements Converter<ScoredValue<byte[]>, Tuple> {
 
 	public final static ScoredValueConverter INSTANCE = new ScoredValueConverter();
 
-	public final static SetConverter<ScoredValue<byte[]>, Tuple> SET_CONVERTER = new SetConverter<>(
-			INSTANCE);
+	public final static SetConverter<ScoredValue<byte[]>, Tuple> SET_CONVERTER = new SetConverter<>(INSTANCE);
 
-	public final static ListConverter<ScoredValue<byte[]>, Tuple> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
+	public final static ListConverter<ScoredValue<byte[]>, Tuple> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
 	public Tuple convert(final ScoredValue<byte[]> source) {

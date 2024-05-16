@@ -32,7 +32,7 @@ import io.lettuce.core.GeoArgs;
  * {@link GeoUnit} 转换为 Lettuce {@link GeoArgs.Unit}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> {
 

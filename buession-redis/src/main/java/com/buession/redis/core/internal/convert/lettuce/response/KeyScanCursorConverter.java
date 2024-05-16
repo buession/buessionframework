@@ -39,7 +39,7 @@ import java.util.List;
  * 		Key 类型
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class KeyScanCursorConverter<K>
 		implements Converter<KeyScanCursor<K>, ScanResult<List<K>>> {

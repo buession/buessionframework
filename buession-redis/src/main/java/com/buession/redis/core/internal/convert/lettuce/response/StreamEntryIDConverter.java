@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamEntryId;
@@ -33,7 +33,7 @@ import redis.clients.jedis.StreamEntryID;
  * jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class StreamEntryIDConverter implements Converter<String, StreamEntryId> {
 
