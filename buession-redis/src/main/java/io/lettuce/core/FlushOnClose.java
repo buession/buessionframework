@@ -21,10 +21,42 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
+ */
+package io.lettuce.core;
+
+import io.lettuce.core.api.PipeliningFlushPolicy;
+import io.lettuce.core.api.PipeliningFlushState;
+import io.lettuce.core.api.StatefulConnection;
+
+/**
+ * Implementation to flush on closing the pipeline.
  *
  * @author Yong.Teng
- * @since 2.4.0
- */public enum FlushOnClose {
+ * @since 3.0.0
+ */
+public enum FlushOnClose implements PipeliningFlushPolicy, PipeliningFlushState {
+
+	INSTANCE;
+
+	@Override
+	public PipeliningFlushState newPipeline() {
+		return INSTANCE;
+	}
+
+	@Override
+	public void onOpen(StatefulConnection<?, ?> connection) {
+		connection.setAutoFlushCommands(false);
+	}
+
+	@Override
+	public void onCommand(StatefulConnection<?, ?> connection) {
+
+	}
+
+	@Override
+	public void onClose(StatefulConnection<?, ?> connection) {
+		connection.flushCommands();
+		connection.setAutoFlushCommands(true);
+	}
+
 }

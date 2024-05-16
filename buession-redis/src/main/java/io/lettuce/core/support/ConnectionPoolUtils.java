@@ -21,10 +21,139 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core.support;/**
- * 
- *
+ */
+package io.lettuce.core.support;
+
+import io.lettuce.core.LettucePool;
+import io.lettuce.core.LettucePoolConfig;
+import io.lettuce.core.api.StatefulRedisConnection;
+import org.apache.commons.pool2.ObjectPool;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
  * @author Yong.Teng
- * @since 2.4.0
- */public class ConnectionPoolUtils {
+ * @since 3.0.0
+ */
+public class ConnectionPoolUtils {
+
+	private ConnectionPoolUtils() {
+
+	}
+
+	public static LettucePool createLettucePool(final LettucePoolConfig<byte[], byte[]> lettucePoolConfig,
+												final String host, final int port, final int connectionTimeout,
+												final int soTimeout, final String user, final String password,
+												final int database, final String clientName, final boolean ssl) {
+		return createLettucePool(lettucePoolConfig, host, port, connectionTimeout, soTimeout, user, password, database,
+				clientName, ssl, true);
+	}
+
+	public static LettucePool createLettucePool(final LettucePoolConfig<byte[], byte[]> lettucePoolConfig,
+												final String host, final int port, final int connectionTimeout,
+												final int soTimeout, final String user, final String password,
+												final int database, final String clientName, final boolean ssl, final
+												boolean wrapConnections) {
+		AtomicReference<ConnectionWrapping.Origin<StatefulRedisConnection<byte[], byte[]>>> poolRef = new AtomicReference<>();
+
+		LettucePool pool = new LettucePool(lettucePoolConfig, host, port, connectionTimeout, soTimeout, user,
+				password, database, clientName, ssl) {
+
+			@Override
+			public StatefulRedisConnection<byte[], byte[]> borrowObject() throws Exception {
+				return wrapConnections ? ConnectionWrapping.wrapConnection(super.borrowObject(), poolRef.get())
+						: super.borrowObject();
+			}
+
+			@Override
+			public void returnObject(StatefulRedisConnection<byte[], byte[]> obj) {
+				if(wrapConnections && obj instanceof ConnectionWrapping.HasTargetConnection){
+					super.returnObject(
+							(StatefulRedisConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection());
+					return;
+				}
+
+				super.returnObject(obj);
+			}
+		};
+
+		poolRef.set(new ObjectPoolWrapper<>(pool));
+
+		return pool;
+	}
+
+	public static LettucePool createLettucePool(final LettucePoolConfig<byte[], byte[]> lettucePoolConfig,
+												final String host, final int port, final int connectionTimeout,
+												final int soTimeout, final String user, final String password,
+												final int database, final String clientName, final boolean ssl,
+												final SSLSocketFactory sslSocketFactory,
+												final SSLParameters sslParameters,
+												final HostnameVerifier hostnameVerifier) {
+		return createLettucePool(lettucePoolConfig, host, port, connectionTimeout, soTimeout, user, password, database,
+				clientName, ssl, sslSocketFactory, sslParameters, hostnameVerifier, true);
+	}
+
+	public static LettucePool createLettucePool(final LettucePoolConfig<byte[], byte[]> lettucePoolConfig,
+												final String host, final int port, final int connectionTimeout,
+												final int soTimeout, final String user, final String password,
+												final int database, final String clientName, final boolean ssl,
+												final SSLSocketFactory sslSocketFactory,
+												final SSLParameters sslParameters,
+												final HostnameVerifier hostnameVerifier,
+												final boolean wrapConnections) {
+		AtomicReference<ConnectionWrapping.Origin<StatefulRedisConnection<byte[], byte[]>>> poolRef = new AtomicReference<>();
+
+		LettucePool pool = new LettucePool(lettucePoolConfig, host, port, connectionTimeout, soTimeout, user,
+				password, database, clientName, ssl, sslSocketFactory, sslParameters, hostnameVerifier) {
+
+			@Override
+			public StatefulRedisConnection<byte[], byte[]> borrowObject() throws Exception {
+				return wrapConnections ? ConnectionWrapping.wrapConnection(super.borrowObject(), poolRef.get())
+						: super.borrowObject();
+			}
+
+			@Override
+			public void returnObject(StatefulRedisConnection<byte[], byte[]> obj) {
+				if(wrapConnections && obj instanceof ConnectionWrapping.HasTargetConnection){
+					super.returnObject(
+							(StatefulRedisConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection());
+					return;
+				}
+
+				super.returnObject(obj);
+			}
+		};
+
+		poolRef.set(new ObjectPoolWrapper<>(pool));
+
+		return pool;
+	}
+
+	private static class ObjectPoolWrapper<T> implements ConnectionWrapping.Origin<T> {
+
+		private static final CompletableFuture<Void> COMPLETED = CompletableFuture.completedFuture(null);
+
+		private final ObjectPool<T> pool;
+
+		ObjectPoolWrapper(ObjectPool<T> pool) {
+			this.pool = pool;
+		}
+
+		@Override
+		public void returnObject(T o) throws Exception {
+			pool.returnObject(o);
+		}
+
+		@Override
+		public CompletableFuture<Void> returnObjectAsync(T o) throws Exception {
+			pool.returnObject(o);
+			return COMPLETED;
+		}
+
+	}
+
 }

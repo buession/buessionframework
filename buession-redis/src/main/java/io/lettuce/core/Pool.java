@@ -24,12 +24,85 @@
  */
 package io.lettuce.core;
 
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
+ * 连接池
+ *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
-public class LettucePool extends GenericObjectPool<T> {
+public class Pool<T> extends GenericObjectPool<T> {
+
+	public Pool(PooledObjectFactory<T> factory) {
+		super(factory);
+	}
+
+	public Pool(PooledObjectFactory<T> factory, GenericObjectPoolConfig<T> config) {
+		super(factory, config);
+	}
+
+	public Pool(PooledObjectFactory<T> factory, GenericObjectPoolConfig<T> config, AbandonedConfig abandonedConfig) {
+		super(factory, config, abandonedConfig);
+	}
+
+	public T getResource() {
+		try{
+			return super.borrowObject();
+		}catch(RedisException re){
+			throw re;
+		}catch(Exception e){
+			throw new RedisException("Could not get a resource from the pool", e);
+		}
+	}
+
+	public void returnResource(final T resource) {
+		if(resource == null){
+			return;
+		}
+		try{
+			super.returnObject(resource);
+		}catch(RuntimeException e){
+			throw new RedisException("Could not return the resource to the pool", e);
+		}
+	}
+
+	public void returnBrokenResource(final T resource) {
+		if(resource == null){
+			return;
+		}
+		try{
+			super.invalidateObject(resource);
+		}catch(Exception e){
+			throw new RedisException("Could not return the broken resource to the pool", e);
+		}
+	}
+
+	@Override
+	public void addObjects(int count) {
+		try{
+			for(int i = 0; i < count; i++){
+				addObject();
+			}
+		}catch(Exception e){
+			throw new RedisException("Error trying to add idle objects", e);
+		}
+	}
+
+	@Override
+	public void close() {
+		destroy();
+	}
+
+	public void destroy() {
+		try{
+			super.close();
+		}catch(RuntimeException e){
+			throw new RedisException("Could not destroy the pool", e);
+		}
+	}
 
 }

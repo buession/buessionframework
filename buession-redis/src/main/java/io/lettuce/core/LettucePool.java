@@ -22,35 +22,29 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core.support;
+package io.lettuce.core;
 
 import com.buession.redis.core.RedisNode;
-import io.lettuce.core.Pool;
-import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import redis.clients.jedis.DefaultJedisClientConfig;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisClientConfig;
-import redis.clients.jedis.JedisFactory;
-import redis.clients.jedis.JedisSocketFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Lettuce 连接池
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 
-	private AtomicReference<ConnectionWrapping.Origin<StatefulRedisConnection<byte[], byte[]>>> poolRef = new AtomicReference<>();
+	private final static Logger logger = LoggerFactory.getLogger(LettucePool.class);
 
 	/**
 	 * 构造函数
@@ -83,9 +77,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 */
 	public LettucePool(final String url, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
 					   final HostnameVerifier hostnameVerifier) {
-		this(new GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>>(),
-				new JedisFactory(URI.create(url), (int) RedisURI.DEFAULT_TIMEOUT,
-						(int) RedisURI.DEFAULT_TIMEOUT, null, sslSocketFactory, sslParameters, hostnameVerifier));
+		this(new GenericObjectPoolConfig<>(), new LettuceFactory(RedisURI.create(url), (int) RedisURI.DEFAULT_TIMEOUT,
+				(int) RedisURI.DEFAULT_TIMEOUT, null, sslSocketFactory, sslParameters, hostnameVerifier));
 	}
 
 	/**
@@ -97,7 +90,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		Redis 端口
 	 */
 	public LettucePool(final String host, final int port) {
-		this(new HostAndPort(host, port), DefaultJedisClientConfig.builder().build());
+		this(new LettuceFactory(host, port));
 	}
 
 	/**
@@ -111,7 +104,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		是否为 SSL
 	 */
 	public LettucePool(final String host, final int port, final boolean ssl) {
-		this(new HostAndPort(host, port), DefaultJedisClientConfig.builder().ssl(ssl).build());
+		this(new LettuceFactory(host, port, ssl));
 	}
 
 	/**
@@ -132,9 +125,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 */
 	public LettucePool(final String host, final int port, final boolean ssl, final SSLSocketFactory sslSocketFactory,
 					   final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
-		this(new HostAndPort(host, port), DefaultJedisClientConfig.builder().ssl(ssl)
-				.sslSocketFactory(sslSocketFactory).sslParameters(sslParameters)
-				.hostnameVerifier(hostnameVerifier).build());
+		this(new LettuceFactory(host, port, ssl, sslSocketFactory, sslParameters, hostnameVerifier));
 	}
 
 	/**
@@ -150,19 +141,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		密码
 	 */
 	public LettucePool(final String host, final int port, final String user, final String password) {
-		this(new HostAndPort(host, port), DefaultJedisClientConfig.builder().user(user).password(password).build());
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param hostAndPort
-	 * 		Redis 主机地址和端口
-	 * @param clientConfig
-	 * 		客户端配置
-	 */
-	public LettucePool(final HostAndPort hostAndPort, final JedisClientConfig clientConfig) {
-		this(new JedisFactory(hostAndPort, clientConfig));
+		this(new LettuceFactory(host, port, user, password));
 	}
 
 	/**
@@ -447,8 +426,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		是否为 SSL
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final String host, final int port, final int timeout, final String user, final String password
-			, final boolean ssl) {
+					   final String host, final int port, final int timeout, final String user, final String password,
+					   final boolean ssl) {
 		this(poolConfig, host, port, timeout, user, password, RedisNode.DEFAULT_DATABASE, ssl);
 	}
 
@@ -660,8 +639,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 					   final String host, final int port, final int timeout, final String password, final int database,
 					   final String clientName, final boolean ssl, final SSLSocketFactory sslSocketFactory,
 					   final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
-		this(poolConfig, host, port, timeout, timeout, password, database, clientName, ssl,
-				sslSocketFactory, sslParameters, hostnameVerifier);
+		this(poolConfig, host, port, timeout, timeout, password, database, clientName, ssl, sslSocketFactory,
+				sslParameters, hostnameVerifier);
 	}
 
 	/**
@@ -741,8 +720,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
 					   final String host, final int port, final int connectionTimeout, final int soTimeout,
 					   final String password, final int database, final String clientName) {
-		this(poolConfig, new JedisFactory(host, port, connectionTimeout, soTimeout, password,
-				database, clientName));
+		this(poolConfig, host, port, connectionTimeout, soTimeout, null, password, database, clientName);
 	}
 
 	/**
@@ -807,7 +785,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 					   final String password, final int database, final String clientName, final boolean ssl,
 					   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
 					   final HostnameVerifier hostnameVerifier) {
-		this(poolConfig, new JedisFactory(host, port, connectionTimeout, soTimeout, password,
+		this(poolConfig, new LettuceFactory(host, port, connectionTimeout, soTimeout, password,
 				database, clientName, ssl, sslSocketFactory, sslParameters, hostnameVerifier));
 	}
 
@@ -836,8 +814,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
 					   final String host, final int port, final int connectionTimeout, final int soTimeout,
 					   final String user, final String password, final int database, final String clientName) {
-		this(poolConfig, new JedisFactory(host, port, connectionTimeout, soTimeout, user, password,
-				database, clientName));
+		this(poolConfig, new LettuceFactory(host, port, connectionTimeout, soTimeout, user, password, database,
+				clientName));
 	}
 
 	/**
@@ -868,8 +846,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 					   final String host, final int port, final int connectionTimeout, final int soTimeout,
 					   final String user, final String password, final int database, final String clientName,
 					   final boolean ssl) {
-		this(poolConfig, host, port, connectionTimeout, soTimeout, user, password, database,
-				clientName, ssl, null, null, null);
+		this(poolConfig, host, port, connectionTimeout, soTimeout, user, password, database, clientName, ssl, null,
+				null, null);
 	}
 
 	/**
@@ -907,8 +885,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 					   final String user, final String password, final int database, final String clientName,
 					   final boolean ssl, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
 					   final HostnameVerifier hostnameVerifier) {
-		this(poolConfig, host, port, connectionTimeout, soTimeout, 0, user, password, database,
-				clientName, ssl, sslSocketFactory, sslParameters, hostnameVerifier);
+		this(poolConfig, new LettuceFactory(host, port, connectionTimeout, soTimeout, user, password, database,
+				clientName, ssl, sslSocketFactory, sslParameters, hostnameVerifier));
 	}
 
 	/**
@@ -941,6 +919,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * @param hostnameVerifier
 	 *        {@link HostnameVerifier}
 	 */
+	/*
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
 					   final String host, final int port, final int connectionTimeout, final int soTimeout,
 					   final int infiniteSoTimeout, final String password, final int database,
@@ -950,6 +929,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 				database, clientName, ssl, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
+	 */
+
 	/**
 	 * 构造函数
 	 *
@@ -972,6 +953,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * @param clientName
 	 * 		客户端名称
 	 */
+	/*
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
 					   final String host, final int port, final int connectionTimeout, final int soTimeout,
 					   final int infiniteSoTimeout, final String user, final String password, final int database,
@@ -979,6 +961,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 		this(poolConfig, new JedisFactory(host, port, connectionTimeout, soTimeout, infiniteSoTimeout,
 				user, password, database, clientName));
 	}
+
+	 */
 
 	/**
 	 * 构造函数
@@ -1010,6 +994,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * @param hostnameVerifier
 	 *        {@link HostnameVerifier}
 	 */
+	/*
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
 					   final String host, final int port, final int connectionTimeout, final int soTimeout,
 					   final int infiniteSoTimeout, final String user, final String password, final int database,
@@ -1020,6 +1005,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 				hostnameVerifier));
 	}
 
+	 */
+
 	/**
 	 * 构造函数
 	 *
@@ -1027,7 +1014,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		连接 URL
 	 */
 	public LettucePool(final URI uri) {
-		this(new GenericObjectPoolConfig<>(), uri);
+		this(new LettucePoolConfig<>(), uri);
 	}
 
 	/**
@@ -1044,7 +1031,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 */
 	public LettucePool(final URI uri, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
 					   final HostnameVerifier hostnameVerifier) {
-		this(new GenericObjectPoolConfig<>(), uri, sslSocketFactory, sslParameters, hostnameVerifier);
+		this(new LettucePoolConfig<>(), uri, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
 	/**
@@ -1056,7 +1043,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		超时
 	 */
 	public LettucePool(final URI uri, final int timeout) {
-		this(new GenericObjectPoolConfig<>(), uri, timeout);
+		this(new LettucePoolConfig<>(), uri, timeout);
 	}
 
 	/**
@@ -1075,7 +1062,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 */
 	public LettucePool(final URI uri, final int timeout, final SSLSocketFactory sslSocketFactory,
 					   final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
-		this(new GenericObjectPoolConfig<>(), uri, timeout, sslSocketFactory, sslParameters, hostnameVerifier);
+		this(new LettucePoolConfig<>(), uri, timeout, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
 	/**
@@ -1108,8 +1095,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig, final URI uri,
 					   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
 					   final HostnameVerifier hostnameVerifier) {
-		this(poolConfig, uri, (int) RedisURI.DEFAULT_TIMEOUT, sslSocketFactory, sslParameters,
-				hostnameVerifier);
+		this(poolConfig, uri, (int) RedisURI.DEFAULT_TIMEOUT, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
 	/**
@@ -1187,7 +1173,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig, final URI uri,
 					   final int connectionTimeout, final int soTimeout, final SSLSocketFactory sslSocketFactory,
 					   final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
-		this(poolConfig, new JedisFactory(uri, connectionTimeout, soTimeout, null, sslSocketFactory,
+		this(poolConfig, new LettuceFactory(RedisURI.create(uri), connectionTimeout, soTimeout, sslSocketFactory,
 				sslParameters, hostnameVerifier));
 	}
 
@@ -1215,38 +1201,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 					   final int connectionTimeout, final int soTimeout, final int infiniteSoTimeout,
 					   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
 					   final HostnameVerifier hostnameVerifier) {
-		this(poolConfig, new JedisFactory(uri, connectionTimeout, soTimeout, infiniteSoTimeout, null,
+		this(poolConfig, new LettuceFactory(RedisURI.create(uri), connectionTimeout, soTimeout, infiniteSoTimeout, null,
 				sslSocketFactory, sslParameters, hostnameVerifier));
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param poolConfig
-	 * 		线程池配置
-	 * @param hostAndPort
-	 * 		Redis 主机地址和端口
-	 * @param clientConfig
-	 * 		客户端配置
-	 */
-	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<K, V>> poolConfig,
-					   final HostAndPort hostAndPort, final JedisClientConfig clientConfig) {
-		this(poolConfig, new JedisFactory(hostAndPort, clientConfig));
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param poolConfig
-	 * 		线程池配置
-	 * @param jedisSocketFactory
-	 * 		Socket 工厂
-	 * @param clientConfig
-	 * 		客户端配置
-	 */
-	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final JedisSocketFactory jedisSocketFactory, final JedisClientConfig clientConfig) {
-		this(poolConfig, new JedisFactory(jedisSocketFactory, clientConfig));
 	}
 
 	/**
@@ -1259,7 +1215,26 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
 					   final PooledObjectFactory<StatefulRedisConnection<byte[], byte[]>> factory) {
-		super(poolConfig, factory);
+		super(factory, poolConfig);
+	}
+
+	@Override
+	public StatefulRedisConnection<byte[], byte[]> getResource() {
+		StatefulRedisConnection<byte[], byte[]> connection = super.getResource();
+		//jedis.setDataSource(this);
+		return connection;
+	}
+
+	@Override
+	public void returnResource(final StatefulRedisConnection<byte[], byte[]> resource) {
+		if(resource != null){
+			try{
+				super.returnResource(resource);
+			}catch(RuntimeException e){
+				super.returnBrokenResource(resource);
+				logger.warn("Resource is returned to the pool as broken", e);
+			}
+		}
 	}
 
 }

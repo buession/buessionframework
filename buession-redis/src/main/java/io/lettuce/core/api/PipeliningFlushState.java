@@ -21,10 +21,40 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core.api;/**
- * 
+ */
+package io.lettuce.core.api;
+
+/**
+ * State object associated with flushing of the currently ongoing pipeline.
  *
  * @author Yong.Teng
- * @since 2.4.0
- */public interface PipeliningFlushState {
+ * @since 3.0.0
+ */
+public interface PipeliningFlushState {
+
+	/**
+	 * Callback if the pipeline gets opened.
+	 *
+	 * @param connection
+	 *        {@link StatefulConnection}
+	 */
+	void onOpen(StatefulConnection<?, ?> connection);
+
+	/**
+	 * Callback for each issued Redis command.
+	 *
+	 * @param connection
+	 *        {@link StatefulConnection}
+	 */
+	void onCommand(StatefulConnection<?, ?> connection);
+
+	/**
+	 * Callback if the pipeline gets closed.
+	 *
+	 * @param connection
+	 *        {@link StatefulConnection}
+	 */
+	void onClose(StatefulConnection<?, ?> connection);
+
+
 }
