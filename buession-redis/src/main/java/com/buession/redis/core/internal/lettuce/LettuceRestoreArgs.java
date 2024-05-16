@@ -31,7 +31,7 @@ import io.lettuce.core.RestoreArgs;
  * Lettuce {@link RestoreArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceRestoreArgs extends RestoreArgs {
 

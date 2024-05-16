@@ -31,7 +31,7 @@ import io.lettuce.core.BitFieldArgs;
  * Lettuce {@link BitFieldArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceBitFieldArgs extends BitFieldArgs {
 

@@ -35,7 +35,7 @@ import java.util.Optional;
  * Lettuce {@link SetArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class LettuceSetArgs extends SetArgs {
 

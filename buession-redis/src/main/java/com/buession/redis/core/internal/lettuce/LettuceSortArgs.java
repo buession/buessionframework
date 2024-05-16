@@ -37,7 +37,7 @@ import java.util.Optional;
  * Lettuce {@link SortArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceSortArgs extends SortArgs {
 
@@ -58,14 +58,14 @@ public final class LettuceSortArgs extends SortArgs {
 	public LettuceSortArgs(final String by, final String[] gets) {
 		this(by);
 		if(gets != null){
-			Arrays.stream(gets).map(this::get);
+			Arrays.stream(gets).forEach(this::get);
 		}
 	}
 
 	public LettuceSortArgs(final byte[] by, final byte[][] gets) {
 		this(by);
 		if(gets != null){
-			Arrays.stream(gets).map((v)->this.get(SafeEncoder.encode(v)));
+			Arrays.stream(gets).forEach((v)->this.get(SafeEncoder.encode(v)));
 		}
 	}
 
@@ -127,7 +127,7 @@ public final class LettuceSortArgs extends SortArgs {
 		if(sortArgument != null){
 			Optional.ofNullable(sortArgument.getBy()).ifPresent((v)->sortArgs.by(SafeEncoder.encode(v)));
 			if(sortArgument.getGetPatterns() != null){
-				Arrays.stream(sortArgument.getGetPatterns()).map((v)->sortArgs.get(SafeEncoder.encode(v)));
+				Arrays.stream(sortArgument.getGetPatterns()).forEach((v)->sortArgs.get(SafeEncoder.encode(v)));
 			}
 			order(sortArgs, sortArgument.getOrder());
 			limit(sortArgs, sortArgument.getLimit());

@@ -34,7 +34,7 @@ import java.util.Optional;
  * Lettuce {@link GeoArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceGeoArgs extends GeoArgs {
 
@@ -43,16 +43,19 @@ public final class LettuceGeoArgs extends GeoArgs {
 	}
 
 	public LettuceGeoArgs(final boolean withCoord, final boolean withDist, final boolean withHash) {
+		super();
 		withCoordinates(this, withCoord);
 		withDistance(this, withDist);
 		withHash(this, withHash);
 	}
 
 	public LettuceGeoArgs(final Order order) {
+		super();
 		sort(this, order);
 	}
 
 	public LettuceGeoArgs(final int count) {
+		super();
 		withCount(count);
 	}
 

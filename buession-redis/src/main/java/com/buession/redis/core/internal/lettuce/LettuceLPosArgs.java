@@ -33,7 +33,7 @@ import java.util.Optional;
  * Lettuce {@link LPosArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public final class LettuceLPosArgs extends LPosArgs {
 
@@ -42,10 +42,12 @@ public final class LettuceLPosArgs extends LPosArgs {
 	}
 
 	public LettuceLPosArgs(final int rank) {
+		super();
 		rank(rank);
 	}
 
 	public LettuceLPosArgs(final int rank, final int maxLen) {
+		super();
 		rank(rank);
 		maxlen(maxLen);
 	}
