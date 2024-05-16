@@ -19,192 +19,154 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Maps;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.core.converter.MapConverter;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
-import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Jedis 单机模式 Pub/Sub 命令操作
+ * Lettuce 单机模式 Pub/Sub 命令操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 2.4.0
  */
-public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisStandaloneClient> {
+public final class LettucePubSubOperations extends AbstractPubSubOperations<LettuceStandaloneClient> {
 
-	public JedisPubSubOperations(final JedisStandaloneClient client){
+	public LettucePubSubOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		new JedisCommand<Void>(client, ProtocolCommand.PSUBSCRIBE)
-				.general((cmd)->{
-					cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
-					return null;
-				})
+		new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		new JedisCommand<Void>(client, ProtocolCommand.PSUBSCRIBE)
-				.general((cmd)->{
-					cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
-					return null;
-				})
+		new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public Long publish(final String channel, final String message){
+	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return new JedisCommand<Long>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->cmd.publish(channel, message))
-				.pipeline((cmd)->cmd.publish(channel, message))
-				.transaction((cmd)->cmd.publish(channel, message))
+		return new LettuceCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long publish(final byte[] channel, final byte[] message){
-		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return new JedisCommand<Long>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->cmd.publish(channel, message))
-				.pipeline((cmd)->cmd.publish(channel, message))
-				.transaction((cmd)->cmd.publish(channel, message))
-				.run(args);
-	}
-
-	@Override
-	public List<String> pubsubChannels(){
-		return new JedisCommand<List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
-				.general((cmd)->cmd.pubsubChannels())
+	public List<String> pubsubChannels() {
+		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
 				.run();
 	}
 
 	@Override
-	public List<String> pubsubChannels(final String pattern){
+	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisCommand<List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
-				.general((cmd)->cmd.pubsubChannels(pattern))
+		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
 				.run(args);
 	}
 
 	@Override
-	public List<byte[]> pubsubChannels(final byte[] pattern){
+	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.PUBSUB_CHANNELS)
-				.general((cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
-						Converters.STRING_LIST_TO_BINARY_LIST_CONVERTER)
+		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(pattern),
+				(v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Long pubsubNumPat(){
-		return new JedisCommand<Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
-				.general((cmd)->cmd.pubsubNumPat())
+	public Long pubsubNumPat() {
+		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
 				.run();
 	}
 
 	@Override
-	public Map<String, Long> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisCommand<Map<String, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
-				.general((cmd)->cmd.pubsubNumSub(channels))
+		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+				(cmd)->cmd.pubsubNumsub(SafeEncoder.encode(channels)), new MapConverter<>(SafeEncoder::encode, (v)->v))
 				.run(args);
 	}
 
 	@Override
-	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisCommand<Map<byte[], Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
-				.general((cmd)->{
-					final Map<String, Long> temp = cmd.pubsubNumSub(
-							Converters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels));
-					return Maps.map(temp, SafeEncoder::encode, (value)->value);
-				})
+		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels), (v)->v)
 				.run(args);
 	}
 
 	@Override
-	public Object pUnSubscribe(){
-		return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+	public Object pUnSubscribe() {
+		return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 				.run();
 	}
 
 	@Override
-	public Object pUnSubscribe(final String... patterns){
+	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+		return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public Object pUnSubscribe(final byte[]... patterns){
+	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+		return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new JedisCommand<String>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->{
-					cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
-					return null;
-				})
+		new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new JedisCommand<String>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->{
-					cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
-					return null;
-				})
+		new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public Object unSubscribe(){
-		return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+	public Object unSubscribe() {
+		return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 				.run();
 	}
 
 	@Override
-	public Object unSubscribe(final String... channels){
+	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+		return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 				.run(args);
 	}
 
 	@Override
-	public Object unSubscribe(final byte[]... channels){
+	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+		return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 				.run(args);
 	}
 
