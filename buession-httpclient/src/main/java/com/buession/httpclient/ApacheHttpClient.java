@@ -67,7 +67,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public ApacheHttpClient(com.buession.httpclient.apache.ApacheClientConnectionManager connectionManager) {
 		super(connectionManager);
@@ -79,7 +79,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param configuration
 	 * 		配置
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public ApacheHttpClient(Configuration configuration) {
 		super(V5 ? new Apache5ClientConnectionManager(configuration) : new ApacheClientConnectionManager(
@@ -92,7 +92,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	 * @param httpClient
 	 *        {@link ApacheClient} 实例
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public ApacheHttpClient(ApacheClient httpClient) {
 		this.httpClient = httpClient;

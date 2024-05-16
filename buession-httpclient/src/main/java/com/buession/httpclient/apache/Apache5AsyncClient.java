@@ -71,7 +71,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 

@@ -63,7 +63,7 @@ import java.util.Optional;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class Apache4Client extends AbstractApacheClient {
 

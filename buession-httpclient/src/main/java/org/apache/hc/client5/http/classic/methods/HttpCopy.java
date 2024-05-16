@@ -32,6 +32,7 @@ import java.net.URI;
  * Copy 请求
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
 public class HttpCopy extends HttpUriRequestBase {
 

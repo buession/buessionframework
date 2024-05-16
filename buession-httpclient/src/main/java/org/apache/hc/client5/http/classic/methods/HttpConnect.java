@@ -32,7 +32,7 @@ import java.net.URI;
  * Connect 请求
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class HttpConnect extends HttpUriRequestBase {
 

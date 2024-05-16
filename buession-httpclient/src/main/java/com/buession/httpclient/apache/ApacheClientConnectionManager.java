@@ -28,7 +28,7 @@ import com.buession.httpclient.conn.ConnectionManager;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public interface ApacheClientConnectionManager extends ConnectionManager {
 

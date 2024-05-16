@@ -38,7 +38,7 @@ import java.util.concurrent.ThreadFactory;
  * Apache HttpComponents 5 异步连接管理器
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectionManager<AsyncClientConnectionManager>
 		implements com.buession.httpclient.apache.ApacheNioClientConnectionManager {

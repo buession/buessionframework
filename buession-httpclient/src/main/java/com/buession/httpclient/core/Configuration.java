@@ -84,7 +84,7 @@ public class Configuration {
 	/**
 	 * The maximum time to live for persistent connections.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private int connectionTimeToLive = -1;
 
@@ -101,7 +101,7 @@ public class Configuration {
 	/**
 	 * Determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private Boolean expectContinueEnabled;
 
@@ -130,7 +130,7 @@ public class Configuration {
 	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
 	 * connection by allowing the request to complete in the background, discarding the response.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private Boolean hardCancellationEnabled;
 
@@ -142,14 +142,14 @@ public class Configuration {
 	/**
 	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private Collection<String> targetPreferredAuthSchemes;
 
 	/**
 	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private Collection<String> proxyPreferredAuthSchemes;
 
@@ -166,7 +166,7 @@ public class Configuration {
 	/**
 	 * Determines the name of the cookie specification to be used for HTTP state management.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private String cookieSpec;
 
@@ -180,7 +180,7 @@ public class Configuration {
 	/**
 	 * 代理配置
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private Proxy proxy;
 
@@ -349,7 +349,7 @@ public class Configuration {
 	 *
 	 * @return The maximum time to live for persistent connections.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public int getConnectionTimeToLive() {
 		return connectionTimeToLive;
@@ -361,7 +361,7 @@ public class Configuration {
 	 * @param connectionTimeToLive
 	 * 		The maximum time to live for persistent connections.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setConnectionTimeToLive(int connectionTimeToLive) {
 		this.connectionTimeToLive = connectionTimeToLive;
@@ -414,7 +414,7 @@ public class Configuration {
 	 *
 	 * @return true / false
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public Boolean isExpectContinueEnabled() {
 		return getExpectContinueEnabled();
@@ -425,7 +425,7 @@ public class Configuration {
 	 *
 	 * @return true / false
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public Boolean getExpectContinueEnabled() {
 		return expectContinueEnabled;
@@ -437,7 +437,7 @@ public class Configuration {
 	 * @param expectContinueEnabled
 	 * 		true / false
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setExpectContinueEnabled(Boolean expectContinueEnabled) {
 		this.expectContinueEnabled = expectContinueEnabled;
@@ -551,8 +551,9 @@ public class Configuration {
 	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
 	 * connection by allowing the request to complete in the background, discarding the response.
 	 *
-	 * @Return true / false
-	 * @since 2.4.0
+	 * @return true / false
+	 *
+	 * @since 3.0.0
 	 */
 	public Boolean isHardCancellationEnabled() {
 		return getHardCancellationEnabled();
@@ -563,8 +564,9 @@ public class Configuration {
 	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
 	 * connection by allowing the request to complete in the background, discarding the response.
 	 *
-	 * @Return true / false
-	 * @since 2.4.0
+	 * @return true / false
+	 *
+	 * @since 3.0.0
 	 */
 	public Boolean getHardCancellationEnabled() {
 		return hardCancellationEnabled;
@@ -578,7 +580,7 @@ public class Configuration {
 	 * @param hardCancellationEnabled
 	 * 		Enabled hard cancellation
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setHardCancellationEnabled(Boolean hardCancellationEnabled) {
 		this.hardCancellationEnabled = hardCancellationEnabled;
@@ -618,7 +620,7 @@ public class Configuration {
 	 *
 	 * @return Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public Collection<String> getTargetPreferredAuthSchemes() {
 		return targetPreferredAuthSchemes;
@@ -631,7 +633,7 @@ public class Configuration {
 	 * @param targetPreferredAuthSchemes
 	 * 		Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setTargetPreferredAuthSchemes(Collection<String> targetPreferredAuthSchemes) {
 		this.targetPreferredAuthSchemes = targetPreferredAuthSchemes;
@@ -643,7 +645,7 @@ public class Configuration {
 	 *
 	 * @return Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public Collection<String> getProxyPreferredAuthSchemes() {
 		return proxyPreferredAuthSchemes;
@@ -656,7 +658,7 @@ public class Configuration {
 	 * @param proxyPreferredAuthSchemes
 	 * 		Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setProxyPreferredAuthSchemes(Collection<String> proxyPreferredAuthSchemes) {
 		this.proxyPreferredAuthSchemes = proxyPreferredAuthSchemes;
@@ -723,7 +725,7 @@ public class Configuration {
 	 *
 	 * @return Determines the name of the cookie specification to be used for HTTP state management.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public String getCookieSpec() {
 		return cookieSpec;
@@ -735,7 +737,7 @@ public class Configuration {
 	 * @param cookieSpec
 	 * 		Determines the name of the cookie specification to be used for HTTP state management.
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setCookieSpec(String cookieSpec) {
 		this.cookieSpec = cookieSpec;
@@ -765,7 +767,7 @@ public class Configuration {
 	 *
 	 * @return 代理配置
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public Proxy getProxy() {
 		return proxy;
@@ -777,7 +779,7 @@ public class Configuration {
 	 * @param proxy
 	 * 		代理配置
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public void setProxy(Proxy proxy) {
 		this.proxy = proxy;
@@ -818,7 +820,7 @@ public class Configuration {
 	 * 代理配置
 	 *
 	 * @author yong.teng
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public final static class Proxy {
 

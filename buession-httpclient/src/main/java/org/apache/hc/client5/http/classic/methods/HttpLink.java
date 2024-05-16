@@ -33,6 +33,7 @@ import java.net.URI;
  * Link 请求
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
 public class HttpLink extends HttpUriRequestBase {
 

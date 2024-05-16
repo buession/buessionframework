@@ -35,7 +35,7 @@ import java.io.OutputStream;
  * A streamed, non-repeatable and chunked entity that obtains its content from an {@link InputStream}.
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class ChunkedInputStreamEntity extends AbstractHttpEntity {
 

@@ -29,7 +29,7 @@ import com.buession.httpclient.conn.NioConnectionManager;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public interface ApacheNioClientConnectionManager extends NioConnectionManager, ConnectionManager {
 

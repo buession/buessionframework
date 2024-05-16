@@ -32,6 +32,7 @@ import java.net.URI;
  * Wrapped 请求
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
 public class HttpWrapped extends HttpUriRequestBase {
 

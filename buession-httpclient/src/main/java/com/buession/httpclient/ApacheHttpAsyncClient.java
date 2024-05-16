@@ -67,7 +67,7 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public ApacheHttpAsyncClient(com.buession.httpclient.apache.ApacheNioClientConnectionManager connectionManager) {
 		super(connectionManager);
@@ -79,7 +79,7 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 	 * @param configuration
 	 * 		配置
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public ApacheHttpAsyncClient(Configuration configuration) {
 		super(V5 ? new Apache5NioClientConnectionManager(configuration) : new ApacheNioClientConnectionManager(
@@ -92,7 +92,7 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 	 * @param httpAsyncClient
 	 *        {@link ApacheAsyncClient} 实例
 	 *
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	public ApacheHttpAsyncClient(ApacheAsyncClient httpAsyncClient) {
 		this.httpAsyncClient = httpAsyncClient;

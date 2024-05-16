@@ -48,7 +48,7 @@ import java.io.IOException;
  * Apache Http Client 5 响应构建器
  *
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class Apache5ResponseBuilder extends AbstractResponseBuilder<org.apache.hc.core5.http.HttpResponse> {
 
@@ -117,7 +117,7 @@ public class Apache5ResponseBuilder extends AbstractResponseBuilder<org.apache.h
 	 * Apache HttpClient 5 响应头解析器
 	 *
 	 * @author Yong.Teng
-	 * @since 2.4.0
+	 * @since 3.0.0
 	 */
 	private static class ApacheResponseHeaderParse extends AbstractResponseHeaderParse<Header[]> {
 

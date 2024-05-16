@@ -32,6 +32,7 @@ import java.net.URI;
  * Move 请求
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
 public class HttpMove extends HttpUriRequestBase {
 

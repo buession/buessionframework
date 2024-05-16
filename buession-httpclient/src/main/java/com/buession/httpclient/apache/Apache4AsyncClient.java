@@ -64,7 +64,7 @@ import java.util.concurrent.Future;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class Apache4AsyncClient extends AbstractApacheAsyncClient {
 

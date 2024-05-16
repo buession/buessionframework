@@ -26,7 +26,7 @@ package com.buession.httpclient.apache;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public abstract class AbstractApacheClient extends BaseApacheClient implements ApacheClient {
 

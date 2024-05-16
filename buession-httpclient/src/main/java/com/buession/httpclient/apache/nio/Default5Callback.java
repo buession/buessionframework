@@ -31,7 +31,7 @@ import org.apache.hc.core5.concurrent.FutureCallback;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class Default5Callback extends BaseCallback implements FutureCallback<Response> {
 

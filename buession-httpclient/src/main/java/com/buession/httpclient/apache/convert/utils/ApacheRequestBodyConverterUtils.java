@@ -42,7 +42,7 @@ import java.util.Map;
 
 /**
  * @author Yong.Teng
- * @since 2.4.0
+ * @since 3.0.0
  */
 public class ApacheRequestBodyConverterUtils {
 
