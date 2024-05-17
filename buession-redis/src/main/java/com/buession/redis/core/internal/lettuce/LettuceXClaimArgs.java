@@ -46,9 +46,9 @@ public class LettuceXClaimArgs extends XClaimArgs {
 		minIdleTime((minIdleTime));
 	}
 
-	public LettuceXClaimArgs(final long minIdleTime, final boolean force) {
+	public LettuceXClaimArgs(final long minIdleTime, final boolean justId) {
 		this(minIdleTime);
-		force(force);
+		justId(this, justId);
 	}
 
 	public LettuceXClaimArgs(final long minIdleTime, final long idle, final long time,

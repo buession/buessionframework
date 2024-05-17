@@ -21,10 +21,26 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import io.lettuce.core.XGroupCreateArgs;
+
+/**
+ * Lettuce {@link XGroupCreateArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LettuceXGroupCreateArgs {
+ */
+public final class LettuceXGroupCreateArgs extends XGroupCreateArgs {
+
+	public LettuceXGroupCreateArgs() {
+		super();
+	}
+
+	public LettuceXGroupCreateArgs(final boolean mkstream) {
+		super();
+		mkstream(mkstream);
+	}
+
 }

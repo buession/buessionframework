@@ -21,10 +21,41 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import io.lettuce.core.XReadArgs;
+
+/**
+ * Lettuce {@link XReadArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LettuceXReadArgs {
+ */
+public final class LettuceXReadArgs extends XReadArgs {
+
+	public LettuceXReadArgs() {
+		super();
+	}
+
+	public LettuceXReadArgs(final long count) {
+		super();
+		count(count);
+	}
+
+	public LettuceXReadArgs(final long block, final long count) {
+		this(count);
+		block(block);
+	}
+
+	public LettuceXReadArgs(final boolean noack, final long count) {
+		this(count);
+		noack(noack);
+	}
+
+	public LettuceXReadArgs(final long block, final boolean noack, final long count) {
+		this(block, count);
+		noack(noack);
+	}
+
 }

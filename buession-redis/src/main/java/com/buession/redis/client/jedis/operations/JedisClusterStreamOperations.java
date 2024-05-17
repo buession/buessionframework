@@ -760,11 +760,11 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 				streams);
 		return new JedisClusterCommand<List<Map<String, List<StreamEntry>>>>(client, ProtocolCommand.XREADGROUP)
 				.general((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
-						new StreamEntryConverter.MapEntryStreamEntryConverter((k)->k))
+						new StreamEntryConverter.ListMapEntryStreamEntryConverter<>((k)->k))
 				.pipeline((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
-						new StreamEntryConverter.MapEntryStreamEntryConverter((k)->k))
+						new StreamEntryConverter.ListMapEntryStreamEntryConverter<>((k)->k))
 				.transaction((cmd)->cmd.xreadGroup(groupName, consumerName, params, stringStreamEntryIDMap),
-						new StreamEntryConverter.MapEntryStreamEntryConverter((k)->k))
+						new StreamEntryConverter.ListMapEntryStreamEntryConverter<>((k)->k))
 				.run(args);
 	}
 
