@@ -24,8 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Maps;
-import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.StreamOperations;
@@ -37,8 +35,10 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.XReadArgs;
 
 import java.util.List;
 import java.util.Map;
@@ -92,7 +92,14 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 	}
 
 	@Override
-	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
+											final int minIdleTime, final StreamEntryId... ids) {
+		return xClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+				minIdleTime, ids);
+	}
+
+	@Override
+	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											final int minIdleTime, final StreamEntryId[] ids,
 											final XClaimArgument xClaimArgument) {
 		return xClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
@@ -100,227 +107,129 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 	}
 
 	@Override
-	public Long xDel(final byte[] key, final StreamEntryId... ids) {
+	public Long xDel(final String key, final StreamEntryId... ids) {
 		return xDel(SafeEncoder.encode(key), ids);
 	}
 
 	@Override
-	public Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
+	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 							   final boolean makeStream) {
 		return xGroupCreate(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id, makeStream);
 	}
 
 	@Override
-	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
+	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName) {
+		return xGroupDelConsumer(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
+				SafeEncoder.encode(consumerName));
+	}
+
+	@Override
+	public Status xGroupDestroy(final String key, final String groupName) {
+		return xGroupDestroy(SafeEncoder.encode(key), SafeEncoder.encode(groupName));
+	}
+
+	@Override
+	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id) {
 		return xGroupSetId(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id);
 	}
 
 	@Override
-	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
+	public List<StreamConsumer> xInfoConsumers(final String key, final String groupName) {
 		return xInfoConsumers(SafeEncoder.encode(key), SafeEncoder.encode(groupName));
 	}
 
 	@Override
-	public List<StreamGroup> xInfoGroups(final byte[] key) {
+	public List<StreamGroup> xInfoGroups(final String key) {
 		return xInfoGroups(SafeEncoder.encode(key));
 	}
 
 	@Override
-	public Stream xInfoStream(final byte[] key) {
+	public Stream xInfoStream(final String key) {
 		return xInfoStream(SafeEncoder.encode(key));
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full) {
+	public StreamFull xInfoStream(final String key, final boolean full) {
 		return xInfoStream(SafeEncoder.encode(key), full);
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count) {
+	public StreamFull xInfoStream(final String key, final boolean full, final long count) {
 		return xInfoStream(SafeEncoder.encode(key), full, count);
 	}
 
 	@Override
-	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
+	public Long xLen(final String key) {
+		return xLen(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public StreamPendingSummary xPending(final String key, final String groupName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName));
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime) {
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), minIdleTime);
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
+	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 										final StreamEntryId end, final long count) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), start, end, count);
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] consumerName) {
+	public List<StreamPending> xPending(final String key, final String groupName, final String consumerName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName));
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										final StreamEntryId start, final StreamEntryId end, final long count) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), minIdleTime, start, end, count);
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final byte[] consumerName) {
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+										final String consumerName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), minIdleTime,
 				SafeEncoder.encode(consumerName));
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count, final byte[] consumerName) {
+	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
+										final StreamEntryId end, final long count, final String consumerName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), start, end, count,
 				SafeEncoder.encode(consumerName));
 	}
 
 	@Override
-	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										final StreamEntryId start, final StreamEntryId end, final long count,
-										final byte[] consumerName) {
+										final String consumerName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), minIdleTime, start, end, count,
 				SafeEncoder.encode(consumerName));
 	}
 
 	@Override
-	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end) {
+	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end) {
 		return xRange(SafeEncoder.encode(key), start, end);
 	}
 
 	@Override
-	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
+	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
 									final long count) {
 		return xRange(SafeEncoder.encode(key), start, end, count);
 	}
 
 	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final int block, final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), isNoAck, null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), isNoAck, xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final int block,
-														   final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block, null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block,
-							xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, isNoAck, null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, isNoAck,
-							xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final int block, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, isNoAck, null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, block,
-							xStreams));
-		}
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final int block, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block, isNoAck,
-							null));
-		}else{
-			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
-			return afterBianryXReadGroup(
-					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block, isNoAck,
-							xStreams));
-		}
-	}
-
-	@Override
-	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start) {
+	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start) {
 		return xRevRange(SafeEncoder.encode(key), end, start);
 	}
 
 	@Override
-	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
+	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
 									   final long count) {
 		return xRevRange(SafeEncoder.encode(key), end, start, count);
 	}
@@ -335,15 +244,39 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 		return xTrim(SafeEncoder.encode(key), xTrimArgument, limit);
 	}
 
-	protected static List<Map<byte[], List<StreamEntry>>> afterBianryXReadGroup(
-			final List<Map<String, List<StreamEntry>>> data) {
-		if(data == null){
-			return null;
-		}else{
-			final ListConverter<Map<String, List<StreamEntry>>, Map<byte[], List<StreamEntry>>> converter =
-					new ListConverter<>(new MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<>());
-			return converter.convert(data);
+	protected List<Map<String, List<StreamEntry>>> xRead(final XReadArgs xReadArgs, final Map<String,
+			StreamEntryId> streams, final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
 		}
+
+		/*
+		return new LettuceCommand<List<StreamMessage<byte[], List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
+				client,
+				ProtocolCommand.XREAD, (cmd)->(xReadArgs == null ?
+				cmd.xread(streamOffsets) : cmd.xread(xReadArgs, streamOffsets)),
+				(v)->(List<Map<String, List<StreamEntry>>>) null)
+				.run(args);
+
+		 */
+		return null;
+	}
+
+	protected List<Map<String, List<StreamEntry>>> xReadGroup(final XReadArgs xReadArgs, final String groupName,
+															  final String consumerName,
+															  final Map<String, StreamEntryId> streams,
+															  final CommandArguments args) {
+		return null;
+	}
+
+	protected List<Map<byte[], List<StreamEntry>>> xReadGroup(final XReadArgs xReadArgs, final byte[] groupName,
+															  final byte[] consumerName,
+															  final Map<byte[], StreamEntryId> streams,
+															  final CommandArguments args) {
+		return null;
 	}
 
 }

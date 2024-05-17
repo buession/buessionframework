@@ -64,4 +64,34 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 
 	}
 
+	/**
+	 * Lettuce  {@link StreamMessage<byte[], byte[]>} 转换为 {@link StreamEntryId}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class StreamMessageStreamEntryIdConverter implements Converter<StreamMessage<byte[], byte[]>,
+			StreamEntryId> {
+
+		@Override
+		public StreamEntryId convert(final StreamMessage<byte[], byte[]> source) {
+			return new StreamEntryId(source.getId());
+		}
+
+	}
+
+	/**
+	 * Lettuce {@link List} {@link StreamMessage<byte[], byte[]>} 转换为 {@link List} {@link StreamEntryId}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamMessageStreamEntryIdConverter extends ListConverter<StreamMessage<byte[],
+			byte[]>, StreamEntryId> {
+
+		public ListStreamMessageStreamEntryIdConverter() {
+			super(new StreamMessageStreamEntryIdConverter());
+		}
+	}
+
 }

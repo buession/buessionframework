@@ -26,27 +26,37 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.Tuple;
-import io.lettuce.core.ScoredValue;
-import io.lettuce.core.StreamMessage;
+import com.buession.redis.core.StreamConsumer;
 import org.springframework.lang.Nullable;
-import redis.clients.jedis.StreamEntryID;
 
 import java.util.List;
 
 /**
- * Lettuce Message Id 转换为 {@link StreamEntryId}
+ * Lettuce 'xinfo-consumers' 命令结果转换为 {@link StreamConsumer}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamEntryIDConverter implements Converter<String, StreamEntryId> {
+public final class StreamConsumersInfoConverter implements Converter<Object, StreamConsumer> {
 
 	@Nullable
 	@Override
-	public StreamEntryId convert(final String source) {
+	public StreamConsumer convert(final Object source) {
 		return null;
+	}
+
+	/**
+	 * Lettuce 'xinfo-consumers' 命令结果转换为 {@link List} {@link StreamConsumer}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamConsumersInfoConverter extends ListConverter<Object, StreamConsumer> {
+
+		public ListStreamConsumersInfoConverter() {
+			super(new StreamConsumersInfoConverter());
+		}
+
 	}
 
 }
