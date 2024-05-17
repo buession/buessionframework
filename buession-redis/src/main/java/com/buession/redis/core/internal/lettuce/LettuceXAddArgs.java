@@ -54,7 +54,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	}
 
 	public LettuceXAddArgs(final StreamEntryId id) {
-		this(StreamEntryIdConverter.INSTANCE.convert(id));
+		this((new StreamEntryIdConverter()).convert(id));
 	}
 
 	public LettuceXAddArgs(final long maxLen) {

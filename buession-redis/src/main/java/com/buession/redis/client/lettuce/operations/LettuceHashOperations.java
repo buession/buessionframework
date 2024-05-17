@@ -25,13 +25,13 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.BooleanStatusConverter;
-import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.response.MapScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.ListSetConverter;
 import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -143,7 +143,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		return new LettuceCommand<>(client, ProtocolCommand.HMGET,
 				(cmd)->cmd.hmget(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
-				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())))
+				new com.buession.core.converter.ListConverter<>((v)->SafeEncoder.encode(v.getValue())))
 				.run(args);
 	}
 
@@ -151,7 +151,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
-				new ListConverter<>(Value::getValue))
+				new com.buession.core.converter.ListConverter<>(Value::getValue))
 				.run(args);
 	}
 

@@ -91,14 +91,6 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 				minIdleTime, ids, xClaimArgument);
 	}
 
-
-	@Override
-	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
-											final int minIdleTime, final StreamEntryId... ids) {
-		return xClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, ids);
-	}
-
 	@Override
 	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
 											final int minIdleTime, final StreamEntryId[] ids,

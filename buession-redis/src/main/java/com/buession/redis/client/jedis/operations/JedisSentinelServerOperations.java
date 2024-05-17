@@ -51,6 +51,7 @@ import com.buession.redis.core.internal.convert.jedis.response.RoleConverter;
 import com.buession.redis.core.internal.jedis.JedisFailoverParams;
 import redis.clients.jedis.JedisMonitor;
 import redis.clients.jedis.args.SaveMode;
+import redis.clients.jedis.params.FailoverParams;
 
 import java.util.List;
 
@@ -290,7 +291,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status failover(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		final JedisFailoverParams params = new JedisFailoverParams(host, port);
+		final FailoverParams params = new JedisFailoverParams(host, port);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
@@ -299,7 +300,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status failover(final String host, final int port, final int timeout) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
-		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout);
+		final FailoverParams params = new JedisFailoverParams(host, port, timeout);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
@@ -309,7 +310,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("isForce", isForce)
 				.put("timeout", timeout);
-		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout, isForce);
+		final FailoverParams params = new JedisFailoverParams(host, port, timeout, isForce);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
@@ -318,7 +319,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status failover(final int timeout) {
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		final JedisFailoverParams params = new JedisFailoverParams(timeout);
+		final FailoverParams params = new JedisFailoverParams(timeout);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.FAILOVER)
 				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);

@@ -35,7 +35,11 @@ import redis.clients.jedis.params.XClaimParams;
  */
 public class JedisXClaimParams extends XClaimParams {
 
-	public static JedisXClaimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
+	public JedisXClaimParams() {
+		super();
+	}
+
+	public static JedisXClaimParams from(final StreamCommands.XClaimArgument xClaimArgument) {
 		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
 
 		return xClaimParams;

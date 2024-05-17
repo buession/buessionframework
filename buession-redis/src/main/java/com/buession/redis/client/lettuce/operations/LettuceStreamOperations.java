@@ -203,10 +203,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 									final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
-		return new LettuceCommand<>(
-				client, ProtocolCommand.XCLAIM,
-				(cmd)->cmd.xclaim(key, Consumer.from(groupName, consumerName), minIdleTime,
-						(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
+		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, Consumer.from(groupName,
+						consumerName), minIdleTime,
+				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
 				new StreamMessageConverter.ListStreamMessageConverter())
 				.run(args);
 	}
@@ -218,11 +217,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
-		return new LettuceCommand<>(
-				client, ProtocolCommand.XCLAIM,
-				(cmd)->cmd.xclaim(key, Consumer.from(groupName, consumerName),
-						LettuceXClaimArgs.from(xClaimArgument).minIdleTime(minIdleTime),
-						(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
+		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, Consumer.from(groupName,
+						consumerName), LettuceXClaimArgs.from(xClaimArgument).minIdleTime(minIdleTime),
+				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
 				new StreamMessageConverter.ListStreamMessageConverter())
 				.run(args);
 	}
@@ -242,6 +239,18 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 				.transaction(
 						(cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, params, streamEntryIDs),
 						StreamEntryIDConverter.LIST_CONVERTER)
+				.run(args);
+	}
+
+	@Override
+	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+											final int minIdleTime, final StreamEntryId... ids) {
+		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
+		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, Consumer.from(groupName,
+						consumerName), (new LettuceXClaimArgs()).minIdleTime(minIdleTime),
+				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
+				new StreamMessageConverter.ListStreamMessageConverter())
 				.run(args);
 	}
 

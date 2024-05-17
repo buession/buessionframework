@@ -21,10 +21,46 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis;
+
+import com.buession.redis.core.StreamEntryId;
+import redis.clients.jedis.StreamEntryID;
+
+/**
+ * Jedis {@link StreamEntryID} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class JedisStreamEntryID {
+ */
+public final class JedisStreamEntryID extends StreamEntryID {
+
+	public JedisStreamEntryID() {
+		super();
+	}
+
+	public JedisStreamEntryID(final String id) {
+		super(id);
+	}
+
+	public JedisStreamEntryID(final byte[] id) {
+		super(id);
+	}
+
+	public JedisStreamEntryID(final long time) {
+		super(time);
+	}
+
+	public JedisStreamEntryID(final long time, final long sequence) {
+		super(time, sequence);
+	}
+
+	public static JedisStreamEntryID from(final StreamEntryId streamEntryId) {
+		if(streamEntryId == null){
+			return new JedisStreamEntryID();
+		}else{
+			return new JedisStreamEntryID(streamEntryId.getTime(), streamEntryId.getSequence());
+		}
+	}
+
 }

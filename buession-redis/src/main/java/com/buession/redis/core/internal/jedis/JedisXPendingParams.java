@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
 import redis.clients.jedis.params.XPendingParams;
 
 /**
@@ -55,8 +54,7 @@ public final class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count) {
-		super(StreamEntryIdConverter.INSTANCE.convert(start), StreamEntryIdConverter.INSTANCE.convert(end),
-				(int) count);
+		super(JedisStreamEntryID.from(start), JedisStreamEntryID.from(end), (int) count);
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count,

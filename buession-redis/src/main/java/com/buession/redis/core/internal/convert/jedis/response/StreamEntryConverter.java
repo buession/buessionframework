@@ -85,4 +85,25 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 
 	}
 
+	/**
+	 * Jedis {@link List} key {@link Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>} 转换为
+	 * {@link List} {@link Map<TK, List<StreamEntry>>}
+	 *
+	 * @param <SK>
+	 * 		转换器 key 类型
+	 * @param <TK>
+	 * 		目标 key 类型
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListMapEntryStreamEntryConverter<SK, TK> extends
+			ListConverter<Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>, Map<TK, List<StreamEntry>>> {
+
+		public ListMapEntryStreamEntryConverter(final Converter<SK, TK> keyConverter) {
+			super(new MapEntryStreamEntryConverter<>(keyConverter));
+		}
+
+	}
+
 }

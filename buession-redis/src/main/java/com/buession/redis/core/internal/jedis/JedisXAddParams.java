@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.StreamCommands;
-import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XAddParams;
@@ -61,7 +60,7 @@ public final class JedisXAddParams extends XAddParams {
 	}
 
 	public JedisXAddParams(final StreamEntryId id) {
-		this(StreamEntryIdConverter.INSTANCE.convert(id));
+		this(JedisStreamEntryID.from(id));
 	}
 
 	public JedisXAddParams(final String id, final String minId) {
