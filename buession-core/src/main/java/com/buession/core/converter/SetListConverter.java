@@ -59,7 +59,6 @@ public class SetListConverter<S, T> implements Converter<Set<S>, List<T>> {
 		this.itemConverter = itemConverter;
 	}
 
-	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<T> convert(final Set<S> source) {
 		if(source == null){

@@ -21,10 +21,62 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.converter;/**
- * 
+ */
+package com.buession.core.converter;
+
+import com.buession.core.builder.MapBuilder;
+import org.springframework.lang.Nullable;
+
+import java.util.Map;
+
+/**
+ * {@link Map.Entry} 到 {@link Map} 转换器
+ *
+ * @param <SK>
+ * 		Map 原 key 类型
+ * @param <SV>
+ * 		Map 原 value 类型
+ * @param <TK>
+ * 		Map 目标 key 类型
+ * @param <TV>
+ * 		Map 目标 value 类型
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class MapEntryMapConverter {
+ */
+public class MapEntryMapConverter<SK, SV, TK, TV> implements Converter<Map.Entry<SK, SV>, Map<TK, TV>> {
+
+	/**
+	 * Map key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * Map value 转换器
+	 */
+	private final Converter<SV, TV> valueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Map key 转换器
+	 * @param valueConverter
+	 * 		Map value 转换器
+	 */
+	public MapEntryMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
+
+	@Nullable
+	@Override
+	public Map<TK, TV> convert(final Map.Entry<SK, SV> source) {
+		if(source == null){
+			return null;
+		}else{
+			return MapBuilder.of(keyConverter.convert(source.getKey()), valueConverter.convert(source.getValue()));
+		}
+	}
+
 }
