@@ -27,7 +27,22 @@ package com.buession.redis.client.lettuce;
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
-import com.buession.redis.client.lettuce.operations.*;
+import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
+import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceGeoOperations;
+import com.buession.redis.client.lettuce.operations.LettuceHashOperations;
+import com.buession.redis.client.lettuce.operations.LettuceHyperLogLogOperations;
+import com.buession.redis.client.lettuce.operations.LettuceKeyOperations;
+import com.buession.redis.client.lettuce.operations.LettuceListOperations;
+import com.buession.redis.client.lettuce.operations.LettucePubSubOperations;
+import com.buession.redis.client.lettuce.operations.LettuceScriptingOperations;
+import com.buession.redis.client.lettuce.operations.LettuceServerOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSortedSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceStreamOperations;
+import com.buession.redis.client.lettuce.operations.LettuceStringOperations;
+import com.buession.redis.client.lettuce.operations.LettuceTransactionOperations;
 
 /**
  * Lettuce 单机模式客户端
