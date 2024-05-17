@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -37,15 +37,17 @@ import redis.clients.jedis.resps.StreamInfo;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamInfoConverter implements Converter<StreamInfo, Stream> {
+public final class StreamInfoConverter implements Converter<StreamInfo, Stream> {
 
-	public final static StreamInfoConverter INSTANCE = new StreamInfoConverter();
+	private final StreamEntryConverter streamEntryConverter = new StreamEntryConverter();
+
+	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
 	@Override
-	public Stream convert(final StreamInfo source){
-		final StreamEntryId lastGeneratedId = StreamEntryIDConverter.INSTANCE.convert(source.getLastGeneratedId());
-		final StreamEntry firstEntry = StreamEntryConverter.INSTANCE.convert(source.getFirstEntry());
-		final StreamEntry lastEntry = StreamEntryConverter.INSTANCE.convert(source.getLastEntry());
+	public Stream convert(final StreamInfo source) {
+		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
+		final StreamEntry firstEntry = streamEntryConverter.convert(source.getFirstEntry());
+		final StreamEntry lastEntry = streamEntryConverter.convert(source.getLastEntry());
 		return new Stream(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
 				source.getGroups(), lastGeneratedId, firstEntry, lastEntry, source.getStreamInfo());
 	}

@@ -38,6 +38,12 @@ import java.util.Set;
  */
 public interface SetListConverter<S, T> extends Converter<Set<S>, List<T>> {
 
+	/**
+	 * {@link String} {@link Set} 到 byte[] {@link List} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class StringToBinarySetListConverter extends com.buession.core.converter.SetListConverter<String, byte[]>
 			implements SetListConverter<String, byte[]> {
 
@@ -47,6 +53,12 @@ public interface SetListConverter<S, T> extends Converter<Set<S>, List<T>> {
 
 	}
 
+	/**
+	 * byte[] {@link Set} 到 {@link String} {@link List} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class BinaryToStringSetListConverter extends com.buession.core.converter.SetListConverter<byte[], String>
 			implements SetListConverter<byte[], String> {
 

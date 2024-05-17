@@ -174,7 +174,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("values", values);
 		return new LettuceCommand<>(client, ProtocolCommand.MSET,
 				(cmd)->cmd.mset((new MapConverter.StringToBinaryMapConverter()).convert(values)),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -191,14 +191,14 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		return new LettuceCommand<>(client, ProtocolCommand.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -206,7 +206,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.SET,
-				(cmd)->cmd.set(key, value, LettuceSetArgs.from(setArgument)), OkStatusConverter.INSTANCE)
+				(cmd)->cmd.set(key, value, LettuceSetArgs.from(setArgument)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -214,7 +214,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		return new LettuceCommand<>(client, ProtocolCommand.SETEX, (cmd)->cmd.setex(key, lifetime, value),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 

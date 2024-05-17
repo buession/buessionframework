@@ -56,48 +56,48 @@ import java.util.List;
  */
 public final class JedisSentinelClusterOperations extends AbstractClusterOperations<JedisSentinelClient> {
 
-	public JedisSentinelClusterOperations(final JedisSentinelClient client){
+	public JedisSentinelClusterOperations(final JedisSentinelClient client) {
 		super(client);
 	}
 
 	@Override
-	public String clusterMyId(){
+	public String clusterMyId() {
 		return new JedisSentinelCommand<String>(client, ProtocolCommand.CLUSTER_MY_ID)
 				.general((cmd)->cmd.clusterMyId())
 				.run();
 	}
 
 	@Override
-	public Status clusterAddSlots(final int... slots){
+	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-				.general((cmd)->cmd.clusterAddSlots(slots), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterAddSlots(slots), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<ClusterSlot> clusterSlots(){
+	public List<ClusterSlot> clusterSlots() {
 		return new JedisSentinelCommand<List<ClusterSlot>>(client, ProtocolCommand.CLUSTER_SLOTS)
-				.general((cmd)->cmd.clusterSlots(), ClusterSlotConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.clusterSlots(), new ClusterSlotConverter.ListClusterSlotConverter())
 				.run();
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final String nodeId){
+	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisSentinelCommand<Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 				.run(args);
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final byte[] nodeId){
+	public Integer clusterCountFailureReports(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisSentinelCommand<Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 				.run(args);
 	}
 
 	@Override
-	public Long clusterCountKeysInSlot(final int slot){
+	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create("slot", slot);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
 				.general((cmd)->cmd.clusterCountKeysInSlot(slot))
@@ -105,40 +105,40 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public Status clusterDelSlots(final int... slots){
+	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-				.general((cmd)->cmd.clusterDelSlots(slots), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterDelSlots(slots), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status clusterFlushSlots(){
+	public Status clusterFlushSlots() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-				.general((cmd)->cmd.clusterFlushSlots(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterFlushSlots(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
+	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
 				.general((cmd)->cmd.clusterFailover(
-								ClusterFailoverOptionConverter.INSTANCE.convert(clusterFailoverOption)),
-						OkStatusConverter.INSTANCE)
+								(new ClusterFailoverOptionConverter()).convert(clusterFailoverOption)),
+						new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status clusterForget(final String nodeId){
+	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_FORGET)
-				.general((cmd)->cmd.clusterForget(nodeId), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterForget(nodeId), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count){
+	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
 		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 				.general((cmd)->cmd.clusterGetKeysInSlot(slot, (int) count))
@@ -146,7 +146,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public Long clusterKeySlot(final String key){
+	public Long clusterKeySlot(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 				.general((cmd)->cmd.clusterKeySlot(key))
@@ -154,84 +154,85 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public ClusterInfo clusterInfo(){
+	public ClusterInfo clusterInfo() {
 		return new JedisSentinelCommand<ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-				.general((cmd)->cmd.clusterInfo(), ClusterInfoConverter.INSTANCE)
+				.general((cmd)->cmd.clusterInfo(), new ClusterInfoConverter())
 				.run();
 	}
 
 	@Override
-	public Status clusterMeet(final String ip, final int port){
+	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_MEET)
-				.general((cmd)->cmd.clusterMeet(ip, port), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterMeet(ip, port), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterNodes(){
+	public List<ClusterRedisNode> clusterNodes() {
 		return new JedisSentinelCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_NODES)
-				.general((cmd)->cmd.clusterNodes(), ClusterNodesConverter.INSTANCE)
+				.general((cmd)->cmd.clusterNodes(), new ClusterNodesConverter())
 				.run();
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterSlaves(final String nodeId){
+	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisSentinelCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_SLAVES)
-				.general((cmd)->cmd.clusterSlaves(nodeId), ClusterNodeConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.clusterSlaves(nodeId), new ClusterNodeConverter.ListClusterNodeConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterReplicas(final String nodeId){
+	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisSentinelCommand<List<ClusterRedisNode>>(client, ProtocolCommand.CLUSTER_REPLICAS)
-				.general((cmd)->cmd.clusterReplicas(nodeId), ClusterReplicasConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.clusterReplicas(nodeId),
+						new ClusterReplicasConverter.ListClusterReplicasConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status clusterReplicate(final String nodeId){
+	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-				.general((cmd)->cmd.clusterReplicate(nodeId), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterReplicate(nodeId), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status clusterReset(final ClusterResetOption clusterResetOption){
+	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_RESET)
-				.general((cmd)->cmd.clusterReset(ClusterResetOptionConverter.INSTANCE.convert(clusterResetOption)),
-						OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterReset((new ClusterResetOptionConverter()).convert(clusterResetOption)),
+						new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status clusterSaveConfig(){
+	public Status clusterSaveConfig() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-				.general((cmd)->cmd.clusterSaveConfig(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterSaveConfig(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status clusterSetConfigEpoch(final long configEpoch){
+	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-				.general((cmd)->cmd.clusterSetConfigEpoch(configEpoch), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.clusterSetConfigEpoch(configEpoch), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch(){
+	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
 		return new JedisSentinelCommand<KeyValue<BumpEpoch, Integer>>(client, ProtocolCommand.CLUSTER_BUMPEPOCH)
-				.general((cmd)->cmd.clusterBumpEpoch(), BumpEpochConverter.INSTANCE)
+				.general((cmd)->cmd.clusterBumpEpoch(), new BumpEpochConverter())
 				.run();
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId){
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
@@ -248,28 +249,28 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 						default:
 							return null;
 					}
-				}, OkStatusConverter.INSTANCE)
+				}, new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status asking(){
+	public Status asking() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.ASKING)
-				.general((cmd)->cmd.asking(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.asking(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status readWrite(){
+	public Status readWrite() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.ASKING)
-				.general((cmd)->cmd.readwrite(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.readwrite(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status readOnly(){
+	public Status readOnly() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.ASKING)
-				.general((cmd)->cmd.readonly(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.readonly(), new OkStatusConverter())
 				.run();
 	}
 

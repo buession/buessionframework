@@ -38,8 +38,6 @@ import redis.clients.jedis.params.RestoreParams;
 @Deprecated
 public final class RestoreArgumentConverter implements Converter<KeyCommands.RestoreArgument, RestoreParams> {
 
-	public final static RestoreArgumentConverter INSTANCE = new RestoreArgumentConverter();
-
 	@Override
 	public RestoreParams convert(final KeyCommands.RestoreArgument source) {
 		return JedisRestoreParams.from(source);

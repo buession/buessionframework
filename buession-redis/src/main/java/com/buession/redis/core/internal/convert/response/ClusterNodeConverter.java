@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
@@ -29,26 +29,22 @@ import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.SlotRange;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Cluster Slaves 命令结果转换为 {@link RedisClusterServer}
+ * Cluster Slaves 命令结果转换为 {@link ClusterRedisNode}
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
 public final class ClusterNodeConverter implements Converter<String, ClusterRedisNode> {
 
-	public final static ClusterNodeConverter INSTANCE = new ClusterNodeConverter();
-
-	public final static ListConverter<String, ClusterRedisNode> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
-	public ClusterRedisNode convert(final String source){
+	public ClusterRedisNode convert(final String source) {
 		String[] values = StringUtils.split(source, " ");
 		String[] hostAndPort = StringUtils.split(values[1], ":");
 		String host = hostAndPort[0];
@@ -70,6 +66,20 @@ public final class ClusterNodeConverter implements Converter<String, ClusterRedi
 
 		return new ClusterRedisNode(values[0], host, Integer.parseInt(port), flags, values[3],
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
+	}
+
+	/**
+	 * {@link List} 慢日志对象 转换为 {@link List} {@link ClusterRedisNode}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListClusterNodeConverter extends ListConverter<String, ClusterRedisNode> {
+
+		public ListClusterNodeConverter() {
+			super(new ClusterNodeConverter());
+		}
+
 	}
 
 }

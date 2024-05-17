@@ -38,8 +38,6 @@ import redis.clients.jedis.params.SortingParams;
 @Deprecated
 public final class SortArgumentConverter implements Converter<KeyCommands.SortArgument, SortingParams> {
 
-	public final static SortArgumentConverter INSTANCE = new SortArgumentConverter();
-
 	@Override
 	public SortingParams convert(final KeyCommands.SortArgument source) {
 		return JedisSortingParams.from(source);

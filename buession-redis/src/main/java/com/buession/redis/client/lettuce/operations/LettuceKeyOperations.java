@@ -35,8 +35,8 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.ListSetConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -230,7 +230,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
-				new LettuceMigrateArgs<>(keys)), OkStatusConverter.INSTANCE)
+				new LettuceMigrateArgs<>(keys)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -240,7 +240,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
-				new LettuceMigrateArgs<>(operation, keys)), OkStatusConverter.INSTANCE)
+				new LettuceMigrateArgs<>(operation, keys)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -250,7 +250,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
-				new LettuceMigrateArgs<>(keys, password)), OkStatusConverter.INSTANCE)
+				new LettuceMigrateArgs<>(keys, password)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -261,7 +261,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
-				new LettuceMigrateArgs<>(operation, keys, password)), OkStatusConverter.INSTANCE)
+				new LettuceMigrateArgs<>(operation, keys, password)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -271,7 +271,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
-				new LettuceMigrateArgs<>(keys, user, password)), OkStatusConverter.INSTANCE)
+				new LettuceMigrateArgs<>(keys, user, password)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -282,7 +282,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.migrate(host, port, db, timeout,
-				new LettuceMigrateArgs<>(operation, keys, user, password)), OkStatusConverter.INSTANCE)
+				new LettuceMigrateArgs<>(operation, keys, user, password)), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -311,7 +311,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new LettuceCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -328,7 +328,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		return new LettuceCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -339,7 +339,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.put("ttl", ttl).put("argument", argument);
 		return new LettuceCommand<>(client, ProtocolCommand.RESTORE,
 				(cmd)->cmd.restore(key, serializedValue, LettuceRestoreArgs.from(argument).ttl(ttl)),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -347,7 +347,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public ScanResult<List<String>> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
 		return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
-				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				new KeyScanCursorConverter.BSKeyScanCursorConverter())
 				.run(args);
 	}
 
@@ -364,7 +364,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
 				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				new KeyScanCursorConverter.BSKeyScanCursorConverter())
 				.run(args);
 	}
 
@@ -382,7 +382,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
 				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				new KeyScanCursorConverter.BSKeyScanCursorConverter())
 				.run(args);
 	}
 
@@ -401,7 +401,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.SCAN,
 				(cmd)->cmd.scan(new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
-				KeyScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				new KeyScanCursorConverter.BSKeyScanCursorConverter())
 				.run(args);
 	}
 
@@ -419,7 +419,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(SafeEncoder.encode(key)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -435,7 +435,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
 		return new LettuceCommand<>(client, ProtocolCommand.SORT,
 				(cmd)->cmd.sort(SafeEncoder.encode(key), LettuceSortArgs.from(sortArgument)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 

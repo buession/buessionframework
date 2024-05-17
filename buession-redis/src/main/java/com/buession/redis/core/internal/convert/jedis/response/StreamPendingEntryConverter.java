@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -30,22 +30,36 @@ import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamPending;
 import redis.clients.jedis.resps.StreamPendingEntry;
 
+import java.util.List;
+
 /**
  * jedis {@link StreamPendingEntry} 转换为 {@link StreamPending}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamPendingEntryConverter implements Converter<StreamPendingEntry, StreamPending> {
+public final class StreamPendingEntryConverter implements Converter<StreamPendingEntry, StreamPending> {
 
-	public final static StreamPendingEntryConverter INSTANCE = new StreamPendingEntryConverter();
-
-	public final static ListConverter<StreamPendingEntry, StreamPending> LIST_CONVERTER = new ListConverter<>(INSTANCE);
+	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
 	@Override
-	public StreamPending convert(final StreamPendingEntry source){
-		final StreamEntryId id = StreamEntryIDConverter.INSTANCE.convert(source.getID());
+	public StreamPending convert(final StreamPendingEntry source) {
+		final StreamEntryId id = streamEntryIDConverter.convert(source.getID());
 		return new StreamPending(id, source.getConsumerName(), source.getIdleTime(), source.getDeliveredTimes());
+	}
+
+	/**
+	 * Jedis {@link List} {@link StreamPendingEntry} 转换为 {@link List} {@link StreamPending}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamPendingEntryConverter extends ListConverter<StreamPendingEntry, StreamPending> {
+
+		public ListStreamPendingEntryConverter() {
+			super(new StreamPendingEntryConverter());
+		}
+
 	}
 
 }

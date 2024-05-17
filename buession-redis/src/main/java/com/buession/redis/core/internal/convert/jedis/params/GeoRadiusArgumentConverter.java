@@ -38,8 +38,6 @@ import redis.clients.jedis.params.GeoRadiusParam;
 @Deprecated
 public final class GeoRadiusArgumentConverter implements Converter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> {
 
-	public final static GeoRadiusArgumentConverter INSTANCE = new GeoRadiusArgumentConverter();
-
 	@Override
 	public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source) {
 		return JedisGeoRadiusParam.from(source);

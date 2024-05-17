@@ -38,8 +38,6 @@ import redis.clients.jedis.params.SetParams;
 @Deprecated
 public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
 
-	public final static SetArgumentConverter INSTANCE = new SetArgumentConverter();
-
 	@Override
 	public SetParams convert(final StringCommands.SetArgument source) {
 		return JedisSetParams.from(source);

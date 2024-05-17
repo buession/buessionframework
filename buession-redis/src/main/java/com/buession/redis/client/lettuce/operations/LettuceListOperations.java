@@ -31,7 +31,7 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
@@ -78,7 +78,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -93,7 +93,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<>(client, ProtocolCommand.LRANGE,
-				(cmd)->cmd.lrange(SafeEncoder.encode(key), start, end), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				(cmd)->cmd.lrange(SafeEncoder.encode(key), start, end), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -139,7 +139,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Status lTrim(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 

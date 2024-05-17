@@ -38,8 +38,6 @@ import redis.clients.jedis.params.GetExParams;
 @Deprecated
 public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
 
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
-
 	@Override
 	public GetExParams convert(final StringCommands.GetExArgument source) {
 		return JedisGetExParams.from(source);

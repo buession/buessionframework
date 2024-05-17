@@ -36,8 +36,6 @@ import io.lettuce.core.GeoArgs;
  */
 public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> {
 
-	public final static GeoUnitConverter INSTANCE = new GeoUnitConverter();
-
 	@Override
 	public GeoArgs.Unit convert(final GeoUnit source) {
 		switch(source){

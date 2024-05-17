@@ -30,6 +30,8 @@ import com.buession.redis.core.Client;
 import com.buession.redis.core.SlowLog;
 import redis.clients.jedis.resps.Slowlog;
 
+import java.util.List;
+
 /**
  * jedis {@link Slowlog} 转换为 {@link SlowLog}
  *
@@ -38,12 +40,8 @@ import redis.clients.jedis.resps.Slowlog;
  */
 public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 
-	public final static SlowlogConverter INSTANCE = new SlowlogConverter();
-
-	public final static ListConverter<Slowlog, SlowLog> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
-	public SlowLog convert(final Slowlog source){
+	public SlowLog convert(final Slowlog source) {
 		final Client client = new Client();
 
 		client.setHost(source.getClientIpPort().getHost());
@@ -51,6 +49,20 @@ public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 
 		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
 				client, source.getClientName());
+	}
+
+	/**
+	 * Jedis {@link List} {@link Slowlog} 转换为 {@link List} {@link SlowLog}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListSlowlogConverter extends ListConverter<Slowlog, SlowLog> {
+
+		public ListSlowlogConverter() {
+			super(new SlowlogConverter());
+		}
+
 	}
 
 }

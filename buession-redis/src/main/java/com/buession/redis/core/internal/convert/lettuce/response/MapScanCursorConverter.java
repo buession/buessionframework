@@ -50,15 +50,21 @@ public final class MapScanCursorConverter<K, V>
 		return new ScanResult<>(source.getCursor(), source.getMap());
 	}
 
+	/**
+	 * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	public final static class BvSvMapScanCursorConverter
 			implements Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<String, String>>> {
 
-		public final static BvSvMapScanCursorConverter INSTANCE = new BvSvMapScanCursorConverter();
+		private final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
+				new MapConverter.BinaryToStringMapConverter();
 
 		@Override
 		public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
-			return new ScanResult<>(source.getCursor(),
-					(new MapConverter.BinaryToStringMapConverter()).convert(source.getMap()));
+			return new ScanResult<>(source.getCursor(), binaryToStringMapConverter.convert(source.getMap()));
 		}
 
 	}

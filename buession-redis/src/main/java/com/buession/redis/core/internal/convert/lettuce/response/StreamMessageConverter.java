@@ -32,22 +32,36 @@ import com.buession.redis.core.internal.convert.response.MapConverter;
 import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
 public class StreamMessageConverter implements Converter<StreamMessage<byte[], byte[]>, StreamEntry> {
 
-	public final static StreamMessageConverter INSTANCE = new StreamMessageConverter();
-
-	public final static ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
+	private final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
+			new MapConverter.BinaryToStringMapConverter();
 
 	@Nullable
 	@Override
 	public StreamEntry convert(final StreamMessage<byte[], byte[]> source) {
-		return new StreamEntry(new StreamEntryId(source.getId()),
-				(new MapConverter.BinaryToStringMapConverter()).convert(source.getBody()));
+		return new StreamEntry(new StreamEntryId(source.getId()), binaryToStringMapConverter.convert(source.getBody()));
+	}
+
+	/**
+	 * Lettuce {@link List} {@link StreamMessage<byte[], byte[]>} 转换为 {@link List} {@link StreamEntry}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamMessageConverter
+			extends ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> {
+
+		public ListStreamMessageConverter() {
+			super(new StreamMessageConverter());
+		}
+
 	}
 
 }

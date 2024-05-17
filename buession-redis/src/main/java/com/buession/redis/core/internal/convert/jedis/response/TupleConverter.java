@@ -29,6 +29,8 @@ import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetConverter;
 import com.buession.redis.core.Tuple;
 
+import java.util.List;
+
 /**
  * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
  *
@@ -37,17 +39,37 @@ import com.buession.redis.core.Tuple;
  */
 public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
 
-	public final static TupleConverter INSTANCE = new TupleConverter();
-
-	public final static SetConverter<redis.clients.jedis.resps.Tuple, Tuple> SET_CONVERTER = new SetConverter<>(
-			INSTANCE);
-
-	public final static ListConverter<redis.clients.jedis.resps.Tuple, Tuple> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
-
 	@Override
 	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
 		return new Tuple(source.getBinaryElement(), source.getScore());
+	}
+
+	/**
+	 * Jedis {@link List} {@link redis.clients.jedis.resps.Tuple} 转换为 {@link List} {@link Tuple}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListTupleConverter extends ListConverter<redis.clients.jedis.resps.Tuple, Tuple> {
+
+		public ListTupleConverter() {
+			super(new TupleConverter());
+		}
+
+	}
+
+	/**
+	 * Jedis {@link List} {@link redis.clients.jedis.resps.Tuple} 转换为 {@link List} {@link Tuple}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class SetTupleConverter extends SetConverter<redis.clients.jedis.resps.Tuple, Tuple> {
+
+		public SetTupleConverter() {
+			super(new TupleConverter());
+		}
+
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -38,15 +38,10 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamConsumerFullInfoConverter implements Converter<StreamConsumerFullInfo, StreamConsumerFull> {
-
-	public final static StreamConsumerFullInfoConverter INSTANCE = new StreamConsumerFullInfoConverter();
-
-	public final static ListConverter<StreamConsumerFullInfo, StreamConsumerFull> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
+public final class StreamConsumerFullInfoConverter implements Converter<StreamConsumerFullInfo, StreamConsumerFull> {
 
 	@Override
-	public StreamConsumerFull convert(final StreamConsumerFullInfo source){
+	public StreamConsumerFull convert(final StreamConsumerFullInfo source) {
 		final List<Long> pendings = new ArrayList<>();
 
 		if(source.getPending() != null){
@@ -59,6 +54,21 @@ public class StreamConsumerFullInfoConverter implements Converter<StreamConsumer
 
 		return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), pendings,
 				source.getConsumerInfo());
+	}
+
+	/**
+	 * Jedis {@link List} {@link StreamConsumerFullInfo} 转换为 {@link List} {@link StreamConsumerFull}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamConsumerFullInfoConverter
+			extends ListConverter<StreamConsumerFullInfo, StreamConsumerFull> {
+
+		public ListStreamConsumerFullInfoConverter() {
+			super(new StreamConsumerFullInfoConverter());
+		}
+
 	}
 
 }

@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -51,10 +50,6 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 	 */
 	final class ListScanResultConverter<S> implements ScanResultConverter<S, List<S>> {
 
-		public final static ListScanResultConverter<String> STRING_LIST_CONVERTER = new ListScanResultConverter<>();
-
-		public final static ListScanResultConverter<byte[]> BINARY_LIST_CONVERTER = new ListScanResultConverter<>();
-
 		@Override
 		public ScanResult<List<S>> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
 			return new ScanResult<>(source.getCursor(), source.getResult());
@@ -71,13 +66,13 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 	final class ListTupleScanResultConverter
 			implements ScanResultConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
 
-		public final static ListTupleScanResultConverter INSTANCE = new ListTupleScanResultConverter();
+		private final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
 
 		@Override
 		public ScanResult<List<Tuple>> convert(
 				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source) {
 			return new com.buession.redis.core.ScanResult<>(source.getCursor(),
-					TupleConverter.LIST_CONVERTER.convert(source.getResult()));
+					listTupleConverter.convert(source.getResult()));
 		}
 
 	}
@@ -95,10 +90,6 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 	 * @since 2.0.0
 	 */
 	final class MapScanResultConverter<K, V> implements ScanResultConverter<Map.Entry<K, V>, Map<K, V>> {
-
-		public final static MapScanResultConverter<String, String> STRING_MAP_CONVERTER = new MapScanResultConverter<>();
-
-		public final static MapScanResultConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapScanResultConverter<>();
 
 		@Override
 		public ScanResult<Map<K, V>> convert(final redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source) {

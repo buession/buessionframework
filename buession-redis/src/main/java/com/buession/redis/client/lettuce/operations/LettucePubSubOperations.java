@@ -29,7 +29,7 @@ import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -73,7 +73,7 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	@Override
 	public List<String> pubsubChannels() {
 		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run();
 	}
 
@@ -81,7 +81,7 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 

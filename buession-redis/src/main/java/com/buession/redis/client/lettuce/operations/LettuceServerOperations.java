@@ -195,7 +195,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -219,14 +219,14 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	@Override
 	public Status configResetStat() {
 		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status configRewrite() {
 		return new LettuceCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
@@ -273,33 +273,33 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status flushAll() {
-		return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status flushDb() {
-		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Info info() {
-		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), InfoConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), new InfoConverter())
 				.run();
 	}
 
@@ -307,7 +307,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create("section", section);
 		return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(section.name().toLowerCase()),
-				InfoConverter.INSTANCE)
+				new InfoConverter())
 				.run(args);
 	}
 
@@ -421,21 +421,21 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new LettuceCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public List<Role> role() {
 		return new LettuceCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(),
-				RoleConverter.LIST_CONVERTER)
+				new RoleConverter.ListRoleConverter())
 				.run();
 	}
 
 	@Override
 	public Status save() {
 		return new LettuceCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
@@ -461,7 +461,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	@Override
 	public List<SlowLog> slowLogGet() {
 		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
-				SlowlogConverter.LIST_CONVERTER)
+				new SlowlogConverter.ListSlowlogConverter())
 				.run();
 	}
 
@@ -469,7 +469,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet((int) count),
-				SlowlogConverter.LIST_CONVERTER)
+				new SlowlogConverter.ListSlowlogConverter())
 				.run(args);
 	}
 
@@ -482,7 +482,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	@Override
 	public Status slowLogReset() {
 		return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
@@ -490,13 +490,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
 		return new LettuceCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public RedisServerTime time() {
-		return new LettuceCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), new RedisServerTimeConverter())
 				.run();
 	}
 

@@ -36,8 +36,6 @@ import com.buession.redis.core.Constants;
  */
 public final class OkStatusConverter implements Converter<String, Status> {
 
-	public final static OkStatusConverter INSTANCE = new OkStatusConverter();
-
 	@Override
 	public Status convert(final String source) {
 		return Status.valueOf(Constants.OK.equalsIgnoreCase(source));

@@ -29,9 +29,9 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -46,12 +46,12 @@ import java.util.Set;
  */
 public final class JedisSentinelHashOperations extends AbstractHashOperations<JedisSentinelClient> {
 
-	public JedisSentinelHashOperations(final JedisSentinelClient client){
+	public JedisSentinelHashOperations(final JedisSentinelClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long hDel(final String key, final String... fields){
+	public Long hDel(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HDEL)
 				.general((cmd)->cmd.hdel(key, fields))
@@ -61,7 +61,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hDel(final byte[] key, final byte[]... fields){
+	public Long hDel(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HDEL)
 				.general((cmd)->cmd.hdel(key, fields))
@@ -71,7 +71,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Boolean hExists(final String key, final String field){
+	public Boolean hExists(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.HEXISTS)
 				.general((cmd)->cmd.hexists(key, field))
@@ -81,7 +81,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Boolean hExists(final byte[] key, final byte[] field){
+	public Boolean hExists(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.HEXISTS)
 				.general((cmd)->cmd.hexists(key, field))
@@ -91,7 +91,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public String hGet(final String key, final String field){
+	public String hGet(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisSentinelCommand<String>(client, ProtocolCommand.HGET)
 				.general((cmd)->cmd.hget(key, field))
@@ -101,7 +101,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public byte[] hGet(final byte[] key, final byte[] field){
+	public byte[] hGet(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.HGET)
 				.general((cmd)->cmd.hget(key, field))
@@ -111,7 +111,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Map<String, String> hGetAll(final String key){
+	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Map<String, String>>(client, ProtocolCommand.HGETALL)
 				.general((cmd)->cmd.hgetAll(key))
@@ -121,7 +121,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Map<byte[], byte[]> hGetAll(final byte[] key){
+	public Map<byte[], byte[]> hGetAll(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Map<byte[], byte[]>>(client, ProtocolCommand.HGETALL)
 				.general((cmd)->cmd.hgetAll(key))
@@ -131,7 +131,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hIncrBy(final String key, final String field, final long value){
+	public Long hIncrBy(final String key, final String field, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HINCRBY)
 				.general((cmd)->cmd.hincrBy(key, field, value))
@@ -141,7 +141,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HINCRBY)
 				.general((cmd)->cmd.hincrBy(key, field, value))
@@ -151,7 +151,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Double hIncrByFloat(final String key, final String field, final double value){
+	public Double hIncrByFloat(final String key, final String field, final double value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.HINCRBYFLOAT)
 				.general((cmd)->cmd.hincrByFloat(key, field, value))
@@ -161,7 +161,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Double>(client, ProtocolCommand.HINCRBYFLOAT)
 				.general((cmd)->cmd.hincrByFloat(key, field, value))
@@ -171,7 +171,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Set<String> hKeys(final String key){
+	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.HKEYS)
 				.general((cmd)->cmd.hkeys(key))
@@ -181,7 +181,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Set<byte[]> hKeys(final byte[] key){
+	public Set<byte[]> hKeys(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.HKEYS)
 				.general((cmd)->cmd.hkeys(key))
@@ -191,7 +191,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hLen(final String key){
+	public Long hLen(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HLEN)
 				.general((cmd)->cmd.hlen(key))
@@ -201,7 +201,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hLen(final byte[] key){
+	public Long hLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HLEN)
 				.general((cmd)->cmd.hlen(key))
@@ -211,7 +211,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<String> hMGet(final String key, final String... fields){
+	public List<String> hMGet(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.HMGET)
 				.general((cmd)->cmd.hmget(key, fields))
@@ -221,7 +221,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.HMGET)
 				.general((cmd)->cmd.hmget(key, fields))
@@ -231,27 +231,27 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Status hMSet(final String key, final Map<String, String> data){
+	public Status hMSet(final String key, final Map<String, String> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.HMGET)
-				.general((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.hmset(key, data), new OkStatusConverter())
+				.pipeline((cmd)->cmd.hmset(key, data), new OkStatusConverter())
+				.transaction((cmd)->cmd.hmset(key, data), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.HMGET)
-				.general((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.hmset(key, data), new OkStatusConverter())
+				.pipeline((cmd)->cmd.hmset(key, data), new OkStatusConverter())
+				.transaction((cmd)->cmd.hmset(key, data), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public String hRandField(final String key){
+	public String hRandField(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<String>(client, ProtocolCommand.HRANDFIELD)
 				.general((cmd)->cmd.hrandfield(key))
@@ -261,7 +261,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public byte[] hRandField(final byte[] key){
+	public byte[] hRandField(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.HRANDFIELD)
 				.general((cmd)->cmd.hrandfield(key))
@@ -271,7 +271,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<String> hRandField(final String key, final long count){
+	public List<String> hRandField(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.HRANDFIELD)
 				.general((cmd)->cmd.hrandfield(key, count))
@@ -281,7 +281,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<byte[]> hRandField(final byte[] key, final long count){
+	public List<byte[]> hRandField(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.HRANDFIELD)
 				.general((cmd)->cmd.hrandfield(key, count))
@@ -291,7 +291,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Map<String, String> hRandFieldWithValues(final String key, final long count){
+	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<Map<String, String>>(client, ProtocolCommand.HRANDFIELD)
 				.general((cmd)->cmd.hrandfieldWithValues(key, count))
@@ -301,7 +301,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count){
+	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<Map<byte[], byte[]>>(client, ProtocolCommand.HRANDFIELD)
 				.general((cmd)->cmd.hrandfieldWithValues(key, count))
@@ -311,118 +311,96 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new JedisSentinelCommand<ScanResult<Map<String, String>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor), ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new JedisSentinelCommand<ScanResult<Map<byte[], byte[]>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor), ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisSentinelCommand<ScanResult<Map<String, String>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisSentinelCommand<ScanResult<Map<byte[], byte[]>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count){
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisSentinelCommand<ScanResult<Map<String, String>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisSentinelCommand<ScanResult<Map<byte[], byte[]>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final long count){
+												 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		return new JedisSentinelCommand<ScanResult<Map<String, String>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final long count){
+												 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		return new JedisSentinelCommand<ScanResult<Map<byte[], byte[]>>>(client, ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.pipeline((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
+				.transaction((cmd)->cmd.hscan(key, cursor, params), new ScanResultConverter.MapScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public Long hSet(final String key, final String field, final String value){
+	public Long hSet(final String key, final String field, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HSET)
 				.general((cmd)->cmd.hset(key, field, value))
@@ -432,7 +410,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hSet(final byte[] key, final byte[] field, final byte[] value){
+	public Long hSet(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HSET)
 				.general((cmd)->cmd.hset(key, field, value))
@@ -442,27 +420,27 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Status hSetNx(final String key, final String field, final String value){
+	public Status hSetNx(final String key, final String field, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.HSETNX)
-				.general((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
+				.pipeline((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
+				.transaction((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.HSETNX)
-				.general((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
+				.pipeline((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
+				.transaction((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Long hStrLen(final String key, final String field){
+	public Long hStrLen(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HSTRLEN)
 				.general((cmd)->cmd.hstrlen(key, field))
@@ -472,7 +450,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public Long hStrLen(final byte[] key, final byte[] field){
+	public Long hStrLen(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.HSTRLEN)
 				.general((cmd)->cmd.hstrlen(key, field))
@@ -482,7 +460,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<String> hVals(final String key){
+	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.HVALS)
 				.general((cmd)->cmd.hvals(key))
@@ -492,7 +470,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<byte[]> hVals(final byte[] key){
+	public List<byte[]> hVals(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.HVALS)
 				.general((cmd)->cmd.hvals(key))

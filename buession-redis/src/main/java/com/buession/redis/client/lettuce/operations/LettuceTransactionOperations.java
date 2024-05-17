@@ -47,7 +47,7 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public Status multi() {
-		return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), new OkStatusConverter())
 				.run();
 	}
 
@@ -67,13 +67,13 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status unwatch() {
-		return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), new OkStatusConverter())
 				.run();
 	}
 

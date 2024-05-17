@@ -36,8 +36,6 @@ import com.buession.redis.core.Constants;
  */
 public final class PingResultConverter implements Converter<String, Status> {
 
-	public final static PingResultConverter INSTANCE = new PingResultConverter();
-
 	@Override
 	public Status convert(final String source) {
 		return Status.valueOf(Constants.PONG.equalsIgnoreCase(source));

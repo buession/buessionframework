@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
@@ -38,11 +38,9 @@ import com.buession.redis.core.BumpEpoch;
  */
 public final class BumpEpochConverter implements Converter<String, KeyValue<BumpEpoch, Integer>> {
 
-	public final static BumpEpochConverter INSTANCE = new BumpEpochConverter();
-
 	@Override
-	public KeyValue<BumpEpoch, Integer> convert(final String source){
-		KeyValueParser keyValueParser = new KeyValueParser(source, " ");
+	public KeyValue<BumpEpoch, Integer> convert(final String source) {
+		final KeyValueParser keyValueParser = new KeyValueParser(source, " ");
 		return new KeyValue<>(EnumUtils.getEnum(BumpEpoch.class, keyValueParser.getKey()),
 				keyValueParser.getIntValue());
 	}

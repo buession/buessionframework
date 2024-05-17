@@ -32,10 +32,10 @@ import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.UnblockType;
@@ -57,14 +57,14 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
-		return new LettuceCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create("password", password);
-		return new LettuceCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -85,7 +85,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Status ping() {
-		return new LettuceCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.ping(), PingResultConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.ping(), new PingResultConverter())
 				.run();
 	}
 
@@ -100,21 +100,21 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Status quit() {
-		return new LettuceCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create("db", db);
-		return new LettuceCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_CACHING, OkStatusConverter.INSTANCE)
+		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_CACHING, new OkStatusConverter())
 				.run(args);
 	}
 
@@ -128,7 +128,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status clientSetName(final byte[] name) {
 		final CommandArguments args = CommandArguments.create("name", name);
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -148,7 +148,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public List<Client> clientList() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-				ClientConverter.ClientListConverter.INSTANCE)
+				new ClientConverter.ClientListConverter())
 				.run();
 	}
 
@@ -156,7 +156,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-				ClientConverter.ClientListConverter.INSTANCE)
+				new ClientConverter.ClientListConverter())
 				.run(args);
 	}
 
@@ -170,7 +170,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_PAUSE, (cmd)->cmd.clientPause(timeout),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -185,7 +185,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(host + ':' + port),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -193,7 +193,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientUnblock(clientId,
-				UnblockType.ERROR), Converters.ONE_STATUS_CONVERTER)
+				UnblockType.ERROR), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -201,7 +201,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		return new LettuceCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientUnblock(clientId,
-				ClientUnblockTypeConverter.INSTANCE.convert(type)), Converters.ONE_STATUS_CONVERTER)
+				(new ClientUnblockTypeConverter()).convert(type)), new OneStatusConverter())
 				.run(args);
 	}
 

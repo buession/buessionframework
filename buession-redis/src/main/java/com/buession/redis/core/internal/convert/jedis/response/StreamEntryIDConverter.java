@@ -19,70 +19,74 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.StreamEntryID;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
+ * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class StreamEntryIDConverter implements Converter<StreamEntryID, StreamEntryId> {
 
-	public final static StreamEntryIDConverter INSTANCE = new StreamEntryIDConverter();
-
-	public final static ListConverter<StreamEntryID, StreamEntryId> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
-	public StreamEntryId convert(final StreamEntryID source){
+	public StreamEntryId convert(final StreamEntryID source) {
 		return new StreamEntryId(source.getTime(), source.getSequence());
 	}
 
+	/**
+	 * Jedis {@link byte[]} 转换为 {@link StreamEntryId}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
 	public final static class BinaryStreamEntryIdConverter implements Converter<byte[], StreamEntryId> {
 
-		public final static BinaryStreamEntryIdConverter INSTANCE = new BinaryStreamEntryIdConverter();
-
 		@Override
-		public StreamEntryId convert(final byte[] source){
+		public StreamEntryId convert(final byte[] source) {
 			return new StreamEntryId(source);
 		}
 
 	}
 
-	public final static class MapStreamEntryIdConverter implements
-			Converter<Map.Entry<StreamEntryID, List<StreamEntryID>>, Map<StreamEntryId, List<StreamEntryId>>> {
+	/**
+	 * Jedis {@link List} {@link StreamEntryID} 转换为 {@link List} {@link StreamEntryId}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamEntryIDConverter extends ListConverter<StreamEntryID, StreamEntryId> {
 
-		public final static MapStreamEntryIdConverter INSTANCE = new MapStreamEntryIdConverter();
+		public ListStreamEntryIDConverter() {
+			super(new StreamEntryIDConverter());
+		}
 
-		private final static ListConverter<StreamEntryID, StreamEntryId> LIST_ENTRY_ID_CONVERTER = new ListConverter<>(
-				StreamEntryIDConverter.INSTANCE);
+	}
 
-		@Override
-		public Map<StreamEntryId, List<StreamEntryId>> convert(
-				final Map.Entry<StreamEntryID, List<StreamEntryID>> source){
-			final Map<StreamEntryId, List<StreamEntryId>> result = new LinkedHashMap<>();
-			final StreamEntryId id = StreamEntryIDConverter.INSTANCE.convert(source.getKey());
+	/**
+	 * Jedis key {@link Map.Entry<StreamEntryID, List<StreamEntryID>>} 转换为
+	 * {@link Map<StreamEntryId, List<StreamEntryId>>}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class MapEntryStreamEntryIdConverter extends
+			MapEntryMapConverter<StreamEntryID, List<StreamEntryID>, StreamEntryId, List<StreamEntryId>> {
 
-			if(source.getValue() != null){
-				final List<StreamEntryId> streamEntryIdS = LIST_ENTRY_ID_CONVERTER.convert(source.getValue());
-				result.put(id, streamEntryIdS);
-			}else{
-				result.put(id, null);
-			}
-
-			return result;
+		public MapEntryStreamEntryIdConverter() {
+			super(new StreamEntryIDConverter(), new ListStreamEntryIDConverter());
 		}
 
 	}

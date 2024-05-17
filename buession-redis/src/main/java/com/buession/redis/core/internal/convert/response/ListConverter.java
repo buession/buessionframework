@@ -37,6 +37,12 @@ import java.util.List;
  */
 public interface ListConverter<S, T> extends Converter<List<S>, List<T>> {
 
+	/**
+	 * {@link String} {@link List} 到 byte[] {@link List} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class StringToBinaryListConverter extends com.buession.core.converter.ListConverter<String, byte[]>
 			implements ListConverter<String, byte[]> {
 
@@ -46,6 +52,12 @@ public interface ListConverter<S, T> extends Converter<List<S>, List<T>> {
 
 	}
 
+	/**
+	 * byte[] {@link List} 到 {@link String} {@link List} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class BinaryToStringListConverter extends com.buession.core.converter.ListConverter<byte[], String>
 			implements ListConverter<byte[], String> {
 

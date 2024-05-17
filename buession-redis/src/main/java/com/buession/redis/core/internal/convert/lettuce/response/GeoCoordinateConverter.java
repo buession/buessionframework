@@ -29,6 +29,8 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
 import io.lettuce.core.GeoCoordinates;
 
+import java.util.List;
+
 /**
  * Lettuce {@link GeoCoordinates} 转换为 {@link Geo}
  *
@@ -37,13 +39,23 @@ import io.lettuce.core.GeoCoordinates;
  */
 public final class GeoCoordinateConverter implements Converter<GeoCoordinates, Geo> {
 
-	public final static GeoCoordinateConverter INSTANCE = new GeoCoordinateConverter();
-
-	public final static ListConverter<GeoCoordinates, Geo> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
 	public Geo convert(final GeoCoordinates source) {
 		return new Geo(source.getX().doubleValue(), source.getY().doubleValue());
+	}
+
+	/**
+	 * Lettuce {@link List} {@link GeoCoordinates} 转换为 {@link List} {@link Geo}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListGeoCoordinateConverter extends ListConverter<GeoCoordinates, Geo> {
+
+		public ListGeoCoordinateConverter() {
+			super(new GeoCoordinateConverter());
+		}
+
 	}
 
 }

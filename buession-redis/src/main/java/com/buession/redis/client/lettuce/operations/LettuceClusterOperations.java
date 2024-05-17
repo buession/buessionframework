@@ -36,13 +36,13 @@ import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ClusterReplicasConverter;
 import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
 import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodesConverter;
 import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;
@@ -69,14 +69,14 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS, (cmd)->cmd.clusterAddSlots(slots),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
-				ClusterSlotConverter.LIST_CONVERTER)
+				new ClusterSlotConverter.ListClusterSlotConverter())
 				.run();
 	}
 
@@ -100,14 +100,14 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS, (cmd)->cmd.clusterDelSlots(slots),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushslots(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
@@ -116,7 +116,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
 				(cmd)->cmd.clusterFailover(ClusterFailoverOption.FORCE == clusterFailoverOption),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -124,7 +124,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -132,7 +132,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-				(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -147,7 +147,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	@Override
 	public ClusterInfo clusterInfo() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
-				ClusterInfoConverter.INSTANCE)
+				new ClusterInfoConverter())
 				.run();
 	}
 
@@ -155,14 +155,14 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
-				ClusterNodesConverter.INSTANCE)
+				new ClusterNodesConverter())
 				.run();
 	}
 
@@ -170,7 +170,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
-				ClusterNodeConverter.LIST_CONVERTER)
+				new ClusterNodeConverter.ListClusterNodeConverter())
 				.run(args);
 	}
 
@@ -178,7 +178,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS, (cmd)->cmd.clusterReplicate(nodeId),
-				ClusterReplicasConverter.INSTANCE)
+				new ClusterReplicasConverter())
 				.run(args);
 	}
 
@@ -186,7 +186,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE, (cmd)->cmd.clusterReplicate(nodeId),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -194,14 +194,14 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_RESET,
-				(cmd)->cmd.clusterReset(ClusterResetOption.HARD == clusterResetOption), OkStatusConverter.INSTANCE)
+				(cmd)->cmd.clusterReset(ClusterResetOption.HARD == clusterResetOption), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveconfig(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
@@ -209,14 +209,14 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
-				(cmd)->cmd.clusterSetConfigEpoch(configEpoch), OkStatusConverter.INSTANCE)
+				(cmd)->cmd.clusterSetConfigEpoch(configEpoch), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
 		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
-				BumpEpochConverter.INSTANCE)
+				new BumpEpochConverter())
 				.run();
 	}
 
@@ -237,28 +237,28 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 				default:
 					return null;
 			}
-		}, OkStatusConverter.INSTANCE)
+		}, new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
 	public Status asking() {
 		return new LettuceCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status readWrite() {
 		return new LettuceCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status readOnly() {
 		return new LettuceCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 

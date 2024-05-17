@@ -27,7 +27,7 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import io.lettuce.core.ScoredValueScanCursor;
 import io.lettuce.core.ValueScanCursor;
 
@@ -49,15 +49,21 @@ public final class ValueScanCursorConverter<K> implements Converter<ValueScanCur
 		return new ScanResult<>(source.getCursor(), source.getValues());
 	}
 
+	/**
+	 * Lettuce {@link ValueScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	public final static class BSKeyScanCursorConverter
 			implements Converter<ValueScanCursor<byte[]>, ScanResult<List<String>>> {
 
-		public final static BSKeyScanCursorConverter INSTANCE = new BSKeyScanCursorConverter();
+		private final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
+				new ListConverter.BinaryToStringListConverter();
 
 		@Override
 		public ScanResult<List<String>> convert(final ValueScanCursor<byte[]> source) {
-			return new ScanResult<>(source.getCursor(),
-					Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER.convert(source.getValues()));
+			return new ScanResult<>(source.getCursor(), binaryToStringListConverter.convert(source.getValues()));
 		}
 
 	}
@@ -71,12 +77,12 @@ public final class ValueScanCursorConverter<K> implements Converter<ValueScanCur
 	public final static class ScoredValueScanCursorConverter
 			implements Converter<ScoredValueScanCursor<byte[]>, ScanResult<List<Tuple>>> {
 
-		public final static ScoredValueScanCursorConverter INSTANCE = new ScoredValueScanCursorConverter();
+		private final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
+				new ScoredValueConverter.ListScoredValueConverter();
 
 		@Override
 		public ScanResult<List<Tuple>> convert(final ScoredValueScanCursor<byte[]> source) {
-			return new ScanResult<>(source.getCursor(),
-					ScoredValueConverter.LIST_CONVERTER.convert(source.getValues()));
+			return new ScanResult<>(source.getCursor(), listScoredValueConverter.convert(source.getValues()));
 		}
 
 	}

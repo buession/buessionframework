@@ -19,19 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.StreamConsumerFull;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
 import redis.clients.jedis.resps.StreamFullInfo;
-import redis.clients.jedis.resps.StreamGroupFullInfo;
 
 import java.util.List;
 
@@ -41,42 +38,23 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamFullInfoConverter implements Converter<StreamFullInfo, StreamFull> {
+public final class StreamFullInfoConverter implements Converter<StreamFullInfo, StreamFull> {
 
-	public final static StreamFullInfoConverter INSTANCE = new StreamFullInfoConverter();
+	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+
+	private final StreamFullInfoGroupConverter.ListStreamFullInfoGroupConverter listStreamFullInfoGroupConverter =
+			new StreamFullInfoGroupConverter.ListStreamFullInfoGroupConverter();
+
+	private final StreamEntryConverter.ListStreamEntryConverter listStreamEntryConverter =
+			new StreamEntryConverter.ListStreamEntryConverter();
 
 	@Override
-	public StreamFull convert(final StreamFullInfo source){
-		final List<StreamFull.Group> groups = StreamFullInfoGroupConverter.LIST_CONVERTER.convert(source.getGroups());
-		final StreamEntryId lastGeneratedId = StreamEntryIDConverter.INSTANCE.convert(source.getLastGeneratedId());
-		final List<StreamEntry> entries = StreamEntryConverter.LIST_CONVERTER.convert(source.getEntries());
+	public StreamFull convert(final StreamFullInfo source) {
+		final List<StreamFull.Group> groups = listStreamFullInfoGroupConverter.convert(source.getGroups());
+		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
+		final List<StreamEntry> entries = listStreamEntryConverter.convert(source.getEntries());
 		return new StreamFull(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
 				groups, lastGeneratedId, entries, source.getStreamFullInfo());
-	}
-
-	/**
-	 * jedis {@link StreamGroupFullInfo} 转换为 {@link StreamFull.Group}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.1
-	 */
-	public final static class StreamFullInfoGroupConverter implements Converter<StreamGroupFullInfo, StreamFull.Group> {
-
-		public final static StreamFullInfoGroupConverter INSTANCE = new StreamFullInfoGroupConverter();
-
-		public final static ListConverter<StreamGroupFullInfo, StreamFull.Group> LIST_CONVERTER = new ListConverter<>(
-				INSTANCE);
-
-		@Override
-		public StreamFull.Group convert(final StreamGroupFullInfo source){
-			final List<StreamConsumerFull> consumers = StreamConsumerFullInfoConverter.LIST_CONVERTER.convert(
-					source.getConsumers());
-			final StreamEntryId lastDeliveredId = StreamEntryIDConverter.INSTANCE.convert(source.getLastDeliveredId());
-
-			return new StreamFull.Group(source.getName(), consumers, source.getPending(), source.getPelCount(),
-					lastDeliveredId, source.getGroupFullInfo());
-		}
-
 	}
 
 }

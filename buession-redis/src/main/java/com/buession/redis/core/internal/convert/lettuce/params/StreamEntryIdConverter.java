@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.params;
@@ -29,6 +29,8 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntryId;
 
+import java.util.Map;
+
 /**
  * {@link StreamEntryId} 转换为 Lettuce Stream MessageId
  *
@@ -37,27 +39,35 @@ import com.buession.redis.core.StreamEntryId;
  */
 public final class StreamEntryIdConverter implements Converter<StreamEntryId, String> {
 
-	public final static StreamEntryIdConverter INSTANCE = new StreamEntryIdConverter();
-
-	public final static ArrayConverter<StreamEntryId, String> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE,
-			String.class);
-
 	@Override
 	public String convert(final StreamEntryId source) {
 		return source == null ? null : source.toString();
 	}
 
-	public final static class MapStreamEntryIdConverter<SK, TK>
-			extends MapConverter<SK, StreamEntryId, TK, String> {
+	/**
+	 * 数组形式 {@link StreamEntryId} 转换为数组形式 Lettuce Stream MessageId
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ArrayStreamEntryIdConverter extends ArrayConverter<StreamEntryId, String> {
 
-		public final static MapStreamEntryIdConverter<String, String> STRING_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
-				(key)->key);
+		public ArrayStreamEntryIdConverter() {
+			super(new StreamEntryIdConverter(), String.class);
+		}
 
-		public final static MapStreamEntryIdConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
-				(key)->key);
+	}
+
+	/**
+	 * {@link Map} 形式 {@link StreamEntryId} 转换为 {@link Map} 形式 Lettuce Stream MessageId
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class MapStreamEntryIdConverter<SK, TK> extends MapConverter<SK, StreamEntryId, TK, String> {
 
 		public MapStreamEntryIdConverter(final Converter<SK, TK> keyConverter) {
-			super(keyConverter, StreamEntryIdConverter.INSTANCE);
+			super(keyConverter, new StreamEntryIdConverter());
 		}
 
 	}

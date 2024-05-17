@@ -35,10 +35,8 @@ import com.buession.redis.core.GeoUnit;
  */
 public final class GeoUnitConverter implements Converter<GeoUnit, redis.clients.jedis.args.GeoUnit> {
 
-	public final static GeoUnitConverter INSTANCE = new GeoUnitConverter();
-
 	@Override
-	public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source){
+	public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source) {
 		switch(source){
 			case M:
 				return redis.clients.jedis.args.GeoUnit.M;

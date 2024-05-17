@@ -44,12 +44,12 @@ import java.util.List;
  */
 public final class JedisTransactionOperations extends AbstractTransactionOperations<JedisStandaloneClient> {
 
-	public JedisTransactionOperations(final JedisStandaloneClient client){
+	public JedisTransactionOperations(final JedisStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Status multi(){
+	public Status multi() {
 		return new JedisCommand<Status>(client, ProtocolCommand.MULTI)
 				.general((cmd)->{
 					RedisConnection connection = client.getConnection();
@@ -63,7 +63,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					return new Response<>(new Builder<Status>() {
 
 						@Override
-						public Status build(Object data){
+						public Status build(Object data) {
 							return Status.SUCCESS;
 						}
 
@@ -73,11 +73,11 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	}
 
 	@Override
-	public List<Object> exec(){
+	public List<Object> exec() {
 		return new JedisCommand<List<Object>>(client, ProtocolCommand.EXEC) {
 
 			@Override
-			public List<Object> execute() throws RedisException{
+			public List<Object> execute() throws RedisException {
 				RedisConnection connection = client.getConnection();
 				return connection.exec();
 			}
@@ -86,7 +86,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	}
 
 	@Override
-	public void discard(){
+	public void discard() {
 		new JedisCommand<Void>(client, ProtocolCommand.DISCARD)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
@@ -97,49 +97,49 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	}
 
 	@Override
-	public Status watch(final String... keys){
+	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.watch(keys), new OkStatusConverter())
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
-					public String build(Object data){
+					public String build(Object data) {
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE)
+				}), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status watch(final byte[]... keys){
+	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.watch(keys), new OkStatusConverter())
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
-					public String build(Object data){
+					public String build(Object data) {
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE)
+				}), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status unwatch(){
+	public Status unwatch() {
 		return new JedisCommand<Status>(client, ProtocolCommand.UNWATCH)
-				.general((cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.unwatch(), new OkStatusConverter())
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
-					public String build(Object data){
+					public String build(Object data) {
 						return cmd.unwatch();
 					}
 
-				}), OkStatusConverter.INSTANCE)
+				}), new OkStatusConverter())
 				.run();
 	}
 

@@ -36,9 +36,7 @@ import redis.clients.jedis.params.XTrimParams;
  * @since 2.0.0
  */
 @Deprecated
-public class XTrimArgumentConverter implements Converter<StreamCommands.XTrimArgument, XTrimParams> {
-
-	public final static XTrimArgumentConverter INSTANCE = new XTrimArgumentConverter();
+public final class XTrimArgumentConverter implements Converter<StreamCommands.XTrimArgument, XTrimParams> {
 
 	@Override
 	public XTrimParams convert(final StreamCommands.XTrimArgument source) {

@@ -28,8 +28,8 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 
 /**
  * Lettuce 单机模式 HyperLogLog 命令操作
@@ -47,7 +47,7 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 		return new LettuceCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-				Converters.ONE_STATUS_CONVERTER)
+				new OneStatusConverter())
 				.run(args);
 	}
 
@@ -55,7 +55,7 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 

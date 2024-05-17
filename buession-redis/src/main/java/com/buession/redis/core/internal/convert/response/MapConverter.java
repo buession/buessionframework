@@ -37,6 +37,12 @@ import java.util.Map;
  */
 public interface MapConverter<SK, SV, TK, TV> extends Converter<Map<SK, SV>, Map<TK, TV>> {
 
+	/**
+	 * {@link String} {@link Map} 到 byte[] {@link Map} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class StringToBinaryMapConverter extends com.buession.core.converter.MapConverter<String, String, byte[], byte[]>
 			implements MapConverter<String, String, byte[], byte[]> {
 
@@ -46,6 +52,12 @@ public interface MapConverter<SK, SV, TK, TV> extends Converter<Map<SK, SV>, Map
 
 	}
 
+	/**
+	 * byte[] {@link Map} 到 {@link String} {@link Map} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class BinaryToStringMapConverter extends com.buession.core.converter.MapConverter<byte[], byte[], String, String>
 			implements MapConverter<byte[], byte[], String, String> {
 
@@ -55,6 +67,12 @@ public interface MapConverter<SK, SV, TK, TV> extends Converter<Map<SK, SV>, Map
 
 	}
 
+	/**
+	 * {@link String} key {@link Map} 到 byte[] key {@link Map} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class StringToBinaryKeyPrimitiveValueMapConverter<V> extends com.buession.core.converter.MapConverter<String, V,
 			byte[], V> implements MapConverter<String, V, byte[], V> {
 
@@ -64,6 +82,12 @@ public interface MapConverter<SK, SV, TK, TV> extends Converter<Map<SK, SV>, Map
 
 	}
 
+	/**
+	 * byte[] key {@link Map} 到 {@link String} key {@link Map} 转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class BinaryToStringKeyPrimitiveValueMapConverter<V>
 			extends com.buession.core.converter.MapConverter<byte[], V, String, V>
 			implements MapConverter<byte[], V, String, V> {

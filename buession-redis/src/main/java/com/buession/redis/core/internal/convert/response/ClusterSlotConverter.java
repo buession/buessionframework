@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
@@ -41,13 +41,9 @@ import java.util.List;
  */
 public final class ClusterSlotConverter implements Converter<Object, ClusterSlot> {
 
-	public final static ClusterSlotConverter INSTANCE = new ClusterSlotConverter();
-
-	public final static ListConverter<Object, ClusterSlot> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
 	@SuppressWarnings({"unchecked"})
-	public ClusterSlot convert(final Object source){
+	public ClusterSlot convert(final Object source) {
 		if(source instanceof List){
 			List<Object> data = (List<Object>) source;
 
@@ -73,6 +69,20 @@ public final class ClusterSlotConverter implements Converter<Object, ClusterSlot
 		}
 
 		return null;
+	}
+
+	/**
+	 * {@link List} Cluster Slots 命令结果 转换为 {@link List} {@link ClusterSlot}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListClusterSlotConverter extends ListConverter<Object, ClusterSlot> {
+
+		public ListClusterSlotConverter() {
+			super(new ClusterSlotConverter());
+		}
+
 	}
 
 }

@@ -22,25 +22,52 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.command.BitMapCommands;
-import org.springframework.lang.Nullable;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamConsumerFull;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.StreamFull;
+import redis.clients.jedis.resps.StreamGroupFullInfo;
+
+import java.util.List;
 
 /**
- * {@link BitMapCommands.BitFieldArgument} 转换为 jedis bitfield 参数
+ * Jedis {@link StreamGroupFullInfo} 转换为 {@link StreamFull.Group}
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
-public final class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, String[]> {
+public class StreamFullInfoGroupConverter implements Converter<StreamGroupFullInfo, StreamFull.Group> {
 
-	@Nullable
+	private final StreamConsumerFullInfoConverter.ListStreamConsumerFullInfoConverter listStreamConsumerFullInfoConverter = new StreamConsumerFullInfoConverter.ListStreamConsumerFullInfoConverter();
+
+	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+
 	@Override
-	public String[] convert(final BitMapCommands.BitFieldArgument source) {
-		return source == null ? null : StringUtils.split(source.toString(), " ");
+	public StreamFull.Group convert(final StreamGroupFullInfo source) {
+		final List<StreamConsumerFull> consumers = listStreamConsumerFullInfoConverter.convert(
+				source.getConsumers());
+		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
+
+		return new StreamFull.Group(source.getName(), consumers, source.getPending(), source.getPelCount(),
+				lastDeliveredId, source.getGroupFullInfo());
+	}
+
+	/**
+	 * Jedis {@link List} {@link StreamGroupFullInfo} 转换为 {@link List} {@link StreamFull.Group}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamFullInfoGroupConverter extends ListConverter<StreamGroupFullInfo,
+			StreamFull.Group> {
+
+		public ListStreamFullInfoGroupConverter() {
+			super(new StreamFullInfoGroupConverter());
+		}
+
 	}
 
 }

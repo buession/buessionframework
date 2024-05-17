@@ -34,12 +34,12 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
 import com.buession.redis.core.internal.convert.response.BinaryObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.jedis.JedisRestoreParams;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
@@ -146,9 +146,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
+				.pipeline((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
+				.transaction((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -156,9 +156,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
+				.pipeline((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
+				.transaction((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -166,11 +166,11 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
+		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
+				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
+				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -178,11 +178,11 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
+		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
+				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
+				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -190,9 +190,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
+				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
+				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -200,9 +200,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
+				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
+				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -210,9 +210,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status pExpire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
+				.pipeline((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
+				.transaction((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -220,9 +220,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
+				.pipeline((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
+				.transaction((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -230,9 +230,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status pExpireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
+				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
+				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -240,9 +240,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
+				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
+				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -250,9 +250,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status persist(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.persist(key), new OneStatusConverter())
+				.pipeline((cmd)->cmd.persist(key), new OneStatusConverter())
+				.transaction((cmd)->cmd.persist(key), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -260,9 +260,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.persist(key), new OneStatusConverter())
+				.pipeline((cmd)->cmd.persist(key), new OneStatusConverter())
+				.transaction((cmd)->cmd.persist(key), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -536,9 +536,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status rename(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
+				.pipeline((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
+				.transaction((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -546,9 +546,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
+				.pipeline((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
+				.transaction((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -556,9 +556,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status renameNx(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
+				.pipeline((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
+				.transaction((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -566,9 +566,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
+				.pipeline((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
+				.transaction((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
 				.run(args);
 	}
 
@@ -577,9 +577,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -588,9 +588,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -601,9 +601,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 				.put("ttl", ttl).put("argument", argument);
 		final JedisRestoreParams params = JedisRestoreParams.from(argument);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -614,9 +614,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 				.put("ttl", ttl).put("argument", argument);
 		final JedisRestoreParams params = JedisRestoreParams.from(argument);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -624,10 +624,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public ScanResult<List<String>> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
 		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -635,10 +634,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public ScanResult<List<byte[]>> scan(final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
 		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -647,12 +645,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -661,12 +656,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -675,12 +667,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -689,12 +678,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -704,12 +690,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
@@ -719,12 +702,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 

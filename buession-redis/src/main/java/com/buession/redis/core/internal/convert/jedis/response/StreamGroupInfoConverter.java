@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -30,24 +30,37 @@ import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamGroup;
 import redis.clients.jedis.resps.StreamGroupInfo;
 
+import java.util.List;
+
 /**
  * jedis {@link StreamGroupInfo} 转换为 {@link StreamGroup}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamGroupInfoConverter implements Converter<StreamGroupInfo, StreamGroup> {
+public final class StreamGroupInfoConverter implements Converter<StreamGroupInfo, StreamGroup> {
 
-	public final static StreamGroupInfoConverter INSTANCE = new StreamGroupInfoConverter();
-
-	public final static ListConverter<StreamGroupInfo, StreamGroup> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
+	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
 	@Override
-	public StreamGroup convert(final StreamGroupInfo source){
-		final StreamEntryId lastDeliveredId = StreamEntryIDConverter.INSTANCE.convert(source.getLastDeliveredId());
+	public StreamGroup convert(final StreamGroupInfo source) {
+		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
 		return new StreamGroup(source.getName(), source.getConsumers(), source.getPending(), lastDeliveredId,
 				source.getGroupInfo());
+	}
+
+	/**
+	 * Jedis {@link List} {@link StreamGroupInfo} 转换为 {@link List} {@link StreamGroup}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListStreamGroupInfoConverter extends ListConverter<StreamGroupInfo, StreamGroup> {
+
+		public ListStreamGroupInfoConverter() {
+			super(new StreamGroupInfoConverter());
+		}
+
 	}
 
 }

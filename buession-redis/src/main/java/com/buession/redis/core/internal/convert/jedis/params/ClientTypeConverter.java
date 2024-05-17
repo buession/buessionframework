@@ -35,10 +35,8 @@ import com.buession.redis.core.ClientType;
  */
 public final class ClientTypeConverter implements Converter<ClientType, redis.clients.jedis.args.ClientType> {
 
-	public final static ClientTypeConverter INSTANCE = new ClientTypeConverter();
-
 	@Override
-	public redis.clients.jedis.args.ClientType convert(final ClientType source){
+	public redis.clients.jedis.args.ClientType convert(final ClientType source) {
 		switch(source){
 			case NORMAL:
 				return redis.clients.jedis.args.ClientType.NORMAL;

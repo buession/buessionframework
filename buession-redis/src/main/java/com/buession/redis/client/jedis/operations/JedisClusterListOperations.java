@@ -74,7 +74,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
+		final redis.clients.jedis.args.ListPosition pos = (new ListPositionConverter()).convert(position);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.linsert(key, pos, pivot, value))
 				.pipeline((cmd)->cmd.linsert(key, pos, pivot, value))
@@ -86,7 +86,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
+		final redis.clients.jedis.args.ListPosition pos = (new ListPositionConverter()).convert(position);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.linsert(key, pos, pivot, value))
 				.pipeline((cmd)->cmd.linsert(key, pos, pivot, value))
@@ -98,9 +98,9 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Status lSet(final String key, final long index, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.LINSERT)
-				.general((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
+				.pipeline((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
+				.transaction((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -108,9 +108,9 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.LINSERT)
-				.general((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
+				.pipeline((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
+				.transaction((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -244,9 +244,9 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Status lTrim(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.LTRIM)
-				.general((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
+				.pipeline((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
+				.transaction((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -254,9 +254,9 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Status lTrim(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.LTRIM)
-				.general((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
+				.pipeline((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
+				.transaction((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
 				.run(args);
 	}
 
@@ -264,8 +264,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
-		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
+		final ListDirection fromDirection = (new DirectionConverter()).convert(from);
+		final ListDirection toDirection = (new DirectionConverter()).convert(to);
 		return new JedisClusterCommand<String>(client, ProtocolCommand.LMOVE)
 				.general((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.pipeline((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
@@ -277,8 +277,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
-		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
+		final ListDirection fromDirection = (new DirectionConverter()).convert(from);
+		final ListDirection toDirection = (new DirectionConverter()).convert(to);
 		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.LMOVE)
 				.general((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.pipeline((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
@@ -291,8 +291,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
-		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
-		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
+		final ListDirection fromDirection = (new DirectionConverter()).convert(from);
+		final ListDirection toDirection = (new DirectionConverter()).convert(to);
 		return new JedisClusterCommand<String>(client, ProtocolCommand.BLMOVE)
 				.general((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.pipeline((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
@@ -305,8 +305,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
-		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
-		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
+		final ListDirection fromDirection = (new DirectionConverter()).convert(from);
+		final ListDirection toDirection = (new DirectionConverter()).convert(to);
 		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.BLMOVE)
 				.general((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.pipeline((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))

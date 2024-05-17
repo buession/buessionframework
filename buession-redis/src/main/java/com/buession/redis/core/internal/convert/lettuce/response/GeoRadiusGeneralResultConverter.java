@@ -28,6 +28,8 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.SetListConverter;
 import com.buession.redis.core.GeoRadius;
 
+import java.util.List;
+
 /**
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
  *
@@ -45,6 +47,20 @@ public final class GeoRadiusGeneralResultConverter implements Converter<byte[], 
 		//return new GeoRadius(source.getMember(), source.getDistance(),
 		//GeoCoordinateConverter.INSTANCE.convert(source.getCoordinate()));
 		return null;
+	}
+
+	/**
+	 * Lettuce {@link List} georadius 命令结果转换为 {@link List} {@link GeoRadius}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class SetListGeoRadiusGeneralResultConverter extends SetListConverter<byte[], GeoRadius> {
+
+		public SetListGeoRadiusGeneralResultConverter() {
+			super(new GeoRadiusGeneralResultConverter());
+		}
+
 	}
 
 }

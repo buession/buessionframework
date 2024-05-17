@@ -31,7 +31,6 @@ import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.MapScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.ListSetConverter;
 import com.buession.redis.core.internal.convert.response.MapConverter;
@@ -160,7 +159,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 		return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -204,7 +203,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
 				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor)),
-				MapScanCursorConverter.BvSvMapScanCursorConverter.INSTANCE)
+				new MapScanCursorConverter.BvSvMapScanCursorConverter())
 				.run(args);
 	}
 
@@ -221,7 +220,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
 				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				MapScanCursorConverter.BvSvMapScanCursorConverter.INSTANCE)
+				new MapScanCursorConverter.BvSvMapScanCursorConverter())
 				.run(args);
 	}
 
@@ -239,7 +238,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
 				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				MapScanCursorConverter.BvSvMapScanCursorConverter.INSTANCE)
+				new MapScanCursorConverter.BvSvMapScanCursorConverter())
 				.run(args);
 	}
 
@@ -258,8 +257,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
 				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor),
-						new LettuceScanArgs(pattern, count)),
-				MapScanCursorConverter.BvSvMapScanCursorConverter.INSTANCE)
+						new LettuceScanArgs(pattern, count)), new MapScanCursorConverter.BvSvMapScanCursorConverter())
 				.run(args);
 	}
 
@@ -301,7 +299,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(SafeEncoder.encode(key)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 

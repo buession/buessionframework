@@ -38,8 +38,6 @@ import java.util.List;
  */
 public final class RedisServerTimeConverter implements Converter<List<byte[]>, RedisServerTime> {
 
-	public final static RedisServerTimeConverter INSTANCE = new RedisServerTimeConverter();
-
 	@Override
 	public RedisServerTime convert(final List<byte[]> source) {
 		/*

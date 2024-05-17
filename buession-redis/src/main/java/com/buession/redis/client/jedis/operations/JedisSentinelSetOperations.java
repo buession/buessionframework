@@ -29,8 +29,8 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -44,12 +44,12 @@ import java.util.Set;
  */
 public final class JedisSentinelSetOperations extends AbstractSetOperations<JedisSentinelClient> {
 
-	public JedisSentinelSetOperations(final JedisSentinelClient client){
+	public JedisSentinelSetOperations(final JedisSentinelClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long sAdd(final String key, final String... members){
+	public Long sAdd(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SADD)
 				.general((cmd)->cmd.sadd(key, members))
@@ -59,7 +59,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sAdd(final byte[] key, final byte[]... members){
+	public Long sAdd(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SADD)
 				.general((cmd)->cmd.sadd(key, members))
@@ -69,7 +69,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sCard(final String key){
+	public Long sCard(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SCARD)
 				.general((cmd)->cmd.scard(key))
@@ -79,7 +79,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sCard(final byte[] key){
+	public Long sCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SCARD)
 				.general((cmd)->cmd.scard(key))
@@ -89,7 +89,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<String> sDiff(final String... keys){
+	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.SDIFF)
 				.general((cmd)->cmd.sdiff(keys))
@@ -99,7 +99,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<byte[]> sDiff(final byte[]... keys){
+	public Set<byte[]> sDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.SDIFF)
 				.general((cmd)->cmd.sdiff(keys))
@@ -109,7 +109,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sDiffStore(final String destKey, final String... keys){
+	public Long sDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
 				.general((cmd)->cmd.sdiffstore(destKey, keys))
@@ -119,7 +119,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
+	public Long sDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SDIFFSTORE)
 				.general((cmd)->cmd.sdiffstore(destKey, keys))
@@ -129,7 +129,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<String> sInter(final String... keys){
+	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.SINTER)
 				.general((cmd)->cmd.sinter(keys))
@@ -139,7 +139,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<byte[]> sInter(final byte[]... keys){
+	public Set<byte[]> sInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.SINTER)
 				.general((cmd)->cmd.sinter(keys))
@@ -149,7 +149,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sInterStore(final String destKey, final String... keys){
+	public Long sInterStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SINTERSTORE)
 				.general((cmd)->cmd.sinterstore(destKey, keys))
@@ -159,7 +159,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sInterStore(final byte[] destKey, final byte[]... keys){
+	public Long sInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SINTERSTORE)
 				.general((cmd)->cmd.sinterstore(destKey, keys))
@@ -169,7 +169,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Boolean sIsMember(final String key, final String member){
+	public Boolean sIsMember(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
 				.general((cmd)->cmd.sismember(key, member))
@@ -179,7 +179,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Boolean sIsMember(final byte[] key, final byte[] member){
+	public Boolean sIsMember(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.SISMEMBER)
 				.general((cmd)->cmd.sismember(key, member))
@@ -189,7 +189,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public List<Boolean> smIsMember(final String key, final String... members){
+	public List<Boolean> smIsMember(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
 				.general((cmd)->cmd.smismember(key, members))
@@ -199,7 +199,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public List<Boolean> smIsMember(final byte[] key, final byte[]... members){
+	public List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
 				.general((cmd)->cmd.smismember(key, members))
@@ -209,7 +209,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<String> sMembers(final String key){
+	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.SMEMBERS)
 				.general((cmd)->cmd.smembers(key))
@@ -219,7 +219,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<byte[]> sMembers(final byte[] key){
+	public Set<byte[]> sMembers(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.SMEMBERS)
 				.general((cmd)->cmd.smembers(key))
@@ -229,27 +229,27 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Status sMove(final String key, final String destKey, final String member){
+	public Status sMove(final String key, final String destKey, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SMOVE)
-				.general((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
+				.pipeline((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
+				.transaction((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
+	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SMOVE)
-				.general((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
+				.general((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
+				.pipeline((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
+				.transaction((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public String sPop(final String key){
+	public String sPop(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<String>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key))
@@ -259,7 +259,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public byte[] sPop(final byte[] key){
+	public byte[] sPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key))
@@ -269,7 +269,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<String> sPop(final String key, final long count){
+	public Set<String> sPop(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key, count))
@@ -279,7 +279,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<byte[]> sPop(final byte[] key, final long count){
+	public Set<byte[]> sPop(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.SPOP)
 				.general((cmd)->cmd.spop(key, count))
@@ -289,7 +289,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public String sRandMember(final String key){
+	public String sRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<String>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key))
@@ -298,7 +298,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public byte[] sRandMember(final byte[] key){
+	public byte[] sRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key))
@@ -307,7 +307,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count){
+	public List<String> sRandMember(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key, (int) count))
@@ -316,7 +316,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count){
+	public List<byte[]> sRandMember(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.SRANDMEMBER)
 				.general((cmd)->cmd.srandmember(key, (int) count))
@@ -325,7 +325,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sRem(final String key, final String... members){
+	public Long sRem(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SREM)
 				.general((cmd)->cmd.srem(key, members))
@@ -335,7 +335,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sRem(final byte[] key, final byte[]... members){
+	public Long sRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SREM)
 				.general((cmd)->cmd.srem(key, members))
@@ -345,121 +345,97 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor){
+	public ScanResult<List<String>> sScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new JedisSentinelCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new JedisSentinelCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisSentinelCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
 		return new JedisSentinelCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count){
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisSentinelCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
 		return new JedisSentinelCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-										  final long count){
+										  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		return new JedisSentinelCommand<ScanResult<List<String>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final long count){
+										  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		return new JedisSentinelCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.general((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.pipeline((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
+				.transaction((cmd)->cmd.sscan(key, cursor, params), new ScanResultConverter.ListScanResultConverter<>())
 				.run(args);
 	}
 
 	@Override
-	public Set<String> sUnion(final String... keys){
+	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<String>>(client, ProtocolCommand.SUNION)
 				.general((cmd)->cmd.sunion(keys))
@@ -469,7 +445,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<byte[]> sUnion(final byte[]... keys){
+	public Set<byte[]> sUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Set<byte[]>>(client, ProtocolCommand.SUNION)
 				.general((cmd)->cmd.sunion(keys))
@@ -479,7 +455,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sUnionStore(final String destKey, final String... keys){
+	public Long sUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
 				.general((cmd)->cmd.sunionstore(destKey, keys))
@@ -489,7 +465,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SUNIONSTORE)
 				.general((cmd)->cmd.sunionstore(destKey, keys))

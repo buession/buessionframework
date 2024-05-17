@@ -36,10 +36,8 @@ import redis.clients.jedis.args.UnblockType;
  */
 public final class ClientUnblockTypeConverter implements Converter<ClientUnblockType, UnblockType> {
 
-	public final static ClientUnblockTypeConverter INSTANCE = new ClientUnblockTypeConverter();
-
 	@Override
-	public UnblockType convert(final ClientUnblockType source){
+	public UnblockType convert(final ClientUnblockType source) {
 		switch(source){
 			case TIMEOUT:
 				return UnblockType.TIMEOUT;

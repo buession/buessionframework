@@ -62,19 +62,19 @@ import java.util.List;
  */
 public final class JedisServerOperations extends AbstractServerOperations<JedisStandaloneClient> {
 
-	public JedisServerOperations(final JedisStandaloneClient client){
+	public JedisServerOperations(final JedisStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public List<String> aclCat(){
+	public List<String> aclCat() {
 		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
 				.general((cmd)->cmd.aclCat())
 				.run();
 	}
 
 	@Override
-	public List<String> aclCat(final String categoryName){
+	public List<String> aclCat(final String categoryName) {
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
 		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_CAT)
 				.general((cmd)->cmd.aclCat(categoryName))
@@ -82,7 +82,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<byte[]> aclCat(final byte[] categoryName){
+	public List<byte[]> aclCat(final byte[] categoryName) {
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
 		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.ACL_CAT)
 				.general((cmd)->cmd.aclCat(categoryName))
@@ -90,53 +90,53 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Status aclSetUser(final String username, final String... rules){
+	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
-				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.aclSetUser(username, rules), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules){
+	public Status aclSetUser(final byte[] username, final byte[]... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
-				.general((cmd)->cmd.aclSetUser(username, rules), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.aclSetUser(username, rules), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final String username){
+	public AclUser aclGetUser(final String username) {
 		final CommandArguments args = CommandArguments.create("username", username);
 		return new JedisCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
-				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE)
+				.general((cmd)->cmd.aclGetUser(username), new AccessControlUserConverter())
 				.run(args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final byte[] username){
+	public AclUser aclGetUser(final byte[] username) {
 		final CommandArguments args = CommandArguments.create("username", username);
 		return new JedisCommand<AclUser>(client, ProtocolCommand.ACL_GETUSER)
-				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE)
+				.general((cmd)->cmd.aclGetUser(username), new AccessControlUserConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<String> aclUsers(){
+	public List<String> aclUsers() {
 		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_USERS)
 				.general((cmd)->cmd.aclUsers())
 				.run();
 	}
 
 	@Override
-	public String aclWhoAmI(){
+	public String aclWhoAmI() {
 		return new JedisCommand<String>(client, ProtocolCommand.ACL_WHOAMI)
 				.general((cmd)->cmd.aclWhoAmI())
 				.run();
 	}
 
 	@Override
-	public Long aclDelUser(final String... usernames){
+	public Long aclDelUser(final String... usernames) {
 		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
 		return new JedisCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
@@ -150,7 +150,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Long aclDelUser(final byte[]... usernames){
+	public Long aclDelUser(final byte[]... usernames) {
 		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
 		return new JedisCommand<Long>(client, ProtocolCommand.ACL_DELUSER)
 				.general((cmd)->{
@@ -164,86 +164,87 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public String aclGenPass(){
+	public String aclGenPass() {
 		return new JedisCommand<String>(client, ProtocolCommand.ACL_GENPASS)
 				.general((cmd)->cmd.aclGenPass())
 				.run();
 	}
 
 	@Override
-	public List<String> aclList(){
+	public List<String> aclList() {
 		return new JedisCommand<List<String>>(client, ProtocolCommand.ACL_LIST)
 				.general((cmd)->cmd.aclList())
 				.run();
 	}
 
 	@Override
-	public Status aclLoad(){
+	public Status aclLoad() {
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOAD)
-				.general((cmd)->cmd.aclLoad(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.aclLoad(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public List<AclLog> aclLog(){
+	public List<AclLog> aclLog() {
 		return new JedisCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog(), AccessControlLogEntryConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.aclLog(), new AccessControlLogEntryConverter.ListAccessControlLogEntryConverter())
 				.run();
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count){
+	public List<AclLog> aclLog(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		return new JedisCommand<List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog((int) count), AccessControlLogEntryConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.aclLog((int) count),
+						new AccessControlLogEntryConverter.ListAccessControlLogEntryConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status aclLogReset(){
+	public Status aclLogReset() {
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGREST)
-				.general((cmd)->cmd.aclLogReset(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.aclLogReset(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status aclLogSave(){
+	public Status aclLogSave() {
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGSAVE)
 				.run();
 	}
 
 	@Override
-	public String bgRewriteAof(){
+	public String bgRewriteAof() {
 		return new JedisCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
 				.general((cmd)->cmd.bgrewriteaof())
 				.run();
 	}
 
 	@Override
-	public String bgSave(){
+	public String bgSave() {
 		return new JedisCommand<String>(client, ProtocolCommand.BGREWRITEAOF)
 				.general((cmd)->cmd.bgsave())
 				.run();
 	}
 
 	@Override
-	public Status configSet(final String parameter, final String value){
+	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
-				.general((cmd)->cmd.configSet(parameter, value), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.configSet(parameter, value), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status configSet(final byte[] parameter, final byte[] value){
+	public Status configSet(final byte[] parameter, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
-				.general((cmd)->cmd.configSet(parameter, value), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.configSet(parameter, value), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<String> configGet(final String parameter){
+	public List<String> configGet(final String parameter) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter);
 		return new JedisCommand<List<String>>(client, ProtocolCommand.CONFIG_GET)
 				.general((cmd)->cmd.configGet(parameter))
@@ -251,7 +252,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter){
+	public List<byte[]> configGet(final byte[] parameter) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter);
 		return new JedisCommand<List<byte[]>>(client, ProtocolCommand.CONFIG_GET)
 				.general((cmd)->cmd.configGet(parameter))
@@ -259,143 +260,143 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Status configResetStat(){
+	public Status configResetStat() {
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
-				.general((cmd)->cmd.configResetStat(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.configResetStat(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status configRewrite(){
+	public Status configRewrite() {
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_REWRITE)
-				.general((cmd)->cmd.configRewrite(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.configRewrite(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Long dbSize(){
+	public Long dbSize() {
 		return new JedisCommand<Long>(client, ProtocolCommand.DBSIZE)
 				.general((cmd)->cmd.dbSize()).pipeline((cmd)->cmd.dbSize())
 				.run();
 	}
 
 	@Override
-	public Status failover(){
+	public Status failover() {
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.failover(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status failover(final String host, final int port){
+	public Status failover(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status failover(final String host, final int port, final int timeout){
+	public Status failover(final String host, final int port, final int timeout) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status failover(final String host, final int port, final boolean isForce, final int timeout){
+	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("isForce", isForce)
 				.put("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout, isForce);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status failover(final int timeout){
+	public Status failover(final int timeout) {
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(timeout);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.failover(params), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status flushAll(){
+	public Status flushAll() {
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
-				.general((cmd)->cmd.flushAll(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.flushAll(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status flushAll(final FlushMode mode){
+	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
-				.general((cmd)->cmd.flushAll(FlushModeConverter.INSTANCE.convert(mode)), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.flushAll((new FlushModeConverter()).convert(mode)), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status flushDb(){
+	public Status flushDb() {
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.general((cmd)->cmd.flushDB(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.flushDB(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status flushDb(final FlushMode mode){
+	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.general((cmd)->cmd.flushDB(FlushModeConverter.INSTANCE.convert(mode)), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.flushDB((new FlushModeConverter()).convert(mode)), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Info info(){
+	public Info info() {
 		return new JedisCommand<Info>(client, ProtocolCommand.INFO)
-				.general((cmd)->cmd.info(), InfoConverter.INSTANCE)
+				.general((cmd)->cmd.info(), new InfoConverter())
 				.run();
 	}
 
 	@Override
-	public Info info(final Info.Section section){
+	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create("section", section);
 		return new JedisCommand<Info>(client, ProtocolCommand.INFO)
-				.general((cmd)->cmd.info(section.name().toLowerCase()), InfoConverter.INSTANCE)
+				.general((cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter())
 				.run(args);
 	}
 
 	@Override
-	public Long lastSave(){
+	public Long lastSave() {
 		return new JedisCommand<Long>(client, ProtocolCommand.LASTSAVE)
 				.general((cmd)->cmd.lastsave())
 				.run();
 	}
 
 	@Override
-	public String memoryDoctor(){
+	public String memoryDoctor() {
 		return new JedisCommand<String>(client, ProtocolCommand.MEMORY_DOCTOR)
 				.general((cmd)->cmd.memoryDoctor())
 				.run();
 	}
 
 	@Override
-	public Status memoryPurge(){
+	public Status memoryPurge() {
 		return new JedisCommand<Status>(client, ProtocolCommand.MEMORY_PURGE)
 				.run();
 	}
 
 	@Override
-	public MemoryStats memoryStats(){
+	public MemoryStats memoryStats() {
 		return new JedisCommand<MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
 				.run();
 	}
 
 	@Override
-	public Long memoryUsage(final String key){
+	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
@@ -405,7 +406,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Long memoryUsage(final byte[] key){
+	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key))
@@ -415,7 +416,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Long memoryUsage(final String key, final int samples){
+	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
@@ -425,7 +426,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Long memoryUsage(final byte[] key, final int samples){
+	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 		return new JedisCommand<Long>(client, ProtocolCommand.MEMORY_USAGE)
 				.general((cmd)->cmd.memoryUsage(key, samples))
@@ -435,37 +436,37 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<Module> moduleList(){
+	public List<Module> moduleList() {
 		return new JedisCommand<List<Module>>(client, ProtocolCommand.MODULE_LIST)
-				.general((cmd)->cmd.moduleList(), ModuleConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.moduleList(), new ModuleConverter.ListModuleConverter())
 				.run();
 	}
 
 	@Override
-	public Status moduleLoad(final String path, final String... arguments){
+	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
 		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_LOAD)
-				.general((cmd)->cmd.moduleLoad(path, arguments), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.moduleLoad(path, arguments), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status moduleUnLoad(final String name){
+	public Status moduleUnLoad(final String name) {
 		final CommandArguments args = CommandArguments.create("name", name);
 		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_UNLOAD)
-				.general((cmd)->cmd.moduleUnload(name), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.moduleUnload(name), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public void monitor(final RedisMonitor redisMonitor){
+	public void monitor(final RedisMonitor redisMonitor) {
 		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
 		new JedisCommand<Status>(client, ProtocolCommand.MONITOR)
 				.general((cmd)->{
 					cmd.monitor(new JedisMonitor() {
 
 						@Override
-						public void onCommand(final String command){
+						public void onCommand(final String command) {
 							redisMonitor.onCommand(command);
 						}
 
@@ -476,21 +477,21 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Object pSync(final String replicationId, final long offset){
+	public Object pSync(final String replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
 		return new JedisCommand<>(client, ProtocolCommand.PSYNC)
 				.run(args);
 	}
 
 	@Override
-	public Object pSync(final byte[] replicationId, final long offset){
+	public Object pSync(final byte[] replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
 		return new JedisCommand<>(client, ProtocolCommand.PSYNC)
 				.run(args);
 	}
 
 	@Override
-	public void sync(){
+	public void sync() {
 		new JedisCommand<Void>(client, ProtocolCommand.SYNC)
 				.pipeline((cmd)->{
 					cmd.sync();
@@ -500,37 +501,37 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public Status replicaOf(final String host, final int port){
+	public Status replicaOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new JedisCommand<Status>(client, ProtocolCommand.REPLICAOF)
-				.general((cmd)->cmd.replicaof(host, port), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.replicaof(host, port), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public Status slaveOf(final String host, final int port){
+	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new JedisCommand<Status>(client, ProtocolCommand.SLAVEOF)
-				.general((cmd)->cmd.slaveof(host, port), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.slaveof(host, port), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public List<Role> role(){
+	public List<Role> role() {
 		return new JedisCommand<List<Role>>(client, ProtocolCommand.ROLE)
-				.general((cmd)->cmd.role(), RoleConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.role(), new RoleConverter.ListRoleConverter())
 				.run();
 	}
 
 	@Override
-	public Status save(){
+	public Status save() {
 		return new JedisCommand<Status>(client, ProtocolCommand.SAVE)
-				.general((cmd)->cmd.save(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.save(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public void shutdown(){
+	public void shutdown() {
 		new JedisCommand<Void>(client, ProtocolCommand.SHUTDOWN)
 				.general((cmd)->{
 					cmd.shutdown();
@@ -540,7 +541,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public void shutdown(final boolean save){
+	public void shutdown(final boolean save) {
 		final CommandArguments args = CommandArguments.create("save", save);
 		new JedisCommand<Void>(client, ProtocolCommand.SHUTDOWN)
 				.general((cmd)->{
@@ -552,48 +553,48 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(){
+	public List<SlowLog> slowLogGet() {
 		return new JedisCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(), SlowlogConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.slowlogGet(), new SlowlogConverter.ListSlowlogConverter())
 				.run();
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count){
+	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		return new JedisCommand<List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(count), SlowlogConverter.LIST_CONVERTER)
+				.general((cmd)->cmd.slowlogGet(count), new SlowlogConverter.ListSlowlogConverter())
 				.run(args);
 	}
 
 	@Override
-	public Long slowLogLen(){
+	public Long slowLogLen() {
 		return new JedisCommand<Long>(client, ProtocolCommand.SLOWLOG_LEN)
 				.general((cmd)->cmd.slowlogLen())
 				.run();
 	}
 
 	@Override
-	public Status slowLogReset(){
+	public Status slowLogReset() {
 		return new JedisCommand<Status>(client, ProtocolCommand.SLOWLOG_RESET)
-				.general((cmd)->cmd.slowlogReset(), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.slowlogReset(), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status swapdb(final int db1, final int db2){
+	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
 		return new JedisCommand<Status>(client, ProtocolCommand.SWAPDB)
-				.general((cmd)->cmd.swapDB(db1, db2), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.swapDB(db1, db2), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.swapDB(db1, db2), new OkStatusConverter())
+				.pipeline((cmd)->cmd.swapDB(db1, db2), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public RedisServerTime time(){
+	public RedisServerTime time() {
 		return new JedisCommand<RedisServerTime>(client, ProtocolCommand.TIME)
-				.general((cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
-				.pipeline((cmd)->cmd.time(), RedisServerTimeConverter.INSTANCE)
+				.general((cmd)->cmd.time(), new RedisServerTimeConverter())
+				.pipeline((cmd)->cmd.time(), new RedisServerTimeConverter())
 				.run();
 	}
 

@@ -45,8 +45,6 @@ import java.util.stream.Collectors;
  */
 public final class ClusterReplicasConverter implements Converter<String, List<ClusterRedisNode>> {
 
-	public final static ClusterReplicasConverter INSTANCE = new ClusterReplicasConverter();
-
 	@Override
 	public List<ClusterRedisNode> convert(final String source) {
 		String[] rows = source.split("\r\n");

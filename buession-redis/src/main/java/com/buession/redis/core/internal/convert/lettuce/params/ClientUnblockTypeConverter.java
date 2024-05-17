@@ -36,8 +36,6 @@ import io.lettuce.core.UnblockType;
  */
 public final class ClientUnblockTypeConverter implements Converter<ClientUnblockType, UnblockType> {
 
-	public final static ClientUnblockTypeConverter INSTANCE = new ClientUnblockTypeConverter();
-
 	@Override
 	public UnblockType convert(final ClientUnblockType source) {
 		switch(source){

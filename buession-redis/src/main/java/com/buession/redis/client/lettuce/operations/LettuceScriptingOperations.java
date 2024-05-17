@@ -105,7 +105,7 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	@Override
 	public Status scriptFlush() {
 		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 
@@ -113,7 +113,7 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run(args);
 	}
 
@@ -136,7 +136,7 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	@Override
 	public Status scriptKill() {
 		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
-				OkStatusConverter.INSTANCE)
+				new OkStatusConverter())
 				.run();
 	}
 

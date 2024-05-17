@@ -55,8 +55,6 @@ public final class InfoConverter implements Converter<String, Info> {
 
 	private final static Pattern PATTERN = Pattern.compile("# (\\S+)[\\s]+([^#]+)");
 
-	public final static InfoConverter INSTANCE = new InfoConverter();
-
 	@Override
 	public Info convert(final String source) {
 		Info.Server server = null;

@@ -43,12 +43,12 @@ import java.util.List;
  */
 public final class JedisScriptingOperations extends AbstractScriptingOperations<JedisStandaloneClient> {
 
-	public JedisScriptingOperations(final JedisStandaloneClient client){
+	public JedisScriptingOperations(final JedisStandaloneClient client) {
 		super(client);
 	}
 
 	@Override
-	public Object eval(final String script){
+	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
 		return new JedisCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script))
@@ -58,7 +58,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object eval(final byte[] script){
+	public Object eval(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
 		return new JedisCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script))
@@ -68,7 +68,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object eval(final String script, final String... params){
+	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisCommand<>(client, ProtocolCommand.EVAL)
@@ -79,7 +79,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object eval(final byte[] script, final byte[]... params){
+	public Object eval(final byte[] script, final byte[]... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisCommand<>(client, ProtocolCommand.EVAL)
@@ -90,7 +90,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object eval(final String script, final String[] keys, final String[] arguments){
+	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		return new JedisCommand<>(client, ProtocolCommand.EVAL)
@@ -101,7 +101,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		return new JedisCommand<>(client, ProtocolCommand.EVAL)
@@ -112,7 +112,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object evalSha(final String digest){
+	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
 		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest))
@@ -122,7 +122,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object evalSha(final byte[] digest){
+	public Object evalSha(final byte[] digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
 		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest))
@@ -132,7 +132,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object evalSha(final String digest, final String... params){
+	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
@@ -143,7 +143,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object evalSha(final byte[] digest, final byte[]... params){
+	public Object evalSha(final byte[] digest, final byte[]... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
@@ -154,7 +154,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
+	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
@@ -165,7 +165,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
+	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		return new JedisCommand<>(client, ProtocolCommand.EVALSHA)
@@ -176,7 +176,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public List<Boolean> scriptExists(final String... sha1){
+	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 		return new JedisCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 				.general((cmd)->cmd.scriptExists(sha1))
@@ -186,7 +186,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public List<Boolean> scriptExists(final byte[]... sha1){
+	public List<Boolean> scriptExists(final byte[]... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 		return new JedisCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 				.general((cmd)->cmd.scriptExists(sha1))
@@ -196,27 +196,27 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Status scriptFlush(){
+	public Status scriptFlush() {
 		return new JedisCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.scriptFlush(), new OkStatusConverter())
+				.pipeline((cmd)->cmd.scriptFlush((String) null), new OkStatusConverter())
+				.transaction((cmd)->cmd.scriptFlush((String) null), new OkStatusConverter())
 				.run();
 	}
 
 	@Override
-	public Status scriptFlush(final FlushMode mode){
+	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		final redis.clients.jedis.args.FlushMode flushMode = FlushModeConverter.INSTANCE.convert(mode);
+		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 		return new JedisCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(flushMode), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.scriptFlush(flushMode), new OkStatusConverter())
+				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), new OkStatusConverter())
+				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), new OkStatusConverter())
 				.run(args);
 	}
 
 	@Override
-	public String scriptLoad(final String script){
+	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
 		return new JedisCommand<String>(client, ProtocolCommand.SCRIPT_LOAD)
 				.general((cmd)->cmd.scriptLoad(script))
@@ -226,7 +226,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public byte[] scriptLoad(final byte[] script){
+	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
 		return new JedisCommand<byte[]>(client, ProtocolCommand.SCRIPT_LOAD)
 				.general((cmd)->cmd.scriptLoad(script))
@@ -236,11 +236,11 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Status scriptKill(){
+	public Status scriptKill() {
 		return new JedisCommand<Status>(client, ProtocolCommand.SCRIPT_KILL)
-				.general((cmd)->cmd.scriptKill(), OkStatusConverter.INSTANCE)
-				.pipeline((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
+				.general((cmd)->cmd.scriptKill(), new OkStatusConverter())
+				.pipeline((cmd)->cmd.scriptKill((String) null), new OkStatusConverter())
+				.transaction((cmd)->cmd.scriptKill((String) null), new OkStatusConverter())
 				.run();
 	}
 

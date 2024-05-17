@@ -38,8 +38,6 @@ import redis.clients.jedis.params.XAddParams;
 @Deprecated
 public final class XAddArgumentConverter implements Converter<StreamCommands.XAddArgument, XAddParams> {
 
-	public final static XAddArgumentConverter INSTANCE = new XAddArgumentConverter();
-
 	@Override
 	public XAddParams convert(final StreamCommands.XAddArgument source) {
 		return JedisXAddParams.from(source);

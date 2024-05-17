@@ -37,8 +37,6 @@ import redis.clients.jedis.StreamEntryID;
  */
 public class StreamEntryIDConverter implements Converter<String, StreamEntryId> {
 
-	public final static StreamEntryIDConverter INSTANCE = new StreamEntryIDConverter();
-
 	@Nullable
 	@Override
 	public StreamEntryId convert(final String source) {

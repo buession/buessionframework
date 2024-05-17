@@ -38,10 +38,8 @@ import java.util.List;
  */
 public final class RedisServerTimeConverter implements Converter<List<String>, RedisServerTime> {
 
-	public final static RedisServerTimeConverter INSTANCE = new RedisServerTimeConverter();
-
 	@Override
-	public RedisServerTime convert(final List<String> source){
+	public RedisServerTime convert(final List<String> source) {
 		Date date = new Date();
 		date.setTime(Long.parseLong(source.get(0)) * 1000L);
 

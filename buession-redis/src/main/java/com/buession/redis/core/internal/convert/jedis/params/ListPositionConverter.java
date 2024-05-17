@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -35,10 +35,8 @@ import com.buession.redis.core.ListPosition;
  */
 public final class ListPositionConverter implements Converter<ListPosition, redis.clients.jedis.args.ListPosition> {
 
-	public final static ListPositionConverter INSTANCE = new ListPositionConverter();
-
 	@Override
-	public redis.clients.jedis.args.ListPosition convert(final ListPosition source){
+	public redis.clients.jedis.args.ListPosition convert(final ListPosition source) {
 		switch(source){
 			case BEFORE:
 				return redis.clients.jedis.args.ListPosition.BEFORE;

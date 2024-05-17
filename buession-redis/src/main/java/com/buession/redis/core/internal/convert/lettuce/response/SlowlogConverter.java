@@ -28,6 +28,8 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.SlowLog;
 
+import java.util.List;
+
 /**
  * Lettuce 慢日志对象转换为 {@link SlowLog}
  *
@@ -35,10 +37,6 @@ import com.buession.redis.core.SlowLog;
  * @since 3.0.0
  */
 public final class SlowlogConverter implements Converter<Object, SlowLog> {
-
-	public final static SlowlogConverter INSTANCE = new SlowlogConverter();
-
-	public final static ListConverter<Object, SlowLog> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
 	public SlowLog convert(final Object source) {
@@ -53,6 +51,20 @@ public final class SlowlogConverter implements Converter<Object, SlowLog> {
 
 		 */
 		return null;
+	}
+
+	/**
+	 * Lettuce {@link List} 慢日志对象 转换为 {@link List} {@link SlowLog}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListSlowlogConverter extends ListConverter<Object, SlowLog> {
+
+		public ListSlowlogConverter() {
+			super(new SlowlogConverter());
+		}
+
 	}
 
 }

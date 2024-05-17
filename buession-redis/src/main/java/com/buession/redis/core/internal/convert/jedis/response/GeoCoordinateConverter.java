@@ -29,21 +29,33 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
 import redis.clients.jedis.GeoCoordinate;
 
+import java.util.List;
+
 /**
- * jedis {@link GeoCoordinate} 转换为 {@link Geo}
+ * Jedis {@link GeoCoordinate} 转换为 {@link Geo}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class GeoCoordinateConverter implements Converter<GeoCoordinate, Geo> {
 
-	public final static GeoCoordinateConverter INSTANCE = new GeoCoordinateConverter();
-
-	public final static ListConverter<GeoCoordinate, Geo> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
-	public Geo convert(final GeoCoordinate source){
+	public Geo convert(final GeoCoordinate source) {
 		return new Geo(source.getLongitude(), source.getLatitude());
+	}
+
+	/**
+	 * Jedis {@link List} {@link GeoCoordinate} 转换为 {@link List} {@link Geo}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListGeoCoordinateConverter extends ListConverter<GeoCoordinate, Geo> {
+
+		public ListGeoCoordinateConverter() {
+			super(new GeoCoordinateConverter());
+		}
+
 	}
 
 }

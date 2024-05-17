@@ -19,38 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.command.StreamCommands;
+import com.buession.redis.core.internal.jedis.JedisXClaimParams;
 import redis.clients.jedis.params.XClaimParams;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
+@Deprecated
 public final class XClaimArgumentConverter implements Converter<StreamCommands.XClaimArgument, XClaimParams> {
-
-	public final static XClaimArgumentConverter INSTANCE = new XClaimArgumentConverter();
 
 	@Override
 	public XClaimParams convert(final StreamCommands.XClaimArgument source) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final XClaimParams xClaimParams = new XClaimParams();
-
-		propertyMapper.from(source.getIdleTime()).to(xClaimParams::idle);
-		propertyMapper.from(source.getIdleUnixTime()).to(xClaimParams::time);
-		propertyMapper.from(source.getRetryCount()).to(xClaimParams::retryCount);
-
-		if(Boolean.TRUE.equals(source.isForce())){
-			xClaimParams.force();
-		}
-
-		return xClaimParams;
+		return JedisXClaimParams.from(source);
 	}
 
 }

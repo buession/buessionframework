@@ -27,14 +27,22 @@ package com.buession.redis.core.internal.convert.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.utils.SafeEncoder;
 
+import java.lang.reflect.Array;
+
 /**
- * {@link java.lang.reflect.Array} 转换器
+ * {@link Array} 转换器
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
 public interface ArrayConverter<S, T> extends Converter<S[], T[]> {
 
+	/**
+	 * 字符串数组到 byte[] 数组转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class StringToBinaryArrayConverter extends com.buession.core.converter.ArrayConverter<String, byte[]>
 			implements ArrayConverter<String, byte[]> {
 
@@ -44,6 +52,12 @@ public interface ArrayConverter<S, T> extends Converter<S[], T[]> {
 
 	}
 
+	/**
+	 * byte[] 数组到字符串数组转换器
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	class BinaryToStringArrayConverter extends com.buession.core.converter.ArrayConverter<byte[], String>
 			implements ArrayConverter<byte[], String> {
 

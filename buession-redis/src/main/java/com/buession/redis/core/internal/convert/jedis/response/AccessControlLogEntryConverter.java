@@ -19,18 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.beans.BeanConverter;
 import com.buession.beans.DefaultBeanConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
 import redis.clients.jedis.resps.AccessControlLogEntry;
+
+import java.util.List;
 
 /**
  * jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
@@ -40,20 +41,30 @@ import redis.clients.jedis.resps.AccessControlLogEntry;
  */
 public final class AccessControlLogEntryConverter implements Converter<AccessControlLogEntry, AclLog> {
 
-	public final static AccessControlLogEntryConverter INSTANCE = new AccessControlLogEntryConverter();
-
-	public final static ListConverter<AccessControlLogEntry, AclLog> LIST_CONVERTER = new ListConverter<>(
-			AccessControlLogEntryConverter.INSTANCE);
+	private final DefaultBeanConverter beanConverter = new DefaultBeanConverter();
 
 	@Override
 	public AclLog convert(final AccessControlLogEntry source) {
-		final BeanConverter beanConverter = new DefaultBeanConverter();
 		final Client client = new Client();
 
 		beanConverter.convert(source.getClientInfo(), client);
 
 		return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
 				source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
+	}
+
+	/**
+	 * Jedis {@link List} {@link AccessControlLogEntry} 转换为 {@link List} {@link AclLog}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListAccessControlLogEntryConverter extends ListConverter<AccessControlLogEntry, AclLog> {
+
+		public ListAccessControlLogEntryConverter() {
+			super(new AccessControlLogEntryConverter());
+		}
+
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -39,19 +39,21 @@ import java.util.List;
 public final class KeyedZSetElementConverter
 		implements Converter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
 
-	public final static KeyedZSetElementConverter INSTANCE = new KeyedZSetElementConverter();
-
 	@Override
-	public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
+	public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source) {
 		return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
 	}
 
+	/**
+	 * Jedis {@link List<byte[]>} 转换为 {@link List} {@link KeyedZSetElement}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
 	public final static class BinaryDataKeyedZSetElementConverter implements Converter<List<byte[]>, KeyedZSetElement> {
 
-		public final static BinaryDataKeyedZSetElementConverter INSTANCE = new BinaryDataKeyedZSetElementConverter();
-
 		@Override
-		public KeyedZSetElement convert(final List<byte[]> source){
+		public KeyedZSetElement convert(final List<byte[]> source) {
 			return new KeyedZSetElement(source.get(0), source.get(1), BuilderFactory.DOUBLE.build(source.get(2)));
 		}
 

@@ -35,9 +35,9 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ValueScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceZAddArgs;
@@ -67,7 +67,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public Tuple zPopMin(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
-				ScoredValueConverter.INSTANCE)
+				new ScoredValueConverter())
 				.run(args);
 	}
 
@@ -75,7 +75,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zPopMin(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, count),
-				ScoredValueConverter.LIST_CONVERTER)
+				new ScoredValueConverter.ListScoredValueConverter())
 				.run(args);
 	}
 
@@ -83,7 +83,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public Tuple zPopMax(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new LettuceCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmin(key),
-				ScoredValueConverter.INSTANCE)
+				new ScoredValueConverter())
 				.run(args);
 	}
 
@@ -91,7 +91,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zPopMax(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmin(key, count),
-				ScoredValueConverter.LIST_CONVERTER)
+				(new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -502,7 +502,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(SafeEncoder.encode(key), start,
-				end), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				end), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -517,7 +517,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrangeWithScores(key, start, end),
-				ScoredValueConverter.LIST_CONVERTER)
+				(new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -526,7 +526,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
 				(cmd)->cmd.zrangebylex(SafeEncoder.encode(key), Range.create(NumberUtils.double2bytes(min),
-						NumberUtils.double2bytes(max))), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+						NumberUtils.double2bytes(max))), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -536,7 +536,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
 				(cmd)->cmd.zrangebylex(SafeEncoder.encode(key), Range.create(SafeEncoder.encode(min),
-						SafeEncoder.encode(max))), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+						SafeEncoder.encode(max))), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -557,7 +557,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
 				(cmd)->cmd.zrangebylex(SafeEncoder.encode(key), Range.create(NumberUtils.double2bytes(min),
 						NumberUtils.double2bytes(max)), Limit.create(offset, count)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -570,7 +570,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
 				(cmd)->cmd.zrangebylex(SafeEncoder.encode(key), Range.create(SafeEncoder.encode(min),
 						SafeEncoder.encode(max)), Limit.create(offset, count)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -590,7 +590,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
 				(cmd)->cmd.zrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -609,7 +609,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 				.put("offset", offset).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
 				(cmd)->cmd.zrangebyscore(SafeEncoder.encode(key), Range.create(min, max), Limit.create(offset, count)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -627,7 +627,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-				(cmd)->cmd.zrangebyscoreWithScores(key, Range.create(min, max)), ScoredValueConverter.LIST_CONVERTER)
+				(cmd)->cmd.zrangebyscoreWithScores(key, Range.create(min, max)),
+				(new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -637,7 +638,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-				(cmd)->cmd.zrangebyscoreWithScores(key, Range.create(min, max)), ScoredValueConverter.LIST_CONVERTER)
+				(cmd)->cmd.zrangebyscoreWithScores(key, Range.create(min, max)),
+				(new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -827,7 +829,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGE,
 				(cmd)->cmd.zrevrange(SafeEncoder.encode(key), start, end),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -843,7 +845,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGE,
-				(cmd)->cmd.zrevrangeWithScores(key, start, end), ScoredValueConverter.LIST_CONVERTER)
+				(cmd)->cmd.zrevrangeWithScores(key, start, end), (new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -852,7 +854,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
 				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), Range.create(NumberUtils.double2bytes(min),
-						NumberUtils.double2bytes(max))), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+						NumberUtils.double2bytes(max))), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -862,7 +864,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
 				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), Range.create(SafeEncoder.encode(min),
-						SafeEncoder.encode(max))), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+						SafeEncoder.encode(max))), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -883,7 +885,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
 				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), Range.create(NumberUtils.double2bytes(min),
 						NumberUtils.double2bytes(max)), Limit.create(offset, count)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -896,7 +898,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
 				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), Range.create(SafeEncoder.encode(min),
 						SafeEncoder.encode(max)), Limit.create(offset, count)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -916,7 +918,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
 				(cmd)->cmd.zrevrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -936,7 +938,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
 				(cmd)->cmd.zrevrangebyscore(SafeEncoder.encode(key), Range.create(min, max),
 						Limit.create(offset, count)),
-				Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -956,7 +958,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
 				(cmd)->cmd.zrevrangebyscoreWithScores(key, Range.create(min, max)),
-				ScoredValueConverter.LIST_CONVERTER)
+				(new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -967,7 +969,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 				.put("offset", offset).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
 				(cmd)->cmd.zrevrangebyscoreWithScores(key, Range.create(min, max),
-						Limit.create(offset, count)), ScoredValueConverter.LIST_CONVERTER)
+						Limit.create(offset, count)), (new ScoredValueConverter.ListScoredValueConverter()))
 				.run(args);
 	}
 
@@ -983,7 +985,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -992,7 +994,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(key, new LettuceScanCursor(cursor)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -1001,7 +1003,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -1010,7 +1012,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -1019,7 +1021,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -1028,7 +1030,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -1040,7 +1042,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern,
 						count)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 
@@ -1051,7 +1053,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 				.put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.ZREVRANK,
 				(cmd)->cmd.zscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
-				ValueScanCursorConverter.ScoredValueScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.ScoredValueScanCursorConverter()))
 				.run(args);
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
@@ -29,8 +29,9 @@ import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.RedisClusterServer;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
@@ -40,19 +41,12 @@ import java.util.List;
  */
 public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
 
-	public final static ClusterNodesConverter INSTANCE = new ClusterNodesConverter();
+	private final ClusterNodeConverter clusterNodeConverter = new ClusterNodeConverter();
 
 	@Override
 	public List<ClusterRedisNode> convert(final String source) {
-		String[] rows = StringUtils.split(source, "\r\n");
-
-		final List<ClusterRedisNode> nodes = new ArrayList<>(rows.length);
-
-		for(String row : rows){
-			nodes.add(ClusterNodeConverter.INSTANCE.convert(row));
-		}
-
-		return nodes;
+		return Arrays.stream(StringUtils.split(source, "\r\n")).map(clusterNodeConverter::convert).collect(
+				Collectors.toList());
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -36,10 +36,8 @@ import redis.clients.jedis.args.BitOP;
  */
 public final class BitOperationConverter implements Converter<BitOperation, BitOP> {
 
-	public final static BitOperationConverter INSTANCE = new BitOperationConverter();
-
 	@Override
-	public BitOP convert(final BitOperation source){
+	public BitOP convert(final BitOperation source) {
 		switch(source){
 			case AND:
 				return BitOP.AND;

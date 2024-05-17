@@ -29,22 +29,36 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.GeoRadius;
 import redis.clients.jedis.resps.GeoRadiusResponse;
 
+import java.util.List;
+
 /**
- * jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
+ * Jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, GeoRadius> {
 
-	public final static GeoRadiusResponseConverter INSTANCE = new GeoRadiusResponseConverter();
-
-	public final static ListConverter<GeoRadiusResponse, GeoRadius> LIST_CONVERTER = new ListConverter<>(INSTANCE);
+	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
 
 	@Override
-	public GeoRadius convert(final GeoRadiusResponse source){
+	public GeoRadius convert(final GeoRadiusResponse source) {
 		return new GeoRadius(source.getMember(), source.getDistance(),
-				GeoCoordinateConverter.INSTANCE.convert(source.getCoordinate()));
+				geoCoordinateConverter.convert(source.getCoordinate()));
+	}
+
+	/**
+	 * Jedis {@link List} {@link GeoRadiusResponse} 转换为 {@link List} {@link GeoRadius}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListGeoRadiusResponseConverter extends ListConverter<GeoRadiusResponse, GeoRadius> {
+
+		public ListGeoRadiusResponseConverter() {
+			super(new GeoRadiusResponseConverter());
+		}
+
 	}
 
 }

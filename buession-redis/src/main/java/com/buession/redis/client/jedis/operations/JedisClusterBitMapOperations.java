@@ -94,7 +94,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
+		final redis.clients.jedis.args.BitCountOption option = (new BitCountOptionConverter()).convert(
 				bitCountOption);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.BITCOUNT)
 				.general((cmd)->cmd.bitcount(key, start, end, option))
@@ -107,7 +107,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
+		final redis.clients.jedis.args.BitCountOption option = (new BitCountOptionConverter()).convert(
 				bitCountOption);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.BITCOUNT)
 				.general((cmd)->cmd.bitcount(key, start, end, option))
@@ -119,7 +119,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	@Override
 	public List<Long> bitField(final String key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		final String[] arguments = BitFieldArgumentConverter.INSTANCE.convert(argument);
+		final String[] arguments = (new BitFieldArgumentConverter()).convert(argument);
 		return new JedisClusterCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
 				.general((cmd)->cmd.bitfield(key, arguments))
 				.pipeline((cmd)->cmd.bitfield(key, arguments))
@@ -130,7 +130,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		final byte[][] arguments = SafeEncoder.encode(BitFieldArgumentConverter.INSTANCE.convert(argument));
+		final byte[][] arguments = SafeEncoder.encode((new BitFieldArgumentConverter()).convert(argument));
 		return new JedisClusterCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
 				.general((cmd)->cmd.bitfield(key, arguments))
 				.pipeline((cmd)->cmd.bitfield(key, arguments))
@@ -162,7 +162,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
-		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
+		final BitOP bitOP = (new BitOperationConverter()).convert(operation);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.BITOP)
 				.general((cmd)->cmd.bitop(bitOP, destKey, keys))
 				.pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
@@ -174,7 +174,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
-		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
+		final BitOP bitOP = (new BitOperationConverter()).convert(operation);
 		return new JedisClusterCommand<Long>(client, ProtocolCommand.BITOP)
 				.general((cmd)->cmd.bitop(bitOP, destKey, keys))
 				.pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))

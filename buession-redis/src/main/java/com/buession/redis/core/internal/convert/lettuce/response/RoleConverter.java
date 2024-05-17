@@ -28,6 +28,8 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Role;
 
+import java.util.List;
+
 /**
  * Lettuce 角色信息 转换为 {@link Role}
  *
@@ -36,13 +38,23 @@ import com.buession.redis.core.Role;
  */
 public final class RoleConverter implements Converter<Object, Role> {
 
-	public final static RoleConverter INSTANCE = new RoleConverter();
-
-	public final static ListConverter<Object, Role> LIST_CONVERTER = new ListConverter<>(INSTANCE);
-
 	@Override
 	public Role convert(final Object source) {
 		return null;
+	}
+
+	/**
+	 * Lettuce {@link List} 角色信息 转换为 {@link List} {@link Role}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListRoleConverter extends ListConverter<Object, Role> {
+
+		public ListRoleConverter() {
+			super(new RoleConverter());
+		}
+
 	}
 
 }

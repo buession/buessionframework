@@ -125,7 +125,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 		return new LettuceCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-				GeoCoordinateConverter.LIST_CONVERTER)
+				new GeoCoordinateConverter.ListGeoCoordinateConverter())
 				.run(args);
 	}
 
@@ -143,7 +143,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
-				GeoUnitConverter.INSTANCE.convert(unit)), (v)->v)
+				(new GeoUnitConverter()).convert(unit)), (v)->v)
 				.run(args);
 	}
 
@@ -153,7 +153,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS, (cmd)->cmd.georadius(key, longitude, latitude,
-				radius, GeoUnitConverter.INSTANCE.convert(unit)), GeoRadiusGeneralResultConverter.LIST_CONVERTER)
+				radius, (new GeoUnitConverter()).convert(unit)),
+				new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter())
 				.run(args);
 	}
 
@@ -165,8 +166,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
 		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS, (cmd)->cmd.georadius(key, longitude, latitude,
-				radius, GeoUnitConverter.INSTANCE.convert(unit), LettuceGeoArgs.from(geoRadiusArgument)),
-				GeoRadiusResponseConverter.LIST_CONVERTER)
+				radius, (new GeoUnitConverter()).convert(unit), LettuceGeoArgs.from(geoRadiusArgument)),
+				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter())
 				.run(args);
 	}
 
@@ -196,8 +197,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-				(cmd)->cmd.georadiusbymember(key, member, radius, GeoUnitConverter.INSTANCE.convert(unit)),
-				GeoRadiusGeneralResultConverter.LIST_CONVERTER)
+				(cmd)->cmd.georadiusbymember(key, member, radius, (new GeoUnitConverter()).convert(unit)),
+				new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter())
 				.run(args);
 	}
 
@@ -207,8 +208,9 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-				(cmd)->cmd.georadiusbymember(key, member, radius, GeoUnitConverter.INSTANCE.convert(unit),
-						LettuceGeoArgs.from(geoRadiusArgument)), GeoRadiusResponseConverter.LIST_CONVERTER)
+				(cmd)->cmd.georadiusbymember(key, member, radius, (new GeoUnitConverter()).convert(unit),
+						LettuceGeoArgs.from(geoRadiusArgument)),
+				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter())
 				.run(args);
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -33,19 +33,16 @@ import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.SlotRange;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis Cluster Replicas 命令结果转换为 {@link RedisClusterServer} 列表
+ * Jedis Cluster Replicas 命令结果转换为 {@link RedisClusterServer}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class ClusterReplicasConverter implements Converter<String, ClusterRedisNode> {
-
-	public final static ClusterReplicasConverter INSTANCE = new ClusterReplicasConverter();
-
-	public final static ListConverter<String, ClusterRedisNode> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
 	public ClusterRedisNode convert(final String source) {
@@ -70,6 +67,20 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 
 		return new ClusterRedisNode(values[0], host, Integer.parseInt(port), flags, values[3],
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
+	}
+
+	/**
+	 * Jedis {@link List} Cluster Replicas 命令结果 转换为 {@link List} {@link RedisClusterServer}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListClusterReplicasConverter extends ListConverter<String, ClusterRedisNode> {
+
+		public ListClusterReplicasConverter() {
+			super(new ClusterReplicasConverter());
+		}
+
 	}
 
 }

@@ -26,9 +26,8 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import io.lettuce.core.KeyScanCursor;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -41,25 +40,28 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class KeyScanCursorConverter<K>
-		implements Converter<KeyScanCursor<K>, ScanResult<List<K>>> {
+public final class KeyScanCursorConverter<K> implements Converter<KeyScanCursor<K>, ScanResult<List<K>>> {
 
-	@Nullable
 	@Override
 	public ScanResult<List<K>> convert(final KeyScanCursor<K> source) {
 		return new ScanResult<>(source.getCursor(), source.getKeys());
 	}
 
+	/**
+	 * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
 	public final static class BSKeyScanCursorConverter
 			implements Converter<KeyScanCursor<byte[]>, ScanResult<List<String>>> {
 
-		public final static BSKeyScanCursorConverter INSTANCE = new BSKeyScanCursorConverter();
+		private final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
+				new ListConverter.BinaryToStringListConverter();
 
-		@Nullable
 		@Override
 		public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
-			return new ScanResult<>(source.getCursor(),
-					Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER.convert(source.getKeys()));
+			return new ScanResult<>(source.getCursor(), binaryToStringListConverter.convert(source.getKeys()));
 		}
 
 	}

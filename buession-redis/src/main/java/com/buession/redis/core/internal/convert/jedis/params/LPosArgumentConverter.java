@@ -38,8 +38,6 @@ import redis.clients.jedis.params.LPosParams;
 @Deprecated
 public final class LPosArgumentConverter implements Converter<ListCommands.LPosArgument, LPosParams> {
 
-	public final static LPosArgumentConverter INSTANCE = new LPosArgumentConverter();
-
 	@Override
 	public LPosParams convert(final ListCommands.LPosArgument source) {
 		return JedisLPosParams.from(source);

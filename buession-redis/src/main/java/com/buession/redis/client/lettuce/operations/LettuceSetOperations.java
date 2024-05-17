@@ -30,8 +30,8 @@ import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ValueScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.SetConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
@@ -203,7 +203,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public List<String> sRandMember(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.SRANDMEMBER,
-				(cmd)->cmd.srandmember(SafeEncoder.encode(key), count), Converters.BINARY_LIST_TO_STRING_LIST_CONVERTER)
+				(cmd)->cmd.srandmember(SafeEncoder.encode(key), count), new ListConverter.BinaryToStringListConverter())
 				.run(args);
 	}
 
@@ -225,7 +225,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public ScanResult<List<String>> sScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		return new LettuceCommand<>(client, ProtocolCommand.SSCAN, (cmd)->cmd.sscan(SafeEncoder.encode(key),
-				new LettuceScanCursor(cursor)), ValueScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				new LettuceScanCursor(cursor)), (new ValueScanCursorConverter.BSKeyScanCursorConverter()))
 				.run(args);
 	}
 
@@ -242,7 +242,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		return new LettuceCommand<>(client, ProtocolCommand.SSCAN,
 				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				ValueScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.BSKeyScanCursorConverter()))
 				.run(args);
 	}
 
@@ -260,7 +260,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		return new LettuceCommand<>(client, ProtocolCommand.SSCAN,
 				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				ValueScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.BSKeyScanCursorConverter()))
 				.run(args);
 	}
 
@@ -281,7 +281,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		return new LettuceCommand<>(client, ProtocolCommand.SSCAN,
 				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor),
 						new LettuceScanArgs(pattern, count)),
-				ValueScanCursorConverter.BSKeyScanCursorConverter.INSTANCE)
+				(new ValueScanCursorConverter.BSKeyScanCursorConverter()))
 				.run(args);
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -27,6 +27,8 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Module;
+
+import java.util.List;
 
 /**
  * jedis {@link redis.clients.jedis.Module} 转换为 {@link Module}
@@ -36,14 +38,23 @@ import com.buession.redis.core.Module;
  */
 public final class ModuleConverter implements Converter<redis.clients.jedis.Module, Module> {
 
-	public final static ModuleConverter INSTANCE = new ModuleConverter();
-
-	public final static ListConverter<redis.clients.jedis.Module, Module> LIST_CONVERTER = new ListConverter<>(
-			INSTANCE);
-
 	@Override
-	public Module convert(final redis.clients.jedis.Module source){
+	public Module convert(final redis.clients.jedis.Module source) {
 		return new Module(source.getName(), source.getVersion());
+	}
+
+	/**
+	 * Jedis {@link List} {@link redis.clients.jedis.Module} 转换为 {@link List} {@link Module}
+	 *
+	 * @author Yong.Teng
+	 * @since 3.0.0
+	 */
+	public final static class ListModuleConverter extends ListConverter<redis.clients.jedis.Module, Module> {
+
+		public ListModuleConverter() {
+			super(new ModuleConverter());
+		}
+
 	}
 
 }
