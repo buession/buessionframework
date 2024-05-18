@@ -39,6 +39,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * Lettuce 连接池对象工厂
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */

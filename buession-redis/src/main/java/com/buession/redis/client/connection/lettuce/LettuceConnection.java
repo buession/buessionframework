@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
@@ -34,12 +35,16 @@ import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettucePool;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.codec.ByteArrayCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -353,13 +358,24 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 				throw JedisRedisExceptionUtils.convert(e);
 			}
 		}else{
+			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-			//final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource,
-			//getSslConfiguration());
+			final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
 
-			//builder.database(dataSource.getDatabase());
+			if(dataSource.getDatabase() >= 0){
+				redisURI.setDatabase(dataSource.getDatabase());
+			}
 
-			//jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), builder.build());
+			propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
+			propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
+
+			if(dataSource.getConnectTimeout() > 0){
+				redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
+			}
+
+			redisURI.setSsl(dataSource.getSslConfiguration() != null);
+
+			delegate = RedisClient.create(redisURI).connect(new ByteArrayCodec());
 		}
 	}
 

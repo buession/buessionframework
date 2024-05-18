@@ -94,7 +94,7 @@ public class LettuceDataSource extends AbstractLettuceDataSource implements Stan
 	}
 
 	@Override
-	public RedisConnection getConnection() {
+	public LettuceConnection getConnection() {
 		if(isUsePool()){
 			if(pool == null){
 				pool = createPool();
