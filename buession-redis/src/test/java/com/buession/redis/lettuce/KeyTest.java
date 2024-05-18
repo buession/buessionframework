@@ -21,10 +21,22 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.lettuce;/**
- * 
- *
+ */
+package com.buession.redis.lettuce;
+
+import com.buession.redis.RedisTemplate;
+import org.junit.jupiter.api.Test;
+
+/**
  * @author Yong.Teng
  * @since 3.0.0
- */public class KeyTest {
+ */
+public class KeyTest extends AbstractRedisTest {
+
+	@Test
+	public void exists() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.exists("a"));
+	}
+
 }

@@ -48,7 +48,7 @@ public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byt
 	}
 
 	/**
-	 * Lettuce {@link List} {@link GeoWithin<byte[]>} 转换为 {@link List} {@link GeoRadius}
+	 * Lettuce {@link List} {@link GeoWithin} 转换为 {@link List} {@link GeoRadius}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0

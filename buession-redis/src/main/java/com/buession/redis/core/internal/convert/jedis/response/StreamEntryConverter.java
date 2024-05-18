@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
+ * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
  *
  * @author Yong.Teng
  * @since 2.0.0
@@ -65,8 +65,7 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 	}
 
 	/**
-	 * Jedis key {@link Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>} 转换为
-	 * {@link Map<TK, List<StreamEntry>>}
+	 * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
 	 *
 	 * @param <SK>
 	 * 		转换器 key 类型
@@ -86,8 +85,7 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 	}
 
 	/**
-	 * Jedis {@link List} key {@link Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>} 转换为
-	 * {@link List} {@link Map<TK, List<StreamEntry>>}
+	 * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
 	 *
 	 * @param <SK>
 	 * 		转换器 key 类型

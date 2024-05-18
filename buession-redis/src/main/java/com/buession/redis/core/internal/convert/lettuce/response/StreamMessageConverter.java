@@ -50,7 +50,7 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 	}
 
 	/**
-	 * Lettuce {@link List} {@link StreamMessage<byte[], byte[]>} 转换为 {@link List} {@link StreamEntry}
+	 * Lettuce {@link List} {@link StreamMessage} 转换为 {@link List} {@link StreamEntry}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0
@@ -65,7 +65,7 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 	}
 
 	/**
-	 * Lettuce  {@link StreamMessage<byte[], byte[]>} 转换为 {@link StreamEntryId}
+	 * Lettuce  {@link StreamMessage} 转换为 {@link StreamEntryId}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0
@@ -81,7 +81,7 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 	}
 
 	/**
-	 * Lettuce {@link List} {@link StreamMessage<byte[], byte[]>} 转换为 {@link List} {@link StreamEntryId}
+	 * Lettuce {@link List} {@link StreamMessage} 转换为 {@link List} {@link StreamEntryId}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0

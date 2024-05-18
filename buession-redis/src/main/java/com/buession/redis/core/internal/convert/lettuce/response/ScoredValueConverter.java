@@ -47,7 +47,7 @@ public final class ScoredValueConverter implements Converter<ScoredValue<byte[]>
 	}
 
 	/**
-	 * Lettuce {@link List} {@link ScoredValue<byte[]>} 转换为 {@link List} {@link Tuple}
+	 * Lettuce {@link List} {@link ScoredValue} 转换为 {@link List} {@link Tuple}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0
@@ -61,7 +61,7 @@ public final class ScoredValueConverter implements Converter<ScoredValue<byte[]>
 	}
 
 	/**
-	 * Lettuce {@link Set} {@link ScoredValue<byte[]>} 转换为 {@link Set} {@link Tuple}
+	 * Lettuce {@link Set} {@link ScoredValue} 转换为 {@link Set} {@link Tuple}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0

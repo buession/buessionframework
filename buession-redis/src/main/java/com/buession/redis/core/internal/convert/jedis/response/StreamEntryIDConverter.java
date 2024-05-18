@@ -47,7 +47,7 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 	}
 
 	/**
-	 * Jedis {@link byte[]} 转换为 {@link StreamEntryId}
+	 * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
@@ -76,8 +76,7 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 	}
 
 	/**
-	 * Jedis key {@link Map.Entry<StreamEntryID, List<StreamEntryID>>} 转换为
-	 * {@link Map<StreamEntryId, List<StreamEntryId>>}
+	 * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
 	 *
 	 * @author Yong.Teng
 	 * @since 3.0.0

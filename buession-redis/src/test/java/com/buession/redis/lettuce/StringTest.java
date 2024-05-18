@@ -31,12 +31,18 @@ import org.junit.jupiter.api.Test;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyTest extends AbstractRedisTest {
+public class StringTest extends AbstractRedisTest {
 
 	@Test
-	public void exists() {
+	public void set() {
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.exists("a"));
+		System.out.println(redisTemplate.set("a", "A"));
+	}
+
+	@Test
+	public void get() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.get("a"));
 	}
 
 }

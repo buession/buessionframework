@@ -22,11 +22,33 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.redis.lettuce;
+
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractRedisTest {
+
+	protected LettuceDataSource dataSource() {
+		LettuceDataSource dataSource = new LettuceDataSource();
+
+		dataSource.setHost("192.168.0.231");
+		dataSource.setPort(6379);
+		dataSource.setDatabase(1);
+		dataSource.setPassword("rds_PWD");
+
+		return dataSource;
+	}
+
+	protected RedisTemplate redisTemplate() {
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource());
+
+		redisTemplate.afterPropertiesSet();
+
+		return redisTemplate;
+	}
 
 }

@@ -26,6 +26,7 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
@@ -33,7 +34,11 @@ import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedPipelineCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 
 /**
@@ -66,11 +71,34 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		@Override
 		public R execute() throws RedisException {
+			if(connection.isPipeline()){
+				if(executor == null){
+					throw new NotSupportedPipelineCommandException(RedisConnectionUtils.getRedisMode(connection),
+							getCommand());
+				}
+			}else if(connection.isTransaction()){
+				if(executor == null){
+					throw new NotSupportedTransactionCommandException(RedisConnectionUtils.getRedisMode(connection),
+							getCommand());
+				}
+			}else{
+				if(executor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.NORMAL, getCommand());
+				}else{
+					final StatefulRedisConnection<byte[], byte[]> statefulRedisConnection =
+							((LettuceConnection) connection).getStatefulConnection();
+					try{
+						final SR result = executor.execute(statefulRedisConnection.sync());
+						return result == null ? null : converter.convert(result);
+					}catch(Exception e){
+						throw new RedisException(e.getMessage(), e);
+					}
+				}
+			}
 			/*
 			if(connection.isPipeline()){
 				if(pipelineRunner == null){
-					throw new NotSupportedPipelineCommandException(
-							RedisConnectionUtils.getRedisMode(client.getConnection()), getCommand());
 				}else{
 					try{
 						client.getTxResults().add(pipelineRunner.run());
@@ -80,8 +108,6 @@ public interface LettuceRedisOperations extends RedisOperations {
 				}
 			}else if(connection.isTransaction()){
 				if(transactionRunner == null){
-					throw new NotSupportedTransactionCommandException(
-							RedisConnectionUtils.getRedisMode(client.getConnection()), getCommand());
 				}else{
 					try{
 						client.getTxResults().add(transactionRunner.run());
@@ -90,17 +116,6 @@ public interface LettuceRedisOperations extends RedisOperations {
 					}
 				}
 			}else{
-				if(runner == null){
-					throw new NotSupportedCommandException(
-							RedisConnectionUtils.getRedisMode(client.getConnection()),
-							NotSupportedCommandException.Type.NORMAL, getCommand());
-				}else{
-					try{
-						return runner.run();
-					}catch(Exception e){
-						throw new RedisException(e.getMessage(), e);
-					}
-				}
 			}
 
 			 */
@@ -177,6 +192,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	class LettuceCommand<SR, R> extends AbstractLettuceCommand<LettuceStandaloneClient, LettuceConnection, SR, R> {
 
+		@SuppressWarnings({"unchecked", "rawtype"})
 		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command, null, (value)->(R) value);
 		}
@@ -196,60 +212,6 @@ public interface LettuceRedisOperations extends RedisOperations {
 							  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
-
-		/*
-		public LettuceCommand<R> general(final Executor<RedisCommands<byte[], byte[]>, R> executor) {
-			this.runner = new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public R run() throws Exception {
-					return executor.execute(connection.getStatefulConnection().sync());
-				}
-
-			};
-
-			return this;
-		}
-
-		public <SR> LettuceCommand<R> general(final Executor<RedisCommands<byte[], byte[]>, SR> executor,
-											  final Converter<SR, R> converter) {
-			this.runner = new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public R run() throws Exception {
-					return converter.convert(executor.execute(connection.getStatefulConnection().sync()));
-				}
-
-			};
-
-			return this;
-		}
-
-		public LettuceCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
-			this.pipelineRunner = createPipelineRunner(executor);
-			return this;
-		}
-
-		public <SR> LettuceCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-											   final Converter<SR, R> converter) {
-			this.pipelineRunner = createPipelineRunner(executor, converter);
-			return this;
-		}
-
-		public LettuceCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
-			this.transactionRunner = createTransactionRunner(executor);
-			return this;
-		}
-
-		public <SR> LettuceCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-												  final Converter<SR, R> converter) {
-			this.transactionRunner = createTransactionRunner(executor, converter);
-			return this;
-		}
-
-		 */
 
 	}
 

@@ -31,7 +31,7 @@ import redis.clients.jedis.BuilderFactory;
 import java.util.List;
 
 /**
- * jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link KeyedZSetElement}
+ * Jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link KeyedZSetElement}
  *
  * @author Yong.Teng
  * @since 2.0.0
@@ -45,7 +45,7 @@ public final class KeyedZSetElementConverter
 	}
 
 	/**
-	 * Jedis {@link List<byte[]>} 转换为 {@link List} {@link KeyedZSetElement}
+	 * Jedis {@link List} 字节型 {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link List} {@link KeyedZSetElement}
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
