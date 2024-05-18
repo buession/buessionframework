@@ -61,7 +61,7 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2) {
-		return geoDist(key, member1, member2);
+		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2));
 	}
 
 	@Override

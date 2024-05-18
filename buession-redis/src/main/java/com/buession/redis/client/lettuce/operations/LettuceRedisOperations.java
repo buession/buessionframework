@@ -98,24 +98,17 @@ public interface LettuceRedisOperations extends RedisOperations {
 			}
 			/*
 			if(connection.isPipeline()){
-				if(pipelineRunner == null){
-				}else{
-					try{
+				try{
 						client.getTxResults().add(pipelineRunner.run());
 					}catch(Exception e){
 						throw new RedisException(e.getMessage(), e);
 					}
-				}
 			}else if(connection.isTransaction()){
-				if(transactionRunner == null){
-				}else{
-					try{
+				try{
 						client.getTxResults().add(transactionRunner.run());
 					}catch(Exception e){
 						throw new RedisException(e.getMessage(), e);
 					}
-				}
-			}else{
 			}
 
 			 */

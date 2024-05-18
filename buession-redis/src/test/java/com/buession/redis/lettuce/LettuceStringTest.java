@@ -22,41 +22,29 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.lettuce;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.SetListConverter;
-import com.buession.redis.core.GeoRadius;
-
-import java.util.List;
+import com.buession.lang.Status;
+import com.buession.redis.RedisTemplate;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
- * Lettuce georadius 命令结果转换为 {@link GeoRadius}
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class GeoRadiusGeneralResultConverter implements Converter<byte[], GeoRadius> {
+public class StringTest extends AbstractRedisTest {
 
-	@Override
-	public GeoRadius convert(final byte[] source) {
-		//return new GeoRadius(source.getMember(), source.getDistance(),
-		//GeoCoordinateConverter.INSTANCE.convert(source.getCoordinate()));
-		return new GeoRadius(source, 0, null);
+	@Test
+	public void set() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Assertions.assertEquals(redisTemplate.set("a", "A"), Status.SUCCESS);
 	}
 
-	/**
-	 * Lettuce {@link List} georadius 命令结果转换为 {@link List} {@link GeoRadius}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class SetListGeoRadiusGeneralResultConverter extends SetListConverter<byte[], GeoRadius> {
-
-		public SetListGeoRadiusGeneralResultConverter() {
-			super(new GeoRadiusGeneralResultConverter());
-		}
-
+	@Test
+	public void get() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Assertions.assertEquals(redisTemplate.get("a"), "A");
 	}
 
 }

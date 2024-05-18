@@ -31,6 +31,7 @@ import com.buession.lang.Constants;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -86,14 +87,10 @@ public final class CommandArguments {
 		if(Validate.isEmpty(getParameters())){
 			return Constants.EMPTY_STRING;
 		}else{
-			final StringBuilder sb = new StringBuilder(getParameters().size() * 8);
+			final StringJoiner sb = new StringJoiner(", ");
 
 			getParameters().forEach((name, value)->{
-				if(sb.length() > 0){
-					sb.append(", ");
-				}
-
-				sb.append(name).append(" => ").append(value);
+				sb.add(name + " => " + value);
 			});
 
 			return sb.toString();

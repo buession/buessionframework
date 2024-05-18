@@ -19,30 +19,36 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.lettuce;
+package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
-import org.junit.jupiter.api.Test;
+import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 
 /**
  * @author Yong.Teng
- * @since 3.0.0
  */
-public class StringTest extends AbstractRedisTest {
+public abstract class AbstractRedisTest {
 
-	@Test
-	public void set() {
-		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.set("a", "A"));
+	protected JedisDataSource dataSource() {
+		JedisDataSource dataSource = new JedisDataSource();
+
+		dataSource.setHost("192.168.0.231");
+		dataSource.setPort(6379);
+		dataSource.setDatabase(1);
+		dataSource.setPassword("rds_PWD");
+
+		return dataSource;
 	}
 
-	@Test
-	public void get() {
-		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.get("a"));
+	protected RedisTemplate redisTemplate() {
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource());
+
+		redisTemplate.afterPropertiesSet();
+
+		return redisTemplate;
 	}
 
 }

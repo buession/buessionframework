@@ -30,6 +30,7 @@ import com.buession.redis.core.GeoRadius;
 import io.lettuce.core.GeoWithin;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
@@ -43,8 +44,8 @@ public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byt
 
 	@Override
 	public GeoRadius convert(final GeoWithin<byte[]> source) {
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				geoCoordinateConverter.convert(source.getCoordinates()));
+		return new GeoRadius(source.getMember(), Optional.ofNullable(source.getDistance()).orElse(0D),
+				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
 	}
 
 	/**

@@ -24,19 +24,63 @@
  */
 package com.buession.redis.lettuce;
 
+import com.buession.lang.Geo;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.GeoCommands;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyTest extends AbstractRedisTest {
+public class GeoTest extends AbstractRedisTest {
 
 	@Test
-	public void exists() {
+	public void geoAdd() {
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.exists("a"));
+		Assertions.assertEquals(redisTemplate.geoAdd("beijing", "gugong", 116.405706, 39.921797), 1L);
+		Assertions.assertEquals(redisTemplate.geoAdd("beijing", "tiantan", 116.416629, 39.885709), 1L);
+	}
+
+	@Test
+	public void geoHash() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<String> result = redisTemplate.geoHash("beijing", "gugong", "tiantan");
+		result.forEach(System.out::println);
+	}
+
+	@Test
+	public void geoPos() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<Geo> result = redisTemplate.geoPos("beijing", "gugong", "tiantan");
+		result.forEach(System.out::println);
+	}
+
+	@Test
+	public void geoDist() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Double result = redisTemplate.geoDist("beijing", "gugong", "tiantan");
+		System.out.println(result);
+	}
+
+	@Test
+	public void geoRadius() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<GeoRadius> result = redisTemplate.geoRadius("beijing", 116.405706, 39.921797, 5.0, GeoUnit.KM);
+		result.forEach(System.out::println);
+	}
+
+	@Test
+	public void geoRadiusWithadiusArgument() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<GeoRadius> result = redisTemplate.geoRadius("beijing", 116.405706, 39.921797, 5.0, GeoUnit.KM,
+				GeoCommands.GeoRadiusArgument.Builder.create().withCoord().withDist().withHash().build());
+		result.forEach(System.out::println);
 	}
 
 }
