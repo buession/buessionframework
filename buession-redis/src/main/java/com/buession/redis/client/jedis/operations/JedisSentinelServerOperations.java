@@ -517,9 +517,9 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public List<Role> role() {
-		return new JedisSentinelCommand<List<Role>>(client, ProtocolCommand.ROLE)
-				.general((cmd)->cmd.role(), new RoleConverter.ListRoleConverter())
+	public Role role() {
+		return new JedisSentinelCommand<Role>(client, ProtocolCommand.ROLE)
+				.general((cmd)->cmd.role(), new RoleConverter())
 				.run();
 	}
 

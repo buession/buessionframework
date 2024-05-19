@@ -517,9 +517,9 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<Role> role() {
-		return new JedisCommand<List<Role>>(client, ProtocolCommand.ROLE)
-				.general((cmd)->cmd.role(), new RoleConverter.ListRoleConverter())
+	public Role role() {
+		return new JedisCommand<Role>(client, ProtocolCommand.ROLE)
+				.general((cmd)->cmd.role(), new RoleConverter())
 				.run();
 	}
 

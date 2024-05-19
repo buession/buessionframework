@@ -426,9 +426,9 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	@Override
-	public List<Role> role() {
+	public Role role() {
 		return new LettuceCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(),
-				new RoleConverter.ListRoleConverter())
+				new RoleConverter())
 				.run();
 	}
 

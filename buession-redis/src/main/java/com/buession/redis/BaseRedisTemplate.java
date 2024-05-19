@@ -2144,7 +2144,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<Role> role() {
+	public Role role() {
 		return execute((client)->client.serverOperations().role());
 	}
 
