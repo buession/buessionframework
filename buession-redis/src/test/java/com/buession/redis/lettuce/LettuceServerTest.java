@@ -26,8 +26,11 @@ package com.buession.redis.lettuce;
 
 import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.SlowLog;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -45,6 +48,19 @@ public class LettuceServerTest extends AbstractLettuceRedisTest {
 	public void role() {
 		RedisTemplate redisTemplate = redisTemplate();
 		System.out.println(redisTemplate.role());
+	}
+
+	@Test
+	public void info() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.info());
+	}
+
+	@Test
+	public void slowLogGet() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<SlowLog> result = redisTemplate.slowLogGet(3);
+		result.forEach(System.out::println);
 	}
 
 }

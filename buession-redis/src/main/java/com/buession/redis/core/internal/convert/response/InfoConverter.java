@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.EnumUtils;
@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * Info 转换
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
 public final class InfoConverter implements Converter<String, Info> {
 
