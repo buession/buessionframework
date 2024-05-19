@@ -19,29 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.redis.lettuce;
 
+import com.buession.lang.Status;
+import com.buession.redis.RedisTemplate;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yong.Teng
- * @since 1.3.2
+ * @since 3.0.0
  */
-public class ListTest {
+public class LettuceStringTest extends AbstractLettuceRedisTest {
 
 	@Test
-	public void test() {
-		List<Object> list = new ArrayList<>(2);
+	public void set() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Assertions.assertEquals(redisTemplate.set("a", "A"), Status.SUCCESS);
+	}
 
-		list.add("A");
-		list.add("B");
-
+	@Test
+	public void get() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Assertions.assertEquals(redisTemplate.get("a"), "A");
 	}
 
 }

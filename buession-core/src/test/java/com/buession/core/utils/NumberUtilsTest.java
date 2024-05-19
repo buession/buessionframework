@@ -19,29 +19,25 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.core.utils;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Yong.Teng
- * @since 1.3.2
+ * @since 3.0.0
  */
-public class ListTest {
+public class NumberUtilsTest {
 
 	@Test
-	public void test() {
-		List<Object> list = new ArrayList<>(2);
-
-		list.add("A");
-		list.add("B");
-
+	public void longTest() {
+		String s = "1716131060146";
+		byte[] bytes = NumberUtils.long2bytes(Long.parseLong(s));
+		long l = NumberUtils.bytes2long(bytes);
+		System.out.println(l);
 	}
 
 }

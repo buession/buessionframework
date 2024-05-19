@@ -24,8 +24,8 @@
  */
 package com.buession.core.validator;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -35,39 +35,39 @@ public class ValidateTest {
 
 	@Test
 	public void isBlank() {
-		Assert.assertEquals(true, Validate.isBlank(""));
-		Assert.assertEquals(true, Validate.isBlank(null));
-		Assert.assertEquals(true, Validate.isBlank("\r\n"));
-		Assert.assertEquals(true, Validate.isBlank(" "));
-		Assert.assertEquals(false, Validate.isBlank("\na"));
+		Assertions.assertEquals(true, Validate.isBlank(""));
+		Assertions.assertEquals(true, Validate.isBlank(null));
+		Assertions.assertEquals(true, Validate.isBlank("\r\n"));
+		Assertions.assertEquals(true, Validate.isBlank(" "));
+		Assertions.assertEquals(false, Validate.isBlank("\na"));
 	}
 
 	@Test
 	public void isNotBlank() {
-		Assert.assertEquals(false, Validate.isNotBlank(""));
-		Assert.assertEquals(false, Validate.isNotBlank(null));
-		Assert.assertEquals(false, Validate.isNotBlank("\r\n"));
-		Assert.assertEquals(false, Validate.isNotBlank(" "));
-		Assert.assertEquals(true, Validate.isNotBlank("\na"));
+		Assertions.assertEquals(false, Validate.isNotBlank(""));
+		Assertions.assertEquals(false, Validate.isNotBlank(null));
+		Assertions.assertEquals(false, Validate.isNotBlank("\r\n"));
+		Assertions.assertEquals(false, Validate.isNotBlank(" "));
+		Assertions.assertEquals(true, Validate.isNotBlank("\na"));
 	}
 
 	@Test
 	public void isEmail() {
-		Assert.assertFalse(Validate.isEmail(""));
-		Assert.assertTrue(Validate.isEmail("webmaster@buession.com"));
+		Assertions.assertFalse(Validate.isEmail(""));
+		Assertions.assertTrue(Validate.isEmail("webmaster@buession.com"));
 	}
 
 	@Test
 	public void isMimeType() {
-		Assert.assertEquals(true, Validate.isMimeType("application/rtf"));
-		Assert.assertEquals(true, Validate.isMimeType("application/vnd.wap.wmlc"));
-		Assert.assertEquals(true, Validate.isMimeType("application/x-rar-compressed"));
-		Assert.assertEquals(true,
+		Assertions.assertEquals(true, Validate.isMimeType("application/rtf"));
+		Assertions.assertEquals(true, Validate.isMimeType("application/vnd.wap.wmlc"));
+		Assertions.assertEquals(true, Validate.isMimeType("application/x-rar-compressed"));
+		Assertions.assertEquals(true,
 				Validate.isMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
-		Assert.assertEquals(true, Validate.isMimeType("video/3gpp"));
-		Assert.assertEquals(false, Validate.isMimeType("video/-3gpp"));
-		Assert.assertEquals(false, Validate.isMimeType("video/3gpp-"));
-		Assert.assertEquals(false, Validate.isMimeType("application/x-rar--compressed"));
+		Assertions.assertEquals(true, Validate.isMimeType("video/3gpp"));
+		Assertions.assertEquals(false, Validate.isMimeType("video/-3gpp"));
+		Assertions.assertEquals(false, Validate.isMimeType("video/3gpp-"));
+		Assertions.assertEquals(false, Validate.isMimeType("application/x-rar--compressed"));
 	}
 
 }

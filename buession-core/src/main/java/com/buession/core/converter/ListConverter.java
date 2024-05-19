@@ -70,6 +70,7 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 				return stream.collect(
 						Collectors.toCollection(()->(List<T>) BeanUtils.instantiateClass(source.getClass())));
 			}catch(Exception e){
+				e.printStackTrace();
 				return stream.collect(Collectors.toList());
 			}
 		}

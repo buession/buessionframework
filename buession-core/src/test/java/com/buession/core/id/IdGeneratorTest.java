@@ -24,7 +24,7 @@
  */
 package com.buession.core.id;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng

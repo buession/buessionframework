@@ -24,8 +24,8 @@
  */
 package com.buession.core.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -36,7 +36,7 @@ public class StringUtilsTest {
 	@Test
 	public void left() {
 		String str = "123456789";
-		Assert.assertEquals("123", StringUtils.left(str, 3));
+		Assertions.assertEquals("123", StringUtils.left(str, 3));
 	}
 
 }

@@ -25,7 +25,7 @@
 package com.buession.core.serializer;
 
 import com.buession.lang.Uptime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 
@@ -38,7 +38,7 @@ public class DefaultByteArraySerializerTest {
 	private final static DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
 
 	@Test
-	public void serialize() throws SerializerException{
+	public void serialize() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime);
@@ -46,7 +46,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void serializeWithCharsetName() throws SerializerException{
+	public void serializeWithCharsetName() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime, StandardCharsets.UTF_8.name());
@@ -54,7 +54,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void serializeWithCharset() throws SerializerException{
+	public void serializeWithCharset() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime, StandardCharsets.UTF_8);
@@ -62,7 +62,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void serializeAsBytes() throws SerializerException{
+	public void serializeAsBytes() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime);
@@ -70,7 +70,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void serializeAsBytesWithCharsetName() throws SerializerException{
+	public void serializeAsBytesWithCharsetName() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8.name());
@@ -78,7 +78,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void serializeAsBytesWithCharset() throws SerializerException{
+	public void serializeAsBytesWithCharset() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8);
@@ -86,7 +86,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void deserialize() throws SerializerException{
+	public void deserialize() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime);
@@ -94,7 +94,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void deserializeWithCharsetName() throws SerializerException{
+	public void deserializeWithCharsetName() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime, StandardCharsets.UTF_8.name());
@@ -103,7 +103,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void deserializeWithCharset() throws SerializerException{
+	public void deserializeWithCharset() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime, StandardCharsets.UTF_8);
@@ -112,7 +112,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void deserializeBytes() throws SerializerException{
+	public void deserializeBytes() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime);
@@ -121,7 +121,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void deserializeBytesWithCharsetName() throws SerializerException{
+	public void deserializeBytesWithCharsetName() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8.name());
@@ -130,7 +130,7 @@ public class DefaultByteArraySerializerTest {
 	}
 
 	@Test
-	public void deserializeBytesWithCharset() throws SerializerException{
+	public void deserializeBytesWithCharset() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8);

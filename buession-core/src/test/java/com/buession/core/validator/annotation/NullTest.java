@@ -24,12 +24,10 @@
  */
 package com.buession.core.validator.annotation;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -42,12 +40,11 @@ import java.util.StringJoiner;
  */
 @Configuration
 @ComponentScan(basePackages = {"com.buession"})
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {NullTest.class})
 public class NullTest {
 
 	@Test
-	public void test(){
+	public void test() {
 		User user = new User();
 
 		user.setUsername(null);
@@ -61,16 +58,16 @@ public class NullTest {
 		@Null
 		private String username;
 
-		public String getUsername(){
+		public String getUsername() {
 			return username;
 		}
 
-		public void setUsername(@Valid @Null String username){
+		public void setUsername(@Valid @Null String username) {
 			this.username = username;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
 					.add("username='" + username + "'")
 					.toString();

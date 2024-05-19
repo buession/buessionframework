@@ -25,7 +25,7 @@
 package com.buession.core.converter;
 
 import com.buession.core.collect.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -34,7 +34,7 @@ import org.junit.Test;
 public class ArrayConverterTest {
 
 	@Test
-	public void map(){
+	public void map() {
 		String[] data = new String[]{"1", "2"};
 		String[] result = Arrays.map(data, String.class, (value)->"key" + value);
 

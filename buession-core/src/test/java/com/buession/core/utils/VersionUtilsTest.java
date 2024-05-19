@@ -24,8 +24,8 @@
  */
 package com.buession.core.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -34,11 +34,11 @@ import org.junit.Test;
 public class VersionUtilsTest {
 
 	@Test
-	public void compare(){
-		Assert.assertEquals(VersionUtils.compare("1.0.0", "1.0.1-beta"), -1);
-		Assert.assertEquals(VersionUtils.compare("1.0.0-beta", "1.0.0-release"), -1);
-		Assert.assertEquals(VersionUtils.compare("1.0.0", "1.0.0-release"), 1);
-		Assert.assertEquals(VersionUtils.compare("1.0.0", "1.0.0-pl"), 1);
+	public void compare() {
+		Assertions.assertEquals(VersionUtils.compare("1.0.0", "1.0.1-beta"), -1);
+		Assertions.assertEquals(VersionUtils.compare("1.0.0-beta", "1.0.0-release"), -1);
+		Assertions.assertEquals(VersionUtils.compare("1.0.0", "1.0.0-release"), 1);
+		Assertions.assertEquals(VersionUtils.compare("1.0.0", "1.0.0-pl"), 1);
 	}
 
 }
