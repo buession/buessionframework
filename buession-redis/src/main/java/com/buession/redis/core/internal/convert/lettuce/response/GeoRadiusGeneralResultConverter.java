@@ -40,9 +40,7 @@ public final class GeoRadiusGeneralResultConverter implements Converter<byte[], 
 
 	@Override
 	public GeoRadius convert(final byte[] source) {
-		//return new GeoRadius(source.getMember(), source.getDistance(),
-		//GeoCoordinateConverter.INSTANCE.convert(source.getCoordinate()));
-		return new GeoRadius(source, 0, null);
+		return new GeoRadius(source);
 	}
 
 	/**

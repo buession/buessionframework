@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -41,41 +41,53 @@ public class GeoRadius implements Serializable {
 
 	private final byte[] member;
 
-	private final double distance;
+	private final Double distance;
 
 	private final Geo geo;
 
-	public GeoRadius(final byte[] member, final double distance, final Geo geo){
+	public GeoRadius(final byte[] member) {
+		this(member, null, null);
+	}
+
+	public GeoRadius(final byte[] member, final Double distance) {
+		this(member, distance, null);
+	}
+
+	public GeoRadius(final byte[] member, final Geo geo) {
+		this(member, null, geo);
+	}
+
+	public GeoRadius(final byte[] member, final Double distance, final Geo geo) {
 		this.member = member;
 		this.distance = distance;
 		this.geo = geo;
 	}
 
-	public byte[] getMember(){
+	public byte[] getMember() {
 		return member;
 	}
 
-	public String getMemberAsString(){
+	public String getMemberAsString() {
 		return new String(member, StandardCharsets.UTF_8);
 	}
 
-	public double getDistance(){
+	public Double getDistance() {
 		return distance;
 	}
 
-	public Geo getGeo(){
+	public Geo getGeo() {
 		return geo;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		int result = Objects.hash(distance, geo);
 		result = 31 * result + Arrays.hashCode(member);
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
@@ -90,11 +102,11 @@ public class GeoRadius implements Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("member", member)
-				.add("distance", distance)
-				.add("geo", geo)
+				.addIfAbsent("distance", distance)
+				.addIfAbsent("geo", geo)
 				.build();
 	}
 
