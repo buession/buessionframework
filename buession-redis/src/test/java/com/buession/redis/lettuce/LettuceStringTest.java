@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StringTest extends AbstractRedisTest {
+public class LettuceStringTest extends AbstractLettuceRedisTest {
 
 	@Test
 	public void set() {

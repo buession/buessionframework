@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyTest extends AbstractRedisTest {
+public class LettuceKeyTest extends AbstractLettuceRedisTest {
 
 	@Test
 	public void exists() {

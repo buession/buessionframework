@@ -38,7 +38,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class GeoTest extends AbstractRedisTest {
+public class JedisGeoTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void geoAdd() {

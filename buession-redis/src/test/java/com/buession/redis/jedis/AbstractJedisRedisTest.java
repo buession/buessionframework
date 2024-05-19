@@ -30,7 +30,7 @@ import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTest {
+public abstract class AbstractJedisRedisTest {
 
 	protected JedisDataSource dataSource() {
 		JedisDataSource dataSource = new JedisDataSource();

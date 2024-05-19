@@ -30,7 +30,7 @@ import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTest {
+public abstract class AbstractLettuceRedisTest {
 
 	protected LettuceDataSource dataSource() {
 		LettuceDataSource dataSource = new LettuceDataSource();
