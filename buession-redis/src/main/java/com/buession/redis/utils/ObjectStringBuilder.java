@@ -80,7 +80,7 @@ public final class ObjectStringBuilder {
 	}
 
 	public ObjectStringBuilder add(final String name, final Object value) {
-		joiner.add(name + '=');
+		joiner.add(name + '=' + value);
 		return this;
 	}
 

@@ -22,23 +22,27 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.lettuce;
+package com.buession.redis.jedis;
 
-import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceServerTest extends AbstractLettuceRedisTest {
+public class JedisServerTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void time() {
 		RedisTemplate redisTemplate = redisTemplate();
 		System.out.println(redisTemplate.time());
+	}
+
+	@Test
+	public void role() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.role());
 	}
 
 }

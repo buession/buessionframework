@@ -33,18 +33,18 @@ import org.junit.jupiter.api.Test;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceStringTest extends AbstractLettuceRedisTest {
+public class LettuceServerTest extends AbstractLettuceRedisTest {
 
 	@Test
-	public void set() {
+	public void time() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertEquals(redisTemplate.set("a", "A"), Status.SUCCESS);
+		System.out.println(redisTemplate.time());
 	}
 
 	@Test
-	public void get() {
+	public void role() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertEquals(redisTemplate.get("a"), "A");
+		System.out.println(redisTemplate.role());
 	}
 
 }

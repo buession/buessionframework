@@ -25,7 +25,9 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.RedisServerTime;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Date;
 import java.util.List;
@@ -40,13 +42,11 @@ public final class RedisServerTimeConverter implements Converter<List<byte[]>, R
 
 	@Override
 	public RedisServerTime convert(final List<byte[]> source) {
-		/*
-		Date date = new Date();
-		date.setTime(Long.parseLong(source.get(0)) * 1000L);
+		if(source != null && source.size() == 2){
+			final Date date = new Date(Long.parseLong(SafeEncoder.encode(source.get(0))) * 1000L);
+			return new RedisServerTime(date, Long.parseLong(SafeEncoder.encode(source.get(1))));
+		}
 
-		return new RedisServerTime(date, Long.parseLong(source.get(1)));
-
-		 */
 		return null;
 	}
 

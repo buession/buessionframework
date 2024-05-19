@@ -711,7 +711,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 实例在复制中担任的角色信息
 	 */
-	List<Role> role();
+	Role role();
 
 	/**
 	 * 执行一个同步保存操作，将当前 Redis 实例的所有数据快照(snapshot)以 RDB 文件的形式保存到硬盘；

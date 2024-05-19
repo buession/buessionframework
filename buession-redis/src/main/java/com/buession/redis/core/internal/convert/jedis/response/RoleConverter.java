@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.utils.EnumUtils;
 import com.buession.redis.core.Role;
 
 import java.util.List;
@@ -40,21 +41,15 @@ public final class RoleConverter implements Converter<Object, Role> {
 
 	@Override
 	public Role convert(final Object source) {
-		return null;
-	}
+		if(source instanceof List){
+			List<Object> tmp = (List<Object>) source;
 
-	/**
-	 * Jedis {@link List} 角色信息 转换为 {@link List} {@link Role}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListRoleConverter extends ListConverter<Object, Role> {
-
-		public ListRoleConverter() {
-			super(new RoleConverter());
+			if(tmp.size() == 3){
+				return EnumUtils.getEnum(Role.class, tmp.get(0).toString().toUpperCase());
+			}
 		}
 
+		return null;
 	}
 
 }
