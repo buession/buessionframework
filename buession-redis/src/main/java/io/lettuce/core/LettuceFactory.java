@@ -24,6 +24,7 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.validator.Validate;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -75,8 +76,8 @@ public class LettuceFactory extends BasePooledObjectFactory<StatefulRedisConnect
 
 	public LettuceFactory(final String host, final int port, final String user, final String password, int database,
 						  final String clientName) {
-		this(RedisURI.builder().withHost(host).withPort(port).withPassword(password).withDatabase(database)
-				.withClientName(clientName));
+		this(RedisURI.builder().withHost(host).withPort(port).withPassword(password).withDatabase(database),
+				clientName);
 	}
 
 	public LettuceFactory(final String host, final int port, final int connectionTimeout, final int soTimeout) {
@@ -106,7 +107,7 @@ public class LettuceFactory extends BasePooledObjectFactory<StatefulRedisConnect
 	public LettuceFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
 						  int database, final String clientName) {
 		this(RedisURI.builder().withHost(host).withPort(port).withDatabase(database)
-				.withTimeout(Duration.ofMillis(connectionTimeout)).withClientName(clientName));
+				.withTimeout(Duration.ofMillis(connectionTimeout)), clientName);
 	}
 
 	public LettuceFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
@@ -117,7 +118,7 @@ public class LettuceFactory extends BasePooledObjectFactory<StatefulRedisConnect
 	public LettuceFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
 						  final String user, final String password, int database, final String clientName) {
 		this(RedisURI.builder().withHost(host).withPort(port).withPassword(password).withDatabase(database)
-				.withTimeout(Duration.ofMillis(connectionTimeout)).withClientName(clientName));
+				.withTimeout(Duration.ofMillis(connectionTimeout)), clientName);
 	}
 
 	public LettuceFactory(final String host, final int port, final boolean ssl) {
@@ -234,7 +235,7 @@ public class LettuceFactory extends BasePooledObjectFactory<StatefulRedisConnect
 						  final String clientName, final boolean ssl, final SSLSocketFactory sslSocketFactory,
 						  final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
 		this(RedisURI.builder().withHost(host).withPort(port).withPassword(password).withDatabase(database)
-				.withClientName(clientName).withSsl(ssl));
+				.withSsl(ssl), clientName);
 	}
 
 	public LettuceFactory(final String host, final int port, final int connectionTimeout, final int soTimeout,
@@ -295,7 +296,7 @@ public class LettuceFactory extends BasePooledObjectFactory<StatefulRedisConnect
 						  final boolean ssl, final SSLSocketFactory sslSocketFactory,
 						  final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
 		this(RedisURI.builder().withHost(host).withPort(port).withPassword(password).withDatabase(database)
-				.withClientName(clientName).withTimeout(Duration.ofMillis(connectionTimeout)).withSsl(ssl));
+				.withTimeout(Duration.ofMillis(connectionTimeout)).withSsl(ssl), clientName);
 	}
 
 	public LettuceFactory(final RedisURI uri) {
@@ -482,6 +483,13 @@ public class LettuceFactory extends BasePooledObjectFactory<StatefulRedisConnect
 	}
 
 	protected LettuceFactory(final RedisURI.Builder builder) {
+		this.client = RedisClient.create(builder.build());
+	}
+
+	protected LettuceFactory(final RedisURI.Builder builder, final String clientName) {
+		if(Validate.hasText(clientName)){
+			builder.withClientName(clientName);
+		}
 		this.client = RedisClient.create(builder.build());
 	}
 

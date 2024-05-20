@@ -26,6 +26,7 @@ package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.core.PoolConfig;
 
 /**
  * @author Yong.Teng
@@ -39,6 +40,7 @@ public abstract class AbstractLettuceRedisTest {
 		dataSource.setPort(6379);
 		dataSource.setDatabase(1);
 		dataSource.setPassword("rds_PWD");
+		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
 	}
