@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.lettuce;
+package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.ScanResult;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceKeyTest extends AbstractLettuceRedisTest {
+public class JedisKeyTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void exists() {
