@@ -24,16 +24,14 @@
  */
 package com.buession.redis.exception;
 
-import com.buession.core.utils.StringUtils;
-import redis.clients.jedis.exceptions.JedisConnectionException;
-
 /**
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 3.0.0
  */
-public class JedisRedisExceptionUtils {
+public class LettuceRedisExceptionUtils {
 
-	public static RedisException convert(final Exception e){
+	public static RedisException convert(final Exception e) {
+		/*
 		if(e instanceof JedisConnectionException){
 			if(StringUtils.contains(e.getMessage(), "pool")){
 				return new PoolException(e.getMessage(), e);
@@ -43,8 +41,11 @@ public class JedisRedisExceptionUtils {
 		}else if(e instanceof NotSupportedCommandException){
 			return (NotSupportedCommandException) e;
 		}else{
-			return new RedisException(e.getMessage(), e);
+
 		}
+
+		 */
+		return new RedisException(e.getMessage(), e);
 	}
 
 }
