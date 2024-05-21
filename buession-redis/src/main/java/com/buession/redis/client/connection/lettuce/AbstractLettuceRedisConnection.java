@@ -29,6 +29,7 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
+import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -167,8 +168,7 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 			return executor.execute(this);
 		}catch(Exception e){
 			logger.error("Redis execute command failure: {}", e.getMessage(), e);
-			//throw JedisRedisExceptionUtils.convert(e);
-			throw new RedisException(e.getMessage(), e);
+			throw LettuceRedisExceptionUtils.convert(e);
 		}
 	}
 
