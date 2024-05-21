@@ -24,14 +24,15 @@
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
-import com.buession.lang.Constants;
+import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.core.RedisNode;
+import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.LettucePoolConfig;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,22 +108,31 @@ public class LettuceDataSource extends AbstractLettuceDataSource implements Stan
 
 	private LettucePool createPool() {
 		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final LettucePoolConfig<byte[], byte[]> lettucePoolConfig = new LettucePoolConfig<>();
+		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+		final DefaultLettuceClientConfig.Builder lettuceClientConfigBuilder = DefaultLettuceClientConfig.builder()
+				.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
+				.database(getDatabase()).clientName(getClientName()).ssl(isUseSsl());
 
 		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
 
-		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
+		if(Validate.hasText(getPassword())){
+			if(Validate.hasText(getUsername())){
+				lettuceClientConfigBuilder.user(getUsername());
+			}
+			lettuceClientConfigBuilder.password(getPassword());
+		}
+
 		if(sslConfiguration == null){
 			logger.debug("Create lettuce pool.");
-			return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, getHost(), getPort(), getConnectTimeout(),
-					getSoTimeout(), getUsername(), password, getDatabase(), getClientName(), isUseSsl());
 		}else{
 			logger.debug("Create lettuce pool with ssl.");
-			return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, getHost(), getPort(), getConnectTimeout(),
-					getSoTimeout(), getUsername(), password, getDatabase(), getClientName(), isUseSsl(),
-					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
-					sslConfiguration.getHostnameVerifier());
+			lettuceClientConfigBuilder.sslSocketFactory(sslConfiguration.getSslSocketFactory())
+					.sslParameters(sslConfiguration.getSslParameters())
+					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
 		}
+		
+		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, getHost(), getPort(),
+				lettuceClientConfigBuilder.build());
 	}
 
 }
