@@ -28,7 +28,7 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
-import com.buession.redis.exception.JedisRedisExceptionUtils;
+import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -40,6 +40,7 @@ import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
+import io.lettuce.core.codec.RedisCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	private LettucePool pool;
 
 	/**
-	 * StatefulRedisConnection 对象
+	 * {@link StatefulRedisConnection} 实例
 	 */
 	private StatefulRedisConnection<byte[], byte[]> delegate;
 
@@ -341,6 +342,27 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 		return pool != null;
 	}
 
+	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+		final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
+
+		if(dataSource.getDatabase() >= 0){
+			redisURI.setDatabase(dataSource.getDatabase());
+		}
+
+		propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
+		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
+
+		if(dataSource.getConnectTimeout() > 0){
+			redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
+		}
+
+		redisURI.setSsl(dataSource.getSslConfiguration() != null);
+
+		return RedisClient.create(redisURI).connect(codec);
+	}
+
 	@Override
 	protected void doConnect() throws RedisConnectionFailureException {
 		if(isUsePool()){
@@ -355,27 +377,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
 				}
 
-				throw JedisRedisExceptionUtils.convert(e);
+				throw LettuceRedisExceptionUtils.convert(e);
 			}
 		}else{
-			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-			final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
-
-			if(dataSource.getDatabase() >= 0){
-				redisURI.setDatabase(dataSource.getDatabase());
-			}
-
-			propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
-			propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
-
-			if(dataSource.getConnectTimeout() > 0){
-				redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-			}
-
-			redisURI.setSsl(dataSource.getSslConfiguration() != null);
-
-			delegate = RedisClient.create(redisURI).connect(new ByteArrayCodec());
+			delegate = createStatefulRedisConnection(new ByteArrayCodec());
 		}
 	}
 
@@ -403,37 +408,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		if(isUsePool()){
-			logger.info("Lettuce close.");
+		logger.info("Lettuce close.");
 
-			//if(jedis != null){
-			//jedis.close();
-			//}
-		}else{
-			logger.info("Lettuce quit and disconnect.");
-
-			/*
-			if(jedis != null){
-				Exception ex = null;
-
-				try{
-					jedis.quit();
-				}catch(Exception e){
-					ex = e;
-				}
-
-				try{
-					jedis.disconnect();
-				}catch(Exception e){
-					ex = e;
-				}
-
-				if(ex != null){
-					throw new RedisException(ex);
-				}
-			}
-
-			 */
+		if(delegate != null){
+			delegate.close();
 		}
 	}
 
