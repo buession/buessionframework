@@ -21,10 +21,112 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
+ */
+package io.lettuce.core;
+
+import com.buession.redis.core.RedisNode;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+import java.time.Duration;
+
+/**
+ * 客户端配置
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LettuceClientConfig {
+ */
+public interface LettuceClientConfig {
+
+	/**
+	 * 返回连接超时
+	 *
+	 * @return 连接超时
+	 */
+	default Duration getConnectionTimeout() {
+		return RedisURI.DEFAULT_TIMEOUT_DURATION;
+	}
+
+	/**
+	 * 返回读取超时
+	 *
+	 * @return 读取超时
+	 */
+	default Duration getSocketTimeout() {
+		return RedisURI.DEFAULT_TIMEOUT_DURATION;
+	}
+
+	/**
+	 * 返回用户名
+	 *
+	 * @return 用户名
+	 */
+	default String getUser() {
+		return null;
+	}
+
+	/**
+	 * 返回密码
+	 *
+	 * @return 密码
+	 */
+	default String getPassword() {
+		return null;
+	}
+
+	/**
+	 * 返回数据库
+	 *
+	 * @return 数据库
+	 */
+	default int getDatabase() {
+		return RedisNode.DEFAULT_DATABASE;
+	}
+
+	/**
+	 * 返回客户端名称
+	 *
+	 * @return 客户端名称
+	 */
+	default String getClientName() {
+		return null;
+	}
+
+	/**
+	 * 返回是否为 TLS 连接
+	 *
+	 * @return <code>true</code> - to create a TLS connection. <code>false</code> - otherwise.
+	 */
+	default boolean isSsl() {
+		return false;
+	}
+
+	/**
+	 * 返回 {@link SSLSocketFactory}
+	 *
+	 * @return {@link SSLSocketFactory}
+	 */
+	default SSLSocketFactory getSslSocketFactory() {
+		return null;
+	}
+
+	/**
+	 * 返回 {@link SSLParameters}
+	 *
+	 * @return {@link SSLParameters}
+	 */
+	default SSLParameters getSslParameters() {
+		return null;
+	}
+
+	/**
+	 * 返回 {@link HostnameVerifier}
+	 *
+	 * @return {@link HostnameVerifier}
+	 */
+	default HostnameVerifier getHostnameVerifier() {
+		return null;
+	}
+
 }

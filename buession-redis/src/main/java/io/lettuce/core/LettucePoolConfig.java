@@ -24,7 +24,7 @@
  */
 package io.lettuce.core;
 
-import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.support.BoundedPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -33,10 +33,17 @@ import java.time.Duration;
 /**
  * Lettuce 连接池配置
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ * @param <C>
+ *        {@link StatefulConnection} 类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettucePoolConfig<K, V> extends GenericObjectPoolConfig<StatefulRedisConnection<K, V>> {
+public class LettucePoolConfig<K, V, C extends StatefulConnection<K, V>> extends GenericObjectPoolConfig<C> {
 
 	/**
 	 * 构造函数
