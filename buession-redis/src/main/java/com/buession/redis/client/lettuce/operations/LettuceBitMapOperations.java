@@ -29,8 +29,8 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
 import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
+import io.lettuce.core.BitFieldArgs;
 
 import java.util.List;
 
@@ -49,89 +49,170 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 	@Override
 	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		return new LettuceCommand<>(client, ProtocolCommand.BITFIELD,
-				(cmd)->cmd.bitfield(key, LettuceBitFieldArgs.from(argument)), (v)->v)
-				.run(args);
+		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, bitFieldArgs),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, bitFieldArgs),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return new LettuceCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+					.run(args);
+		}else{
+			return new LettuceCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
-		return new LettuceCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
-			if(operation == BitOperation.AND){
-				return cmd.bitopAnd(destKey, keys);
-			}else if(operation == BitOperation.OR){
-				return cmd.bitopOr(destKey, keys);
-			}else if(operation == BitOperation.NOT){
-				return cmd.bitopNot(destKey, keys[0]);
-			}else if(operation == BitOperation.XOR){
-				return cmd.bitopXor(destKey, keys);
-			}else{
-				return null;
-			}
-		}, (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+				if(operation == BitOperation.AND){
+					return cmd.bitopAnd(destKey, keys);
+				}else if(operation == BitOperation.OR){
+					return cmd.bitopOr(destKey, keys);
+				}else if(operation == BitOperation.NOT){
+					return cmd.bitopNot(destKey, keys[0]);
+				}else if(operation == BitOperation.XOR){
+					return cmd.bitopXor(destKey, keys);
+				}else{
+					return null;
+				}
+			}, (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+				if(operation == BitOperation.AND){
+					return cmd.bitopAnd(destKey, keys);
+				}else if(operation == BitOperation.OR){
+					return cmd.bitopOr(destKey, keys);
+				}else if(operation == BitOperation.NOT){
+					return cmd.bitopNot(destKey, keys[0]);
+				}else if(operation == BitOperation.XOR){
+					return cmd.bitopXor(destKey, keys);
+				}else{
+					return null;
+				}
+			}, (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value, start, end), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value, start, end),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value, start, end),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return new LettuceCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
-				new OneBooleanConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+					oneBooleanConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+					oneBooleanConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, value ? 1 : 0),
-				new OneBooleanConverter())
-				.run(args);
+		final int iValue = value ? 1 : 0;
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
+					oneBooleanConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
+					oneBooleanConverter)
+					.run(args);
+		}
 	}
 
 }

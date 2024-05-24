@@ -24,12 +24,12 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -49,95 +49,176 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new LettuceCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, null), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, null), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, null), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
-		return new LettuceCommand<>(client, ProtocolCommand.EVAL,
-				(cmd)->cmd.eval(script, null, null, SafeEncoder.encode(params)), (v)->v)
-				.run(args);
+		final byte[][] bParams = SafeEncoder.encode(params);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, null, bParams), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, null, bParams), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new LettuceCommand<>(client, ProtocolCommand.EVAL,
-				(cmd)->cmd.eval(script, null, SafeEncoder.encode(keys), SafeEncoder.encode(arguments)), (v)->v)
-				.run(args);
+		final byte[][] bKeys = SafeEncoder.encode(keys);
+		final byte[][] bArguments = SafeEncoder.encode(arguments);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, bKeys, bArguments), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, bKeys, bArguments), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		return new LettuceCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, null), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, null), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, null), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
-		return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
-				(cmd)->cmd.evalsha(digest, null, null, SafeEncoder.encode(params)), (v)->v)
-				.run(args);
+		final byte[][] bParams = SafeEncoder.encode(params);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, null, bParams), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, null, bParams), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
-				(cmd)->cmd.evalsha(digest, null, SafeEncoder.encode(keys), SafeEncoder.encode(arguments)),
-				(v)->v)
-				.run(args);
+		final byte[][] bKeys = SafeEncoder.encode(keys);
+		final byte[][] bArguments = SafeEncoder.encode(arguments);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, bKeys, bArguments), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, bKeys, bArguments), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status scriptFlush() {
-		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
-				(cmd)->cmd.scriptLoad(SafeEncoder.encode(script)), (v)->v)
-				.run(args);
+		final byte[] bScript = SafeEncoder.encode(script);
+
+		return scriptLoad(bScript, (v)->v, args);
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
-				SafeEncoder::encode)
-				.run(args);
+		return scriptLoad(script, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public Status scriptKill() {
-		return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+					okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+					okStatusConverter)
+					.run();
+		}
+	}
+
+	private <V> V scriptLoad(final byte[] script, final Converter<String, V> converter,
+							 final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), converter)
+					.run(args);
+		}
 	}
 
 }

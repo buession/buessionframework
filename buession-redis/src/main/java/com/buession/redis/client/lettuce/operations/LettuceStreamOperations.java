@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Stream;
@@ -46,14 +46,17 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamInfoConve
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingSummaryConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;
+import io.lettuce.core.XAddArgs;
+import io.lettuce.core.XClaimArgs;
+import io.lettuce.core.XGroupCreateArgs;
 import io.lettuce.core.XReadArgs;
 
 import java.util.List;
@@ -75,17 +78,25 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("ids", (Object[]) ids);
-		return new LettuceCommand<>(client, ProtocolCommand.XACK, (cmd)->cmd.xack(key, groupName,
-				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)), (value)->value)
-				.run(args);
+		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XACK, (cmd)->cmd.xack(key, groupName, messageIds),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XACK, (cmd)->cmd.xack(key, groupName, messageIds),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
-		return new LettuceCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, new LettuceXAddArgs(id),
-				hash), new StreamEntryIDConverter())
-				.run(args);
+		final XAddArgs xAddArgs = new LettuceXAddArgs(id);
+
+		return xAdd(key, hash, xAddArgs, args);
 	}
 
 	@Override
@@ -93,10 +104,10 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 							  final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		return new LettuceCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key,
-				LettuceXAddArgs.from(xAddArgument).id((new StreamEntryIdConverter()).convert(id)),
-				hash), new StreamEntryIDConverter())
-				.run(args);
+		final StreamEntryIdConverter streamEntryIdConverter = new StreamEntryIdConverter();
+		final XAddArgs xAddArgs = LettuceXAddArgs.from(xAddArgument).id(streamEntryIdConverter.convert(id));
+
+		return xAdd(key, hash, xAddArgs, args);
 	}
 
 	@Override
@@ -105,9 +116,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 															final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start);
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(client,
-				ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaim(args);
 	}
 
 	@Override
@@ -116,9 +125,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 															final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start);
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(client,
-				ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaim(args);
 	}
 
 	@Override
@@ -128,9 +135,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(client,
-				ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaim(args);
 	}
 
 	@Override
@@ -140,9 +145,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(client,
-				ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaim(args);
 	}
 
 	@Override
@@ -152,9 +155,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count");
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-				client, ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaimJustId(args);
 	}
 
 	@Override
@@ -164,9 +165,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count");
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-				client, ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaimJustId(args);
 	}
 
 	@Override
@@ -176,9 +175,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-				client, ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaimJustId(args);
 	}
 
 	@Override
@@ -188,9 +185,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
-		return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-				client, ProtocolCommand.XAUTOCLAIM)
-				.run(args);
+		return xAutoClaimJustId(args);
 	}
 
 	@Override
@@ -198,11 +193,10 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 									final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
-		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, Consumer.from(groupName,
-						consumerName), minIdleTime,
-				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
-				new StreamMessageConverter.ListStreamMessageConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final XClaimArgs xClaimArgs = new LettuceXClaimArgs(minIdleTime);
+
+		return xClaim(key, ids, consumer, xClaimArgs, args);
 	}
 
 	@Override
@@ -212,11 +206,10 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
-		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, Consumer.from(groupName,
-						consumerName), LettuceXClaimArgs.from(xClaimArgument).minIdleTime(minIdleTime),
-				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
-				new StreamMessageConverter.ListStreamMessageConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final XClaimArgs xClaimArgs = LettuceXClaimArgs.from(xClaimArgument).minIdleTime(minIdleTime);
+
+		return xClaim(key, ids, consumer, xClaimArgs, args);
 	}
 
 	@Override
@@ -224,11 +217,10 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 											final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
-		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key,
-				Consumer.from(groupName, consumerName), new LettuceXClaimArgs(minIdleTime, true),
-				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
-				new StreamMessageConverter.ListStreamMessageStreamEntryIdConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final XClaimArgs xClaimArgs = new LettuceXClaimArgs(minIdleTime, true);
+
+		return xClaimJustId(key, ids, consumer, xClaimArgs, args);
 	}
 
 	@Override
@@ -238,19 +230,24 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
-		return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, Consumer.from(groupName,
-						consumerName), LettuceXClaimArgs.from(xClaimArgument).minIdleTime(minIdleTime).justid(),
-				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)),
-				new StreamMessageConverter.ListStreamMessageStreamEntryIdConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final XClaimArgs xClaimArgs = LettuceXClaimArgs.from(xClaimArgument).minIdleTime(minIdleTime).justid();
+
+		return xClaimJustId(key, ids, consumer, xClaimArgs, args);
 	}
 
 	@Override
 	public Long xDel(final byte[] key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("ids", (Object[]) ids);
-		return new LettuceCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key,
-				(new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids)), (v)->v)
-				.run(args);
+		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, messageIds), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, messageIds), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -258,115 +255,210 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 							   final boolean makeStream) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("id", id);
-		return new LettuceCommand<>(client, ProtocolCommand.XGROUP_CREATE, (cmd)->cmd.xgroupCreate(
-				XReadArgs.StreamOffset.latest(key), groupName, new LettuceXGroupCreateArgs(makeStream)),
-				new OkStatusConverter())
-				.run(args);
+		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.latest(key);
+		final XGroupCreateArgs xGroupCreateArgs = new LettuceXGroupCreateArgs(makeStream);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XGROUP_CREATE,
+					(cmd)->cmd.xgroupCreate(streamOffset, groupName, xGroupCreateArgs), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XGROUP_CREATE,
+					(cmd)->cmd.xgroupCreate(streamOffset, groupName, xGroupCreateArgs), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new LettuceCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
-				.run(args);
+		return xGroupCreateConsumer(args);
 	}
 
 	@Override
 	public Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new LettuceCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
-				.run(args);
+		return xGroupCreateConsumer(args);
 	}
 
 	@Override
 	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new LettuceCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER, (cmd)->cmd.xgroupDelconsumer(
-				key, Consumer.from(groupName, consumerName)), (v)->v ? 1L : 0L)
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final Converter<Boolean, Long> converter = (v)->v ? 1L : 0L;
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
+					(cmd)->cmd.xgroupDelconsumer(key, consumer), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
+					(cmd)->cmd.xgroupDelconsumer(key, consumer), converter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status xGroupDestroy(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new LettuceCommand<>(client, ProtocolCommand.XGROUP_DESTROY, (cmd)->cmd.xgroupDestroy(
-				key, groupName), new BooleanStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
+					(cmd)->cmd.xgroupDestroy(key, groupName), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
+					(cmd)->cmd.xgroupDestroy(key, groupName), booleanStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("id", id);
-		return new LettuceCommand<>(client, ProtocolCommand.XGROUP_SETID, (cmd)->cmd.xgroupSetid(
-				XReadArgs.StreamOffset.from(key, id.toString()), groupName), new OkStatusConverter())
-				.run(args);
+		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.from(key, id.toString());
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XGROUP_SETID,
+					(cmd)->cmd.xgroupSetid(streamOffset, groupName), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XGROUP_SETID,
+					(cmd)->cmd.xgroupSetid(streamOffset, groupName), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new LettuceCommand<>(client, ProtocolCommand.XINFO_CONSUMERS, (cmd)->cmd.xinfoConsumers(key, groupName),
-				new StreamConsumersInfoConverter.ListStreamConsumersInfoConverter())
-				.run(args);
+		final StreamConsumersInfoConverter.ListStreamConsumersInfoConverter listStreamConsumersInfoConverter =
+				new StreamConsumersInfoConverter.ListStreamConsumersInfoConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XINFO_CONSUMERS,
+					(cmd)->cmd.xinfoConsumers(key, groupName), listStreamConsumersInfoConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XINFO_CONSUMERS,
+					(cmd)->cmd.xinfoConsumers(key, groupName), listStreamConsumersInfoConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<StreamGroup> xInfoGroups(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
-				new StreamGroupInfoConverter.ListStreamGroupInfoConverter())
-				.run(args);
+		final StreamGroupInfoConverter.ListStreamGroupInfoConverter listStreamGroupInfoConverter =
+				new StreamGroupInfoConverter.ListStreamGroupInfoConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
+					listStreamGroupInfoConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
+					listStreamGroupInfoConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Stream xInfoStream(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(
-				key), new StreamInfoConverter())
-				.run(args);
+		final StreamInfoConverter streamInfoConverter = new StreamInfoConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(
+					key), streamInfoConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(
+					key), streamInfoConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public StreamFull xInfoStream(final byte[] key, final boolean full) {
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full);
-		return new LettuceCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
-				new StreamFullInfoConverter())
-				.run(args);
+		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+					streamFullInfoConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+					streamFullInfoConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full).put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
-				new StreamFullInfoConverter())
-				.run(args);
+		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+					streamFullInfoConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+					streamFullInfoConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long xLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
-				new StreamPendingSummaryConverter())
-				.run(args);
+		final StreamPendingSummaryConverter streamPendingSummaryConverter = new StreamPendingSummaryConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+					streamPendingSummaryConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+					streamPendingSummaryConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
-				new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final StreamPendingConverter.ListStreamPendingConverter listStreamPendingConverter =
+				new StreamPendingConverter.ListStreamPendingConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+					listStreamPendingConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+					listStreamPendingConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -374,20 +466,21 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 										final StreamEntryId end, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("start", start).put("end", end).put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName,
-				Range.create(start.toString(), end.toString()), Limit.from(count)),
-				new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final Limit limit = Limit.from(count);
+
+		return xPending(key, groupName, range, limit, args);
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key,
-				Consumer.from(groupName, consumerName), Range.unbounded(), Limit.unlimited()),
-				new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final Range<String> range = Range.unbounded();
+		final Limit limit = Limit.unlimited();
+
+		return xPending(key, consumer, range, limit, args);
 	}
 
 	@Override
@@ -395,10 +488,10 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 										final StreamEntryId start, final StreamEntryId end, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("start", start).put("end", end).put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName,
-				Range.create(start.toString(), end.toString()), Limit.from(count)),
-				new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final Limit limit = Limit.from(count);
+
+		return xPending(key, groupName, range, limit, args);
 	}
 
 	@Override
@@ -406,10 +499,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 										final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING,
-				(cmd)->cmd.xpending(key, Consumer.from(groupName, consumerName), Range.unbounded(), Limit.unlimited()),
-				new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final Range<String> range = Range.unbounded();
+		final Limit limit = Limit.unlimited();
+
+		return xPending(key, consumer, range, limit, args);
 	}
 
 	@Override
@@ -417,10 +511,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 										final StreamEntryId end, final long count, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key,
-				Consumer.from(groupName, consumerName), Range.create(start.toString(), end.toString()),
-				Limit.from(count)), new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final Limit limit = Limit.from(count);
+
+		return xPending(key, consumer, range, limit, args);
 	}
 
 	@Override
@@ -429,47 +524,71 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 										final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
-		return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key,
-				Consumer.from(groupName, consumerName), Range.create(start.toString(), end.toString()),
-				Limit.from(count)), new StreamPendingConverter.ListStreamPendingConverter())
-				.run(args);
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final Limit limit = Limit.from(count);
+
+		return xPending(key, consumer, range, limit, args);
 	}
 
 	@Override
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new LettuceCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key,
-				Range.create(start.toString(), end.toString())),
-				new StreamMessageConverter.ListStreamMessageConverter())
-				.run(args);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
+				new StreamMessageConverter.ListStreamMessageConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range),
+					listStreamMessageConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range),
+					listStreamMessageConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
 									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return new LettuceCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key,
-				Range.create(start.toString(), end.toString()), Limit.from(count)),
-				new StreamMessageConverter.ListStreamMessageConverter())
-				.run(args);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final Limit limit = Limit.from(count);
+		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
+				new StreamMessageConverter.ListStreamMessageConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range, limit),
+					listStreamMessageConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range, limit),
+					listStreamMessageConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("streams", streams);
-		return xRead(null, streams, args);
+		return xRead(streams, args);
 	}
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("count", count).put("streams", streams);
-		return xRead(new LettuceXReadArgs(count), streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
+
+		return xRead(xReadArgs, streams, args);
 	}
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("block", block).put("streams", streams);
-		return xRead(new LettuceXReadArgs(block), streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
+
+		return xRead(xReadArgs, streams, args);
 	}
 
 	@Override
@@ -477,7 +596,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 													  final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("count", count).put("block", block)
 				.put("streams", streams);
-		return xRead(new LettuceXReadArgs(block, count), streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
+
+		return xRead(xReadArgs, streams, args);
 	}
 
 	@Override
@@ -485,7 +606,10 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("streams", streams);
-		return xReadGroup(null, groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, args);
 	}
 
 	@Override
@@ -493,7 +617,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("streams", streams);
-		return xReadGroup(null, groupName, consumerName, streams, args);
+		return xReadGroup(groupName, consumerName, streams, args);
 	}
 
 	@Override
@@ -501,7 +625,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final long count, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(count), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -509,7 +637,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final long count, final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(count), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -517,7 +647,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final int block, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("block", block).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(block), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -525,7 +659,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final int block, final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("block", block).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(block), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -534,7 +670,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup((new LettuceXReadArgs()).noack(isNoAck), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -543,7 +683,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup((new LettuceXReadArgs()).noack(isNoAck), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -552,7 +694,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(block, count), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -561,7 +707,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(block, count), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -570,7 +718,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(isNoAck, count), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -579,7 +731,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(isNoAck, count), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -588,7 +742,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup((new LettuceXReadArgs(block)).noack(isNoAck), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -597,7 +755,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup((new LettuceXReadArgs(block)).noack(isNoAck), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -606,7 +766,11 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(block, isNoAck, count), groupName, consumerName, streams, args);
+		final byte[] bGroupName = SafeEncoder.encode(groupName);
+		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
+
+		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -615,16 +779,27 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		return xReadGroup(new LettuceXReadArgs(block, isNoAck, count), groupName, consumerName, streams, args);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start);
-		return new LettuceCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key,
-				Range.create(start.toString(), end.toString())),
-				new StreamMessageConverter.ListStreamMessageConverter())
-				.run(args);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
+				new StreamMessageConverter.ListStreamMessageConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, range),
+					listStreamMessageConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, range),
+					listStreamMessageConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -632,27 +807,216 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 									   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start)
 				.put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key,
-				Range.create(start.toString(), end.toString()), Limit.from(count)),
-				new StreamMessageConverter.ListStreamMessageConverter())
-				.run(args);
+		final Range<String> range = Range.create(start.toString(), end.toString());
+		final Limit limit = Limit.from(count);
+		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
+				new StreamMessageConverter.ListStreamMessageConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, range, limit),
+					listStreamMessageConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, range, limit),
+					listStreamMessageConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
-		return new LettuceCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key,
-				xTrimArgument.isApproximateTrimming(), Long.MAX_VALUE), (value)->value)
-				.run(args);
+		return xTrim(key, xTrimArgument.isApproximateTrimming(), Long.MAX_VALUE, args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
-		return new LettuceCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key,
-				xTrimArgument.isApproximateTrimming(), limit), (value)->value)
+		return xTrim(key, xTrimArgument.isApproximateTrimming(), limit, args);
+	}
+
+	private StreamEntryId xAdd(final byte[] key, final Map<byte[], byte[]> hash, final XAddArgs xAddArgs,
+							   final CommandArguments args) {
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, xAddArgs, hash),
+					streamEntryIDConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, xAddArgs, hash),
+					streamEntryIDConverter)
+					.run(args);
+		}
+	}
+
+	private Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(
+					client, ProtocolCommand.XAUTOCLAIM)
+					.run(args);
+		}else{
+			return new LettuceCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(
+					client, ProtocolCommand.XAUTOCLAIM)
+					.run(args);
+		}
+	}
+
+	private Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
+					client, ProtocolCommand.XAUTOCLAIM)
+					.run(args);
+		}else{
+			return new LettuceCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
+					client, ProtocolCommand.XAUTOCLAIM)
+					.run(args);
+		}
+	}
+
+	private List<StreamEntry> xClaim(final byte[] key, final StreamEntryId[] ids, final Consumer<byte[]> consumer,
+									 final XClaimArgs xClaimArgs, final CommandArguments args) {
+		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
+		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
+				new StreamMessageConverter.ListStreamMessageConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XCLAIM,
+					(cmd)->cmd.xclaim(key, consumer, xClaimArgs, messageIds), listStreamMessageConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XCLAIM, (cmd)->cmd.xclaim(key, consumer, xClaimArgs,
+					messageIds), listStreamMessageConverter)
+					.run(args);
+		}
+	}
+
+	private List<StreamEntryId> xClaimJustId(final byte[] key, final StreamEntryId[] ids,
+											 final Consumer<byte[]> consumer, final XClaimArgs xClaimArgs,
+											 final CommandArguments args) {
+		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
+		final StreamMessageConverter.ListStreamMessageStreamEntryIdConverter listStreamMessageStreamEntryIdConverter
+				= new StreamMessageConverter.ListStreamMessageStreamEntryIdConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XCLAIM,
+					(cmd)->cmd.xclaim(key, consumer, xClaimArgs, messageIds), listStreamMessageStreamEntryIdConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XCLAIM,
+					(cmd)->cmd.xclaim(key, consumer, xClaimArgs, messageIds), listStreamMessageStreamEntryIdConverter)
+					.run(args);
+		}
+	}
+
+	private Status xGroupCreateConsumer(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
+					.run(args);
+		}else{
+			return new LettuceCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
+					.run(args);
+		}
+	}
+
+	private List<StreamPending> xPending(final byte[] key, final byte[] groupName, Range<String> range,
+										 final Limit limit, final CommandArguments args) {
+		final StreamPendingConverter.ListStreamPendingConverter listStreamPendingConverter =
+				new StreamPendingConverter.ListStreamPendingConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName,
+					range, limit), listStreamPendingConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName,
+					range, limit), listStreamPendingConverter)
+					.run(args);
+		}
+	}
+
+	private List<StreamPending> xPending(final byte[] key, final Consumer<byte[]> consumer, Range<String> range,
+										 final Limit limit, final CommandArguments args) {
+		final StreamPendingConverter.ListStreamPendingConverter listStreamPendingConverter =
+				new StreamPendingConverter.ListStreamPendingConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, consumer,
+					range, limit), listStreamPendingConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, consumer,
+					range, limit), listStreamPendingConverter)
+					.run(args);
+		}
+	}
+
+	private List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
+													   final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
+		/*
+		return new LettuceCommand<List<StreamMessage<byte[], List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
+				client,
+				ProtocolCommand.XREAD, (cmd)->(xReadArgs == null ?
+				cmd.xread(streamOffsets) : cmd.xread(xReadArgs, streamOffsets)),
+				(v)->(List<Map<String, List<StreamEntry>>>) null)
 				.run(args);
+
+		 */
+		return null;
+	}
+
+	private List<Map<String, List<StreamEntry>>> xRead(final XReadArgs xReadArgs, final Map<String,
+			StreamEntryId> streams, final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
+		/*
+		return new LettuceCommand<List<StreamMessage<byte[], List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
+				client,
+				ProtocolCommand.XREAD, (cmd)->(xReadArgs == null ?
+				cmd.xread(streamOffsets) : cmd.xread(xReadArgs, streamOffsets)),
+				(v)->(List<Map<String, List<StreamEntry>>>) null)
+				.run(args);
+
+		 */
+		return null;
+	}
+
+	private <K> List<Map<K, List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final Map<K, StreamEntryId> streams,
+														   final XReadArgs xReadArgs, final CommandArguments args) {
+		return null;
+	}
+
+	private <K> List<Map<K, List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final Map<K, StreamEntryId> streams,
+														   final CommandArguments args) {
+		return null;
+	}
+
+	private Long xTrim(final byte[] key, final boolean approximateTrimming, final long limit,
+					   final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key,
+					approximateTrimming, limit), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key,
+					approximateTrimming, limit), (v)->v)
+					.run(args);
+		}
 	}
 
 }

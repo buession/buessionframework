@@ -42,8 +42,6 @@ import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodesConverter;
 import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
-import com.buession.redis.core.internal.convert.response.ListConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;
 
@@ -61,205 +59,389 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 
 	@Override
 	public String clusterMyId() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS, (cmd)->cmd.clusterAddSlots(slots),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
+					(cmd)->cmd.clusterAddSlots(slots), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS, (cmd)->cmd.clusterAddSlots(slots),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
-				new ClusterSlotConverter.ListClusterSlotConverter())
-				.run();
+		final ClusterSlotConverter.ListClusterSlotConverter listClusterSlotConverter =
+				new ClusterSlotConverter.ListClusterSlotConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
+					listClusterSlotConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
+					listClusterSlotConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-				(cmd)->cmd.clusterCountFailureReports(nodeId).intValue(), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create("slot", slot);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
-				(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
+					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
+					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS, (cmd)->cmd.clusterDelSlots(slots),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
+					(cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS, (cmd)->cmd.clusterDelSlots(slots),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushslots(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushslots(),
+					okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushslots(),
+					okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
-				(cmd)->cmd.clusterFailover(ClusterFailoverOption.FORCE == clusterFailoverOption),
-				new OkStatusConverter())
-				.run(args);
+		final boolean force = ClusterFailoverOption.FORCE == clusterFailoverOption;
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
+					(cmd)->cmd.clusterFailover(force), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER, (cmd)->cmd.clusterFailover(force),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-				(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), new ListConverter.BinaryToStringListConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, (cmd)->cmd.clusterKeyslot(key),
-				(v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+					(cmd)->cmd.clusterKeyslot(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, (cmd)->cmd.clusterKeyslot(key),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
-				new ClusterInfoConverter())
-				.run();
+		final ClusterInfoConverter clusterInfoConverter = new ClusterInfoConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
+					clusterInfoConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
+					clusterInfoConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
-				new ClusterNodesConverter())
-				.run();
+		final ClusterNodesConverter clusterNodesConverter = new ClusterNodesConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
+					clusterNodesConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
+					clusterNodesConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
-				new ClusterNodeConverter.ListClusterNodeConverter())
-				.run(args);
+		final ClusterNodeConverter.ListClusterNodeConverter listClusterNodeConverter =
+				new ClusterNodeConverter.ListClusterNodeConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
+					listClusterNodeConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
+					listClusterNodeConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS, (cmd)->cmd.clusterReplicate(nodeId),
-				new ClusterReplicasConverter())
-				.run(args);
+		final ClusterReplicasConverter clusterReplicasConverter = new ClusterReplicasConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
+					(cmd)->cmd.clusterReplicate(nodeId), clusterReplicasConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS, (cmd)->cmd.clusterReplicate(nodeId),
+					clusterReplicasConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE, (cmd)->cmd.clusterReplicate(nodeId),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
+					(cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE, (cmd)->cmd.clusterReplicate(nodeId),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_RESET,
-				(cmd)->cmd.clusterReset(ClusterResetOption.HARD == clusterResetOption), new OkStatusConverter())
-				.run(args);
+		final boolean hard = ClusterResetOption.HARD == clusterResetOption;
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_RESET, (cmd)->cmd.clusterReset(hard),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_RESET, (cmd)->cmd.clusterReset(hard),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveconfig(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveconfig(),
+					okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveconfig(),
+					okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
-				(cmd)->cmd.clusterSetConfigEpoch(configEpoch), new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
+					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
+					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
-				new BumpEpochConverter())
-				.run();
+		final BumpEpochConverter bumpEpochConverter = new BumpEpochConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
+					bumpEpochConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
+					bumpEpochConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-		return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
-			switch(setSlotOption){
-				case IMPORTING:
-					return cmd.clusterSetSlotImporting(slot, nodeId);
-				case MIGRATING:
-					return cmd.clusterSetSlotMigrating(slot, nodeId);
-				case STABLE:
-					return cmd.clusterSetSlotStable(slot);
-				case NODE:
-					return cmd.clusterSetSlotNode(slot, nodeId);
-				default:
-					return null;
-			}
-		}, new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
+				switch(setSlotOption){
+					case IMPORTING:
+						return cmd.clusterSetSlotImporting(slot, nodeId);
+					case MIGRATING:
+						return cmd.clusterSetSlotMigrating(slot, nodeId);
+					case STABLE:
+						return cmd.clusterSetSlotStable(slot);
+					case NODE:
+						return cmd.clusterSetSlotNode(slot, nodeId);
+					default:
+						return null;
+				}
+			}, okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
+				switch(setSlotOption){
+					case IMPORTING:
+						return cmd.clusterSetSlotImporting(slot, nodeId);
+					case MIGRATING:
+						return cmd.clusterSetSlotMigrating(slot, nodeId);
+					case STABLE:
+						return cmd.clusterSetSlotStable(slot);
+					case NODE:
+						return cmd.clusterSetSlotNode(slot, nodeId);
+					default:
+						return null;
+				}
+			}, okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status asking() {
-		return new LettuceCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(), okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(), okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status readWrite() {
-		return new LettuceCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
+					okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(), okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status readOnly() {
-		return new LettuceCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
-				new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(), okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(), okStatusConverter)
+					.run();
+		}
 	}
 
 }

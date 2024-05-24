@@ -81,11 +81,6 @@ public abstract class AbstractHashOperations<C extends LettuceRedisClient> exten
 	}
 
 	@Override
-	public String hRandField(final String key) {
-		return SafeEncoder.encode(hRandField(SafeEncoder.encode(key)));
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
 		return hScan(key, Long.toString(cursor));
 	}

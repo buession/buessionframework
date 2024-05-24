@@ -36,6 +36,7 @@ import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.XReadArgs;
@@ -242,41 +243,6 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 	@Override
 	public Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit) {
 		return xTrim(SafeEncoder.encode(key), xTrimArgument, limit);
-	}
-
-	protected List<Map<String, List<StreamEntry>>> xRead(final XReadArgs xReadArgs, final Map<String,
-			StreamEntryId> streams, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		int i = 0;
-
-		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
-		}
-
-		/*
-		return new LettuceCommand<List<StreamMessage<byte[], List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-				client,
-				ProtocolCommand.XREAD, (cmd)->(xReadArgs == null ?
-				cmd.xread(streamOffsets) : cmd.xread(xReadArgs, streamOffsets)),
-				(v)->(List<Map<String, List<StreamEntry>>>) null)
-				.run(args);
-
-		 */
-		return null;
-	}
-
-	protected List<Map<String, List<StreamEntry>>> xReadGroup(final XReadArgs xReadArgs, final String groupName,
-															  final String consumerName,
-															  final Map<String, StreamEntryId> streams,
-															  final CommandArguments args) {
-		return null;
-	}
-
-	protected List<Map<byte[], List<StreamEntry>>> xReadGroup(final XReadArgs xReadArgs, final byte[] groupName,
-															  final byte[] consumerName,
-															  final Map<byte[], StreamEntryId> streams,
-															  final CommandArguments args) {
-		return null;
 	}
 
 }

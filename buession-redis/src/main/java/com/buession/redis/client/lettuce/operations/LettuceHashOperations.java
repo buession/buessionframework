@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
@@ -34,10 +35,13 @@ import com.buession.redis.core.internal.convert.lettuce.response.MapScanCursorCo
 import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.ListSetConverter;
 import com.buession.redis.core.internal.convert.response.MapConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.KeyValue;
+import io.lettuce.core.MapScanCursor;
+import io.lettuce.core.ScanArgs;
+import io.lettuce.core.ScanCursor;
 import io.lettuce.core.Value;
 
 import java.util.HashSet;
@@ -60,205 +64,263 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
-		return new LettuceCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean hExists(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
-		return new LettuceCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String hGet(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
-		return new LettuceCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(SafeEncoder.encode(key),
-				SafeEncoder.encode(field)), SafeEncoder::encode)
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[] bField = SafeEncoder.encode(field);
+
+		return hGet(bKey, bField, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
-		return new LettuceCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
-				.run(args);
+		return hGet(key, field, (v)->v, args);
 	}
 
 	@Override
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(SafeEncoder.encode(key)),
-				(new MapConverter.BinaryToStringMapConverter()))
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
+				new MapConverter.BinaryToStringMapConverter();
+
+		return hGetAll(bKey, binaryToStringMapConverter, args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), (v)->v)
-				.run(args);
+		return hGetAll(key, (v)->v, args);
 	}
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.HINCRBYFLOAT, (cmd)->cmd.hincrbyfloat(key, field, value),
-				(v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(SafeEncoder.encode(key)),
-				new ListSetConverter.BinaryToStringListSetConverter())
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ListSetConverter.BinaryToStringListSetConverter binaryToStringListSetConverter =
+				new ListSetConverter.BinaryToStringListSetConverter();
+
+		return hKeys(bKey, binaryToStringListSetConverter, args);
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), HashSet::new)
-				.run(args);
+		return hKeys(key, HashSet::new, args);
 	}
 
 	@Override
 	public Long hLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
-		return new LettuceCommand<>(client, ProtocolCommand.HMGET,
-				(cmd)->cmd.hmget(SafeEncoder.encode(key), SafeEncoder.encode(fields)),
-				new com.buession.core.converter.ListConverter<>((v)->SafeEncoder.encode(v.getValue())))
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[][] bFields = SafeEncoder.encode(fields);
+		final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
+				new com.buession.core.converter.ListConverter<>((v)->SafeEncoder.encode(v.getValue()));
+
+		return hMGet(bKey, bFields, listConverter, args);
 	}
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
-		return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
-				new com.buession.core.converter.ListConverter<>(Value::getValue))
-				.run(args);
+		final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter =
+				new com.buession.core.converter.ListConverter<>(Value::getValue);
+
+		return hMGet(key, fields, listConverter, args);
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
-		return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
-				new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public String hRandField(final String key) {
+		final CommandArguments args = CommandArguments.create("key", key);
+		return hRandField(args);
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<byte[], byte[]>(client, ProtocolCommand.HRANDFIELD)
-				.run(args);
+		return hRandField(args);
 	}
 
 	@Override
 	public List<String> hRandField(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.HRANDFIELD)
-				.run(args);
+		return hRandField(args);
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new LettuceCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.HRANDFIELD)
-				.run(args);
+		return hRandField(args);
 	}
 
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new LettuceCommand<Map<String, String>, Map<String, String>>(client, ProtocolCommand.HRANDFIELD)
-				.run(args);
+		return hRandFieldWithValues(args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return new LettuceCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client, ProtocolCommand.HRANDFIELD)
-				.run(args);
+		return hRandFieldWithValues(args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor)),
-				new MapScanCursorConverter.BvSvMapScanCursorConverter())
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor)),
-				new MapScanCursorConverter<>())
-				.run(args);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, mapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				new MapScanCursorConverter.BvSvMapScanCursorConverter())
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
+		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
-				new MapScanCursorConverter<>())
-				.run(args);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
+		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				new MapScanCursorConverter.BvSvMapScanCursorConverter())
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(count);
+		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
-				new MapScanCursorConverter<>())
-				.run(args);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(count);
+		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor),
-						new LettuceScanArgs(pattern, count)), new MapScanCursorConverter.BvSvMapScanCursorConverter())
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
+		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
@@ -266,48 +328,171 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 												 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		return new LettuceCommand<>(client, ProtocolCommand.HSCAN,
-				(cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
-				new MapScanCursorConverter<>())
-				.run(args);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
+		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
 
 	@Override
 	public Long hSet(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
-				(v)->Boolean.TRUE.equals(v) ? 1L : 0L)
-				.run(args);
+		final Converter<Boolean, Long> converter = (v)->Boolean.TRUE.equals(v) ? 1L : 0L;
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value), converter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
-				new BooleanStatusConverter())
-				.run(args);
+		final BooleanStatusConverter booleanStatusConverter = new BooleanStatusConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+					booleanStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
-		return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(SafeEncoder.encode(key)),
-				new ListConverter.BinaryToStringListConverter())
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+
+		return hVals(bKey, binaryToStringListConverter, args);
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new LettuceCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
-				.run(args);
+		return hVals(key, (v)->v, args);
+	}
+
+	private <V> V hGet(final byte[] key, final byte[] field, final Converter<byte[], V> converter,
+					   final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
+					.run(args);
+		}
+	}
+
+	private <K, V> Map<K, V> hGetAll(final byte[] key,
+									 final MapConverter<byte[], byte[], K, V> converter, final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+					.run(args);
+		}
+	}
+
+	private <V> Set<V> hKeys(final byte[] key, final ListSetConverter<byte[], V> converter,
+							 final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> hMGet(final byte[] key, final byte[][] fields,
+							  final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, V> converter,
+							  final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+					.run(args);
+		}
+	}
+
+	private <K, V> V hRandField(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<K, V>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}else{
+			return new LettuceCommand<K, V>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}
+	}
+
+	private <K, V> Map<K, V> hRandFieldWithValues(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}else{
+			return new LettuceCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}
+	}
+
+	private <K, V> ScanResult<Map<K, V>> hScan(final byte[] key, final ScanCursor cursor,
+											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
+											   CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+					.run(args);
+		}
+	}
+
+	private <K, V> ScanResult<Map<K, V>> hScan(final byte[] key, final ScanCursor cursor, final ScanArgs scanArgs,
+											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
+											   CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
+					converter)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> hVals(final byte[] key, final ListConverter<byte[], V> converter, final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+					.run(args);
+		}
 	}
 
 }

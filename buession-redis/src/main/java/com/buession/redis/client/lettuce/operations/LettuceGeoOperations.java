@@ -60,14 +60,22 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
-		return new LettuceCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, longitude, latitude,
-				member), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEOADD,
+					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEOADD,
+					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
+		final byte[] bKey = SafeEncoder.encode(key);
 		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
 				memberCoordinates.size() * 3);
 
@@ -80,9 +88,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 			});
 		}
 
-		return new LettuceCommand<>(client, ProtocolCommand.GEOADD,
-				(cmd)->cmd.geoadd(SafeEncoder.encode(key), lngLatMemberBuilder.build().toArray(new Object[]{})), (v)->v)
-				.run(args);
+		return geoAdd(bKey, lngLatMemberBuilder, args);
 	}
 
 	@Override
@@ -100,51 +106,59 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 			});
 		}
 
-		return new LettuceCommand<>(client, ProtocolCommand.GEOADD,
-				(cmd)->cmd.geoadd(key, lngLatMemberBuilder.build().toArray(new Object[]{})), (v)->v)
-				.run(args);
+		return geoAdd(key, lngLatMemberBuilder, args);
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new LettuceCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(SafeEncoder.encode(key),
-				SafeEncoder.encode(members)), new ListConverter<>(Value::getValue))
-				.run(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[][] bMembers = SafeEncoder.encode(members);
+		final ListConverter<Value<String>, String> listConverter = new ListConverter<>(Value::getValue);
+
+		return geoHash(bKey, bMembers, listConverter, args);
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new LettuceCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
-				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())))
-				.run(args);
+		final ListConverter<Value<String>, byte[]> listConverter = new ListConverter<>(
+				(v)->SafeEncoder.encode(v.getValue()));
+
+		return geoHash(key, members, listConverter, args);
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return new LettuceCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-				new GeoCoordinateConverter.ListGeoCoordinateConverter())
-				.run(args);
+		final GeoCoordinateConverter.ListGeoCoordinateConverter listGeoCoordinateConverter =
+				new GeoCoordinateConverter.ListGeoCoordinateConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
+					listGeoCoordinateConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
+					listGeoCoordinateConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
-		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
-				GeoArgs.Unit.m), (v)->v)
-				.run(args);
+		return geoDist(key, member1, member2, GeoArgs.Unit.m, args);
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		return new LettuceCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
-				(new GeoUnitConverter()).convert(unit)), (v)->v)
-				.run(args);
+		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
+
+		return geoDist(key, member1, member2, geoArgsUnit, args);
 	}
 
 	@Override
@@ -152,10 +166,20 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS, (cmd)->cmd.georadius(key, longitude, latitude,
-				radius, (new GeoUnitConverter()).convert(unit)),
-				new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter())
-				.run(args);
+		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
+		final GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter setListGeoRadiusGeneralResultConverter = new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEORADIUS,
+					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
+					setListGeoRadiusGeneralResultConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS,
+					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
+					setListGeoRadiusGeneralResultConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -165,10 +189,22 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS, (cmd)->cmd.georadius(key, longitude, latitude,
-				radius, (new GeoUnitConverter()).convert(unit), LettuceGeoArgs.from(geoRadiusArgument)),
-				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter())
-				.run(args);
+		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
+		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
+		final GeoRadiusResponseConverter.ListGeoRadiusResponseConverter listGeoRadiusResponseConverter =
+				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEORADIUS,
+					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
+					listGeoRadiusResponseConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS,
+					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
+					listGeoRadiusResponseConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -176,8 +212,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-				.run(args);
+		return geoRadiusRo(args);
 	}
 
 	@Override
@@ -187,8 +222,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-				.run(args);
+		return geoRadiusRo(args);
 	}
 
 	@Override
@@ -196,10 +230,20 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-				(cmd)->cmd.georadiusbymember(key, member, radius, (new GeoUnitConverter()).convert(unit)),
-				new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter())
-				.run(args);
+		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
+		final GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter setListGeoRadiusGeneralResultConverter = new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
+					setListGeoRadiusGeneralResultConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
+					setListGeoRadiusGeneralResultConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -207,11 +251,22 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-				(cmd)->cmd.georadiusbymember(key, member, radius, (new GeoUnitConverter()).convert(unit),
-						LettuceGeoArgs.from(geoRadiusArgument)),
-				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter())
-				.run(args);
+		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
+		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
+		final GeoRadiusResponseConverter.ListGeoRadiusResponseConverter listGeoRadiusResponseConverter =
+				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
+					listGeoRadiusResponseConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
+					listGeoRadiusResponseConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -219,8 +274,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER_RO)
-				.run(args);
+		return geoRadiusByMemberRo(args);
 	}
 
 	@Override
@@ -228,8 +282,66 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER_RO)
-				.run(args);
+		return geoRadiusByMemberRo(args);
+	}
+
+	private Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder, final CommandArguments args) {
+		final Object[] lngLatMembers = lngLatMemberBuilder.build().toArray(new Object[]{});
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, lngLatMembers),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, lngLatMembers), (v)->v)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> geoHash(final byte[] key, final byte[][] members,
+								final ListConverter<Value<String>, V> converter, final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members), converter)
+					.run(args);
+		}
+	}
+
+	private Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoArgs.Unit unit,
+						   final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.GEODIST, (cmd)->cmd.geodist(key, member1, member2,
+					unit), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.GEODIST,
+					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
+					.run(args);
+		}
+	}
+
+	private List<GeoRadius> geoRadiusRo(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
+					.run(args);
+		}else{
+			return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
+					.run(args);
+		}
+	}
+
+	private List<GeoRadius> geoRadiusByMemberRo(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER_RO)
+					.run(args);
+		}else{
+			return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER_RO)
+					.run(args);
+		}
 	}
 
 }

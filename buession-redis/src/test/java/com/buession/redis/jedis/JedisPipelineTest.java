@@ -22,25 +22,29 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.lettuce;
 
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.AbstractRedisOperations;
+import com.buession.redis.RedisTemplate;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
- * Lettuce Redis 命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClient> extends AbstractRedisOperations<C>
-		implements LettuceRedisOperations {
+public class LettucePipelineTest extends AbstractLettuceRedisTest {
 
-	public AbstractLettuceRedisOperations(final C client) {
-		super(client);
+	@Test
+	public void test() {
+		RedisTemplate redisTemplate = redisTemplate();
+		redisTemplate.pipeline();
+		redisTemplate.exists("a");
+		redisTemplate.get("a");
+		redisTemplate.role();
+		List<Object> result = redisTemplate.exec();
+		System.out.println(result);
 	}
 
 }

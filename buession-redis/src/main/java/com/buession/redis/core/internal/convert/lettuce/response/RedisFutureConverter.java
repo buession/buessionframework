@@ -19,35 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.connection;
-
-import com.buession.core.converter.Converter;
-import com.buession.core.utils.Assert;
-import com.buession.redis.core.PoolConfig;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.springframework.lang.Nullable;
-
-/**
+ */package com.buession.redis.core.internal.convert.lettuce.response;/**
+ * 
+ *
  * @author Yong.Teng
- * @since 2.3.0
- */
-@Deprecated
-public class PoolConfigConverter<T> implements Converter<PoolConfig, GenericObjectPoolConfig<T>> {
-
-	private final GenericObjectPoolConfig<T> poolConfig;
-
-	public PoolConfigConverter(final GenericObjectPoolConfig<T> poolConfig) {
-		Assert.isNull(poolConfig, "GenericObjectPoolConfig cloud not be null.");
-		this.poolConfig = poolConfig;
-	}
-
-	@Nullable
-	@Override
-	public GenericObjectPoolConfig<T> convert(PoolConfig config) {
-		return config.toGenericObjectPoolConfig(poolConfig);
-	}
-
+ * @since 3.0.0
+ */public class RedisFutureConverter {
 }

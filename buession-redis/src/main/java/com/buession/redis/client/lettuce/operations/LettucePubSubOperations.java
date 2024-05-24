@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.PubSubListener;
@@ -51,123 +52,211 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
-				.run(args);
+		pSubscribe(args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
-				.run(args);
+		pSubscribe(args);
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return new LettuceCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> pubsubChannels() {
-		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-				new ListConverter.BinaryToStringListConverter())
-				.run();
+		final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
+				new ListConverter.BinaryToStringListConverter();
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+					binaryToStringListConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+					binaryToStringListConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)), new ListConverter.BinaryToStringListConverter())
-				.run(args);
+		final byte[] bPattern = SafeEncoder.encode(pattern);
+
+		return pubsubChannels(bPattern, binaryToStringListConverter, args);
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(pattern),
-				(v)->v)
-				.run(args);
+		return pubsubChannels(pattern, (v)->v, args);
 	}
 
 	@Override
 	public Long pubsubNumPat() {
-		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
-				(cmd)->cmd.pubsubNumsub(SafeEncoder.encode(channels)), new MapConverter<>(SafeEncoder::encode, (v)->v))
-				.run(args);
+		final byte[][] bChannels = SafeEncoder.encode(channels);
+		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
+
+		return pubsubNumSub(bChannels, converter, args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels), (v)->v)
-				.run(args);
+		return pubsubNumSub(channels, (v)->v, args);
 	}
 
 	@Override
 	public Object pUnSubscribe() {
-		return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run();
+		}
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-				.run(args);
+		return pUnSubscribe(args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-				.run(args);
+		return pUnSubscribe(args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
-				.run(args);
+		subscribe(args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
-				.run(args);
+		subscribe(args);
 	}
 
 	@Override
 	public Object unSubscribe() {
-		return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run();
+		}
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-				.run(args);
+		return unSubscribe(args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-				.run(args);
+		return unSubscribe(args);
+	}
+
+	private void pSubscribe(final CommandArguments args) {
+		if(isMulti()){
+			new LettuceAsyncCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}else{
+			new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> pubsubChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
+									   final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+					(cmd)->cmd.pubsubChannels(pattern), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(pattern),
+					converter)
+					.run(args);
+		}
+	}
+
+	private <K> Map<K, Long> pubsubNumSub(final byte[][] channels,
+										  final Converter<Map<byte[], Long>, Map<K, Long>> converter,
+										  final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
+					converter)
+					.run(args);
+		}
+	}
+
+	private Object pUnSubscribe(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run(args);
+		}
+	}
+
+	private void subscribe(final CommandArguments args) {
+		if(isMulti()){
+			new LettuceAsyncCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}else{
+			new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}
+	}
+
+	private Object unSubscribe(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run(args);
+		}
 	}
 
 }

@@ -24,11 +24,12 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import io.lettuce.core.TransactionResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,34 +48,61 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public Status multi() {
-		return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public List<Object> exec() {
-		return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(),
-				(value)->value.stream().collect(Collectors.toList()))
-				.run();
+		final Converter<TransactionResult, List<Object>> converter = (v)->v.stream().collect(Collectors.toList());
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+					.run();
+		}
 	}
 
 	@Override
 	public void discard() {
-		new LettuceCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (value)->value)
-				.run();
+		if(isMulti()){
+			new LettuceAsyncCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+					.run();
+		}else{
+			new LettuceCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), new OkStatusConverter())
-				.run(args);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status unwatch() {
-		return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), new OkStatusConverter())
-				.run();
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+					.run();
+		}
 	}
 
 }

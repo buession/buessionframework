@@ -26,19 +26,25 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
+import com.buession.redis.core.Command;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
+import com.buession.redis.core.internal.convert.lettuce.response.RedisFutureConverter;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
+import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 
 /**
@@ -75,11 +81,13 @@ public interface LettuceRedisOperations extends RedisOperations {
 				if(executor == null){
 					throw new NotSupportedPipelineCommandException(RedisConnectionUtils.getRedisMode(connection),
 							getCommand());
+				}else{
 				}
 			}else if(connection.isTransaction()){
 				if(executor == null){
 					throw new NotSupportedTransactionCommandException(RedisConnectionUtils.getRedisMode(connection),
 							getCommand());
+				}else{
 				}
 			}else{
 				if(executor == null){
@@ -96,90 +104,155 @@ public interface LettuceRedisOperations extends RedisOperations {
 					}
 				}
 			}
-			/*
-			if(connection.isPipeline()){
-				try{
-						client.getTxResults().add(pipelineRunner.run());
-					}catch(Exception e){
-						throw new RedisException(e.getMessage(), e);
-					}
-			}else if(connection.isTransaction()){
-				try{
-						client.getTxResults().add(transactionRunner.run());
-					}catch(Exception e){
-						throw new RedisException(e.getMessage(), e);
-					}
-			}
 
-			 */
 			return null;
 		}
 
-		/*
-		protected Runner createPipelineRunner(final Executor<Pipeline, Response<R>> executor) {
-			return new Runner() {
+	}
 
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public JedisResult<R, R> run() throws Exception {
-					final Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
-					return newJedisResult(executor.execute(jedisPipeline));
+	abstract class AbstractLettuceAsyncCommand<CLIENT extends LettuceRedisClient, CONN extends LettuceRedisConnection, SR, R>
+			extends AbstractRedisOperationsCommand<CLIENT, CONN, R> {
+
+		protected final Command<R> redisCommand;
+
+		protected AbstractLettuceAsyncCommand(final CLIENT client, final ProtocolCommand command,
+											  final Command<R> redisCommand) {
+			super(client, command);
+			this.redisCommand = redisCommand;
+		}
+
+		@Override
+		public R execute() throws RedisException {
+			return redisCommand.execute();
+		}
+
+		protected final static class GeneralCommand<CONN extends RedisConnection, SR, R> implements Command<R> {
+
+			private final CONN connection;
+
+			private final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor;
+
+			private final Converter<SR, R> converter;
+
+			public GeneralCommand(final CONN connection,
+								  final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor,
+								  final Converter<SR, R> converter) {
+				this.connection = connection;
+				this.executor = executor;
+				this.converter = converter;
+			}
+
+			@Override
+			public ProtocolCommand getCommand() {
+				return null;
+			}
+
+			@Override
+			public R execute() throws RedisException {
+				if(connection.isPipeline()){
+					if(executor == null){
+						throw new NotSupportedPipelineCommandException(RedisConnectionUtils.getRedisMode(connection),
+								getCommand());
+					}else{
+						final StatefulRedisConnection<byte[], byte[]> statefulRedisConnection =
+								((LettuceConnection) connection).getStatefulConnection();
+						try{
+							final SR result = executor.execute(statefulRedisConnection.async());
+							return result == null ? null : converter.convert(result);
+						}catch(Exception e){
+							throw new RedisException(e.getMessage(), e);
+						}
+					}
+				}else if(connection.isTransaction()){
+					if(executor == null){
+						throw new NotSupportedTransactionCommandException(RedisConnectionUtils.getRedisMode(connection),
+								getCommand());
+					}else{
+						final StatefulRedisConnection<byte[], byte[]> statefulRedisConnection =
+								((LettuceConnection) connection).getStatefulConnection();
+						try{
+							final SR result = executor.execute(statefulRedisConnection.async());
+							return result == null ? null : converter.convert(result);
+						}catch(Exception e){
+							throw new RedisException(e.getMessage(), e);
+						}
+					}
+				}else{
 				}
 
-			};
+				return null;
+			}
+
+			@Override
+			public R run(CommandArguments arguments) throws RedisException {
+				return null;
+			}
+
 		}
 
-		protected <SR> Runner createPipelineRunner(final Executor<Pipeline, Response<SR>> executor,
-												   final Converter<SR, R> converter) {
-			return new Runner() {
+		protected final static class AsyncCommand<CONN extends RedisConnection, SR, R> implements Command<R> {
 
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public JedisResult<SR, R> run() throws Exception {
-					final Pipeline jedisPipeline = ((JedisPipeline) pipeline()).primitive();
-					return newJedisResult(executor.execute(jedisPipeline), converter);
+			private final CONN connection;
+
+			private final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor;
+
+			private final Converter<RedisFuture<SR>, R> converter;
+
+			public AsyncCommand(final CONN connection,
+								final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+								final Converter<RedisFuture<SR>, R> converter) {
+				this.connection = connection;
+				this.executor = executor;
+				this.converter = converter;
+			}
+
+			@Override
+			public ProtocolCommand getCommand() {
+				return null;
+			}
+
+			@Override
+			public R execute() throws RedisException {
+				if(connection.isPipeline()){
+					if(executor == null){
+						throw new NotSupportedPipelineCommandException(RedisConnectionUtils.getRedisMode(connection),
+								getCommand());
+					}else{
+						final StatefulRedisConnection<byte[], byte[]> statefulRedisConnection =
+								((LettuceConnection) connection).getStatefulConnection();
+						try{
+							final RedisFuture<SR> result = executor.execute(statefulRedisConnection.async());
+							return result == null ? null : converter.convert(result);
+						}catch(Exception e){
+							throw new RedisException(e.getMessage(), e);
+						}
+					}
+				}else if(connection.isTransaction()){
+					if(executor == null){
+						throw new NotSupportedTransactionCommandException(RedisConnectionUtils.getRedisMode(connection),
+								getCommand());
+					}else{
+						final StatefulRedisConnection<byte[], byte[]> statefulRedisConnection =
+								((LettuceConnection) connection).getStatefulConnection();
+						try{
+							final RedisFuture<SR> result = executor.execute(statefulRedisConnection.async());
+							return result == null ? null : converter.convert(result);
+						}catch(Exception e){
+							throw new RedisException(e.getMessage(), e);
+						}
+					}
+				}else{
 				}
 
-			};
+				return null;
+			}
+
+			@Override
+			public R run(CommandArguments arguments) throws RedisException {
+				return null;
+			}
+
 		}
-
-		protected Runner createTransactionRunner(final Executor<Transaction, Response<R>> executor) {
-			return new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public JedisResult<R, R> run() throws Exception {
-					final Transaction transaction = ((JedisTransaction) transaction()).primitive();
-					return newJedisResult(executor.execute(transaction));
-				}
-
-			};
-		}
-
-		protected <SR> Runner createTransactionRunner(final Executor<Transaction, Response<SR>> executor,
-													  final Converter<SR, R> converter) {
-			return new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public JedisResult<SR, R> run() throws Exception {
-					final Transaction transaction = ((JedisTransaction) transaction()).primitive();
-					return newJedisResult(executor.execute(transaction), converter);
-				}
-
-			};
-		}
-
-		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response) {
-			return JedisResult.Builder.<SV, TV>fromResponse(response).build();
-		}
-
-		protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response,
-															  final Converter<SV, TV> converter) {
-			return JedisResult.Builder.<SV, TV>fromResponse(response).mappedWith(converter).build();
-		}
-
-		 */
 
 	}
 
@@ -195,9 +268,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			super(client, command, null, converter);
 		}
 
+		@SuppressWarnings({"unchecked", "rawtype"})
 		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 							  final Executor<RedisCommands<byte[], byte[]>, SR> executor) {
-			super(client, command, executor);
+			super(client, command, executor, (value)->(R) value);
 		}
 
 		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
@@ -208,126 +282,40 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/*
-	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, JedisSentinelConnection, R> {
+	class LettuceAsyncCommand<SR, R> extends AbstractLettuceAsyncCommand<LettuceStandaloneClient, LettuceConnection,
+			SR, R> {
 
-		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command,
-									   final Executor<RedisCommands<byte[], byte[]>, R> executor) {
-			super(client, command);
+		@SuppressWarnings({"unchecked", "rawtype"})
+		public LettuceAsyncCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+			super(client, command, new AsyncCommand<>(client.getConnection(), null, (value)->(R) value));
 		}
 
-		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor) {
-			this.runner = new Runner() {
+		public LettuceAsyncCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+								   final Converter<SR, R> converter) {
+			super(client, command,
+					new AsyncCommand<>(client.getConnection(), null, new RedisFutureConverter<>(converter)));
 
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public R run() throws Exception {
-					return executor.execute(connection.getJedis());
-				}
-
-			};
-
-			return this;
 		}
 
-		public <SR> JedisSentinelCommand<R> general(final Executor<Jedis, SR> executor,
-													final Converter<SR, R> converter) {
-			this.runner = new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public R run() throws Exception {
-					return converter.convert(executor.execute(connection.getJedis()));
-				}
-
-			};
-
-			return this;
+		@SuppressWarnings({"unchecked", "rawtype"})
+		public LettuceAsyncCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+								   final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor) {
+			super(client, command, new AsyncCommand<>(client.getConnection(), executor, (value)->(R) value));
 		}
 
-		public JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
-			this.pipelineRunner = createPipelineRunner(executor);
-			return this;
+		public LettuceAsyncCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+								   final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+								   final Converter<SR, R> converter) {
+			super(client, command, new AsyncCommand<>(client.getConnection(), executor,
+					new RedisFutureConverter<>(converter)));
 		}
 
-		public <SR> JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-													 final Converter<SR, R> converter) {
-			this.pipelineRunner = createPipelineRunner(executor, converter);
-			return this;
-		}
-
-		public JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
-			this.transactionRunner = createTransactionRunner(executor);
-			return this;
-		}
-
-		public <SR> JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-														final Converter<SR, R> converter) {
-			this.transactionRunner = createTransactionRunner(executor, converter);
-			return this;
+		public LettuceAsyncCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+								   final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor,
+								   final Converter<SR, R> converter, final boolean tmp) {
+			super(client, command, new GeneralCommand<>(client.getConnection(), executor, converter));
 		}
 
 	}
-
-	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, JedisClusterConnection, R> {
-
-		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command) {
-			super(client, command);
-		}
-
-		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor) {
-			this.runner = new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public R run() throws Exception {
-					return executor.execute(connection.getCluster());
-				}
-
-			};
-
-			return this;
-		}
-
-		public <SR> JedisClusterCommand<R> general(final Executor<JedisCluster, SR> executor,
-												   final Converter<SR, R> converter) {
-			this.runner = new Runner() {
-
-				@SuppressWarnings({"unchecked"})
-				@Override
-				public R run() throws Exception {
-					return converter.convert(executor.execute(connection.getCluster()));
-				}
-
-			};
-
-			return this;
-		}
-
-		public JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor) {
-			this.pipelineRunner = createPipelineRunner(executor);
-			return this;
-		}
-
-		public <SR> JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-													final Converter<SR, R> converter) {
-			this.pipelineRunner = createPipelineRunner(executor, converter);
-			return this;
-		}
-
-		public JedisClusterCommand<R> transaction(final Executor<Transaction, Response<R>> executor) {
-			this.transactionRunner = createTransactionRunner(executor);
-			return this;
-		}
-
-		public <SR> JedisClusterCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
-													   final Converter<SR, R> converter) {
-			this.transactionRunner = createTransactionRunner(executor, converter);
-			return this;
-		}
-
-	}
-
-	 */
 
 }
