@@ -31,7 +31,6 @@ import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.TransactionResultConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -117,7 +116,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						return cmd.watch(keys);
 					}
 
-				}), new OkStatusConverter())
+				}), okStatusConverter)
 				.run(args);
 	}
 
@@ -132,7 +131,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						return cmd.watch(keys);
 					}
 
-				}), new OkStatusConverter())
+				}), okStatusConverter)
 				.run(args);
 	}
 
@@ -146,7 +145,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						return cmd.unwatch();
 					}
 
-				}), new OkStatusConverter())
+				}), okStatusConverter)
 				.run();
 	}
 

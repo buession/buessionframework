@@ -46,8 +46,6 @@ import com.buession.redis.core.internal.convert.jedis.response.StreamGroupInfoCo
 import com.buession.redis.core.internal.convert.jedis.response.StreamInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.StreamPendingEntryConverter;
 import com.buession.redis.core.internal.convert.jedis.response.StreamPendingSummaryConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisStreamEntryID;
 import com.buession.redis.core.internal.jedis.JedisXAddParams;
 import com.buession.redis.core.internal.jedis.JedisXAutoClaimParams;
@@ -301,10 +299,10 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 				.put("id", id);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.XGROUP_CREATE)
-				.general((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), new OkStatusConverter())
-				.pipeline((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), new OkStatusConverter())
+				.general((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), okStatusConverter)
+				.pipeline((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), okStatusConverter)
 				.transaction((cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream),
-						new OkStatusConverter())
+						okStatusConverter)
 				.run(args);
 	}
 
@@ -358,9 +356,9 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	public Status xGroupDestroy(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.XGROUP_DESTROY)
-				.general((cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter())
-				.pipeline((cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter())
-				.transaction((cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter())
+				.general((cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
+				.pipeline((cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
+				.transaction((cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
 				.run(args);
 	}
 
@@ -368,9 +366,9 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 	public Status xGroupDestroy(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.XGROUP_DESTROY)
-				.general((cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter())
-				.pipeline((cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter())
-				.transaction((cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter())
+				.general((cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
+				.pipeline((cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
+				.transaction((cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
 				.run(args);
 	}
 
@@ -379,9 +377,9 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("id", id);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.XGROUP_SETID)
-				.general((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), new OkStatusConverter())
-				.pipeline((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), new OkStatusConverter())
-				.transaction((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), new OkStatusConverter())
+				.general((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), okStatusConverter)
+				.pipeline((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), okStatusConverter)
+				.transaction((cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), okStatusConverter)
 				.run(args);
 	}
 

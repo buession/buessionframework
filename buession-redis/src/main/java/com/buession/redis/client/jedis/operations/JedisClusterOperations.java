@@ -44,7 +44,6 @@ import com.buession.redis.core.internal.convert.jedis.response.ClusterReplicasCo
 import com.buession.redis.core.internal.convert.jedis.response.ClusterResetOptionConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
 import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;
 
@@ -71,7 +70,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-				.general((cmd)->cmd.clusterAddSlots(slots), new OkStatusConverter())
+				.general((cmd)->cmd.clusterAddSlots(slots), okStatusConverter)
 				.run(args);
 	}
 
@@ -108,14 +107,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-				.general((cmd)->cmd.clusterDelSlots(slots), new OkStatusConverter())
+				.general((cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
 				.run(args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-				.general((cmd)->cmd.clusterFlushSlots(), new OkStatusConverter())
+				.general((cmd)->cmd.clusterFlushSlots(), okStatusConverter)
 				.run();
 	}
 
@@ -125,7 +124,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
 				.general((cmd)->cmd.clusterFailover(
 								(new ClusterFailoverOptionConverter()).convert(clusterFailoverOption)),
-						new OkStatusConverter())
+						okStatusConverter)
 				.run(args);
 	}
 
@@ -133,7 +132,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_FORGET)
-				.general((cmd)->cmd.clusterForget(nodeId), new OkStatusConverter())
+				.general((cmd)->cmd.clusterForget(nodeId), okStatusConverter)
 				.run(args);
 	}
 
@@ -164,7 +163,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_MEET)
-				.general((cmd)->cmd.clusterMeet(ip, port), new OkStatusConverter())
+				.general((cmd)->cmd.clusterMeet(ip, port), okStatusConverter)
 				.run(args);
 	}
 
@@ -196,7 +195,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-				.general((cmd)->cmd.clusterReplicate(nodeId), new OkStatusConverter())
+				.general((cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
 				.run(args);
 	}
 
@@ -205,14 +204,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_RESET)
 				.general((cmd)->cmd.clusterReset((new ClusterResetOptionConverter()).convert(clusterResetOption)),
-						new OkStatusConverter())
+						okStatusConverter)
 				.run(args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-				.general((cmd)->cmd.clusterSaveConfig(), new OkStatusConverter())
+				.general((cmd)->cmd.clusterSaveConfig(), okStatusConverter)
 				.run();
 	}
 
@@ -220,7 +219,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
 		return new JedisCommand<Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-				.general((cmd)->cmd.clusterSetConfigEpoch(configEpoch), new OkStatusConverter())
+				.general((cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
 				.run(args);
 	}
 
@@ -249,28 +248,28 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 						default:
 							return null;
 					}
-				}, new OkStatusConverter())
+				}, okStatusConverter)
 				.run(args);
 	}
 
 	@Override
 	public Status asking() {
 		return new JedisCommand<Status>(client, ProtocolCommand.ASKING)
-				.general((cmd)->cmd.asking(), new OkStatusConverter())
+				.general((cmd)->cmd.asking(), okStatusConverter)
 				.run();
 	}
 
 	@Override
 	public Status readWrite() {
 		return new JedisCommand<Status>(client, ProtocolCommand.READWRITE)
-				.general((cmd)->cmd.readwrite(), new OkStatusConverter())
+				.general((cmd)->cmd.readwrite(), okStatusConverter)
 				.run();
 	}
 
 	@Override
 	public Status readOnly() {
 		return new JedisCommand<Status>(client, ProtocolCommand.READONLY)
-				.general((cmd)->cmd.readonly(), new OkStatusConverter())
+				.general((cmd)->cmd.readonly(), okStatusConverter)
 				.run();
 	}
 

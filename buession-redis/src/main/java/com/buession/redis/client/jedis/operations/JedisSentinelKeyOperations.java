@@ -37,9 +37,7 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
 import com.buession.redis.core.internal.convert.response.BinaryObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
-import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.jedis.JedisMigrateParams;
 import com.buession.redis.core.internal.jedis.JedisRestoreParams;
@@ -147,9 +145,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status expire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
-				.pipeline((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
-				.transaction((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
+				.general((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
+				.pipeline((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
+				.transaction((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
 				.run(args);
 	}
 
@@ -157,9 +155,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
-				.pipeline((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
-				.transaction((cmd)->cmd.expire(key, lifetime), new OneStatusConverter())
+				.general((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
+				.pipeline((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
+				.transaction((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
 				.run(args);
 	}
 
@@ -169,9 +167,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("expireOption", expireOption);
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
+				.general((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 				.run(args);
 	}
 
@@ -181,9 +179,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("expireOption", expireOption);
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), new OneStatusConverter())
+				.general((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 				.run(args);
 	}
 
@@ -191,9 +189,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status expireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
+				.general((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
+				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
+				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
 				.run(args);
 	}
 
@@ -201,9 +199,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), new OneStatusConverter())
+				.general((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
+				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
+				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
 				.run(args);
 	}
 
@@ -211,9 +209,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status pExpire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
-				.transaction((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
+				.general((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
+				.pipeline((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
+				.transaction((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
 				.run(args);
 	}
 
@@ -221,9 +219,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
-				.transaction((cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter())
+				.general((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
+				.pipeline((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
+				.transaction((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
 				.run(args);
 	}
 
@@ -231,9 +229,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status pExpireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
+				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 				.run(args);
 	}
 
@@ -241,9 +239,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), new OneStatusConverter())
+				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 				.run(args);
 	}
 
@@ -251,9 +249,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status persist(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), new OneStatusConverter())
-				.pipeline((cmd)->cmd.persist(key), new OneStatusConverter())
-				.transaction((cmd)->cmd.persist(key), new OneStatusConverter())
+				.general((cmd)->cmd.persist(key), oneStatusConverter)
+				.pipeline((cmd)->cmd.persist(key), oneStatusConverter)
+				.transaction((cmd)->cmd.persist(key), oneStatusConverter)
 				.run(args);
 	}
 
@@ -261,9 +259,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), new OneStatusConverter())
-				.pipeline((cmd)->cmd.persist(key), new OneStatusConverter())
-				.transaction((cmd)->cmd.persist(key), new OneStatusConverter())
+				.general((cmd)->cmd.persist(key), oneStatusConverter)
+				.pipeline((cmd)->cmd.persist(key), oneStatusConverter)
+				.transaction((cmd)->cmd.persist(key), oneStatusConverter)
 				.run(args);
 	}
 
@@ -392,8 +390,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status move(final String key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MOVE)
-				.general((cmd)->cmd.move(key, db), new OneStatusConverter())
-				.pipeline((cmd)->cmd.move(key, db), new OneStatusConverter())
+				.general((cmd)->cmd.move(key, db), oneStatusConverter)
+				.pipeline((cmd)->cmd.move(key, db), oneStatusConverter)
 				.run(args);
 	}
 
@@ -401,8 +399,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status move(final byte[] key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MOVE)
-				.general((cmd)->cmd.move(key, db), new OneStatusConverter())
-				.pipeline((cmd)->cmd.move(key, db), new OneStatusConverter())
+				.general((cmd)->cmd.move(key, db), oneStatusConverter)
+				.pipeline((cmd)->cmd.move(key, db), oneStatusConverter)
 				.run(args);
 	}
 
@@ -412,8 +410,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("timeout", timeout).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams();
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -423,8 +421,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("timeout", timeout).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams();
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -435,8 +433,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -447,8 +445,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -459,8 +457,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -471,8 +469,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -484,8 +482,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -497,8 +495,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -509,8 +507,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(user, password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -521,8 +519,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(user, password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -534,8 +532,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -547,8 +545,8 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("keys", (Object[]) keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), new OkStatusConverter())
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -583,9 +581,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status rename(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
-				.pipeline((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
-				.transaction((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
+				.general((cmd)->cmd.rename(key, newKey), okStatusConverter)
+				.pipeline((cmd)->cmd.rename(key, newKey), okStatusConverter)
+				.transaction((cmd)->cmd.rename(key, newKey), okStatusConverter)
 				.run(args);
 	}
 
@@ -593,9 +591,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
-				.pipeline((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
-				.transaction((cmd)->cmd.rename(key, newKey), new OkStatusConverter())
+				.general((cmd)->cmd.rename(key, newKey), okStatusConverter)
+				.pipeline((cmd)->cmd.rename(key, newKey), okStatusConverter)
+				.transaction((cmd)->cmd.rename(key, newKey), okStatusConverter)
 				.run(args);
 	}
 
@@ -603,9 +601,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status renameNx(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
-				.pipeline((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
-				.transaction((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
+				.general((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
+				.pipeline((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
+				.transaction((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
 				.run(args);
 	}
 
@@ -613,9 +611,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
-				.pipeline((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
-				.transaction((cmd)->cmd.renamenx(key, newKey), new OneStatusConverter())
+				.general((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
+				.pipeline((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
+				.transaction((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
 				.run(args);
 	}
 
@@ -624,9 +622,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
+				.general((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 				.run(args);
 	}
 
@@ -635,9 +633,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), new OkStatusConverter())
+				.general((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 				.run(args);
 	}
 
@@ -648,9 +646,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("ttl", ttl).put("argument", argument);
 		final JedisRestoreParams params = JedisRestoreParams.from(argument);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
+				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
 				.run(args);
 	}
 
@@ -661,9 +659,9 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 				.put("ttl", ttl).put("argument", argument);
 		final JedisRestoreParams params = JedisRestoreParams.from(argument);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), new OkStatusConverter())
+				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
 				.run(args);
 	}
 

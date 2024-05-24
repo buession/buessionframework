@@ -29,9 +29,7 @@ import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
-import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -234,9 +232,9 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	public Status hMSet(final String key, final Map<String, String> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.HMGET)
-				.general((cmd)->cmd.hmset(key, data), new OkStatusConverter())
-				.pipeline((cmd)->cmd.hmset(key, data), new OkStatusConverter())
-				.transaction((cmd)->cmd.hmset(key, data), new OkStatusConverter())
+				.general((cmd)->cmd.hmset(key, data), okStatusConverter)
+				.pipeline((cmd)->cmd.hmset(key, data), okStatusConverter)
+				.transaction((cmd)->cmd.hmset(key, data), okStatusConverter)
 				.run(args);
 	}
 
@@ -244,9 +242,9 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.HMGET)
-				.general((cmd)->cmd.hmset(key, data), new OkStatusConverter())
-				.pipeline((cmd)->cmd.hmset(key, data), new OkStatusConverter())
-				.transaction((cmd)->cmd.hmset(key, data), new OkStatusConverter())
+				.general((cmd)->cmd.hmset(key, data), okStatusConverter)
+				.pipeline((cmd)->cmd.hmset(key, data), okStatusConverter)
+				.transaction((cmd)->cmd.hmset(key, data), okStatusConverter)
 				.run(args);
 	}
 
@@ -423,9 +421,9 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	public Status hSetNx(final String key, final String field, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.HSETNX)
-				.general((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
-				.pipeline((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
-				.transaction((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
+				.general((cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
+				.pipeline((cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
+				.transaction((cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
 				.run(args);
 	}
 
@@ -433,9 +431,9 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		return new JedisClusterCommand<Status>(client, ProtocolCommand.HSETNX)
-				.general((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
-				.pipeline((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
-				.transaction((cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter())
+				.general((cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
+				.pipeline((cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
+				.transaction((cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
 				.run(args);
 	}
 

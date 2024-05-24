@@ -44,7 +44,6 @@ import com.buession.redis.core.internal.convert.jedis.response.AccessControlUser
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.response.InfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.SlowlogConverter;
 import com.buession.redis.core.internal.convert.jedis.response.RoleConverter;
@@ -93,7 +92,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
-				.general((cmd)->cmd.aclSetUser(username, rules), new OkStatusConverter())
+				.general((cmd)->cmd.aclSetUser(username, rules), okStatusConverter)
 				.run(args);
 	}
 
@@ -101,7 +100,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status aclSetUser(final byte[] username, final byte[]... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_SETUSER)
-				.general((cmd)->cmd.aclSetUser(username, rules), new OkStatusConverter())
+				.general((cmd)->cmd.aclSetUser(username, rules), okStatusConverter)
 				.run(args);
 	}
 
@@ -180,7 +179,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status aclLoad() {
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOAD)
-				.general((cmd)->cmd.aclLoad(), new OkStatusConverter())
+				.general((cmd)->cmd.aclLoad(), okStatusConverter)
 				.run();
 	}
 
@@ -203,7 +202,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status aclLogReset() {
 		return new JedisCommand<Status>(client, ProtocolCommand.ACL_LOGREST)
-				.general((cmd)->cmd.aclLogReset(), new OkStatusConverter())
+				.general((cmd)->cmd.aclLogReset(), okStatusConverter)
 				.run();
 	}
 
@@ -231,7 +230,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
-				.general((cmd)->cmd.configSet(parameter, value), new OkStatusConverter())
+				.general((cmd)->cmd.configSet(parameter, value), okStatusConverter)
 				.run(args);
 	}
 
@@ -239,7 +238,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status configSet(final byte[] parameter, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_SET)
-				.general((cmd)->cmd.configSet(parameter, value), new OkStatusConverter())
+				.general((cmd)->cmd.configSet(parameter, value), okStatusConverter)
 				.run(args);
 	}
 
@@ -262,14 +261,14 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status configResetStat() {
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
-				.general((cmd)->cmd.configResetStat(), new OkStatusConverter())
+				.general((cmd)->cmd.configResetStat(), okStatusConverter)
 				.run();
 	}
 
 	@Override
 	public Status configRewrite() {
 		return new JedisCommand<Status>(client, ProtocolCommand.CONFIG_REWRITE)
-				.general((cmd)->cmd.configRewrite(), new OkStatusConverter())
+				.general((cmd)->cmd.configRewrite(), okStatusConverter)
 				.run();
 	}
 
@@ -283,7 +282,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status failover() {
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(), new OkStatusConverter())
+				.general((cmd)->cmd.failover(), okStatusConverter)
 				.run();
 	}
 
@@ -292,7 +291,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), new OkStatusConverter())
+				.general((cmd)->cmd.failover(params), okStatusConverter)
 				.run(args);
 	}
 
@@ -301,7 +300,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), new OkStatusConverter())
+				.general((cmd)->cmd.failover(params), okStatusConverter)
 				.run(args);
 	}
 
@@ -311,7 +310,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 				.put("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(host, port, timeout, isForce);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), new OkStatusConverter())
+				.general((cmd)->cmd.failover(params), okStatusConverter)
 				.run(args);
 	}
 
@@ -320,14 +319,14 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		final JedisFailoverParams params = new JedisFailoverParams(timeout);
 		return new JedisCommand<Status>(client, ProtocolCommand.FAILOVER)
-				.general((cmd)->cmd.failover(params), new OkStatusConverter())
+				.general((cmd)->cmd.failover(params), okStatusConverter)
 				.run(args);
 	}
 
 	@Override
 	public Status flushAll() {
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
-				.general((cmd)->cmd.flushAll(), new OkStatusConverter())
+				.general((cmd)->cmd.flushAll(), okStatusConverter)
 				.run();
 	}
 
@@ -335,14 +334,14 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHALL)
-				.general((cmd)->cmd.flushAll((new FlushModeConverter()).convert(mode)), new OkStatusConverter())
+				.general((cmd)->cmd.flushAll((new FlushModeConverter()).convert(mode)), okStatusConverter)
 				.run(args);
 	}
 
 	@Override
 	public Status flushDb() {
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.general((cmd)->cmd.flushDB(), new OkStatusConverter())
+				.general((cmd)->cmd.flushDB(), okStatusConverter)
 				.run();
 	}
 
@@ -350,7 +349,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		return new JedisCommand<Status>(client, ProtocolCommand.FLUSHDB)
-				.general((cmd)->cmd.flushDB((new FlushModeConverter()).convert(mode)), new OkStatusConverter())
+				.general((cmd)->cmd.flushDB((new FlushModeConverter()).convert(mode)), okStatusConverter)
 				.run(args);
 	}
 
@@ -446,7 +445,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
 		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_LOAD)
-				.general((cmd)->cmd.moduleLoad(path, arguments), new OkStatusConverter())
+				.general((cmd)->cmd.moduleLoad(path, arguments), okStatusConverter)
 				.run(args);
 	}
 
@@ -454,7 +453,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status moduleUnLoad(final String name) {
 		final CommandArguments args = CommandArguments.create("name", name);
 		return new JedisCommand<Status>(client, ProtocolCommand.MODULE_UNLOAD)
-				.general((cmd)->cmd.moduleUnload(name), new OkStatusConverter())
+				.general((cmd)->cmd.moduleUnload(name), okStatusConverter)
 				.run(args);
 	}
 
@@ -504,7 +503,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status replicaOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new JedisCommand<Status>(client, ProtocolCommand.REPLICAOF)
-				.general((cmd)->cmd.replicaof(host, port), new OkStatusConverter())
+				.general((cmd)->cmd.replicaof(host, port), okStatusConverter)
 				.run(args);
 	}
 
@@ -512,7 +511,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return new JedisCommand<Status>(client, ProtocolCommand.SLAVEOF)
-				.general((cmd)->cmd.slaveof(host, port), new OkStatusConverter())
+				.general((cmd)->cmd.slaveof(host, port), okStatusConverter)
 				.run(args);
 	}
 
@@ -526,7 +525,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status save() {
 		return new JedisCommand<Status>(client, ProtocolCommand.SAVE)
-				.general((cmd)->cmd.save(), new OkStatusConverter())
+				.general((cmd)->cmd.save(), okStatusConverter)
 				.run();
 	}
 
@@ -577,7 +576,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Status slowLogReset() {
 		return new JedisCommand<Status>(client, ProtocolCommand.SLOWLOG_RESET)
-				.general((cmd)->cmd.slowlogReset(), new OkStatusConverter())
+				.general((cmd)->cmd.slowlogReset(), okStatusConverter)
 				.run();
 	}
 
@@ -585,8 +584,8 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
 		return new JedisCommand<Status>(client, ProtocolCommand.SWAPDB)
-				.general((cmd)->cmd.swapDB(db1, db2), new OkStatusConverter())
-				.pipeline((cmd)->cmd.swapDB(db1, db2), new OkStatusConverter())
+				.general((cmd)->cmd.swapDB(db1, db2), okStatusConverter)
+				.pipeline((cmd)->cmd.swapDB(db1, db2), okStatusConverter)
 				.run(args);
 	}
 

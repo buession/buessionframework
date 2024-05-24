@@ -32,7 +32,6 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisLPosParams;
 import redis.clients.jedis.args.ListDirection;
 
@@ -98,9 +97,9 @@ public final class JedisSentinelListOperations extends AbstractListOperations<Je
 	public Status lSet(final String key, final long index, final String value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.LINSERT)
-				.general((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
-				.pipeline((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
-				.transaction((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
+				.general((cmd)->cmd.lset(key, index, value), okStatusConverter)
+				.pipeline((cmd)->cmd.lset(key, index, value), okStatusConverter)
+				.transaction((cmd)->cmd.lset(key, index, value), okStatusConverter)
 				.run(args);
 	}
 
@@ -108,9 +107,9 @@ public final class JedisSentinelListOperations extends AbstractListOperations<Je
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.LINSERT)
-				.general((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
-				.pipeline((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
-				.transaction((cmd)->cmd.lset(key, index, value), new OkStatusConverter())
+				.general((cmd)->cmd.lset(key, index, value), okStatusConverter)
+				.pipeline((cmd)->cmd.lset(key, index, value), okStatusConverter)
+				.transaction((cmd)->cmd.lset(key, index, value), okStatusConverter)
 				.run(args);
 	}
 
@@ -244,9 +243,9 @@ public final class JedisSentinelListOperations extends AbstractListOperations<Je
 	public Status lTrim(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.LTRIM)
-				.general((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
-				.pipeline((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
-				.transaction((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
+				.general((cmd)->cmd.ltrim(key, start, end), okStatusConverter)
+				.pipeline((cmd)->cmd.ltrim(key, start, end), okStatusConverter)
+				.transaction((cmd)->cmd.ltrim(key, start, end), okStatusConverter)
 				.run(args);
 	}
 
@@ -254,9 +253,9 @@ public final class JedisSentinelListOperations extends AbstractListOperations<Je
 	public Status lTrim(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.LTRIM)
-				.general((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
-				.pipeline((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
-				.transaction((cmd)->cmd.ltrim(key, start, end), new OkStatusConverter())
+				.general((cmd)->cmd.ltrim(key, start, end), okStatusConverter)
+				.pipeline((cmd)->cmd.ltrim(key, start, end), okStatusConverter)
+				.transaction((cmd)->cmd.ltrim(key, start, end), okStatusConverter)
 				.run(args);
 	}
 

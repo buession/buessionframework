@@ -30,7 +30,6 @@ import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -197,9 +196,9 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 	@Override
 	public Status scriptFlush() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(), new OkStatusConverter())
-				.pipeline((cmd)->cmd.scriptFlush((String) null), new OkStatusConverter())
-				.transaction((cmd)->cmd.scriptFlush((String) null), new OkStatusConverter())
+				.general((cmd)->cmd.scriptFlush(), okStatusConverter)
+				.pipeline((cmd)->cmd.scriptFlush((String) null), okStatusConverter)
+				.transaction((cmd)->cmd.scriptFlush((String) null), okStatusConverter)
 				.run();
 	}
 
@@ -208,9 +207,9 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(flushMode), new OkStatusConverter())
-				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), new OkStatusConverter())
-				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), new OkStatusConverter())
+				.general((cmd)->cmd.scriptFlush(flushMode), okStatusConverter)
+				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
+				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
 				.run(args);
 	}
 
@@ -237,9 +236,9 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 	@Override
 	public Status scriptKill() {
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SCRIPT_KILL)
-				.general((cmd)->cmd.scriptKill(), new OkStatusConverter())
-				.pipeline((cmd)->cmd.scriptKill((String) null), new OkStatusConverter())
-				.transaction((cmd)->cmd.scriptKill((String) null), new OkStatusConverter())
+				.general((cmd)->cmd.scriptKill(), okStatusConverter)
+				.pipeline((cmd)->cmd.scriptKill((String) null), okStatusConverter)
+				.transaction((cmd)->cmd.scriptKill((String) null), okStatusConverter)
 				.run();
 	}
 

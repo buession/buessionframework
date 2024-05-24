@@ -28,8 +28,6 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 
 /**
  * Jedis 哨兵模式 HyperLogLog 命令操作
@@ -47,9 +45,9 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	public Status pfAdd(final String key, final String... elements) {
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFADD)
-				.general((cmd)->cmd.pfadd(key, elements), new OneStatusConverter())
-				.pipeline((cmd)->cmd.pfadd(key, elements), new OneStatusConverter())
-				.transaction((cmd)->cmd.pfadd(key, elements), new OneStatusConverter())
+				.general((cmd)->cmd.pfadd(key, elements), oneStatusConverter)
+				.pipeline((cmd)->cmd.pfadd(key, elements), oneStatusConverter)
+				.transaction((cmd)->cmd.pfadd(key, elements), oneStatusConverter)
 				.run(args);
 	}
 
@@ -57,9 +55,9 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFADD)
-				.general((cmd)->cmd.pfadd(key, elements), new OneStatusConverter())
-				.pipeline((cmd)->cmd.pfadd(key, elements), new OneStatusConverter())
-				.transaction((cmd)->cmd.pfadd(key, elements), new OneStatusConverter())
+				.general((cmd)->cmd.pfadd(key, elements), oneStatusConverter)
+				.pipeline((cmd)->cmd.pfadd(key, elements), oneStatusConverter)
+				.transaction((cmd)->cmd.pfadd(key, elements), oneStatusConverter)
 				.run(args);
 	}
 
@@ -67,9 +65,9 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	public Status pfMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFMERGE)
-				.general((cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter())
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter())
+				.general((cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+				.transaction((cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 				.run(args);
 	}
 
@@ -77,9 +75,9 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PFMERGE)
-				.general((cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter())
-				.pipeline((cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter())
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter())
+				.general((cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+				.pipeline((cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+				.transaction((cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 				.run(args);
 	}
 

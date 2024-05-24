@@ -30,7 +30,6 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
-import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -232,9 +231,9 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	public Status sMove(final String key, final String destKey, final String member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SMOVE)
-				.general((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
-				.pipeline((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
-				.transaction((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
+				.general((cmd)->cmd.smove(key, destKey, member), oneStatusConverter)
+				.pipeline((cmd)->cmd.smove(key, destKey, member), oneStatusConverter)
+				.transaction((cmd)->cmd.smove(key, destKey, member), oneStatusConverter)
 				.run(args);
 	}
 
@@ -242,9 +241,9 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SMOVE)
-				.general((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
-				.pipeline((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
-				.transaction((cmd)->cmd.smove(key, destKey, member), new OneStatusConverter())
+				.general((cmd)->cmd.smove(key, destKey, member), oneStatusConverter)
+				.pipeline((cmd)->cmd.smove(key, destKey, member), oneStatusConverter)
+				.transaction((cmd)->cmd.smove(key, destKey, member), oneStatusConverter)
 				.run(args);
 	}
 
