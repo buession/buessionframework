@@ -83,19 +83,6 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit) {
-		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit, geoRadiusArgument);
-	}
-
-	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit) {
 		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit);
@@ -105,19 +92,6 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit) {
-		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
-				geoRadiusArgument);
 	}
 
 }

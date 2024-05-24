@@ -32,7 +32,6 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyValue;
@@ -115,8 +114,6 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
-		final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
-				new ListConverter.BinaryToStringListConverter();
 
 		return lRange(bKey, start, end, binaryToStringListConverter, args);
 	}

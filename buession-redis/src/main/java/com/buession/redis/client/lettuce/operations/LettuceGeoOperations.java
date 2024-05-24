@@ -208,10 +208,28 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 	}
 
 	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit);
+		return geoRadiusRo(args);
+	}
+
+	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
+		return geoRadiusRo(args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument) {
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit)
+				.put("geoRadiusArgument", geoRadiusArgument);
 		return geoRadiusRo(args);
 	}
 
@@ -270,10 +288,26 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 	}
 
 	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit);
+		return geoRadiusByMemberRo(args);
+	}
+
+	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
+		return geoRadiusByMemberRo(args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		return geoRadiusByMemberRo(args);
 	}
 

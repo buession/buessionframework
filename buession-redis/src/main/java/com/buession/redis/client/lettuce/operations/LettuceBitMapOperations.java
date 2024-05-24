@@ -105,16 +105,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 	}
 
 	@Override
+	public List<Long> bitFieldRo(final String key, final String... arguments) {
+		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		return bitFieldRo(args);
+	}
+
+	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-					.run(args);
-		}else{
-			return new LettuceCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-					.run(args);
-		}
+		return bitFieldRo(args);
 	}
 
 	@Override
@@ -211,6 +210,16 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
 					oneBooleanConverter)
+					.run(args);
+		}
+	}
+
+	private List<Long> bitFieldRo(final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+					.run(args);
+		}else{
+			return new LettuceCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
 					.run(args);
 		}
 	}

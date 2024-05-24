@@ -365,10 +365,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 		final CommandArguments args = CommandArguments.create("mode", mode);
 
 		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), okStatusConverter)
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHALL,
+					(cmd)->mode == FlushMode.ASYNC ? cmd.flushallAsync() : cmd.flushall(), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL,
+					(cmd)->mode == FlushMode.ASYNC ? cmd.flushallAsync() : cmd.flushall(), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -389,10 +391,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 		final CommandArguments args = CommandArguments.create("mode", mode);
 
 		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), okStatusConverter)
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->mode == FlushMode.ASYNC ?
+					cmd.flushdbAsync() : cmd.flushdb(), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->mode == FlushMode.ASYNC ?
+					cmd.flushdbAsync() : cmd.flushdb(), okStatusConverter)
 					.run(args);
 		}
 	}

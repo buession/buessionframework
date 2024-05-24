@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
@@ -237,13 +236,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return hRandFieldWithValues(args);
+		return hRandField(args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return hRandFieldWithValues(args);
+		return hRandField(args);
 	}
 
 	@Override
@@ -353,7 +352,6 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final BooleanStatusConverter booleanStatusConverter = new BooleanStatusConverter();
 
 		if(isMulti()){
 			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
@@ -439,22 +437,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		}
 	}
 
-	private <K, V> V hRandField(final CommandArguments args) {
+	private <SV, TV> TV hRandField(final CommandArguments args) {
 		if(isMulti()){
-			return new LettuceAsyncCommand<K, V>(client, ProtocolCommand.HRANDFIELD)
+			return new LettuceAsyncCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
 					.run(args);
 		}else{
-			return new LettuceCommand<K, V>(client, ProtocolCommand.HRANDFIELD)
-					.run(args);
-		}
-	}
-
-	private <K, V> Map<K, V> hRandFieldWithValues(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HRANDFIELD)
-					.run(args);
-		}else{
-			return new LettuceCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HRANDFIELD)
+			return new LettuceCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
 					.run(args);
 		}
 	}

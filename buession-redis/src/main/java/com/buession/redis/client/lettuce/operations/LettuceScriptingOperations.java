@@ -49,30 +49,18 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
+		final byte[][] bKeys = new byte[][]{};
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, null), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, null), (v)->v)
-					.run(args);
-		}
+		return eval(script, bKeys, null, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		final byte[][] bKeys = new byte[][]{};
 		final byte[][] bParams = SafeEncoder.encode(params);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, null, bParams), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, null, bParams), (v)->v)
-					.run(args);
-		}
+		return eval(script, bKeys, bParams, args);
 	}
 
 	@Override
@@ -82,44 +70,24 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, bKeys, bArguments), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, bKeys, bArguments), (v)->v)
-					.run(args);
-		}
+		return eval(script, bKeys, bArguments, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
+		final byte[][] bKeys = new byte[][]{};
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, null), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, null), (v)->v)
-					.run(args);
-		}
+		return evalSha(digest, bKeys, null, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
+		final byte[][] bKeys = new byte[][]{};
 		final byte[][] bParams = SafeEncoder.encode(params);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, null, bParams), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, null, bParams), (v)->v)
-					.run(args);
-		}
+		return evalSha(digest, bKeys, bParams, args);
 	}
 
 	@Override
@@ -129,15 +97,7 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, bKeys, bArguments), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, bKeys, bArguments), (v)->v)
-					.run(args);
-		}
+		return evalSha(digest, bKeys, bArguments, args);
 	}
 
 	@Override
@@ -206,6 +166,32 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
 					okStatusConverter)
 					.run();
+		}
+	}
+
+	private Object eval(final String script, final byte[][] keys, final byte[][] arguments,
+						final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
+					.run(args);
+		}
+	}
+
+	private Object evalSha(final String digest, final byte[][] keys, final byte[][] arguments,
+						   final CommandArguments args) {
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
+					.run(args);
 		}
 	}
 

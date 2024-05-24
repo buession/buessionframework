@@ -69,11 +69,6 @@ public abstract class AbstractBitMapOperations<C extends LettuceRedisClient> ext
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final String key, final String... arguments) {
-		return bitFieldRo(SafeEncoder.encode(key), SafeEncoder.encode(arguments));
-	}
-
-	@Override
 	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
 		return bitOp(operation, SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}

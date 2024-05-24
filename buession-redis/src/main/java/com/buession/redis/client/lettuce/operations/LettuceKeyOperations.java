@@ -36,7 +36,6 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyScanCursorConverter;
-import com.buession.redis.core.internal.convert.response.ListConverter;
 import com.buession.redis.core.internal.convert.response.ListSetConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
@@ -300,8 +299,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 					.run(args);
 		}
 
-		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
-				booleanStatusConverter)
+		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db), booleanStatusConverter)
 				.run(args);
 	}
 
@@ -561,8 +559,6 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
-		final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
-				new ListConverter.BinaryToStringListConverter();
 
 		return sort(bKey, sortArgs, binaryToStringListConverter, args);
 	}
@@ -580,7 +576,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 		final SortArgs sortArgs = new LettuceSortArgs();
 
-		return sort(key, destKey, sortArgs, args);
+		return sortStore(key, destKey, sortArgs, args);
 	}
 
 	@Override
@@ -589,7 +585,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.put("sortArgument", sortArgument);
 		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
 
-		return sort(key, destKey, sortArgs, args);
+		return sortStore(key, destKey, sortArgs, args);
 	}
 
 	@Override
@@ -785,7 +781,8 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.run(args);
 	}
 
-	private Long sort(final byte[] key, final byte[] destKey, final SortArgs sortArgs, final CommandArguments args) {
+	private Long sortStore(final byte[] key, final byte[] destKey, final SortArgs sortArgs,
+						   final CommandArguments args) {
 		if(isMulti()){
 			return new LettuceAsyncCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sortStore(key, sortArgs, destKey),
 					(v)->v)

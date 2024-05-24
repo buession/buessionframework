@@ -44,6 +44,7 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamFullInfoC
 import com.buession.redis.core.internal.convert.lettuce.response.StreamGroupInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingSummaryConverter;
 import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
@@ -54,6 +55,7 @@ import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;
+import io.lettuce.core.StreamMessage;
 import io.lettuce.core.XAddArgs;
 import io.lettuce.core.XClaimArgs;
 import io.lettuce.core.XGroupCreateArgs;
@@ -606,10 +608,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
-
-		return xReadGroup(bGroupName, bConsumerName, streams, args);
+		return xReadGroup(groupName, consumerName, streams, args);
 	}
 
 	@Override
@@ -625,11 +624,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final long count, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -647,11 +644,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final int block, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("block", block).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -670,11 +665,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("isNoAck", isNoAck).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -694,11 +687,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -718,11 +709,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -742,11 +731,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -766,11 +753,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		final byte[] bGroupName = SafeEncoder.encode(groupName);
-		final byte[] bConsumerName = SafeEncoder.encode(consumerName);
 		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
 
-		return xReadGroup(bGroupName, bConsumerName, streams, xReadArgs, args);
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
@@ -956,54 +941,143 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 													   final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		int i = 0;
+		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
+				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
 
 		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
 			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
 		}
 
-		/*
-		return new LettuceCommand<List<StreamMessage<byte[], List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-				client,
-				ProtocolCommand.XREAD, (cmd)->(xReadArgs == null ?
-				cmd.xread(streamOffsets) : cmd.xread(xReadArgs, streamOffsets)),
-				(v)->(List<Map<String, List<StreamEntry>>>) null)
-				.run(args);
-
-		 */
-		return null;
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREAD, (cmd)->cmd.xread(streamOffsets),
+					listStreamMessageMapConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XREAD, (cmd)->cmd.xread(streamOffsets),
+					listStreamMessageMapConverter)
+					.run(args);
+		}
 	}
 
 	private List<Map<String, List<StreamEntry>>> xRead(final XReadArgs xReadArgs, final Map<String,
 			StreamEntryId> streams, final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		int i = 0;
+		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
+				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
 
 		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
 			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
 		}
 
-		/*
-		return new LettuceCommand<List<StreamMessage<byte[], List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-				client,
-				ProtocolCommand.XREAD, (cmd)->(xReadArgs == null ?
-				cmd.xread(streamOffsets) : cmd.xread(xReadArgs, streamOffsets)),
-				(v)->(List<Map<String, List<StreamEntry>>>) null)
-				.run(args);
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREAD, (cmd)->cmd.xread(xReadArgs, streamOffsets),
+					listStreamMessageMapConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.XREAD, (cmd)->cmd.xread(xReadArgs, streamOffsets),
+					listStreamMessageMapConverter)
+					.run(args);
+		}
+	}
 
-		 */
-		return null;
+	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+															final Map<String, StreamEntryId> streams,
+															final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
+				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
+		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets,
+				listStreamMessageMapConverter, args);
+	}
+
+	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+															final Map<byte[], StreamEntryId> streams,
+															final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final StreamMessageMapConverter.ListStreamMessageMapConverter<byte[]> listStreamMessageMapConverter =
+				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		int i = 0;
+
+		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
+		}
+
+		return xReadGroup(groupName, consumerName, streamOffsets, listStreamMessageMapConverter, args);
 	}
 
 	private <K> List<Map<K, List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final Map<K, StreamEntryId> streams,
-														   final XReadArgs xReadArgs, final CommandArguments args) {
-		return null;
-	}
-
-	private <K> List<Map<K, List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final Map<K, StreamEntryId> streams,
+														   final XReadArgs.StreamOffset<byte[]>[] streamOffsets,
+														   final Converter<List<StreamMessage<byte[], byte[]>>,
+																   List<Map<K, List<StreamEntry>>>> converter,
 														   final CommandArguments args) {
-		return null;
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREADGROUP, (cmd)->cmd.xreadgroup(consumer,
+					streamOffsets), converter)
+					.run(args);
+		}else{
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREADGROUP, (cmd)->cmd.xreadgroup(consumer,
+					streamOffsets), converter)
+					.run(args);
+		}
+	}
+
+	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+															final Map<String, StreamEntryId> streams,
+															final XReadArgs xReadArgs, final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
+				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
+		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets, xReadArgs,
+				listStreamMessageMapConverter, args);
+	}
+
+	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+															final Map<byte[], StreamEntryId> streams,
+															final XReadArgs xReadArgs, final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final StreamMessageMapConverter.ListStreamMessageMapConverter<byte[]> listStreamMessageMapConverter =
+				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		int i = 0;
+
+		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
+		}
+
+		return xReadGroup(groupName, consumerName, streamOffsets, xReadArgs, listStreamMessageMapConverter, args);
+	}
+
+	private <K> List<Map<K, List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final XReadArgs.StreamOffset<byte[]>[] streamOffsets,
+														   final XReadArgs xReadArgs,
+														   final Converter<List<StreamMessage<byte[], byte[]>>,
+																   List<Map<K, List<StreamEntry>>>> converter,
+														   final CommandArguments args) {
+		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
+
+		if(isMulti()){
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREADGROUP, (cmd)->cmd.xreadgroup(consumer,
+					xReadArgs, streamOffsets), converter)
+					.run(args);
+		}else{
+			return new LettuceAsyncCommand<>(client, ProtocolCommand.XREADGROUP, (cmd)->cmd.xreadgroup(consumer,
+					xReadArgs, streamOffsets), converter)
+					.run(args);
+		}
 	}
 
 	private Long xTrim(final byte[] key, final boolean approximateTrimming, final long limit,

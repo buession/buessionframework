@@ -50,6 +50,7 @@ import io.lettuce.core.ScanArgs;
 import io.lettuce.core.ScanCursor;
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScoredValueScanCursor;
+import io.lettuce.core.ZAddArgs;
 import io.lettuce.core.ZStoreArgs;
 
 import java.util.List;
@@ -179,79 +180,103 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
-		return zAdd(key, members, new LettuceZAddArgs(gtLt), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
-		return zAdd(key, members, new LettuceZAddArgs(gtLt), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx, gtLt), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx, gtLt), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx, ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx, ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(gtLt, ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt, ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(gtLt, ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt, ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
@@ -259,7 +284,9 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 					 final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx, gtLt, ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt, ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
@@ -267,7 +294,9 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 					 final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
-		return zAdd(key, members, new LettuceZAddArgs(nxXx, gtLt, ch), args);
+		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt, ch);
+
+		return zAdd(key, members, zAddArgs, args);
 	}
 
 	@Override
@@ -1399,7 +1428,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return zAdd(bKey, scoredValues, args);
 	}
 
-	private Long zAdd(final String key, final Map<String, Double> members, final LettuceZAddArgs zAddArgs,
+	private Long zAdd(final String key, final Map<String, Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
@@ -1423,7 +1452,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		return zAdd(key, scoredValues, args);
 	}
 
-	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final LettuceZAddArgs zAddArgs,
+	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
 		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
 		int i = 0;
@@ -1445,7 +1474,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 		}
 	}
 
-	private Long zAdd(final byte[] key, final ScoredValue<byte[]>[] scoredValues, final LettuceZAddArgs zAddArgs,
+	private Long zAdd(final byte[] key, final ScoredValue<byte[]>[] scoredValues, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
 		if(isMulti()){
 			return new LettuceAsyncCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, zAddArgs, scoredValues),
