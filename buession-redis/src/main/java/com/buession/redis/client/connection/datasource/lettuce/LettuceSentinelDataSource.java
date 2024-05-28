@@ -31,7 +31,7 @@ import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
-import io.lettuce.core.DefaultLettuceClientConfig;
+import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
@@ -179,27 +179,17 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final DefaultLettuceClientConfig.Builder lettuceClientConfigBuilder = DefaultLettuceClientConfig.builder()
-				.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
-				.database(getDatabase()).clientName(getClientName()).ssl(isUseSsl());
+		final LettuceClientConfigBuilder lettuceClientConfigBuilder = LettuceClientConfigBuilder.create(this,
+				getSslConfiguration());
 
 		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
 
-		if(Validate.hasText(getPassword())){
-			if(Validate.hasText(getUsername())){
-				lettuceClientConfigBuilder.user(getUsername());
-			}
-			lettuceClientConfigBuilder.password(getPassword());
-		}
+		lettuceClientConfigBuilder.database(getDatabase());
 
-		final String password = com.buession.lang.Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
 		if(sslConfiguration == null){
 			logger.debug("Create lettuce pool.");
 		}else{
 			logger.debug("Create lettuce pool with ssl.");
-			lettuceClientConfigBuilder.sslSocketFactory(sslConfiguration.getSslSocketFactory())
-					.sslParameters(sslConfiguration.getSslParameters())
-					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
 		}
 
 		return ConnectionPoolUtils.createLettuceSentinelPool(getMasterName(), lettucePoolConfig,

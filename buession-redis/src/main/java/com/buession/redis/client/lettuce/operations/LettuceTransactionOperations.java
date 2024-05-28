@@ -48,8 +48,11 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public Status multi() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
@@ -61,8 +64,11 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 	public List<Object> exec() {
 		final Converter<TransactionResult, List<Object>> converter = (v)->v.stream().collect(Collectors.toList());
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
@@ -72,8 +78,11 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public void discard() {
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+					.run();
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
 					.run();
 		}else{
 			new LettuceCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
@@ -85,8 +94,13 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
+					okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
@@ -96,8 +110,13 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public Status unwatch() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
+					okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)

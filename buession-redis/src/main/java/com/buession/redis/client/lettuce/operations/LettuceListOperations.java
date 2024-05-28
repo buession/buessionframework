@@ -71,8 +71,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 				.put("value", value);
 		final boolean before = ListPosition.BEFORE == position;
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LINSERT,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LINSERT,
+					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LINSERT,
 					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v)
 					.run(args);
 		}else{
@@ -86,8 +90,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
 					okStatusConverter)
 					.run(args);
 		}else{
@@ -101,8 +109,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long lLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
@@ -128,8 +139,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long lPos(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
@@ -142,9 +156,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs),
-					(v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS,
+					(cmd)->cmd.lpos(key, element, lPosArgs), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS,
+					(cmd)->cmd.lpos(key, element, lPosArgs), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs), (v)->v)
@@ -158,13 +176,17 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 				.put("count", count);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, (int) count,
-					lPosArgs), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS,
+					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS,
+					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, (int) count,
-					lPosArgs), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.LPOS,
+					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v)
 					.run(args);
 		}
 	}
@@ -173,8 +195,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long lRem(final byte[] key, final byte[] value, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
@@ -186,8 +213,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Status lTrim(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
 					okStatusConverter)
 					.run(args);
 		}else{
@@ -298,8 +329,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long lPush(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
@@ -311,8 +345,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long lPushX(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
@@ -353,8 +391,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long rPush(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
@@ -366,8 +407,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public Long rPushX(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
@@ -377,8 +422,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	private <V> V lIndex(final byte[] key, final long index, final Converter<byte[], V> converter,
 						 final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
 					converter)
 					.run(args);
 		}else{
@@ -389,8 +438,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	private <V> List<V> lRange(final byte[] key, final long start, final long end,
 							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
 					converter)
 					.run(args);
 		}else{
@@ -401,8 +454,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	}
 
 	private <V> V lMove(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<V, V>(client, ProtocolCommand.LMOVE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.LMOVE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.LMOVE)
 					.run(args);
 		}else{
 			return new LettuceCommand<V, V>(client, ProtocolCommand.LMOVE)
@@ -411,19 +467,27 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	}
 
 	private <V> V blMove(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<V, V>(client, ProtocolCommand.LMOVE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.BLMOVE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.BLMOVE)
 					.run(args);
 		}else{
-			return new LettuceCommand<V, V>(client, ProtocolCommand.LMOVE)
+			return new LettuceCommand<V, V>(client, ProtocolCommand.BLMOVE)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> blPop(final byte[][] keys, final int timeout, final Converter<KeyValue<byte[], byte[]>,
 			List<V>> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
+					converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), converter)
@@ -433,8 +497,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	private <V> List<V> brPop(final byte[][] keys, final int timeout, final Converter<KeyValue<byte[], byte[]>,
 			List<V>> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
+					converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), converter)
@@ -444,8 +513,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	private <V> V brPoplPush(final byte[] key, final byte[] destKey, final int timeout,
 							 final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.BRPOPLPUSH,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.BRPOPLPUSH,
+					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.BRPOPLPUSH,
 					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter)
 					.run(args);
 		}else{
@@ -456,8 +529,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	}
 
 	private <V> V lPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
@@ -466,8 +542,11 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	}
 
 	private <V> V rPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
@@ -477,9 +556,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	private <V> V rPoplPush(final byte[] key, final byte[] destKey, final Converter<byte[], V> converter,
 							final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
 					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOPLPUSH,
+					(cmd)->cmd.rpoplpush(key, destKey), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),

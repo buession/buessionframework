@@ -21,57 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.connection;
-
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.exception.RedisConnectionFailureException;
-
-/**
- * Jedis Redis 连接工厂
+ */package com.buession.redis.core.internal.convert.jedis.response;/**
+ * 
  *
  * @author Yong.Teng
- * @since 3.0.0
- */
-public class JedisConnectionFactory extends AbstractConnectionFactory<JedisDataSource> {
-
-	private RedisConnection redisConnection;
-
-	public JedisConnectionFactory(final JedisDataSource dataSource) {
-		super(dataSource);
-	}
-
-	@Override
-	public RedisConnection getConnection() {
-		if(redisConnection == null){
-			if(isRedisClusterAware()){
-				redisConnection = getClusterConnection();
-			}else if(isRedisSentinelAware()){
-				redisConnection = getSentinelConnection();
-			}else{
-				redisConnection = dataSource.getConnection();
-			}
-		}
-
-		return redisConnection;
-	}
-
-	@Override
-	public RedisSentinelConnection getSentinelConnection() {
-		if(isRedisSentinelAware()){
-			return (RedisSentinelConnection) dataSource.getConnection();
-		}
-
-		throw new RedisConnectionFailureException("No Sentinels datasource");
-	}
-
-	@Override
-	public RedisClusterConnection getClusterConnection() {
-		if(isRedisClusterAware()){
-			return (RedisClusterConnection) dataSource.getConnection();
-		}
-
-		throw new RedisConnectionFailureException("No Cluster datasource");
-	}
-
+ * @since 2.3.0
+ */public class MemoryStatsConverter {
 }

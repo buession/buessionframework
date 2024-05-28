@@ -66,9 +66,13 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
 					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUBLISH,
+					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
@@ -81,8 +85,12 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 		final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
 				new ListConverter.BinaryToStringListConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+					binaryToStringListConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
 					binaryToStringListConverter)
 					.run();
 		}else{
@@ -108,8 +116,13 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Long pubsubNumPat() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
+					(v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
+					(v)->v)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
@@ -134,8 +147,11 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Object pUnSubscribe() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
@@ -171,8 +187,11 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Object unSubscribe() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
@@ -193,8 +212,11 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	}
 
 	private void pSubscribe(final CommandArguments args) {
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 					.run(args);
 		}else{
 			new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
@@ -204,8 +226,12 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	private <V> List<V> pubsubChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
 									   final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+					(cmd)->cmd.pubsubChannels(pattern), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
 					(cmd)->cmd.pubsubChannels(pattern), converter)
 					.run(args);
 		}else{
@@ -218,9 +244,13 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	private <K> Map<K, Long> pubsubNumSub(final byte[][] channels,
 										  final Converter<Map<byte[], Long>, Map<K, Long>> converter,
 										  final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
-					converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+					(cmd)->cmd.pubsubNumsub(channels), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+					(cmd)->cmd.pubsubNumsub(channels), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
@@ -230,8 +260,11 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	}
 
 	private Object pUnSubscribe(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
@@ -240,8 +273,11 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	}
 
 	private void subscribe(final CommandArguments args) {
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.SUBSCRIBE)
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
 					.run(args);
 		}else{
 			new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
@@ -250,8 +286,11 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	}
 
 	private Object unSubscribe(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)

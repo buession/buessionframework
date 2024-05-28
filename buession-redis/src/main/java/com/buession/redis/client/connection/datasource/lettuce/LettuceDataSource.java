@@ -24,12 +24,11 @@
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
-import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.core.RedisNode;
-import io.lettuce.core.DefaultLettuceClientConfig;
+import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -109,28 +108,19 @@ public class LettuceDataSource extends AbstractLettuceDataSource implements Stan
 	private LettucePool createPool() {
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final DefaultLettuceClientConfig.Builder lettuceClientConfigBuilder = DefaultLettuceClientConfig.builder()
-				.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
-				.database(getDatabase()).clientName(getClientName()).ssl(isUseSsl());
+		final LettuceClientConfigBuilder lettuceClientConfigBuilder = LettuceClientConfigBuilder.create(this,
+				getSslConfiguration());
 
 		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
 
-		if(Validate.hasText(getPassword())){
-			if(Validate.hasText(getUsername())){
-				lettuceClientConfigBuilder.user(getUsername());
-			}
-			lettuceClientConfigBuilder.password(getPassword());
-		}
+		lettuceClientConfigBuilder.database(getDatabase());
 
 		if(sslConfiguration == null){
 			logger.debug("Create lettuce pool.");
 		}else{
 			logger.debug("Create lettuce pool with ssl.");
-			lettuceClientConfigBuilder.sslSocketFactory(sslConfiguration.getSslSocketFactory())
-					.sslParameters(sslConfiguration.getSslParameters())
-					.hostnameVerifier(sslConfiguration.getHostnameVerifier());
 		}
-		
+
 		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, getHost(), getPort(),
 				lettuceClientConfigBuilder.build());
 	}

@@ -65,8 +65,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public List<String> aclCat() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
 					.run();
 		}else{
 			return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
@@ -112,8 +115,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public List<String> aclUsers() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
 					.run();
 		}else{
 			return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
@@ -123,8 +129,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public String aclWhoAmI() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
+		if(isPipeline()){
+			return new LettucePipelineCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
 					.run();
 		}else{
 			return new LettuceCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
@@ -146,8 +155,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public String aclGenPass() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
+		if(isPipeline()){
+			return new LettucePipelineCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
 					.run();
 		}else{
 			return new LettuceCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
@@ -157,8 +169,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public List<String> aclList() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
 					.run();
 		}else{
 			return new LettuceCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
@@ -168,8 +183,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status aclLoad() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
 					.run();
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
@@ -179,8 +197,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public List<AclLog> aclLog() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
 					.run();
 		}else{
 			return new LettuceCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
@@ -192,8 +213,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public List<AclLog> aclLog(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
 					.run(args);
 		}else{
 			return new LettuceCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
@@ -203,8 +227,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status aclLogReset() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
 					.run();
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
@@ -214,8 +241,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status aclLogSave() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
 					.run();
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
@@ -225,19 +255,25 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public String bgRewriteAof() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
+		if(isPipeline()){
+			return new LettucePipelineCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
+					.run();
+		}else{
+			return new LettuceCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
 					.run();
 		}
-
-		return new LettuceCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
-				.run();
 	}
 
 	@Override
 	public String bgSave() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<String, String>(client, ProtocolCommand.BGSAVE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<String, String>(client, ProtocolCommand.BGSAVE)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<String, String>(client, ProtocolCommand.BGSAVE)
 					.run();
 		}else{
 			return new LettuceCommand<String, String>(client, ProtocolCommand.BGSAVE)
@@ -249,9 +285,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
-					okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CONFIG_SET,
+					(cmd)->cmd.configSet(parameter, value), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CONFIG_SET,
+					(cmd)->cmd.configSet(parameter, value), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
@@ -278,8 +318,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status configResetStat() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT,
+					(cmd)->cmd.configResetstat(),
 					okStatusConverter)
 					.run();
 		}else{
@@ -291,8 +336,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status configRewrite() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
 					okStatusConverter)
 					.run();
 		}else{
@@ -304,8 +353,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Long dbSize() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbsize(), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbsize(), (v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbsize(), (v)->v)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbsize(), (v)->v)
@@ -315,8 +367,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status failover() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 					.run();
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
@@ -351,8 +406,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status flushAll() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(),
+					okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushall(), okStatusConverter)
@@ -364,8 +424,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHALL,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.FLUSHALL,
+					(cmd)->mode == FlushMode.ASYNC ? cmd.flushallAsync() : cmd.flushall(), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.FLUSHALL,
 					(cmd)->mode == FlushMode.ASYNC ? cmd.flushallAsync() : cmd.flushall(), okStatusConverter)
 					.run(args);
 		}else{
@@ -377,8 +441,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status flushDb() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(),
+					okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushdb(), okStatusConverter)
@@ -390,8 +459,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->mode == FlushMode.ASYNC ?
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->mode == FlushMode.ASYNC ?
+					cmd.flushdbAsync() : cmd.flushdb(), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->mode == FlushMode.ASYNC ?
 					cmd.flushdbAsync() : cmd.flushdb(), okStatusConverter)
 					.run(args);
 		}else{
@@ -405,8 +478,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Info info() {
 		final InfoConverter infoConverter = new InfoConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), infoConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), infoConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), infoConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(), infoConverter)
@@ -420,8 +496,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 		final String sectionName = section.name().toLowerCase();
 		final InfoConverter infoConverter = new InfoConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(sectionName),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(sectionName),
+					infoConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.info(sectionName),
 					infoConverter)
 					.run(args);
 		}else{
@@ -432,8 +512,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Long lastSave() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(), Date::getTime)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(), Date::getTime)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(),
+					Date::getTime)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(), Date::getTime)
@@ -443,8 +527,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public String memoryDoctor() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
+		if(isPipeline()){
+			return new LettucePipelineCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
 					.run();
 		}else{
 			return new LettuceCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
@@ -454,8 +541,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status memoryPurge() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
 					.run();
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
@@ -465,8 +555,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public MemoryStats memoryStats() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
+		if(isPipeline()){
+			return new LettucePipelineCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
 					.run();
 		}else{
 			return new LettuceCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
@@ -478,8 +571,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
@@ -491,8 +589,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
@@ -502,8 +605,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public List<Module> moduleList() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
 					.run();
 		}else{
 			return new LettuceCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
@@ -539,8 +645,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public void monitor(final RedisMonitor redisMonitor) {
 		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
 
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.MONITOR)
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.MONITOR)
+					.run(args);
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.MONITOR)
 					.run(args);
 		}else{
 			new LettuceCommand<>(client, ProtocolCommand.MONITOR)
@@ -562,8 +671,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public void sync() {
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.SYNC)
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.SYNC)
+					.run();
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.SYNC)
 					.run();
 		}else{
 			new LettuceCommand<>(client, ProtocolCommand.SYNC)
@@ -575,8 +687,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status replicaOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
 					.run(args);
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
@@ -588,22 +703,30 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
 					okStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port), okStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Role role() {
 		final RoleConverter roleConverter = new RoleConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(), roleConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(), roleConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(), roleConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(), roleConverter)
@@ -613,8 +736,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status save() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(), okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(), okStatusConverter)
@@ -624,8 +750,14 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public void shutdown() {
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
+				cmd.shutdown(true);
+				return null;
+			}, (v)->v)
+					.run();
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
 				cmd.shutdown(true);
 				return null;
 			}, (v)->v)
@@ -643,8 +775,14 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public void shutdown(final boolean save) {
 		final CommandArguments args = CommandArguments.create("save", save);
 
-		if(isMulti()){
-			new LettuceAsyncCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
+		if(isPipeline()){
+			new LettucePipelineCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
+				cmd.shutdown(save);
+				return null;
+			}, (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			new LettuceTransactionCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
 				cmd.shutdown(save);
 				return null;
 			}, (v)->v)
@@ -662,8 +800,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public List<SlowLog> slowLogGet() {
 		final SlowlogConverter.ListSlowlogConverter listSlowlogConverter = new SlowlogConverter.ListSlowlogConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
+					listSlowlogConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
 					listSlowlogConverter)
 					.run();
 		}else{
@@ -678,8 +820,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 		final CommandArguments args = CommandArguments.create("count", count);
 		final SlowlogConverter.ListSlowlogConverter listSlowlogConverter = new SlowlogConverter.ListSlowlogConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet((int) count),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet((int) count),
+					listSlowlogConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SLOWLOG_GET,
+					(cmd)->cmd.slowlogGet((int) count),
 					listSlowlogConverter)
 					.run(args);
 		}else{
@@ -691,8 +838,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Long slowLogLen() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(), (v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(), (v)->v)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(), (v)->v)
@@ -702,8 +852,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public Status slowLogReset() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
 					okStatusConverter)
 					.run();
 		}else{
@@ -717,8 +871,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
 					okStatusConverter)
 					.run(args);
 		}else{
@@ -731,8 +889,13 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	public RedisServerTime time() {
 		final RedisServerTimeConverter redisServerTimeConverter = new RedisServerTimeConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), redisServerTimeConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(),
+					redisServerTimeConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(),
+					redisServerTimeConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), redisServerTimeConverter)
@@ -741,9 +904,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private <V> List<V> aclCat(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
-					.run();
+		if(isPipeline()){
+			return new LettucePipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
+					.run(args);
 		}else{
 			return new LettuceCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
 					.run(args);
@@ -751,8 +917,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private Status aclSetUser(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
 					.run(args);
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
@@ -761,8 +930,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private AclUser aclGetUser(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
+		if(isPipeline()){
+			return new LettucePipelineCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
 					.run(args);
 		}else{
 			return new LettuceCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
@@ -771,8 +943,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private Long aclDelUser(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
 					.run(args);
 		}else{
 			return new LettuceCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
@@ -782,8 +957,12 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	private <V> List<V> configGet(final String parameter, final Converter<Map<String, String>, List<V>> converter,
 								  final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),
 					converter)
 					.run(args);
 		}else{
@@ -793,8 +972,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private Status failover(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 					.run(args);
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
@@ -803,8 +985,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private Status moduleLoad(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
 					.run(args);
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
@@ -813,8 +998,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private Status moduleUnLoad(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
 					.run(args);
 		}else{
 			return new LettuceCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
@@ -823,8 +1011,11 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	private Object pSync(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PSYNC)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PSYNC)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PSYNC)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PSYNC)

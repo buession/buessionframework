@@ -45,8 +45,12 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
 					oneStatusConverter)
 					.run(args);
 		}else{
@@ -60,8 +64,12 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
 					okStatusConverter)
 					.run(args);
 		}else{
@@ -75,8 +83,11 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)

@@ -19,14 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.redis.client.RedisClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.internal.convert.response.ListConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 
 /**
  * Redis 命令操作抽象类
@@ -38,8 +42,34 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractRedisOperations<C extends RedisClient> implements RedisOperations {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-
 	protected C client;
+
+	protected final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
+			new ListConverter.BinaryToStringListConverter();
+
+	protected final static OkStatusConverter okStatusConverter = new OkStatusConverter();
+
+	protected final static BooleanStatusConverter booleanStatusConverter = new BooleanStatusConverter();
+
+	protected final OneStatusConverter oneStatusConverter = new OneStatusConverter();
+
+	protected final OneBooleanConverter oneBooleanConverter = new OneBooleanConverter();
+
+	public AbstractRedisOperations(final C client) {
+		this.client = client;
+	}
+
+	protected boolean isPipeline() {
+		return client.getConnection().isPipeline();
+	}
+
+	protected boolean isTransaction() {
+		return client.getConnection().isTransaction();
+	}
+
+	protected boolean isMulti() {
+		final RedisConnection connection = client.getConnection();
+		return connection.isPipeline() || connection.isTransaction();
+	}
 
 }

@@ -104,8 +104,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
 					(v)->v)
 					.run(args);
 		}else{
@@ -116,8 +120,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 
 	@Override
 	public Status scriptFlush() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
 					okStatusConverter)
 					.run();
 		}else{
@@ -131,8 +139,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
 					okStatusConverter)
 					.run(args);
 		}else{
@@ -158,8 +170,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 
 	@Override
 	public Status scriptKill() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+					okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
 					okStatusConverter)
 					.run();
 		}else{
@@ -171,8 +187,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 
 	private Object eval(final String script, final byte[][] keys, final byte[][] arguments,
 						final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVAL,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
 					.run(args);
 		}else{
@@ -184,8 +204,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 
 	private Object evalSha(final String digest, final byte[][] keys, final byte[][] arguments,
 						   final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EVALSHA,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
 					.run(args);
 		}else{
@@ -197,8 +221,12 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 
 	private <V> V scriptLoad(final byte[] script, final Converter<String, V> converter,
 							 final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
 					converter)
 					.run(args);
 		}else{

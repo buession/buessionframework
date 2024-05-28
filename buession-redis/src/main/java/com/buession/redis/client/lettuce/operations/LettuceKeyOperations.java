@@ -71,67 +71,83 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Long del(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
-				.run(args);
 	}
 
 	@Override
 	public byte[] dump(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
-				.run(args);
 	}
 
 	@Override
 	public Boolean exists(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
-				.run(args);
 	}
 
 	@Override
 	public Long exists(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
-				.run(args);
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					booleanStatusConverter)
 					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
+					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-				booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
@@ -139,100 +155,127 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-				booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireat(key, unixTimestamp),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireat(key, unixTimestamp),
 					booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireat(key, unixTimestamp),
-				booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
-				booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.pexpireat(key, unixTimestamp),
-					booleanStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.pexpireat(key, unixTimestamp),
-				booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
 					booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key), booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Long ttl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
-				.run(args);
 	}
 
 	@Override
 	public Long pTtl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
-				.run(args);
 	}
 
 	@Override
@@ -277,14 +320,16 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("db", db)
 				.put("replace", replace);
 		return copy(args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("db", db)
 				.put("replace", replace);
 		return copy(args);
 	}
@@ -293,18 +338,24 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Status move(final byte[] key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
 					booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db), booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
+	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]...
+			keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
 		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys);
@@ -323,7 +374,8 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+	public Status migrate(final String host, final int port, final int db, final byte[] password,
+						  final int timeout,
 						  final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
@@ -333,7 +385,8 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+	public Status migrate(final String host, final int port, final int db, final byte[] password,
+						  final int timeout,
 						  final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
@@ -344,20 +397,24 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+	public Status migrate(final String host, final int port, final int db, final byte[] user,
+						  final byte[] password,
 						  final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
+				.put("user", user).put("password", password).put("timeout", timeout)
+				.put("keys", (Object[]) keys);
 		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys, user, password);
 
 		return migrate(host, port, db, timeout, migrateArgs, args);
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+	public Status migrate(final String host, final int port, final int db, final byte[] user,
+						  final byte[] password,
 						  final int timeout, final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
+				.put("user", user).put("password", password).put("timeout", timeout)
+				.put("operation", operation)
 				.put("keys", (Object[]) keys);
 		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys, user, password);
 
@@ -382,44 +439,57 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public String randomKey() {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
+					SafeEncoder::encode)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
+					SafeEncoder::encode)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
 					SafeEncoder::encode)
 					.run();
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(), SafeEncoder::encode)
-				.run();
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
 					okStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
-				okStatusConverter)
-				.run(args);
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					booleanStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
-				booleanStatusConverter)
-				.run(args);
 	}
 
 	@Override
@@ -427,15 +497,19 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RESTORE,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
-				okStatusConverter)
-				.run(args);
 	}
 
 	@Override
@@ -445,15 +519,19 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 				.put("ttl", ttl).put("argument", argument);
 		final RestoreArgs restoreArgs = LettuceRestoreArgs.from(argument).ttl(ttl);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, serializedValue,
-					restoreArgs), okStatusConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, serializedValue, restoreArgs), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, serializedValue, restoreArgs), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, serializedValue, restoreArgs), okStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, serializedValue,
-				restoreArgs), okStatusConverter)
-				.run(args);
 	}
 
 	@Override
@@ -592,13 +670,16 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Long touch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
-				.run(args);
 	}
 
 	@Override
@@ -606,41 +687,51 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key);
 		final TypeConverter typeConverter = new TypeConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
-				.run(args);
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
-				.run(args);
 	}
 
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.WAIT,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.WAIT,
 					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitForReplication(replicas, timeout),
-				(v)->v)
-				.run(args);
 	}
 
 	@Override
@@ -648,149 +739,200 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key);
 		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
-					objectEncodingConverter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
-				objectEncodingConverter)
-				.run(args);
 	}
 
 	@Override
 	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
+					.run(args);
+		}else{
+			return new LettuceCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
 					.run(args);
 		}
-
-		return new LettuceCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
-				.run(args);
 	}
 
 	@Override
 	public Long objectIdleTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
-					(v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key), (v)->v)
-				.run(args);
 	}
 
 	@Override
 	public Long objectRefcount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
-					(v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key), (v)->v)
-				.run(args);
 	}
 
 	private Status copy(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<Status, Status>(client, ProtocolCommand.COPY)
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.COPY)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.COPY)
+					.run(args);
+		}else{
+			return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
 					.run(args);
 		}
-
-		return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
-				.run(args);
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout,
 						   final MigrateArgs<byte[]> migrateArgs, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.MIGRATE,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.MIGRATE, (cmd)->cmd.migrate(host, port, db, timeout,
-				migrateArgs), okStatusConverter)
-				.run(args);
 	}
 
 	private <V> Set<V> keys(final byte[] pattern, final ListSetConverter<byte[], V> converter,
 							final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
-				.run(args);
 	}
 
-	private <V> ScanResult<List<V>> scan(final ScanCursor cursor, final Converter<KeyScanCursor<byte[]>,
-			ScanResult<List<V>>> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
+	private <V> ScanResult<List<V>> scan(final ScanCursor cursor,
+										 final Converter<KeyScanCursor<byte[]>,
+												 ScanResult<List<V>>> converter, final CommandArguments args) {
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
-				.run(args);
 	}
 
 	private <V> ScanResult<List<V>> scan(final ScanCursor cursor, final ScanArgs scanArgs,
 										 final Converter<KeyScanCursor<byte[]>, ScanResult<List<V>>> converter,
 										 final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
+					converter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs), converter)
-				.run(args);
 	}
 
 	private <V> List<V> sort(final byte[] key,
 							 final com.buession.core.converter.Converter<List<byte[]>, List<V>> converter,
 							 final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
-				.run(args);
 	}
 
 	private <V> List<V> sort(final byte[] key, final SortArgs sortArgs,
 							 final com.buession.core.converter.Converter<List<byte[]>, List<V>> converter,
 							 final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
+					converter)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs), converter)
-				.run(args);
 	}
 
 	private Long sortStore(final byte[] key, final byte[] destKey, final SortArgs sortArgs,
 						   final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sortStore(key, sortArgs, destKey),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sortStore(key, sortArgs, destKey),
 					(v)->v)
 					.run(args);
 		}
-
-		return new LettuceCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
-				.run(args);
 	}
 
 }

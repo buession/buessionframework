@@ -30,6 +30,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisGetExParams;
 import com.buession.redis.core.internal.jedis.JedisSetParams;
+import redis.clients.jedis.params.GetExParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +191,7 @@ public final class JedisClusterStringOperations extends AbstractStringOperations
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final JedisGetExParams params = JedisGetExParams.from(getExArgument);
+		final GetExParams params = JedisGetExParams.from(getExArgument);
 		return new JedisClusterCommand<String>(client, ProtocolCommand.GETEX)
 				.general((cmd)->cmd.getEx(key, params))
 				.pipeline((cmd)->cmd.getEx(key, params))
@@ -201,7 +202,7 @@ public final class JedisClusterStringOperations extends AbstractStringOperations
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final JedisGetExParams params = JedisGetExParams.from(getExArgument);
+		final GetExParams params = JedisGetExParams.from(getExArgument);
 		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.GETEX)
 				.general((cmd)->cmd.getEx(key, params))
 				.pipeline((cmd)->cmd.getEx(key, params))

@@ -64,8 +64,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Long hDel(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
@@ -77,8 +80,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Boolean hExists(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
@@ -121,9 +128,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
 					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HINCRBY,
+					(cmd)->cmd.hincrby(key, field, value), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value), (v)->v)
@@ -135,8 +146,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}else{
@@ -166,8 +181,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Long hLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
@@ -199,8 +217,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else{
@@ -339,8 +361,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		final Converter<Boolean, Long> converter = (v)->Boolean.TRUE.equals(v) ? 1L : 0L;
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
 					converter)
 					.run(args);
 		}else{
@@ -353,8 +379,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					booleanStatusConverter)
 					.run(args);
 		}else{
@@ -368,8 +398,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Long hStrLen(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field),
+					(v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
@@ -393,9 +427,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 
 	private <V> V hGet(final byte[] key, final byte[] field, final Converter<byte[], V> converter,
 					   final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field),
-					converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
@@ -405,8 +441,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 
 	private <K, V> Map<K, V> hGetAll(final byte[] key,
 									 final MapConverter<byte[], byte[], K, V> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
@@ -416,8 +455,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 
 	private <V> Set<V> hKeys(final byte[] key, final ListSetConverter<byte[], V> converter,
 							 final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
@@ -428,8 +470,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <V> List<V> hMGet(final byte[] key, final byte[][] fields,
 							  final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, V> converter,
 							  final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+					converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
@@ -438,8 +484,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	}
 
 	private <SV, TV> TV hRandField(final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
+		if(isPipeline()){
+			return new LettucePipelineCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
 					.run(args);
 		}else{
 			return new LettuceCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
@@ -450,8 +499,12 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <K, V> ScanResult<Map<K, V>> hScan(final byte[] key, final ScanCursor cursor,
 											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
 											   CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+					converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
@@ -462,9 +515,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <K, V> ScanResult<Map<K, V>> hScan(final byte[] key, final ScanCursor cursor, final ScanArgs scanArgs,
 											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
 											   CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
 					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSCAN,
+					(cmd)->cmd.hscan(key, cursor, scanArgs), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
@@ -474,8 +531,11 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	}
 
 	private <V> List<V> hVals(final byte[] key, final ListConverter<byte[], V> converter, final CommandArguments args) {
-		if(isMulti()){
-			return new LettuceAsyncCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)

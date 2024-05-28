@@ -42,7 +42,7 @@ public final class RedisConnectionUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(RedisConnectionUtils.class);
 
-	private RedisConnectionUtils(){
+	private RedisConnectionUtils() {
 	}
 
 	/**
@@ -53,7 +53,7 @@ public final class RedisConnectionUtils {
 	 *
 	 * @return Redis 模式
 	 */
-	public static RedisMode getRedisMode(final RedisConnection connection){
+	public static RedisMode getRedisMode(final RedisConnection connection) {
 		if(connection instanceof RedisSentinelConnection){
 			return RedisMode.SENTINEL;
 		}else if(connection instanceof RedisClusterConnection){
@@ -63,33 +63,33 @@ public final class RedisConnectionUtils {
 		}
 	}
 
-	public static RedisConnection bindConnection(final RedisConnectionFactory factory){
+	public static RedisConnection bindConnection(final RedisConnectionFactory factory) {
 		return bindConnection(factory, false);
 	}
 
 	public static RedisConnection bindConnection(final RedisConnectionFactory factory,
-												 final boolean enableTransactionSupport){
+												 final boolean enableTransactionSupport) {
 		return doGetConnection(factory, true, true, enableTransactionSupport);
 	}
 
-	public static RedisConnection getConnection(final RedisConnectionFactory factory){
+	public static RedisConnection getConnection(final RedisConnectionFactory factory) {
 		return getConnection(factory, false);
 	}
 
 	public static RedisConnection getConnection(final RedisConnectionFactory factory,
-												final boolean enableTransactionSupport){
+												final boolean enableTransactionSupport) {
 		return doGetConnection(factory, true, false, enableTransactionSupport);
 	}
 
 	public static boolean isConnectionTransactional(final RedisConnectionFactory factory,
-													final RedisConnection connection){
+													final RedisConnection connection) {
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 		RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
 		return (connHolder != null && connection == connHolder.getConnection());
 	}
 
 	public static void releaseConnection(final RedisConnectionFactory factory,
-										 final @Nullable RedisConnection connection, final boolean transactionSupport){
+										 final @Nullable RedisConnection connection, final boolean transactionSupport) {
 		if(connection == null){
 			logger.error("Redis connection is null.");
 			return;
@@ -115,7 +115,7 @@ public final class RedisConnectionUtils {
 		}
 	}
 
-	public static void unbindConnection(final RedisConnectionFactory factory){
+	public static void unbindConnection(final RedisConnectionFactory factory) {
 		RedisConnectionHolder connectionHolder = TransactionUtils.unbindResourceIfPossible(factory);
 		if(connectionHolder == null){
 			return;
@@ -130,7 +130,7 @@ public final class RedisConnectionUtils {
 	}
 
 	private static RedisConnection doGetConnection(final RedisConnectionFactory factory, final boolean allowCreate,
-												   final boolean bind, final boolean enableTransactionSupport){
+												   final boolean bind, final boolean enableTransactionSupport) {
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 
 		RedisConnectionHolder connectionHolder = TransactionUtils.getResource(factory);
@@ -156,15 +156,17 @@ public final class RedisConnectionUtils {
 			startTime = System.nanoTime();
 		}
 
-		try{
-			connection.connect();
-		}catch(RedisConnectionFailureException e){
-			logger.error("Redis connection failure: {}", e.getMessage());
-			throw e;
-		}finally{
-			if(logger.isDebugEnabled()){
-				long finishTime = System.nanoTime();
-				logger.debug("Connection redis execution time: {}", finishTime - startTime);
+		if(connection.isConnect() == false){
+			try{
+				connection.connect();
+			}catch(RedisConnectionFailureException e){
+				logger.error("Redis connection failure: {}", e.getMessage());
+				throw e;
+			}finally{
+				if(logger.isDebugEnabled()){
+					long finishTime = System.nanoTime();
+					logger.debug("Connection redis execution time: {}", finishTime - startTime);
+				}
 			}
 		}
 
@@ -190,7 +192,7 @@ public final class RedisConnectionUtils {
 	}
 
 	private static void potentiallyRegisterTransactionSynchronisation(final RedisConnectionFactory factory,
-																	  final RedisConnectionHolder connectionHolder){
+																	  final RedisConnectionHolder connectionHolder) {
 		if(TransactionUtils.isActualNonReadonlyTransactionActive() &&
 				connectionHolder.isTransactionSyncronisationActive() == false){
 			connectionHolder.setTransactionSyncronisationActive(true);
@@ -204,7 +206,7 @@ public final class RedisConnectionUtils {
 	}
 
 	private static RedisConnection createConnectionProxy(final RedisConnectionFactory factory,
-														 final RedisConnection connection){
+														 final RedisConnection connection) {
 		ProxyFactory proxyFactory = new ProxyFactory(connection);
 		proxyFactory.addAdvice(new ConnectionSplittingInterceptor(factory));
 
@@ -212,7 +214,7 @@ public final class RedisConnectionUtils {
 		return (RedisConnection) proxyFactory.getProxy();
 	}
 
-	private static void connectionClose(final RedisConnection connection){
+	private static void connectionClose(final RedisConnection connection) {
 		if(connection == null){
 			return;
 		}
