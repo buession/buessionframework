@@ -83,18 +83,8 @@ public final class SlowlogConverter implements Converter<Object, SlowLog> {
 		return tmp.stream().map((v)->v == null ? null : new String(v)).collect(Collectors.toList());
 	}
 
-	/**
-	 * Lettuce {@link List} 慢日志对象 转换为 {@link List} {@link SlowLog}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListSlowlogConverter extends ListConverter<Object, SlowLog> {
-
-		public ListSlowlogConverter() {
-			super(new SlowlogConverter());
-		}
-
+	public static ListConverter<Object, SlowLog> listConverter() {
+		return new ListConverter<>(new SlowlogConverter());
 	}
 
 }

@@ -45,19 +45,8 @@ public final class StreamConsumersInfoConverter implements Converter<StreamConsu
 		return new StreamConsumer(source.getName(), source.getIdle(), source.getPending(), source.getConsumerInfo());
 	}
 
-	/**
-	 * Jedis {@link List} {@link StreamConsumersInfo} 转换为 {@link List} {@link StreamConsumerFull}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamConsumersInfoConverter extends ListConverter<StreamConsumersInfo,
-			StreamConsumer> {
-
-		public ListStreamConsumersInfoConverter() {
-			super(new StreamConsumersInfoConverter());
-		}
-
+	public static ListConverter<StreamConsumersInfo, StreamConsumer> listConverter() {
+		return new ListConverter<>(new StreamConsumersInfoConverter());
 	}
 
 }

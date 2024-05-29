@@ -24,6 +24,8 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.SetConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.Aggregate;
@@ -102,7 +104,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMin(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
@@ -122,7 +124,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
@@ -178,7 +180,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMax(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
@@ -198,7 +200,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
@@ -588,7 +590,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Set<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
+		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
@@ -608,7 +610,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Set<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
+		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
@@ -1066,7 +1068,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRandMemberWithScores(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
@@ -1086,7 +1088,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
@@ -1142,7 +1144,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGE,
@@ -1162,7 +1164,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGE,
@@ -1418,7 +1420,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1438,7 +1440,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1459,7 +1461,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1480,7 +1482,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1502,7 +1504,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1524,7 +1526,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1547,7 +1549,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1570,7 +1572,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -2004,7 +2006,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
@@ -2024,7 +2026,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
@@ -2290,7 +2292,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2310,7 +2312,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2331,7 +2333,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2352,7 +2354,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2374,7 +2376,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2396,7 +2398,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2419,7 +2421,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2442,7 +2444,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -2908,7 +2910,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	}
 
 	private Set<Tuple> zInterWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
+		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTER,
@@ -2926,7 +2928,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	}
 
 	private Set<Tuple> zInterWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
+		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTER,
@@ -3178,7 +3180,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	}
 
 	private Set<Tuple> zUnionWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
+		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNION,
@@ -3196,7 +3198,7 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	}
 
 	private Set<Tuple> zUnionWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
+		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNION,

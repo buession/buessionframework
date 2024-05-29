@@ -45,18 +45,8 @@ public final class StreamGroupInfoConverter implements Converter<Object, StreamG
 		return null;
 	}
 
-	/**
-	 * Lettuce 'xinfo-consumers' 命令结果转换为 {@link List} {@link StreamGroup}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamGroupInfoConverter extends ListConverter<Object, StreamGroup> {
-
-		public ListStreamGroupInfoConverter() {
-			super(new StreamGroupInfoConverter());
-		}
-
+	public static ListConverter<Object, StreamGroup> listConverter() {
+		return new ListConverter<>(new StreamGroupInfoConverter());
 	}
 
 }

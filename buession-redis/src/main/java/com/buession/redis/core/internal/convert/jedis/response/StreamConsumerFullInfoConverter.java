@@ -56,19 +56,8 @@ public final class StreamConsumerFullInfoConverter implements Converter<StreamCo
 				source.getConsumerInfo());
 	}
 
-	/**
-	 * Jedis {@link List} {@link StreamConsumerFullInfo} 转换为 {@link List} {@link StreamConsumerFull}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamConsumerFullInfoConverter
-			extends ListConverter<StreamConsumerFullInfo, StreamConsumerFull> {
-
-		public ListStreamConsumerFullInfoConverter() {
-			super(new StreamConsumerFullInfoConverter());
-		}
-
+	public static ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listConverter() {
+		return new ListConverter<>(new StreamConsumerFullInfoConverter());
 	}
 
 }

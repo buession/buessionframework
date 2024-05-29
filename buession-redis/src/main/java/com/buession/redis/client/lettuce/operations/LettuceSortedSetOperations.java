@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Aggregate;
@@ -91,8 +92,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, count),
@@ -131,8 +131,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmin(key, count),
@@ -645,8 +644,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZRANGE,
@@ -781,8 +779,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final Range<Double> range = Range.create(min, max);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -806,8 +803,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 				.put("offset", offset).put("count", count);
 		final Range<Double> range = Range.create(min, max);
 		final Limit limit = Limit.create(offset, count);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1059,8 +1055,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
@@ -1195,8 +1190,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final Range<Double> range = Range.create(min, max);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -1220,8 +1214,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 				.put("offset", offset).put("count", count);
 		final Range<Double> range = Range.create(min, max);
 		final Limit limit = Limit.create(offset, count);
-		final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,

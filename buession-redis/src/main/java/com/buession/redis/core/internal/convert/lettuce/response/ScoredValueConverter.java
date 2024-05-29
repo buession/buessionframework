@@ -26,12 +26,10 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.SetConverter;
 import com.buession.redis.core.Tuple;
 import io.lettuce.core.ScoredValue;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Lettuce {@link ScoredValue} 转换为 {@link Tuple}
@@ -46,32 +44,8 @@ public final class ScoredValueConverter implements Converter<ScoredValue<byte[]>
 		return new Tuple(source.getValue(), source.getScore());
 	}
 
-	/**
-	 * Lettuce {@link List} {@link ScoredValue} 转换为 {@link List} {@link Tuple}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListScoredValueConverter extends ListConverter<ScoredValue<byte[]>, Tuple> {
-
-		public ListScoredValueConverter() {
-			super(new ScoredValueConverter());
-		}
-
-	}
-
-	/**
-	 * Lettuce {@link Set} {@link ScoredValue} 转换为 {@link Set} {@link Tuple}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class SetScoredValueConverter extends SetConverter<ScoredValue<byte[]>, Tuple> {
-
-		public SetScoredValueConverter() {
-			super(new ScoredValueConverter());
-		}
-
+	public static ListConverter<ScoredValue<byte[]>, Tuple> listConverter() {
+		return new ListConverter<>(new ScoredValueConverter());
 	}
 
 }

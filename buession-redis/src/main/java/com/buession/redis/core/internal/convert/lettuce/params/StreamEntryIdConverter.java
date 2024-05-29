@@ -26,10 +26,7 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntryId;
-
-import java.util.Map;
 
 /**
  * {@link StreamEntryId} 转换为 Lettuce Stream MessageId
@@ -44,32 +41,8 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryId, St
 		return source == null ? null : source.toString();
 	}
 
-	/**
-	 * 数组形式 {@link StreamEntryId} 转换为数组形式 Lettuce Stream MessageId
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ArrayStreamEntryIdConverter extends ArrayConverter<StreamEntryId, String> {
-
-		public ArrayStreamEntryIdConverter() {
-			super(new StreamEntryIdConverter(), String.class);
-		}
-
-	}
-
-	/**
-	 * {@link Map} 形式 {@link StreamEntryId} 转换为 {@link Map} 形式 Lettuce Stream MessageId
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class MapStreamEntryIdConverter<SK, TK> extends MapConverter<SK, StreamEntryId, TK, String> {
-
-		public MapStreamEntryIdConverter(final Converter<SK, TK> keyConverter) {
-			super(keyConverter, new StreamEntryIdConverter());
-		}
-
+	public static ArrayConverter<StreamEntryId, String> arrayConverter() {
+		return new ArrayConverter<>(new StreamEntryIdConverter(), String.class);
 	}
 
 }

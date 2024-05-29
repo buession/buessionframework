@@ -25,10 +25,12 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
 import redis.clients.jedis.resps.StreamFullInfo;
+import redis.clients.jedis.resps.StreamGroupFullInfo;
 
 import java.util.List;
 
@@ -42,11 +44,11 @@ public final class StreamFullInfoConverter implements Converter<StreamFullInfo, 
 
 	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
-	private final StreamFullInfoGroupConverter.ListStreamFullInfoGroupConverter listStreamFullInfoGroupConverter =
-			new StreamFullInfoGroupConverter.ListStreamFullInfoGroupConverter();
+	private final ListConverter<StreamGroupFullInfo, StreamFull.Group> listStreamFullInfoGroupConverter =
+			StreamFullInfoGroupConverter.listConverter();
 
-	private final StreamEntryConverter.ListStreamEntryConverter listStreamEntryConverter =
-			new StreamEntryConverter.ListStreamEntryConverter();
+	private final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
+			StreamEntryConverter.listConverter();
 
 	@Override
 	public StreamFull convert(final StreamFullInfo source) {

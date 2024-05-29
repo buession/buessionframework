@@ -51,18 +51,8 @@ public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 				client, source.getClientName());
 	}
 
-	/**
-	 * Jedis {@link List} {@link Slowlog} 转换为 {@link List} {@link SlowLog}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListSlowlogConverter extends ListConverter<Slowlog, SlowLog> {
-
-		public ListSlowlogConverter() {
-			super(new SlowlogConverter());
-		}
-
+	public static ListConverter<Slowlog, SlowLog> listConverter() {
+		return new ListConverter<>(new SlowlogConverter());
 	}
 
 }

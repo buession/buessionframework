@@ -68,18 +68,8 @@ public final class ClusterNodeConverter implements Converter<String, ClusterRedi
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 
-	/**
-	 * {@link List} 慢日志对象 转换为 {@link List} {@link ClusterRedisNode}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListClusterNodeConverter extends ListConverter<String, ClusterRedisNode> {
-
-		public ListClusterNodeConverter() {
-			super(new ClusterNodeConverter());
-		}
-
+	public static ListConverter<String, ClusterRedisNode> listConverter() {
+		return new ListConverter<>(new ClusterNodeConverter());
 	}
 
 }

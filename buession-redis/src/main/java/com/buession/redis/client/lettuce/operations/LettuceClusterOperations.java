@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
@@ -94,8 +95,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		final ClusterSlotConverter.ListClusterSlotConverter listClusterSlotConverter =
-				new ClusterSlotConverter.ListClusterSlotConverter();
+		final ListConverter<Object, ClusterSlot> listClusterSlotConverter = ClusterSlotConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
@@ -326,8 +326,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final ClusterNodeConverter.ListClusterNodeConverter listClusterNodeConverter =
-				new ClusterNodeConverter.ListClusterNodeConverter();
+		final ListConverter<String, ClusterRedisNode> listClusterNodeConverter = ClusterNodeConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.CLUSTER_SLAVES,

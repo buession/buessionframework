@@ -44,18 +44,8 @@ public final class GeoCoordinateConverter implements Converter<GeoCoordinate, Ge
 		return new Geo(source.getLongitude(), source.getLatitude());
 	}
 
-	/**
-	 * Jedis {@link List} {@link GeoCoordinate} 转换为 {@link List} {@link Geo}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListGeoCoordinateConverter extends ListConverter<GeoCoordinate, Geo> {
-
-		public ListGeoCoordinateConverter() {
-			super(new GeoCoordinateConverter());
-		}
-
+	public static ListConverter<GeoCoordinate, Geo> listConverter() {
+		return new ListConverter<>(new GeoCoordinateConverter());
 	}
 
 }

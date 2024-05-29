@@ -54,19 +54,8 @@ public class StreamMessageMapConverter<K>
 		return null;
 	}
 
-	/**
-	 * Lettuce {@link List} {@link StreamMessage} 转换为 {@link List} {@link StreamEntry}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamMessageMapConverter<K>
-			extends ListConverter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> {
-
-		public ListStreamMessageMapConverter() {
-			super(new StreamMessageMapConverter<>());
-		}
-
+	public static <K> ListConverter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> listConverter() {
+		return new ListConverter<>(new StreamMessageMapConverter<>());
 	}
 
 }

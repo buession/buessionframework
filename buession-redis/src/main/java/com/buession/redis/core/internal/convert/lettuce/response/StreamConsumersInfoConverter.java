@@ -45,18 +45,8 @@ public final class StreamConsumersInfoConverter implements Converter<Object, Str
 		return null;
 	}
 
-	/**
-	 * Lettuce 'xinfo-consumers' 命令结果转换为 {@link List} {@link StreamConsumer}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamConsumersInfoConverter extends ListConverter<Object, StreamConsumer> {
-
-		public ListStreamConsumersInfoConverter() {
-			super(new StreamConsumersInfoConverter());
-		}
-
+	public static ListConverter<Object, StreamConsumer> listConverter() {
+		return new ListConverter<>(new StreamConsumersInfoConverter());
 	}
 
 }

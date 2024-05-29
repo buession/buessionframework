@@ -32,10 +32,11 @@ import com.buession.core.validator.Validate;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.command.ProtocolCommand;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Client Info 命令结果转换为 {@link Client}
@@ -132,24 +133,8 @@ public final class ClientConverter implements Converter<String, Client> {
 
 		@Override
 		public List<Client> convert(final String source) {
-			if(Validate.isBlank(source)){
-				return null;
-			}
-
-			String[] clients = source.split("[\\r\\n]");
-			List<Client> result = new ArrayList<>(clients.length);
-
-			if(Validate.isNotEmpty(clients)){
-				for(String s : clients){
-					Client client = clientConverter.convert(s);
-
-					if(client != null){
-						result.add(client);
-					}
-				}
-			}
-
-			return result;
+			return Arrays.stream(StringUtils.split(source, "\r\n")).map(clientConverter::convert).collect(
+					Collectors.toList());
 		}
 	}
 

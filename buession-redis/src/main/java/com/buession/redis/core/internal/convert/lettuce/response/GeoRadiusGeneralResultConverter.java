@@ -43,18 +43,8 @@ public final class GeoRadiusGeneralResultConverter implements Converter<byte[], 
 		return new GeoRadius(source);
 	}
 
-	/**
-	 * Lettuce {@link List} georadius 命令结果转换为 {@link List} {@link GeoRadius}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class SetListGeoRadiusGeneralResultConverter extends SetListConverter<byte[], GeoRadius> {
-
-		public SetListGeoRadiusGeneralResultConverter() {
-			super(new GeoRadiusGeneralResultConverter());
-		}
-
+	public static SetListConverter<byte[], GeoRadius> setListConverter() {
+		return new SetListConverter<>(new GeoRadiusGeneralResultConverter());
 	}
 
 }

@@ -53,18 +53,8 @@ public final class AccessControlLogEntryConverter implements Converter<AccessCon
 				source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
 	}
 
-	/**
-	 * Jedis {@link List} {@link AccessControlLogEntry} 转换为 {@link List} {@link AclLog}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListAccessControlLogEntryConverter extends ListConverter<AccessControlLogEntry, AclLog> {
-
-		public ListAccessControlLogEntryConverter() {
-			super(new AccessControlLogEntryConverter());
-		}
-
+	public static ListConverter<AccessControlLogEntry, AclLog> listConverter() {
+		return new ListConverter<>(new AccessControlLogEntryConverter());
 	}
 
 }

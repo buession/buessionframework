@@ -69,18 +69,8 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 
-	/**
-	 * Jedis {@link List} Cluster Replicas 命令结果 转换为 {@link List} {@link RedisClusterServer}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListClusterReplicasConverter extends ListConverter<String, ClusterRedisNode> {
-
-		public ListClusterReplicasConverter() {
-			super(new ClusterReplicasConverter());
-		}
-
+	public static ListConverter<String, ClusterRedisNode> listConverter() {
+		return new ListConverter<>(new ClusterReplicasConverter());
 	}
 
 }

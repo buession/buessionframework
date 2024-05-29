@@ -47,18 +47,8 @@ public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byt
 				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
 	}
 
-	/**
-	 * Lettuce {@link List} {@link GeoWithin} 转换为 {@link List} {@link GeoRadius}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListGeoRadiusResponseConverter extends ListConverter<GeoWithin<byte[]>, GeoRadius> {
-
-		public ListGeoRadiusResponseConverter() {
-			super(new GeoRadiusResponseConverter());
-		}
-
+	public static ListConverter<GeoWithin<byte[]>, GeoRadius> listConverter() {
+		return new ListConverter<>(new GeoRadiusResponseConverter());
 	}
 
 }

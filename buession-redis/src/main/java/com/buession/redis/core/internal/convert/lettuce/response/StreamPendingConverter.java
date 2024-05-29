@@ -45,18 +45,8 @@ public final class StreamPendingConverter implements Converter<Object, StreamPen
 		return null;
 	}
 
-	/**
-	 * Lettuce xpending' 命令结果转换为转换为 {@link List} {@link StreamPending}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamPendingConverter extends ListConverter<Object, StreamPending> {
-
-		public ListStreamPendingConverter() {
-			super(new StreamPendingConverter());
-		}
-
+	public static ListConverter<Object, StreamPending> listConverter() {
+		return new ListConverter<>(new StreamPendingConverter());
 	}
 
 }

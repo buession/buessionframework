@@ -71,18 +71,8 @@ public final class ClusterSlotConverter implements Converter<Object, ClusterSlot
 		return null;
 	}
 
-	/**
-	 * {@link List} Cluster Slots 命令结果 转换为 {@link List} {@link ClusterSlot}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListClusterSlotConverter extends ListConverter<Object, ClusterSlot> {
-
-		public ListClusterSlotConverter() {
-			super(new ClusterSlotConverter());
-		}
-
+	public static ListConverter<Object, ClusterSlot> listConverter() {
+		return new ListConverter<>(new ClusterSlotConverter());
 	}
 
 }

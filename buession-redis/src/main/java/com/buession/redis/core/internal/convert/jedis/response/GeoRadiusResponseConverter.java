@@ -47,18 +47,8 @@ public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, 
 				source.getCoordinate() == null ? null : geoCoordinateConverter.convert(source.getCoordinate()));
 	}
 
-	/**
-	 * Jedis {@link List} {@link GeoRadiusResponse} 转换为 {@link List} {@link GeoRadius}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListGeoRadiusResponseConverter extends ListConverter<GeoRadiusResponse, GeoRadius> {
-
-		public ListGeoRadiusResponseConverter() {
-			super(new GeoRadiusResponseConverter());
-		}
-
+	public static ListConverter<GeoRadiusResponse, GeoRadius> listConverter() {
+		return new ListConverter<>(new GeoRadiusResponseConverter());
 	}
 
 }

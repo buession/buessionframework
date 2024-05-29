@@ -44,18 +44,8 @@ public final class GeoCoordinateConverter implements Converter<GeoCoordinates, G
 		return new Geo(source.getX().doubleValue(), source.getY().doubleValue());
 	}
 
-	/**
-	 * Lettuce {@link List} {@link GeoCoordinates} 转换为 {@link List} {@link Geo}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListGeoCoordinateConverter extends ListConverter<GeoCoordinates, Geo> {
-
-		public ListGeoCoordinateConverter() {
-			super(new GeoCoordinateConverter());
-		}
-
+	public static ListConverter<GeoCoordinates, Geo> listConverter() {
+		return new ListConverter<>(new GeoCoordinateConverter());
 	}
 
 }

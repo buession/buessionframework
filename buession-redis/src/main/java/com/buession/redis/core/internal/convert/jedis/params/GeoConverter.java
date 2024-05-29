@@ -43,22 +43,8 @@ public final class GeoConverter implements Converter<Geo, GeoCoordinate> {
 		return new GeoCoordinate(source.getLongitude(), source.getLatitude());
 	}
 
-	/**
-	 * {@link Map} 形式的 {@link Geo} 转换为 jedis {@link Map} 形式 {@link GeoCoordinate}
-	 *
-	 * @param <K>
-	 *        {@link Map} Key 类型
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class MapConverter<K>
-			extends com.buession.core.converter.MapConverter<K, Geo, K, GeoCoordinate> {
-
-		public MapConverter() {
-			super((key)->key, new GeoConverter());
-		}
-
+	public static <K> com.buession.core.converter.MapConverter<K, Geo, K, GeoCoordinate> mapConverter() {
+		return new com.buession.core.converter.MapConverter<>((key)->key, new GeoConverter());
 	}
 
 }

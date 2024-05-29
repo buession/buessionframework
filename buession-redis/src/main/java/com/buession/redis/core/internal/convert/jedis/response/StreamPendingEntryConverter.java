@@ -48,18 +48,8 @@ public final class StreamPendingEntryConverter implements Converter<StreamPendin
 		return new StreamPending(id, source.getConsumerName(), source.getIdleTime(), source.getDeliveredTimes());
 	}
 
-	/**
-	 * Jedis {@link List} {@link StreamPendingEntry} 转换为 {@link List} {@link StreamPending}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamPendingEntryConverter extends ListConverter<StreamPendingEntry, StreamPending> {
-
-		public ListStreamPendingEntryConverter() {
-			super(new StreamPendingEntryConverter());
-		}
-
+	public static ListConverter<StreamPendingEntry, StreamPending> listConverter() {
+		return new ListConverter<>(new StreamPendingEntryConverter());
 	}
 
 }

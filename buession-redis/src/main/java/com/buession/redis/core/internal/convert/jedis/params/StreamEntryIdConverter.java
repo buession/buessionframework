@@ -42,34 +42,12 @@ import java.util.Map;
 @FunctionalInterface
 public interface StreamEntryIdConverter extends Converter<StreamEntryId, StreamEntryID> {
 
-	/**
-	 * 数组形式的 {@link StreamEntryId} 转换为 jedis 数组形式 {@link StreamEntryID}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	final class ArrayStreamEntryIdConverter extends ArrayConverter<StreamEntryId, StreamEntryID> {
-
-		public ArrayStreamEntryIdConverter() {
-			super(JedisStreamEntryID::from, StreamEntryID.class);
-		}
+	static ArrayConverter<StreamEntryId, StreamEntryID> arrayConverter() {
+		return new ArrayConverter<>(JedisStreamEntryID::from, StreamEntryID.class);
 	}
 
-	/**
-	 * {@link Map} 形式的 {@link StreamEntryId} 转换为 jedis {@link Map} 形式 {@link StreamEntryID}
-	 *
-	 * @param <K>
-	 *        {@link Map} Key 类型
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	final class MapStreamEntryIdConverter<K> extends MapConverter<K, StreamEntryId, K, StreamEntryID> {
-
-		public MapStreamEntryIdConverter() {
-			super((key)->key, JedisStreamEntryID::from);
-		}
-
+	static <K> MapConverter<K, StreamEntryId, K, StreamEntryID> mapConverter() {
+		return new MapConverter<>((key)->key, JedisStreamEntryID::from);
 	}
 
 }

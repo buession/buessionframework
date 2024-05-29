@@ -28,6 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.internal.convert.response.ListConverter;
+import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScoredValueScanCursor;
 import io.lettuce.core.ValueScanCursor;
 
@@ -77,8 +78,8 @@ public final class ValueScanCursorConverter<K> implements Converter<ValueScanCur
 	public final static class ScoredValueScanCursorConverter
 			implements Converter<ScoredValueScanCursor<byte[]>, ScanResult<List<Tuple>>> {
 
-		private final ScoredValueConverter.ListScoredValueConverter listScoredValueConverter =
-				new ScoredValueConverter.ListScoredValueConverter();
+		private final com.buession.core.converter.ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter
+				= ScoredValueConverter.listConverter();
 
 		@Override
 		public ScanResult<List<Tuple>> convert(final ScoredValueScanCursor<byte[]> source) {

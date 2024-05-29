@@ -26,6 +26,7 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.collect.Maps;
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.AclLog;
@@ -798,7 +799,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 
 	@Override
 	public List<SlowLog> slowLogGet() {
-		final SlowlogConverter.ListSlowlogConverter listSlowlogConverter = new SlowlogConverter.ListSlowlogConverter();
+		final ListConverter<Object, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
@@ -818,7 +819,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	@Override
 	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
-		final SlowlogConverter.ListSlowlogConverter listSlowlogConverter = new SlowlogConverter.ListSlowlogConverter();
+		final ListConverter<Object, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet((int) count),

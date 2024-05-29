@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -66,7 +67,8 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 	final class ListTupleScanResultConverter
 			implements ScanResultConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
 
-		private final TupleConverter.ListTupleConverter listTupleConverter = new TupleConverter.ListTupleConverter();
+		private final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter =
+				TupleConverter.listConverter();
 
 		@Override
 		public ScanResult<List<Tuple>> convert(

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
@@ -93,8 +94,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		final ClusterSlotConverter.ListClusterSlotConverter listClusterSlotConverter =
-				new ClusterSlotConverter.ListClusterSlotConverter();
+		final ListConverter<Object, ClusterSlot> listClusterSlotConverter = ClusterSlotConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
@@ -307,8 +307,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final ClusterNodeConverter.ListClusterNodeConverter listClusterNodeConverter =
-				new ClusterNodeConverter.ListClusterNodeConverter();
+		final ListConverter<String, ClusterRedisNode> listClusterNodeConverter = ClusterNodeConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
@@ -328,8 +327,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final ClusterReplicasConverter.ListClusterReplicasConverter listClusterReplicasConverter =
-				new ClusterReplicasConverter.ListClusterReplicasConverter();
+		final ListConverter<String, ClusterRedisNode> listClusterReplicasConverter = ClusterReplicasConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,

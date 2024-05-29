@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Stream;
@@ -80,7 +81,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("ids", (Object[]) ids);
-		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
+		final String[] messageIds = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XACK,
@@ -245,7 +246,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	@Override
 	public Long xDel(final byte[] key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("ids", (Object[]) ids);
-		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
+		final String[] messageIds = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, messageIds), (v)->v)
@@ -361,8 +362,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		final StreamConsumersInfoConverter.ListStreamConsumersInfoConverter listStreamConsumersInfoConverter =
-				new StreamConsumersInfoConverter.ListStreamConsumersInfoConverter();
+		final ListConverter<Object, StreamConsumer> listStreamConsumersInfoConverter = StreamConsumersInfoConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XINFO_CONSUMERS,
@@ -382,8 +382,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	@Override
 	public List<StreamGroup> xInfoGroups(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final StreamGroupInfoConverter.ListStreamGroupInfoConverter listStreamGroupInfoConverter =
-				new StreamGroupInfoConverter.ListStreamGroupInfoConverter();
+		final ListConverter<Object, StreamGroup> listStreamGroupInfoConverter = StreamGroupInfoConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
@@ -500,8 +499,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime);
-		final StreamPendingConverter.ListStreamPendingConverter listStreamPendingConverter =
-				new StreamPendingConverter.ListStreamPendingConverter();
+		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
@@ -592,8 +590,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final Range<String> range = Range.create(start.toString(), end.toString());
-		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
-				new StreamMessageConverter.ListStreamMessageConverter();
+		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
+				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range),
@@ -616,8 +614,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final Range<String> range = Range.create(start.toString(), end.toString());
 		final Limit limit = Limit.from(count);
-		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
-				new StreamMessageConverter.ListStreamMessageConverter();
+		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
+				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range, limit),
@@ -836,8 +834,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start);
 		final Range<String> range = Range.create(start.toString(), end.toString());
-		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
-				new StreamMessageConverter.ListStreamMessageConverter();
+		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
+				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, range),
@@ -861,8 +859,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 				.put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());
 		final Limit limit = Limit.from(count);
-		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
-				new StreamMessageConverter.ListStreamMessageConverter();
+		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
+				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XREVRANGE,
@@ -947,9 +945,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 
 	private List<StreamEntry> xClaim(final byte[] key, final StreamEntryId[] ids, final Consumer<byte[]> consumer,
 									 final XClaimArgs xClaimArgs, final CommandArguments args) {
-		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
-		final StreamMessageConverter.ListStreamMessageConverter listStreamMessageConverter =
-				new StreamMessageConverter.ListStreamMessageConverter();
+		final String[] messageIds = StreamEntryIdConverter.arrayConverter().convert(ids);
+		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
+				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XCLAIM,
@@ -969,9 +967,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	private List<StreamEntryId> xClaimJustId(final byte[] key, final StreamEntryId[] ids,
 											 final Consumer<byte[]> consumer, final XClaimArgs xClaimArgs,
 											 final CommandArguments args) {
-		final String[] messageIds = (new StreamEntryIdConverter.ArrayStreamEntryIdConverter()).convert(ids);
-		final StreamMessageConverter.ListStreamMessageStreamEntryIdConverter listStreamMessageStreamEntryIdConverter
-				= new StreamMessageConverter.ListStreamMessageStreamEntryIdConverter();
+		final String[] messageIds = StreamEntryIdConverter.arrayConverter().convert(ids);
+		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntryId> listStreamMessageStreamEntryIdConverter
+				= StreamMessageConverter.StreamMessageStreamEntryIdConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XCLAIM,
@@ -1003,8 +1001,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 
 	private List<StreamPending> xPending(final byte[] key, final byte[] groupName, Range<String> range,
 										 final Limit limit, final CommandArguments args) {
-		final StreamPendingConverter.ListStreamPendingConverter listStreamPendingConverter =
-				new StreamPendingConverter.ListStreamPendingConverter();
+		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING,
@@ -1023,8 +1020,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 
 	private List<StreamPending> xPending(final byte[] key, final Consumer<byte[]> consumer, Range<String> range,
 										 final Limit limit, final CommandArguments args) {
-		final StreamPendingConverter.ListStreamPendingConverter listStreamPendingConverter =
-				new StreamPendingConverter.ListStreamPendingConverter();
+		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING,
@@ -1045,8 +1041,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 													   final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		int i = 0;
-		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
-				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
+				StreamMessageMapConverter.listConverter();
 
 		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
 			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
@@ -1071,8 +1067,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 			StreamEntryId> streams, final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		int i = 0;
-		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
-				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
+				StreamMessageMapConverter.listConverter();
 
 		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
 			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
@@ -1097,8 +1093,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 															final Map<String, StreamEntryId> streams,
 															final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
-				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
+				StreamMessageMapConverter.listConverter();
 		int i = 0;
 
 		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
@@ -1113,8 +1109,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 															final Map<byte[], StreamEntryId> streams,
 															final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		final StreamMessageMapConverter.ListStreamMessageMapConverter<byte[]> listStreamMessageMapConverter =
-				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
+				StreamMessageMapConverter.listConverter();
 		int i = 0;
 
 		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
@@ -1150,8 +1146,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 															final Map<String, StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		final StreamMessageMapConverter.ListStreamMessageMapConverter<String> listStreamMessageMapConverter =
-				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
+				StreamMessageMapConverter.listConverter();
 		int i = 0;
 
 		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
@@ -1166,8 +1162,8 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 															final Map<byte[], StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		final StreamMessageMapConverter.ListStreamMessageMapConverter<byte[]> listStreamMessageMapConverter =
-				new StreamMessageMapConverter.ListStreamMessageMapConverter<>();
+		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
+				StreamMessageMapConverter.listConverter();
 		int i = 0;
 
 		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){

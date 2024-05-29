@@ -29,6 +29,7 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamConsumerFull;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
+import redis.clients.jedis.resps.StreamConsumerFullInfo;
 import redis.clients.jedis.resps.StreamGroupFullInfo;
 
 import java.util.List;
@@ -41,7 +42,8 @@ import java.util.List;
  */
 public class StreamFullInfoGroupConverter implements Converter<StreamGroupFullInfo, StreamFull.Group> {
 
-	private final StreamConsumerFullInfoConverter.ListStreamConsumerFullInfoConverter listStreamConsumerFullInfoConverter = new StreamConsumerFullInfoConverter.ListStreamConsumerFullInfoConverter();
+	private final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter =
+			StreamConsumerFullInfoConverter.listConverter();
 
 	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
@@ -55,19 +57,8 @@ public class StreamFullInfoGroupConverter implements Converter<StreamGroupFullIn
 				lastDeliveredId, source.getGroupFullInfo());
 	}
 
-	/**
-	 * Jedis {@link List} {@link StreamGroupFullInfo} 转换为 {@link List} {@link StreamFull.Group}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamFullInfoGroupConverter extends ListConverter<StreamGroupFullInfo,
-			StreamFull.Group> {
-
-		public ListStreamFullInfoGroupConverter() {
-			super(new StreamFullInfoGroupConverter());
-		}
-
+	public static ListConverter<StreamGroupFullInfo, StreamFull.Group> listConverter() {
+		return new ListConverter<>(new StreamFullInfoGroupConverter());
 	}
 
 }

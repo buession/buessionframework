@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.collect.Arrays;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.AclLog;
@@ -52,6 +53,8 @@ import com.buession.redis.core.internal.jedis.JedisFailoverParams;
 import redis.clients.jedis.JedisMonitor;
 import redis.clients.jedis.args.SaveMode;
 import redis.clients.jedis.params.FailoverParams;
+import redis.clients.jedis.resps.AccessControlLogEntry;
+import redis.clients.jedis.resps.Slowlog;
 
 import java.util.List;
 
@@ -299,8 +302,8 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public List<AclLog> aclLog() {
-		final AccessControlLogEntryConverter.ListAccessControlLogEntryConverter listAccessControlLogEntryConverter =
-				new AccessControlLogEntryConverter.ListAccessControlLogEntryConverter();
+		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
+				AccessControlLogEntryConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
@@ -318,8 +321,8 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<AclLog> aclLog(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
-		final AccessControlLogEntryConverter.ListAccessControlLogEntryConverter listAccessControlLogEntryConverter =
-				new AccessControlLogEntryConverter.ListAccessControlLogEntryConverter();
+		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
+				AccessControlLogEntryConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
@@ -779,7 +782,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public List<Module> moduleList() {
-		final ModuleConverter.ListModuleConverter listModuleConverter = new ModuleConverter.ListModuleConverter();
+		final ListConverter<redis.clients.jedis.Module, Module> listModuleConverter = ModuleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
@@ -986,7 +989,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public List<SlowLog> slowLogGet() {
-		final SlowlogConverter.ListSlowlogConverter listSlowlogConverter = new SlowlogConverter.ListSlowlogConverter();
+		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
@@ -1004,7 +1007,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
-		final SlowlogConverter.ListSlowlogConverter listSlowlogConverter = new SlowlogConverter.ListSlowlogConverter();
+		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)

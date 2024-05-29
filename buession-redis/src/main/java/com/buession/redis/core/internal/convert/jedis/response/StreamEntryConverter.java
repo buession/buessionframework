@@ -49,19 +49,8 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 		return new StreamEntry(id, source.getFields());
 	}
 
-	/**
-	 * Jedis {@link List} {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link List} {@link StreamEntry}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamEntryConverter extends ListConverter<redis.clients.jedis.resps.StreamEntry,
-			StreamEntry> {
-
-		public ListStreamEntryConverter() {
-			super(new StreamEntryConverter());
-		}
-
+	public static ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listConverter() {
+		return new ListConverter<>(new StreamEntryConverter());
 	}
 
 	/**
@@ -79,7 +68,7 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 			MapEntryMapConverter<SK, List<redis.clients.jedis.resps.StreamEntry>, TK, List<StreamEntry>> {
 
 		public MapEntryStreamEntryConverter(final Converter<SK, TK> keyConverter) {
-			super(keyConverter, new StreamEntryConverter.ListStreamEntryConverter());
+			super(keyConverter, StreamEntryConverter.listConverter());
 		}
 
 	}

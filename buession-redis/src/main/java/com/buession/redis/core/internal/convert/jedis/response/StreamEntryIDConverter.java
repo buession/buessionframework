@@ -31,7 +31,6 @@ import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.StreamEntryID;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
@@ -46,6 +45,14 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 		return new StreamEntryId(source.getTime(), source.getSequence());
 	}
 
+	public static ListConverter<StreamEntryID, StreamEntryId> listConverter() {
+		return new ListConverter<>(new StreamEntryIDConverter());
+	}
+
+	public static MapEntryMapConverter<StreamEntryID, List<StreamEntryID>, StreamEntryId, List<StreamEntryId>> mapEntryMapConverter() {
+		return new MapEntryMapConverter<>(new StreamEntryIDConverter(), listConverter());
+	}
+
 	/**
 	 * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
 	 *
@@ -57,35 +64,6 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 		@Override
 		public StreamEntryId convert(final byte[] source) {
 			return new StreamEntryId(source);
-		}
-
-	}
-
-	/**
-	 * Jedis {@link List} {@link StreamEntryID} 转换为 {@link List} {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamEntryIDConverter extends ListConverter<StreamEntryID, StreamEntryId> {
-
-		public ListStreamEntryIDConverter() {
-			super(new StreamEntryIDConverter());
-		}
-
-	}
-
-	/**
-	 * Jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class MapEntryStreamEntryIdConverter extends
-			MapEntryMapConverter<StreamEntryID, List<StreamEntryID>, StreamEntryId, List<StreamEntryId>> {
-
-		public MapEntryStreamEntryIdConverter() {
-			super(new StreamEntryIDConverter(), new ListStreamEntryIDConverter());
 		}
 
 	}

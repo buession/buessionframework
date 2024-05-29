@@ -51,19 +51,8 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 		return new StreamEntry(new StreamEntryId(source.getId()), binaryToStringMapConverter.convert(source.getBody()));
 	}
 
-	/**
-	 * Lettuce {@link List} {@link StreamMessage} 转换为 {@link List} {@link StreamEntry}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamMessageConverter
-			extends ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> {
-
-		public ListStreamMessageConverter() {
-			super(new StreamMessageConverter());
-		}
-
+	public static ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listConverter() {
+		return new ListConverter<>(new StreamMessageConverter());
 	}
 
 	/**
@@ -80,20 +69,10 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 			return new StreamEntryId(source.getId());
 		}
 
-	}
-
-	/**
-	 * Lettuce {@link List} {@link StreamMessage} 转换为 {@link List} {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamMessageStreamEntryIdConverter extends ListConverter<StreamMessage<byte[],
-			byte[]>, StreamEntryId> {
-
-		public ListStreamMessageStreamEntryIdConverter() {
-			super(new StreamMessageStreamEntryIdConverter());
+		public static ListConverter<StreamMessage<byte[], byte[]>, StreamEntryId> listConverter() {
+			return new ListConverter<>(new StreamMessageStreamEntryIdConverter());
 		}
+
 	}
 
 }

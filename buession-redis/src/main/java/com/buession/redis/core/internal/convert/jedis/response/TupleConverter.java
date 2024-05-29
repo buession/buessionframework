@@ -30,6 +30,7 @@ import com.buession.core.converter.SetConverter;
 import com.buession.redis.core.Tuple;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
@@ -44,32 +45,12 @@ public final class TupleConverter implements Converter<redis.clients.jedis.resps
 		return new Tuple(source.getBinaryElement(), source.getScore());
 	}
 
-	/**
-	 * Jedis {@link List} {@link redis.clients.jedis.resps.Tuple} 转换为 {@link List} {@link Tuple}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListTupleConverter extends ListConverter<redis.clients.jedis.resps.Tuple, Tuple> {
-
-		public ListTupleConverter() {
-			super(new TupleConverter());
-		}
-
+	public static ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter() {
+		return new ListConverter<>(new TupleConverter());
 	}
-
-	/**
-	 * Jedis {@link List} {@link redis.clients.jedis.resps.Tuple} 转换为 {@link List} {@link Tuple}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class SetTupleConverter extends SetConverter<redis.clients.jedis.resps.Tuple, Tuple> {
-
-		public SetTupleConverter() {
-			super(new TupleConverter());
-		}
-
+	
+	public static SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setConverter() {
+		return new SetConverter<>(new TupleConverter());
 	}
 
 }

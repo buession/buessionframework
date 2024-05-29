@@ -43,18 +43,8 @@ public final class ModuleConverter implements Converter<redis.clients.jedis.Modu
 		return new Module(source.getName(), source.getVersion());
 	}
 
-	/**
-	 * Jedis {@link List} {@link redis.clients.jedis.Module} 转换为 {@link List} {@link Module}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListModuleConverter extends ListConverter<redis.clients.jedis.Module, Module> {
-
-		public ListModuleConverter() {
-			super(new ModuleConverter());
-		}
-
+	public static ListConverter<redis.clients.jedis.Module, Module> listConverter() {
+		return new ListConverter<>(new ModuleConverter());
 	}
 
 }

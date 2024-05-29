@@ -26,6 +26,7 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.SetListConverter;
 import com.buession.lang.Geo;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.GeoRadius;
@@ -39,6 +40,8 @@ import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusRespon
 import com.buession.redis.core.internal.lettuce.LettuceGeoArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.GeoArgs;
+import io.lettuce.core.GeoCoordinates;
+import io.lettuce.core.GeoWithin;
 import io.lettuce.core.Value;
 
 import java.util.List;
@@ -135,8 +138,7 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		final GeoCoordinateConverter.ListGeoCoordinateConverter listGeoCoordinateConverter =
-				new GeoCoordinateConverter.ListGeoCoordinateConverter();
+		final ListConverter<GeoCoordinates, Geo> listGeoCoordinateConverter = GeoCoordinateConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
@@ -175,7 +177,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-		final GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter setListGeoRadiusGeneralResultConverter = new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter();
+		final SetListConverter<byte[], GeoRadius> setListGeoRadiusGeneralResultConverter =
+				GeoRadiusGeneralResultConverter.setListConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUS,
@@ -204,8 +207,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 				.put("geoRadiusArgument", geoRadiusArgument);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
 		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
-		final GeoRadiusResponseConverter.ListGeoRadiusResponseConverter listGeoRadiusResponseConverter =
-				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter();
+		final ListConverter<GeoWithin<byte[]>, GeoRadius> listGeoRadiusResponseConverter =
+				GeoRadiusResponseConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUS,
@@ -267,7 +270,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-		final GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter setListGeoRadiusGeneralResultConverter = new GeoRadiusGeneralResultConverter.SetListGeoRadiusGeneralResultConverter();
+		final SetListConverter<byte[], GeoRadius> setListGeoRadiusGeneralResultConverter =
+				GeoRadiusGeneralResultConverter.setListConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
@@ -294,8 +298,8 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
 		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
-		final GeoRadiusResponseConverter.ListGeoRadiusResponseConverter listGeoRadiusResponseConverter =
-				new GeoRadiusResponseConverter.ListGeoRadiusResponseConverter();
+		final ListConverter<GeoWithin<byte[]>, GeoRadius> listGeoRadiusResponseConverter =
+				GeoRadiusResponseConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,

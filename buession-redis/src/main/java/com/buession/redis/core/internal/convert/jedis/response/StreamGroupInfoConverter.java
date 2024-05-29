@@ -49,18 +49,8 @@ public final class StreamGroupInfoConverter implements Converter<StreamGroupInfo
 				source.getGroupInfo());
 	}
 
-	/**
-	 * Jedis {@link List} {@link StreamGroupInfo} 转换为 {@link List} {@link StreamGroup}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamGroupInfoConverter extends ListConverter<StreamGroupInfo, StreamGroup> {
-
-		public ListStreamGroupInfoConverter() {
-			super(new StreamGroupInfoConverter());
-		}
-
+	public static ListConverter<StreamGroupInfo, StreamGroup> listConverter() {
+		return new ListConverter<>(new StreamGroupInfoConverter());
 	}
 
 }
