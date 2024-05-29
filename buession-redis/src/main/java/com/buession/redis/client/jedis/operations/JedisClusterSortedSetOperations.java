@@ -42,7 +42,10 @@ import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisZAddParams;
 import com.buession.redis.core.internal.jedis.JedisZParams;
 import com.buession.redis.core.internal.jedis.JedisZRangeParams;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.params.ZAddParams;
 import redis.clients.jedis.params.ZParams;
+import redis.clients.jedis.params.ZRangeParams;
 
 import java.util.List;
 import java.util.Map;
@@ -337,7 +340,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -345,7 +348,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -353,7 +356,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
-		final JedisZAddParams zAddParams = new JedisZAddParams(gtLt);
+		final ZAddParams zAddParams = new JedisZAddParams(gtLt);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -361,7 +364,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt);
-		final JedisZAddParams zAddParams = new JedisZAddParams(gtLt);
+		final ZAddParams zAddParams = new JedisZAddParams(gtLt);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -369,7 +372,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(ch);
+		final ZAddParams zAddParams = new JedisZAddParams(ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -377,7 +380,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(ch);
+		final ZAddParams zAddParams = new JedisZAddParams(ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -386,7 +389,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -395,7 +398,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -404,7 +407,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx, ch);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx, ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -413,7 +416,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx, ch);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx, ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -422,7 +425,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(gtLt, ch);
+		final ZAddParams zAddParams = new JedisZAddParams(gtLt, ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -431,7 +434,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("gtLt", gtLt)
 				.put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(gtLt, ch);
+		final ZAddParams zAddParams = new JedisZAddParams(gtLt, ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -441,7 +444,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 					 final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt, ch);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt, ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -451,7 +454,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 					 final boolean ch) {
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members).put("nxXx", nxXx)
 				.put("gtLt", gtLt).put("ch", ch);
-		final JedisZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt, ch);
+		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt, ch);
 
 		return zAdd(key, members, zAddParams, args);
 	}
@@ -886,7 +889,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zInterStore(destKey, keys, zParams, args);
 	}
@@ -895,7 +898,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zInterStore(destKey, keys, zParams, args);
 	}
@@ -904,7 +907,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zInterStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zInterStore(destKey, keys, zParams, args);
 	}
@@ -913,7 +916,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zInterStore(destKey, keys, zParams, args);
 	}
@@ -923,7 +926,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zInterStore(destKey, keys, zParams, args);
 	}
@@ -933,7 +936,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zInterStore(destKey, keys, zParams, args);
 	}
@@ -1608,7 +1611,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1617,7 +1620,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1627,7 +1630,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final ZRangeBy by) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1637,7 +1640,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final ZRangeBy by) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1647,7 +1650,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1657,7 +1660,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1667,7 +1670,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1677,7 +1680,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1687,7 +1690,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final ZRangeBy by, final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1697,7 +1700,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final ZRangeBy by, final boolean rev) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1707,7 +1710,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final ZRangeBy by, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1717,7 +1720,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final ZRangeBy by, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1727,7 +1730,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1737,7 +1740,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1747,7 +1750,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final boolean rev, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1757,7 +1760,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final boolean rev, final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
-		final JedisZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev, offset, count);
+		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -2571,7 +2574,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return zScan(key, cursor, scanParams, args);
 	}
@@ -2579,7 +2582,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return zScan(key, cursor, scanParams, args);
 	}
@@ -2587,7 +2590,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return zScan(key, cursor, scanParams, args);
 	}
@@ -2595,7 +2598,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return zScan(key, cursor, scanParams, args);
 	}
@@ -2605,7 +2608,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return zScan(key, cursor, scanParams, args);
 	}
@@ -2615,7 +2618,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 										 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return zScan(key, cursor, scanParams, args);
 	}
@@ -2659,7 +2662,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final JedisZParams zParams = new JedisZParams();
+		final ZParams zParams = new JedisZParams();
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2667,7 +2670,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final JedisZParams zParams = new JedisZParams();
+		final ZParams zParams = new JedisZParams();
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2675,7 +2678,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2683,7 +2686,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2691,7 +2694,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<String> zUnion(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2699,7 +2702,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2708,7 +2711,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2717,7 +2720,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zUnion(keys, zParams, args);
 	}
@@ -2725,7 +2728,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final JedisZParams zParams = new JedisZParams();
+		final ZParams zParams = new JedisZParams();
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2733,7 +2736,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final JedisZParams zParams = new JedisZParams();
+		final ZParams zParams = new JedisZParams();
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2741,7 +2744,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2749,7 +2752,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2757,7 +2760,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2765,7 +2768,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	@Override
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2774,7 +2777,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2783,7 +2786,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zUnionWithScores(keys, zParams, args);
 	}
@@ -2830,7 +2833,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zUnionStore(destKey, keys, zParams, args);
 	}
@@ -2839,7 +2842,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate);
-		final JedisZParams zParams = new JedisZParams(aggregate);
+		final ZParams zParams = new JedisZParams(aggregate);
 
 		return zUnionStore(destKey, keys, zParams, args);
 	}
@@ -2848,7 +2851,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zUnionStore(destKey, keys, zParams, args);
 	}
@@ -2857,7 +2860,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(weights);
+		final ZParams zParams = new JedisZParams(weights);
 
 		return zUnionStore(destKey, keys, zParams, args);
 	}
@@ -2867,7 +2870,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zUnionStore(destKey, keys, zParams, args);
 	}
@@ -2877,13 +2880,13 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 							final double... weights) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys)
 				.put("aggregate", aggregate).put("weights", weights);
-		final JedisZParams zParams = new JedisZParams(aggregate, weights);
+		final ZParams zParams = new JedisZParams(aggregate, weights);
 
 		return zUnionStore(destKey, keys, zParams, args);
 	}
 
-	private Long zAdd(final String key, final Map<String, Double> members,
-					  final JedisZAddParams zAddParams, final CommandArguments args) {
+	private Long zAdd(final String key, final Map<String, Double> members, final ZAddParams zAddParams,
+					  final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZADD,
 					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
@@ -2899,8 +2902,8 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zAdd(final byte[] key, final Map<byte[], Double> members,
-					  final JedisZAddParams zAddParams, final CommandArguments args) {
+	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddParams zAddParams,
+					  final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZADD,
 					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
@@ -2982,7 +2985,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zInterStore(final String destKey, final String[] keys, final JedisZParams zParams,
+	private Long zInterStore(final String destKey, final String[] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
@@ -2999,7 +3002,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zInterStore(final byte[] destKey, final byte[][] keys, final JedisZParams zParams,
+	private Long zInterStore(final byte[] destKey, final byte[][] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
@@ -3116,7 +3119,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zRangeStore(final String destKey, final String key, final JedisZRangeParams zRangeParams,
+	private Long zRangeStore(final String destKey, final String key, final ZRangeParams zRangeParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZRANGESTORE,
@@ -3133,7 +3136,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zRangeStore(final byte[] destKey, final byte[] key, final JedisZRangeParams zRangeParams,
+	private Long zRangeStore(final byte[] destKey, final byte[] key, final ZRangeParams zRangeParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZRANGESTORE,
@@ -3150,7 +3153,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private ScanResult<List<Tuple>> zScan(final String key, final String cursor, final JedisScanParams scanParams,
+	private ScanResult<List<Tuple>> zScan(final String key, final String cursor, final ScanParams scanParams,
 										  final CommandArguments args) {
 		final ScanResultConverter.ListTupleScanResultConverter listTupleScanResultConverter =
 				new ScanResultConverter.ListTupleScanResultConverter();
@@ -3170,7 +3173,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final JedisScanParams scanParams,
+	private ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final ScanParams scanParams,
 										  final CommandArguments args) {
 		final ScanResultConverter.ListTupleScanResultConverter listTupleScanResultConverter =
 				new ScanResultConverter.ListTupleScanResultConverter();
@@ -3190,7 +3193,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Set<String> zUnion(final String[] keys, final JedisZParams zParams, final CommandArguments args) {
+	private Set<String> zUnion(final String[] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
 					(v)->v)
@@ -3205,7 +3208,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Set<byte[]> zUnion(final byte[][] keys, final JedisZParams zParams, final CommandArguments args) {
+	private Set<byte[]> zUnion(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
 					(v)->v)
@@ -3220,7 +3223,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Set<Tuple> zUnionWithScores(final String[] keys, final JedisZParams zParams, final CommandArguments args) {
+	private Set<Tuple> zUnionWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
 		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
 
 		if(isPipeline()){
@@ -3238,7 +3241,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Set<Tuple> zUnionWithScores(final byte[][] keys, final JedisZParams zParams, final CommandArguments args) {
+	private Set<Tuple> zUnionWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
 		final TupleConverter.SetTupleConverter setTupleConverter = new TupleConverter.SetTupleConverter();
 
 		if(isPipeline()){
@@ -3256,7 +3259,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zUnionStore(final String destKey, final String[] keys, final JedisZParams zParams,
+	private Long zUnionStore(final String destKey, final String[] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
@@ -3273,7 +3276,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		}
 	}
 
-	private Long zUnionStore(final byte[] destKey, final byte[][] keys, final JedisZParams zParams,
+	private Long zUnionStore(final byte[] destKey, final byte[][] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,

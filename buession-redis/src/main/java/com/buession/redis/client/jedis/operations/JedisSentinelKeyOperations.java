@@ -44,6 +44,10 @@ import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisSortingParams;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.ExpiryOption;
+import redis.clients.jedis.params.MigrateParams;
+import redis.clients.jedis.params.RestoreParams;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.params.SortingParams;
 
 import java.util.List;
 import java.util.Set;
@@ -580,7 +584,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams();
+		final MigrateParams migrateParams = new JedisMigrateParams();
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -589,7 +593,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams();
+		final MigrateParams migrateParams = new JedisMigrateParams();
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -599,7 +603,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final MigrateOperation operation, final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation);
+		final MigrateParams migrateParams = new JedisMigrateParams(operation);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -609,7 +613,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation);
+		final MigrateParams migrateParams = new JedisMigrateParams(operation);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -619,7 +623,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(password);
+		final MigrateParams migrateParams = new JedisMigrateParams(password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -629,7 +633,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(password);
+		final MigrateParams migrateParams = new JedisMigrateParams(password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -640,7 +644,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, password);
+		final MigrateParams migrateParams = new JedisMigrateParams(operation, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -651,7 +655,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, password);
+		final MigrateParams migrateParams = new JedisMigrateParams(operation, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -661,7 +665,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final int timeout, final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(user, password);
+		final MigrateParams migrateParams = new JedisMigrateParams(user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -671,7 +675,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(user, password);
+		final MigrateParams migrateParams = new JedisMigrateParams(user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -682,7 +686,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
+		final MigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -693,7 +697,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
+		final MigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
@@ -866,7 +870,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final JedisRestoreParams restoreParams = JedisRestoreParams.from(argument);
+		final RestoreParams restoreParams = JedisRestoreParams.from(argument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.RESTORE,
@@ -888,7 +892,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final JedisRestoreParams restoreParams = JedisRestoreParams.from(argument);
+		final RestoreParams restoreParams = JedisRestoreParams.from(argument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.RESTORE,
@@ -950,7 +954,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return scan(cursor, scanParams, args);
 	}
@@ -958,7 +962,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return scan(cursor, scanParams, args);
 	}
@@ -966,7 +970,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return scan(cursor, scanParams, args);
 	}
@@ -974,7 +978,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return scan(cursor, scanParams, args);
 	}
@@ -983,7 +987,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return scan(cursor, scanParams, args);
 	}
@@ -992,7 +996,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return scan(cursor, scanParams, args);
 	}
@@ -1032,7 +1036,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams),
@@ -1051,7 +1055,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams),
@@ -1107,7 +1111,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SORT,
@@ -1128,7 +1132,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SORT,
@@ -1487,7 +1491,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout, final String[] keys,
-						   final JedisMigrateParams migrateParams, final CommandArguments args) {
+						   final MigrateParams migrateParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys), okStatusConverter)
@@ -1504,7 +1508,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout, final byte[][] keys,
-						   final JedisMigrateParams migrateParams, final CommandArguments args) {
+						   final MigrateParams migrateParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys), okStatusConverter)
@@ -1520,7 +1524,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		}
 	}
 
-	private ScanResult<List<String>> scan(final String cursor, final JedisScanParams scanParams,
+	private ScanResult<List<String>> scan(final String cursor, final ScanParams scanParams,
 										  final CommandArguments args) {
 		final ScanResultConverter.ListScanResultConverter<String> listScanResultConverter =
 				new ScanResultConverter.ListScanResultConverter<>();
@@ -1540,7 +1544,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		}
 	}
 
-	private ScanResult<List<byte[]>> scan(final byte[] cursor, final JedisScanParams scanParams,
+	private ScanResult<List<byte[]>> scan(final byte[] cursor, final ScanParams scanParams,
 										  final CommandArguments args) {
 		final ScanResultConverter.ListScanResultConverter<byte[]> listScanResultConverter =
 				new ScanResultConverter.ListScanResultConverter<>();

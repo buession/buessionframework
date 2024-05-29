@@ -30,6 +30,8 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisGetExParams;
 import com.buession.redis.core.internal.jedis.JedisSetParams;
+import redis.clients.jedis.params.GetExParams;
+import redis.clients.jedis.params.SetParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -292,7 +294,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final JedisGetExParams getExParams = JedisGetExParams.from(getExArgument);
+		final GetExParams getExParams = JedisGetExParams.from(getExArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getEx(key, getExParams),
@@ -311,7 +313,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final JedisGetExParams getExParams = JedisGetExParams.from(getExArgument);
+		final GetExParams getExParams = JedisGetExParams.from(getExArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getEx(key, getExParams),
@@ -560,7 +562,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSetParams setParams = JedisSetParams.from(setArgument);
+		final SetParams setParams = JedisSetParams.from(setArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SET,
@@ -580,7 +582,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSetParams setParams = JedisSetParams.from(setArgument);
+		final SetParams setParams = JedisSetParams.from(setArgument);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SET,

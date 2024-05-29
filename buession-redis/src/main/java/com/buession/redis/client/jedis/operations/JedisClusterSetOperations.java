@@ -31,6 +31,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
+import redis.clients.jedis.params.ScanParams;
 
 import java.util.List;
 import java.util.Set;
@@ -624,7 +625,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return sScan(key, cursor, scanParams, args);
 	}
@@ -632,7 +633,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return sScan(key, cursor, scanParams, args);
 	}
@@ -640,7 +641,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return sScan(key, cursor, scanParams, args);
 	}
@@ -648,7 +649,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return sScan(key, cursor, scanParams, args);
 	}
@@ -658,7 +659,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 										  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return sScan(key, cursor, scanParams, args);
 	}
@@ -668,7 +669,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 										  final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return sScan(key, cursor, scanParams, args);
 	}
@@ -743,7 +744,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 		}
 	}
 
-	private ScanResult<List<String>> sScan(final String key, final String cursor, final JedisScanParams scanParams,
+	private ScanResult<List<String>> sScan(final String key, final String cursor, final ScanParams scanParams,
 										   final CommandArguments args) {
 		final ScanResultConverter.ListScanResultConverter<String> listScanResultConverter =
 				new ScanResultConverter.ListScanResultConverter<>();
@@ -763,7 +764,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 		}
 	}
 
-	private ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final JedisScanParams scanParams,
+	private ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final ScanParams scanParams,
 										   final CommandArguments args) {
 		final ScanResultConverter.ListScanResultConverter<byte[]> listScanResultConverter =
 				new ScanResultConverter.ListScanResultConverter<>();

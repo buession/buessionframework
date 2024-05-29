@@ -558,7 +558,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return hScan(key, cursor, scanParams, args);
 	}
@@ -566,7 +566,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern);
+		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return hScan(key, cursor, scanParams, args);
 	}
@@ -574,7 +574,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return hScan(key, cursor, scanParams, args);
 	}
@@ -582,7 +582,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(count);
+		final ScanParams scanParams = new JedisScanParams(count);
 
 		return hScan(key, cursor, scanParams, args);
 	}
@@ -591,7 +591,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return hScan(key, cursor, scanParams, args);
 	}
@@ -601,7 +601,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 												 final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return hScan(key, cursor, scanParams, args);
 	}
