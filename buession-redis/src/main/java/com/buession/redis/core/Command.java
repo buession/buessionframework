@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -86,7 +86,6 @@ public interface Command<R> {
 	 *
 	 * @author Yong.Teng
 	 */
-	@FunctionalInterface
 	interface Runner {
 
 		/**
@@ -97,10 +96,10 @@ public interface Command<R> {
 		 *
 		 * @return Redis 命令运行结果
 		 *
-		 * @throws Exception
+		 * @throws RedisException
 		 * 		Redis 命令运行异常
 		 */
-		<R> R run() throws Exception;
+		<R> R run() throws RedisException;
 
 	}
 

@@ -35,12 +35,12 @@ import com.buession.redis.core.command.ProtocolCommand;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT, SR, R>
-		extends AbstractRedisCommand<CLIENT, R> {
+public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT,
+		OSR, SR, R> extends AbstractRedisCommand<CLIENT, R> {
 
 	protected final CONN connection;
 
-	protected final Executor<CXT, SR> executor;
+	protected final Executor<CXT, OSR> executor;
 
 	protected final Converter<SR, R> converter;
 
@@ -50,7 +50,7 @@ public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient,
 	}
 
 	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
-										  final Executor<CXT, SR> executor) {
+										  final Executor<CXT, OSR> executor) {
 		this(client, command, executor, null);
 	}
 
@@ -61,13 +61,13 @@ public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient,
 
 	@SuppressWarnings({"unchecked"})
 	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
-										  final Executor<CXT, SR> executor, final Converter<SR, R> converter) {
+										  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 		super(client, command);
 		connection = (CONN) client.getConnection();
 		this.executor = executor;
 		this.converter = converter;
 	}
 
-	protected abstract SR doExecute() throws Exception;
+	protected abstract R doExecute() throws Exception;
 
 }

@@ -26,27 +26,20 @@ package com.buession.redis.client.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.RedisClusterClient;
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.RedisClusterConnection;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
-import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.Command;
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
-import io.lettuce.core.api.async.RedisAsyncCommands;
 
 /**
  * Redis 命令操作接口
@@ -55,26 +48,25 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
  */
 public interface RedisOperations {
 
-	abstract class AbstractStandaloneCommand<CLIENT extends RedisStandaloneClient, CONN extends RedisStandaloneConnection, CXT, SR, R>
-			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, SR, R> {
+	abstract class AbstractStandaloneCommand<CLIENT extends RedisStandaloneClient, CONN extends RedisStandaloneConnection, CXT, OSR, SR, R>
+			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, OSR, SR, R> {
 
-		protected AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command) {
+		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		protected AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
-											final Executor<CXT, SR> executor) {
+		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
+										 final Executor<CXT, OSR> executor) {
 			super(client, command, executor);
 		}
 
-		protected AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
-											final Converter<SR, R> converter) {
+		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
+										 final Converter<SR, R> converter) {
 			super(client, command, converter);
 		}
 
-		protected AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
-											final Executor<CXT, SR> executor,
-											final Converter<SR, R> converter) {
+		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
+										 final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
@@ -93,8 +85,7 @@ public interface RedisOperations {
 				}
 			}else{
 				try{
-					final SR result = doExecute();
-					return result == null ? null : converter.convert(result);
+					return doExecute();
 				}catch(Exception e){
 					throw new RedisException(e.getMessage(), e);
 				}
@@ -103,26 +94,25 @@ public interface RedisOperations {
 
 	}
 
-	abstract class AbstractSentinelCommand<CLIENT extends RedisSentinelClient, CONN extends RedisSentinelConnection, CXT, SR, R>
-			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, SR, R> {
+	abstract class AbstractSentinelCommand<CLIENT extends RedisSentinelClient, CONN extends RedisSentinelConnection, CXT, OSR, SR, R>
+			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, OSR, SR, R> {
 
-		protected AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command) {
+		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		protected AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
-										  final Executor<CXT, SR> executor) {
+		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
+									   final Executor<CXT, OSR> executor) {
 			super(client, command, executor);
 		}
 
-		protected AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
-										  final Converter<SR, R> converter) {
+		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
+									   final Converter<SR, R> converter) {
 			super(client, command, converter);
 		}
 
-		protected AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
-										  final Executor<CXT, SR> executor,
-										  final Converter<SR, R> converter) {
+		public AbstractSentinelCommand(final CLIENT client, ProtocolCommand command,
+									   final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
@@ -141,8 +131,7 @@ public interface RedisOperations {
 				}
 			}else{
 				try{
-					final SR result = doExecute();
-					return result == null ? null : converter.convert(result);
+					return doExecute();
 				}catch(Exception e){
 					throw new RedisException(e.getMessage(), e);
 				}
@@ -151,26 +140,25 @@ public interface RedisOperations {
 
 	}
 
-	abstract class AbstractClusterCommand<CLIENT extends RedisClusterClient, CONN extends RedisClusterConnection, CXT, SR, R>
-			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, SR, R> {
+	abstract class AbstractClusterCommand<CLIENT extends RedisClusterClient, CONN extends RedisClusterConnection, CXT, OSR, SR, R>
+			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, OSR, SR, R> {
 
-		protected AbstractClusterCommand(final CLIENT client, final ProtocolCommand command) {
+		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		protected AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
-										 final Executor<CXT, SR> executor) {
+		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
+									  final Executor<CXT, OSR> executor) {
 			super(client, command, executor);
 		}
 
-		protected AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
-										 final Converter<SR, R> converter) {
+		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
+									  final Converter<SR, R> converter) {
 			super(client, command, converter);
 		}
 
-		protected AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
-										 final Executor<CXT, SR> executor,
-										 final Converter<SR, R> converter) {
+		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
+									  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
@@ -189,8 +177,7 @@ public interface RedisOperations {
 				}
 			}else{
 				try{
-					final SR result = doExecute();
-					return result == null ? null : converter.convert(result);
+					return doExecute();
 				}catch(Exception e){
 					throw new RedisException(e.getMessage(), e);
 				}
