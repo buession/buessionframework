@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.internal;
 
+import com.buession.core.Executor;
+import com.buession.core.converter.Converter;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.AbstractRedisCommand;
@@ -33,15 +35,39 @@ import com.buession.redis.core.command.ProtocolCommand;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, R>
+public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT, SR, R>
 		extends AbstractRedisCommand<CLIENT, R> {
 
-	protected CONN connection;
+	protected final CONN connection;
+
+	protected final Executor<CXT, SR> executor;
+
+	protected final Converter<SR, R> converter;
 
 	@SuppressWarnings({"unchecked"})
 	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command) {
+		this(client, command, null, (value)->(R) value);
+	}
+
+	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
+										  final Executor<CXT, SR> executor) {
+		this(client, command, executor, null);
+	}
+
+	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
+										  final Converter<SR, R> converter) {
+		this(client, command, null, converter);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
+										  final Executor<CXT, SR> executor, final Converter<SR, R> converter) {
 		super(client, command);
 		connection = (CONN) client.getConnection();
+		this.executor = executor;
+		this.converter = converter;
 	}
+
+	protected abstract SR doExecute() throws Exception;
 
 }
