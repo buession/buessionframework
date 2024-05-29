@@ -35,6 +35,8 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 
 /**
+ * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */

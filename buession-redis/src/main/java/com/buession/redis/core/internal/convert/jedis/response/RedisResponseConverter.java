@@ -21,10 +21,31 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.Response;
+
+/**
+ * 将 Jedis 管道、事务结果转换为目标结果
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class RedisResponseConverter {
+ */
+public final class RedisResponseConverter<S, T> implements Converter<Response<S>, T> {
+
+	private final Converter<S, T> converter;
+
+	public RedisResponseConverter(final Converter<S, T> converter) {
+		this.converter = converter;
+	}
+
+	@Nullable
+	@Override
+	public T convert(final Response<S> source) {
+		return converter.convert(source.get());
+	}
+
 }

@@ -27,12 +27,12 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntry;
-import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.internal.convert.response.MapConverter;
 import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
@@ -40,15 +40,18 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamMessageConverter implements Converter<StreamMessage<byte[], byte[]>, StreamEntry> {
+public class StreamMessageMapConverter<K>
+		implements Converter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> {
 
 	private final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
 			new MapConverter.BinaryToStringMapConverter();
 
 	@Nullable
 	@Override
-	public StreamEntry convert(final StreamMessage<byte[], byte[]> source) {
-		return new StreamEntry(new StreamEntryId(source.getId()), binaryToStringMapConverter.convert(source.getBody()));
+	public Map<K, List<StreamEntry>> convert(final StreamMessage<byte[], byte[]> source) {
+		//return new StreamEntry(new StreamEntryId(source.getId()),
+		//binaryToStringMapConverter.convert(source.getBody()));
+		return null;
 	}
 
 	/**
@@ -57,43 +60,13 @@ public class StreamMessageConverter implements Converter<StreamMessage<byte[], b
 	 * @author Yong.Teng
 	 * @since 3.0.0
 	 */
-	public final static class ListStreamMessageConverter
-			extends ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> {
+	public final static class ListStreamMessageMapConverter<K>
+			extends ListConverter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> {
 
-		public ListStreamMessageConverter() {
-			super(new StreamMessageConverter());
+		public ListStreamMessageMapConverter() {
+			super(new StreamMessageMapConverter<>());
 		}
 
-	}
-
-	/**
-	 * Lettuce  {@link StreamMessage} 转换为 {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class StreamMessageStreamEntryIdConverter implements Converter<StreamMessage<byte[], byte[]>,
-			StreamEntryId> {
-
-		@Override
-		public StreamEntryId convert(final StreamMessage<byte[], byte[]> source) {
-			return new StreamEntryId(source.getId());
-		}
-
-	}
-
-	/**
-	 * Lettuce {@link List} {@link StreamMessage} 转换为 {@link List} {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListStreamMessageStreamEntryIdConverter extends ListConverter<StreamMessage<byte[],
-			byte[]>, StreamEntryId> {
-
-		public ListStreamMessageStreamEntryIdConverter() {
-			super(new StreamMessageStreamEntryIdConverter());
-		}
 	}
 
 }

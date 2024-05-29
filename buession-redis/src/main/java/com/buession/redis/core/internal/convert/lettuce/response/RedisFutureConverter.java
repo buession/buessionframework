@@ -21,10 +21,41 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import io.lettuce.core.RedisFuture;
+import org.springframework.lang.Nullable;
+
+import java.util.concurrent.ExecutionException;
+
+/**
+ * 将 Lettuce 管道、事务结果转换为目标结果
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class RedisFutureConverter {
+ */
+public final class RedisFutureConverter<S, T> implements Converter<RedisFuture<S>, T> {
+
+	private final Converter<S, T> converter;
+
+	public RedisFutureConverter(final Converter<S, T> converter) {
+		this.converter = converter;
+	}
+
+	@Nullable
+	@Override
+	public T convert(final RedisFuture<S> source) {
+		try{
+			return converter.convert(source.get());
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}catch(ExecutionException e){
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 }

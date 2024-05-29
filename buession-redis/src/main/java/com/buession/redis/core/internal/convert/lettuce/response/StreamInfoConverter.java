@@ -28,17 +28,19 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.Stream;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 /**
  * Lettuce 'xinfo-consumers' 命令结果转换为 {@link Stream}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamInfoConverter implements Converter<Object, Stream> {
+public final class StreamInfoConverter implements Converter<List<Object>, Stream> {
 
 	@Nullable
 	@Override
-	public Stream convert(final Object source) {
+	public Stream convert(final List<Object> source) {
 		return null;
 	}
 

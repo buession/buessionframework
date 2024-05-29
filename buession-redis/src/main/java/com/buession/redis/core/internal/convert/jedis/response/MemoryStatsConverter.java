@@ -21,10 +21,27 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.MemoryStats;
+import org.springframework.lang.Nullable;
+
+import java.util.Map;
+
+/**
+ * Jedis memory-stats 命令结果转换
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public class MemoryStatsConverter {
+ */
+public final class MemoryStatsConverter implements Converter<Map<String, Object>, MemoryStats> {
+
+	@Nullable
+	@Override
+	public MemoryStats convert(final Map<String, Object> source) {
+		return null;
+	}
+
 }

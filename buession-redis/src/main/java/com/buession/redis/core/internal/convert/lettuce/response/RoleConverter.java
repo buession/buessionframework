@@ -36,16 +36,12 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class RoleConverter implements Converter<Object, Role> {
+public final class RoleConverter implements Converter<List<Object>, Role> {
 
 	@Override
-	public Role convert(final Object source) {
-		if(source instanceof List){
-			List<Object> tmp = (List<Object>) source;
-
-			if(tmp.size() == 3){
-				return EnumUtils.getEnum(Role.class, new String((byte[]) tmp.get(0)).toUpperCase());
-			}
+	public Role convert(final List<Object> source) {
+		if(source != null && source.size() == 3){
+			return EnumUtils.getEnum(Role.class, new String((byte[]) source.get(0)).toUpperCase());
 		}
 
 		return null;
