@@ -270,8 +270,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime, expiryOption),
-					oneStatusConverter)
+					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -282,8 +281,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.expireAt(key, unixTimestamp),
-					oneStatusConverter)
+					(cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
@@ -302,8 +300,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.expireAt(key, unixTimestamp),
-					oneStatusConverter)
+					(cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
@@ -797,8 +794,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey),
-					oneStatusConverter)
+					(cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
@@ -822,8 +818,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, ttl, serializedValue),
-					okStatusConverter)
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -843,8 +838,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, ttl, serializedValue),
-					okStatusConverter)
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}
 	}
