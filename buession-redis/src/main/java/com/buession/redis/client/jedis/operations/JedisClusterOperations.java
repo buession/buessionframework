@@ -44,6 +44,7 @@ import com.buession.redis.core.internal.convert.jedis.response.ClusterReplicasCo
 import com.buession.redis.core.internal.convert.jedis.response.ClusterResetOptionConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
 import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.ClusterResetType;
 
 import java.util.List;
@@ -113,13 +114,18 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return clusterCountFailureReports(args);
-	}
 
-	@Override
-	public Integer clusterCountFailureReports(final byte[] nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return clusterCountFailureReports(args);
+		if(isPipeline()){
+			return new JedisPipelineCommand<Integer, Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -374,7 +380,6 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 
 	@Override
 	public Status clusterSaveConfig() {
-
 		if(isPipeline()){
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
 					.run();
@@ -474,7 +479,7 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.READWRITE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.READWRITE)
+			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.READWRITE)
 					.run();
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readwrite(),
@@ -494,19 +499,6 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readonly(), okStatusConverter)
 					.run();
-		}
-	}
-
-	private Integer clusterCountFailureReports(final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Integer, Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}else{
-			return new JedisCommand<Integer, Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
 		}
 	}
 

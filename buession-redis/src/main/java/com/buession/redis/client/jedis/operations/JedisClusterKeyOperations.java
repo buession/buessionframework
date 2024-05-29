@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ExpireOption;
@@ -39,6 +38,7 @@ import com.buession.redis.core.internal.convert.response.BinaryObjectEncodingCon
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
+import com.buession.redis.core.internal.jedis.JedisMigrateParams;
 import com.buession.redis.core.internal.jedis.JedisRestoreParams;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisSortingParams;
@@ -63,101 +63,169 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Long del(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.DEL)
-				.general((cmd)->cmd.del(keys))
-				.pipeline((cmd)->cmd.del(keys))
-				.transaction((cmd)->cmd.del(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long del(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.DEL)
-				.general((cmd)->cmd.del(keys))
-				.pipeline((cmd)->cmd.del(keys))
-				.transaction((cmd)->cmd.del(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String dump(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<String>(client, ProtocolCommand.DUMP)
-				.general((cmd)->cmd.dump(key), SafeEncoder::encode)
-				.pipeline((cmd)->cmd.dump(key), SafeEncoder::encode)
-				.transaction((cmd)->cmd.dump(key), SafeEncoder::encode)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key),
+					SafeEncoder::encode)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key),
+					SafeEncoder::encode)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), SafeEncoder::encode)
+					.run(args);
+		}
 	}
 
 	@Override
 	public byte[] dump(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.DUMP)
-				.general((cmd)->cmd.dump(key))
-				.pipeline((cmd)->cmd.dump(key))
-				.transaction((cmd)->cmd.dump(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean exists(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Boolean>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(key))
-				.pipeline((cmd)->cmd.exists(key))
-				.transaction((cmd)->cmd.exists(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean exists(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Boolean>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(key))
-				.pipeline((cmd)->cmd.exists(key))
-				.transaction((cmd)->cmd.exists(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long exists(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(keys))
-				.pipeline((cmd)->cmd.exists(keys))
-				.transaction((cmd)->cmd.exists(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long exists(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(keys))
-				.pipeline((cmd)->cmd.exists(keys))
-				.transaction((cmd)->cmd.exists(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
-				.pipeline((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
-				.transaction((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
-				.pipeline((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
-				.transaction((cmd)->cmd.expire(key, lifetime), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -165,11 +233,21 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expiryOption),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -177,234 +255,323 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
-				.general((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
-				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
-				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expiryOption),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.expireAt(key, unixTimestamp),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIREAT)
-				.general((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
-				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
-				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.expireAt(key, unixTimestamp),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
+					(cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
-				.transaction((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PEXPIRE,
+					(cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIRE)
-				.general((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
-				.pipeline((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
-				.transaction((cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PEXPIRE,
+					(cmd)->cmd.pexpire(key, lifetime), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PEXPIREAT,
+					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PEXPIREAT,
+					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PEXPIREAT,
+					(cmd)->cmd.pexpireAt(key, unixTimestamp),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIREAT)
-				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
-				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
-				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PEXPIREAT,
+					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PEXPIREAT,
+					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PEXPIREAT,
+					(cmd)->cmd.pexpireAt(key, unixTimestamp),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status persist(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), oneStatusConverter)
-				.pipeline((cmd)->cmd.persist(key), oneStatusConverter)
-				.transaction((cmd)->cmd.persist(key), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.PERSIST)
-				.general((cmd)->cmd.persist(key), oneStatusConverter)
-				.pipeline((cmd)->cmd.persist(key), oneStatusConverter)
-				.transaction((cmd)->cmd.persist(key), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long ttl(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.TTL)
-				.general((cmd)->cmd.ttl(key))
-				.pipeline((cmd)->cmd.ttl(key))
-				.transaction((cmd)->cmd.ttl(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long ttl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.TTL)
-				.general((cmd)->cmd.ttl(key))
-				.pipeline((cmd)->cmd.ttl(key))
-				.transaction((cmd)->cmd.ttl(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long pTtl(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.PTTL)
-				.general((cmd)->cmd.pttl(key))
-				.pipeline((cmd)->cmd.pttl(key))
-				.transaction((cmd)->cmd.pttl(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long pTtl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.PTTL)
-				.general((cmd)->cmd.pttl(key))
-				.pipeline((cmd)->cmd.pttl(key))
-				.transaction((cmd)->cmd.pttl(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
-				.pipeline((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
-				.transaction((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
-				.run(args);
+		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
-				.pipeline((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
-				.transaction((cmd)->cmd.copy(key, destKey, false), new BooleanStatusConverter())
-				.run(args);
+		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.run(args);
+		return copy(key, destKey, db, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.run(args);
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db);
+		return copy(key, destKey, db, false, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
-				.pipeline((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
-				.transaction((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
-				.run(args);
+		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.general((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
-				.pipeline((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
-				.transaction((cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter())
-				.run(args);
+		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.run(args);
+		return copy(key, destKey, db, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
-				.run(args);
+		return copy(key, destKey, db, replace, args);
 	}
 
 	@Override
 	public Status move(final String key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MOVE)
-				.run(args);
+		return move(args);
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MOVE)
-				.run(args);
+		return move(args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams();
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams();
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -412,8 +579,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final MigrateOperation operation, final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -421,8 +589,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -430,8 +599,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -439,8 +609,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -449,8 +620,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -459,8 +631,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -468,8 +641,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final int timeout, final String... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(user, password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -477,8 +651,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(user, password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -487,8 +662,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
@@ -497,99 +673,176 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MIGRATE)
-				.run(args);
+		final JedisMigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
+
+		return migrate(host, port, db, timeout, keys, migrateParams, args);
 	}
 
 	@Override
 	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisClusterCommand<Set<String>>(client, ProtocolCommand.KEYS)
-				.general((cmd)->cmd.keys(pattern))
-				.pipeline((cmd)->cmd.keys(pattern))
-				.transaction((cmd)->cmd.keys(pattern))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisClusterCommand<Set<byte[]>>(client, ProtocolCommand.KEYS)
-				.general((cmd)->cmd.keys(pattern))
-				.pipeline((cmd)->cmd.keys(pattern))
-				.transaction((cmd)->cmd.keys(pattern))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String randomKey() {
-		return new JedisClusterCommand<String>(client, ProtocolCommand.RANDOMKEY)
-				.general((cmd)->cmd.randomKey())
-				.pipeline((cmd)->cmd.randomKey())
-				.transaction((cmd)->cmd.randomKey())
-				.run();
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomKey(),
+					(v)->v)
+					.run();
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), okStatusConverter)
-				.pipeline((cmd)->cmd.rename(key, newKey), okStatusConverter)
-				.transaction((cmd)->cmd.rename(key, newKey), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), okStatusConverter)
-				.pipeline((cmd)->cmd.rename(key, newKey), okStatusConverter)
-				.transaction((cmd)->cmd.rename(key, newKey), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
-				.pipeline((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
-				.transaction((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RENAMENX,
+					(cmd)->cmd.renamenx(key, newKey),
+					oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
-				.general((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
-				.pipeline((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
-				.transaction((cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					oneStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RENAMENX,
+					(cmd)->cmd.renamenx(key, newKey),
+					oneStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -597,12 +850,21 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final JedisRestoreParams params = JedisRestoreParams.from(argument);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
-				.run(args);
+		final JedisRestoreParams restoreParams = JedisRestoreParams.from(argument);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -610,336 +872,685 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final JedisRestoreParams params = JedisRestoreParams.from(argument);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), okStatusConverter)
-				.run(args);
+		final JedisRestoreParams restoreParams = JedisRestoreParams.from(argument);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.RESTORE,
+					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
-		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final ScanResultConverter.ListScanResultConverter<String> listScanResultConverter =
+				new ScanResultConverter.ListScanResultConverter<>();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+					listScanResultConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+					listScanResultConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+					listScanResultConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
-		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final ScanResultConverter.ListScanResultConverter<byte[]> listScanResultConverter =
+				new ScanResultConverter.ListScanResultConverter<>();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+					listScanResultConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+					listScanResultConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+					listScanResultConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final JedisScanParams scanParams = new JedisScanParams(pattern);
+
+		return scan(cursor, scanParams, args);
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
-		final JedisScanParams params = new JedisScanParams(pattern);
-		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final JedisScanParams scanParams = new JedisScanParams(pattern);
+
+		return scan(cursor, scanParams, args);
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
-		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final JedisScanParams scanParams = new JedisScanParams(count);
+
+		return scan(cursor, scanParams, args);
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
-		final JedisScanParams params = new JedisScanParams(count);
-		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final JedisScanParams scanParams = new JedisScanParams(count);
+
+		return scan(cursor, scanParams, args);
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisClusterCommand<ScanResult<List<String>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+
+		return scan(cursor, scanParams, args);
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		final JedisScanParams params = new JedisScanParams(pattern, count);
-		return new JedisClusterCommand<ScanResult<List<byte[]>>>(client, ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.pipeline((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.transaction((cmd)->cmd.scan(cursor, params), new ScanResultConverter.ListScanResultConverter<>())
-				.run(args);
+		final JedisScanParams scanParams = new JedisScanParams(pattern, count);
+
+		return scan(cursor, scanParams, args);
 	}
 
 	@Override
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key))
-				.pipeline((cmd)->cmd.sort(key))
-				.transaction((cmd)->cmd.sort(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key))
-				.pipeline((cmd)->cmd.sort(key))
-				.transaction((cmd)->cmd.sort(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final JedisSortingParams params = JedisSortingParams.from(sortArgument);
-		return new JedisClusterCommand<List<String>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params))
-				.pipeline((cmd)->cmd.sort(key, params))
-				.transaction((cmd)->cmd.sort(key, params))
-				.run(args);
+		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sort(key, sortingParams), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final JedisSortingParams params = JedisSortingParams.from(sortArgument);
-		return new JedisClusterCommand<List<byte[]>>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params))
-				.pipeline((cmd)->cmd.sort(key, params))
-				.transaction((cmd)->cmd.sort(key, params))
-				.run(args);
+		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sort(key, sortingParams), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, destKey))
-				.pipeline((cmd)->cmd.sort(key, destKey))
-				.transaction((cmd)->cmd.sort(key, destKey))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, destKey))
-				.pipeline((cmd)->cmd.sort(key, destKey))
-				.transaction((cmd)->cmd.sort(key, destKey))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final JedisSortingParams params = JedisSortingParams.from(sortArgument);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params, destKey))
-				.pipeline((cmd)->cmd.sort(key, params, destKey))
-				.transaction((cmd)->cmd.sort(key, params, destKey))
-				.run(args);
+		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams, destKey),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final JedisSortingParams params = JedisSortingParams.from(sortArgument);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params, destKey))
-				.pipeline((cmd)->cmd.sort(key, params, destKey))
-				.transaction((cmd)->cmd.sort(key, params, destKey))
-				.run(args);
+		final JedisSortingParams sortingParams = JedisSortingParams.from(sortArgument);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SORT,
+					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams, destKey),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long touch(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.TOUCH)
-				.general((cmd)->cmd.touch(keys))
-				.pipeline((cmd)->cmd.touch(keys))
-				.transaction((cmd)->cmd.touch(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long touch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.TOUCH)
-				.general((cmd)->cmd.touch(keys))
-				.pipeline((cmd)->cmd.touch(keys))
-				.transaction((cmd)->cmd.touch(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Type type(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Type>(client, ProtocolCommand.TYPE)
-				.general((cmd)->cmd.type(key), new TypeConverter())
-				.pipeline((cmd)->cmd.type(key), new TypeConverter())
-				.transaction((cmd)->cmd.type(key), new TypeConverter())
-				.run(args);
+		final TypeConverter typeConverter = new TypeConverter();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key),
+					typeConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Type>(client, ProtocolCommand.TYPE)
-				.general((cmd)->cmd.type(key), new TypeConverter())
-				.pipeline((cmd)->cmd.type(key), new TypeConverter())
-				.transaction((cmd)->cmd.type(key), new TypeConverter())
-				.run(args);
+		final TypeConverter typeConverter = new TypeConverter();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key),
+					typeConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long unlink(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.UNLINK)
-				.general((cmd)->cmd.unlink(keys))
-				.pipeline((cmd)->cmd.unlink(keys))
-				.transaction((cmd)->cmd.unlink(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.UNLINK)
-				.general((cmd)->cmd.unlink(keys))
-				.pipeline((cmd)->cmd.unlink(keys))
-				.transaction((cmd)->cmd.unlink(keys))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.WAIT)
-				.general((cmd)->cmd.waitReplicas((String) null, replicas, timeout))
-				.pipeline((cmd)->cmd.waitReplicas(replicas, timeout))
-				.transaction((cmd)->cmd.waitReplicas(replicas, timeout))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas((String) null, replicas, timeout), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<ObjectEncoding>(client, ProtocolCommand.OBJECT_ENCODING)
-				.general((cmd)->cmd.objectEncoding(key), new ObjectEncodingConverter())
-				.pipeline((cmd)->cmd.objectEncoding(key), new ObjectEncodingConverter())
-				.transaction((cmd)->cmd.objectEncoding(key), new ObjectEncodingConverter())
-				.run(args);
+		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+					objectEncodingConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<ObjectEncoding>(client, ProtocolCommand.OBJECT_ENCODING)
-				.general((cmd)->cmd.objectEncoding(key), new BinaryObjectEncodingConverter())
-				.pipeline((cmd)->cmd.objectEncoding(key), new BinaryObjectEncodingConverter())
-				.transaction((cmd)->cmd.objectEncoding(key), new BinaryObjectEncodingConverter())
-				.run(args);
+		final BinaryObjectEncodingConverter binaryObjectEncodingConverter = new BinaryObjectEncodingConverter();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), binaryObjectEncodingConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), binaryObjectEncodingConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+					binaryObjectEncodingConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long objectFreq(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
-				.general((cmd)->cmd.objectFreq(key))
-				.pipeline((cmd)->cmd.objectFreq(key))
-				.transaction((cmd)->cmd.objectFreq(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
-				.general((cmd)->cmd.objectFreq(key))
-				.pipeline((cmd)->cmd.objectFreq(key))
-				.transaction((cmd)->cmd.objectFreq(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long objectIdleTime(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
-				.general((cmd)->cmd.objectIdletime(key))
-				.pipeline((cmd)->cmd.objectIdletime(key))
-				.transaction((cmd)->cmd.objectIdletime(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long objectIdleTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
-				.general((cmd)->cmd.objectIdletime(key))
-				.pipeline((cmd)->cmd.objectIdletime(key))
-				.transaction((cmd)->cmd.objectIdletime(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long objectRefcount(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
-				.general((cmd)->cmd.objectRefcount(key))
-				.pipeline((cmd)->cmd.objectRefcount(key))
-				.transaction((cmd)->cmd.objectRefcount(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long objectRefcount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
-				.general((cmd)->cmd.objectRefcount(key))
-				.pipeline((cmd)->cmd.objectRefcount(key))
-				.transaction((cmd)->cmd.objectRefcount(key))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	private Status copy(final String key, final String destKey, final boolean replace, final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	private Status copy(final byte[] key, final byte[] destKey, final boolean replace, final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	private Status copy(final String key, final String destKey, final int db, final boolean replace,
+						final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	private Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace,
+						final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	public Status move(final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.MOVE)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.MOVE)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.MOVE)
+					.run(args);
+		}
+	}
+
+	private Status migrate(final String host, final int port, final int db, final int timeout, final String[] keys,
+						   final JedisMigrateParams migrateParams, final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	private Status migrate(final String host, final int port, final int db, final int timeout, final byte[][] keys,
+						   final JedisMigrateParams migrateParams, final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE,
+					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	private ScanResult<List<String>> scan(final String cursor, final JedisScanParams scanParams,
+										  final CommandArguments args) {
+		final ScanResultConverter.ListScanResultConverter<String> listScanResultConverter =
+				new ScanResultConverter.ListScanResultConverter<>();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+					listScanResultConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SCAN,
+					(cmd)->cmd.scan(cursor, scanParams), listScanResultConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+					listScanResultConverter)
+					.run(args);
+		}
+	}
+
+	private ScanResult<List<byte[]>> scan(final byte[] cursor, final JedisScanParams scanParams,
+										  final CommandArguments args) {
+		final ScanResultConverter.ListScanResultConverter<byte[]> listScanResultConverter =
+				new ScanResultConverter.ListScanResultConverter<>();
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+					listScanResultConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SCAN,
+					(cmd)->cmd.scan(cursor, scanParams), listScanResultConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+					listScanResultConverter)
+					.run(args);
+		}
 	}
 
 }

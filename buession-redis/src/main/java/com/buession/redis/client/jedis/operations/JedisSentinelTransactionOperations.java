@@ -49,97 +49,188 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 
 	@Override
 	public Status multi() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MULTI)
-				.general((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.multi();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+				RedisConnection connection = client.getConnection();
 
-					return Status.SUCCESS;
-				}).transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.multi();
+				return new Response<>(new Builder<Status>() {
 
-					return new Response<>(new Builder<Status>() {
-
-						@Override
-						public Status build(Object data) {
+					@Override
+					public Status build(Object data) {
+						try{
+							connection.multi();
 							return Status.SUCCESS;
+						}catch(Exception e){
+							return Status.FAILURE;
 						}
+					}
 
-					});
-				})
-				.run();
+				});
+			}, (v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+				RedisConnection connection = client.getConnection();
+
+				return new Response<>(new Builder<Status>() {
+
+					@Override
+					public Status build(Object data) {
+						try{
+							connection.multi();
+							return Status.SUCCESS;
+						}catch(Exception e){
+							return Status.FAILURE;
+						}
+					}
+
+				});
+			}, (v)->v)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				try{
+					connection.multi();
+					return Status.SUCCESS;
+				}catch(Exception e){
+					return Status.FAILURE;
+				}
+			}, (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public List<Object> exec() {
-		return new JedisSentinelCommand<List<Object>>(client, ProtocolCommand.EXEC) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+				RedisConnection connection = client.getConnection();
 
-			@Override
-			public List<Object> execute() throws RedisException {
+				return new Response<>(new Builder<List<Object>>() {
+
+					@Override
+					public List<Object> build(Object data) {
+						return connection.exec();
+					}
+
+				});
+			}, (v)->v).run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+				RedisConnection connection = client.getConnection();
+
+				return new Response<>(new Builder<List<Object>>() {
+
+					@Override
+					public List<Object> build(Object data) {
+						return connection.exec();
+					}
+
+				});
+			}, (v)->v).run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				return connection.exec();
-			}
-
-		}.run();
+			}, (v)->v).run();
+		}
 	}
 
 	@Override
 	public void discard() {
-		new JedisSentinelCommand<Void>(client, ProtocolCommand.DISCARD)
-				.transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.discard();
-					return null;
-				})
-				.run();
+		if(isPipeline()){
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				connection.discard();
+				return null;
+			}, (v)->v)
+					.run();
+		}else if(isTransaction()){
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				connection.discard();
+				return null;
+			}, (v)->v)
+					.run();
+		}else{
+			new JedisSentinelCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				connection.discard();
+				return null;
+			}, (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), okStatusConverter)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
 
-					@Override
-					public String build(Object data) {
-						return cmd.watch(keys);
-					}
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WATCH,
+					(cmd)->new Response<>(new Builder<String>() {
 
-				}), okStatusConverter)
-				.run(args);
+						@Override
+						public String build(Object data) {
+							return cmd.watch(keys);
+						}
+
+					}), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), okStatusConverter)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
 
-					@Override
-					public String build(Object data) {
-						return cmd.watch(keys);
-					}
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WATCH,
+					(cmd)->new Response<>(new Builder<String>() {
 
-				}), okStatusConverter)
-				.run(args);
+						@Override
+						public String build(Object data) {
+							return cmd.watch(keys);
+						}
+
+					}), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status unwatch() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.UNWATCH)
-				.general((cmd)->cmd.unwatch(), okStatusConverter)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.UNWATCH,
+					(cmd)->new Response<>(new Builder<String>() {
 
-					@Override
-					public String build(Object data) {
-						return cmd.unwatch();
-					}
+						@Override
+						public String build(Object data) {
+							return cmd.unwatch();
+						}
 
-				}), okStatusConverter)
-				.run();
+					}), okStatusConverter)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+					.run();
+		}
 	}
 
 }

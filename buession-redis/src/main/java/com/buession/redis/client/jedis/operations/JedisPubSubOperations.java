@@ -180,8 +180,9 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		final String[] sChannels = SafeEncoder.encode(channels);
+		final MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<Long> stringToBinaryKeyPrimitiveValueMapConverter = new MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<>();
 
-		return pubsubNumSub(sChannels, new MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<>(), args);
+		return pubsubNumSub(sChannels, stringToBinaryKeyPrimitiveValueMapConverter, args);
 	}
 
 	@Override

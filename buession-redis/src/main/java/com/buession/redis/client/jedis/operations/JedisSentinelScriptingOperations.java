@@ -49,197 +49,367 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script))
-				.pipeline((cmd)->cmd.eval(script))
-				.transaction((cmd)->cmd.eval(script))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script)).pipeline((cmd)->cmd.eval(script))
-				.transaction((cmd)->cmd.eval(script))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, paramsSize, params))
-				.pipeline((cmd)->cmd.eval(script, paramsSize, params))
-				.transaction((cmd)->cmd.eval(script, paramsSize, params))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, paramsSize, params), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, paramsSize, params), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, paramsSize, params),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, paramsSize, params))
-				.pipeline((cmd)->cmd.eval(script, paramsSize, params))
-				.transaction((cmd)->cmd.eval(script, paramsSize, params))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, paramsSize, params), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, paramsSize, params), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, paramsSize, params),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.run(args);
+		final List<String> keysList = Arrays.asList(keys);
+		final List<String> argumentsList = Arrays.asList(arguments);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL)
-				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.run(args);
+		final List<byte[]> keysList = Arrays.asList(keys);
+		final List<byte[]> argumentsList = Arrays.asList(arguments);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVAL,
+					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest))
-				.pipeline((cmd)->cmd.evalsha(digest))
-				.transaction((cmd)->cmd.evalsha(digest))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest))
-				.pipeline((cmd)->cmd.evalsha(digest))
-				.transaction((cmd)->cmd.evalsha(digest))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.pipeline((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.pipeline((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.run(args);
+		final List<String> keysList = Arrays.asList(keys);
+		final List<String> argumentsList = Arrays.asList(arguments);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.run(args);
+		final List<byte[]> keysList = Arrays.asList(keys);
+		final List<byte[]> argumentsList = Arrays.asList(arguments);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EVALSHA,
+					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return new JedisSentinelCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
-				.general((cmd)->cmd.scriptExists(sha1))
-				.pipeline((cmd)->cmd.scriptExists(null, sha1))
-				.transaction((cmd)->cmd.scriptExists(null, sha1))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
+					(cmd)->cmd.scriptExists(null, sha1), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
+					(cmd)->cmd.scriptExists(null, sha1), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return new JedisSentinelCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
-				.general((cmd)->cmd.scriptExists(sha1))
-				.pipeline((cmd)->cmd.scriptExists(null, sha1))
-				.transaction((cmd)->cmd.scriptExists(null, sha1))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
+					(cmd)->cmd.scriptExists(null, sha1), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
+					(cmd)->cmd.scriptExists(null, sha1), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status scriptFlush() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(), okStatusConverter)
-				.pipeline((cmd)->cmd.scriptFlush((String) null), okStatusConverter)
-				.transaction((cmd)->cmd.scriptFlush((String) null), okStatusConverter)
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
+					(cmd)->cmd.scriptFlush((String) null), okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
+					(cmd)->cmd.scriptFlush((String) null), okStatusConverter)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+					okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush(flushMode), okStatusConverter)
-				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
-				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
+					(cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
+					(cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisSentinelCommand<String>(client, ProtocolCommand.SCRIPT_LOAD)
-				.general((cmd)->cmd.scriptLoad(script))
-				.pipeline((cmd)->cmd.scriptLoad(script, null))
-				.transaction((cmd)->cmd.scriptLoad(script, null))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
+					(cmd)->cmd.scriptLoad(script, null), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
+					(cmd)->cmd.scriptLoad(script, null), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.SCRIPT_LOAD)
-				.general((cmd)->cmd.scriptLoad(script))
-				.pipeline((cmd)->cmd.scriptLoad(script, null))
-				.transaction((cmd)->cmd.scriptLoad(script, null))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
+					(cmd)->cmd.scriptLoad(script, null), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
+					(cmd)->cmd.scriptLoad(script, null), (v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status scriptKill() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SCRIPT_KILL)
-				.general((cmd)->cmd.scriptKill(), okStatusConverter)
-				.pipeline((cmd)->cmd.scriptKill((String) null), okStatusConverter)
-				.transaction((cmd)->cmd.scriptKill((String) null), okStatusConverter)
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_KILL,
+					(cmd)->cmd.scriptKill((String) null), okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_KILL,
+					(cmd)->cmd.scriptKill((String) null), okStatusConverter)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+					okStatusConverter)
+					.run();
+		}
 	}
 
 }

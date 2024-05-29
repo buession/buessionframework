@@ -36,6 +36,7 @@ import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter
 import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
+import redis.clients.jedis.args.UnblockType;
 
 import java.util.List;
 
@@ -54,168 +55,361 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.AUTH)
-				.general((cmd)->cmd.auth(user, password), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.AUTH)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(user, password),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create("password", password);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.AUTH)
-				.general((cmd)->cmd.auth(password), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.AUTH)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create("str", str);
-		return new JedisSentinelCommand<String>(client, ProtocolCommand.ECHO)
-				.general((cmd)->cmd.echo(str))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.ECHO)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.ECHO)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.echo(str), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public byte[] echo(final byte[] str) {
 		final CommandArguments args = CommandArguments.create("str", str);
-		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.ECHO)
-				.general((cmd)->cmd.echo(str))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<byte[], byte[]>(client, ProtocolCommand.ECHO)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<byte[], byte[]>(client, ProtocolCommand.ECHO)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.echo(str), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status ping() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PING)
-				.general((cmd)->cmd.ping(), new PingResultConverter())
-				.run();
+		final PingResultConverter pingResultConverter = new PingResultConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PING)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PING)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PING, (cmd)->cmd.ping(), pingResultConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status reset() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.RESET)
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.RESET)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.RESET)
+					.run();
+		}else{
+			return new JedisSentinelCommand<Status, Status>(client, ProtocolCommand.RESET)
+					.run();
+		}
 	}
 
 	@Override
 	public Status quit() {
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.QUIT)
-				.general((cmd)->cmd.quit(), okStatusConverter)
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.QUIT)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.QUIT)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create("db", db);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SELECT)
-				.general((cmd)->cmd.select(db), okStatusConverter)
-				.pipeline((cmd)->cmd.select(db), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SELECT)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_CACHING)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long clientId() {
-		return new JedisSentinelCommand<Long>(client, ProtocolCommand.CLIENT_ID)
-				.general((cmd)->cmd.clientId())
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLIENT_ID)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.CLIENT_ID)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clientSetName(final String name) {
 		final CommandArguments args = CommandArguments.create("name", name);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
+					(cmd)->cmd.clientSetname(name), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name) {
 		final CommandArguments args = CommandArguments.create("name", name);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
+					(cmd)->cmd.clientSetname(name), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String clientGetName() {
-		return new JedisSentinelCommand<String>(client, ProtocolCommand.CLIENT_GETNAME)
-				.general((cmd)->cmd.clientGetname())
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.CLIENT_GETNAME)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.CLIENT_GETNAME)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_GETNAME,
+					(cmd)->cmd.clientGetname(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
 	public Integer clientGetRedir() {
-		return new JedisSentinelCommand<Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-				.run();
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+					.run();
+		}else{
+			return new JedisSentinelCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+					.run();
+		}
 	}
 
 	@Override
 	public List<Client> clientList() {
-		return new JedisSentinelCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(), new ClientConverter.ClientListConverter())
-				.run();
+		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<Client>, List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<Client>, List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		return new JedisSentinelCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList((new ClientTypeConverter()).convert(clientType)),
-						new ClientConverter.ClientListConverter())
-				.run(args);
+		final redis.clients.jedis.args.ClientType jClientType = (new ClientTypeConverter()).convert(clientType);
+		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<Client>, List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<Client>, List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(jClientType),
+					clientListConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Client clientInfo() {
-		return new JedisSentinelCommand<Client>(client, ProtocolCommand.CLIENT_INFO)
-				.general((cmd)->cmd.clientInfo(), new ClientConverter())
-				.run();
+		final ClientConverter clientConverter = new ClientConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Client, Client>(client, ProtocolCommand.CLIENT_LIST)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Client, Client>(client, ProtocolCommand.CLIENT_LIST)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientInfo(),
+					clientConverter)
+					.run();
+		}
 	}
 
 	@Override
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
-				.general((cmd)->cmd.clientPause(timeout), okStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_PAUSE)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_PAUSE)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_PAUSE, (cmd)->cmd.clientInfo(),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create("option", option);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_REPLY)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
-				.general((cmd)->cmd.clientKill(host + ":" + port), okStatusConverter)
-				.run(args);
+		final String addr = host + ':' + port;
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_KILL)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_KILL)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(addr),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, null), oneStatusConverter)
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_UNBLOCK,
+					(cmd)->cmd.clientUnblock(clientId),
+					oneStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		return new JedisSentinelCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, (new ClientUnblockTypeConverter()).convert(type)),
-						oneStatusConverter)
-				.run(args);
+		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_UNBLOCK,
+					(cmd)->cmd.clientUnblock(clientId, unblockType), oneStatusConverter)
+					.run(args);
+		}
 	}
 
 }
