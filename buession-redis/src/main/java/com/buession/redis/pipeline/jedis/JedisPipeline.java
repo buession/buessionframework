@@ -40,7 +40,7 @@ public class JedisPipeline implements Pipeline {
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
 
-	public JedisPipeline(redis.clients.jedis.Pipeline pipeline) {
+	public JedisPipeline(final redis.clients.jedis.Pipeline pipeline) {
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
 		this.delegate = pipeline;
 	}

@@ -34,18 +34,18 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public class JedisPipeline implements Pipeline {
+public class JedisClusterPipeline implements Pipeline {
 
-	private final redis.clients.jedis.Pipeline delegate;
+	private final redis.clients.jedis.ClusterPipeline delegate;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
+	private final static Logger logger = LoggerFactory.getLogger(JedisClusterPipeline.class);
 
-	public JedisPipeline(final redis.clients.jedis.Pipeline pipeline) {
+	public JedisClusterPipeline(final redis.clients.jedis.ClusterPipeline pipeline) {
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
 		this.delegate = pipeline;
 	}
 
-	public redis.clients.jedis.Pipeline primitive() {
+	public redis.clients.jedis.ClusterPipeline primitive() {
 		return delegate;
 	}
 
@@ -58,7 +58,7 @@ public class JedisPipeline implements Pipeline {
 	@Override
 	public List<Object> syncAndReturnAll() {
 		logger.info("Redis pipeline syncAndReturnAll.");
-		return delegate.syncAndReturnAll();
+		return null;
 	}
 
 	@Override

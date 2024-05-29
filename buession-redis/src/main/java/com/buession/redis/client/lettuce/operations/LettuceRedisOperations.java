@@ -56,7 +56,7 @@ import io.lettuce.core.api.sync.RedisCommands;
 public interface LettuceRedisOperations extends RedisOperations {
 
 	class LettuceCommand<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisCommands<byte[], byte[]>, SR, R> {
+			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisCommands<byte[], byte[]>, SR, SR, R> {
 
 		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -79,14 +79,15 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		@Override
-		protected SR doExecute() throws Exception {
-			return executor.execute(connection.getStatefulConnection().sync());
+		protected R doExecute() throws Exception {
+			final SR result = executor.execute(connection.getStatefulConnection().sync());
+			return result == null ? null : converter.convert(result);
 		}
 
 	}
 
 	class LettucePipelineCommand<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>, R> {
+			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
 		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -94,7 +95,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 									  final Converter<SR, R> converter) {
-			super(client, command, new RedisFutureConverter<>(converter));
+			super(client, command, converter);
 		}
 
 		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
@@ -105,18 +106,19 @@ public interface LettuceRedisOperations extends RedisOperations {
 		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 									  final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 									  final Converter<SR, R> converter) {
-			super(client, command, executor, new RedisFutureConverter<>(converter));
+			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected RedisFuture<SR> doExecute() throws Exception {
-			return executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws Exception {
+			executor.execute(connection.getStatefulConnection().async());
+			return null;
 		}
 
 	}
 
 	class LettucePipelineCommand2<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, SR, R> {
+			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, SR, SR, R> {
 
 		public LettucePipelineCommand2(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -139,14 +141,16 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		@Override
-		protected SR doExecute() throws Exception {
-			return executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws Exception {
+			executor.execute(connection.getStatefulConnection().async());
+			return null;
 		}
 
 	}
 
 	class LettuceTransactionCommand<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>, R> {
+			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>,
+					RedisFuture<SR>, SR, R> {
 
 		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -154,7 +158,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 										 final Converter<SR, R> converter) {
-			super(client, command, new RedisFutureConverter<>(converter));
+			super(client, command, converter);
 		}
 
 		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
@@ -165,18 +169,19 @@ public interface LettuceRedisOperations extends RedisOperations {
 		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 										 final Converter<SR, R> converter) {
-			super(client, command, executor, new RedisFutureConverter<>(converter));
+			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected RedisFuture<SR> doExecute() throws Exception {
-			return executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws Exception {
+			executor.execute(connection.getStatefulConnection().async());
+			return null;
 		}
 
 	}
 
 	class LettuceTransactionCommand2<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, SR, R> {
+			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, SR, SR, R> {
 
 		public LettuceTransactionCommand2(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -199,8 +204,9 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		@Override
-		protected SR doExecute() throws Exception {
-			return executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws Exception {
+			executor.execute(connection.getStatefulConnection().async());
+			return null;
 		}
 
 	}
