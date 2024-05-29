@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -28,11 +28,17 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.jedis.JedisClusterPipeline;
+import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisCluster;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Jedis 集群模式连接器
@@ -495,14 +501,45 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	protected void internalInit() {
-		if(cluster == null){
-			throw new IllegalStateException("JedisCluster cloud not be initialized.");
+	public Pipeline openPipeline() {
+		if(pipeline == null){
+			pipeline = new JedisClusterPipeline(cluster.pipelined());
+		}
+
+		return pipeline;
+	}
+
+	@Override
+	public Transaction multi() {
+		if(transaction == null){
+			transaction = new JedisTransaction(cluster.multi());
+		}
+
+		return transaction;
+	}
+
+	@Override
+	public List<Object> exec() throws RedisException {
+		if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
 		}
 	}
 
 	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
+	public void discard() throws RedisException {
+		if(transaction != null){
+			transaction.discard();
+			transaction = null;
+		}else{
+			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
+		}
 	}
 
 	@Override
@@ -513,6 +550,17 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	@Override
 	public boolean isClosed() {
 		return cluster == null;
+	}
+
+	@Override
+	protected void internalInit() {
+		if(cluster == null){
+			throw new IllegalStateException("JedisCluster cloud not be initialized.");
+		}
+	}
+
+	@Override
+	protected void doConnect() throws RedisConnectionFailureException {
 	}
 
 	@Override
