@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.lettuce;
 
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.internal.jedis.JedisSetParams;
 import io.lettuce.core.SetArgs;
 
 import java.util.Optional;

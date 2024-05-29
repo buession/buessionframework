@@ -4400,7 +4400,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 					connection.closePipeline();
 				}
 			}else{
-				return client.getConnection().exec();
+				return connection.exec();
 			}
 		});
 	}
