@@ -391,4 +391,5 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 	}
+
 }

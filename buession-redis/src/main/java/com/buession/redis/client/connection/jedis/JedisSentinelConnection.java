@@ -40,6 +40,7 @@ import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.JedisRedisExceptionUtils;
+import com.buession.redis.pipeline.DefaultPipeline;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.Transaction;
@@ -646,7 +647,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			pipeline = new JedisPipeline(jedis.pipelined());
+			final redis.clients.jedis.Pipeline pipelineObject = jedis.pipelined();
+			pipeline = new DefaultPipeline<>(new JedisPipeline(pipelineObject), pipelineObject);
 		}
 
 		return pipeline;

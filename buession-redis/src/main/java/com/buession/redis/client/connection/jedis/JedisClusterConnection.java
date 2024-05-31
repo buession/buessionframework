@@ -29,6 +29,7 @@ import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.DefaultPipeline;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisClusterPipeline;
 import com.buession.redis.transaction.Transaction;
@@ -503,7 +504,8 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			pipeline = new JedisClusterPipeline(cluster.pipelined());
+			final redis.clients.jedis.ClusterPipeline pipelineObject = cluster.pipelined();
+			pipeline = new DefaultPipeline<>(new JedisClusterPipeline(cluster.pipelined()), pipelineObject);
 		}
 
 		return pipeline;

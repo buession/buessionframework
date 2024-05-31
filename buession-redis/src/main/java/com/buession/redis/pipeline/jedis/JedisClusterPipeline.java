@@ -19,15 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline.jedis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.pipeline.Pipeline;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -38,32 +36,23 @@ public class JedisClusterPipeline implements Pipeline {
 
 	private final redis.clients.jedis.ClusterPipeline delegate;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisClusterPipeline.class);
-
 	public JedisClusterPipeline(final redis.clients.jedis.ClusterPipeline pipeline) {
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
 		this.delegate = pipeline;
 	}
 
-	public redis.clients.jedis.ClusterPipeline primitive() {
-		return delegate;
-	}
-
 	@Override
 	public void sync() {
-		logger.info("Redis pipeline sync.");
 		delegate.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll() {
-		logger.info("Redis pipeline syncAndReturnAll.");
 		return null;
 	}
 
 	@Override
 	public void close() {
-		logger.info("Redis pipeline close.");
 		delegate.close();
 	}
 

@@ -31,6 +31,7 @@ import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.JedisRedisExceptionUtils;
+import com.buession.redis.pipeline.DefaultPipeline;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.Transaction;
@@ -275,7 +276,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			pipeline = new JedisPipeline(jedis.pipelined());
+			final redis.clients.jedis.Pipeline pipelineObject = jedis.pipelined();
+			pipeline = new DefaultPipeline<>(new JedisPipeline(pipelineObject), pipelineObject);
 		}
 
 		return pipeline;
@@ -298,7 +300,14 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	public List<Object> exec() throws RedisException {
-		if(transaction != null){
+		if(pipeline != null){
+			final List<Object> result = pipeline.syncAndReturnAll();
+
+			pipeline.close();
+			pipeline = null;
+
+			return result;
+		}else if(transaction != null){
 			final List<Object> result = transaction.exec();
 
 			transaction.close();
