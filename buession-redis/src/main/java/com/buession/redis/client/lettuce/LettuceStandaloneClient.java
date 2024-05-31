@@ -43,6 +43,7 @@ import com.buession.redis.client.lettuce.operations.LettuceSortedSetOperations;
 import com.buession.redis.client.lettuce.operations.LettuceStreamOperations;
 import com.buession.redis.client.lettuce.operations.LettuceStringOperations;
 import com.buession.redis.client.lettuce.operations.LettuceTransactionOperations;
+import com.buession.redis.client.operations.*;
 
 /**
  * Lettuce 单机模式客户端
@@ -82,83 +83,147 @@ public class LettuceStandaloneClient extends AbstractLettuceRedisClient implemen
 	}
 
 	@Override
-	public LettuceBitMapOperations bitMapOperations() {
-		return new LettuceBitMapOperations(this);
+	public BitMapOperations bitMapOperations() {
+		if(bitMapOperations == null){
+			bitMapOperations = new LettuceBitMapOperations(this);
+		}
+
+		return bitMapOperations;
 	}
 
 	@Override
-	public LettuceClusterOperations clusterOperations() {
-		return new LettuceClusterOperations(this);
+	public ClusterOperations clusterOperations() {
+		if(clusterOperations == null){
+			clusterOperations = new LettuceClusterOperations(this);
+		}
+
+		return clusterOperations;
 	}
 
 	@Override
-	public LettuceConnectionOperations connectionOperations() {
-		return new LettuceConnectionOperations(this);
+	public ConnectionOperations connectionOperations() {
+		if(connectionOperations == null){
+			connectionOperations = new LettuceConnectionOperations(this);
+		}
+
+		return connectionOperations;
 	}
 
 	@Override
-	public LettuceGeoOperations geoOperations() {
-		return new LettuceGeoOperations(this);
+	public GeoOperations geoOperations() {
+		if(geoOperations == null){
+			geoOperations = new LettuceGeoOperations(this);
+		}
+
+		return geoOperations;
 	}
 
 	@Override
-	public LettuceHashOperations hashOperations() {
-		return new LettuceHashOperations(this);
+	public HashOperations hashOperations() {
+		if(hashOperations == null){
+			hashOperations = new LettuceHashOperations(this);
+		}
+
+		return hashOperations;
 	}
 
 	@Override
-	public LettuceHyperLogLogOperations hyperLogLogOperations() {
-		return new LettuceHyperLogLogOperations(this);
+	public HyperLogLogOperations hyperLogLogOperations() {
+		if(hyperLogLogOperations == null){
+			hyperLogLogOperations = new LettuceHyperLogLogOperations(this);
+		}
+
+		return hyperLogLogOperations;
 	}
 
 	@Override
-	public LettuceKeyOperations keyOperations() {
-		return new LettuceKeyOperations(this);
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new LettuceKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override
-	public LettuceListOperations listOperations() {
-		return new LettuceListOperations(this);
+	public ListOperations listOperations() {
+		if(listOperations == null){
+			listOperations = new LettuceListOperations(this);
+		}
+
+		return listOperations;
 	}
 
 	@Override
-	public LettucePubSubOperations pubSubOperations() {
-		return new LettucePubSubOperations(this);
+	public PubSubOperations pubSubOperations() {
+		if(pubSubOperations == null){
+			pubSubOperations = new LettucePubSubOperations(this);
+		}
+
+		return pubSubOperations;
 	}
 
 	@Override
-	public LettuceScriptingOperations scriptingOperations() {
-		return new LettuceScriptingOperations(this);
+	public ScriptingOperations scriptingOperations() {
+		if(scriptingOperations == null){
+			scriptingOperations = new LettuceScriptingOperations(this);
+		}
+
+		return scriptingOperations;
 	}
 
 	@Override
-	public LettuceServerOperations serverOperations() {
-		return new LettuceServerOperations(this);
+	public ServerOperations serverOperations() {
+		if(serverOperations == null){
+			serverOperations = new LettuceServerOperations(this);
+		}
+
+		return serverOperations;
 	}
 
 	@Override
-	public LettuceSetOperations setOperations() {
-		return new LettuceSetOperations(this);
+	public SetOperations setOperations() {
+		if(setOperations == null){
+			setOperations = new LettuceSetOperations(this);
+		}
+
+		return setOperations;
 	}
 
 	@Override
-	public LettuceSortedSetOperations sortedSetOperations() {
-		return new LettuceSortedSetOperations(this);
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new LettuceSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
 	}
 
 	@Override
-	public LettuceStreamOperations streamOperations() {
-		return new LettuceStreamOperations(this);
+	public StreamOperations streamOperations() {
+		if(streamOperations == null){
+			streamOperations = new LettuceStreamOperations(this);
+		}
+
+		return streamOperations;
 	}
 
 	@Override
-	public LettuceStringOperations stringOperations() {
-		return new LettuceStringOperations(this);
+	public StringOperations stringOperations() {
+		if(stringOperations == null){
+			stringOperations = new LettuceStringOperations(this);
+		}
+
+		return stringOperations;
 	}
 
 	@Override
-	public LettuceTransactionOperations transactionOperations() {
-		return new LettuceTransactionOperations(this);
+	public TransactionOperations transactionOperations() {
+		if(transactionOperations == null){
+			transactionOperations = new LettuceTransactionOperations(this);
+		}
+
+		return transactionOperations;
 	}
 
 }

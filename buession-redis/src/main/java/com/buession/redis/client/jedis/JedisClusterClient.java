@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -43,6 +43,7 @@ import com.buession.redis.client.jedis.operations.JedisClusterSortedSetOperation
 import com.buession.redis.client.jedis.operations.JedisClusterStreamOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterStringOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterTransactionOperations;
+import com.buession.redis.client.operations.*;
 
 /**
  * jedis 集群模式客户端
@@ -57,7 +58,7 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	/**
 	 * 构造函数
 	 */
-	public JedisClusterClient(){
+	public JedisClusterClient() {
 		super();
 	}
 
@@ -67,98 +68,162 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	 * @param connection
 	 * 		Jedis Redis 集群连接对象 {@link JedisClusterConnection}
 	 */
-	public JedisClusterClient(final JedisClusterConnection connection){
+	public JedisClusterClient(final JedisClusterConnection connection) {
 		super(connection);
 	}
 
 	@Override
-	public JedisClusterConnection getConnection(){
+	public JedisClusterConnection getConnection() {
 		return connection;
 	}
 
 	@Override
-	public void setConnection(RedisConnection connection){
+	public void setConnection(RedisConnection connection) {
 		this.connection = (JedisClusterConnection) connection;
 	}
 
 	@Override
-	public JedisClusterBitMapOperations bitMapOperations(){
-		return new JedisClusterBitMapOperations(this);
+	public BitMapOperations bitMapOperations() {
+		if(bitMapOperations == null){
+			bitMapOperations = new JedisClusterBitMapOperations(this);
+		}
+
+		return bitMapOperations;
 	}
 
 	@Override
-	public JedisClusterClusterOperations clusterOperations(){
-		return new JedisClusterClusterOperations(this);
+	public ClusterOperations clusterOperations() {
+		if(clusterOperations == null){
+			clusterOperations = new JedisClusterClusterOperations(this);
+		}
+
+		return clusterOperations;
 	}
 
 	@Override
-	public JedisClusterConnectionOperations connectionOperations(){
-		return new JedisClusterConnectionOperations(this);
+	public ConnectionOperations connectionOperations() {
+		if(connectionOperations == null){
+			connectionOperations = new JedisClusterConnectionOperations(this);
+		}
+
+		return connectionOperations;
 	}
 
 	@Override
-	public JedisClusterGeoOperations geoOperations(){
-		return new JedisClusterGeoOperations(this);
+	public GeoOperations geoOperations() {
+		if(geoOperations == null){
+			geoOperations = new JedisClusterGeoOperations(this);
+		}
+
+		return geoOperations;
 	}
 
 	@Override
-	public JedisClusterHashOperations hashOperations(){
-		return new JedisClusterHashOperations(this);
+	public HashOperations hashOperations() {
+		if(hashOperations == null){
+			hashOperations = new JedisClusterHashOperations(this);
+		}
+
+		return hashOperations;
 	}
 
 	@Override
-	public JedisClusterHyperLogLogOperations hyperLogLogOperations(){
-		return new JedisClusterHyperLogLogOperations(this);
+	public HyperLogLogOperations hyperLogLogOperations() {
+		if(hyperLogLogOperations == null){
+			hyperLogLogOperations = new JedisClusterHyperLogLogOperations(this);
+		}
+
+		return hyperLogLogOperations;
 	}
 
 	@Override
-	public JedisClusterKeyOperations keyOperations(){
-		return new JedisClusterKeyOperations(this);
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisClusterKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override
-	public JedisClusterListOperations listOperations(){
-		return new JedisClusterListOperations(this);
+	public ListOperations listOperations() {
+		if(listOperations == null){
+			listOperations = new JedisClusterListOperations(this);
+		}
+
+		return listOperations;
 	}
 
 	@Override
-	public JedisClusterPubSubOperations pubSubOperations(){
-		return new JedisClusterPubSubOperations(this);
+	public PubSubOperations pubSubOperations() {
+		if(pubSubOperations == null){
+			pubSubOperations = new JedisClusterPubSubOperations(this);
+		}
+
+		return pubSubOperations;
 	}
 
 	@Override
-	public JedisClusterScriptingOperations scriptingOperations(){
-		return new JedisClusterScriptingOperations(this);
+	public ScriptingOperations scriptingOperations() {
+		if(scriptingOperations == null){
+			scriptingOperations = new JedisClusterScriptingOperations(this);
+		}
+
+		return scriptingOperations;
 	}
 
 	@Override
-	public JedisClusterServerOperations serverOperations(){
-		return new JedisClusterServerOperations(this);
+	public ServerOperations serverOperations() {
+		if(serverOperations == null){
+			serverOperations = new JedisClusterServerOperations(this);
+		}
+
+		return serverOperations;
 	}
 
 	@Override
-	public JedisClusterSetOperations setOperations(){
-		return new JedisClusterSetOperations(this);
+	public SetOperations setOperations() {
+		if(setOperations == null){
+			setOperations = new JedisClusterSetOperations(this);
+		}
+
+		return setOperations;
 	}
 
 	@Override
-	public JedisClusterSortedSetOperations sortedSetOperations(){
-		return new JedisClusterSortedSetOperations(this);
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new JedisClusterSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
 	}
 
 	@Override
-	public JedisClusterStreamOperations streamOperations(){
-		return new JedisClusterStreamOperations(this);
+	public StreamOperations streamOperations() {
+		if(streamOperations == null){
+			streamOperations = new JedisClusterStreamOperations(this);
+		}
+
+		return streamOperations;
 	}
 
 	@Override
-	public JedisClusterStringOperations stringOperations(){
-		return new JedisClusterStringOperations(this);
+	public StringOperations stringOperations() {
+		if(stringOperations == null){
+			stringOperations = new JedisClusterStringOperations(this);
+		}
+
+		return stringOperations;
 	}
 
 	@Override
-	public JedisClusterTransactionOperations transactionOperations(){
-		return new JedisClusterTransactionOperations(this);
+	public TransactionOperations transactionOperations() {
+		if(transactionOperations == null){
+			transactionOperations = new JedisClusterTransactionOperations(this);
+		}
+
+		return transactionOperations;
 	}
 
 }

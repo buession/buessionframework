@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.core.FutureResult;
-import redis.clients.jedis.Response;
+import io.lettuce.core.RedisFuture;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -40,7 +40,7 @@ import java.util.Queue;
  */
 public abstract class AbstractLettuceRedisClient extends AbstractRedisClient implements LettuceRedisClient {
 
-	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
+	private Queue<FutureResult<RedisFuture<Object>, Object, Object>> txResults = new LinkedList<>();
 
 	/**
 	 * 构造函数
@@ -60,7 +60,7 @@ public abstract class AbstractLettuceRedisClient extends AbstractRedisClient imp
 	}
 
 	@Override
-	public Queue<FutureResult<Response<Object>, Object, Object>> getTxResults() {
+	public Queue<FutureResult<RedisFuture<Object>, Object, Object>> getTxResults() {
 		return txResults;
 	}
 

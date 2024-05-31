@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -43,6 +43,7 @@ import com.buession.redis.client.jedis.operations.JedisSentinelSortedSetOperatio
 import com.buession.redis.client.jedis.operations.JedisSentinelStreamOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelStringOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelTransactionOperations;
+import com.buession.redis.client.operations.*;
 
 /**
  * jedis 哨兵模式客户端
@@ -57,7 +58,7 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	/**
 	 * 构造函数
 	 */
-	public JedisSentinelClient(){
+	public JedisSentinelClient() {
 		super();
 	}
 
@@ -67,98 +68,162 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	 * @param connection
 	 * 		Jedis Redis 哨兵连接对象 {@link JedisSentinelConnection}
 	 */
-	public JedisSentinelClient(final JedisSentinelConnection connection){
+	public JedisSentinelClient(final JedisSentinelConnection connection) {
 		super(connection);
 	}
 
 	@Override
-	public JedisSentinelConnection getConnection(){
+	public JedisSentinelConnection getConnection() {
 		return connection;
 	}
 
 	@Override
-	public void setConnection(RedisConnection connection){
+	public void setConnection(RedisConnection connection) {
 		this.connection = (JedisSentinelConnection) connection;
 	}
 
 	@Override
-	public JedisSentinelBitMapOperations bitMapOperations(){
-		return new JedisSentinelBitMapOperations(this);
+	public BitMapOperations bitMapOperations() {
+		if(bitMapOperations == null){
+			bitMapOperations = new JedisSentinelBitMapOperations(this);
+		}
+
+		return bitMapOperations;
 	}
 
 	@Override
-	public JedisSentinelClusterOperations clusterOperations(){
-		return new JedisSentinelClusterOperations(this);
+	public ClusterOperations clusterOperations() {
+		if(clusterOperations == null){
+			clusterOperations = new JedisSentinelClusterOperations(this);
+		}
+
+		return clusterOperations;
 	}
 
 	@Override
-	public JedisSentinelConnectionOperations connectionOperations(){
-		return new JedisSentinelConnectionOperations(this);
+	public ConnectionOperations connectionOperations() {
+		if(connectionOperations == null){
+			connectionOperations = new JedisSentinelConnectionOperations(this);
+		}
+
+		return connectionOperations;
 	}
 
 	@Override
-	public JedisSentinelGeoOperations geoOperations(){
-		return new JedisSentinelGeoOperations(this);
+	public GeoOperations geoOperations() {
+		if(geoOperations == null){
+			geoOperations = new JedisSentinelGeoOperations(this);
+		}
+
+		return geoOperations;
 	}
 
 	@Override
-	public JedisSentinelHashOperations hashOperations(){
-		return new JedisSentinelHashOperations(this);
+	public HashOperations hashOperations() {
+		if(hashOperations == null){
+			hashOperations = new JedisSentinelHashOperations(this);
+		}
+
+		return hashOperations;
 	}
 
 	@Override
-	public JedisSentinelHyperLogLogOperations hyperLogLogOperations(){
-		return new JedisSentinelHyperLogLogOperations(this);
+	public HyperLogLogOperations hyperLogLogOperations() {
+		if(hyperLogLogOperations == null){
+			hyperLogLogOperations = new JedisSentinelHyperLogLogOperations(this);
+		}
+
+		return hyperLogLogOperations;
 	}
 
 	@Override
-	public JedisSentinelKeyOperations keyOperations(){
-		return new JedisSentinelKeyOperations(this);
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisSentinelKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override
-	public JedisSentinelListOperations listOperations(){
-		return new JedisSentinelListOperations(this);
+	public ListOperations listOperations() {
+		if(listOperations == null){
+			listOperations = new JedisSentinelListOperations(this);
+		}
+
+		return listOperations;
 	}
 
 	@Override
-	public JedisSentinelPubSubOperations pubSubOperations(){
-		return new JedisSentinelPubSubOperations(this);
+	public PubSubOperations pubSubOperations() {
+		if(pubSubOperations == null){
+			pubSubOperations = new JedisSentinelPubSubOperations(this);
+		}
+
+		return pubSubOperations;
 	}
 
 	@Override
-	public JedisSentinelScriptingOperations scriptingOperations(){
-		return new JedisSentinelScriptingOperations(this);
+	public ScriptingOperations scriptingOperations() {
+		if(scriptingOperations == null){
+			scriptingOperations = new JedisSentinelScriptingOperations(this);
+		}
+
+		return scriptingOperations;
 	}
 
 	@Override
-	public JedisSentinelServerOperations serverOperations(){
-		return new JedisSentinelServerOperations(this);
+	public ServerOperations serverOperations() {
+		if(serverOperations == null){
+			serverOperations = new JedisSentinelServerOperations(this);
+		}
+
+		return serverOperations;
 	}
 
 	@Override
-	public JedisSentinelSetOperations setOperations(){
-		return new JedisSentinelSetOperations(this);
+	public SetOperations setOperations() {
+		if(setOperations == null){
+			setOperations = new JedisSentinelSetOperations(this);
+		}
+
+		return setOperations;
 	}
 
 	@Override
-	public JedisSentinelSortedSetOperations sortedSetOperations(){
-		return new JedisSentinelSortedSetOperations(this);
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new JedisSentinelSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
 	}
 
 	@Override
-	public JedisSentinelStreamOperations streamOperations(){
-		return new JedisSentinelStreamOperations(this);
+	public StreamOperations streamOperations() {
+		if(streamOperations == null){
+			streamOperations = new JedisSentinelStreamOperations(this);
+		}
+
+		return streamOperations;
 	}
 
 	@Override
-	public JedisSentinelStringOperations stringOperations(){
-		return new JedisSentinelStringOperations(this);
+	public StringOperations stringOperations() {
+		if(stringOperations == null){
+			stringOperations = new JedisSentinelStringOperations(this);
+		}
+
+		return stringOperations;
 	}
 
 	@Override
-	public JedisSentinelTransactionOperations transactionOperations(){
-		return new JedisSentinelTransactionOperations(this);
+	public TransactionOperations transactionOperations() {
+		if(transactionOperations == null){
+			transactionOperations = new JedisSentinelTransactionOperations(this);
+		}
+
+		return transactionOperations;
 	}
 
 }

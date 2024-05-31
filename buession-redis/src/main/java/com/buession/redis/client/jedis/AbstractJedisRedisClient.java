@@ -19,18 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.core.FutureResult;
-import redis.clients.jedis.Response;
-
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Jedis Redis 客户端抽象类
@@ -39,12 +34,10 @@ import java.util.Queue;
  */
 public abstract class AbstractJedisRedisClient extends AbstractRedisClient implements JedisRedisClient {
 
-	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
-
 	/**
 	 * 构造函数
 	 */
-	public AbstractJedisRedisClient(){
+	public AbstractJedisRedisClient() {
 		super();
 	}
 
@@ -54,13 +47,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	 * @param connection
 	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
 	 */
-	public AbstractJedisRedisClient(final JedisRedisConnection connection){
+	public AbstractJedisRedisClient(final JedisRedisConnection connection) {
 		super(connection);
-	}
-
-	@Override
-	public Queue<FutureResult<Response<Object>, Object, Object>> getTxResults(){
-		return txResults;
 	}
 
 }

@@ -24,25 +24,14 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
-import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.Command;
-import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
-import com.buession.redis.core.internal.convert.lettuce.response.RedisFutureConverter;
-import com.buession.redis.exception.NotSupportedCommandException;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.PipelineFactory;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -63,23 +52,13 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
-							  final Converter<SR, R> converter) {
-			super(client, command, converter);
-		}
-
-		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
-							  final Executor<RedisCommands<byte[], byte[]>, SR> executor) {
-			super(client, command, executor);
-		}
-
-		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
 							  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws Exception {
+		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getStatefulConnection().sync());
 			return result == null ? null : converter.convert(result);
 		}
@@ -94,25 +73,45 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
-									  final Converter<SR, R> converter) {
-			super(client, command, converter);
-		}
-
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
-									  final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor) {
-			super(client, command, executor);
-		}
-
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 									  final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 									  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws Exception {
-			executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws RedisException {
+			final Runner runner = new Runner() {
+
+				@Override
+				public LettuceResult<SR, R> run() throws RedisException {
+					com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+
+					if(pipeline instanceof PipelineFactory){
+						final RedisFuture<SR> future = executor.execute(connection.getStatefulConnection().async());
+						LettuceResult<SR, R> result = converter == null ? newLettuceResult(future) :
+								newLettuceResult(future, converter);
+
+						connection.executePipeline(result);
+
+						return result;
+					}else{
+						throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+					}
+				}
+
+			};
+
+			client.getTxResults().add(runner.run());
 			return null;
+		}
+
+		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> response) {
+			return LettuceResult.Builder.<SR, R>fromResponse(response).build();
+		}
+
+		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> response,
+														final Converter<SR, R> converter) {
+			return LettuceResult.Builder.<SR, R>fromResponse(response).mappedWith(converter).build();
 		}
 
 	}
@@ -125,24 +124,14 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		public LettucePipelineCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
-									   final Converter<SR, R> converter) {
-			super(client, command, converter);
-		}
-
-		public LettucePipelineCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
-									   final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor) {
-			super(client, command, executor);
-		}
-
-		public LettucePipelineCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
 									   final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor,
 									   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws Exception {
-			executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws RedisException {
+			//executor.execute(connection.getStatefulConnection().async());
 			return null;
 		}
 
@@ -157,24 +146,14 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
-										 final Converter<SR, R> converter) {
-			super(client, command, converter);
-		}
-
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
-										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor) {
-			super(client, command, executor);
-		}
-
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 										 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws Exception {
-			executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws RedisException {
+			//executor.execute(connection.getStatefulConnection().async());
 			return null;
 		}
 
@@ -188,24 +167,14 @@ public interface LettuceRedisOperations extends RedisOperations {
 		}
 
 		public LettuceTransactionCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
-										  final Converter<SR, R> converter) {
-			super(client, command, converter);
-		}
-
-		public LettuceTransactionCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
-										  final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor) {
-			super(client, command, executor);
-		}
-
-		public LettuceTransactionCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
 										  final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor,
 										  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws Exception {
-			executor.execute(connection.getStatefulConnection().async());
+		protected R doExecute() throws RedisException {
+			//executor.execute(connection.getStatefulConnection().async());
 			return null;
 		}
 

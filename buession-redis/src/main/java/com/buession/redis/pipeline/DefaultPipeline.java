@@ -22,22 +22,12 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce;
-
-import com.buession.redis.client.RedisClient;
-import com.buession.redis.core.FutureResult;
-import io.lettuce.core.RedisFuture;
-
-import java.util.Queue;
+package com.buession.redis.pipeline;
 
 /**
- * Lettuce Redis 客户端
- *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 2.3.0
  */
-public interface LettuceRedisClient extends RedisClient {
-
-	Queue<FutureResult<RedisFuture<Object>, Object, Object>> getTxResults();
+public class BasePipeline<T> implements Pipeline {
 
 }

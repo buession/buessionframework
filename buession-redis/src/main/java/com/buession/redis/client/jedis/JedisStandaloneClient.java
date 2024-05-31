@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -43,6 +43,7 @@ import com.buession.redis.client.jedis.operations.JedisSortedSetOperations;
 import com.buession.redis.client.jedis.operations.JedisStreamOperations;
 import com.buession.redis.client.jedis.operations.JedisStringOperations;
 import com.buession.redis.client.jedis.operations.JedisTransactionOperations;
+import com.buession.redis.client.operations.*;
 
 /**
  * Jedis 单机模式客户端
@@ -56,7 +57,7 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	/**
 	 * 构造函数
 	 */
-	public JedisStandaloneClient(){
+	public JedisStandaloneClient() {
 		super();
 	}
 
@@ -66,98 +67,162 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	 * @param connection
 	 * 		Jedis Redis 单机连接对象 {@link JedisConnection}
 	 */
-	public JedisStandaloneClient(final JedisConnection connection){
+	public JedisStandaloneClient(final JedisConnection connection) {
 		super(connection);
 	}
 
 	@Override
-	public JedisConnection getConnection(){
+	public JedisConnection getConnection() {
 		return connection;
 	}
 
 	@Override
-	public void setConnection(RedisConnection connection){
+	public void setConnection(RedisConnection connection) {
 		this.connection = (JedisConnection) connection;
 	}
 
 	@Override
-	public JedisBitMapOperations bitMapOperations(){
-		return new JedisBitMapOperations(this);
+	public BitMapOperations bitMapOperations() {
+		if(bitMapOperations == null){
+			bitMapOperations = new JedisBitMapOperations(this);
+		}
+
+		return bitMapOperations;
 	}
 
 	@Override
-	public JedisClusterOperations clusterOperations(){
-		return new JedisClusterOperations(this);
+	public ClusterOperations clusterOperations() {
+		if(clusterOperations == null){
+			clusterOperations = new JedisClusterOperations(this);
+		}
+
+		return clusterOperations;
 	}
 
 	@Override
-	public JedisConnectionOperations connectionOperations(){
-		return new JedisConnectionOperations(this);
+	public ConnectionOperations connectionOperations() {
+		if(connectionOperations == null){
+			connectionOperations = new JedisConnectionOperations(this);
+		}
+
+		return connectionOperations;
 	}
 
 	@Override
-	public JedisGeoOperations geoOperations(){
-		return new JedisGeoOperations(this);
+	public GeoOperations geoOperations() {
+		if(geoOperations == null){
+			geoOperations = new JedisGeoOperations(this);
+		}
+
+		return geoOperations;
 	}
 
 	@Override
-	public JedisHashOperations hashOperations(){
-		return new JedisHashOperations(this);
+	public HashOperations hashOperations() {
+		if(hashOperations == null){
+			hashOperations = new JedisHashOperations(this);
+		}
+
+		return hashOperations;
 	}
 
 	@Override
-	public JedisHyperLogLogOperations hyperLogLogOperations(){
-		return new JedisHyperLogLogOperations(this);
+	public HyperLogLogOperations hyperLogLogOperations() {
+		if(hyperLogLogOperations == null){
+			hyperLogLogOperations = new JedisHyperLogLogOperations(this);
+		}
+
+		return hyperLogLogOperations;
 	}
 
 	@Override
-	public JedisKeyOperations keyOperations(){
-		return new JedisKeyOperations(this);
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override
-	public JedisListOperations listOperations(){
-		return new JedisListOperations(this);
+	public ListOperations listOperations() {
+		if(listOperations == null){
+			listOperations = new JedisListOperations(this);
+		}
+
+		return listOperations;
 	}
 
 	@Override
-	public JedisPubSubOperations pubSubOperations(){
-		return new JedisPubSubOperations(this);
+	public PubSubOperations pubSubOperations() {
+		if(pubSubOperations == null){
+			pubSubOperations = new JedisPubSubOperations(this);
+		}
+
+		return pubSubOperations;
 	}
 
 	@Override
-	public JedisScriptingOperations scriptingOperations(){
-		return new JedisScriptingOperations(this);
+	public ScriptingOperations scriptingOperations() {
+		if(scriptingOperations == null){
+			scriptingOperations = new JedisScriptingOperations(this);
+		}
+
+		return scriptingOperations;
 	}
 
 	@Override
-	public JedisServerOperations serverOperations(){
-		return new JedisServerOperations(this);
+	public ServerOperations serverOperations() {
+		if(serverOperations == null){
+			serverOperations = new JedisServerOperations(this);
+		}
+
+		return serverOperations;
 	}
 
 	@Override
-	public JedisSetOperations setOperations(){
-		return new JedisSetOperations(this);
+	public SetOperations setOperations() {
+		if(setOperations == null){
+			setOperations = new JedisSetOperations(this);
+		}
+
+		return setOperations;
 	}
 
 	@Override
-	public JedisSortedSetOperations sortedSetOperations(){
-		return new JedisSortedSetOperations(this);
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new JedisSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
 	}
 
 	@Override
-	public JedisStreamOperations streamOperations(){
-		return new JedisStreamOperations(this);
+	public StreamOperations streamOperations() {
+		if(streamOperations == null){
+			streamOperations = new JedisStreamOperations(this);
+		}
+
+		return streamOperations;
 	}
 
 	@Override
-	public JedisStringOperations stringOperations(){
-		return new JedisStringOperations(this);
+	public StringOperations stringOperations() {
+		if(stringOperations == null){
+			stringOperations = new JedisStringOperations(this);
+		}
+
+		return stringOperations;
 	}
 
 	@Override
-	public JedisTransactionOperations transactionOperations(){
-		return new JedisTransactionOperations(this);
+	public TransactionOperations transactionOperations() {
+		if(transactionOperations == null){
+			transactionOperations = new JedisTransactionOperations(this);
+		}
+
+		return transactionOperations;
 	}
 
 }
