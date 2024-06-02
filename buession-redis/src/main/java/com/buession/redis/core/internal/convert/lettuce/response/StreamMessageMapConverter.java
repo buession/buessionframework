@@ -26,8 +26,9 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntry;
-import com.buession.redis.core.internal.convert.response.MapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
 
@@ -43,8 +44,8 @@ import java.util.Map;
 public class StreamMessageMapConverter<K>
 		implements Converter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> {
 
-	private final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
-			new MapConverter.BinaryToStringMapConverter();
+	private final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter =
+			Converters.mapBinaryToString();
 
 	@Nullable
 	@Override

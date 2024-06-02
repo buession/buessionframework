@@ -24,8 +24,8 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Lists;
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListSetConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ExpireOption;
@@ -35,8 +35,8 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyScanCursorConverter;
-import com.buession.redis.core.internal.convert.response.ListSetConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.lettuce.LettuceMigrateArgs;
@@ -425,8 +425,8 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		final byte[] bPattern = SafeEncoder.encode(pattern);
-		final ListSetConverter.BinaryToStringListSetConverter binaryToStringListSetConverter =
-				new ListSetConverter.BinaryToStringListSetConverter();
+		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
+				Converters.listSetBinaryToString();
 
 		return keys(bPattern, binaryToStringListSetConverter, args);
 	}
@@ -434,7 +434,9 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	@Override
 	public Set<byte[]> keys(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return keys(pattern, Lists::toSet, args);
+		final ListSetConverter<byte[], byte[]> converter = new ListSetConverter<>((v)->v);
+
+		return keys(pattern, converter, args);
 	}
 
 	@Override

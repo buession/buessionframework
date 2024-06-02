@@ -26,13 +26,12 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.response.MapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
-
-import java.util.List;
 
 /**
  * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
@@ -42,8 +41,8 @@ import java.util.List;
  */
 public class StreamMessageConverter implements Converter<StreamMessage<byte[], byte[]>, StreamEntry> {
 
-	private final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
-			new MapConverter.BinaryToStringMapConverter();
+	private final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter =
+			Converters.mapBinaryToString();
 
 	@Nullable
 	@Override

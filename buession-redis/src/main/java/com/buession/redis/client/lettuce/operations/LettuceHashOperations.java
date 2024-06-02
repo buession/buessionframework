@@ -25,15 +25,15 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListSetConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.MapScanCursorConverter;
-import com.buession.redis.core.internal.convert.response.ListConverter;
-import com.buession.redis.core.internal.convert.response.ListSetConverter;
-import com.buession.redis.core.internal.convert.response.MapConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
@@ -112,8 +112,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final byte[] bKey = SafeEncoder.encode(key);
-		final MapConverter.BinaryToStringMapConverter binaryToStringMapConverter =
-				new MapConverter.BinaryToStringMapConverter();
+		final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter = Converters.mapBinaryToString();
 
 		return hGetAll(bKey, binaryToStringMapConverter, args);
 	}
@@ -165,8 +164,8 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final byte[] bKey = SafeEncoder.encode(key);
-		final ListSetConverter.BinaryToStringListSetConverter binaryToStringListSetConverter =
-				new ListSetConverter.BinaryToStringListSetConverter();
+		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
+				Converters.listSetBinaryToString();
 
 		return hKeys(bKey, binaryToStringListSetConverter, args);
 	}
@@ -439,8 +438,8 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		}
 	}
 
-	private <K, V> Map<K, V> hGetAll(final byte[] key,
-									 final MapConverter<byte[], byte[], K, V> converter, final CommandArguments args) {
+	private <K, V> Map<K, V> hGetAll(final byte[] key, final Converter<Map<byte[], byte[]>, Map<K, V>> converter,
+									 final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
 					.run(args);
@@ -453,7 +452,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		}
 	}
 
-	private <V> Set<V> hKeys(final byte[] key, final ListSetConverter<byte[], V> converter,
+	private <V> Set<V> hKeys(final byte[] key, final Converter<List<byte[]>, Set<V>> converter,
 							 final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
@@ -468,7 +467,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	}
 
 	private <V> List<V> hMGet(final byte[] key, final byte[][] fields,
-							  final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, V> converter,
+							  final Converter<List<KeyValue<byte[], byte[]>>, List<V>> converter,
 							  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
@@ -530,7 +529,8 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		}
 	}
 
-	private <V> List<V> hVals(final byte[] key, final ListConverter<byte[], V> converter, final CommandArguments args) {
+	private <V> List<V> hVals(final byte[] key, final Converter<List<byte[]>, List<V>> converter,
+							  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);

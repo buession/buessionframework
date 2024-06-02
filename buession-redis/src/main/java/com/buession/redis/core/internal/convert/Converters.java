@@ -22,49 +22,56 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.response;
+package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.ListSetConverter;
+import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.SetConverter;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.util.Set;
-
 /**
- * {@link Set} 转换器
- *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 2.3.0
  */
-public interface SetConverter<S, T> extends Converter<Set<S>, Set<T>> {
+public interface Converters {
 
-	/**
-	 * {@link String} {@link Set} 到 byte[] {@link Set} 转换器
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	class StringToBinarySetConverter extends com.buession.core.converter.SetConverter<String, byte[]>
-			implements SetConverter<String, byte[]> {
-
-		public StringToBinarySetConverter() {
-			super(SafeEncoder::encode);
-		}
-
+	static ListConverter<String, byte[]> listStringToBinary() {
+		return new ListConverter<>(SafeEncoder::encode);
 	}
 
-	/**
-	 * byte[] {@link Set} 到 {@link String} {@link Set} 转换器
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	class BinaryToStringSetConverter extends com.buession.core.converter.SetConverter<byte[], String>
-			implements SetConverter<byte[], String> {
+	static ListConverter<byte[], String> listBinaryToString() {
+		return new ListConverter<>(SafeEncoder::encode);
+	}
 
-		public BinaryToStringSetConverter() {
-			super(SafeEncoder::encode);
-		}
+	static SetConverter<String, byte[]> setStringToBinary() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
 
+	static SetConverter<byte[], String> setBinaryToString() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
+
+	static ListSetConverter<byte[], String> listSetBinaryToString() {
+		return new ListSetConverter<>(SafeEncoder::encode);
+	}
+
+	static ListSetConverter<byte[], String> setListBinaryToString() {
+		return new ListSetConverter<>(SafeEncoder::encode);
+	}
+
+	static MapConverter<String, String, byte[], byte[]> mapStringToBinary() {
+		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+	}
+
+	static MapConverter<byte[], byte[], String, String> mapBinaryToString() {
+		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	static <S, T> Converter<S, T> always() {
+		return (value)->(T) value;
 	}
 
 }

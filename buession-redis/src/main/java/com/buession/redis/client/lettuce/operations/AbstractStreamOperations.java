@@ -35,7 +35,7 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
-import com.buession.redis.core.internal.convert.response.MapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -64,13 +64,13 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
-		return xAdd(SafeEncoder.encode(key), id, (new MapConverter.StringToBinaryMapConverter()).convert(hash));
+		return xAdd(SafeEncoder.encode(key), id, Converters.mapStringToBinary().convert(hash));
 	}
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument) {
-		return xAdd(SafeEncoder.encode(key), id, (new MapConverter.StringToBinaryMapConverter()).convert(hash),
+		return xAdd(SafeEncoder.encode(key), id, Converters.mapStringToBinary().convert(hash),
 				xAddArgument);
 	}
 

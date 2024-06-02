@@ -25,12 +25,13 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.MapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.lettuce.LettuceSetArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyValue;
@@ -220,8 +221,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	@Override
 	public List<byte[]> mGet(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter =
-				new com.buession.core.converter.ListConverter<>(Value::getValue);
+		final ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(Value::getValue);
 
 		return mGet(keys, listConverter, args);
 	}
@@ -229,7 +229,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	@Override
 	public Status mSet(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
-		final Map<byte[], byte[]> bValues = (new MapConverter.StringToBinaryMapConverter()).convert(values);
+		final Map<byte[], byte[]> bValues = Converters.mapStringToBinary().convert(values);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.MSET, (cmd)->cmd.mset(bValues),
@@ -248,7 +248,7 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	@Override
 	public Status mSetNx(final Map<String, String> values) {
 		final CommandArguments args = CommandArguments.create("values", values);
-		final Map<byte[], byte[]> bValues = (new MapConverter.StringToBinaryMapConverter()).convert(values);
+		final Map<byte[], byte[]> bValues = Converters.mapStringToBinary().convert(values);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.MSETNX, (cmd)->cmd.msetnx(bValues),

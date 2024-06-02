@@ -25,8 +25,9 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.internal.convert.response.ListConverter;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyScanCursor;
 
 import java.util.List;
@@ -56,8 +57,8 @@ public final class KeyScanCursorConverter<K> implements Converter<KeyScanCursor<
 	public final static class BSKeyScanCursorConverter
 			implements Converter<KeyScanCursor<byte[]>, ScanResult<List<String>>> {
 
-		private final ListConverter.BinaryToStringListConverter binaryToStringListConverter =
-				new ListConverter.BinaryToStringListConverter();
+		private final ListConverter<byte[], String> binaryToStringListConverter =
+				new ListConverter<>(SafeEncoder::encode);
 
 		@Override
 		public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {

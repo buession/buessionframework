@@ -28,10 +28,12 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
+import com.buession.redis.core.Command;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineFactory;
+import io.lettuce.core.FlushEachCommand;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -80,38 +82,28 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			final Runner runner = new Runner() {
+			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
-				@Override
-				public LettuceResult<SR, R> run() throws RedisException {
-					com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+			if(pipeline instanceof PipelineFactory){
+				final PipelineFactory<FlushEachCommand, RedisFuture<Object>> pipelineFactory = (PipelineFactory<FlushEachCommand, RedisFuture<Object>>) pipeline;
+				//final RedisFuture<SR> future = executor.execute(connection.getStatefulConnection().async());
 
-					if(pipeline instanceof PipelineFactory){
-						final RedisFuture<SR> future = executor.execute(connection.getStatefulConnection().async());
-						LettuceResult<SR, R> result = converter == null ? newLettuceResult(future) :
-								newLettuceResult(future, converter);
+				final Runner runner = new PtRunner<>(new Executor<FlushEachCommand, RedisFuture<SR>>() {
 
-						connection.executePipeline(result);
-
-						return result;
-					}else{
-						throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+					@Override
+					public RedisFuture<SR> execute(FlushEachCommand context) throws RedisException {
+						context.onCommand(connection.getStatefulConnection());
+						return executor.execute(connection.getStatefulConnection().async());
 					}
-				}
 
-			};
+				}, pipelineFactory, converter);
 
-			client.getTxResults().add(runner.run());
-			return null;
-		}
+				pipelineFactory.getTxResults().add(runner.run());
 
-		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> response) {
-			return LettuceResult.Builder.<SR, R>fromResponse(response).build();
-		}
-
-		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> response,
-														final Converter<SR, R> converter) {
-			return LettuceResult.Builder.<SR, R>fromResponse(response).mappedWith(converter).build();
+				return null;
+			}else{
+				throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+			}
 		}
 
 	}
@@ -176,6 +168,40 @@ public interface LettuceRedisOperations extends RedisOperations {
 		protected R doExecute() throws RedisException {
 			//executor.execute(connection.getStatefulConnection().async());
 			return null;
+		}
+
+	}
+
+	final class PtRunner<T, SR, R> implements Command.Runner {
+
+		private final Command.Executor<T, RedisFuture<SR>> executor;
+
+		private final PipelineFactory<T, RedisFuture<Object>> pipelineFactory;
+
+		private final Converter<SR, R> converter;
+
+		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+						final PipelineFactory<T, RedisFuture<Object>> pipelineFactory,
+						final Converter<SR, R> converter) {
+			this.executor = executor;
+			this.pipelineFactory = pipelineFactory;
+			this.converter = converter;
+		}
+
+		@SuppressWarnings({"unchecked"})
+		@Override
+		public LettuceResult<SR, R> run() throws RedisException {
+			final RedisFuture<SR> future = executor.execute(pipelineFactory.getObject());
+			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+		}
+
+		private LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {
+			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).build();
+		}
+
+		private LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future,
+													  final Converter<SR, R> converter) {
+			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).mappedWith(converter).build();
 		}
 
 	}

@@ -25,12 +25,12 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.response.ListConverter;
-import com.buession.redis.core.internal.convert.response.MapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
@@ -154,8 +154,8 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		final String sPattern = SafeEncoder.encode(pattern);
-		final ListConverter.StringToBinaryListConverter stringToBinaryListConverter =
-				new ListConverter.StringToBinaryListConverter();
+		final com.buession.core.converter.ListConverter<String, byte[]> stringToBinaryListConverter =
+				Converters.listStringToBinary();
 
 		return pubsubChannels(sPattern, stringToBinaryListConverter, args);
 	}
@@ -184,7 +184,8 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		final String[] sChannels = SafeEncoder.encode(channels);
-		final MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<Long> stringToBinaryKeyPrimitiveValueMapConverter = new MapConverter.StringToBinaryKeyPrimitiveValueMapConverter<>();
+		final MapConverter<String, Long, byte[], Long> stringToBinaryKeyPrimitiveValueMapConverter =
+				new MapConverter<>(SafeEncoder::encode, (v)->v);
 
 		return pubsubNumSub(sChannels, stringToBinaryKeyPrimitiveValueMapConverter, args);
 	}
