@@ -32,7 +32,8 @@ import com.buession.redis.core.Command;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.PipelineFactory;
+import com.buession.redis.exception.RedisPipelineException;
+import com.buession.redis.pipeline.PipelineProxy;
 import io.lettuce.core.FlushEachCommand;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -80,29 +81,25 @@ public interface LettuceRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
-			if(pipeline instanceof PipelineFactory){
-				final PipelineFactory<FlushEachCommand, RedisFuture<Object>> pipelineFactory = (PipelineFactory<FlushEachCommand, RedisFuture<Object>>) pipeline;
-				//final RedisFuture<SR> future = executor.execute(connection.getStatefulConnection().async());
+			if(pipeline instanceof PipelineProxy){
+				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
+						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
 
-				final Runner runner = new PtRunner<>(new Executor<FlushEachCommand, RedisFuture<SR>>() {
-
-					@Override
-					public RedisFuture<SR> execute(FlushEachCommand context) throws RedisException {
-						context.onCommand(connection.getStatefulConnection());
-						return executor.execute(connection.getStatefulConnection().async());
-					}
-
+				final Runner runner = new PtRunner<>((context)->{
+					context.onCommand(connection.getStatefulConnection());
+					return executor.execute(connection.getStatefulConnection().async());
 				}, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
 				return null;
 			}else{
-				throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
 			}
 		}
 
@@ -123,8 +120,31 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			//executor.execute(connection.getStatefulConnection().async());
-			return null;
+			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+
+			if(pipeline instanceof PipelineProxy){
+				//final PipelineProxy<FlushEachCommand, RedisFuture<Object>> pipelineFactory =
+				//(PipelineProxy<FlushEachCommand, RedisFuture<Object>>) pipeline;
+
+				/*
+				final Runner runner = new PtRunner<>(new Executor<FlushEachCommand, SR>() {
+
+					@Override
+					public SR execute(FlushEachCommand context) throws RedisException {
+						context.onCommand(connection.getStatefulConnection());
+						return executor.execute(connection.getStatefulConnection().async());
+					}
+
+				}, pipelineFactory, converter);
+
+				pipelineFactory.getTxResults().add(runner.run());
+
+				 */
+
+				return null;
+			}else{
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+			}
 		}
 
 	}
@@ -176,12 +196,12 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		private final Command.Executor<T, RedisFuture<SR>> executor;
 
-		private final PipelineFactory<T, RedisFuture<Object>> pipelineFactory;
+		private final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory;
 
 		private final Converter<SR, R> converter;
 
 		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-						final PipelineFactory<T, RedisFuture<Object>> pipelineFactory,
+						final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory,
 						final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.pipelineFactory = pipelineFactory;

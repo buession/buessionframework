@@ -77,7 +77,6 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
-import com.buession.redis.pipeline.Pipeline;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -4391,17 +4390,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public List<Object> exec() {
 		return execute((client)->{
 			RedisConnection connection = client.getConnection();
-
-			if(connection.isPipeline()){
-				final Pipeline pipeline = connection.openPipeline();
-				try{
-					return pipeline.syncAndReturnAll();
-				}finally{
-					connection.closePipeline();
-				}
-			}else{
-				return connection.exec();
-			}
+			return connection.exec();
 		});
 	}
 

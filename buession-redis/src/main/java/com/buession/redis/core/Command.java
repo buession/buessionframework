@@ -81,11 +81,20 @@ public interface Command<R> {
 	 */
 	R run(final CommandArguments arguments) throws RedisException;
 
+	@FunctionalInterface
+	interface Executor<C, R> extends com.buession.core.Executor<C, R> {
+
+		@Override
+		R execute(C context) throws RedisException;
+
+	}
+
 	/**
 	 * Redis 命令运行器
 	 *
 	 * @author Yong.Teng
 	 */
+	@FunctionalInterface
 	interface Runner {
 
 		/**

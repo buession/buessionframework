@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
@@ -197,8 +198,8 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[][] bFields = SafeEncoder.encode(fields);
-		final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
-				new com.buession.core.converter.ListConverter<>((v)->SafeEncoder.encode(v.getValue()));
+		final ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
+				new ListConverter<>((v)->SafeEncoder.encode(v.getValue()));
 
 		return hMGet(bKey, bFields, listConverter, args);
 	}
@@ -206,8 +207,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
-		final com.buession.core.converter.ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter =
-				new com.buession.core.converter.ListConverter<>(Value::getValue);
+		final ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(Value::getValue);
 
 		return hMGet(key, fields, listConverter, args);
 	}

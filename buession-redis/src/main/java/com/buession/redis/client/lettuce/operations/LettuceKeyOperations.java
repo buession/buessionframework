@@ -855,8 +855,8 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	private <V> ScanResult<List<V>> scan(final ScanCursor cursor,
-										 final Converter<KeyScanCursor<byte[]>,
-												 ScanResult<List<V>>> converter, final CommandArguments args) {
+										 final Converter<KeyScanCursor<byte[]>, ScanResult<List<V>>> converter,
+										 final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
 					.run(args);
@@ -888,8 +888,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	private <V> List<V> sort(final byte[] key,
-							 final com.buession.core.converter.Converter<List<byte[]>, List<V>> converter,
-							 final CommandArguments args) {
+							 final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
 					.run(args);
@@ -903,8 +902,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	private <V> List<V> sort(final byte[] key, final SortArgs sortArgs,
-							 final com.buession.core.converter.Converter<List<byte[]>, List<V>> converter,
-							 final CommandArguments args) {
+							 final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
 					converter)
