@@ -24,24 +24,24 @@
  */
 package com.buession.redis.client.lettuce;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.lettuce.LettuceConnection;
-import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
-import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
-import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
-import com.buession.redis.client.lettuce.operations.LettuceGeoOperations;
-import com.buession.redis.client.lettuce.operations.LettuceHashOperations;
-import com.buession.redis.client.lettuce.operations.LettuceHyperLogLogOperations;
-import com.buession.redis.client.lettuce.operations.LettuceKeyOperations;
-import com.buession.redis.client.lettuce.operations.LettuceListOperations;
-import com.buession.redis.client.lettuce.operations.LettucePubSubOperations;
-import com.buession.redis.client.lettuce.operations.LettuceScriptingOperations;
-import com.buession.redis.client.lettuce.operations.LettuceServerOperations;
-import com.buession.redis.client.lettuce.operations.LettuceSetOperations;
-import com.buession.redis.client.lettuce.operations.LettuceSortedSetOperations;
-import com.buession.redis.client.lettuce.operations.LettuceStreamOperations;
-import com.buession.redis.client.lettuce.operations.LettuceStringOperations;
-import com.buession.redis.client.lettuce.operations.LettuceTransactionOperations;
+import com.buession.redis.client.RedisClusterClient;
+import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
+import com.buession.redis.client.lettuce.operations.LettuceClusterBitMapOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterClusterOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterConnectionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterGeoOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterHashOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterHyperLogLogOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterKeyOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterListOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterPubSubOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterScriptingOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterServerOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterSortedSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterStreamOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterStringOperations;
+import com.buession.redis.client.lettuce.operations.LettuceClusterTransactionOperations;
 import com.buession.redis.client.operations.*;
 
 /**
@@ -50,10 +50,8 @@ import com.buession.redis.client.operations.*;
  * @author Yong.Teng
  * @since 3.0.0
  */
-//public class LettuceClusterClient extends AbstractLettuceRedisClient implements RedisStandaloneClient {
-public class LettuceClusterClient extends LettuceStandaloneClient {
-
-	private LettuceConnection connection;
+public class LettuceClusterClient extends AbstractLettuceRedisClient<LettuceClusterConnection>
+		implements RedisClusterClient {
 
 	/**
 	 * 构造函数
@@ -66,26 +64,16 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	 * 构造函数
 	 *
 	 * @param connection
-	 * 		Lettuce Redis 单机连接对象 {@link LettuceConnection}
+	 * 		Lettuce Redis 集群连接对象 {@link LettuceClusterConnection}
 	 */
-	public LettuceClusterClient(final LettuceConnection connection) {
+	public LettuceClusterClient(final LettuceClusterConnection connection) {
 		super(connection);
-	}
-
-	@Override
-	public LettuceConnection getConnection() {
-		return connection;
-	}
-
-	@Override
-	public void setConnection(RedisConnection connection) {
-		this.connection = (LettuceConnection) connection;
 	}
 
 	@Override
 	public BitMapOperations bitMapOperations() {
 		if(bitMapOperations == null){
-			bitMapOperations = new LettuceBitMapOperations(this);
+			bitMapOperations = new LettuceClusterBitMapOperations(this);
 		}
 
 		return bitMapOperations;
@@ -94,7 +82,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public ClusterOperations clusterOperations() {
 		if(clusterOperations == null){
-			clusterOperations = new LettuceClusterOperations(this);
+			clusterOperations = new LettuceClusterClusterOperations(this);
 		}
 
 		return clusterOperations;
@@ -103,7 +91,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public ConnectionOperations connectionOperations() {
 		if(connectionOperations == null){
-			connectionOperations = new LettuceConnectionOperations(this);
+			connectionOperations = new LettuceClusterConnectionOperations(this);
 		}
 
 		return connectionOperations;
@@ -112,7 +100,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public GeoOperations geoOperations() {
 		if(geoOperations == null){
-			geoOperations = new LettuceGeoOperations(this);
+			geoOperations = new LettuceClusterGeoOperations(this);
 		}
 
 		return geoOperations;
@@ -121,7 +109,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public HashOperations hashOperations() {
 		if(hashOperations == null){
-			hashOperations = new LettuceHashOperations(this);
+			hashOperations = new LettuceClusterHashOperations(this);
 		}
 
 		return hashOperations;
@@ -130,7 +118,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public HyperLogLogOperations hyperLogLogOperations() {
 		if(hyperLogLogOperations == null){
-			hyperLogLogOperations = new LettuceHyperLogLogOperations(this);
+			hyperLogLogOperations = new LettuceClusterHyperLogLogOperations(this);
 		}
 
 		return hyperLogLogOperations;
@@ -139,7 +127,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public KeyOperations keyOperations() {
 		if(keyOperations == null){
-			keyOperations = new LettuceKeyOperations(this);
+			keyOperations = new LettuceClusterKeyOperations(this);
 		}
 
 		return keyOperations;
@@ -148,7 +136,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public ListOperations listOperations() {
 		if(listOperations == null){
-			listOperations = new LettuceListOperations(this);
+			listOperations = new LettuceClusterListOperations(this);
 		}
 
 		return listOperations;
@@ -157,7 +145,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public PubSubOperations pubSubOperations() {
 		if(pubSubOperations == null){
-			pubSubOperations = new LettucePubSubOperations(this);
+			pubSubOperations = new LettuceClusterPubSubOperations(this);
 		}
 
 		return pubSubOperations;
@@ -166,7 +154,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public ScriptingOperations scriptingOperations() {
 		if(scriptingOperations == null){
-			scriptingOperations = new LettuceScriptingOperations(this);
+			scriptingOperations = new LettuceClusterScriptingOperations(this);
 		}
 
 		return scriptingOperations;
@@ -175,7 +163,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public ServerOperations serverOperations() {
 		if(serverOperations == null){
-			serverOperations = new LettuceServerOperations(this);
+			serverOperations = new LettuceClusterServerOperations(this);
 		}
 
 		return serverOperations;
@@ -184,7 +172,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public SetOperations setOperations() {
 		if(setOperations == null){
-			setOperations = new LettuceSetOperations(this);
+			setOperations = new LettuceClusterSetOperations(this);
 		}
 
 		return setOperations;
@@ -193,7 +181,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public SortedSetOperations sortedSetOperations() {
 		if(sortedSetOperations == null){
-			sortedSetOperations = new LettuceSortedSetOperations(this);
+			sortedSetOperations = new LettuceClusterSortedSetOperations(this);
 		}
 
 		return sortedSetOperations;
@@ -202,7 +190,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public StreamOperations streamOperations() {
 		if(streamOperations == null){
-			streamOperations = new LettuceStreamOperations(this);
+			streamOperations = new LettuceClusterStreamOperations(this);
 		}
 
 		return streamOperations;
@@ -211,7 +199,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public StringOperations stringOperations() {
 		if(stringOperations == null){
-			stringOperations = new LettuceStringOperations(this);
+			stringOperations = new LettuceClusterStringOperations(this);
 		}
 
 		return stringOperations;
@@ -220,7 +208,7 @@ public class LettuceClusterClient extends LettuceStandaloneClient {
 	@Override
 	public TransactionOperations transactionOperations() {
 		if(transactionOperations == null){
-			transactionOperations = new LettuceTransactionOperations(this);
+			transactionOperations = new LettuceClusterTransactionOperations(this);
 		}
 
 		return transactionOperations;

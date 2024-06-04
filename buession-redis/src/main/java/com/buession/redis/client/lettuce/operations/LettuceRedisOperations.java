@@ -25,8 +25,10 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
+import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
@@ -40,6 +42,8 @@ import io.lettuce.core.FlushEachCommand;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
+import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.sentinel.api.async.RedisSentinelAsyncCommands;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 
@@ -200,6 +204,86 @@ public interface LettuceRedisOperations extends RedisOperations {
 		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command,
 												 final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 												 final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		@Override
+		protected R doExecute() throws RedisException {
+			//executor.execute(connection.getStatefulConnection().async());
+			return null;
+		}
+
+	}
+
+	class LettuceClusterCommand<SR, R> extends
+			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterCommands<byte[], byte[]>, SR, SR, R> {
+
+		public LettuceClusterCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+			super(client, command);
+		}
+
+		public LettuceClusterCommand(final LettuceClusterClient client, final ProtocolCommand command,
+									 final Executor<RedisClusterCommands<byte[], byte[]>, SR> executor,
+									 final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		@Override
+		protected R doExecute() throws RedisException {
+			final SR result = executor.execute(connection.getStatefulRedisClusterConnection().sync());
+			return result == null ? null : converter.convert(result);
+		}
+
+	}
+
+	class LettuceClusterPipelineCommand<SR, R> extends
+			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
+
+		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+			super(client, command);
+		}
+
+		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final ProtocolCommand command,
+											 final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+											 final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		@SuppressWarnings({"unchecked"})
+		@Override
+		protected R doExecute() throws RedisException {
+			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+
+			if(pipeline instanceof PipelineProxy){
+				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
+						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
+
+				final Runner runner = new PtRunner<>((context)->{
+					context.onCommand(connection.getStatefulRedisClusterConnection());
+					return executor.execute(connection.getStatefulRedisClusterConnection().async());
+				}, pipelineFactory, converter);
+
+				pipelineFactory.getTxResults().add(runner.run());
+
+				return null;
+			}else{
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+			}
+		}
+
+	}
+
+	class LettuceClusterTransactionCommand<SR, R> extends
+			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterAsyncCommands<byte[], byte[]>,
+					RedisFuture<SR>, SR, R> {
+
+		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+			super(client, command);
+		}
+
+		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final ProtocolCommand command,
+												final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+												final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
