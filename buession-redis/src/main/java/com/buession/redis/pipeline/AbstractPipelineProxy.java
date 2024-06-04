@@ -38,11 +38,13 @@ import java.util.stream.Collectors;
  *
  * @param <T>
  * 		原生管道类型
+ * @param <FR>
+ * 		管道异步结果
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class AbstractPipelineProxy<T, FR extends FutureResult> implements PipelineProxy<T, FR> {
+public abstract class AbstractPipelineProxy<T, FR extends FutureResult<?>> implements PipelineProxy<T, FR> {
 
 	private Pipeline target;
 
@@ -50,7 +52,7 @@ public abstract class AbstractPipelineProxy<T, FR extends FutureResult> implemen
 
 	private final Queue<FR> txResults = new LinkedList<>();
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractPipelineProxy.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public AbstractPipelineProxy(final Pipeline target, final T object) {
 		//Assert.isNull(target, "Redis Pipeline cloud not be null.");

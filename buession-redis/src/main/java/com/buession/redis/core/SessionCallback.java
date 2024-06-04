@@ -25,6 +25,7 @@
 package com.buession.redis.core;
 
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.exception.RedisException;
 
 /**
  * @author Yong.Teng
@@ -32,4 +33,7 @@ import com.buession.redis.client.RedisClient;
 @FunctionalInterface
 public interface SessionCallback<R> extends com.buession.core.Executor<RedisClient, R> {
 
+	@Override
+	R execute(RedisClient context) throws RedisException;
+	
 }

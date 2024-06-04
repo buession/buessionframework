@@ -22,27 +22,27 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
-import redis.clients.jedis.DefaultJedisClientConfig;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
+import io.lettuce.core.DefaultLettuceClientConfig;
 
 /**
  * @author Yong.Teng
- * @since 2.1.2
+ * @since 3.0.0
  */
-public class JedisClientConfigBuilder {
+public class LettuceClientConfigBuilder {
 
-	private final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
+	private final DefaultLettuceClientConfig.Builder builder = DefaultLettuceClientConfig.builder();
 
-	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource, final SslConfiguration sslConfiguration) {
+	private LettuceClientConfigBuilder(final LettuceRedisDataSource dataSource,
+									   final SslConfiguration sslConfiguration) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
-				.blockingSocketTimeoutMillis(dataSource.getInfiniteSoTimeout())
 				.ssl(sslConfiguration != null);
 
 		propertyMapper.from(dataSource.getClientName()).to(builder::clientName);
@@ -59,32 +59,32 @@ public class JedisClientConfigBuilder {
 		}
 	}
 
-	public static JedisClientConfigBuilder create(final JedisRedisDataSource dataSource,
-												  final SslConfiguration sslConfiguration) {
-		return new JedisClientConfigBuilder(dataSource, sslConfiguration);
+	public static LettuceClientConfigBuilder create(final LettuceRedisDataSource dataSource,
+													final SslConfiguration sslConfiguration) {
+		return new LettuceClientConfigBuilder(dataSource, sslConfiguration);
 	}
 
-	public JedisClientConfigBuilder user(final String user) {
+	public LettuceClientConfigBuilder user(final String user) {
 		builder.user(user);
 		return this;
 	}
 
-	public JedisClientConfigBuilder password(final String password) {
+	public LettuceClientConfigBuilder password(final String password) {
 		builder.password(password);
 		return this;
 	}
 
-	public JedisClientConfigBuilder database(final int database) {
+	public LettuceClientConfigBuilder database(final int database) {
 		builder.database(database);
 		return this;
 	}
 
-	public JedisClientConfigBuilder clientName(final String clientName) {
+	public LettuceClientConfigBuilder clientName(final String clientName) {
 		builder.clientName(clientName);
 		return this;
 	}
 
-	public DefaultJedisClientConfig build() {
+	public DefaultLettuceClientConfig build() {
 		return builder.build();
 	}
 

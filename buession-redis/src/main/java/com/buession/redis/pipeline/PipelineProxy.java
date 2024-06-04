@@ -33,11 +33,13 @@ import java.util.Queue;
  *
  * @param <T>
  * 		原生管道类型
+ * @param <FR>
+ * 		管道异步结果
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface PipelineProxy<T, FR extends FutureResult> extends Pipeline {
+public interface PipelineProxy<T, FR extends FutureResult<?>> extends Pipeline {
 
 	/**
 	 * 返回原生管道实例
