@@ -498,40 +498,22 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		this.sentinelSoTimeout = sentinelSoTimeout;
 	}
 
-	/**
-	 * 返回哨兵节点连接超时
-	 *
-	 * @return 哨兵节点连接超时（单位：毫秒）
-	 */
+	@Override
 	public int getSentinelConnectTimeout() {
 		return sentinelConnectTimeout;
 	}
 
-	/**
-	 * 设置哨兵节点连接超时
-	 *
-	 * @param sentinelConnectTimeout
-	 * 		哨兵节点连接超时（单位：毫秒）
-	 */
+	@Override
 	public void setSentinelConnectTimeout(int sentinelConnectTimeout) {
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 	}
 
-	/**
-	 * 返回哨兵节点读取超时
-	 *
-	 * @return 哨兵节点读取超时（单位：毫秒）
-	 */
+	@Override
 	public int getSentinelSoTimeout() {
 		return sentinelSoTimeout;
 	}
 
-	/**
-	 * 设置哨兵节点读取超时
-	 *
-	 * @param sentinelSoTimeout
-	 * 		哨兵节点读取超时（单位：毫秒）
-	 */
+	@Override
 	public void setSentinelSoTimeout(int sentinelSoTimeout) {
 		this.sentinelSoTimeout = sentinelSoTimeout;
 	}

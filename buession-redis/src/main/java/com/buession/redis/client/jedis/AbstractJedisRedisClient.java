@@ -30,9 +30,13 @@ import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 /**
  * Jedis Redis 客户端抽象类
  *
+ * @param <CONN>
+ * 		Jedis Redis 连接对象类型 {@link JedisRedisConnection}
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClient extends AbstractRedisClient implements JedisRedisClient {
+public abstract class AbstractJedisRedisClient<CONN extends JedisRedisConnection> extends AbstractRedisClient<CONN>
+		implements JedisRedisClient {
 
 	/**
 	 * 构造函数
@@ -47,7 +51,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	 * @param connection
 	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
 	 */
-	public AbstractJedisRedisClient(final JedisRedisConnection connection) {
+	public AbstractJedisRedisClient(final CONN connection) {
 		super(connection);
 	}
 

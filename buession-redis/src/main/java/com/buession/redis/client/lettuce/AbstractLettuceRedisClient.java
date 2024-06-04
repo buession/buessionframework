@@ -25,15 +25,19 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 
 /**
  * Lettuce Redis 客户端抽象类
  *
+ * @param <CONN>
+ * 		Lettuce Redis 连接对象类型 {@link LettuceRedisConnection}
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisClient extends AbstractRedisClient implements LettuceRedisClient {
+public abstract class AbstractLettuceRedisClient<CONN extends LettuceRedisConnection> extends AbstractRedisClient<CONN>
+		implements LettuceRedisClient {
 
 	/**
 	 * 构造函数
@@ -46,9 +50,9 @@ public abstract class AbstractLettuceRedisClient extends AbstractRedisClient imp
 	 * 构造函数
 	 *
 	 * @param connection
-	 * 		Lettuce Redis 连接对象 {@link LettuceConnection}
+	 * 		Lettuce Redis 连接对象 {@link LettuceRedisConnection}
 	 */
-	public AbstractLettuceRedisClient(final LettuceConnection connection) {
+	public AbstractLettuceRedisClient(final CONN connection) {
 		super(connection);
 	}
 

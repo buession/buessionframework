@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisStandaloneClient;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.operations.JedisBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterOperations;
@@ -50,9 +49,7 @@ import com.buession.redis.client.operations.*;
  *
  * @author Yong.Teng
  */
-public class JedisStandaloneClient extends AbstractJedisRedisClient implements RedisStandaloneClient {
-
-	private JedisConnection connection;
+public class JedisStandaloneClient extends AbstractJedisRedisClient<JedisConnection> implements RedisStandaloneClient {
 
 	/**
 	 * 构造函数
@@ -69,16 +66,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	 */
 	public JedisStandaloneClient(final JedisConnection connection) {
 		super(connection);
-	}
-
-	@Override
-	public JedisConnection getConnection() {
-		return connection;
-	}
-
-	@Override
-	public void setConnection(RedisConnection connection) {
-		this.connection = (JedisConnection) connection;
 	}
 
 	@Override

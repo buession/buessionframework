@@ -25,7 +25,6 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisStandaloneClient;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
@@ -51,9 +50,8 @@ import com.buession.redis.client.operations.*;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceStandaloneClient extends AbstractLettuceRedisClient implements RedisStandaloneClient {
-
-	private LettuceConnection connection;
+public class LettuceStandaloneClient extends AbstractLettuceRedisClient<LettuceConnection>
+		implements RedisStandaloneClient {
 
 	/**
 	 * 构造函数
@@ -70,16 +68,6 @@ public class LettuceStandaloneClient extends AbstractLettuceRedisClient implemen
 	 */
 	public LettuceStandaloneClient(final LettuceConnection connection) {
 		super(connection);
-	}
-
-	@Override
-	public LettuceConnection getConnection() {
-		return connection;
-	}
-
-	@Override
-	public void setConnection(RedisConnection connection) {
-		this.connection = (LettuceConnection) connection;
 	}
 
 	@Override

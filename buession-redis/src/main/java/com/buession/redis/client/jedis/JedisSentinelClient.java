@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisSentinelClient;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
@@ -51,9 +50,8 @@ import com.buession.redis.client.operations.*;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisSentinelClient extends AbstractJedisRedisClient implements RedisSentinelClient {
-
-	private JedisSentinelConnection connection;
+public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelConnection>
+		implements RedisSentinelClient {
 
 	/**
 	 * 构造函数
@@ -70,16 +68,6 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	 */
 	public JedisSentinelClient(final JedisSentinelConnection connection) {
 		super(connection);
-	}
-
-	@Override
-	public JedisSentinelConnection getConnection() {
-		return connection;
-	}
-
-	@Override
-	public void setConnection(RedisConnection connection) {
-		this.connection = (JedisSentinelConnection) connection;
 	}
 
 	@Override

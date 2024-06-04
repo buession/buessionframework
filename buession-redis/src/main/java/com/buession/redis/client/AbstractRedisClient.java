@@ -26,6 +26,7 @@ package com.buession.redis.client;
 
 import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
 import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
@@ -52,9 +53,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Redis 客户端抽象类
  *
+ * @param <CONN>
+ * 		Redis 连接对象类型 {@link RedisConnection}
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClient implements RedisClient {
+public abstract class AbstractRedisClient<CONN extends RedisConnection> implements RedisClient {
+
+	/**
+	 * Redis 连接对象
+	 *
+	 * @since 3.0.0
+	 */
+	protected CONN connection;
 
 	protected BitMapOperations bitMapOperations;
 
@@ -103,8 +114,19 @@ public abstract class AbstractRedisClient implements RedisClient {
 	 * @param connection
 	 * 		Redis 连接对象 {@link RedisConnection}
 	 */
-	public AbstractRedisClient(final RedisConnection connection) {
+	public AbstractRedisClient(final CONN connection) {
 		setConnection(connection);
+	}
+
+	@Override
+	public CONN getConnection() {
+		return connection;
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public void setConnection(RedisConnection connection) {
+		this.connection = (CONN) connection;
 	}
 
 	@Override

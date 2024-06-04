@@ -25,8 +25,7 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisSentinelClient;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelBitMapOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelConnectionOperations;
@@ -51,9 +50,8 @@ import com.buession.redis.client.operations.*;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelClient extends AbstractLettuceRedisClient implements RedisSentinelClient {
-
-	private LettuceConnection connection;
+public class LettuceSentinelClient extends AbstractLettuceRedisClient<LettuceSentinelConnection>
+		implements RedisSentinelClient {
 
 	/**
 	 * 构造函数
@@ -66,20 +64,10 @@ public class LettuceSentinelClient extends AbstractLettuceRedisClient implements
 	 * 构造函数
 	 *
 	 * @param connection
-	 * 		Lettuce Redis 单机连接对象 {@link LettuceConnection}
+	 * 		Lettuce Redis 哨兵连接对象 {@link LettuceSentinelConnection}
 	 */
-	public LettuceSentinelClient(final LettuceConnection connection) {
+	public LettuceSentinelClient(final LettuceSentinelConnection connection) {
 		super(connection);
-	}
-
-	@Override
-	public LettuceConnection getConnection() {
-		return connection;
-	}
-
-	@Override
-	public void setConnection(RedisConnection connection) {
-		this.connection = (LettuceConnection) connection;
 	}
 
 	@Override

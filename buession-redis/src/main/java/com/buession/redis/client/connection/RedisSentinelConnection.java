@@ -39,6 +39,36 @@ import java.util.List;
 public interface RedisSentinelConnection extends RedisConnection {
 
 	/**
+	 * 返回哨兵节点连接超时
+	 *
+	 * @return 哨兵节点连接超时（单位：毫秒）
+	 */
+	int getSentinelConnectTimeout();
+
+	/**
+	 * 设置哨兵节点连接超时
+	 *
+	 * @param sentinelConnectTimeout
+	 * 		哨兵节点连接超时（单位：毫秒）
+	 */
+	void setSentinelConnectTimeout(int sentinelConnectTimeout);
+
+	/**
+	 * 返回哨兵节点读取超时
+	 *
+	 * @return 哨兵节点读取超时（单位：毫秒）
+	 */
+	int getSentinelSoTimeout();
+
+	/**
+	 * 设置哨兵节点读取超时
+	 *
+	 * @param sentinelSoTimeout
+	 * 		哨兵节点读取超时（单位：毫秒）
+	 */
+	void setSentinelSoTimeout(int sentinelSoTimeout);
+
+	/**
 	 * 返回 Master 节点列表
 	 *
 	 * @return Master 节点列表
