@@ -24,24 +24,25 @@
  */
 package com.buession.redis.client.lettuce;
 
+import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
-import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
-import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
-import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
-import com.buession.redis.client.lettuce.operations.LettuceGeoOperations;
-import com.buession.redis.client.lettuce.operations.LettuceHashOperations;
-import com.buession.redis.client.lettuce.operations.LettuceHyperLogLogOperations;
-import com.buession.redis.client.lettuce.operations.LettuceKeyOperations;
-import com.buession.redis.client.lettuce.operations.LettuceListOperations;
-import com.buession.redis.client.lettuce.operations.LettucePubSubOperations;
-import com.buession.redis.client.lettuce.operations.LettuceScriptingOperations;
-import com.buession.redis.client.lettuce.operations.LettuceServerOperations;
-import com.buession.redis.client.lettuce.operations.LettuceSetOperations;
-import com.buession.redis.client.lettuce.operations.LettuceSortedSetOperations;
-import com.buession.redis.client.lettuce.operations.LettuceStreamOperations;
-import com.buession.redis.client.lettuce.operations.LettuceStringOperations;
-import com.buession.redis.client.lettuce.operations.LettuceTransactionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelBitMapOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelClusterOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelConnectionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelGeoOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelHashOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelHyperLogLogOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelKeyOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelListOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelPubSubOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelScriptingOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelServerOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelSortedSetOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelStreamOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelStringOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelTransactionOperations;
 import com.buession.redis.client.operations.*;
 
 /**
@@ -50,8 +51,7 @@ import com.buession.redis.client.operations.*;
  * @author Yong.Teng
  * @since 3.0.0
  */
-//public class LettuceSentinelClient extends AbstractLettuceRedisClient implements RedisStandaloneClient {
-public class LettuceSentinelClient extends LettuceStandaloneClient {
+public class LettuceSentinelClient extends AbstractLettuceRedisClient implements RedisSentinelClient {
 
 	private LettuceConnection connection;
 
@@ -85,7 +85,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public BitMapOperations bitMapOperations() {
 		if(bitMapOperations == null){
-			bitMapOperations = new LettuceBitMapOperations(this);
+			bitMapOperations = new LettuceSentinelBitMapOperations(this);
 		}
 
 		return bitMapOperations;
@@ -94,7 +94,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public ClusterOperations clusterOperations() {
 		if(clusterOperations == null){
-			clusterOperations = new LettuceClusterOperations(this);
+			clusterOperations = new LettuceSentinelClusterOperations(this);
 		}
 
 		return clusterOperations;
@@ -103,7 +103,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public ConnectionOperations connectionOperations() {
 		if(connectionOperations == null){
-			connectionOperations = new LettuceConnectionOperations(this);
+			connectionOperations = new LettuceSentinelConnectionOperations(this);
 		}
 
 		return connectionOperations;
@@ -112,7 +112,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public GeoOperations geoOperations() {
 		if(geoOperations == null){
-			geoOperations = new LettuceGeoOperations(this);
+			geoOperations = new LettuceSentinelGeoOperations(this);
 		}
 
 		return geoOperations;
@@ -121,7 +121,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public HashOperations hashOperations() {
 		if(hashOperations == null){
-			hashOperations = new LettuceHashOperations(this);
+			hashOperations = new LettuceSentinelHashOperations(this);
 		}
 
 		return hashOperations;
@@ -130,7 +130,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public HyperLogLogOperations hyperLogLogOperations() {
 		if(hyperLogLogOperations == null){
-			hyperLogLogOperations = new LettuceHyperLogLogOperations(this);
+			hyperLogLogOperations = new LettuceSentinelHyperLogLogOperations(this);
 		}
 
 		return hyperLogLogOperations;
@@ -139,7 +139,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public KeyOperations keyOperations() {
 		if(keyOperations == null){
-			keyOperations = new LettuceKeyOperations(this);
+			keyOperations = new LettuceSentinelKeyOperations(this);
 		}
 
 		return keyOperations;
@@ -148,7 +148,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public ListOperations listOperations() {
 		if(listOperations == null){
-			listOperations = new LettuceListOperations(this);
+			listOperations = new LettuceSentinelListOperations(this);
 		}
 
 		return listOperations;
@@ -157,7 +157,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public PubSubOperations pubSubOperations() {
 		if(pubSubOperations == null){
-			pubSubOperations = new LettucePubSubOperations(this);
+			pubSubOperations = new LettuceSentinelPubSubOperations(this);
 		}
 
 		return pubSubOperations;
@@ -166,7 +166,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public ScriptingOperations scriptingOperations() {
 		if(scriptingOperations == null){
-			scriptingOperations = new LettuceScriptingOperations(this);
+			scriptingOperations = new LettuceSentinelScriptingOperations(this);
 		}
 
 		return scriptingOperations;
@@ -175,7 +175,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public ServerOperations serverOperations() {
 		if(serverOperations == null){
-			serverOperations = new LettuceServerOperations(this);
+			serverOperations = new LettuceSentinelServerOperations(this);
 		}
 
 		return serverOperations;
@@ -184,7 +184,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public SetOperations setOperations() {
 		if(setOperations == null){
-			setOperations = new LettuceSetOperations(this);
+			setOperations = new LettuceSentinelSetOperations(this);
 		}
 
 		return setOperations;
@@ -193,7 +193,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public SortedSetOperations sortedSetOperations() {
 		if(sortedSetOperations == null){
-			sortedSetOperations = new LettuceSortedSetOperations(this);
+			sortedSetOperations = new LettuceSentinelSortedSetOperations(this);
 		}
 
 		return sortedSetOperations;
@@ -202,7 +202,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public StreamOperations streamOperations() {
 		if(streamOperations == null){
-			streamOperations = new LettuceStreamOperations(this);
+			streamOperations = new LettuceSentinelStreamOperations(this);
 		}
 
 		return streamOperations;
@@ -211,7 +211,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public StringOperations stringOperations() {
 		if(stringOperations == null){
-			stringOperations = new LettuceStringOperations(this);
+			stringOperations = new LettuceSentinelStringOperations(this);
 		}
 
 		return stringOperations;
@@ -220,7 +220,7 @@ public class LettuceSentinelClient extends LettuceStandaloneClient {
 	@Override
 	public TransactionOperations transactionOperations() {
 		if(transactionOperations == null){
-			transactionOperations = new LettuceTransactionOperations(this);
+			transactionOperations = new LettuceSentinelTransactionOperations(this);
 		}
 
 		return transactionOperations;

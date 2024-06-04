@@ -782,8 +782,7 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 				return null;
 			}else{
 				final Map<String, String> sNodes = new HashMap<>(node.size());
-				Properties properties = new Properties();
-				RedisServer redisServer;
+				final Properties properties = new Properties();
 
 				node.forEach((key, value)->{
 					sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
@@ -791,7 +790,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 				properties.putAll(sNodes);
 
-				redisServer = new RedisServer(sNodes.get("ip"), Integer.parseInt(sNodes.get("port")), properties);
+				final RedisServer redisServer = new RedisServer(sNodes.get("ip"),
+						Integer.parseInt(sNodes.get("port")), properties);
 				redisServer.setName(sNodes.get("name"));
 				redisServer.setRole(role);
 
