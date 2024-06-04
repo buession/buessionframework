@@ -26,6 +26,8 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
+import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.Command;
@@ -38,6 +40,8 @@ import io.lettuce.core.FlushEachCommand;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.sentinel.api.async.RedisSentinelAsyncCommands;
+import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 
 /**
  * Lettuce Redis 命令操作接口
@@ -106,14 +110,14 @@ public interface LettuceRedisOperations extends RedisOperations {
 	}
 
 	class LettuceTransactionCommand<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>,
+			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+		public LettuceTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+		public LettuceTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command,
 										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 										 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -127,16 +131,75 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	class LettuceTransactionCommand2<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, SR, SR, R> {
+	class LettuceSentinelCommand<SR, R> extends
+			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelCommands<byte[], byte[]>, SR, SR, R> {
 
-		public LettuceTransactionCommand2(final LettuceStandaloneClient client, final ProtocolCommand command) {
+		public LettuceSentinelCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		public LettuceTransactionCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
-										  final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor,
-										  final Converter<SR, R> converter) {
+		public LettuceSentinelCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+									  final Executor<RedisSentinelCommands<byte[], byte[]>, SR> executor,
+									  final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		@Override
+		protected R doExecute() throws RedisException {
+			final SR result = executor.execute(connection.getStatefulRedisSentinelConnection().sync());
+			return result == null ? null : converter.convert(result);
+		}
+
+	}
+
+	class LettuceSentinelPipelineCommand<SR, R> extends
+			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
+
+		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+			super(client, command);
+		}
+
+		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+											  final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+											  final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		@SuppressWarnings({"unchecked"})
+		@Override
+		protected R doExecute() throws RedisException {
+			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+
+			if(pipeline instanceof PipelineProxy){
+				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
+						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
+
+				final Runner runner = new PtRunner<>((context)->{
+					context.onCommand(connection.getStatefulRedisSentinelConnection());
+					return executor.execute(connection.getStatefulRedisSentinelConnection().async());
+				}, pipelineFactory, converter);
+
+				pipelineFactory.getTxResults().add(runner.run());
+
+				return null;
+			}else{
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+			}
+		}
+
+	}
+
+	class LettuceSentinelTransactionCommand<SR, R> extends
+			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelAsyncCommands<byte[], byte[]>,
+					RedisFuture<SR>, SR, R> {
+
+		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+			super(client, command);
+		}
+
+		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+												 final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+												 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
