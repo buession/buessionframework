@@ -38,6 +38,11 @@ import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.UnblockType;
+import io.lettuce.core.codec.ByteArrayCodec;
+import io.lettuce.core.output.StatusOutput;
+import io.lettuce.core.protocol.CommandArgs;
+import io.lettuce.core.protocol.CommandKeyword;
+import io.lettuce.core.protocol.CommandType;
 
 import java.util.List;
 
@@ -58,8 +63,10 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand2<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password),
-					okStatusConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.AUTH,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.AUTH,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(password)), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand2<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password),
@@ -76,8 +83,10 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("password", password);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand2<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password),
-					okStatusConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.AUTH,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.AUTH,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(password)), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand2<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password),
@@ -122,10 +131,10 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public Status reset() {
 		if(isPipeline()){
-			return new LettucePipelineCommand2<>(client, ProtocolCommand.RESET, (cmd)->{
-				cmd.reset();
-				return Status.SUCCESS;
-			}, (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RESET,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandKeyword.RESET,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE)), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand2<>(client, ProtocolCommand.RESET, (cmd)->{
@@ -161,8 +170,10 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 		final CommandArguments args = CommandArguments.create("db", db);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand2<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db),
-					okStatusConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SELECT,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.SELECT,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(db)), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand2<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db),

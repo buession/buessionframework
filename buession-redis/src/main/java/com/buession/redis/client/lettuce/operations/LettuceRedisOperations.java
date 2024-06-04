@@ -105,50 +105,6 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	class LettucePipelineCommand2<SR, R> extends
-			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, SR, SR, R> {
-
-		public LettucePipelineCommand2(final LettuceStandaloneClient client, final ProtocolCommand command) {
-			super(client, command);
-		}
-
-		public LettucePipelineCommand2(final LettuceStandaloneClient client, final ProtocolCommand command,
-									   final Executor<RedisAsyncCommands<byte[], byte[]>, SR> executor,
-									   final Converter<SR, R> converter) {
-			super(client, command, executor, converter);
-		}
-
-		@Override
-		protected R doExecute() throws RedisException {
-			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
-
-			if(pipeline instanceof PipelineProxy){
-				//final PipelineProxy<FlushEachCommand, RedisFuture<Object>> pipelineFactory =
-				//(PipelineProxy<FlushEachCommand, RedisFuture<Object>>) pipeline;
-
-				/*
-				final Runner runner = new PtRunner<>(new Executor<FlushEachCommand, SR>() {
-
-					@Override
-					public SR execute(FlushEachCommand context) throws RedisException {
-						context.onCommand(connection.getStatefulConnection());
-						return executor.execute(connection.getStatefulConnection().async());
-					}
-
-				}, pipelineFactory, converter);
-
-				pipelineFactory.getTxResults().add(runner.run());
-
-				 */
-
-				return null;
-			}else{
-				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
-			}
-		}
-
-	}
-
 	class LettuceTransactionCommand<SR, R> extends
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
