@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * 		管道异步结果
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public abstract class AbstractPipelineProxy<T, FR extends FutureResult<?>> implements PipelineProxy<T, FR> {
 

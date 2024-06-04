@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * Lettuce 事务
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class LettuceTransaction implements Transaction {
 

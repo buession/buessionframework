@@ -37,7 +37,7 @@ import java.util.Queue;
  * 		事务异步结果
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public interface TransactionProxy<T, FR extends FutureResult<?>> extends Transaction {
 

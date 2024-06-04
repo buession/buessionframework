@@ -26,14 +26,12 @@ package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNamedNode;
-import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
@@ -41,30 +39,30 @@ import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.PipeliningFlushPolicy;
+import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Lettuce 哨兵模式连接器
@@ -93,6 +91,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 * {@link StatefulRedisSentinelConnection} 实例
 	 */
 	private StatefulRedisSentinelConnection<byte[], byte[]> delegate;
+
+	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceSentinelConnection.class);
 
@@ -543,29 +543,9 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return null;
 		}
 
-		final List<Map<String, String>> masterNodes = Objects.requireNonNull(createSentinelJedis(
-				(LettuceSentinelDataSource) dataSource)).sentinelMasters();
-		if(masterNodes == null){
-			return null;
-		}
-
-		final List<RedisServer> result = new ArrayList<>(masterNodes.size());
-		RedisServer redisServer;
-		Properties properties;
-
-		for(Map<String, String> masterNode : masterNodes){
-			properties = new Properties();
-			properties.putAll(masterNode);
-
-			redisServer = new RedisServer(masterNode.get("ip"), Integer.parseInt(masterNode.get("port")),
-					properties);
-			redisServer.setName(masterNode.get("name"));
-			redisServer.setRole(Role.MASTER);
-
-			result.add(redisServer);
-		}
-
-		return result;
+		final List<Map<byte[], byte[]>> masterNodes = getSentinelCommands(
+				(LettuceSentinelDataSource) dataSource).masters();
+		return parseRedisServer(masterNodes, Role.MASTER);
 	}
 
 	@Override
@@ -583,29 +563,9 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return null;
 		}
 
-		final List<Map<String, String>> slaveNodes = Objects.requireNonNull(createSentinelJedis(
-				(LettuceSentinelDataSource) dataSource)).sentinelSlaves(masterName);
-		if(slaveNodes == null){
-			return null;
-		}
-
-		final List<RedisServer> result = new ArrayList<>(slaveNodes.size());
-		RedisServer redisServer;
-		Properties properties;
-
-		for(Map<String, String> slaveNode : slaveNodes){
-			properties = new Properties();
-			properties.putAll(slaveNode);
-
-			redisServer = new RedisServer(slaveNode.get("ip"), Integer.parseInt(slaveNode.get("port")),
-					properties);
-			redisServer.setName(slaveNode.get("name"));
-			redisServer.setRole(Role.SLAVE);
-
-			result.add(redisServer);
-		}
-
-		return result;
+		final List<Map<byte[], byte[]>> slaveNodes = getSentinelCommands(
+				(LettuceSentinelDataSource) dataSource).slaves(SafeEncoder.encode(masterName));
+		return parseRedisServer(slaveNodes, Role.SLAVE);
 	}
 
 	@Override
@@ -618,8 +578,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return;
 		}
 
-		Objects.requireNonNull(createSentinelJedis((LettuceSentinelDataSource) dataSource))
-				.sentinelFailover(namedNode.getName());
+		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
+				.failover(SafeEncoder.encode(namedNode.getName()));
 	}
 
 	@Override
@@ -633,8 +593,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return;
 		}
 
-		Objects.requireNonNull(createSentinelJedis((LettuceSentinelDataSource) dataSource))
-				.sentinelMonitor(server.getName(), server.getHost(), server.getPort(), server.getQuorum());
+		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
+				.monitor(SafeEncoder.encode(server.getName()), server.getHost(), server.getPort(), server.getQuorum());
 	}
 
 	public StatefulRedisSentinelConnection<byte[], byte[]> getStatefulRedisSentinelConnection() {
@@ -644,7 +604,13 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			//pipeline = new JedisPipeline(jedis.pipelined());
+			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
+			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
+					new LettucePipelineProxy<>(flushState);
+
+			lettucePipelineProxy.setTarget(
+					new LettucePipeline(delegate, flushState, lettucePipelineProxy.getTxResults()));
+			pipeline = lettucePipelineProxy;
 		}
 
 		return pipeline;
@@ -659,7 +625,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			//transaction = new JedisTransaction(jedis.multi());
+			final RedisSentinelCommands<byte[], byte[]> commands = delegate.sync();
+			//transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;
@@ -667,7 +634,14 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 	@Override
 	public List<Object> exec() throws RedisException {
-		if(transaction != null){
+		if(pipeline != null){
+			final List<Object> result = pipeline.syncAndReturnAll();
+
+			pipeline.close();
+			pipeline = null;
+
+			return result;
+		}else if(transaction != null){
 			final List<Object> result = transaction.exec();
 
 			transaction.close();
@@ -715,45 +689,12 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	protected void internalInit() {
 	}
 
-	private Jedis createSentinelJedis(final LettuceSentinelDataSource dataSource) {
-		/*
-		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
-		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
-		final JedisClientConfig clientConfig = builder.build();
-
-		for(HostAndPort sentinel : sentinels){
-			try(Jedis jedis = new Jedis(sentinel, clientConfig)){
-				return jedis;
-			}catch(JedisException e){
-				logger.warn("Cannot get master address from sentinel running @ {}. Reason: {}. Trying next one.",
-						sentinel, e);
-			}
-		}
-
-		 */
-
-		return null;
+	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
+		return delegate.sync();
 	}
 
 	protected boolean isUsePool() {
 		return pool != null;
-	}
-
-	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
-		}
-
-		Set<HostAndPort> convertedNodes = new LinkedHashSet<>(sentinelNodes.size());
-
-		for(RedisNode node : sentinelNodes){
-			if(node != null){
-				int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-				convertedNodes.add(new HostAndPort(node.getHost(), port));
-			}
-		}
-
-		return convertedNodes;
 	}
 
 	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisSentinelConnection(
@@ -829,6 +770,34 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		if(delegate != null){
 			delegate.close();
 		}
+	}
+
+	protected List<RedisServer> parseRedisServer(final List<Map<byte[], byte[]>> nodes, final Role role) {
+		if(nodes == null){
+			return null;
+		}
+
+		return nodes.stream().map((node)->{
+			if(node == null){
+				return null;
+			}else{
+				final Map<String, String> sNodes = new HashMap<>(node.size());
+				Properties properties = new Properties();
+				RedisServer redisServer;
+
+				node.forEach((key, value)->{
+					sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
+				});
+
+				properties.putAll(sNodes);
+
+				redisServer = new RedisServer(sNodes.get("ip"), Integer.parseInt(sNodes.get("port")), properties);
+				redisServer.setName(sNodes.get("name"));
+				redisServer.setRole(role);
+
+				return redisServer;
+			}
+		}).collect(Collectors.toList());
 	}
 
 }

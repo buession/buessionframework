@@ -32,7 +32,7 @@ import com.buession.redis.pipeline.Pipeline;
  * Lettuce 管道代理
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class LettucePipelineProxy<T> extends AbstractPipelineProxy<T, LettuceResult<?, ?>> {
 

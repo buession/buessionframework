@@ -32,7 +32,7 @@ import com.buession.redis.pipeline.Pipeline;
  * Jedis 管道代理
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class JedisPipelineProxy<T, R> extends AbstractPipelineProxy<T, JedisResult<R, Object>> {
 

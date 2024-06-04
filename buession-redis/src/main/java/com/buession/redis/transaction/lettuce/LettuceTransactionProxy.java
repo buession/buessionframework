@@ -31,7 +31,7 @@ import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class LettuceTransactionProxy
 		extends AbstractTransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<?, ?>> {

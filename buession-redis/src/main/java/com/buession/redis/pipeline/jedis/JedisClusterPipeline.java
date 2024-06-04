@@ -33,7 +33,7 @@ import java.util.List;
  * Jedis 集群模式管道
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class JedisClusterPipeline implements Pipeline {
 

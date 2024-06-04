@@ -33,7 +33,7 @@ import java.util.List;
  * Redis 管道异常
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class RedisPipelineException extends RedisException {
 

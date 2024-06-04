@@ -73,8 +73,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
-	private PipeliningFlushState flushState;
-
 	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
 
 	/**
@@ -286,7 +284,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			flushState = pipeliningFlushPolicy.newPipeline();
+			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
 			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
 					new LettucePipelineProxy<>(flushState);
 
@@ -307,7 +305,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			RedisCommands<byte[], byte[]> commands = delegate.sync();
+			final RedisCommands<byte[], byte[]> commands = delegate.sync();
 			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
 

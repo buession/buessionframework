@@ -34,7 +34,7 @@ import io.lettuce.core.protocol.RedisCommand;
  * Lettuce 事务、管道异步结果
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> {
 

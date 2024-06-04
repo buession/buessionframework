@@ -549,27 +549,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 		final List<Map<String, String>> masterNodes = Objects.requireNonNull(createSentinelJedis(
 				(JedisSentinelDataSource) dataSource)).sentinelMasters();
-		if(masterNodes == null){
-			return null;
-		}
-
-		final List<RedisServer> result = new ArrayList<>(masterNodes.size());
-		RedisServer redisServer;
-		Properties properties;
-
-		for(Map<String, String> masterNode : masterNodes){
-			properties = new Properties();
-			properties.putAll(masterNode);
-
-			redisServer = new RedisServer(masterNode.get("ip"), Integer.parseInt(masterNode.get("port")),
-					properties);
-			redisServer.setName(masterNode.get("name"));
-			redisServer.setRole(Role.MASTER);
-
-			result.add(redisServer);
-		}
-
-		return result;
+		return parseRedisServer(masterNodes, Role.MASTER);
 	}
 
 	@Override
@@ -589,27 +569,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 		final List<Map<String, String>> slaveNodes = Objects.requireNonNull(createSentinelJedis(
 				(JedisSentinelDataSource) dataSource)).sentinelSlaves(masterName);
-		if(slaveNodes == null){
-			return null;
-		}
-
-		final List<RedisServer> result = new ArrayList<>(slaveNodes.size());
-		RedisServer redisServer;
-		Properties properties;
-
-		for(Map<String, String> slaveNode : slaveNodes){
-			properties = new Properties();
-			properties.putAll(slaveNode);
-
-			redisServer = new RedisServer(slaveNode.get("ip"), Integer.parseInt(slaveNode.get("port")),
-					properties);
-			redisServer.setName(slaveNode.get("name"));
-			redisServer.setRole(Role.SLAVE);
-
-			result.add(redisServer);
-		}
-
-		return result;
+		return parseRedisServer(slaveNodes, Role.SLAVE);
 	}
 
 	@Override
@@ -870,6 +830,29 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 				}
 			}
 		}
+	}
+
+	protected List<RedisServer> parseRedisServer(final List<Map<String, String>> nodes, final Role role) {
+		if(nodes == null){
+			return null;
+		}
+
+		final List<RedisServer> result = new ArrayList<>(nodes.size());
+		RedisServer redisServer;
+		Properties properties;
+
+		for(Map<String, String> node : nodes){
+			properties = new Properties();
+			properties.putAll(node);
+
+			redisServer = new RedisServer(node.get("ip"), Integer.parseInt(node.get("port")), properties);
+			redisServer.setName(node.get("name"));
+			redisServer.setRole(role);
+
+			result.add(redisServer);
+		}
+
+		return result;
 	}
 
 }

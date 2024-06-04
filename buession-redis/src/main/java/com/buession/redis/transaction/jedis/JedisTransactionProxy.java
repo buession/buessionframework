@@ -29,8 +29,10 @@ import com.buession.redis.transaction.AbstractTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 
 /**
+ * Jedis 事务代理类
+ *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public class JedisTransactionProxy
 		extends AbstractTransactionProxy<redis.clients.jedis.Transaction, JedisResult<?, ?>> {

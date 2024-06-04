@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * 		事务异步结果
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> implements TransactionProxy<T, FR> {
 

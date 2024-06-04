@@ -37,7 +37,7 @@ import java.util.Queue;
  * 		管道异步结果
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
 public interface PipelineProxy<T, FR extends FutureResult<?>> extends Pipeline {
 
