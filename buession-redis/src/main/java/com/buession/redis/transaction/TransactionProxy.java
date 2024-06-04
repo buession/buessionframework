@@ -22,40 +22,32 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.transaction;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.transaction.Transaction;
+import com.buession.redis.core.FutureResult;
 
-import java.util.List;
+import java.util.Queue;
 
 /**
- * Jedis 事务
+ * 事务代理
+ *
+ * @param <T>
+ * 		事务管道类型
+ * @param <FR>
+ * 		事务异步结果
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisTransaction implements Transaction {
+public interface TransactionProxy<T, FR extends FutureResult<?>> extends Transaction {
 
-	private final redis.clients.jedis.Transaction delegate;
+	/**
+	 * 返回原生事务实例
+	 *
+	 * @return 原生事务实例
+	 */
+	T getObject();
 
-	public JedisTransaction(redis.clients.jedis.Transaction transaction) {
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
-	}
-
-	@Override
-	public List<Object> exec() {
-		return delegate.exec();
-	}
-
-	@Override
-	public String discard() {
-		return delegate.discard();
-	}
-
-	@Override
-	public void close() {
-		delegate.close();
-	}
+	Queue<FR> getTxResults();
 
 }

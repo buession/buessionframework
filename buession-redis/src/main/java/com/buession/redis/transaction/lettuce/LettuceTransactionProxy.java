@@ -22,40 +22,22 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.transaction.lettuce;
 
-import com.buession.core.utils.Assert;
+import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.transaction.AbstractTransactionProxy;
 import com.buession.redis.transaction.Transaction;
-
-import java.util.List;
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
- * Jedis 事务
- *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisTransaction implements Transaction {
+public class LettuceTransactionProxy
+		extends AbstractTransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<?, ?>> {
 
-	private final redis.clients.jedis.Transaction delegate;
-
-	public JedisTransaction(redis.clients.jedis.Transaction transaction) {
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
-	}
-
-	@Override
-	public List<Object> exec() {
-		return delegate.exec();
-	}
-
-	@Override
-	public String discard() {
-		return delegate.discard();
-	}
-
-	@Override
-	public void close() {
-		delegate.close();
+	public LettuceTransactionProxy(final Transaction target, final RedisCommands<byte[], byte[]> object) {
+		super(target, object);
 	}
 
 }

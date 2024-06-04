@@ -36,6 +36,7 @@ import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
+import com.buession.redis.transaction.jedis.JedisTransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -292,7 +293,8 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			transaction = new JedisTransaction(jedis.multi());
+			final redis.clients.jedis.Transaction tran = jedis.multi();
+			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
 		}
 
 		return transaction;

@@ -22,40 +22,78 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.transaction;
 
-import com.buession.core.utils.Assert;
+import com.buession.redis.core.FutureResult;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.TransactionProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.stream.Collectors;
 
 /**
- * Jedis 事务
+ * 事务代理抽象类
+ *
+ * @param <T>
+ * 		原生事务类型
+ * @param <FR>
+ * 		事务异步结果
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisTransaction implements Transaction {
+public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> implements TransactionProxy<T, FR> {
 
-	private final redis.clients.jedis.Transaction delegate;
+	private Transaction target;
 
-	public JedisTransaction(redis.clients.jedis.Transaction transaction) {
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
+	private final T object;
+
+	private final Queue<FR> txResults = new LinkedList<>();
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	public AbstractTransactionProxy(final Transaction target, final T object) {
+		//Assert.isNull(target, "Redis Transaction cloud not be null.");
+		this.target = target;
+		this.object = object;
+	}
+
+	@Override
+	public T getObject() {
+		return object;
+	}
+
+	@Override
+	public Queue<FR> getTxResults() {
+		return txResults;
 	}
 
 	@Override
 	public List<Object> exec() {
-		return delegate.exec();
+		logger.info("Redis transaction exec.");
+		target.exec();
+		return txResults.stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
 	}
 
 	@Override
 	public String discard() {
-		return delegate.discard();
+		logger.info("Redis transaction discard.");
+		return target.discard();
 	}
 
 	@Override
 	public void close() {
-		delegate.close();
+		logger.info("Redis pipeline close.");
+		txResults.clear();
+		target.close();
+	}
+
+	protected void setTarget(Transaction target) {
+		this.target = target;
 	}
 
 }

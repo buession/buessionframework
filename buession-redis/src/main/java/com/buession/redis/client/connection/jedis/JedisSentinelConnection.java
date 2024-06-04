@@ -42,9 +42,10 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
+import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
+import com.buession.redis.transaction.jedis.JedisTransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -648,7 +649,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	public Pipeline openPipeline() {
 		if(pipeline == null){
 			final redis.clients.jedis.Pipeline pipelineObject = jedis.pipelined();
-			pipeline = new LettucePipelineProxy<>(new JedisPipeline(pipelineObject), pipelineObject);
+			pipeline = new JedisPipelineProxy<>(new JedisPipeline(pipelineObject), pipelineObject);
 		}
 
 		return pipeline;
@@ -663,7 +664,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			transaction = new JedisTransaction(jedis.multi());
+			final redis.clients.jedis.Transaction tran = jedis.multi();
+			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
 		}
 
 		return transaction;

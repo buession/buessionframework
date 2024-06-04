@@ -22,40 +22,50 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.transaction.lettuce;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.transaction.Transaction;
+import io.lettuce.core.api.sync.RedisCommands;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Jedis 事务
+ * Lettuce 事务
  *
  * @author Yong.Teng
+ * @since 2.3.0
  */
-public class JedisTransaction implements Transaction {
+public class LettuceTransaction implements Transaction {
 
-	private final redis.clients.jedis.Transaction delegate;
+	private final RedisCommands<byte[], byte[]> delegate;
 
-	public JedisTransaction(redis.clients.jedis.Transaction transaction) {
+	private final static Logger logger = LoggerFactory.getLogger(LettuceTransaction.class);
+
+	public LettuceTransaction(RedisCommands<byte[], byte[]> transaction) {
 		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
 		this.delegate = transaction;
 	}
 
 	@Override
 	public List<Object> exec() {
-		return delegate.exec();
+		logger.info("Redis transaction exec.");
+		return delegate.exec().stream().collect(Collectors.toList());
 	}
 
 	@Override
 	public String discard() {
+		logger.info("Redis transaction discard.");
 		return delegate.discard();
 	}
 
 	@Override
 	public void close() {
-		delegate.close();
+		logger.info("Redis transaction close.");
+		//delegate.close();
 	}
 
 }

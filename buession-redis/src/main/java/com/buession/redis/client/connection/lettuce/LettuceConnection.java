@@ -35,12 +35,15 @@ import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.lettuce.LettuceTransaction;
+import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import org.slf4j.Logger;
@@ -304,7 +307,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			//transaction = new JedisTransaction(jedis.multi());
+			RedisCommands<byte[], byte[]> commands = delegate.sync();
+			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;
