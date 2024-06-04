@@ -22,42 +22,22 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal;
+package com.buession.redis.pipeline.jedis;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.AbstractRedisCommand;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisException;
+import com.buession.redis.core.internal.jedis.JedisResult;
+import com.buession.redis.pipeline.AbstractPipelineProxy;
+import com.buession.redis.pipeline.Pipeline;
 
 /**
+ * Jedis 管道代理
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT,
-		OSR, SR, R> extends AbstractRedisCommand<CLIENT, R> {
+public class JedisPipelineProxy<T, R> extends AbstractPipelineProxy<T, JedisResult<R, Object>> {
 
-	protected final CONN connection;
-
-	protected final Executor<CXT, OSR> executor;
-
-	protected final Converter<SR, R> converter;
-
-	@SuppressWarnings({"unchecked"})
-	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command) {
-		this(client, command, null, (value)->(R) value);
+	public JedisPipelineProxy(final Pipeline target, final T object) {
+		super(target, object);
 	}
-
-	@SuppressWarnings({"unchecked"})
-	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
-										  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
-		super(client, command);
-		connection = (CONN) client.getConnection();
-		this.executor = executor;
-		this.converter = converter;
-	}
-
-	protected abstract R doExecute() throws RedisException;
 
 }

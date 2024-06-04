@@ -25,13 +25,22 @@
 package com.buession.redis.pipeline.lettuce;
 
 import com.buession.core.utils.Assert;
+import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.exception.RedisPipelineException;
 import com.buession.redis.pipeline.Pipeline;
+import io.lettuce.core.LettuceFutures;
+import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.api.StatefulConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.lettuce.core.output.CommandOutput;
+import io.lettuce.core.protocol.RedisCommand;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
@@ -41,57 +50,127 @@ public class LettucePipeline implements Pipeline {
 
 	private final PipeliningFlushState flushState;
 
-	private StatefulConnection<byte[], byte[]> asyncDedicatedConn;
+	private final StatefulConnection<byte[], byte[]> connection;
 
-	private final static Logger logger = LoggerFactory.getLogger(LettucePipeline.class);
+	private Queue<LettuceResult<?, ?>> ppline;
 
-	public LettucePipeline(PipeliningFlushState flushState) {
+	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState) {
 		Assert.isNull(flushState, "Redis Pipeline cloud not be null.");
+		this.connection = connection;
 		this.flushState = flushState;
+		this.flushState.onOpen(connection);
 	}
 
-	public PipeliningFlushState primitive() {
-		return flushState;
+	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState
+			, final Queue<LettuceResult<?, ?>> ppline) {
+		this(connection, flushState);
+		this.ppline = Optional.ofNullable(ppline).orElse(new LinkedList<>());
 	}
 
 	@Override
 	public void sync() {
-		logger.info("Redis pipeline sync.");
-		//delegate.sync();
+		List<RedisCommand<?, ?, ?>> futures = new ArrayList<>(ppline.size());
+
+		for(LettuceResult<?, ?> result : ppline){
+			futures.add(result.getHolder());
+		}
+
+		try{
+			boolean done = LettuceFutures.awaitAll(connection.getTimeout().toMillis(), TimeUnit.MILLISECONDS,
+					futures.toArray(new RedisFuture[futures.size()]));
+
+			Exception problem = null;
+
+			if(done){
+				CommandOutput<?, ?, ?> output;
+
+				for(LettuceResult<?, ?> result : ppline){
+					output = result.getHolder().getOutput();
+					if(output.hasError()){
+						Exception err = new RedisPipelineException(output.getError());
+						if(problem == null){
+							problem = err;
+						}
+					}else{
+						result.get();
+					}
+				}
+			}
+
+			if(problem != null){
+				throw new RedisPipelineException(problem.getMessage(), problem);
+			}
+
+			if(done){
+				return;
+			}
+
+			throw new RedisPipelineException("Redis command timed out");
+		}catch(Exception e){
+			throw new RedisPipelineException(e);
+		}
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll() {
-		logger.info("Redis pipeline syncAndReturnAll.");
-		return null;//delegate.syncAndReturnAll();
+		List<RedisCommand<?, ?, ?>> futures = new ArrayList<>(ppline.size());
+
+		for(LettuceResult<?, ?> result : ppline){
+			futures.add(result.getHolder());
+		}
+
+		try{
+			boolean done = LettuceFutures.awaitAll(connection.getTimeout().toMillis(), TimeUnit.MILLISECONDS,
+					futures.toArray(new RedisFuture[futures.size()]));
+
+			List<Object> results = new ArrayList<>(futures.size());
+
+			Exception problem = null;
+
+			if(done){
+				CommandOutput<?, ?, ?> output;
+
+				for(LettuceResult<?, ?> result : ppline){
+					output = result.getHolder().getOutput();
+					if(output.hasError()){
+						Exception err = new RedisPipelineException(output.getError());
+						if(problem == null){
+							problem = err;
+						}
+						results.add(err);
+					}else{
+						try{
+							results.add(result.get());
+						}catch(Exception e){
+							if(problem == null){
+								problem = e;
+							}
+							results.add(e);
+						}
+					}
+				}
+			}
+
+			if(problem != null){
+				throw new RedisPipelineException(problem.getMessage(), problem);
+			}
+
+			if(done){
+				return results;
+			}
+
+			throw new RedisPipelineException("Redis command timed out");
+		}catch(Exception e){
+			throw new RedisPipelineException(e);
+		}
 	}
 
 	@Override
 	public void close() {
-		logger.info("Redis pipeline close.");
-		flushState.onClose(this.getOrCreateDedicatedConnection());
-	}
-
-	private StatefulConnection<byte[], byte[]> getOrCreateDedicatedConnection() {
-		if(asyncDedicatedConn == null){
-			asyncDedicatedConn = doGetAsyncDedicatedConnection();
+		flushState.onClose(connection);
+		if(ppline != null){
+			ppline.clear();
 		}
-
-		return asyncDedicatedConn;
-	}
-
-	protected StatefulConnection<byte[], byte[]> doGetAsyncDedicatedConnection() {
-		/*
-		StatefulConnection connection = connectionProvider.getConnection(StatefulConnection.class);
-
-		if(customizedDatabaseIndex()){
-			potentiallySelectDatabase(dbIndex);
-		}
-
-		return connection;
-
-		 */
-		return null;
 	}
 
 }

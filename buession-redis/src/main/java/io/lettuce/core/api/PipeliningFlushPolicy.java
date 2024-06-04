@@ -47,7 +47,7 @@ public interface PipeliningFlushPolicy {
 	 * @return A policy to flush after each command.
 	 */
 	static PipeliningFlushPolicy flushEachCommand() {
-		return FlushEachCommand.INSTANCE;
+		return new FlushEachCommand();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public interface PipeliningFlushPolicy {
 	 * @return A policy to flush after each command.
 	 */
 	static PipeliningFlushPolicy flushOnClose() {
-		return FlushOnClose.INSTANCE;
+		return new FlushOnClose();
 	}
 
 	/**

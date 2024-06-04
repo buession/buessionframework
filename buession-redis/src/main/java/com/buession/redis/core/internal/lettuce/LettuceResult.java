@@ -21,10 +21,63 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.FutureResult;
+import com.buession.redis.core.internal.convert.Converters;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.protocol.RedisCommand;
+
+/**
+ * Lettuce 事务、管道异步结果
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public class LettuceResult {
+ */
+public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> {
+
+	@SuppressWarnings({"unchecked"})
+	public LettuceResult(final RedisFuture<SV> resultHolder) {
+		super((RedisCommand<?, SV, ?>) resultHolder);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	public LettuceResult(final RedisFuture<SV> resultHolder, final Converter<SV, TV> converter) {
+		super((RedisCommand<?, SV, ?>) resultHolder, converter);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public SV get() {
+		return (SV) getHolder().getOutput().get();
+	}
+
+	public final static class Builder<SV, TV> {
+
+		private final RedisFuture<SV> response;
+
+		private Converter<SV, TV> converter;
+
+		private Builder(final RedisFuture<SV> response, final Converter<SV, TV> converter) {
+			this.response = response;
+			this.converter = converter;
+		}
+
+		public static <SV, TV> Builder<SV, TV> fromRedisFuture(RedisFuture<SV> response) {
+			return new LettuceResult.Builder<>(response, Converters.always());
+		}
+
+		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
+			this.converter = converter;
+			return this;
+		}
+
+		public LettuceResult<SV, TV> build() {
+			return new LettuceResult<>(response, converter);
+		}
+
+	}
+
 }

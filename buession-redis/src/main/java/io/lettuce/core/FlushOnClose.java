@@ -34,13 +34,11 @@ import io.lettuce.core.api.StatefulConnection;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public enum FlushOnClose implements PipeliningFlushPolicy, PipeliningFlushState {
-
-	INSTANCE;
+public class FlushOnClose implements PipeliningFlushPolicy, PipeliningFlushState {
 
 	@Override
 	public PipeliningFlushState newPipeline() {
-		return INSTANCE;
+		return this;
 	}
 
 	@Override

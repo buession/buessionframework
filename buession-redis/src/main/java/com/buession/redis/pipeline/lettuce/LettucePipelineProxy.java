@@ -21,10 +21,32 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.pipeline;/**
- * 
+ */
+package com.buession.redis.pipeline.lettuce;
+
+import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.pipeline.AbstractPipelineProxy;
+import com.buession.redis.pipeline.Pipeline;
+
+/**
+ * Lettuce 管道代理
  *
  * @author Yong.Teng
  * @since 2.3.0
- */public interface PipelineFactory {
+ */
+public class LettucePipelineProxy<T> extends AbstractPipelineProxy<T, LettuceResult<?, ?>> {
+
+	public LettucePipelineProxy(final T object) {
+		super(null, object);
+	}
+
+	public LettucePipelineProxy(final Pipeline target, final T object) {
+		super(target, object);
+	}
+
+	@Override
+	public void setTarget(Pipeline target) {
+		super.setTarget(target);
+	}
+
 }

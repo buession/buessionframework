@@ -25,10 +25,6 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.core.FutureResult;
-import io.lettuce.core.RedisFuture;
-
-import java.util.Queue;
 
 /**
  * Lettuce Redis 客户端
@@ -37,7 +33,5 @@ import java.util.Queue;
  * @since 3.0.0
  */
 public interface LettuceRedisClient extends RedisClient {
-
-	Queue<FutureResult<RedisFuture<Object>, Object, Object>> getTxResults();
 
 }

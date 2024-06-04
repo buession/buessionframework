@@ -27,14 +27,27 @@ package com.buession.redis.pipeline;
 import java.util.List;
 
 /**
+ * 管道
+ *
  * @author Yong.Teng
  */
 public interface Pipeline {
 
+	/**
+	 * 同步管道
+	 */
 	void sync();
 
+	/**
+	 * 同步管道，并返回所有命令执行结果
+	 *
+	 * @return 命令执行结果
+	 */
 	List<Object> syncAndReturnAll();
 
+	/**
+	 * 关闭管道
+	 */
 	void close();
 
 }

@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FutureResult;
+import com.buession.redis.core.internal.convert.Converters;
 import redis.clients.jedis.Response;
 
 /**
@@ -33,13 +34,13 @@ import redis.clients.jedis.Response;
  *
  * @author Yong.Teng
  */
-public class JedisResult<SV, TV> extends FutureResult<Response<SV>, SV, TV> {
+public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
 
 	public JedisResult(final Response<SV> resultHolder) {
 		super(resultHolder);
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, TV> converter) {
+	public JedisResult(final Response<SV> resultHolder, final Converter<SV, ?> converter) {
 		super(resultHolder, converter);
 	}
 
@@ -59,14 +60,8 @@ public class JedisResult<SV, TV> extends FutureResult<Response<SV>, SV, TV> {
 			this.converter = converter;
 		}
 
-		@Deprecated
-		public static <SV, TV> Builder<SV, TV> forResponse(Response<SV> response) {
-			return fromResponse(response);
-		}
-
-		@SuppressWarnings("unchecked")
 		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
-			return new Builder<>(response, (source)->(TV) source);
+			return new Builder<>(response, Converters.always());
 		}
 
 		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {

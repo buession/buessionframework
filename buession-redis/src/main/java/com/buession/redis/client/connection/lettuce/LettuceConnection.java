@@ -33,11 +33,13 @@ import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
+import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
@@ -66,7 +68,9 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 */
 	private StatefulRedisConnection<byte[], byte[]> delegate;
 
-	private PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
+	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
+
+	private PipeliningFlushState flushState;
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
 
@@ -279,7 +283,13 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			pipeline = new LettucePipeline(pipeliningFlushPolicy.newPipeline());
+			flushState = pipeliningFlushPolicy.newPipeline();
+			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
+					new LettucePipelineProxy<>(flushState);
+
+			lettucePipelineProxy.setTarget(
+					new LettucePipeline(delegate, flushState, lettucePipelineProxy.getTxResults()));
+			pipeline = lettucePipelineProxy;
 		}
 
 		return pipeline;
@@ -302,7 +312,14 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	@Override
 	public List<Object> exec() throws RedisException {
-		if(transaction != null){
+		if(pipeline != null){
+			final List<Object> result = pipeline.syncAndReturnAll();
+
+			pipeline.close();
+			pipeline = null;
+
+			return result;
+		}else if(transaction != null){
 			final List<Object> result = transaction.exec();
 
 			transaction.close();

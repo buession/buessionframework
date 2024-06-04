@@ -24,10 +24,28 @@
  */
 package com.buession.redis.pipeline;
 
+import com.buession.redis.core.FutureResult;
+
+import java.util.Queue;
+
 /**
+ * 管道代理
+ *
+ * @param <T>
+ * 		原生管道类型
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class BasePipeline<T> implements Pipeline {
+public interface PipelineProxy<T, FR extends FutureResult> extends Pipeline {
+
+	/**
+	 * 返回原生管道实例
+	 *
+	 * @return 原生管道实例
+	 */
+	T getObject();
+
+	Queue<FR> getTxResults();
 
 }

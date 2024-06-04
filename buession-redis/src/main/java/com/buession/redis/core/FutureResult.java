@@ -19,47 +19,46 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.internal.convert.Converters;
 import org.springframework.lang.Nullable;
-
-import java.util.function.Supplier;
 
 /**
  * 事务、管道异步结果
  *
  * @param <T>
  * 		Response
- * @param <SV>
- * 		原始结果类型
- * @param <TV>
- * 		目标结果类型
  *
  * @author Yong.Teng
  */
-public abstract class FutureResult<T, SV, TV> implements Supplier<SV> {
+public abstract class FutureResult<T> {
 
 	private final T holder;
 
-	private final Converter<SV, TV> converter;
+	@SuppressWarnings({"rawtypes"})
+	private final Converter converter;
 
-	public FutureResult(final T holder){
-		this(holder, null);
+	public FutureResult(final T holder) {
+		this(holder, Converters.always());
 	}
 
-	@SuppressWarnings("unchecked")
-	public FutureResult(final T holder, final Converter<SV, TV> converter){
+	@SuppressWarnings({"rawtypes"})
+	public FutureResult(final T holder, final Converter converter) {
 		this.holder = holder;
-		this.converter = converter != null ? converter : val->(TV) val;
+		this.converter = converter;
 	}
 
-	public T getHolder(){
+	public final T getHolder() {
 		return holder;
 	}
+
+	@Nullable
+	public abstract Object get();
 
 	/**
 	 * 将 事务、管道
@@ -69,8 +68,9 @@ public abstract class FutureResult<T, SV, TV> implements Supplier<SV> {
 	 *
 	 * @return 转换结果
 	 */
+	@SuppressWarnings({"unchecked"})
 	@Nullable
-	public TV convert(@Nullable SV result){
+	public Object convert(@Nullable Object result) {
 		return result == null ? null : converter.convert(result);
 	}
 

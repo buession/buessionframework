@@ -30,6 +30,8 @@ import com.buession.redis.pipeline.Pipeline;
 import java.util.List;
 
 /**
+ * Jedis 单例、哨兵模式管道
+ *
  * @author Yong.Teng
  */
 public class JedisPipeline implements Pipeline {

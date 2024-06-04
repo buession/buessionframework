@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.RedisClusterClient;
 import com.buession.redis.client.RedisSentinelClient;
@@ -53,16 +52,6 @@ public interface RedisOperations {
 
 		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);
-		}
-
-		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
-										 final Executor<CXT, OSR> executor) {
-			super(client, command, executor);
-		}
-
-		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
-										 final Converter<SR, R> converter) {
-			super(client, command, converter);
 		}
 
 		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
@@ -99,16 +88,6 @@ public interface RedisOperations {
 
 		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command) {
 			super(client, command);
-		}
-
-		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
-									   final Executor<CXT, OSR> executor) {
-			super(client, command, executor);
-		}
-
-		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command,
-									   final Converter<SR, R> converter) {
-			super(client, command, converter);
 		}
 
 		public AbstractSentinelCommand(final CLIENT client, ProtocolCommand command,
@@ -148,16 +127,6 @@ public interface RedisOperations {
 		}
 
 		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
-									  final Executor<CXT, OSR> executor) {
-			super(client, command, executor);
-		}
-
-		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
-									  final Converter<SR, R> converter) {
-			super(client, command, converter);
-		}
-
-		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
 									  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -185,80 +154,5 @@ public interface RedisOperations {
 		}
 
 	}
-
-	/*
-	abstract class AbstractStandalonePipelineCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT, SR, R>
-			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, SR, R> {
-
-		protected final Command<R> redisCommand;
-
-		protected AbstractStandalonePipelineCommand(final CLIENT client, final ProtocolCommand command,
-													final Command<R> redisCommand) {
-			super(client, command);
-			this.redisCommand = redisCommand;
-		}
-
-		@Override
-		public R execute() throws RedisException {
-			return redisCommand.execute();
-		}
-
-		protected static abstract class BaseLettuceAsyncCommand<CONN extends RedisConnection, OSR, SR, R>
-				implements Command<R> {
-
-			protected final CONN connection;
-
-			protected final Executor<RedisAsyncCommands<byte[], byte[]>, OSR> executor;
-
-			protected final Converter<OSR, R> converter;
-
-			public BaseLettuceAsyncCommand(final CONN connection,
-										   final Executor<RedisAsyncCommands<byte[], byte[]>, OSR> executor,
-										   final Converter<OSR, R> converter) {
-				this.connection = connection;
-				this.executor = executor;
-				this.converter = converter;
-			}
-
-			@Override
-			public ProtocolCommand getCommand() {
-				return null;
-			}
-
-			@Override
-			public R execute() throws RedisException {
-				final RedisMode mode = RedisConnectionUtils.getRedisMode(connection);
-
-				if(executor == null){
-					if(connection.isPipeline()){
-						throw new NotSupportedPipelineCommandException(mode, getCommand());
-					}else if(connection.isTransaction()){
-						throw new NotSupportedTransactionCommandException(mode, getCommand());
-					}else{
-						throw new NotSupportedCommandException(mode, NotSupportedCommandException.Type.NORMAL,
-								getCommand());
-					}
-				}
-
-				try{
-					final OSR result = doExecute();
-					return result == null ? null : converter.convert(result);
-				}catch(Exception e){
-					throw new RedisException(e.getMessage(), e);
-				}
-			}
-
-			@Override
-			public R run(CommandArguments arguments) throws RedisException {
-				return null;
-			}
-
-			protected abstract OSR doExecute() throws Exception;
-
-		}
-
-	}
-
-	 */
 
 }

@@ -36,7 +36,8 @@ import com.buession.redis.core.Command;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.PipelineFactory;
+import com.buession.redis.exception.RedisPipelineException;
+import com.buession.redis.pipeline.PipelineProxy;
 import redis.clients.jedis.ClusterPipeline;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -51,8 +52,8 @@ import redis.clients.jedis.Transaction;
  */
 public interface JedisRedisOperations extends RedisOperations {
 
-	class JedisCommand<SR, R>
-			extends AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Jedis, SR, SR, R> {
+	class JedisCommand<SR, R> extends
+			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Jedis, SR, SR, R> {
 
 		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -71,8 +72,8 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisPipelineCommand<SR, R>
-			extends AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Pipeline, Response<SR>, SR, R> {
+	class JedisPipelineCommand<SR, R> extends
+			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Pipeline, Response<SR>, SR, R> {
 
 		public JedisPipelineCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -88,22 +89,22 @@ public interface JedisRedisOperations extends RedisOperations {
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
-			if(pipeline instanceof PipelineFactory){
-				final PipelineFactory<Pipeline, Response<Object>> pipelineFactory = (PipelineFactory<Pipeline, Response<Object>>) pipeline;
+			if(pipeline instanceof PipelineProxy){
+				final PipelineProxy<Pipeline, JedisResult<Object, Object>> pipelineFactory =
+						(PipelineProxy<Pipeline, JedisResult<Object, Object>>) pipeline;
 				final Runner runner = new PtRunner<>(executor, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
 				return null;
 			}else{
-				throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
 			}
 		}
 
 	}
 
-	class JedisTransactionCommand<SR, R>
-			extends
+	class JedisTransactionCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Transaction, Response<SR>, SR, R> {
 
 		public JedisTransactionCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
@@ -153,8 +154,8 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisSentinelCommand<SR, R> extends AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection,
-			Jedis, SR, SR, R> {
+	class JedisSentinelCommand<SR, R> extends
+			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Jedis, SR, SR, R> {
 
 		public JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -173,9 +174,8 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisSentinelPipelineCommand<SR, R>
-			extends AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Pipeline, Response<SR>, SR,
-			R> {
+	class JedisSentinelPipelineCommand<SR, R> extends
+			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Pipeline, Response<SR>, SR, R> {
 
 		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -192,15 +192,15 @@ public interface JedisRedisOperations extends RedisOperations {
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
-			if(pipeline instanceof PipelineFactory){
-				final PipelineFactory<Pipeline, Response<Object>> pipelineFactory = (PipelineFactory<Pipeline, Response<Object>>) pipeline;
+			if(pipeline instanceof PipelineProxy){
+				final PipelineProxy<Pipeline, JedisResult<Object, Object>> pipelineFactory = (PipelineProxy<Pipeline, JedisResult<Object, Object>>) pipeline;
 				final Runner runner = new PtRunner<>(executor, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
 				return null;
 			}else{
-				throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
 			}
 		}
 
@@ -256,8 +256,8 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisClusterCommand<SR, R> extends AbstractClusterCommand<JedisClusterClient, JedisClusterConnection,
-			JedisCluster, SR, SR, R> {
+	class JedisClusterCommand<SR, R> extends
+			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, JedisCluster, SR, SR, R> {
 
 		public JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -294,23 +294,23 @@ public interface JedisRedisOperations extends RedisOperations {
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
-			if(pipeline instanceof PipelineFactory){
-				final PipelineFactory<ClusterPipeline, Response<Object>> pipelineFactory = (PipelineFactory<ClusterPipeline, Response<Object>>) pipeline;
+			if(pipeline instanceof PipelineProxy){
+				final PipelineProxy<ClusterPipeline, JedisResult<Object, Object>> pipelineFactory = (PipelineProxy<ClusterPipeline,
+						JedisResult<Object, Object>>) pipeline;
 				final Runner runner = new PtRunner<>(executor, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
 				return null;
 			}else{
-				throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
+				throw new RedisPipelineException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
 			}
 		}
 
 	}
 
-	class JedisClusterTransactionCommand<SR, R>
-			extends AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, Transaction, Response<SR>, SR,
-			R> {
+	class JedisClusterTransactionCommand<SR, R> extends
+			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, Transaction, Response<SR>, SR, R> {
 
 		public JedisClusterTransactionCommand(final JedisClusterClient client, final ProtocolCommand command) {
 			super(client, command);
@@ -363,12 +363,12 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		private final Command.Executor<T, Response<SR>> executor;
 
-		private final PipelineFactory<T, Response<Object>> pipelineFactory;
+		private final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory;
 
 		private final Converter<SR, R> converter;
 
 		public PtRunner(final Command.Executor<T, Response<SR>> executor,
-						final PipelineFactory<T, Response<Object>> pipelineFactory,
+						final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory,
 						final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.pipelineFactory = pipelineFactory;

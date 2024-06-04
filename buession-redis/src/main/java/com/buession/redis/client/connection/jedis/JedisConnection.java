@@ -31,9 +31,9 @@ import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.JedisRedisExceptionUtils;
-import com.buession.redis.pipeline.DefaultPipeline;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
@@ -277,7 +277,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public Pipeline openPipeline() {
 		if(pipeline == null){
 			final redis.clients.jedis.Pipeline pipelineObject = jedis.pipelined();
-			pipeline = new DefaultPipeline<>(new JedisPipeline(pipelineObject), pipelineObject);
+			pipeline = new JedisPipelineProxy<>(new JedisPipeline(pipelineObject), pipelineObject);
 		}
 
 		return pipeline;
