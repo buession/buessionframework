@@ -24,10 +24,29 @@
  */
 package com.buession.redis.lettuce;
 
+import com.buession.redis.RedisTemplate;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettucenPipelineTest extends AbstractLettuceRedisTest {
+public class LettucePipelineTest extends AbstractLettuceRedisTest {
+
+	@Test
+	public void test() {
+		RedisTemplate redisTemplate = redisTemplate();
+		redisTemplate.pipeline();
+		redisTemplate.set("a", "A");
+		redisTemplate.exists("a");
+		redisTemplate.expire("a", 60);
+		String ret = redisTemplate.get("a");
+		//redisTemplate.role();
+		List<Object> result = redisTemplate.exec();
+		System.out.println(result);
+	}
 
 }

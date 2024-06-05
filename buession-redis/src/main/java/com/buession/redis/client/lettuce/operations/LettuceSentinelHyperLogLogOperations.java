@@ -46,17 +46,13 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFADD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PFADD,
-					(cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFADD)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFADD)
 					.run(args);
 		}
 	}
@@ -66,18 +62,13 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PFMERGE,
-					(cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PFMERGE,
-					(cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}
 	}
@@ -87,15 +78,13 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}
 	}

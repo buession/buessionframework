@@ -114,14 +114,14 @@ public interface LettuceRedisOperations extends RedisOperations {
 	}
 
 	class LettuceTransactionCommand<SR, R> extends
-			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisAsyncCommands<byte[], byte[]>,
+			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		public LettuceTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		public LettuceTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 										 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);

@@ -32,39 +32,44 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 /**
  * Lettuce 连接池对象工厂抽象类
  *
+ * @param <CONN>
+ * 		原生连接类型
+ * @param <C>
+ *        {@link AbstractRedisClient}
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceFactory<T extends StatefulConnection<byte[], byte[]>>
-		extends BasePooledObjectFactory<T> {
+public abstract class AbstractLettuceFactory<CONN extends StatefulConnection<byte[], byte[]>,
+		C extends AbstractRedisClient> extends BasePooledObjectFactory<CONN> {
 
-	private final RedisClient client;
+	private final C client;
 
-	protected AbstractLettuceFactory(final RedisURI uri) {
-		this.client = RedisClient.create(uri);
+	protected AbstractLettuceFactory(final C client) {
+		this.client = client;
 	}
 
 	@Override
-	public PooledObject<T> wrap(T connection) {
+	public PooledObject<CONN> wrap(CONN connection) {
 		return new DefaultPooledObject<>(connection);
 	}
 
 	@Override
-	public void activateObject(PooledObject<T> pooledObject) throws Exception {
-		T connection = pooledObject.getObject();
+	public void activateObject(PooledObject<CONN> pooledObject) throws Exception {
+		CONN connection = pooledObject.getObject();
 		//connection.sync().select(database);
 	}
 
 	@Override
-	public void destroyObject(PooledObject<T> pooledObject) throws Exception {
-		T connection = pooledObject.getObject();
+	public void destroyObject(PooledObject<CONN> pooledObject) throws Exception {
+		CONN connection = pooledObject.getObject();
 
 		if(connection.isOpen()){
 			connection.close();
 		}
 	}
 
-	protected RedisClient getClient() {
+	protected C getClient() {
 		return client;
 	}
 

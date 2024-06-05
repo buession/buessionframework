@@ -182,21 +182,13 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 		final CommandArguments args = CommandArguments.create("db", db);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SELECT,
-					(cmd)->client.getConnection().getStatefulRedisClusterConnection().async()
-							.dispatch(CommandType.SELECT,
-									new StatusOutput<>(ByteArrayCodec.INSTANCE),
-									new CommandArgs<>(ByteArrayCodec.INSTANCE).add(db)), okStatusConverter)
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.SELECT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SELECT,
-					(cmd)->client.getConnection().getStatefulRedisClusterConnection().async()
-							.dispatch(CommandType.SELECT,
-									new StatusOutput<>(ByteArrayCodec.INSTANCE),
-									new CommandArgs<>(ByteArrayCodec.INSTANCE).add(db)), okStatusConverter)
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.SELECT)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db), okStatusConverter)
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.SELECT)
 					.run(args);
 		}
 	}
@@ -238,13 +230,11 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name),
-					okStatusConverter)
+					(cmd)->cmd.clientSetname(name), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name),
-					okStatusConverter)
+					(cmd)->cmd.clientSetname(name), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
@@ -257,13 +247,11 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 	public String clientGetName() {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLIENT_GETNAME,
-					(cmd)->cmd.clientGetname(),
-					SafeEncoder::encode)
+					(cmd)->cmd.clientGetname(), SafeEncoder::encode)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLIENT_GETNAME,
-					(cmd)->cmd.clientGetname(),
-					SafeEncoder::encode)
+					(cmd)->cmd.clientGetname(), SafeEncoder::encode)
 					.run();
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
@@ -345,8 +333,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout),
-					okStatusConverter)
+					(cmd)->cmd.clientPause(timeout), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
@@ -386,8 +373,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLIENT_KILL,
-					(cmd)->cmd.clientKill(addr),
-					okStatusConverter)
+					(cmd)->cmd.clientKill(addr), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(addr),

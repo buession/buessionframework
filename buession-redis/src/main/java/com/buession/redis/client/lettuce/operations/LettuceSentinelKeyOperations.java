@@ -72,13 +72,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.DEL)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.DEL)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.DEL)
 					.run(args);
 		}
 	}
@@ -88,13 +88,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+			return new LettuceSentinelPipelineCommand<byte[], byte[]>(client, ProtocolCommand.DUMP)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+			return new LettuceSentinelTransactionCommand<byte[], byte[]>(client, ProtocolCommand.DUMP)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+			return new LettuceSentinelCommand<byte[], byte[]>(client, ProtocolCommand.DUMP)
 					.run(args);
 		}
 	}
@@ -104,15 +104,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key),
-					(v)->v == 1L)
+			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.EXISTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key),
-					(v)->v == 1L)
+			return new LettuceSentinelTransactionCommand<Boolean, Boolean>(client, ProtocolCommand.EXISTS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
+			return new LettuceSentinelCommand<Boolean, Boolean>(client, ProtocolCommand.EXISTS)
 					.run(args);
 		}
 	}
@@ -122,14 +120,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.EXISTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.EXISTS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.EXISTS)
 					.run(args);
 		}
 	}
@@ -139,18 +136,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.EXPIRE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.EXPIRE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.EXPIRE)
 					.run(args);
 		}
 	}
@@ -161,18 +153,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 				.put("expireOption", expireOption);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.EXPIRE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.EXPIRE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.EXPIRE)
 					.run(args);
 		}
 	}
@@ -182,17 +169,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.EXPIREAT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.EXPIREAT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp),
-					booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.EXPIREAT)
 					.run(args);
 		}
 	}
@@ -202,18 +185,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PEXPIRE,
-					(cmd)->cmd.pexpire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PEXPIRE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PEXPIRE,
-					(cmd)->cmd.pexpire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PEXPIRE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
-					booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PEXPIRE)
 					.run(args);
 		}
 	}
@@ -223,16 +201,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.EXPIREAT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.EXPIREAT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.EXPIREAT)
 					.run(args);
 		}
 	}
@@ -242,16 +217,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
-					booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PERSIST)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
-					booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PERSIST)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
-					booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PERSIST)
 					.run(args);
 		}
 	}
@@ -261,13 +233,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.TTL)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.TTL)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.TTL)
 					.run(args);
 		}
 	}
@@ -277,13 +249,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PTTL)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PTTL)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PTTL)
 					.run(args);
 		}
 	}
@@ -349,16 +321,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
-					booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MOVE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
-					booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MOVE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
-					booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.MOVE)
 					.run(args);
 		}
 	}
@@ -452,16 +421,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	@Override
 	public String randomKey() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
-					SafeEncoder::encode)
+			return new LettuceSentinelPipelineCommand<String, String>(client, ProtocolCommand.RANDOMKEY)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
-					SafeEncoder::encode)
+			return new LettuceSentinelTransactionCommand<String, String>(client, ProtocolCommand.RANDOMKEY)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomkey(),
-					SafeEncoder::encode)
+			return new LettuceSentinelCommand<String, String>(client, ProtocolCommand.RANDOMKEY)
 					.run();
 		}
 	}
@@ -471,17 +437,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.RENAME)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.RENAME,
-					(cmd)->cmd.rename(key, newKey),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.RENAME)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.RENAME)
 					.run(args);
 		}
 	}
@@ -491,18 +453,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey),
-					booleanStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.RENAMENX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey),
-					booleanStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.RENAMENX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
-					booleanStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.RENAMENX)
 					.run(args);
 		}
 	}
@@ -513,16 +470,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 				.put("ttl", ttl);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.RESTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.RESTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.RESTORE)
 					.run(args);
 		}
 	}
@@ -535,16 +489,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final RestoreArgs restoreArgs = LettuceRestoreArgs.from(argument).ttl(ttl);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, serializedValue, restoreArgs), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.RESTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, serializedValue, restoreArgs), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.RESTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.RESTORE,
-					(cmd)->cmd.restore(key, serializedValue, restoreArgs), okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.RESTORE)
 					.run(args);
 		}
 	}
@@ -686,14 +637,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.TOUCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.TOUCH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.TOUCH)
 					.run(args);
 		}
 	}
@@ -704,15 +654,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final TypeConverter typeConverter = new TypeConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key),
-					typeConverter)
+			return new LettuceSentinelPipelineCommand<Type, Type>(client, ProtocolCommand.TYPE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key),
-					typeConverter)
+			return new LettuceSentinelTransactionCommand<Type, Type>(client, ProtocolCommand.TYPE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new LettuceSentinelCommand<Type, Type>(client, ProtocolCommand.TYPE)
 					.run(args);
 		}
 	}
@@ -722,14 +670,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.UNLINK)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.UNLINK)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.UNLINK)
 					.run(args);
 		}
 	}
@@ -739,16 +686,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.WAIT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.WAIT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.WAIT)
 					.run(args);
 		}
 	}
@@ -759,16 +703,16 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
-					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+			return new LettuceSentinelPipelineCommand<ObjectEncoding, ObjectEncoding>(client,
+					ProtocolCommand.OBJECT_ENCODING)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
-					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+			return new LettuceSentinelTransactionCommand<ObjectEncoding, ObjectEncoding>(client,
+					ProtocolCommand.OBJECT_ENCODING)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
-					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+			return new LettuceSentinelCommand<ObjectEncoding, ObjectEncoding>(client,
+					ProtocolCommand.OBJECT_ENCODING)
 					.run(args);
 		}
 	}
@@ -794,16 +738,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
-					(cmd)->cmd.objectIdletime(key), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.OBJECT_IDLETIME)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
-					(cmd)->cmd.objectIdletime(key), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.OBJECT_IDLETIME)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
-					(cmd)->cmd.objectIdletime(key), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.OBJECT_IDLETIME)
 					.run(args);
 		}
 	}
@@ -813,16 +754,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
-					(cmd)->cmd.objectRefcount(key), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
-					(cmd)->cmd.objectRefcount(key), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
-					(cmd)->cmd.objectRefcount(key), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
 					.run(args);
 		}
 	}
@@ -843,16 +781,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	private Status migrate(final String host, final int port, final int db, final int timeout,
 						   final MigrateArgs<byte[]> migrateArgs, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.MIGRATE,
-					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MIGRATE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.MIGRATE,
-					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MIGRATE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.MIGRATE,
-					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.MIGRATE)
 					.run(args);
 		}
 	}
@@ -860,15 +795,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	private <V> Set<V> keys(final byte[] pattern, final ListSetConverter<byte[], V> converter,
 							final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern),
-					converter)
+			return new LettuceSentinelPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.KEYS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern),
-					converter)
+			return new LettuceSentinelTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.KEYS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
+			return new LettuceSentinelCommand<Set<V>, Set<V>>(client, ProtocolCommand.KEYS)
 					.run(args);
 		}
 	}
@@ -877,15 +810,16 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 										 final Converter<KeyScanCursor<byte[]>, ScanResult<List<V>>> converter,
 										 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
-					converter)
+			return new LettuceSentinelPipelineCommand<ScanResult<List<V>>, ScanResult<List<V>>>(client,
+					ProtocolCommand.SCAN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
-					converter)
+			return new LettuceSentinelTransactionCommand<ScanResult<List<V>>, ScanResult<List<V>>>(client,
+					ProtocolCommand.SCAN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), converter)
+			return new LettuceSentinelCommand<ScanResult<List<V>>, ScanResult<List<V>>>(client,
+					ProtocolCommand.SCAN)
 					.run(args);
 		}
 	}
@@ -894,17 +828,16 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 										 final Converter<KeyScanCursor<byte[]>, ScanResult<List<V>>> converter,
 										 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
-					converter)
+			return new LettuceSentinelPipelineCommand<ScanResult<List<V>>, ScanResult<List<V>>>(client,
+					ProtocolCommand.SCAN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCAN,
-					(cmd)->cmd.scan(cursor, scanArgs),
-					converter)
+			return new LettuceSentinelTransactionCommand<ScanResult<List<V>>, ScanResult<List<V>>>(client,
+					ProtocolCommand.SCAN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
-					converter)
+			return new LettuceSentinelCommand<ScanResult<List<V>>, ScanResult<List<V>>>(client,
+					ProtocolCommand.SCAN)
 					.run(args);
 		}
 	}
@@ -912,14 +845,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	private <V> List<V> sort(final byte[] key,
 							 final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.SORT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key),
-					converter)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.SORT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), converter)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.SORT)
 					.run(args);
 		}
 	}
@@ -927,16 +859,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	private <V> List<V> sort(final byte[] key, final SortArgs sortArgs,
 							 final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
-					converter)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.SORT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
-					converter)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.SORT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortArgs),
-					converter)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.SORT)
 					.run(args);
 		}
 	}
@@ -944,17 +873,13 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	private Long sortStore(final byte[] key, final byte[] destKey, final SortArgs sortArgs,
 						   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SORT,
-					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SORT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SORT,
-					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.SORT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SORT,
-					(cmd)->cmd.sortStore(key, sortArgs, destKey),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.SORT)
 					.run(args);
 		}
 	}

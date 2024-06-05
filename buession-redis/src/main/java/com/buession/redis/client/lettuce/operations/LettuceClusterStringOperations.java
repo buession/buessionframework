@@ -112,8 +112,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.INCRBYFLOAT,
-					(cmd)->cmd.incrbyfloat(key, value),
-					(v)->v)
+					(cmd)->cmd.incrbyfloat(key, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.INCRBYFLOAT,
@@ -277,8 +276,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PSETEX,
-					(cmd)->cmd.psetex(key, lifetime, value),
-					okStatusConverter)
+					(cmd)->cmd.psetex(key, lifetime, value), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PSETEX,
@@ -321,8 +319,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SET,
-					(cmd)->cmd.set(key, value, setArgs),
-					okStatusConverter)
+					(cmd)->cmd.set(key, value, setArgs), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value, setArgs),
@@ -337,8 +334,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SETEX,
-					(cmd)->cmd.setex(key, lifetime, value),
-					okStatusConverter)
+					(cmd)->cmd.setex(key, lifetime, value), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SETEX,
@@ -396,8 +392,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETRANGE,
-					(cmd)->cmd.getrange(key, start, end),
-					(v)->v)
+					(cmd)->cmd.getrange(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETRANGE,

@@ -89,8 +89,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HEXISTS,
-					(cmd)->cmd.hexists(key, field),
-					(v)->v)
+					(cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
@@ -134,8 +133,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HINCRBY,
-					(cmd)->cmd.hincrby(key, field, value),
-					(v)->v)
+					(cmd)->cmd.hincrby(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HINCRBY,
@@ -373,8 +371,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSET,
-					(cmd)->cmd.hset(key, field, value),
-					converter)
+					(cmd)->cmd.hset(key, field, value), converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
@@ -389,13 +386,11 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSETNX,
-					(cmd)->cmd.hsetnx(key, field, value),
-					booleanStatusConverter)
+					(cmd)->cmd.hsetnx(key, field, value), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSETNX,
-					(cmd)->cmd.hsetnx(key, field, value),
-					booleanStatusConverter)
+					(cmd)->cmd.hsetnx(key, field, value), booleanStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
@@ -414,8 +409,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSETNX,
-					(cmd)->cmd.hstrlen(key, field),
-					(v)->v)
+					(cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
@@ -536,8 +530,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 											   CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSCAN,
-					(cmd)->cmd.hscan(key, cursor, scanArgs),
-					converter)
+					(cmd)->cmd.hscan(key, cursor, scanArgs), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSCAN,

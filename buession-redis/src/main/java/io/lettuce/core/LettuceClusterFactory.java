@@ -27,53 +27,51 @@ package io.lettuce.core;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
 import com.buession.net.HostAndPort;
+import io.lettuce.core.cluster.RedisClusterClient;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 
 import java.util.Set;
 
 /**
- * Lettuce 哨兵连接对象工厂
+ * Lettuce 集群连接对象工厂
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelFactory
-		extends AbstractLettuceFactory<StatefulRedisSentinelConnection<byte[], byte[]>, RedisClient> {
+public class LettuceClusterFactory
+		extends AbstractLettuceFactory<StatefulRedisClusterConnection<byte[], byte[]>, RedisClusterClient> {
 
-	public LettuceSentinelFactory(final String masterName, final Set<HostAndPort> sentinels) {
-		this(buildRedisURI(masterName, sentinels, DefaultLettuceClientConfig.builder().build()));
+	public LettuceClusterFactory(final Set<HostAndPort> nodes) {
+		this(buildRedisURI(nodes, DefaultLettuceClientConfig.builder().build()));
 	}
 
-	public LettuceSentinelFactory(final String masterName, final Set<HostAndPort> sentinels,
-								  final LettuceClientConfig lettuceClientConfig) {
-		this(buildRedisURI(masterName, sentinels, lettuceClientConfig));
+	public LettuceClusterFactory(final Set<HostAndPort> nodes, final LettuceClientConfig lettuceClientConfig) {
+		this(buildRedisURI(nodes, lettuceClientConfig));
 	}
 
-	protected LettuceSentinelFactory(final RedisURI uri) {
-		super(RedisClient.create(uri));
+	protected LettuceClusterFactory(final RedisURI uri) {
+		super(RedisClusterClient.create(uri));
 	}
 
 	@Override
-	public StatefulRedisSentinelConnection<byte[], byte[]> create() throws Exception {
-		return getClient().connectSentinel(new ByteArrayCodec());
+	public StatefulRedisClusterConnection<byte[], byte[]> create() throws Exception {
+		return getClient().connect(new ByteArrayCodec());
 	}
 
-	private static RedisURI buildRedisURI(final String masterName, final Set<HostAndPort> sentinels,
-										  final LettuceClientConfig lettuceClientConfig) {
+	private static RedisURI buildRedisURI(final Set<HostAndPort> nodes, final LettuceClientConfig lettuceClientConfig) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final RedisURI.Builder builder = RedisURI.builder().withDatabase(lettuceClientConfig.getDatabase())
 				.withSsl(lettuceClientConfig.isSsl());
 
-		propertyMapper.from(masterName).to(builder::withSentinelMasterId);
 		propertyMapper.alwaysApplyingWhenNonNull().from(lettuceClientConfig.getConnectionTimeout())
 				.to(builder::withTimeout);
 		propertyMapper.from(lettuceClientConfig.getClientName()).to(builder::withClientName);
-		sentinels.forEach((sentinel)->{
+		nodes.forEach((node)->{
 			if(Validate.hasText(lettuceClientConfig.getPassword())){
-				builder.withSentinel(sentinel.getHost(), sentinel.getPort(), lettuceClientConfig.getPassword());
+				builder.withSentinel(node.getHost(), node.getPort(), lettuceClientConfig.getPassword());
 			}else{
-				builder.withSentinel(sentinel.getHost(), sentinel.getPort());
+				builder.withSentinel(node.getHost(), node.getPort());
 			}
 		});
 

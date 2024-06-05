@@ -51,15 +51,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}
 	}
@@ -69,17 +67,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}
 	}
@@ -90,17 +84,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 				.put("bitCountOption", bitCountOption);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
 					.run(args);
 		}
 	}
@@ -111,17 +101,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITFIELD,
-					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
+			return new LettuceSentinelPipelineCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITFIELD,
-					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
+			return new LettuceSentinelTransactionCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITFIELD,
-					(cmd)->cmd.bitfield(key, bitFieldArgs),
-					(v)->v)
+			return new LettuceSentinelCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD)
 					.run(args);
 		}
 	}
@@ -144,49 +130,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 				.put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
-				if(operation == BitOperation.AND){
-					return cmd.bitopAnd(destKey, keys);
-				}else if(operation == BitOperation.OR){
-					return cmd.bitopOr(destKey, keys);
-				}else if(operation == BitOperation.NOT){
-					return cmd.bitopNot(destKey, keys[0]);
-				}else if(operation == BitOperation.XOR){
-					return cmd.bitopXor(destKey, keys);
-				}else{
-					return null;
-				}
-			}, (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITOP)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
-				if(operation == BitOperation.AND){
-					return cmd.bitopAnd(destKey, keys);
-				}else if(operation == BitOperation.OR){
-					return cmd.bitopOr(destKey, keys);
-				}else if(operation == BitOperation.NOT){
-					return cmd.bitopNot(destKey, keys[0]);
-				}else if(operation == BitOperation.XOR){
-					return cmd.bitopXor(destKey, keys);
-				}else{
-					return null;
-				}
-			}, (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITOP)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
-				if(operation == BitOperation.AND){
-					return cmd.bitopAnd(destKey, keys);
-				}else if(operation == BitOperation.OR){
-					return cmd.bitopOr(destKey, keys);
-				}else if(operation == BitOperation.NOT){
-					return cmd.bitopNot(destKey, keys[0]);
-				}else if(operation == BitOperation.XOR){
-					return cmd.bitopXor(destKey, keys);
-				}else{
-					return null;
-				}
-			}, (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITOP)
 					.run(args);
 		}
 	}
@@ -196,16 +146,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITPOS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITPOS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITPOS)
 					.run(args);
 		}
 	}
@@ -216,17 +163,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 				.put("end", end);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITPOS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITPOS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value, start, end),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITPOS)
 					.run(args);
 		}
 	}
@@ -236,17 +179,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
-					oneBooleanConverter)
+			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GETBIT,
-					(cmd)->cmd.getbit(key, offset),
-					oneBooleanConverter)
+			return new LettuceSentinelTransactionCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
-					oneBooleanConverter)
+			return new LettuceSentinelCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
 					.run(args);
 		}
 	}
@@ -257,16 +196,13 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 		final int iValue = value ? 1 : 0;
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SETBIT,
-					(cmd)->cmd.setbit(key, offset, iValue), oneBooleanConverter)
+			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.SETBIT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SETBIT,
-					(cmd)->cmd.setbit(key, offset, iValue), oneBooleanConverter)
+			return new LettuceSentinelTransactionCommand<Boolean, Boolean>(client, ProtocolCommand.SETBIT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
-					oneBooleanConverter)
+			return new LettuceSentinelCommand<Boolean, Boolean>(client, ProtocolCommand.SETBIT)
 					.run(args);
 		}
 	}

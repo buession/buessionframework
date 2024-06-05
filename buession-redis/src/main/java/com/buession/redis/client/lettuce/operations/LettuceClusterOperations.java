@@ -60,7 +60,6 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 
 	@Override
 	public String clusterMyId() {
-
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
 					.run();
@@ -173,13 +172,11 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterFlushSlots() {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
-					(cmd)->cmd.clusterFlushslots(),
-					okStatusConverter)
+					(cmd)->cmd.clusterFlushslots(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
-					(cmd)->cmd.clusterFlushslots(),
-					okStatusConverter)
+					(cmd)->cmd.clusterFlushslots(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushslots(),
@@ -294,8 +291,7 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLUSTER_MEET,
-					(cmd)->cmd.clusterMeet(ip, port),
-					okStatusConverter)
+					(cmd)->cmd.clusterMeet(ip, port), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
@@ -406,13 +402,11 @@ public final class LettuceClusterOperations extends AbstractClusterOperations<Le
 	public Status clusterSaveConfig() {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
-					(cmd)->cmd.clusterSaveconfig(),
-					okStatusConverter)
+					(cmd)->cmd.clusterSaveconfig(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
-					(cmd)->cmd.clusterSaveconfig(),
-					okStatusConverter)
+					(cmd)->cmd.clusterSaveconfig(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveconfig(),

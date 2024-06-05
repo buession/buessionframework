@@ -25,10 +25,10 @@
 package io.lettuce.core.api;
 
 import com.buession.core.utils.Assert;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import io.lettuce.core.BufferedFlushing;
 import io.lettuce.core.FlushEachCommand;
 import io.lettuce.core.FlushOnClose;
-import org.springframework.data.redis.connection.lettuce.LettuceConnection;
 
 /**
  * Strategy interface to control pipelining flush behavior. Lettuce writes (flushes) each command individually to the
@@ -51,7 +51,7 @@ public interface PipeliningFlushPolicy {
 	}
 
 	/**
-	 * Return a policy to flush only if {@link LettuceConnection#closePipeline()} is called.
+	 * Return a policy to flush only if {@link LettuceRedisConnection#closePipeline()} is called.
 	 *
 	 * @return A policy to flush after each command.
 	 */

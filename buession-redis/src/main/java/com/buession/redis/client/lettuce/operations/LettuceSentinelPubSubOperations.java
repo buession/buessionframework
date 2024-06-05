@@ -66,17 +66,13 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PUBLISH,
-					(cmd)->cmd.publish(channel, message),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PUBLISH,
-					(cmd)->cmd.publish(channel, message), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}
 	}
@@ -84,18 +80,15 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 	@Override
 	public List<String> pubsubChannels() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-					(cmd)->cmd.pubsubChannels(),
-					binaryToStringListConverter)
+			return new LettuceSentinelPipelineCommand<List<String>, List<String>>(client,
+					ProtocolCommand.PUBSUB_CHANNELS)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-					(cmd)->cmd.pubsubChannels(),
-					binaryToStringListConverter)
+			return new LettuceSentinelTransactionCommand<List<String>, List<String>>(client,
+					ProtocolCommand.PUBSUB_CHANNELS)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-					binaryToStringListConverter)
+			return new LettuceSentinelCommand<List<String>, List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run();
 		}
 	}
@@ -117,18 +110,13 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 	@Override
 	public Long pubsubNumPat() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT,
-					(cmd)->cmd.pubsubNumpat(),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT,
-					(cmd)->cmd.pubsubNumpat(),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 					.run();
 		}
 	}
@@ -230,17 +218,13 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 	private <V> List<V> pubsubChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
 									   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-					(cmd)->cmd.pubsubChannels(pattern), converter)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-					(cmd)->cmd.pubsubChannels(pattern), converter)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-					(cmd)->cmd.pubsubChannels(pattern),
-					converter)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run(args);
 		}
 	}
@@ -249,17 +233,14 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 										  final Converter<Map<byte[], Long>, Map<K, Long>> converter,
 										  final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
-					(cmd)->cmd.pubsubNumsub(channels), converter)
+			return new LettuceSentinelPipelineCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
-					(cmd)->cmd.pubsubNumsub(channels), converter)
+			return new LettuceSentinelTransactionCommand<Map<K, Long>, Map<K, Long>>(client,
+					ProtocolCommand.PUBSUB_NUMSUB)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
-					(cmd)->cmd.pubsubNumsub(channels),
-					converter)
+			return new LettuceSentinelCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 					.run(args);
 		}
 	}

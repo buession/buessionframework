@@ -51,8 +51,7 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PFADD,
-					(cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
+					(cmd)->cmd.pfadd(key, elements), oneStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
@@ -67,13 +66,11 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFMERGE,
-					(cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+					(cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PFMERGE,
-					(cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+					(cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),

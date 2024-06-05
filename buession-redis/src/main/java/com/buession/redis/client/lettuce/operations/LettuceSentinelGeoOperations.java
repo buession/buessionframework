@@ -65,16 +65,13 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 				.put("longitude", longitude).put("latitude", latitude);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.GEOADD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.GEOADD)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.GEOADD)
 					.run(args);
 		}
 	}
@@ -82,38 +79,13 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
-				memberCoordinates.size() * 3);
-
-		if(memberCoordinates != null){
-			memberCoordinates.forEach((k, v)->{
-				lngLatMemberBuilder.
-						add(v.getLongitude()).
-						add(v.getLatitude()).
-						add(SafeEncoder.encode(k));
-			});
-		}
-
-		return geoAdd(bKey, lngLatMemberBuilder, args);
+		return geoAdd(key, memberCoordinates, args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
-				memberCoordinates.size() * 3);
-
-		if(memberCoordinates != null){
-			memberCoordinates.forEach((k, v)->{
-				lngLatMemberBuilder.
-						add(v.getLongitude()).
-						add(v.getLatitude()).
-						add(k);
-			});
-		}
-
-		return geoAdd(key, lngLatMemberBuilder, args);
+		return geoAdd(key, memberCoordinates, args);
 	}
 
 	@Override
@@ -141,17 +113,13 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 		final ListConverter<GeoCoordinates, Geo> listGeoCoordinateConverter = GeoCoordinateConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-					listGeoCoordinateConverter)
+			return new LettuceSentinelPipelineCommand<List<Geo>, List<Geo>>(client, ProtocolCommand.GEOPOS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEOPOS,
-					(cmd)->cmd.geopos(key, members),
-					listGeoCoordinateConverter)
+			return new LettuceSentinelTransactionCommand<List<Geo>, List<Geo>>(client, ProtocolCommand.GEOPOS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-					listGeoCoordinateConverter)
+			return new LettuceSentinelCommand<List<Geo>, List<Geo>>(client, ProtocolCommand.GEOPOS)
 					.run(args);
 		}
 	}
@@ -182,19 +150,15 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 				GeoRadiusGeneralResultConverter.setListConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
+			return new LettuceSentinelPipelineCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
+			return new LettuceSentinelTransactionCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
+			return new LettuceSentinelCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS)
 					.run(args);
 		}
 	}
@@ -212,19 +176,15 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 				GeoRadiusResponseConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
+			return new LettuceSentinelPipelineCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
+			return new LettuceSentinelTransactionCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
+			return new LettuceSentinelCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS)
 					.run(args);
 		}
 	}
@@ -275,19 +235,16 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 				GeoRadiusGeneralResultConverter.setListConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
+			return new LettuceSentinelPipelineCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
+			return new LettuceSentinelTransactionCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
+			return new LettuceSentinelCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER)
 					.run(args);
 		}
 	}
@@ -303,19 +260,16 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 				GeoRadiusResponseConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
+			return new LettuceSentinelPipelineCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
+			return new LettuceSentinelTransactionCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
+			return new LettuceSentinelCommand<List<GeoRadius>, List<GeoRadius>>(client,
+					ProtocolCommand.GEORADIUSBYMEMBER)
 					.run(args);
 		}
 	}
@@ -352,21 +306,19 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 		return geoRadiusByMemberRo(args);
 	}
 
-	private Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder, final CommandArguments args) {
+	@Override
+	protected Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder,
+						  final CommandArguments args) {
 		final Object[] lngLatMembers = lngLatMemberBuilder.build().toArray(new Object[]{});
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, lngLatMembers),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.GEOADD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, lngLatMembers), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.GEOADD)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, lngLatMembers),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.GEOADD)
 					.run(args);
 		}
 	}
@@ -374,18 +326,13 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 	private <V> List<V> geoHash(final byte[] key, final byte[][] members,
 								final ListConverter<Value<String>, V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEOHASH,
-					(cmd)->cmd.geohash(key, members),
-					converter)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.GEOHASH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEOHASH,
-					(cmd)->cmd.geohash(key, members),
-					converter)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.GEOHASH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
-					converter)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.GEOHASH)
 					.run(args);
 		}
 	}
@@ -393,16 +340,13 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 	private Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoArgs.Unit unit,
 						   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.GEODIST,
-					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
+			return new LettuceSentinelPipelineCommand<Double, Double>(client, ProtocolCommand.GEODIST)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.GEODIST,
-					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
+			return new LettuceSentinelTransactionCommand<Double, Double>(client, ProtocolCommand.GEODIST)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.GEODIST,
-					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
+			return new LettuceSentinelCommand<Double, Double>(client, ProtocolCommand.GEODIST)
 					.run(args);
 		}
 	}

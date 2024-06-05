@@ -82,38 +82,13 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
-				memberCoordinates.size() * 3);
-
-		if(memberCoordinates != null){
-			memberCoordinates.forEach((k, v)->{
-				lngLatMemberBuilder.
-						add(v.getLongitude()).
-						add(v.getLatitude()).
-						add(SafeEncoder.encode(k));
-			});
-		}
-
-		return geoAdd(bKey, lngLatMemberBuilder, args);
+		return geoAdd(key, memberCoordinates, args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
-				memberCoordinates.size() * 3);
-
-		if(memberCoordinates != null){
-			memberCoordinates.forEach((k, v)->{
-				lngLatMemberBuilder.
-						add(v.getLongitude()).
-						add(v.getLatitude()).
-						add(k);
-			});
-		}
-
-		return geoAdd(key, lngLatMemberBuilder, args);
+		return geoAdd(key, memberCoordinates, args);
 	}
 
 	@Override
@@ -351,7 +326,9 @@ public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceSta
 		return geoRadiusByMemberRo(args);
 	}
 
-	private Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder, final CommandArguments args) {
+	@Override
+	protected Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder,
+						  final CommandArguments args) {
 		final Object[] lngLatMembers = lngLatMemberBuilder.build().toArray(new Object[]{});
 
 		if(isPipeline()){

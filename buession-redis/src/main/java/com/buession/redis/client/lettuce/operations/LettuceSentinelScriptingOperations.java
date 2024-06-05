@@ -105,18 +105,15 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
-					(cmd)->cmd.scriptExists(sha1),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<List<Boolean>, List<Boolean>>(client,
+					ProtocolCommand.SCRIPT_EXISTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
-					(cmd)->cmd.scriptExists(sha1),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<List<Boolean>, List<Boolean>>(client,
+					ProtocolCommand.SCRIPT_EXISTS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
-					(v)->v)
+			return new LettuceSentinelCommand<List<Boolean>, List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 					.run(args);
 		}
 	}
@@ -124,17 +121,13 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	@Override
 	public Status scriptFlush() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
-					(cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 					.run();
 		}
 	}
@@ -144,17 +137,13 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 		final CommandArguments args = CommandArguments.create("mode", mode);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
-					(cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 					.run(args);
 		}
 	}
@@ -176,16 +165,13 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	@Override
 	public Status scriptKill() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SCRIPT_KILL)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SCRIPT_KILL)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.SCRIPT_KILL)
 					.run();
 		}
 	}
@@ -193,16 +179,13 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	private Object eval(final String script, final byte[][] keys, final byte[][] arguments,
 						final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EVAL)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EVAL)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EVAL,
-					(cmd)->cmd.eval(script, null, keys, arguments), (v)->v)
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.EVAL)
 					.run(args);
 		}
 	}
@@ -210,16 +193,13 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	private Object evalSha(final String digest, final byte[][] keys, final byte[][] arguments,
 						   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EVALSHA,
-					(cmd)->cmd.evalsha(digest, null, keys, arguments), (v)->v)
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.EVALSHA)
 					.run(args);
 		}
 	}
@@ -227,18 +207,13 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	private <V> V scriptLoad(final byte[] script, final Converter<String, V> converter,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
-					(cmd)->cmd.scriptLoad(script),
-					converter)
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.SCRIPT_LOAD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
-					(cmd)->cmd.scriptLoad(script),
-					converter)
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.SCRIPT_LOAD)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
-					converter)
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.SCRIPT_LOAD)
 					.run(args);
 		}
 	}

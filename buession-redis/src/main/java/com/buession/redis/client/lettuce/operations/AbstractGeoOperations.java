@@ -24,14 +24,17 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.builder.ListBuilder;
 import com.buession.lang.Geo;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce 地理位置命令操作抽象类
@@ -93,5 +96,41 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, geoRadiusArgument);
 	}
+
+	protected Long geoAdd(final String key, final Map<String, Geo> memberCoordinates, final CommandArguments args) {
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
+				memberCoordinates.size() * 3);
+
+		if(memberCoordinates != null){
+			memberCoordinates.forEach((k, v)->{
+				lngLatMemberBuilder.
+						add(v.getLongitude()).
+						add(v.getLatitude()).
+						add(SafeEncoder.encode(k));
+			});
+		}
+
+		return geoAdd(bKey, lngLatMemberBuilder, args);
+	}
+
+	protected Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates, final CommandArguments args) {
+		final ListBuilder<Object> lngLatMemberBuilder = ListBuilder.create(memberCoordinates == null ? 0 :
+				memberCoordinates.size() * 3);
+
+		if(memberCoordinates != null){
+			memberCoordinates.forEach((k, v)->{
+				lngLatMemberBuilder.
+						add(v.getLongitude()).
+						add(v.getLatitude()).
+						add(k);
+			});
+		}
+
+		return geoAdd(key, lngLatMemberBuilder, args);
+	}
+
+	protected abstract Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder,
+								   final CommandArguments args);
 
 }

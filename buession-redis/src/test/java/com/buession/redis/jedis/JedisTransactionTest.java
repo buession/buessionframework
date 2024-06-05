@@ -33,12 +33,12 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisPipelineTest extends AbstractJedisRedisTest {
+public class JedisTransactionTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
-		redisTemplate.pipeline();
+		redisTemplate.multi();
 		redisTemplate.set("a", "A");
 		redisTemplate.exists("a");
 		redisTemplate.expire("a", 60);

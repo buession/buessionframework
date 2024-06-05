@@ -93,8 +93,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XACK,
-					(cmd)->cmd.xack(key, groupName, messageIds),
-					(v)->v)
+					(cmd)->cmd.xack(key, groupName, messageIds), (v)->v)
 					.run(args);
 		}
 	}
@@ -255,8 +254,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XDEL,
-					(cmd)->cmd.xdel(key, messageIds),
-					(v)->v)
+					(cmd)->cmd.xdel(key, messageIds), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, messageIds), (v)->v)
@@ -389,13 +387,11 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XINFO_GROUPS,
-					(cmd)->cmd.xinfoGroups(key),
-					listStreamGroupInfoConverter)
+					(cmd)->cmd.xinfoGroups(key), listStreamGroupInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XINFO_GROUPS,
-					(cmd)->cmd.xinfoGroups(key),
-					listStreamGroupInfoConverter)
+					(cmd)->cmd.xinfoGroups(key), listStreamGroupInfoConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
@@ -431,13 +427,11 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XINFO_STREAM,
-					(cmd)->cmd.xinfoStream(key),
-					streamFullInfoConverter)
+					(cmd)->cmd.xinfoStream(key), streamFullInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XINFO_STREAM,
-					(cmd)->cmd.xinfoStream(key),
-					streamFullInfoConverter)
+					(cmd)->cmd.xinfoStream(key), streamFullInfoConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
@@ -453,13 +447,11 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XINFO_STREAM,
-					(cmd)->cmd.xinfoStream(key),
-					streamFullInfoConverter)
+					(cmd)->cmd.xinfoStream(key), streamFullInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XINFO_STREAM,
-					(cmd)->cmd.xinfoStream(key),
-					streamFullInfoConverter)
+					(cmd)->cmd.xinfoStream(key), streamFullInfoConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
@@ -491,8 +483,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XPENDING,
-					(cmd)->cmd.xpending(key, groupName),
-					streamPendingSummaryConverter)
+					(cmd)->cmd.xpending(key, groupName), streamPendingSummaryConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XPENDING,
@@ -513,8 +504,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XPENDING,
-					(cmd)->cmd.xpending(key, groupName),
-					listStreamPendingConverter)
+					(cmd)->cmd.xpending(key, groupName), listStreamPendingConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XPENDING,
@@ -630,13 +620,11 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XRANGE,
-					(cmd)->cmd.xrange(key, range, limit),
-					listStreamMessageConverter)
+					(cmd)->cmd.xrange(key, range, limit), listStreamMessageConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XRANGE,
-					(cmd)->cmd.xrange(key, range, limit),
-					listStreamMessageConverter)
+					(cmd)->cmd.xrange(key, range, limit), listStreamMessageConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, range, limit),
@@ -852,13 +840,11 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XREVRANGE,
-					(cmd)->cmd.xrevrange(key, range),
-					listStreamMessageConverter)
+					(cmd)->cmd.xrevrange(key, range), listStreamMessageConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XREVRANGE,
-					(cmd)->cmd.xrevrange(key, range),
-					listStreamMessageConverter)
+					(cmd)->cmd.xrevrange(key, range), listStreamMessageConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, range),
@@ -887,8 +873,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XREVRANGE,
-					(cmd)->cmd.xrevrange(key, range, limit),
-					listStreamMessageConverter)
+					(cmd)->cmd.xrevrange(key, range, limit), listStreamMessageConverter)
 					.run(args);
 		}
 	}
@@ -912,13 +897,11 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XADD,
-					(cmd)->cmd.xadd(key, xAddArgs, hash),
-					streamEntryIDConverter)
+					(cmd)->cmd.xadd(key, xAddArgs, hash), streamEntryIDConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XADD,
-					(cmd)->cmd.xadd(key, xAddArgs, hash),
-					streamEntryIDConverter)
+					(cmd)->cmd.xadd(key, xAddArgs, hash), streamEntryIDConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, xAddArgs, hash),
@@ -945,7 +928,6 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	}
 
 	private Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final CommandArguments args) {
-
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
 					client, ProtocolCommand.XAUTOCLAIM)
@@ -977,8 +959,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XCLAIM,
-					(cmd)->cmd.xclaim(key, consumer, xClaimArgs,
-							messageIds), listStreamMessageConverter)
+					(cmd)->cmd.xclaim(key, consumer, xClaimArgs, messageIds), listStreamMessageConverter)
 					.run(args);
 		}
 	}
@@ -1073,8 +1054,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.XREAD,
-					(cmd)->cmd.xread(streamOffsets),
-					listStreamMessageMapConverter)
+					(cmd)->cmd.xread(streamOffsets), listStreamMessageMapConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XREAD, (cmd)->cmd.xread(streamOffsets),
@@ -1104,8 +1084,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.XREAD,
-					(cmd)->cmd.xread(xReadArgs, streamOffsets),
-					listStreamMessageMapConverter)
+					(cmd)->cmd.xread(xReadArgs, streamOffsets), listStreamMessageMapConverter)
 					.run(args);
 		}
 	}

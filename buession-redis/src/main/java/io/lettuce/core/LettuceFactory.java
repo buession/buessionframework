@@ -30,12 +30,12 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import java.util.Optional;
 
 /**
- * Lettuce 连接池对象工厂
+ * Lettuce 单机连接池对象工厂
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceFactory extends AbstractLettuceFactory<StatefulRedisConnection<byte[], byte[]>> {
+public class LettuceFactory extends AbstractLettuceFactory<StatefulRedisConnection<byte[], byte[]>, RedisClient> {
 
 	public LettuceFactory(final String host, final int port) {
 		this(host, port, null);
@@ -46,11 +46,11 @@ public class LettuceFactory extends AbstractLettuceFactory<StatefulRedisConnecti
 	}
 
 	public LettuceFactory(final RedisURI uri) {
-		super(uri);
+		super(RedisClient.create(uri));
 	}
 
 	public LettuceFactory(final RedisURI uri, final LettuceClientConfig lettuceClientConfig) {
-		super(buildRedisURI(uri, lettuceClientConfig));
+		this(buildRedisURI(uri, lettuceClientConfig));
 	}
 
 	@Override

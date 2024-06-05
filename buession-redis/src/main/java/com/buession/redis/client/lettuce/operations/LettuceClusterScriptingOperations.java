@@ -106,13 +106,11 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
-					(cmd)->cmd.scriptExists(sha1),
-					(v)->v)
+					(cmd)->cmd.scriptExists(sha1), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
-					(cmd)->cmd.scriptExists(sha1),
-					(v)->v)
+					(cmd)->cmd.scriptExists(sha1), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
@@ -129,8 +127,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 					.run();
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
-					(cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+					(cmd)->cmd.scriptFlush(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
@@ -149,8 +146,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
-					(cmd)->cmd.scriptFlush(),
-					okStatusConverter)
+					(cmd)->cmd.scriptFlush(), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),

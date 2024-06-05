@@ -49,15 +49,13 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}
 	}
@@ -67,13 +65,13 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 		final Converter<TransactionResult, List<Object>> converter = (v)->v.stream().collect(Collectors.toList());
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceSentinelPipelineCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceSentinelTransactionCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceSentinelCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
 					.run();
 		}
 	}
@@ -81,13 +79,13 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 	@Override
 	public void discard() {
 		if(isPipeline()){
-			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else if(isTransaction()){
-			new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else{
-			new LettuceSentinelCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceSentinelCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}
 	}
@@ -97,16 +95,13 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}
 	}
@@ -114,16 +109,13 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 	@Override
 	public Status unwatch() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}
 	}

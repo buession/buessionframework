@@ -144,8 +144,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.EXPIRE,
@@ -165,8 +164,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
+					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
@@ -189,8 +187,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp),
-					booleanStatusConverter)
+					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
 					.run(args);
 		}
 	}
@@ -201,13 +198,11 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PEXPIRE,
-					(cmd)->cmd.pexpire(key, lifetime),
-					booleanStatusConverter)
+					(cmd)->cmd.pexpire(key, lifetime), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PEXPIRE,
-					(cmd)->cmd.pexpire(key, lifetime),
-					booleanStatusConverter)
+					(cmd)->cmd.pexpire(key, lifetime), booleanStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
@@ -474,8 +469,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.RENAME,
-					(cmd)->cmd.rename(key, newKey),
-					okStatusConverter)
+					(cmd)->cmd.rename(key, newKey), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
@@ -490,13 +484,11 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey),
-					booleanStatusConverter)
+					(cmd)->cmd.renamenx(key, newKey), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey),
-					booleanStatusConverter)
+					(cmd)->cmd.renamenx(key, newKey), booleanStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
@@ -895,8 +887,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SCAN,
-					(cmd)->cmd.scan(cursor, scanArgs),
-					converter)
+					(cmd)->cmd.scan(cursor, scanArgs), converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
@@ -948,8 +939,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SORT,
-					(cmd)->cmd.sortStore(key, sortArgs, destKey),
-					(v)->v)
+					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
 					.run(args);
 		}
 	}

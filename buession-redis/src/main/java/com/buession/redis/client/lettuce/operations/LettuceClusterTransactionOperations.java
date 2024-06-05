@@ -24,15 +24,12 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import io.lettuce.core.TransactionResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 集群模式事务命令操作
@@ -49,31 +46,27 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(),
-					okStatusConverter)
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(),
-					okStatusConverter)
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}
 	}
 
 	@Override
 	public List<Object> exec() {
-		final Converter<TransactionResult, List<Object>> converter = (v)->v.stream().collect(Collectors.toList());
-
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceClusterPipelineCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceClusterTransactionCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceClusterCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
 					.run();
 		}
 	}
@@ -81,13 +74,13 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 	@Override
 	public void discard() {
 		if(isPipeline()){
-			new LettuceClusterPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceClusterPipelineCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else if(isTransaction()){
-			new LettuceClusterTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceClusterTransactionCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else{
-			new LettuceClusterCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceClusterCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}
 	}
@@ -97,15 +90,13 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
-					okStatusConverter)
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
-					okStatusConverter)
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}
 	}
@@ -113,15 +104,13 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 	@Override
 	public Status unwatch() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
-					okStatusConverter)
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
-					okStatusConverter)
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}
 	}

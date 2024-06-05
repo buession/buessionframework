@@ -322,13 +322,11 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 	public Status configResetStat() {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT,
-					(cmd)->cmd.configResetstat(),
-					okStatusConverter)
+					(cmd)->cmd.configResetstat(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT,
-					(cmd)->cmd.configResetstat(),
-					okStatusConverter)
+					(cmd)->cmd.configResetstat(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(),
@@ -341,13 +339,11 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 	public Status configRewrite() {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_REWRITE,
-					(cmd)->cmd.configRewrite(),
-					okStatusConverter)
+					(cmd)->cmd.configRewrite(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_REWRITE,
-					(cmd)->cmd.configRewrite(),
-					okStatusConverter)
+					(cmd)->cmd.configRewrite(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
@@ -584,13 +580,11 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key),
-					(v)->v)
+					(cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key),
-					(v)->v)
+					(cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
@@ -605,13 +599,11 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key),
-					(v)->v)
+					(cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key),
-					(v)->v)
+					(cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
@@ -726,8 +718,7 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SLAVEOF,
-					(cmd)->cmd.slaveof(host, port),
-					okStatusConverter)
+					(cmd)->cmd.slaveof(host, port), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
@@ -843,13 +834,11 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SLOWLOG_GET,
-					(cmd)->cmd.slowlogGet((int) count),
-					listSlowlogConverter)
+					(cmd)->cmd.slowlogGet((int) count), listSlowlogConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SLOWLOG_GET,
-					(cmd)->cmd.slowlogGet((int) count),
-					listSlowlogConverter)
+					(cmd)->cmd.slowlogGet((int) count), listSlowlogConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet((int) count),
@@ -882,8 +871,7 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 					.run();
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SLOWLOG_RESET,
-					(cmd)->cmd.slowlogReset(),
-					okStatusConverter)
+					(cmd)->cmd.slowlogReset(), okStatusConverter)
 					.run();
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
@@ -897,16 +885,13 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
-					okStatusConverter)
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.SWAPDB)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
-					okStatusConverter)
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.SWAPDB)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapdb(db1, db2),
-					okStatusConverter)
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.SWAPDB)
 					.run(args);
 		}
 	}
@@ -986,13 +971,11 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 								  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_GET,
-					(cmd)->cmd.configGet(parameter),
-					converter)
+					(cmd)->cmd.configGet(parameter), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_GET,
-					(cmd)->cmd.configGet(parameter),
-					converter)
+					(cmd)->cmd.configGet(parameter), converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),

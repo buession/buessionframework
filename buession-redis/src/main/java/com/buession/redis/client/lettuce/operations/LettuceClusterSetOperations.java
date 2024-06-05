@@ -152,8 +152,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SINTERSTORE,
-					(cmd)->cmd.sinterstore(destKey, keys),
-					(v)->v)
+					(cmd)->cmd.sinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -164,13 +163,11 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SISMEMBER,
-					(cmd)->cmd.sismember(key, member),
-					(v)->v)
+					(cmd)->cmd.sismember(key, member), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SISMEMBER,
-					(cmd)->cmd.sismember(key, member),
-					(v)->v)
+					(cmd)->cmd.sismember(key, member), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SISMEMBER, (cmd)->cmd.sismember(key, member),
@@ -212,8 +209,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SMOVE,
-					(cmd)->cmd.smove(key, destKey, member),
-					booleanStatusConverter)
+					(cmd)->cmd.smove(key, destKey, member), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SMOVE,
@@ -418,8 +414,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SUNIONSTORE,
-					(cmd)->cmd.sunionstore(destKey, keys),
-					(v)->v)
+					(cmd)->cmd.sunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -534,8 +529,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 									final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SRANDMEMBER,
-					(cmd)->cmd.srandmember(key, count),
-					converter)
+					(cmd)->cmd.srandmember(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SRANDMEMBER,
@@ -570,8 +564,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 										  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SSCAN,
-					(cmd)->cmd.sscan(key, cursor, scanArgs),
-					converter)
+					(cmd)->cmd.sscan(key, cursor, scanArgs), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SSCAN,

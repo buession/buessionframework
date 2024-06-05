@@ -107,11 +107,10 @@ public class LettuceSentinelPool extends Pool<StatefulRedisSentinelConnection<by
 	 *
 	 * @param masterName
 	 * 		Master 节点名称
-	 * 		线程池配置
 	 * @param sentinels
 	 * 		哨兵节点
 	 * @param poolConfig
-	 * 		哨兵节点
+	 * 		线程池配置
 	 * @param lettuceClientConfig
 	 * 		客户端配置
 	 * @param sentinelClientConfig

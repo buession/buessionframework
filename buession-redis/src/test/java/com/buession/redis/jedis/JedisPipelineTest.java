@@ -22,10 +22,9 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.lettuce;
+package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,15 +33,17 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettucePipelineTest extends AbstractLettuceRedisTest {
+public class JedisPipelineTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.pipeline();
+		redisTemplate.set("a", "A");
 		redisTemplate.exists("a");
-		redisTemplate.get("a");
-		redisTemplate.role();
+		redisTemplate.expire("a", 60);
+		String ret = redisTemplate.get("a");
+		//redisTemplate.role();
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
 	}

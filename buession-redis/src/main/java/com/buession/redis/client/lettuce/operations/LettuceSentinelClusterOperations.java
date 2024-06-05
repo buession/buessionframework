@@ -60,18 +60,14 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 
 	@Override
 	public String clusterMyId() {
-
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(),
-					(v)->v)
+			return new LettuceSentinelPipelineCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_MY_ID,
-					(cmd)->cmd.clusterMyId(),
-					(v)->v)
+			return new LettuceSentinelTransactionCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
+			return new LettuceSentinelCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
 					.run();
 		}
 	}
@@ -81,17 +77,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("slots", slots);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
-					(cmd)->cmd.clusterAddSlots(slots), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
-					(cmd)->cmd.clusterAddSlots(slots), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
-					(cmd)->cmd.clusterAddSlots(slots),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
 					.run(args);
 		}
 	}
@@ -101,18 +93,16 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final ListConverter<Object, ClusterSlot> listClusterSlotConverter = ClusterSlotConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_SLOTS,
-					(cmd)->cmd.clusterSlots(),
-					listClusterSlotConverter)
+			return new LettuceSentinelPipelineCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
+					ProtocolCommand.CLUSTER_SLOTS)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_SLOTS,
-					(cmd)->cmd.clusterSlots(),
-					listClusterSlotConverter)
+			return new LettuceSentinelTransactionCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
+					ProtocolCommand.CLUSTER_SLOTS)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
-					listClusterSlotConverter)
+			return new LettuceSentinelCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
+					ProtocolCommand.CLUSTER_SLOTS)
 					.run();
 		}
 	}
@@ -122,16 +112,16 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+			return new LettuceSentinelPipelineCommand<Integer, Integer>(client,
+					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+			return new LettuceSentinelTransactionCommand<Integer, Integer>(client,
+					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+			return new LettuceSentinelCommand<Integer, Integer>(client,
+					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}
 	}
@@ -141,16 +131,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("slot", slot);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
-					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
-					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
-					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
 					.run(args);
 		}
 	}
@@ -160,17 +147,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("slots", slots);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
-					(cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
-					(cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
-					(cmd)->cmd.clusterDelSlots(slots),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
 					.run(args);
 		}
 	}
@@ -178,19 +161,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	@Override
 	public Status clusterFlushSlots() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
-					(cmd)->cmd.clusterFlushslots(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
-					(cmd)->cmd.clusterFlushslots(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
-					(cmd)->cmd.clusterFlushslots(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
 					.run();
 		}
 	}
@@ -201,17 +178,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final boolean force = ClusterFailoverOption.FORCE == clusterFailoverOption;
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
-					(cmd)->cmd.clusterFailover(force), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
-					(cmd)->cmd.clusterFailover(force), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
-					(cmd)->cmd.clusterFailover(force),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
 					.run(args);
 		}
 	}
@@ -221,17 +194,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_FORGET,
-					(cmd)->cmd.clusterForget(nodeId), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_FORGET,
-					(cmd)->cmd.clusterForget(nodeId), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_FORGET,
-					(cmd)->cmd.clusterForget(nodeId),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
 					.run(args);
 		}
 	}
@@ -241,16 +210,15 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+			return new LettuceSentinelPipelineCommand<List<String>, List<String>>(client,
+					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+			return new LettuceSentinelTransactionCommand<List<String>, List<String>>(client,
+					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+			return new LettuceSentinelCommand<List<String>, List<String>>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}
 	}
@@ -260,17 +228,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterKeyslot(key), (v)->v)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterKeyslot(key), (v)->v)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterKeyslot(key),
-					(v)->v)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}
 	}
@@ -280,17 +244,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final ClusterInfoConverter clusterInfoConverter = new ClusterInfoConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
-					clusterInfoConverter)
+			return new LettuceSentinelPipelineCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_INFO,
-					(cmd)->cmd.clusterInfo(),
-					clusterInfoConverter)
+			return new LettuceSentinelTransactionCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
-					clusterInfoConverter)
+			return new LettuceSentinelCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
 					.run();
 		}
 	}
@@ -300,18 +260,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_MEET,
-					(cmd)->cmd.clusterMeet(ip, port),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_MEET,
-					(cmd)->cmd.clusterMeet(ip, port),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
 					.run(args);
 		}
 	}
@@ -321,18 +276,16 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final ClusterNodesConverter clusterNodesConverter = new ClusterNodesConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_NODES,
-					(cmd)->cmd.clusterNodes(),
-					clusterNodesConverter)
+			return new LettuceSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_NODES)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_NODES,
-					(cmd)->cmd.clusterNodes(),
-					clusterNodesConverter)
+			return new LettuceSentinelTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_NODES)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
-					clusterNodesConverter)
+			return new LettuceSentinelCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_NODES)
 					.run();
 		}
 	}
@@ -343,17 +296,16 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final ListConverter<String, ClusterRedisNode> listClusterNodeConverter = ClusterNodeConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_SLAVES,
-					(cmd)->cmd.clusterSlaves(nodeId), listClusterNodeConverter)
+			return new LettuceSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_SLAVES)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_SLAVES,
-					(cmd)->cmd.clusterSlaves(nodeId), listClusterNodeConverter)
+			return new LettuceSentinelTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_SLAVES)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_SLAVES,
-					(cmd)->cmd.clusterSlaves(nodeId),
-					listClusterNodeConverter)
+			return new LettuceSentinelCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_SLAVES)
 					.run(args);
 		}
 	}
@@ -364,17 +316,16 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final ClusterReplicasConverter clusterReplicasConverter = new ClusterReplicasConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
-					(cmd)->cmd.clusterReplicate(nodeId), clusterReplicasConverter)
+			return new LettuceSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_REPLICAS)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
-					(cmd)->cmd.clusterReplicate(nodeId), clusterReplicasConverter)
+			return new LettuceSentinelTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_REPLICAS)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
-					(cmd)->cmd.clusterReplicate(nodeId),
-					clusterReplicasConverter)
+			return new LettuceSentinelCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
+					ProtocolCommand.CLUSTER_REPLICAS)
 					.run(args);
 		}
 	}
@@ -384,17 +335,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
-					(cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
-					(cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
-					(cmd)->cmd.clusterReplicate(nodeId),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
 					.run(args);
 		}
 	}
@@ -405,18 +352,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final boolean hard = ClusterResetOption.HARD == clusterResetOption;
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_RESET,
-					(cmd)->cmd.clusterReset(hard),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_RESET,
-					(cmd)->cmd.clusterReset(hard),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_RESET, (cmd)->cmd.clusterReset(hard),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
 					.run(args);
 		}
 	}
@@ -424,19 +366,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	@Override
 	public Status clusterSaveConfig() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
-					(cmd)->cmd.clusterSaveconfig(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
-					(cmd)->cmd.clusterSaveconfig(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
-					(cmd)->cmd.clusterSaveconfig(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
 					.run();
 		}
 	}
@@ -446,16 +382,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
-					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
-					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
-					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
 					.run(args);
 		}
 	}
@@ -465,17 +398,16 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 		final BumpEpochConverter bumpEpochConverter = new BumpEpochConverter();
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH,
-					(cmd)->cmd.clusterBumpepoch(), bumpEpochConverter)
+			return new LettuceSentinelPipelineCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
+					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH,
-					(cmd)->cmd.clusterBumpepoch(), bumpEpochConverter)
+			return new LettuceSentinelTransactionCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
+					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH,
-					(cmd)->cmd.clusterBumpepoch(),
-					bumpEpochConverter)
+			return new LettuceSentinelCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
+					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
 					.run();
 		}
 	}
@@ -486,52 +418,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 				.put("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
-				switch(setSlotOption){
-					case IMPORTING:
-						return cmd.clusterSetSlotImporting(slot, nodeId);
-					case MIGRATING:
-						return cmd.clusterSetSlotMigrating(slot, nodeId);
-					case STABLE:
-						return cmd.clusterSetSlotStable(slot);
-					case NODE:
-						return cmd.clusterSetSlotNode(slot, nodeId);
-					default:
-						return null;
-				}
-			}, okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
-				switch(setSlotOption){
-					case IMPORTING:
-						return cmd.clusterSetSlotImporting(slot, nodeId);
-					case MIGRATING:
-						return cmd.clusterSetSlotMigrating(slot, nodeId);
-					case STABLE:
-						return cmd.clusterSetSlotStable(slot);
-					case NODE:
-						return cmd.clusterSetSlotNode(slot, nodeId);
-					default:
-						return null;
-				}
-			}, okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
-				switch(setSlotOption){
-					case IMPORTING:
-						return cmd.clusterSetSlotImporting(slot, nodeId);
-					case MIGRATING:
-						return cmd.clusterSetSlotMigrating(slot, nodeId);
-					case STABLE:
-						return cmd.clusterSetSlotStable(slot);
-					case NODE:
-						return cmd.clusterSetSlotNode(slot, nodeId);
-					default:
-						return null;
-				}
-			}, okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
 					.run(args);
 		}
 	}
@@ -539,15 +432,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	@Override
 	public Status asking() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ASKING)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ASKING)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(), okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.ASKING)
 					.run();
 		}
 	}
@@ -555,16 +446,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	@Override
 	public Status readWrite() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.READWRITE)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.READWRITE)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.READWRITE)
 					.run();
 		}
 	}
@@ -572,16 +460,13 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	@Override
 	public Status readOnly() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
-					okStatusConverter)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.READONLY)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
-					okStatusConverter)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.READONLY)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
-					okStatusConverter)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.READONLY)
 					.run();
 		}
 	}

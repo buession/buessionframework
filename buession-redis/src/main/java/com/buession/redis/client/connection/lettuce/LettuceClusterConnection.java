@@ -28,7 +28,6 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
-import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
@@ -37,15 +36,14 @@ import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettuceClusterPool;
-import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -586,7 +584,7 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	protected void internalInit() {
 	}
 
-	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
+	private RedisAdvancedClusterCommands<byte[], byte[]> getClusterCommands(final LettuceClusterDataSource dataSource) {
 		return delegate.sync();
 	}
 
@@ -594,15 +592,11 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 		return pool != null;
 	}
 
-	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisSentinelConnection(
+	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
+		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
 		final RedisURI redisURI = null;
-
-		if(dataSource.getDatabase() >= 0){
-			redisURI.setDatabase(dataSource.getDatabase());
-		}
 
 		propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
 		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
@@ -613,7 +607,7 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 
 		redisURI.setSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClient.create(redisURI).connectSentinel(codec);
+		return RedisClusterClient.create(redisURI).connect(codec);
 	}
 
 	@Override
@@ -623,18 +617,18 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 				delegate = pool.getResource();
 
 				if(logger.isInfoEnabled()){
-					logger.info("StatefulRedisSentinelConnection initialized with pool success.");
+					logger.info("StatefulRedisClusterConnection initialized with pool success.");
 				}
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
-					logger.error("StatefulRedisSentinelConnection initialized with pool failure: {}", e.getMessage(),
+					logger.error("StatefulRedisClusterConnection initialized with pool failure: {}", e.getMessage(),
 							e);
 				}
 
 				throw LettuceRedisExceptionUtils.convert(e);
 			}
 		}else{
-			delegate = createStatefulRedisSentinelConnection(new ByteArrayCodec());
+			delegate = createStatefulRedisClusterConnection(new ByteArrayCodec());
 		}
 	}
 
@@ -645,13 +639,13 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 		logger.info("Lettuce destroy.");
 		if(pool != null){
 			if(logger.isInfoEnabled()){
-				logger.info("Lettuce sentinel pool for {} destroy.", pool.getClass().getName());
+				logger.info("Lettuce cluster pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Lettuce sentinel pool.", ex);
+				logger.warn("Cannot properly close Lettuce cluster pool.", ex);
 			}
 
 			pool = null;

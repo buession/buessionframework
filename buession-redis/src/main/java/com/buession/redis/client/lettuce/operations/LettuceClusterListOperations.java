@@ -81,8 +81,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, before, pivot, value),
-					(v)->v)
+					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -97,8 +96,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LSET,
-					(cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
+					(cmd)->cmd.lset(key, index, value), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
@@ -206,8 +204,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LREM,
-					(cmd)->cmd.lrem(key, count, value),
-					(v)->v)
+					(cmd)->cmd.lrem(key, count, value), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
@@ -225,8 +222,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LTRIM,
-					(cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
+					(cmd)->cmd.ltrim(key, start, end), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
@@ -360,8 +356,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LPUSHX,
-					(cmd)->cmd.lpushx(key, values),
-					(v)->v)
+					(cmd)->cmd.lpushx(key, values), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
@@ -426,8 +421,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.RPUSHX,
-					(cmd)->cmd.rpushx(key, values),
-					(v)->v)
+					(cmd)->cmd.rpushx(key, values), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
@@ -455,13 +449,11 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.LRANGE,
-					(cmd)->cmd.lrange(key, start, end),
-					converter)
+					(cmd)->cmd.lrange(key, start, end), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LRANGE,
-					(cmd)->cmd.lrange(key, start, end),
-					converter)
+					(cmd)->cmd.lrange(key, start, end), converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
@@ -504,8 +496,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BLPOP,
-					(cmd)->cmd.blpop(timeout, keys),
-					converter)
+					(cmd)->cmd.blpop(timeout, keys), converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
@@ -522,8 +513,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BRPOP,
-					(cmd)->cmd.brpop(timeout, keys),
-					converter)
+					(cmd)->cmd.brpop(timeout, keys), converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
@@ -579,8 +569,7 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 							final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.RPOPLPUSH,
-					(cmd)->cmd.rpoplpush(key, destKey),
-					converter)
+					(cmd)->cmd.rpoplpush(key, destKey), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.RPOPLPUSH,

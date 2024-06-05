@@ -25,7 +25,7 @@
 package io.lettuce.core;
 
 import com.buession.net.HostAndPort;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
@@ -35,125 +35,98 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Lettuce 哨兵连接池
+ * Lettuce 集群连接池
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceCulsterPool extends Pool<StatefulRedisSentinelConnection<byte[], byte[]>> {
-
-	private LettuceSentinelFactory lettuceFactory;
-
-	private LettuceClientConfig sentinelClientConfig;
-
-	//protected final Collection<MasterListener> masterListeners = new ArrayList<>();
+public class LettuceClusterPool extends Pool<StatefulRedisClusterConnection<byte[], byte[]>> {
 
 	private volatile HostAndPort currentMaster;
 
 	private final Object initPoolLock = new Object();
 
-	private final static Logger logger = LoggerFactory.getLogger(LettuceCulsterPool.class);
+	private final static Logger logger = LoggerFactory.getLogger(LettuceClusterPool.class);
 
 	/**
 	 * 构造函数
 	 *
-	 * @param masterName
-	 * 		Master 节点名称
-	 * @param sentinels
-	 * 		哨兵节点
+	 * @param nodes
+	 * 		集群节点
 	 */
-	public LettuceCulsterPool(final String masterName, final Set<HostAndPort> sentinels) {
-		this(masterName, sentinels, DefaultLettuceClientConfig.builder().build(),
-				DefaultLettuceClientConfig.builder().build());
+	public LettuceClusterPool(final Set<HostAndPort> nodes) {
+		this(nodes, DefaultLettuceClientConfig.builder().build());
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param masterName
-	 * 		Master 节点名称
-	 * @param sentinels
-	 * 		哨兵节点
+	 * @param nodes
+	 * 		集群节点
 	 * @param lettuceClientConfig
 	 * 		客户端配置
-	 * @param sentinelClientConfig
-	 * 		哨兵节点客户端配置
 	 */
-	public LettuceCulsterPool(final String masterName, final Set<HostAndPort> sentinels,
-							  final LettuceClientConfig lettuceClientConfig,
-							  final LettuceClientConfig sentinelClientConfig) {
-		super(new LettuceSentinelFactory(masterName, sentinels, sentinelClientConfig));
+	public LettuceClusterPool(final Set<HostAndPort> nodes, final LettuceClientConfig lettuceClientConfig) {
+		super(new LettuceClusterFactory(nodes, lettuceClientConfig));
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param masterName
-	 * 		Master 节点名称
 	 * @param poolConfig
 	 * 		线程池配置
-	 * @param sentinels
-	 * 		哨兵节点
+	 * @param nodes
+	 * 		集群节点
 	 */
-	public LettuceCulsterPool(final String masterName,
-							  final GenericObjectPoolConfig<StatefulRedisSentinelConnection<byte[], byte[]>> poolConfig,
-							  final Set<HostAndPort> sentinels) {
-		this(masterName, sentinels, poolConfig, DefaultLettuceClientConfig.builder().build(),
-				DefaultLettuceClientConfig.builder().build());
+	public LettuceClusterPool(final GenericObjectPoolConfig<StatefulRedisClusterConnection<byte[], byte[]>> poolConfig,
+							  final Set<HostAndPort> nodes) {
+		this(nodes, poolConfig, DefaultLettuceClientConfig.builder().build());
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param masterName
-	 * 		Master 节点名称
-	 * 		线程池配置
-	 * @param sentinels
-	 * 		哨兵节点
+	 * @param nodes
+	 * 		集群节点
 	 * @param poolConfig
 	 * 		哨兵节点
 	 * @param lettuceClientConfig
 	 * 		客户端配置
-	 * @param sentinelClientConfig
-	 * 		哨兵节点客户端配置
 	 */
-	public LettuceCulsterPool(final String masterName, final Set<HostAndPort> sentinels,
-							  final GenericObjectPoolConfig<StatefulRedisSentinelConnection<byte[], byte[]>> poolConfig,
-							  final LettuceClientConfig lettuceClientConfig,
-							  final LettuceClientConfig sentinelClientConfig) {
-		this(masterName, sentinels, poolConfig, new LettuceSentinelFactory(masterName, sentinels, lettuceClientConfig));
+	public LettuceClusterPool(final Set<HostAndPort> nodes,
+							  final GenericObjectPoolConfig<StatefulRedisClusterConnection<byte[], byte[]>> poolConfig,
+							  final LettuceClientConfig lettuceClientConfig) {
+		this(nodes, poolConfig, new LettuceClusterFactory(nodes, lettuceClientConfig));
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param masterName
-	 * 		Master 节点名称
-	 * @param sentinels
-	 * 		哨兵节点
+	 * @param nodes
+	 * 		集群节点
 	 * @param poolConfig
 	 * 		线程池配置
 	 * @param factory
 	 * 		连接线对象工厂
 	 */
-	protected LettuceCulsterPool(final String masterName, final Set<HostAndPort> sentinels,
-								 final GenericObjectPoolConfig<StatefulRedisSentinelConnection<byte[], byte[]>> poolConfig,
-								 final PooledObjectFactory<StatefulRedisSentinelConnection<byte[], byte[]>> factory) {
+	protected LettuceClusterPool(final Set<HostAndPort> nodes,
+								 final GenericObjectPoolConfig<StatefulRedisClusterConnection<byte[], byte[]>> poolConfig,
+								 final PooledObjectFactory<StatefulRedisClusterConnection<byte[], byte[]>> factory) {
 		super(factory, poolConfig);
 
-		HostAndPort master = initSentinels(masterName, sentinels);
-		initMaster(master);
+		//HostAndPort master = initSentinels(nodes);
+		//initMaster(master);
 	}
 
 	@Override
-	public StatefulRedisSentinelConnection<byte[], byte[]> getResource() {
-		StatefulRedisSentinelConnection<byte[], byte[]> connection = super.getResource();
+	public StatefulRedisClusterConnection<byte[], byte[]> getResource() {
+		StatefulRedisClusterConnection<byte[], byte[]> connection = super.getResource();
 		//jedis.setDataSource(this);
 		return connection;
 	}
 
 	@Override
-	public void returnResource(final StatefulRedisSentinelConnection<byte[], byte[]> resource) {
+	public void returnResource(final StatefulRedisClusterConnection<byte[], byte[]> resource) {
 		if(resource != null){
 			try{
 				super.returnResource(resource);

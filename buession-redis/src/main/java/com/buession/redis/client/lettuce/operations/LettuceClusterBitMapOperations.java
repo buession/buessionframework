@@ -70,8 +70,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end),
-					(v)->v)
+					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
@@ -91,8 +90,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end),
-					(v)->v)
+					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
@@ -201,8 +199,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value),
-					(v)->v)
+					(cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
@@ -241,8 +238,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETBIT,
-					(cmd)->cmd.getbit(key, offset),
-					oneBooleanConverter)
+					(cmd)->cmd.getbit(key, offset), oneBooleanConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
