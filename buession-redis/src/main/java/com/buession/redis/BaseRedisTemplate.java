@@ -28,7 +28,6 @@ import com.buession.core.collect.Maps;
 import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
@@ -4396,9 +4395,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Object> exec() {
-		return execute((client)->{
-			return client.getConnection().exec();
-		});
+		return execute((client)->client.getConnection().exec());
 	}
 
 	@Override

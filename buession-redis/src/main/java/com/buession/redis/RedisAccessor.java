@@ -35,11 +35,13 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Command;
@@ -83,7 +85,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	protected boolean enableTransactionSupport = false;
 
-	private RedisClient redisClient;
+	protected RedisClient redisClient;
 
 	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
@@ -250,6 +252,8 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 				redisClient = new LettuceStandaloneClient();
 			}else if(dataSource instanceof LettuceSentinelDataSource){
 				redisClient = new LettuceSentinelClient();
+			}else if(dataSource instanceof LettuceClusterDataSource){
+				redisClient = new LettuceClusterClient();
 			}else{
 				throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
 			}
