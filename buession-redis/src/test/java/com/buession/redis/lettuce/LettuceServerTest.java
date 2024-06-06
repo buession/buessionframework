@@ -24,10 +24,8 @@
  */
 package com.buession.redis.lettuce;
 
-import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.SlowLog;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

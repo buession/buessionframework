@@ -27,9 +27,7 @@ package com.buession.redis.jedis;
 import com.buession.redis.RedisTemplate;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -37,25 +35,22 @@ import java.util.concurrent.TimeUnit;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ThreadTest extends AbstractJedisRedisTest {
+public class JedisThreadTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
 
-		int corePoolSize = 4; //核心线程数
-		int maximumPoolSize = 8; //最大线程数
-		long keepAliveTime = 10000; //空闲线程存活时间
-		BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(8); //阻塞队列
 		//拒绝策略
 		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
-				corePoolSize,
-				maximumPoolSize,
-				keepAliveTime,
-				TimeUnit.MILLISECONDS, //空闲线程存活时间的单位
-				workQueue
+				4,
+				8,
+				10000,
+				TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<>(8)
 		);
-		for(int i = 0; i < 8; i++){
+
+		for(int i = 0; i < 2; i++){
 			threadPoolExecutor.execute(()->{
 				try{
 					redisTemplate.multi();

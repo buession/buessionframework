@@ -52,9 +52,9 @@ public abstract class AbstractRedisOperations<C extends RedisClient> implements 
 
 	protected final static BooleanStatusConverter booleanStatusConverter = new BooleanStatusConverter();
 
-	protected final OneStatusConverter oneStatusConverter = new OneStatusConverter();
+	protected final static OneStatusConverter oneStatusConverter = new OneStatusConverter();
 
-	protected final OneBooleanConverter oneBooleanConverter = new OneBooleanConverter();
+	protected final static OneBooleanConverter oneBooleanConverter = new OneBooleanConverter();
 
 	public AbstractRedisOperations(final C client) {
 		this.client = client;

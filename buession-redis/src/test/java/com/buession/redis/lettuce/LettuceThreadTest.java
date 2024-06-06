@@ -22,14 +22,13 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis;
+package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ThreadTest extends AbstractJedisRedisTest {
+public class LettuceThreadTest extends AbstractLettuceRedisTest {
 
 	@Test
 	public void test() {

@@ -27,15 +27,8 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
-import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisClientConfig;
-import redis.clients.jedis.providers.ClusterConnectionProvider;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Jedis 集群模式数据源
@@ -59,13 +52,6 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	 * 最大重数时长（单位：秒）
 	 */
 	private int maxTotalRetriesDuration = -1;
-
-	/**
-	 * 连接提供者
-	 *
-	 * @since 3.0.0
-	 */
-	private ClusterConnectionProvider connectionProvider;
 
 	@Override
 	public List<RedisNode> getNodes() {
@@ -99,33 +85,13 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 
 	@Override
 	public JedisClusterConnection getConnection() {
-		if(connectionProvider == null){
-			connectionProvider = createClusterConnectionProvider();
-		}
-
-		return new JedisClusterConnection(this, connectionProvider, getConnectTimeout(), getSoTimeout(),
-				getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
-	}
-
-	protected ClusterConnectionProvider createClusterConnectionProvider() {
-		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(this, getSslConfiguration()).build();
-
-		if(isUsePool()){
-			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
-
-			getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
-
-			return new ClusterConnectionProvider(createHostAndPorts(), clientConfig, connectionPoolConfig);
+		if(getPoolConfig() == null){
+			return new JedisClusterConnection(this, getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
 		}else{
-			return new ClusterConnectionProvider(createHostAndPorts(), clientConfig);
+			return new JedisClusterConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
 		}
-	}
-
-	private Set<HostAndPort> createHostAndPorts() {
-		return getNodes().stream().map((node)->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
 	}
 
 }

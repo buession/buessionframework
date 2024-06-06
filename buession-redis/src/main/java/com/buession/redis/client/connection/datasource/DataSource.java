@@ -170,6 +170,7 @@ public interface DataSource {
 	 *
 	 * @since 2.0.0
 	 */
+	@Deprecated
 	RedisConnection getConnection();
 
 }

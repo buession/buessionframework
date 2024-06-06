@@ -36,7 +36,7 @@ import com.buession.redis.client.connection.datasource.SentinelDataSource;
  */
 public abstract class AbstractConnectionFactory<DS extends DataSource> implements RedisConnectionFactory {
 
-	protected final DS dataSource;
+	private final DS dataSource;
 
 	private RedisConnection redisConnection;
 
@@ -61,12 +61,16 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 				}else if(isRedisSentinelAware()){
 					redisConnection = getSentinelConnection();
 				}else{
-					redisConnection = dataSource.getConnection();
+					redisConnection = getStandaloneConnection();
 				}
 			}
 		}
 
 		return redisConnection;
+	}
+
+	protected DS getDataSource() {
+		return dataSource;
 	}
 
 }

@@ -24,7 +24,13 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
+import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
+import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.exception.RedisConnectionFailureException;
 
 /**
@@ -33,16 +39,41 @@ import com.buession.redis.exception.RedisConnectionFailureException;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceConnectionFactory extends AbstractConnectionFactory<LettuceDataSource> {
+public class LettuceConnectionFactory extends AbstractConnectionFactory<LettuceRedisDataSource> {
 
-	public LettuceConnectionFactory(final LettuceDataSource dataSource) {
+	public LettuceConnectionFactory(final LettuceRedisDataSource dataSource) {
 		super(dataSource);
+	}
+
+	@Override
+	public RedisStandaloneConnection getStandaloneConnection() {
+		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+
+		if(dataSource.getPoolConfig() == null){
+			return new LettuceConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
+					dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
+		}else{
+			return new LettuceConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
+		}
 	}
 
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		if(isRedisSentinelAware()){
-			return (RedisSentinelConnection) dataSource.getConnection();
+			final JedisSentinelDataSource sentinelDataSource = (JedisSentinelDataSource) getDataSource();
+
+			if(sentinelDataSource.getPoolConfig() == null){
+				return new JedisSentinelConnection(sentinelDataSource, sentinelDataSource.getConnectTimeout(),
+						sentinelDataSource.getSoTimeout(), sentinelDataSource.getInfiniteSoTimeout(),
+						sentinelDataSource.getSentinelConnectTimeout(), sentinelDataSource.getSentinelSoTimeout(),
+						sentinelDataSource.getSslConfiguration());
+			}else{
+				return new JedisSentinelConnection(sentinelDataSource, sentinelDataSource.getPoolConfig(),
+						sentinelDataSource.getConnectTimeout(), sentinelDataSource.getSoTimeout(),
+						sentinelDataSource.getInfiniteSoTimeout(), sentinelDataSource.getSentinelConnectTimeout(),
+						sentinelDataSource.getSentinelSoTimeout(), sentinelDataSource.getSslConfiguration());
+			}
 		}
 
 		throw new RedisConnectionFailureException("No Sentinels datasource");
@@ -51,7 +82,8 @@ public class LettuceConnectionFactory extends AbstractConnectionFactory<LettuceD
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		if(isRedisClusterAware()){
-			return (RedisClusterConnection) dataSource.getConnection();
+			final LettuceClusterDataSource clusterDataSource = (LettuceClusterDataSource) getDataSource();
+			return new LettuceClusterConnection();
 		}
 
 		throw new RedisConnectionFailureException("No Cluster datasource");

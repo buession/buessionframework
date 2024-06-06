@@ -40,6 +40,13 @@ public interface RedisConnectionFactory {
 	RedisConnection getConnection();
 
 	/**
+	 * 返回 Redis 单机连接对象
+	 *
+	 * @return Redis 单机连接对象
+	 */
+	RedisStandaloneConnection getStandaloneConnection();
+
+	/**
 	 * 返回 Redis 哨兵连接对象
 	 *
 	 * @return Redis 哨兵连接对象

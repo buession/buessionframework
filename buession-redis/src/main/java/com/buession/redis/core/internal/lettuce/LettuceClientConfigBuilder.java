@@ -84,6 +84,20 @@ public class LettuceClientConfigBuilder {
 		return this;
 	}
 
+	public LettuceClientConfigBuilder connectTimeout(final int connectTimeout) {
+		builder.connectionTimeoutMillis(connectTimeout);
+		return this;
+	}
+
+	public LettuceClientConfigBuilder socketTimeout(final int socketTimeout) {
+		builder.socketTimeoutMillis(socketTimeout);
+		return this;
+	}
+
+	public LettuceClientConfigBuilder infiniteSoTimeout(final int blockingSocketTimeout) {
+		return this;
+	}
+
 	public DefaultLettuceClientConfig build() {
 		return builder.build();
 	}

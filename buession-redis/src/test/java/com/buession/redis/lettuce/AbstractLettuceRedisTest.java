@@ -40,7 +40,7 @@ public abstract class AbstractLettuceRedisTest {
 		dataSource.setPort(6379);
 		dataSource.setDatabase(1);
 		dataSource.setPassword("rds_PWD");
-		dataSource.setPoolConfig(new PoolConfig());
+		//	dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
 	}
