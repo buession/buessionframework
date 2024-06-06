@@ -24,22 +24,13 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Jedis 哨兵模式数据源
@@ -143,40 +134,13 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 
 	@Override
 	public JedisSentinelConnection getConnection() {
-		if(isUsePool()){
-			if(pool == null){
-				pool = createPool();
-			}
+		if(getPoolConfig() == null){
+			return new JedisSentinelConnection(this, getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
+		}else{
+			return new JedisSentinelConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 		}
-
-		return new JedisSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
-				getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-	}
-
-	protected JedisSentinelPool createPool() {
-		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(getSentinels());
-		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
-		final JedisClientConfigBuilder sentinelBuilder = JedisClientConfigBuilder.create(this,
-				getSslConfiguration());
-		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-
-		builder.database(getDatabase());
-
-		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
-
-		return new JedisSentinelPool(getMasterName(), sentinels, jedisPoolConfig, builder.build(),
-				sentinelBuilder.build());
-	}
-
-	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
-		}
-
-		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
 	}
 
 }

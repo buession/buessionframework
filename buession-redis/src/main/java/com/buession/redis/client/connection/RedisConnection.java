@@ -29,6 +29,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -59,6 +60,25 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * 		Redis 数据源
 	 */
 	void setDataSource(DataSource dataSource);
+
+	/**
+	 * 返回连接池配置
+	 *
+	 * @return 连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	PoolConfig getPoolConfig();
+
+	/**
+	 * 连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	void setPoolConfig(PoolConfig poolConfig);
 
 	/**
 	 * 获取连接超时

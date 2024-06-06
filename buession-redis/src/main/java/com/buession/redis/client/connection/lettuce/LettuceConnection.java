@@ -28,6 +28,8 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
@@ -37,7 +39,9 @@ import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
+import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePool;
+import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
@@ -46,6 +50,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,14 +178,12 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	/**
 	 * 构造函数
 	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 */
-	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool) {
-		super(dataSource);
-		this.pool = pool;
+	public LettuceConnection(PoolConfig poolConfig) {
+		super(poolConfig);
+		this.pool = createPool();
 	}
 
 	/**
@@ -188,16 +191,29 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig) {
+		super(dataSource, poolConfig);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-		this.pool = pool;
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
+		this.pool = createPool();
 	}
 
 	/**
@@ -205,8 +221,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -214,10 +230,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
-	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout,
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 							 int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+		this.pool = createPool();
 	}
 
 	/**
@@ -225,14 +241,14 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-		this.pool = pool;
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, sslConfiguration);
+		this.pool = createPool();
 	}
 
 	/**
@@ -240,8 +256,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -249,10 +265,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout,
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 							 SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+		this.pool = createPool();
 	}
 
 	/**
@@ -260,8 +276,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -271,10 +287,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceConnection(LettuceDataSource dataSource, LettucePool pool, int connectTimeout, int soTimeout,
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 							 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		this.pool = createPool();
 	}
 
 	public StatefulRedisConnection<byte[], byte[]> getStatefulConnection() {
@@ -304,6 +320,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	@Override
 	public Transaction multi() {
+		System.out.println("transaction: " + (transaction == null ? "false" : "true"));
 		if(transaction == null){
 			final RedisCommands<byte[], byte[]> commands = delegate.sync();
 			commands.multi();
@@ -362,6 +379,27 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 		return pool != null;
 	}
 
+	@Override
+	protected void doConnect() throws RedisConnectionFailureException {
+		if(isUsePool()){
+			try{
+				delegate = pool.getResource();
+
+				if(logger.isInfoEnabled()){
+					logger.info("StatefulConnection initialized with pool success.");
+				}
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
+				}
+
+				throw LettuceRedisExceptionUtils.convert(e);
+			}
+		}else{
+			delegate = createStatefulRedisConnection(new ByteArrayCodec());
+		}
+	}
+
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
@@ -383,25 +421,23 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 		return RedisClient.create(redisURI).connect(codec);
 	}
 
-	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		if(isUsePool()){
-			try{
-				delegate = pool.getResource();
+	protected LettucePool createPool() {
+		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+		final SslConfiguration sslConfiguration = getSslConfiguration();
+		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
+				getSslConfiguration()).database(dataSource.getDatabase()).build();
 
-				if(logger.isInfoEnabled()){
-					logger.info("StatefulConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
-				}
+		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
 
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
+		if(sslConfiguration == null){
+			logger.debug("Create lettuce pool.");
 		}else{
-			delegate = createStatefulRedisConnection(new ByteArrayCodec());
+			logger.debug("Create lettuce pool with ssl.");
 		}
+
+		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
+				clientConfig);
 	}
 
 	@Override

@@ -22,73 +22,47 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.lettuce;
+package com.buession.redis.jedis;
 
-import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.client.connection.lettuce.LettuceConnection;
-import com.buession.redis.core.RedisNode;
+import com.buession.redis.RedisTemplate;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Lettuce 单机模式数据源
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceDataSource extends AbstractLettuceDataSource implements StandaloneDataSource {
+public class ThreadTest extends AbstractJedisRedisTest {
 
-	/**
-	 * Redis 主机地址
-	 */
-	private String host = RedisNode.DEFAULT_HOST;
+	@Test
+	public void test() {
+		RedisTemplate redisTemplate = redisTemplate();
 
-	/**
-	 * Redis 端口
-	 */
-	private int port = RedisNode.DEFAULT_PORT;
-
-	/**
-	 * 数据库
-	 */
-	private int database = RedisNode.DEFAULT_DATABASE;
-
-	@Override
-	public String getHost() {
-		return host;
-	}
-
-	@Override
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	@Override
-	public int getPort() {
-		return port;
-	}
-
-	@Override
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	@Override
-	public int getDatabase() {
-		return database;
-	}
-
-	@Override
-	public void setDatabase(int database) {
-		this.database = database;
-	}
-
-	@Override
-	public LettuceConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new LettuceConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSslConfiguration());
-		}else{
-			return new LettuceConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSslConfiguration());
+		int corePoolSize = 4; //核心线程数
+		int maximumPoolSize = 8; //最大线程数
+		long keepAliveTime = 10000; //空闲线程存活时间
+		BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(8); //阻塞队列
+		//拒绝策略
+		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+				corePoolSize,
+				maximumPoolSize,
+				keepAliveTime,
+				TimeUnit.MILLISECONDS, //空闲线程存活时间的单位
+				workQueue
+		);
+		for(int i = 0; i < 8; i++){
+			threadPoolExecutor.execute(()->{
+				try{
+					redisTemplate.multi();
+				}catch(Exception e){
+					System.out.println(e.getMessage());
+				}
+			});
 		}
 	}
 

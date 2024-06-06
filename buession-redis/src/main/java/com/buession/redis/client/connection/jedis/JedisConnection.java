@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.lang.Constants;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
+import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
@@ -42,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
 import java.util.List;
@@ -172,6 +175,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param pool
 	 * 		连接池
 	 */
+	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool) {
 		super(dataSource);
 		this.pool = pool;
@@ -189,6 +193,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
+	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 		this.pool = pool;
@@ -208,6 +213,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
+	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
@@ -224,6 +230,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
+	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
 		this.pool = pool;
@@ -243,6 +250,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
+	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
@@ -265,10 +273,143 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
+	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.pool = pool;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(PoolConfig poolConfig) {
+		super(poolConfig);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig) {
+		super(dataSource, poolConfig);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
+						   int infiniteSoTimeout) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, sslConfiguration);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
+						   SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+		this.pool = createPool();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
+						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		this.pool = createPool();
 	}
 
 	public Jedis getJedis() {
@@ -293,6 +434,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	public Transaction multi() {
+		System.out.println("transaction: " + (transaction == null ? "false" : "true"));
 		if(transaction == null){
 			final redis.clients.jedis.Transaction tran = jedis.multi();
 			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
@@ -372,6 +514,33 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 					getSslConfiguration()).build();
 
 			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
+		}
+	}
+
+	protected JedisPool createPool() {
+		if(getPoolConfig() == null){
+			return null;
+		}else{
+			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+			final SslConfiguration sslConfiguration = getSslConfiguration();
+			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+
+			getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
+
+			final String password = Constants.EMPTY_STRING.equals(
+					dataSource.getPassword()) ? null : dataSource.getPassword();
+			if(sslConfiguration == null){
+				logger.debug("Create jedis pool.");
+				return new JedisPool(jedisPoolConfig, dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
+						getSoTimeout(), dataSource.getUsername(), password, dataSource.getDatabase(),
+						dataSource.getClientName(), isUseSsl());
+			}else{
+				logger.debug("Create jedis pool with ssl.");
+				return new JedisPool(jedisPoolConfig, dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
+						getSoTimeout(), dataSource.getUsername(), password, dataSource.getDatabase(),
+						dataSource.getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
+						sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+			}
 		}
 	}
 

@@ -24,27 +24,12 @@
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
-import com.buession.core.validator.Validate;
-import com.buession.net.HostAndPort;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
-import io.lettuce.core.LettucePoolConfig;
-import io.lettuce.core.LettuceSentinelPool;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-import io.lettuce.core.support.ConnectionPoolUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 哨兵模式数据源
@@ -83,10 +68,6 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 	 * 哨兵节点
 	 */
 	private List<RedisNode> sentinels;
-
-	private LettuceSentinelPool pool;
-
-	private final static Logger logger = LoggerFactory.getLogger(LettuceSentinelDataSource.class);
 
 	@Override
 	public int getDatabase() {
@@ -150,62 +131,13 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 
 	@Override
 	public LettuceSentinelConnection getConnection() {
-		if(isUsePool()){
-			if(pool == null){
-				pool = createPool();
-			}
-		}
-
-		return new LettuceSentinelConnection(this, pool, getConnectTimeout(), getSoTimeout(),
-				getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-	}
-
-	protected LettuceSentinelPool createPool() {
-		/*
-		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(getSentinels());
-		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(this, getSslConfiguration());
-		final JedisClientConfigBuilder sentinelBuilder = JedisClientConfigBuilder.create(this,
-				getSslConfiguration());
-		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-
-		builder.database(getDatabase());
-
-		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
-
-		return new LettuceSentinelPool(getMasterName(), sentinels, jedisPoolConfig, builder.build(),
-				sentinelBuilder.build());
-
-		 */
-
-		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final LettuceClientConfigBuilder lettuceClientConfigBuilder = LettuceClientConfigBuilder.create(this,
-				getSslConfiguration());
-
-		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-		lettuceClientConfigBuilder.database(getDatabase());
-
-		if(sslConfiguration == null){
-			logger.debug("Create lettuce pool.");
+		if(getPoolConfig() == null){
+			return new LettuceSentinelConnection(this, getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 		}else{
-			logger.debug("Create lettuce pool with ssl.");
+			return new LettuceSentinelConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
 		}
-
-		return ConnectionPoolUtils.createLettuceSentinelPool(getMasterName(), lettucePoolConfig,
-				getSentinels().stream().map((m)->new HostAndPort(m.getHost(), m.getPort())).collect(Collectors.toSet()),
-				lettuceClientConfigBuilder.build(), lettuceClientConfigBuilder.build());
-	}
-
-	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
-		}
-
-		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
 	}
 
 }

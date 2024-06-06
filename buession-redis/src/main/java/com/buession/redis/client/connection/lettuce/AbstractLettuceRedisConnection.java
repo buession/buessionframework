@@ -29,6 +29,7 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
+import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -96,8 +97,6 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 2.0.0
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
 										  int infiniteSoTimeout) {
@@ -150,6 +149,119 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
 										  int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public AbstractLettuceRedisConnection(PoolConfig poolConfig) {
+		super(poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig) {
+		super(dataSource, poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 */
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+										  int soTimeout) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 */
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+										  int soTimeout, int infiniteSoTimeout) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig,
+										  SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+										  int soTimeout, SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+										  int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	@Override

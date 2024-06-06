@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,13 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * Redis 数据源
 	 */
 	private DataSource dataSource;
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	private PoolConfig poolConfig;
 
 	/**
 	 * 连接超时（单位：毫秒）
@@ -94,9 +102,9 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param connectTimeout
-	 * 		连接超时
+	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
-	 * 		读取超时
+	 * 		读取超时（单位：毫秒）
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout) {
 		this.dataSource = dataSource;
@@ -177,6 +185,137 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(PoolConfig poolConfig) {
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig) {
+		this(dataSource);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
+		this(dataSource, connectTimeout, soTimeout);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
+								   int infiniteSoTimeout) {
+		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
+		this(dataSource, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout（单位：毫秒）
+	 * 		连接超时
+	 * @param soTimeout（单位：毫秒）
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
+								   SslConfiguration sslConfiguration) {
+		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout（单位：毫秒）
+	 * 		Infinite 读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
+								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
 	@Override
 	public DataSource getDataSource() {
 		return dataSource;
@@ -185,6 +324,16 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	@Override
+	public PoolConfig getPoolConfig() {
+		return poolConfig;
+	}
+
+	@Override
+	public void setPoolConfig(PoolConfig poolConfig) {
+		this.poolConfig = poolConfig;
 	}
 
 	@Override

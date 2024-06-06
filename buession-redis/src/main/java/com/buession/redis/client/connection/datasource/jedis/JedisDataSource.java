@@ -24,15 +24,9 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.lang.Constants;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.core.RedisNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis 单机模式数据源
@@ -55,10 +49,6 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
-
-	private JedisPool pool;
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisDataSource.class);
 
 	@Override
 	public String getHost() {
@@ -92,33 +82,12 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 
 	@Override
 	public JedisConnection getConnection() {
-		if(isUsePool()){
-			if(pool == null){
-				pool = createPool();
-			}
-		}
-
-		return new JedisConnection(this, pool, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-				getSslConfiguration());
-	}
-
-	protected JedisPool createPool() {
-		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-
-		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
-
-		final String password = Constants.EMPTY_STRING.equals(getPassword()) ? null : getPassword();
-		if(sslConfiguration == null){
-			logger.debug("Create jedis pool.");
-			return new JedisPool(jedisPoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
-					getUsername(), password, getDatabase(), getClientName(), isUseSsl());
+		if(getPoolConfig() == null){
+			return new JedisConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
+					getSslConfiguration());
 		}else{
-			logger.debug("Create jedis pool with ssl.");
-			return new JedisPool(jedisPoolConfig, getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
-					getUsername(), password, getDatabase(), getClientName(), isUseSsl(),
-					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
-					sslConfiguration.getHostnameVerifier());
+			return new JedisConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
+					getInfiniteSoTimeout(), getSslConfiguration());
 		}
 	}
 
