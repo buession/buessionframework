@@ -25,7 +25,6 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
@@ -57,14 +56,11 @@ import redis.clients.jedis.exceptions.JedisException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Jedis 哨兵模式连接器
@@ -663,13 +659,17 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	protected void internalInit() {
 	}
 
-	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource) {
-		final Set<HostAndPort> sentinels = convertToJedisSentinelSet(dataSource.getSentinels());
-		final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
-		final JedisClientConfig clientConfig = builder.build();
+	protected boolean isUsePool() {
+		return pool != null;
+	}
 
-		for(HostAndPort sentinel : sentinels){
-			try(Jedis jedis = new Jedis(sentinel, clientConfig)){
+	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource) {
+		final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
+
+		for(RedisNode node : dataSource.getSentinels()){
+			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+			HostAndPort sentinel = new HostAndPort(node.getHost(), port);
+			try(Jedis jedis = new Jedis(sentinel, sentinelClientConfig)){
 				return jedis;
 			}catch(JedisException e){
 				logger.warn("Cannot get master address from sentinel running @ {}. Reason: {}. Trying next one.",
@@ -680,35 +680,14 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		return null;
 	}
 
-	protected boolean isUsePool() {
-		return pool != null;
-	}
-
-	private Set<HostAndPort> convertToJedisSentinelSet(Collection<RedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
-		}
-
-		Set<HostAndPort> convertedNodes = new LinkedHashSet<>(sentinelNodes.size());
-
-		for(RedisNode node : sentinelNodes){
-			if(node != null){
-				int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-				convertedNodes.add(new HostAndPort(node.getHost(), port));
-			}
-		}
-
-		return convertedNodes;
-	}
-
 	protected Jedis createJedis(final JedisSentinelDataSource dataSource) {
-		final DefaultJedisClientConfig clientConfig = createJedisClientConfigBuilder(dataSource,
-				getSentinelConnectTimeout(), getSentinelSoTimeout(), getInfiniteSoTimeout()).build();
+		final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
 		boolean sentinelAvailable = false;
 
 		for(RedisNode node : dataSource.getSentinels()){
 			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			try(Jedis jedis = new Jedis(new HostAndPort(node.getHost(), port), clientConfig)){
+			HostAndPort sentinel = new HostAndPort(node.getHost(), port);
+			try(Jedis jedis = new Jedis(sentinel, sentinelClientConfig)){
 				List<String> masterAddr = jedis.sentinelGetMasterAddrByName(dataSource.getMasterName());
 				sentinelAvailable = true;
 
@@ -718,13 +697,11 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 					continue;
 				}
 
-				final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource,
-						getSslConfiguration());
-
-				builder.database(dataSource.getDatabase());
+				final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+						getSslConfiguration()).build();
 
 				return new Jedis(new HostAndPort(masterAddr.get(0), Integer.parseInt(masterAddr.get(1))),
-						builder.build());
+						clientConfig);
 			}
 		}
 
@@ -814,27 +791,30 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		}
 	}
 
+	protected JedisClientConfig createSentinelJedisClientConfig(final JedisSentinelDataSource dataSource) {
+		return JedisClientConfigBuilder.create(dataSource, getSslConfiguration())
+				.connectTimeout(getSentinelConnectTimeout())
+				.socketTimeout(getSentinelSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.clientName(dataSource.getSentinelClientName())
+				.build();
+	}
+
 	protected List<RedisServer> parseRedisServer(final List<Map<String, String>> nodes, final Role role) {
 		if(nodes == null){
 			return null;
 		}
 
-		final List<RedisServer> result = new ArrayList<>(nodes.size());
-		RedisServer redisServer;
-		Properties properties;
-
-		for(Map<String, String> node : nodes){
-			properties = new Properties();
+		return nodes.stream().map((node)->{
+			Properties properties = new Properties();
 			properties.putAll(node);
 
-			redisServer = new RedisServer(node.get("ip"), Integer.parseInt(node.get("port")), properties);
+			RedisServer redisServer = new RedisServer(node.get("ip"), Integer.parseInt(node.get("port")), properties);
 			redisServer.setName(node.get("name"));
 			redisServer.setRole(role);
 
-			result.add(redisServer);
-		}
-
-		return result;
+			return redisServer;
+		}).collect(Collectors.toList());
 	}
 
 }

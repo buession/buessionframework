@@ -205,37 +205,19 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			/*
-			final Runner runner = new PtRunner<SR, R>() {
+			final com.buession.redis.transaction.Transaction transaction = transaction();
 
-				@Override
-				protected Converter<SR, R> getConverter() {
-					return converter;
-				}
+			if(transaction instanceof TransactionProxy){
+				final TransactionProxy<Transaction, JedisResult<Object, Object>> transactionFactory =
+						(TransactionProxy<Transaction, JedisResult<Object, Object>>) transaction;
+				final Runner runner = new TransactionRunner<>(executor, transactionFactory, converter);
 
-				@Override
-				protected Response<SR> doRun() throws RedisException {
-					/*
-					final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+				transactionFactory.getTxResults().add(runner.run());
 
-					if(pipeline instanceof PipelineFactory){
-						final PipelineFactory<Pipeline> pipelineFactory = (PipelineFactory<Pipeline>) pipeline;
-						return executor.execute(pipelineFactory.getObject());
-					}else{
-						throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
-					}
-
-					 */
-			/*
-					return null;
-				}
-
-			};
-
-			client.getTxResults().add(runner.run());
-
-			 */
-			return null;
+				return null;
+			}else{
+				throw new RedisTransactionException("ERR EXEC without multi. Did you forget to call multi?");
+			}
 		}
 
 	}
@@ -308,37 +290,19 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			/*
-			final Runner runner = new PtRunner<SR, R>() {
+			final com.buession.redis.transaction.Transaction transaction = transaction();
 
-				@Override
-				protected Converter<SR, R> getConverter() {
-					return converter;
-				}
+			if(transaction instanceof TransactionProxy){
+				final TransactionProxy<Transaction, JedisResult<Object, Object>> transactionFactory =
+						(TransactionProxy<Transaction, JedisResult<Object, Object>>) transaction;
+				final Runner runner = new TransactionRunner<>(executor, transactionFactory, converter);
 
-				@Override
-				protected Response<SR> doRun() throws RedisException {
-					/*
-					final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
+				transactionFactory.getTxResults().add(runner.run());
 
-					if(pipeline instanceof PipelineFactory){
-						final PipelineFactory<Pipeline> pipelineFactory = (PipelineFactory<Pipeline>) pipeline;
-						return executor.execute(pipelineFactory.getObject());
-					}else{
-						throw new RedisException("ERR EXEC without pipeline. Did you forget to call openPipeline?");
-					}
-
-					 */
-			/*
-					return null;
-				}
-
-			};
-
-			client.getTxResults().add(runner.run());
-
-			 */
-			return null;
+				return null;
+			}else{
+				throw new RedisTransactionException("ERR EXEC without multi. Did you forget to call multi?");
+			}
 		}
 
 	}

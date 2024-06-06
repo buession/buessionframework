@@ -25,7 +25,6 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
-import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisConnection;
@@ -34,7 +33,6 @@ import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
-import redis.clients.jedis.DefaultJedisClientConfig;
 
 import java.io.IOException;
 
@@ -173,29 +171,6 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 			logger.error("Redis execute command failure: {}", e.getMessage(), e);
 			throw JedisRedisExceptionUtils.convert(e);
 		}
-	}
-
-	protected DefaultJedisClientConfig.Builder createJedisClientConfigBuilder(final JedisRedisDataSource dataSource,
-																			  final int connectTimeout,
-																			  final int soTimeout,
-																			  final int infiniteSoTimeout) {
-		final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder()
-				.connectionTimeoutMillis(connectTimeout)
-				.socketTimeoutMillis(soTimeout)
-				.blockingSocketTimeoutMillis(infiniteSoTimeout)
-				.ssl(isUseSsl());
-
-		if(Validate.hasText(dataSource.getClientName())){
-			builder.clientName(dataSource.getClientName());
-		}
-
-		if(getSslConfiguration() != null){
-			builder.sslSocketFactory(getSslConfiguration().getSslSocketFactory())
-					.sslParameters(getSslConfiguration().getSslParameters())
-					.hostnameVerifier(getSslConfiguration().getHostnameVerifier());
-		}
-
-		return builder;
 	}
 
 	@Override

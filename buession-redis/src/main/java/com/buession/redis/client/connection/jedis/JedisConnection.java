@@ -39,6 +39,7 @@ import com.buession.redis.transaction.jedis.JedisTransaction;
 import com.buession.redis.transaction.jedis.JedisTransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -367,11 +368,10 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 			}
 		}else{
 			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-			final JedisClientConfigBuilder builder = JedisClientConfigBuilder.create(dataSource, getSslConfiguration());
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+					getSslConfiguration()).build();
 
-			builder.database(dataSource.getDatabase());
-
-			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), builder.build());
+			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
 		}
 	}
 

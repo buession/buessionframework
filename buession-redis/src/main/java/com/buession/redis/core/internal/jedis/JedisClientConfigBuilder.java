@@ -38,8 +38,9 @@ public class JedisClientConfigBuilder {
 
 	private final DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
 
+	private final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+
 	private JedisClientConfigBuilder(final JedisRedisDataSource dataSource, final SslConfiguration sslConfiguration) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
 				.blockingSocketTimeoutMillis(dataSource.getInfiniteSoTimeout())
@@ -65,12 +66,12 @@ public class JedisClientConfigBuilder {
 	}
 
 	public JedisClientConfigBuilder user(final String user) {
-		builder.user(user);
+		propertyMapper.from(user).to(builder::user);
 		return this;
 	}
 
 	public JedisClientConfigBuilder password(final String password) {
-		builder.password(password);
+		propertyMapper.from(password).to(builder::password);
 		return this;
 	}
 
@@ -80,7 +81,22 @@ public class JedisClientConfigBuilder {
 	}
 
 	public JedisClientConfigBuilder clientName(final String clientName) {
-		builder.clientName(clientName);
+		propertyMapper.from(clientName).to(builder::clientName);
+		return this;
+	}
+
+	public JedisClientConfigBuilder connectTimeout(final int connectTimeout) {
+		builder.connectionTimeoutMillis(connectTimeout);
+		return this;
+	}
+
+	public JedisClientConfigBuilder socketTimeout(final int socketTimeout) {
+		builder.socketTimeoutMillis(socketTimeout);
+		return this;
+	}
+
+	public JedisClientConfigBuilder infiniteSoTimeout(final int blockingSocketTimeout) {
+		builder.blockingSocketTimeoutMillis(blockingSocketTimeout);
 		return this;
 	}
 
