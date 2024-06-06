@@ -35,25 +35,8 @@ import com.buession.redis.exception.RedisConnectionFailureException;
  */
 public class JedisConnectionFactory extends AbstractConnectionFactory<JedisDataSource> {
 
-	private RedisConnection redisConnection;
-
 	public JedisConnectionFactory(final JedisDataSource dataSource) {
 		super(dataSource);
-	}
-
-	@Override
-	public RedisConnection getConnection() {
-		if(redisConnection == null){
-			if(isRedisClusterAware()){
-				redisConnection = getClusterConnection();
-			}else if(isRedisSentinelAware()){
-				redisConnection = getSentinelConnection();
-			}else{
-				redisConnection = dataSource.getConnection();
-			}
-		}
-
-		return redisConnection;
 	}
 
 	@Override

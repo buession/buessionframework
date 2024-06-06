@@ -25,8 +25,6 @@
 package com.buession.redis.transaction;
 
 import com.buession.redis.core.FutureResult;
-import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.TransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -129,6 +129,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
@@ -137,9 +138,9 @@ public interface LettuceRedisOperations extends RedisOperations {
 				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
 						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
 
-				final Runner runner = new TransactionRunner<>((context)->{
-					return executor.execute(connection.getStatefulConnection().async());
-				}, transactionFactory, converter);
+				final Runner runner = new TransactionRunner<>(
+						(context)->executor.execute(connection.getStatefulConnection().async()), transactionFactory,
+						converter);
 
 				transactionFactory.getTxResults().add(runner.run());
 
@@ -223,6 +224,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
@@ -231,9 +233,9 @@ public interface LettuceRedisOperations extends RedisOperations {
 				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
 						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
 
-				final Runner runner = new TransactionRunner<>((context)->{
-					return executor.execute(connection.getStatefulRedisSentinelConnection().async());
-				}, transactionFactory, converter);
+				final Runner runner = new TransactionRunner<>(
+						(context)->executor.execute(connection.getStatefulRedisSentinelConnection().async()),
+						transactionFactory, converter);
 
 				transactionFactory.getTxResults().add(runner.run());
 
@@ -317,6 +319,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
@@ -325,9 +328,9 @@ public interface LettuceRedisOperations extends RedisOperations {
 				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
 						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
 
-				final Runner runner = new TransactionRunner<>((context)->{
-					return executor.execute(connection.getStatefulRedisClusterConnection().async());
-				}, transactionFactory, converter);
+				final Runner runner = new TransactionRunner<>(
+						(context)->executor.execute(connection.getStatefulRedisClusterConnection().async()),
+						transactionFactory, converter);
 
 				transactionFactory.getTxResults().add(runner.run());
 

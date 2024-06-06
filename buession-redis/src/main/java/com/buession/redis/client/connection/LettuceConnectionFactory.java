@@ -40,17 +40,6 @@ public class LettuceConnectionFactory extends AbstractConnectionFactory<LettuceD
 	}
 
 	@Override
-	public RedisConnection getConnection() {
-		if(isRedisClusterAware()){
-			return getClusterConnection();
-		}else if(isRedisSentinelAware()){
-			return getSentinelConnection();
-		}else{
-			return dataSource.getConnection();
-		}
-	}
-
-	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		if(isRedisSentinelAware()){
 			return (RedisSentinelConnection) dataSource.getConnection();
