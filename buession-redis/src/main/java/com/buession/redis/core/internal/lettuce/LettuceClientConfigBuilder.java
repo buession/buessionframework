@@ -38,9 +38,10 @@ public class LettuceClientConfigBuilder {
 
 	private final DefaultLettuceClientConfig.Builder builder = DefaultLettuceClientConfig.builder();
 
+	private final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+
 	private LettuceClientConfigBuilder(final LettuceRedisDataSource dataSource,
 									   final SslConfiguration sslConfiguration) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
 				.ssl(sslConfiguration != null);
@@ -65,12 +66,12 @@ public class LettuceClientConfigBuilder {
 	}
 
 	public LettuceClientConfigBuilder user(final String user) {
-		builder.user(user);
+		propertyMapper.from(user).to(builder::user);
 		return this;
 	}
 
 	public LettuceClientConfigBuilder password(final String password) {
-		builder.password(password);
+		propertyMapper.from(password).to(builder::password);
 		return this;
 	}
 
@@ -80,7 +81,7 @@ public class LettuceClientConfigBuilder {
 	}
 
 	public LettuceClientConfigBuilder clientName(final String clientName) {
-		builder.clientName(clientName);
+		propertyMapper.from(clientName).to(builder::clientName);
 		return this;
 	}
 

@@ -877,23 +877,6 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	public JedisCluster getCluster() {
-		if(cluster == null){
-			if(connectionProvider == null){
-				final JedisClusterDataSource clusterDataSource = (JedisClusterDataSource) getDataSource();
-				final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(clusterDataSource,
-						getSslConfiguration()).build();
-				final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
-
-				getDataSource().getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
-
-				cluster = new JedisCluster(createHostAndPorts(clusterDataSource), clientConfig, maxRedirects,
-						Duration.ofMillis(getMaxTotalRetriesDuration()), connectionPoolConfig);
-			}else{
-				cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
-						Duration.ofMillis(getMaxTotalRetriesDuration()));
-			}
-		}
-
 		return cluster;
 	}
 
@@ -958,23 +941,56 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 		}
 	}
 
+	protected boolean isUsePool() {
+		return getPoolConfig() != null;
+	}
+
 	@Override
 	protected void doConnect() throws RedisConnectionFailureException {
+		final Duration maxTotalRetriesDuration = Duration.ofMillis(getMaxTotalRetriesDuration());
+
+		if(connectionProvider == null){
+			final JedisClusterDataSource clusterDataSource = (JedisClusterDataSource) getDataSource();
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(clusterDataSource,
+							getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
+					.build();
+			final Set<HostAndPort> nodes = createHostAndPorts(clusterDataSource);
+
+			if(isUsePool()){
+				final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
+
+				getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
+
+				cluster = new JedisCluster(nodes, clientConfig, maxRedirects, maxTotalRetriesDuration,
+						connectionPoolConfig);
+			}else{
+				cluster = new JedisCluster(nodes, clientConfig, maxRedirects, maxTotalRetriesDuration);
+			}
+		}else{
+			cluster = new JedisCluster(connectionProvider, getMaxRedirects(), maxTotalRetriesDuration);
+		}
 	}
 
 	protected ClusterConnectionProvider createConnectionProvider() {
-		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
-		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource, getSslConfiguration())
+		final JedisClusterDataSource clusterDataSource = (JedisClusterDataSource) getDataSource();
+		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(clusterDataSource, getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
 				.build();
+		final Set<HostAndPort> nodes = createHostAndPorts(clusterDataSource);
 
-		if(getPoolConfig() == null){
-			return new ClusterConnectionProvider(createHostAndPorts(dataSource), clientConfig);
-		}else{
+		if(isUsePool()){
 			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
 
 			getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
 
-			return new ClusterConnectionProvider(createHostAndPorts(dataSource), clientConfig, connectionPoolConfig);
+			return new ClusterConnectionProvider(nodes, clientConfig, connectionPoolConfig);
+		}else{
+			return new ClusterConnectionProvider(nodes, clientConfig);
 		}
 	}
 

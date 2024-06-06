@@ -427,4 +427,9 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	protected abstract void doClose() throws IOException;
 
+	protected String password() {
+		return com.buession.lang.Constants.EMPTY_STRING.equals(
+				dataSource.getPassword()) ? null : dataSource.getPassword();
+	}
+
 }

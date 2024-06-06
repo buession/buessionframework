@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.lang.Constants;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
@@ -42,6 +41,7 @@ import com.buession.redis.transaction.jedis.JedisTransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -511,7 +511,12 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		}else{
 			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
 			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-					getSslConfiguration()).build();
+							getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase())
+					.build();
 
 			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
 		}
@@ -522,25 +527,25 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 			return null;
 		}else{
 			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-			final SslConfiguration sslConfiguration = getSslConfiguration();
 			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+			final HostAndPort hostAndPort = new HostAndPort(dataSource.getHost(), dataSource.getPort());
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+							getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase())
+					.build();
 
 			getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
 
-			final String password = Constants.EMPTY_STRING.equals(
-					dataSource.getPassword()) ? null : dataSource.getPassword();
-			if(sslConfiguration == null){
-				logger.debug("Create jedis pool.");
-				return new JedisPool(jedisPoolConfig, dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
-						getSoTimeout(), dataSource.getUsername(), password, dataSource.getDatabase(),
-						dataSource.getClientName(), isUseSsl());
+			if(getSslConfiguration() == null){
+				logger.debug("Create JedisPool.");
 			}else{
-				logger.debug("Create jedis pool with ssl.");
-				return new JedisPool(jedisPoolConfig, dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
-						getSoTimeout(), dataSource.getUsername(), password, dataSource.getDatabase(),
-						dataSource.getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
-						sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+				logger.debug("Create JedisPool with ssl.");
 			}
+
+			return new JedisPool(jedisPoolConfig, hostAndPort, clientConfig);
 		}
 	}
 

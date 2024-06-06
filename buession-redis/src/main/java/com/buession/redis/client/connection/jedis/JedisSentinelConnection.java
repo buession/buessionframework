@@ -970,6 +970,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 	protected Jedis createJedis(final JedisSentinelDataSource dataSource) {
 		final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
+		final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+						getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.database(dataSource.getDatabase())
+				.build();
 		boolean sentinelAvailable = false;
 
 		for(RedisNode node : dataSource.getSentinels()){
@@ -984,9 +991,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 							node);
 					continue;
 				}
-
-				final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-						getSslConfiguration()).build();
 
 				return new Jedis(new HostAndPort(masterAddr.get(0), Integer.parseInt(masterAddr.get(1))),
 						clientConfig);
@@ -1029,20 +1033,23 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			return null;
 		}else{
 			final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
+			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 			final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
 			final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource, getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
 					.database(dataSource.getDatabase())
 					.build();
-			final JedisClientConfig sentinelClientConfig = JedisClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getSentinelConnectTimeout())
-					.socketTimeout(getSentinelSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.clientName(dataSource.getSentinelClientName())
-					.build();
-			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+			final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
 
 			getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
+
+			if(getSslConfiguration() == null){
+				logger.debug("Create JedisSentinelPool.");
+			}else{
+				logger.debug("Create JedisSentinelPool with ssl.");
+			}
 
 			return new JedisSentinelPool(dataSource.getMasterName(), sentinels, jedisPoolConfig, clientConfig,
 					sentinelClientConfig);

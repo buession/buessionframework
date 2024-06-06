@@ -422,22 +422,30 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	}
 
 	protected LettucePool createPool() {
-		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
-				getSslConfiguration()).database(dataSource.getDatabase()).build();
-
-		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-		if(sslConfiguration == null){
-			logger.debug("Create lettuce pool.");
+		if(getPoolConfig() == null){
+			return null;
 		}else{
-			logger.debug("Create lettuce pool with ssl.");
-		}
+			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+			final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
+							getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase())
+					.build();
 
-		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
-				clientConfig);
+			getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
+
+			if(getSslConfiguration() == null){
+				logger.debug("Create LettucePool.");
+			}else{
+				logger.debug("Create LettucePool with ssl.");
+			}
+
+			return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
+					clientConfig);
+		}
 	}
 
 	@Override

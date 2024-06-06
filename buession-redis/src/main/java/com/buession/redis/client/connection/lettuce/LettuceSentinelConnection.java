@@ -772,27 +772,23 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return null;
 		}else{
 			final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
+			final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
 			final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
-			final SslConfiguration sslConfiguration = getSslConfiguration();
 			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
 							getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
 					.database(dataSource.getDatabase())
 					.build();
-			final LettuceClientConfig sentinelClientConfig = LettuceClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getSentinelConnectTimeout())
-					.socketTimeout(getSentinelSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.clientName(dataSource.getSentinelClientName())
-					.build();
-			final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+			final LettuceClientConfig sentinelClientConfig = createSentinelLettuceClientConfig(dataSource);
 
 			getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
 
-			if(sslConfiguration == null){
-				logger.debug("Create lettuce pool.");
+			if(getSslConfiguration() == null){
+				logger.debug("Create LettuceSentinelPool.");
 			}else{
-				logger.debug("Create lettuce pool with ssl.");
+				logger.debug("Create LettuceSentinelPool with ssl.");
 			}
 
 			return ConnectionPoolUtils.createLettuceSentinelPool(dataSource.getMasterName(), lettucePoolConfig,
@@ -829,6 +825,15 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		if(delegate != null){
 			delegate.close();
 		}
+	}
+
+	protected LettuceClientConfig createSentinelLettuceClientConfig(final LettuceSentinelDataSource dataSource) {
+		return LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
+				.connectTimeout(getSentinelConnectTimeout())
+				.socketTimeout(getSentinelSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.clientName(dataSource.getSentinelClientName())
+				.build();
 	}
 
 	protected Set<HostAndPort> createSentinelHosts(final Collection<RedisNode> sentinelNodes) {
