@@ -306,6 +306,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	public Transaction multi() {
 		if(transaction == null){
 			final RedisCommands<byte[], byte[]> commands = delegate.sync();
+			commands.multi();
 			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
 

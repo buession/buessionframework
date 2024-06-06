@@ -37,7 +37,9 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisPipelineException;
+import com.buession.redis.exception.RedisTransactionException;
 import com.buession.redis.pipeline.PipelineProxy;
+import com.buession.redis.transaction.TransactionProxy;
 import io.lettuce.core.FlushEachCommand;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -98,7 +100,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
 						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
 
-				final Runner runner = new PtRunner<>((context)->{
+				final Runner runner = new PipelineRunner<>((context)->{
 					context.onCommand(connection.getStatefulConnection());
 					return executor.execute(connection.getStatefulConnection().async());
 				}, pipelineFactory, converter);
@@ -129,8 +131,22 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			//executor.execute(connection.getStatefulConnection().async());
-			return null;
+			final com.buession.redis.transaction.Transaction transaction = transaction();
+
+			if(transaction instanceof TransactionProxy){
+				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
+						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
+
+				final Runner runner = new TransactionRunner<>((context)->{
+					return executor.execute(connection.getStatefulConnection().async());
+				}, transactionFactory, converter);
+
+				transactionFactory.getTxResults().add(runner.run());
+
+				return null;
+			}else{
+				throw new RedisTransactionException("ERR EXEC without MULTI. Did you forget to call multi?");
+			}
 		}
 
 	}
@@ -178,7 +194,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
 						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
 
-				final Runner runner = new PtRunner<>((context)->{
+				final Runner runner = new PipelineRunner<>((context)->{
 					context.onCommand(connection.getStatefulRedisSentinelConnection());
 					return executor.execute(connection.getStatefulRedisSentinelConnection().async());
 				}, pipelineFactory, converter);
@@ -209,8 +225,22 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			//executor.execute(connection.getStatefulConnection().async());
-			return null;
+			final com.buession.redis.transaction.Transaction transaction = transaction();
+
+			if(transaction instanceof TransactionProxy){
+				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
+						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
+
+				final Runner runner = new TransactionRunner<>((context)->{
+					return executor.execute(connection.getStatefulRedisSentinelConnection().async());
+				}, transactionFactory, converter);
+
+				transactionFactory.getTxResults().add(runner.run());
+
+				return null;
+			}else{
+				throw new RedisTransactionException("ERR EXEC without MULTI. Did you forget to call multi?");
+			}
 		}
 
 	}
@@ -258,7 +288,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
 						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
 
-				final Runner runner = new PtRunner<>((context)->{
+				final Runner runner = new PipelineRunner<>((context)->{
 					context.onCommand(connection.getStatefulRedisClusterConnection());
 					return executor.execute(connection.getStatefulRedisClusterConnection().async());
 				}, pipelineFactory, converter);
@@ -289,26 +319,58 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		@Override
 		protected R doExecute() throws RedisException {
-			//executor.execute(connection.getStatefulConnection().async());
-			return null;
+			final com.buession.redis.transaction.Transaction transaction = transaction();
+
+			if(transaction instanceof TransactionProxy){
+				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
+						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
+
+				final Runner runner = new TransactionRunner<>((context)->{
+					return executor.execute(connection.getStatefulRedisClusterConnection().async());
+				}, transactionFactory, converter);
+
+				transactionFactory.getTxResults().add(runner.run());
+
+				return null;
+			}else{
+				throw new RedisTransactionException("ERR EXEC without MULTI. Did you forget to call multi?");
+			}
 		}
 
 	}
 
-	final class PtRunner<T, SR, R> implements Command.Runner {
+	abstract class PtRunner<T, SR, R> implements Command.Runner {
 
-		private final Command.Executor<T, RedisFuture<SR>> executor;
+		protected final Command.Executor<T, RedisFuture<SR>> executor;
+
+		protected final Converter<SR, R> converter;
+
+		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+						final Converter<SR, R> converter) {
+			this.executor = executor;
+			this.converter = converter;
+		}
+
+		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {
+			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).build();
+		}
+
+		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future,
+														final Converter<SR, R> converter) {
+			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).mappedWith(converter).build();
+		}
+
+	}
+
+	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
 		private final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory;
 
-		private final Converter<SR, R> converter;
-
-		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-						final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory,
-						final Converter<SR, R> converter) {
-			this.executor = executor;
+		public PipelineRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+							  final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory,
+							  final Converter<SR, R> converter) {
+			super(executor, converter);
 			this.pipelineFactory = pipelineFactory;
-			this.converter = converter;
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -318,13 +380,24 @@ public interface LettuceRedisOperations extends RedisOperations {
 			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
 		}
 
-		private LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {
-			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).build();
+	}
+
+	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
+
+		private final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy;
+
+		public TransactionRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+								 final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy,
+								 final Converter<SR, R> converter) {
+			super(executor, converter);
+			this.transactionProxy = transactionProxy;
 		}
 
-		private LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future,
-													  final Converter<SR, R> converter) {
-			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).mappedWith(converter).build();
+		@SuppressWarnings({"unchecked"})
+		@Override
+		public LettuceResult<SR, R> run() throws RedisException {
+			final RedisFuture<SR> future = executor.execute(transactionProxy.getObject());
+			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
 		}
 
 	}

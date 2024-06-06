@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.time.Duration;
@@ -576,26 +577,30 @@ public class PoolConfig {
 	 * @since 2.3.2
 	 */
 	public <T> GenericObjectPoolConfig<T> toGenericObjectPoolConfig(final GenericObjectPoolConfig<T> poolConfig) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+
 		poolConfig.setLifo(getLifo());
 		poolConfig.setFairness(getFairness());
 		poolConfig.setMaxWait(getMaxWait());
-		poolConfig.setMinEvictableIdleTime(getMinEvictableIdleTime());
-		poolConfig.setSoftMinEvictableIdleTime(getSoftMinEvictableIdleTime());
-		poolConfig.setEvictionPolicyClassName(getEvictionPolicyClassName());
-		poolConfig.setEvictorShutdownTimeout(getEvictorShutdownTimeout());
 		poolConfig.setNumTestsPerEvictionRun(getNumTestsPerEvictionRun());
 		poolConfig.setTestOnCreate(getTestOnCreate());
 		poolConfig.setTestOnBorrow(getTestOnBorrow());
 		poolConfig.setTestOnReturn(getTestOnReturn());
 		poolConfig.setTestWhileIdle(getTestWhileIdle());
-		poolConfig.setTimeBetweenEvictionRuns(getTimeBetweenEvictionRuns());
 		poolConfig.setBlockWhenExhausted(getBlockWhenExhausted());
 		poolConfig.setJmxEnabled(getJmxEnabled());
-		poolConfig.setJmxNamePrefix(getJmxNamePrefix());
-		poolConfig.setJmxNameBase(getJmxNameBase());
 		poolConfig.setMaxTotal(getMaxTotal());
 		poolConfig.setMinIdle(getMinIdle());
 		poolConfig.setMaxIdle(getMaxIdle());
+
+		propertyMapper.from(getMinEvictableIdleTime()).to(poolConfig::setMinEvictableIdleTime);
+		propertyMapper.from(getSoftMinEvictableIdleTime()).to(poolConfig::setSoftMinEvictableIdleTime);
+		propertyMapper.from(getEvictorShutdownTimeout()).to(poolConfig::setEvictorShutdownTimeout);
+		propertyMapper.from(getTimeBetweenEvictionRuns()).to(poolConfig::setTimeBetweenEvictionRuns);
+		propertyMapper.alwaysApplyingWhenHasText().from(getEvictionPolicyClassName())
+				.to(poolConfig::setEvictionPolicyClassName);
+		propertyMapper.alwaysApplyingWhenHasText().from(getJmxNamePrefix()).to(poolConfig::setJmxNamePrefix);
+		propertyMapper.alwaysApplyingWhenHasText().from(getJmxNameBase()).to(poolConfig::setJmxNameBase);
 
 		return poolConfig;
 	}

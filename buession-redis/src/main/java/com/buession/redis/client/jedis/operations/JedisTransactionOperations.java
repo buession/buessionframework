@@ -49,34 +49,16 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
-				RedisConnection connection = client.getConnection();
-
-				return new Response<>(new Builder<Status>() {
-
-					@Override
-					public Status build(Object data) {
-						try{
-							connection.multi();
-							return Status.SUCCESS;
-						}catch(Exception e){
-							return Status.FAILURE;
-						}
-					}
-
-				});
-			}, (v)->v)
+			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
-				RedisConnection connection = client.getConnection();
-
 				return new Response<>(new Builder<Status>() {
 
 					@Override
 					public Status build(Object data) {
 						try{
-							connection.multi();
+							cmd.multi();
 							return Status.SUCCESS;
 						}catch(Exception e){
 							return Status.FAILURE;
@@ -88,9 +70,8 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					.run();
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
-				RedisConnection connection = client.getConnection();
 				try{
-					connection.multi();
+					cmd.multi();
 					return Status.SUCCESS;
 				}catch(Exception e){
 					return Status.FAILURE;

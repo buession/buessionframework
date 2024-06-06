@@ -77,6 +77,7 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
+import com.buession.redis.transaction.Transaction;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -4383,14 +4384,20 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Status multi() {
-		return execute((client)->client.transactionOperations().multi());
+		return execute((client)->{
+			try{
+				final Transaction transaction = client.getConnection().multi();
+				return transaction != null ? Status.SUCCESS : Status.FAILURE;
+			}catch(Exception e){
+				return Status.FAILURE;
+			}
+		});
 	}
 
 	@Override
 	public List<Object> exec() {
 		return execute((client)->{
-			RedisConnection connection = client.getConnection();
-			return connection.exec();
+			return client.getConnection().exec();
 		});
 	}
 

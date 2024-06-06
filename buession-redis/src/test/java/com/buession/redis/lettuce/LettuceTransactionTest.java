@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis;
+package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
 import org.junit.jupiter.api.Test;
@@ -33,13 +33,13 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisTransactionTest extends AbstractJedisRedisTest {
+public class LettuceTransactionTest extends AbstractLettuceRedisTest {
 
 	@Test
 	public void exec() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("a", "Jedis");
+		redisTemplate.set("a", "Lettuce");
 		redisTemplate.exists("a");
 		redisTemplate.expire("a", 60);
 		String ret = redisTemplate.get("a");
