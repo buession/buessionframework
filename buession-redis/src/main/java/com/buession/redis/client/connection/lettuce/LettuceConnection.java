@@ -183,7 +183,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 */
 	public LettuceConnection(PoolConfig poolConfig) {
 		super(poolConfig);
-		this.pool = createPool();
 	}
 
 	/**
@@ -196,7 +195,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
-		this.pool = createPool();
 	}
 
 	/**
@@ -213,7 +211,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
-		this.pool = createPool();
 	}
 
 	/**
@@ -233,7 +230,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 							 int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.pool = createPool();
 	}
 
 	/**
@@ -248,7 +244,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	/**
@@ -268,7 +263,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 							 SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	/**
@@ -290,7 +284,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 							 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	public StatefulRedisConnection<byte[], byte[]> getStatefulConnection() {
@@ -373,6 +366,9 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	@Override
 	protected void internalInit() {
+		if(pool == null && getPoolConfig() != null){
+			pool = createPool();
+		}
 	}
 
 	protected boolean isUsePool() {
@@ -422,30 +418,26 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	}
 
 	protected LettucePool createPool() {
-		if(getPoolConfig() == null){
-			return null;
+		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
+						getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.database(dataSource.getDatabase())
+				.build();
+
+		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
+
+		if(getSslConfiguration() == null){
+			logger.debug("Create LettucePool.");
 		}else{
-			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-			final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getConnectTimeout())
-					.socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.database(dataSource.getDatabase())
-					.build();
-
-			getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-			if(getSslConfiguration() == null){
-				logger.debug("Create LettucePool.");
-			}else{
-				logger.debug("Create LettucePool with ssl.");
-			}
-
-			return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
-					clientConfig);
+			logger.debug("Create LettucePool with ssl.");
 		}
+
+		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
+				clientConfig);
 	}
 
 	@Override

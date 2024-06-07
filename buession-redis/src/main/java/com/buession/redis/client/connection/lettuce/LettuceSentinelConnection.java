@@ -315,7 +315,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 */
 	public LettuceSentinelConnection(PoolConfig poolConfig) {
 		super(poolConfig);
-		this.pool = createPool();
 	}
 
 	/**
@@ -328,7 +327,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
-		this.pool = createPool();
 	}
 
 	/**
@@ -348,7 +346,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -370,7 +367,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -386,7 +382,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig,
 									 SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	/**
@@ -408,7 +403,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -432,7 +426,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -456,7 +449,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -483,7 +475,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -510,7 +501,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-		this.pool = createPool();
 	}
 
 	/**
@@ -539,7 +529,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
-		this.pool = createPool();
 	}
 
 	@Override
@@ -713,6 +702,9 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 	@Override
 	protected void internalInit() {
+		if(pool == null && getPoolConfig() != null){
+			pool = createPool();
+		}
 	}
 
 	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
@@ -768,32 +760,28 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	}
 
 	protected LettuceSentinelPool createPool() {
-		if(getPoolConfig() == null){
-			return null;
+		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
+		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+		final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
+						getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.database(dataSource.getDatabase())
+				.build();
+		final LettuceClientConfig sentinelClientConfig = createSentinelLettuceClientConfig(dataSource);
+
+		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
+
+		if(getSslConfiguration() == null){
+			logger.debug("Create LettuceSentinelPool.");
 		}else{
-			final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-			final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-			final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
-			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getConnectTimeout())
-					.socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.database(dataSource.getDatabase())
-					.build();
-			final LettuceClientConfig sentinelClientConfig = createSentinelLettuceClientConfig(dataSource);
-
-			getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-			if(getSslConfiguration() == null){
-				logger.debug("Create LettuceSentinelPool.");
-			}else{
-				logger.debug("Create LettuceSentinelPool with ssl.");
-			}
-
-			return ConnectionPoolUtils.createLettuceSentinelPool(dataSource.getMasterName(), lettucePoolConfig,
-					sentinels, clientConfig, sentinelClientConfig);
+			logger.debug("Create LettuceSentinelPool with ssl.");
 		}
+
+		return ConnectionPoolUtils.createLettuceSentinelPool(dataSource.getMasterName(), lettucePoolConfig,
+				sentinels, clientConfig, sentinelClientConfig);
 	}
 
 	@Override

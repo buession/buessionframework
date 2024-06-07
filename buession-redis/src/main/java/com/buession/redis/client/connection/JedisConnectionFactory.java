@@ -39,7 +39,7 @@ import com.buession.redis.exception.RedisConnectionFailureException;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisConnectionFactory extends AbstractConnectionFactory<JedisRedisDataSource> {
+public final class JedisConnectionFactory extends AbstractConnectionFactory<JedisRedisDataSource> {
 
 	public JedisConnectionFactory(final JedisRedisDataSource dataSource) {
 		super(dataSource);
@@ -61,18 +61,18 @@ public class JedisConnectionFactory extends AbstractConnectionFactory<JedisRedis
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		if(isRedisSentinelAware()){
-			final JedisSentinelDataSource sentinelDataSource = (JedisSentinelDataSource) getDataSource();
+			final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
 
-			if(sentinelDataSource.getPoolConfig() == null){
-				return new JedisSentinelConnection(sentinelDataSource, sentinelDataSource.getConnectTimeout(),
-						sentinelDataSource.getSoTimeout(), sentinelDataSource.getInfiniteSoTimeout(),
-						sentinelDataSource.getSentinelConnectTimeout(), sentinelDataSource.getSentinelSoTimeout(),
-						sentinelDataSource.getSslConfiguration());
+			if(dataSource.getPoolConfig() == null){
+				return new JedisSentinelConnection(dataSource, dataSource.getConnectTimeout(),
+						dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
+						dataSource.getSentinelConnectTimeout(), dataSource.getSentinelSoTimeout(),
+						dataSource.getSslConfiguration());
 			}else{
-				return new JedisSentinelConnection(sentinelDataSource, sentinelDataSource.getPoolConfig(),
-						sentinelDataSource.getConnectTimeout(), sentinelDataSource.getSoTimeout(),
-						sentinelDataSource.getInfiniteSoTimeout(), sentinelDataSource.getSentinelConnectTimeout(),
-						sentinelDataSource.getSentinelSoTimeout(), sentinelDataSource.getSslConfiguration());
+				return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig(),
+						dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
+						dataSource.getSentinelConnectTimeout(), dataSource.getSentinelSoTimeout(),
+						dataSource.getSslConfiguration());
 			}
 		}
 
@@ -82,18 +82,17 @@ public class JedisConnectionFactory extends AbstractConnectionFactory<JedisRedis
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		if(isRedisClusterAware()){
-			final JedisClusterDataSource clusterDataSource = (JedisClusterDataSource) getDataSource();
+			final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
 
-			if(clusterDataSource.getPoolConfig() == null){
-				return new JedisClusterConnection(clusterDataSource, clusterDataSource.getConnectTimeout(),
-						clusterDataSource.getSoTimeout(), clusterDataSource.getInfiniteSoTimeout(),
-						clusterDataSource.getMaxRedirects(), clusterDataSource.getMaxTotalRetriesDuration(),
-						clusterDataSource.getSslConfiguration());
+			if(dataSource.getPoolConfig() == null){
+				return new JedisClusterConnection(dataSource, dataSource.getConnectTimeout(),
+						dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
+						dataSource.getMaxTotalRetriesDuration(), dataSource.getSslConfiguration());
 			}else{
-				return new JedisClusterConnection(clusterDataSource, clusterDataSource.getPoolConfig(),
-						clusterDataSource.getConnectTimeout(), clusterDataSource.getSoTimeout(),
-						clusterDataSource.getInfiniteSoTimeout(), clusterDataSource.getMaxRedirects(),
-						clusterDataSource.getMaxTotalRetriesDuration(), clusterDataSource.getSslConfiguration());
+				return new JedisClusterConnection(dataSource, dataSource.getPoolConfig(),
+						dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
+						dataSource.getMaxRedirects(), dataSource.getMaxTotalRetriesDuration(),
+						dataSource.getSslConfiguration());
 			}
 		}
 

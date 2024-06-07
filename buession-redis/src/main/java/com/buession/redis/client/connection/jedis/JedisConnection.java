@@ -290,7 +290,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(PoolConfig poolConfig) {
 		super(poolConfig);
-		this.pool = createPool();
 	}
 
 	/**
@@ -305,7 +304,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
-		this.pool = createPool();
 	}
 
 	/**
@@ -324,7 +322,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
-		this.pool = createPool();
 	}
 
 	/**
@@ -346,7 +343,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.pool = createPool();
 	}
 
 	/**
@@ -363,7 +359,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	/**
@@ -385,7 +380,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	/**
@@ -409,7 +403,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.pool = createPool();
 	}
 
 	public Jedis getJedis() {
@@ -486,6 +479,9 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	protected void internalInit() {
+		if(pool == null && getPoolConfig() != null){
+			pool = createPool();
+		}
 	}
 
 	protected boolean isUsePool() {
@@ -523,30 +519,26 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	protected JedisPool createPool() {
-		if(getPoolConfig() == null){
-			return null;
+		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		final HostAndPort hostAndPort = new HostAndPort(dataSource.getHost(), dataSource.getPort());
+		final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+						getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.database(dataSource.getDatabase())
+				.build();
+
+		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
+
+		if(getSslConfiguration() == null){
+			logger.debug("Create JedisPool.");
 		}else{
-			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-			final HostAndPort hostAndPort = new HostAndPort(dataSource.getHost(), dataSource.getPort());
-			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getConnectTimeout())
-					.socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.database(dataSource.getDatabase())
-					.build();
-
-			getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
-
-			if(getSslConfiguration() == null){
-				logger.debug("Create JedisPool.");
-			}else{
-				logger.debug("Create JedisPool with ssl.");
-			}
-
-			return new JedisPool(jedisPoolConfig, hostAndPort, clientConfig);
+			logger.debug("Create JedisPool with ssl.");
 		}
+
+		return new JedisPool(jedisPoolConfig, hostAndPort, clientConfig);
 	}
 
 	@Override

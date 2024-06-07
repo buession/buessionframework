@@ -61,6 +61,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
+ * Base class for {@link RedisTemplate} defining common properties. Not intended to be used directly.
+ *
  * @author Yong.Teng
  */
 public abstract class RedisAccessor implements InitializingBean, AutoCloseable {

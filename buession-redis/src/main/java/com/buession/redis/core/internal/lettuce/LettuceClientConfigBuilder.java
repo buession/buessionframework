@@ -76,7 +76,9 @@ public class LettuceClientConfigBuilder {
 	}
 
 	public LettuceClientConfigBuilder database(final int database) {
-		builder.database(database);
+		if(database >= 0){
+			builder.database(database);
+		}
 		return this;
 	}
 

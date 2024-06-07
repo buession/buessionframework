@@ -76,7 +76,9 @@ public class JedisClientConfigBuilder {
 	}
 
 	public JedisClientConfigBuilder database(final int database) {
-		builder.database(database);
+		if(database >= 0){
+			builder.database(database);
+		}
 		return this;
 	}
 

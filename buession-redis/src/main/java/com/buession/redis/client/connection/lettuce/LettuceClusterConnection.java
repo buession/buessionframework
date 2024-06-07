@@ -25,9 +25,15 @@
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.net.HostAndPort;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
+import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
@@ -35,7 +41,10 @@ import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
+import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettuceClusterPool;
+import io.lettuce.core.LettucePoolConfig;
+import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
@@ -44,12 +53,17 @@ import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Lettuce 集群模式连接器
@@ -184,12 +198,11 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool) {
-		super(dataSource);
-		this.pool = pool;
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig) {
+		super(dataSource, poolConfig);
 	}
 
 	/**
@@ -197,17 +210,16 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
 	}
 
 	/**
@@ -215,8 +227,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -224,10 +236,9 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
 	/**
@@ -235,15 +246,14 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig,
 									SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-		this.pool = pool;
+		super(dataSource, poolConfig, sslConfiguration);
 	}
 
 	/**
@@ -251,8 +261,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -260,10 +270,9 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
 	/**
@@ -271,8 +280,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -282,10 +291,9 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.pool = pool;
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	/**
@@ -386,8 +394,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -397,9 +405,9 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxTotalRetriesDuration
 	 * 		最大重试时长（单位：毫秒）
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		this(dataSource, pool, connectTimeout, soTimeout);
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -409,8 +417,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -422,10 +430,10 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxTotalRetriesDuration
 	 * 		最大重试时长（单位：毫秒）
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int infiniteSoTimeout, int maxRedirects,
 									int maxTotalRetriesDuration) {
-		this(dataSource, pool, connectTimeout, soTimeout, infiniteSoTimeout);
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -435,8 +443,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -448,10 +456,10 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
 									SslConfiguration sslConfiguration) {
-		this(dataSource, pool, connectTimeout, soTimeout, sslConfiguration);
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -461,8 +469,8 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param pool
-	 * 		连接池
+	 * @param poolConfig
+	 * 		连接池配置
 	 * @param connectTimeout
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
@@ -476,10 +484,10 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public LettuceClusterConnection(LettuceClusterDataSource dataSource, LettuceClusterPool pool, int connectTimeout,
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
 									SslConfiguration sslConfiguration) {
-		this(dataSource, pool, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -582,10 +590,9 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 
 	@Override
 	protected void internalInit() {
-	}
-
-	private RedisAdvancedClusterCommands<byte[], byte[]> getClusterCommands(final LettuceClusterDataSource dataSource) {
-		return delegate.sync();
+		if(pool == null && getPoolConfig() != null){
+			pool = createPool();
+		}
 	}
 
 	protected boolean isUsePool() {
@@ -596,18 +603,23 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-		final RedisURI redisURI = null;
+		final Set<RedisURI> redisURIs = dataSource.getNodes().stream().map((node)->{
+			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
+			final RedisURI redisURI = RedisURI.create(node.getHost(), port);
 
-		propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
-		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
+			propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
+			propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
 
-		if(dataSource.getConnectTimeout() > 0){
-			redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-		}
+			if(dataSource.getConnectTimeout() > 0){
+				redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
+			}
 
-		redisURI.setSsl(dataSource.getSslConfiguration() != null);
+			redisURI.setSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClusterClient.create(redisURI).connect(codec);
+			return redisURI;
+		}).collect(Collectors.toSet());
+
+		return RedisClusterClient.create(redisURIs).connect(codec);
 	}
 
 	@Override
@@ -630,6 +642,28 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 		}else{
 			delegate = createStatefulRedisClusterConnection(new ByteArrayCodec());
 		}
+	}
+
+	protected LettuceClusterPool createPool() {
+		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
+		final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
+						getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.build();
+		final Set<HostAndPort> nodes = createHostAndPorts(dataSource);
+
+		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
+
+		if(getSslConfiguration() == null){
+			logger.debug("Create LettuceClusterPool.");
+		}else{
+			logger.debug("Create LettuceClusterPool with ssl.");
+		}
+
+		return ConnectionPoolUtils.createLettuceClusterPool(lettucePoolConfig, nodes, clientConfig);
 	}
 
 	@Override
@@ -661,6 +695,13 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 		if(delegate != null){
 			delegate.close();
 		}
+	}
+
+	private static Set<HostAndPort> createHostAndPorts(final LettuceClusterDataSource clusterDataSource) {
+		return clusterDataSource.getNodes().stream().map((node)->{
+			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
+			return new HostAndPort(node.getHost(), port);
+		}).collect(Collectors.toSet());
 	}
 
 }

@@ -950,14 +950,14 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 		final Duration maxTotalRetriesDuration = Duration.ofMillis(getMaxTotalRetriesDuration());
 
 		if(connectionProvider == null){
-			final JedisClusterDataSource clusterDataSource = (JedisClusterDataSource) getDataSource();
-			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(clusterDataSource,
+			final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
 							getSslConfiguration())
 					.connectTimeout(getConnectTimeout())
 					.socketTimeout(getSoTimeout())
 					.infiniteSoTimeout(getInfiniteSoTimeout())
 					.build();
-			final Set<HostAndPort> nodes = createHostAndPorts(clusterDataSource);
+			final Set<HostAndPort> nodes = createHostAndPorts(dataSource);
 
 			if(isUsePool()){
 				final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
@@ -975,13 +975,13 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	protected ClusterConnectionProvider createConnectionProvider() {
-		final JedisClusterDataSource clusterDataSource = (JedisClusterDataSource) getDataSource();
-		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(clusterDataSource, getSslConfiguration())
+		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
+		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource, getSslConfiguration())
 				.connectTimeout(getConnectTimeout())
 				.socketTimeout(getSoTimeout())
 				.infiniteSoTimeout(getInfiniteSoTimeout())
 				.build();
-		final Set<HostAndPort> nodes = createHostAndPorts(clusterDataSource);
+		final Set<HostAndPort> nodes = createHostAndPorts(dataSource);
 
 		if(isUsePool()){
 			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();

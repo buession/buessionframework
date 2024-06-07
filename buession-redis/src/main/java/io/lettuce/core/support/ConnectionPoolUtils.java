@@ -26,15 +26,15 @@ package io.lettuce.core.support;
 
 import com.buession.net.HostAndPort;
 import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.LettuceClusterPool;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-import org.apache.commons.pool2.ObjectPool;
 
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -71,8 +71,9 @@ public class ConnectionPoolUtils {
 			@Override
 			public void returnObject(StatefulRedisConnection<byte[], byte[]> obj) {
 				if(wrapConnections && obj instanceof ConnectionWrapping.HasTargetConnection){
-					super.returnObject(
-							(StatefulRedisConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection());
+					StatefulRedisConnection<byte[], byte[]> connection =
+							(StatefulRedisConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection();
+					super.returnObject(connection);
 					return;
 				}
 
@@ -111,11 +112,13 @@ public class ConnectionPoolUtils {
 						: super.borrowObject();
 			}
 
+			@SuppressWarnings({"unchecked"})
 			@Override
 			public void returnObject(StatefulRedisSentinelConnection<byte[], byte[]> obj) {
 				if(wrapConnections && obj instanceof ConnectionWrapping.HasTargetConnection){
-					super.returnObject(
-							(StatefulRedisSentinelConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection());
+					StatefulRedisSentinelConnection<byte[], byte[]> connection =
+							(StatefulRedisSentinelConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection();
+					super.returnObject(connection);
 					return;
 				}
 
@@ -128,27 +131,43 @@ public class ConnectionPoolUtils {
 		return pool;
 	}
 
-	private static class ObjectPoolWrapper<T> implements ConnectionWrapping.Origin<T> {
+	public static LettuceClusterPool createLettuceClusterPool(
+			final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig,
+			final Set<HostAndPort> nodes, final LettuceClientConfig lettuceClientConfig) {
+		return createLettuceClusterPool(lettucePoolConfig, nodes, lettuceClientConfig, true);
+	}
 
-		private static final CompletableFuture<Void> COMPLETED = CompletableFuture.completedFuture(null);
+	public static LettuceClusterPool createLettuceClusterPool(
+			final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig,
+			final Set<HostAndPort> nodes, final LettuceClientConfig lettuceClientConfig,
+			final boolean wrapConnections) {
+		AtomicReference<ConnectionWrapping.Origin<StatefulRedisClusterConnection<byte[], byte[]>>> poolRef = new AtomicReference<>();
 
-		private final ObjectPool<T> pool;
+		final LettuceClusterPool pool = new LettuceClusterPool(nodes, lettucePoolConfig, lettuceClientConfig) {
 
-		ObjectPoolWrapper(ObjectPool<T> pool) {
-			this.pool = pool;
-		}
+			@Override
+			public StatefulRedisClusterConnection<byte[], byte[]> borrowObject() throws Exception {
+				return wrapConnections ? ConnectionWrapping.wrapConnection(super.borrowObject(), poolRef.get())
+						: super.borrowObject();
+			}
 
-		@Override
-		public void returnObject(T o) throws Exception {
-			pool.returnObject(o);
-		}
+			@SuppressWarnings({"unchecked"})
+			@Override
+			public void returnObject(StatefulRedisClusterConnection<byte[], byte[]> obj) {
+				if(wrapConnections && obj instanceof ConnectionWrapping.HasTargetConnection){
+					StatefulRedisClusterConnection<byte[], byte[]> connection =
+							(StatefulRedisClusterConnection<byte[], byte[]>) ((ConnectionWrapping.HasTargetConnection) obj).getTargetConnection();
+					super.returnObject(connection);
+					return;
+				}
 
-		@Override
-		public CompletableFuture<Void> returnObjectAsync(T o) throws Exception {
-			pool.returnObject(o);
-			return COMPLETED;
-		}
+				super.returnObject(obj);
+			}
+		};
 
+		poolRef.set(new ObjectPoolWrapper<>(pool));
+
+		return pool;
 	}
 
 }
