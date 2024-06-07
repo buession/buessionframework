@@ -21,15 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
 import com.buession.core.collect.Arrays;
-import com.buession.core.deserializer.DeserializerException;
-import com.buession.core.serializer.SerializerException;
-import com.buession.core.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,96 +35,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractSerializer<S extends com.buession.core.serializer.Serializer,
-		D extends com.buession.core.deserializer.Deserializer> implements Serializer {
-
-	/**
-	 * 序列化器
-	 */
-	protected final S serializer;
-
-	/**
-	 * 反序列化器
-	 */
-	protected final D deserializer;
+public abstract class AbstractSerializer implements Serializer {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * 构造函数
-	 *
-	 * @param serializer
-	 * 		序列化器
-	 * @param deserializer
-	 * 		反序列化器
-	 */
-	protected AbstractSerializer(final S serializer, final D deserializer) {
-		Assert.isNull(serializer, "original serializer object cloud not be null.");
-		Assert.isNull(deserializer, "original deserializer object cloud not be null.");
-		this.serializer = serializer;
-		this.deserializer = deserializer;
-	}
-
-	@Override
-	public <V> String serialize(final V object) {
-		if(object != null){
-			try{
-				return serializer.serialize(object);
-			}catch(SerializerException e){
-				logger.error("{} serializer error.", object, e);
-			}
-		}
-
-		return null;
-	}
-	
 	@Override
 	public final <V> String[] serialize(final V[] objects) {
 		return Arrays.map(objects, String.class, this::serialize);
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object) {
-		if(object != null){
-			try{
-				return serializer.serializeAsBytes(object);
-			}catch(SerializerException e){
-				logger.error("{} serializer error.", object, e);
-			}
-		}
-
-		return null;
-	}
-
-	@Override
 	public <V> byte[][] serializeAsBytes(final V[] objects) {
 		return Arrays.map(objects, byte[].class, this::serializeAsBytes);
-	}
-
-	@Override
-	public <V> V deserialize(final String str) {
-		if(str != null){
-			try{
-				return deserializer.deserialize(str);
-			}catch(DeserializerException e){
-				logger.error("{} serializer error.", str, e);
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserializeBytes(final byte[] bytes) {
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes);
-			}catch(DeserializerException e){
-				logger.error("{} serializer error.", bytes, e);
-			}
-		}
-
-		return null;
 	}
 
 }

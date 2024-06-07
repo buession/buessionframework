@@ -21,37 +21,68 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
-import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.type.TypeReference;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 
 /**
  * Jackson2 序列化和反序列化
  *
  * @author Yong.Teng
  */
-public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.JacksonJsonSerializer,
-		com.buession.core.deserializer.JacksonJsonDeserializer> {
+public class JacksonJsonSerializer extends AbstractSerializer {
 
-	/**
-	 * 构造函数
-	 */
-	public JacksonJsonSerializer(){
-		super(new com.buession.core.serializer.JacksonJsonSerializer(),
-				new com.buession.core.deserializer.JacksonJsonDeserializer());
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	@Override
+	public <V> String serialize(final V object) {
+		if(object != null){
+			try{
+				return objectMapper.writeValueAsString(object);
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} serializer error.", object, e);
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz){
+	public <V> byte[] serializeAsBytes(final V object) {
+		if(object != null){
+			try{
+				return objectMapper.writeValueAsBytes(object);
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} serializer error.", object, e);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public <V> V deserialize(final String str) {
 		if(str != null){
 			try{
-				return deserializer.deserialize(str, clazz);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", str, clazz.getName(), e);
+				return objectMapper.readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+
+				});
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize error.", str, e);
+				}
 			}
 		}
 
@@ -59,25 +90,14 @@ public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes, clazz);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", bytes, clazz.getName(), e);
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type){
+	public <V> V deserialize(final String str, final Class<V> clazz) {
 		if(str != null){
 			try{
-				return deserializer.deserialize(str, type);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", str, type.getType().getTypeName(), e);
+				return objectMapper.readValue(str, clazz);
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", str, clazz.getName(), e);
+				}
 			}
 		}
 
@@ -85,12 +105,87 @@ public class JacksonJsonSerializer extends AbstractSerializer<com.buession.core.
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
+	public <V> V deserialize(final String str, final TypeReference<V> type) {
+		if(str != null){
+			try{
+				return objectMapper.readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+
+					@Override
+					public Type getType() {
+						return type.getType();
+					}
+
+				});
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", str, type.getType().getTypeName(), e);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes) {
 		if(bytes != null){
 			try{
-				return deserializer.deserialize(bytes, type);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", bytes, type.getType().getTypeName(), e);
+				return objectMapper.readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+
+				});
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize error.", bytes, e);
+				}
+			}catch(IOException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize error.", bytes, e);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz) {
+		if(bytes != null){
+			try{
+				return objectMapper.readValue(bytes, clazz);
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", bytes, clazz.getName(), e);
+				}
+			}catch(IOException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", bytes, clazz.getName(), e);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type) {
+		if(bytes != null){
+			try{
+				return objectMapper.readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+
+					@Override
+					public Type getType() {
+						return type.getType();
+					}
+
+				});
+			}catch(JacksonException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", bytes, type.getType().getTypeName(), e);
+				}
+			}catch(IOException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", bytes, type.getType().getTypeName(), e);
+				}
 			}
 		}
 
