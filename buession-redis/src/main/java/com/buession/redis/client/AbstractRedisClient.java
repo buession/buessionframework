@@ -24,9 +24,7 @@
  */
 package com.buession.redis.client;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
 import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
@@ -45,7 +43,6 @@ import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,11 +128,6 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 
 	@Override
 	public <R> R execute(final Command<R> command, final CommandArguments arguments) {
-		return doExecute((conn)->command.execute(), command.getCommand(), arguments);
-	}
-
-	private <R> R doExecute(final Executor<RedisConnection, R> executor, final ProtocolCommand command,
-							final CommandArguments arguments) {
 		long startTime = 0;
 		if(logger.isDebugEnabled()){
 			startTime = System.nanoTime();
@@ -150,7 +142,7 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 		}
 
 		try{
-			return getConnection().execute(executor);
+			return doExecute(command);
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
@@ -167,6 +159,10 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 				logger.debug("Command execution time: {}", finishTime - startTime);
 			}
 		}
+	}
+
+	private <R> R doExecute(final Command<R> command) {
+		return getConnection().execute((conn)->command.execute());
 	}
 
 }

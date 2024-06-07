@@ -32,6 +32,8 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 
 /**
+ * Redis 运算命令抽象类
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */

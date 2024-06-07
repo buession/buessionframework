@@ -48,7 +48,7 @@ public final class JedisGeoCoordinate extends GeoCoordinate {
 	}
 
 	/**
-	 * 从 {@link Geo} 创建 {@link JedisGeoCoordinate} 对象实例
+	 * 从 {@link Geo} 创建 {@link JedisGeoCoordinate} 实例
 	 *
 	 * @param geo
 	 *        {@link Geo}

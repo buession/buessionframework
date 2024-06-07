@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
@@ -87,7 +87,7 @@ public abstract class AbstractDataSource implements DataSource {
 	 * @return 用户名
 	 */
 	@Override
-	public String getUsername(){
+	public String getUsername() {
 		return username;
 	}
 
@@ -98,7 +98,7 @@ public abstract class AbstractDataSource implements DataSource {
 	 * 		用户名
 	 */
 	@Override
-	public void setUsername(String username){
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
@@ -108,7 +108,7 @@ public abstract class AbstractDataSource implements DataSource {
 	 * @return 密码
 	 */
 	@Override
-	public String getPassword(){
+	public String getPassword() {
 		return password;
 	}
 
@@ -119,7 +119,7 @@ public abstract class AbstractDataSource implements DataSource {
 	 * 		密码
 	 */
 	@Override
-	public void setPassword(String password){
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -129,7 +129,7 @@ public abstract class AbstractDataSource implements DataSource {
 	 * @return 客户端名称
 	 */
 	@Override
-	public String getClientName(){
+	public String getClientName() {
 		return clientName;
 	}
 
@@ -140,66 +140,58 @@ public abstract class AbstractDataSource implements DataSource {
 	 * 		客户端名称
 	 */
 	@Override
-	public void setClientName(String clientName){
+	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
 
 	@Override
-	public int getConnectTimeout(){
+	public int getConnectTimeout() {
 		return connectTimeout;
 	}
 
 	@Override
-	public void setConnectTimeout(int connectTimeout){
+	public void setConnectTimeout(int connectTimeout) {
 		this.connectTimeout = connectTimeout;
 	}
 
 	@Override
-	public int getSoTimeout(){
+	public int getSoTimeout() {
 		return soTimeout;
 	}
 
 	@Override
-	public void setSoTimeout(int soTimeout){
+	public void setSoTimeout(int soTimeout) {
 		this.soTimeout = soTimeout;
 	}
 
 	@Override
-	public int getInfiniteSoTimeout(){
+	public int getInfiniteSoTimeout() {
 		return infiniteSoTimeout;
 	}
 
 	@Override
-	public void setInfiniteSoTimeout(int infiniteSoTimeout){
+	public void setInfiniteSoTimeout(int infiniteSoTimeout) {
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
 
 	@Override
-	public PoolConfig getPoolConfig(){
+	public PoolConfig getPoolConfig() {
 		return poolConfig;
 	}
 
 	@Override
-	public void setPoolConfig(PoolConfig poolConfig){
+	public void setPoolConfig(PoolConfig poolConfig) {
 		this.poolConfig = poolConfig;
 	}
 
 	@Override
-	public SslConfiguration getSslConfiguration(){
+	public SslConfiguration getSslConfiguration() {
 		return sslConfiguration;
 	}
 
 	@Override
-	public void setSslConfiguration(SslConfiguration sslConfiguration){
+	public void setSslConfiguration(SslConfiguration sslConfiguration) {
 		this.sslConfiguration = sslConfiguration;
-	}
-
-	protected boolean isUseSsl(){
-		return sslConfiguration != null;
-	}
-
-	protected boolean isUsePool(){
-		return getPoolConfig() != null;
 	}
 
 }

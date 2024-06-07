@@ -38,10 +38,23 @@ import java.util.Optional;
  */
 public final class JedisGeoRadiusParam extends GeoRadiusParam {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisGeoRadiusParam() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和纬度也一并返回
+	 * @param withDist
+	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
+	 * @param withHash
+	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 */
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash) {
 		super();
 		withCoord(this, withCoord);
@@ -49,39 +62,107 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 		withHash(this, withHash);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param order
+	 * 		排序
+	 */
 	public JedisGeoRadiusParam(final Order order) {
 		super();
 		sort(this, order);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
 	public JedisGeoRadiusParam(final int count) {
 		super();
 		count(count);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param order
+	 * 		排序
+	 * @param count
+	 * 		返回数量
+	 */
 	public JedisGeoRadiusParam(final Order order, final int count) {
 		this(order);
 		count(count);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和纬度也一并返回
+	 * @param withDist
+	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
+	 * @param withHash
+	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param order
+	 * 		排序
+	 */
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
 							   final Order order) {
 		this(withCoord, withDist, withHash);
 		sort(this, order);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和纬度也一并返回
+	 * @param withDist
+	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
+	 * @param withHash
+	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param count
+	 * 		返回数量
+	 */
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
 							   final int count) {
 		this(withCoord, withDist, withHash);
 		count(count);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和纬度也一并返回
+	 * @param withDist
+	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
+	 * @param withHash
+	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param order
+	 * 		排序
+	 * @param count
+	 * 		返回数量
+	 */
 	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
 							   final Order order, final int count) {
 		this(withCoord, withDist, withHash, order);
 		count(count);
 	}
 
+	/**
+	 * 从 {@link GeoCommands.GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
+	 *
+	 * @param geoRadiusArgument
+	 *        {@link GeoCommands.GeoRadiusArgument}
+	 *
+	 * @return {@link JedisGeoRadiusParam} 实例
+	 *
+	 * @since 3.0.0
+	 */
 	public static JedisGeoRadiusParam from(final GeoCommands.GeoRadiusArgument geoRadiusArgument) {
 		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
 
