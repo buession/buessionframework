@@ -108,7 +108,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<scope>compile</scope>
+			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -116,12 +116,14 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>

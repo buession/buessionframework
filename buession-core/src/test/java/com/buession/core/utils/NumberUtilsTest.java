@@ -40,4 +40,12 @@ public class NumberUtilsTest {
 		System.out.println(l);
 	}
 
+	@Test
+	public void intTest() {
+		String s = "373407";
+		byte[] bytes = NumberUtils.int2bytes(Integer.parseInt(s));
+		int i = NumberUtils.bytes2int(bytes);
+		System.out.println(i);
+	}
+
 }
