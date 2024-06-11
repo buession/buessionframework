@@ -21,11 +21,7 @@
 - httpClient 新增代理支持
 - ApacheClient 新增支持 apache httpcomponents 5，根据依赖的 apache httpcomponents 5 和 apache httpcomponents 4 自动判断，优先使用 apache httpcomponents 5
 - 新增支持 Lettuce（stream 命令不稳定，不推荐使用）
-- 中 jedis 模式下，集群支持管道
-- 
-- 
-- 
-- 
+- jedis 模式下，集群支持管道
 
 
 ### 🔔 变化
@@ -45,14 +41,11 @@
 - 删除 OkHttpClient
 - redis 删除参数为字符串数组或 byte[] 数组的方法 bitField
 - redis 废弃字符串型 / byte[]型 min、max 参数的方法
-- redis role 命令直接返回 Role，不再返回 List<Role>
+- redis role 命令直接返回 Role，不再返回 List&lt;Role&gt;
 - redis 重构管道、事务内部实现
 - redis 哨兵连接，如果指定了连接超时、读取超时，但未指定哨兵节点连接超时、读取超时，哨兵节点连接超时、读取超时也使用该值
 - redis 连接池调整在连接对象中创建，不再在 DataSource 中创建
 - redis 不再推荐从 DataSource 中创建 RedisConnection 实例
-- 
-- 
-- 
 
 
 ### 🐞 Bug 修复
@@ -63,15 +56,11 @@
 - 修复 jedis 模式下 API 中，“命令”参数设置错误的 BUG
 - r修复 jedis GeoRadiusResponseConverter coordinate 为 null 时，空指针异常
 - 修复 jedis 模式下连接中的错误和参数丢失等问题
-- 
-- 
-- 
 
 
 ### ⏪ 优化
 - 优化 redis 转换器，不使用静态属性，以减少内存占用
 - jedis 模式命令运算优化
-- 
 
 
 ---
