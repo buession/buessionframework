@@ -83,6 +83,7 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
 
+	@Deprecated
 	@Override
 	public JedisClusterConnection getConnection() {
 		if(getPoolConfig() == null){

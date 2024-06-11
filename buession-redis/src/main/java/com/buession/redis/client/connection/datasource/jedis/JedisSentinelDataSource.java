@@ -132,6 +132,7 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 		this.sentinels = sentinels;
 	}
 
+	@Deprecated
 	@Override
 	public JedisSentinelConnection getConnection() {
 		if(getPoolConfig() == null){

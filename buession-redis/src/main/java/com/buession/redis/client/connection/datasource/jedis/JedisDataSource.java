@@ -80,6 +80,7 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 		this.database = database;
 	}
 
+	@Deprecated
 	@Override
 	public JedisConnection getConnection() {
 		if(getPoolConfig() == null){

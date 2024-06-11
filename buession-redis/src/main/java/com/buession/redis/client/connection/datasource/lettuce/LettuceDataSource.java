@@ -81,6 +81,7 @@ public class LettuceDataSource extends AbstractLettuceDataSource implements Stan
 		this.database = database;
 	}
 
+	@Deprecated
 	@Override
 	public LettuceConnection getConnection() {
 		if(getPoolConfig() == null){

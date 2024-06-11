@@ -85,6 +85,7 @@ public class LettuceClusterDataSource extends AbstractLettuceDataSource implemen
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
 
+	@Deprecated
 	@Override
 	public RedisConnection getConnection() {
 		if(getPoolConfig() == null){

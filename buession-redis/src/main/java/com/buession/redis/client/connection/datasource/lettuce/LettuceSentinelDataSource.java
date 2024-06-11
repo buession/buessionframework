@@ -129,6 +129,7 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 		this.sentinels = sentinels;
 	}
 
+	@Deprecated
 	@Override
 	public LettuceSentinelConnection getConnection() {
 		if(getPoolConfig() == null){
