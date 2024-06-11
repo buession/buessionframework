@@ -38,14 +38,16 @@ public class LettuceRedisExceptionUtils {
 			}else{
 				return new RedisConnectionFailureException(e.getMessage(), e);
 			}
-		}else if(e instanceof NotSupportedCommandException){
-			return (NotSupportedCommandException) e;
-		}else{
+		}else
 
 		}
 
 		 */
-		return new RedisException(e.getMessage(), e);
+		if(e instanceof NotSupportedCommandException){
+			return (NotSupportedCommandException) e;
+		}else{
+			return new RedisException(e.getMessage(), e);
+		}
 	}
 
 }
