@@ -26,6 +26,7 @@ package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.MemoryStats;
+import com.buession.redis.core.Module;
 import com.buession.redis.core.SlowLog;
 import org.junit.jupiter.api.Test;
 
@@ -67,6 +68,13 @@ public class JedisServerTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = redisTemplate();
 		MemoryStats result = redisTemplate.memoryStats();
 		System.out.println(result);
+	}
+
+	@Test
+	public void moduleList() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<Module> result = redisTemplate.moduleList();
+		result.forEach(System.out::println);
 	}
 
 }

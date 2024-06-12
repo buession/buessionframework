@@ -34,7 +34,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.lettuce.response.MapScanCursorConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
@@ -276,8 +276,8 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
-				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
 
 		return hScan(bKey, scanCursor, bvSvMapScanCursorConverter, args);
 	}
@@ -286,7 +286,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
 
 		return hScan(key, scanCursor, mapScanCursorConverter, args);
 	}
@@ -297,8 +297,8 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
-		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
-				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
 
 		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
@@ -308,7 +308,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
-		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
 
 		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
@@ -319,8 +319,8 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
-				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
 
 		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
@@ -330,7 +330,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
 
 		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
@@ -342,8 +342,8 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
-				new MapScanCursorConverter.BvSvMapScanCursorConverter();
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
 
 		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
@@ -355,7 +355,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new MapScanCursorConverter<>();
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
 
 		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}

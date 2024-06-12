@@ -29,9 +29,9 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.MemoryStats;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Jedis memory-stats 命令结果转换
@@ -103,13 +103,13 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 			}else if("keys.count".equals(name)){
 				propertyMapper.from(value).as((v)->(Long) v).to(memoryStats::setKeysCount);
 			}else if(name.startsWith("db.")){
-				final String[] nameParts = StringUtils.split(name, '.');
-				final int db = Integer.parseInt(nameParts[1]);
-				final MemoryStats.Db dbStat = new MemoryStats.Db();
-				final List<Object> dbStatTmp = (List<Object>) value;
+				String[] nameParts = StringUtils.split(name, '.');
+				int db = Integer.parseInt(nameParts[1]);
+				MemoryStats.Db dbStat = new MemoryStats.Db();
+				List<Object> dbStatTmp = (List<Object>) value;
 
 				if(memoryStats.getDbs() == null){
-					memoryStats.setDbs(new HashMap<>(source.size()));
+					memoryStats.setDbs(new TreeMap<>());
 				}
 
 				for(int j = 0, jl = dbStatTmp.size(); j < jl; j++){

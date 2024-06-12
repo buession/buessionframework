@@ -42,7 +42,7 @@ public final class RedisServerTimeConverter implements Converter<List<byte[]>, R
 	@Override
 	public RedisServerTime convert(final List<byte[]> source) {
 		if(source != null && source.size() == 2){
-			final Date date = new Date(Long.parseLong(SafeEncoder.encode(source.get(0))) * 1000L);
+			Date date = new Date(Long.parseLong(SafeEncoder.encode(source.get(0))) * 1000L);
 			return new RedisServerTime(date, Long.parseLong(SafeEncoder.encode(source.get(1))));
 		}
 

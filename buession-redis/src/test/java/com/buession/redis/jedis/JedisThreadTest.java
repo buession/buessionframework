@@ -26,6 +26,9 @@ package com.buession.redis.jedis;
 
 import com.buession.redis.RedisTemplate;
 import org.junit.jupiter.api.Test;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisClientConfig;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -39,7 +42,7 @@ public class JedisThreadTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void test() {
-		RedisTemplate redisTemplate = redisTemplate();
+		//RedisTemplate redisTemplate = redisTemplate();
 
 		//拒绝策略
 		ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
@@ -50,10 +53,13 @@ public class JedisThreadTest extends AbstractJedisRedisTest {
 				new LinkedBlockingQueue<>(8)
 		);
 
-		for(int i = 0; i < 2; i++){
+		JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().password("rds_PWD").build();
+		for(int i = 0; i < 1; i++){
 			threadPoolExecutor.execute(()->{
 				try{
-					redisTemplate.multi();
+					Jedis jedis = new Jedis("192.168.0.231", 6379, clientConfig);
+					//String result = redisTemplate.get("a");
+					System.out.println(jedis);
 				}catch(Exception e){
 					System.out.println(e.getMessage());
 				}

@@ -40,7 +40,7 @@ public final class RedisServerTimeConverter implements Converter<List<String>, R
 
 	@Override
 	public RedisServerTime convert(final List<String> source) {
-		final Date date = new Date(Long.parseLong(source.get(0)) * 1000L);
+		Date date = new Date(Long.parseLong(source.get(0)) * 1000L);
 		return new RedisServerTime(date, Long.parseLong(source.get(1)));
 	}
 

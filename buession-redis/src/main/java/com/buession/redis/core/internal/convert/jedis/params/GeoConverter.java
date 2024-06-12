@@ -25,10 +25,9 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.MapConverter;
 import com.buession.lang.Geo;
 import redis.clients.jedis.GeoCoordinate;
-
-import java.util.Map;
 
 /**
  * {@link Geo} 转换为 jedis {@link GeoCoordinate}
@@ -43,8 +42,8 @@ public final class GeoConverter implements Converter<Geo, GeoCoordinate> {
 		return new GeoCoordinate(source.getLongitude(), source.getLatitude());
 	}
 
-	public static <K> com.buession.core.converter.MapConverter<K, Geo, K, GeoCoordinate> mapConverter() {
-		return new com.buession.core.converter.MapConverter<>((key)->key, new GeoConverter());
+	public static <K> MapConverter<K, Geo, K, GeoCoordinate> mapConverter() {
+		return new MapConverter<>((key)->key, new GeoConverter());
 	}
 
 }

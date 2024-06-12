@@ -32,7 +32,6 @@ import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.SlotRange;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,15 +52,13 @@ public final class ClusterReplicasConverter implements Converter<String, List<Cl
 
 	private ClusterRedisNode rowConvert(final String row) {
 		String[] values = StringUtils.split(row, " ");
-		String[] hostAndPort = StringUtils.split(values[1], ":");
+		String[] hostAndPort = StringUtils.split(values[1], ':');
 		String host = hostAndPort[0];
 		String port = hostAndPort[1].substring(0, hostAndPort[1].indexOf('@'));
-		String[] flagsValues = StringUtils.split(values[2], ":");
-		Set<ClusterRedisNode.Flag> flags = new HashSet<>(flagsValues.length);
-
-		for(String flagsValue : flagsValues){
-			flags.add(EnumUtils.getEnumIgnoreCase(ClusterRedisNode.Flag.class, flagsValue));
-		}
+		String[] flagsValues = StringUtils.split(values[2], ':');
+		Set<ClusterRedisNode.Flag> flags =
+				Arrays.stream(flagsValues).map((v)->EnumUtils.getEnumIgnoreCase(ClusterRedisNode.Flag.class, v))
+						.collect(Collectors.toSet());
 
 		ClusterRedisNode.LinkState linkState = EnumUtils.getEnumIgnoreCase(ClusterRedisNode.LinkState.class, values[7]);
 		SlotRange slotRange = null;

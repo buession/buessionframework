@@ -36,7 +36,7 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.lettuce.response.KeyScanCursorConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.lettuce.LettuceMigrateArgs;
@@ -543,8 +543,8 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	public ScanResult<List<String>> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new KeyScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter();
 
 		return scan(scanCursor, bsKeyScanCursorConverter, args);
 	}
@@ -553,7 +553,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	public ScanResult<List<byte[]>> scan(final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final KeyScanCursorConverter<byte[]> keyScanCursorConverter = new KeyScanCursorConverter<>();
+		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
 
 		return scan(scanCursor, keyScanCursorConverter, args);
 	}
@@ -563,8 +563,8 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
-		final KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new KeyScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter();
 
 		return scan(scanCursor, scanArgs, bsKeyScanCursorConverter, args);
 	}
@@ -574,7 +574,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
-		final KeyScanCursorConverter<byte[]> keyScanCursorConverter = new KeyScanCursorConverter<>();
+		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
 
 		return scan(scanCursor, scanArgs, keyScanCursorConverter, args);
 	}
@@ -584,8 +584,8 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new KeyScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter();
 
 		return scan(scanCursor, scanArgs, bsKeyScanCursorConverter, args);
 	}
@@ -595,7 +595,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final KeyScanCursorConverter<byte[]> keyScanCursorConverter = new KeyScanCursorConverter<>();
+		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
 
 		return scan(scanCursor, scanArgs, keyScanCursorConverter, args);
 	}
@@ -606,8 +606,8 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new KeyScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter();
 
 		return scan(scanCursor, scanArgs, bsKeyScanCursorConverter, args);
 	}
@@ -618,7 +618,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final KeyScanCursorConverter<byte[]> keyScanCursorConverter = new KeyScanCursorConverter<>();
+		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
 
 		return scan(scanCursor, scanArgs, keyScanCursorConverter, args);
 	}

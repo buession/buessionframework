@@ -32,7 +32,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.lettuce.response.ValueScanCursorConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
@@ -297,8 +297,8 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ValueScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
 
 		return sScan(bKey, scanCursor, bsKeyScanCursorConverter, args);
 	}
@@ -307,7 +307,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ValueScanCursorConverter<>();
+		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
 
 		return sScan(key, scanCursor, valueScanCursorConverter, args);
 	}
@@ -317,8 +317,8 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(pattern);
-		final ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ValueScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
 
 		return sScan(bKey, scanCursor, bsKeyScanCursorConverter, args);
 	}
@@ -327,7 +327,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(pattern);
-		final ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ValueScanCursorConverter<>();
+		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
 
 		return sScan(key, scanCursor, valueScanCursorConverter, args);
 	}
@@ -338,8 +338,8 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ValueScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
 
 		return sScan(bKey, scanCursor, scanArgs, bsKeyScanCursorConverter, args);
 	}
@@ -349,7 +349,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ValueScanCursorConverter<>();
+		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
 
 		return sScan(key, scanCursor, scanArgs, valueScanCursorConverter, args);
 	}
@@ -362,8 +362,8 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ValueScanCursorConverter.BSKeyScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
 
 		return sScan(bKey, scanCursor, scanArgs, bsKeyScanCursorConverter, args);
 	}
@@ -375,7 +375,7 @@ public final class LettuceSetOperations extends AbstractSetOperations<LettuceSta
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ValueScanCursorConverter<>();
+		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
 
 		return sScan(key, scanCursor, scanArgs, valueScanCursorConverter, args);
 	}

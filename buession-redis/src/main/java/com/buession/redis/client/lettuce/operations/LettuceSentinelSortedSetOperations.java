@@ -37,8 +37,8 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.ValueScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceZAddArgs;
@@ -1212,8 +1212,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(bKey, scanCursor, scoredValueScanCursorConverter, args);
 	}
@@ -1222,8 +1222,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(key, scanCursor, scoredValueScanCursorConverter, args);
 	}
@@ -1234,8 +1234,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(bKey, scanCursor, scanArgs, scoredValueScanCursorConverter, args);
 	}
@@ -1245,8 +1245,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(key, scanCursor, scanArgs, scoredValueScanCursorConverter, args);
 	}
@@ -1257,8 +1257,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(bKey, scanCursor, scanArgs, scoredValueScanCursorConverter, args);
 	}
@@ -1268,8 +1268,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(key, scanCursor, scanArgs, scoredValueScanCursorConverter, args);
 	}
@@ -1282,8 +1282,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(bKey, scanCursor, scanArgs, scoredValueScanCursorConverter, args);
 	}
@@ -1295,8 +1295,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
-				new ValueScanCursorConverter.ScoredValueScanCursorConverter();
+		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
+				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
 
 		return zScan(key, scanCursor, scanArgs, scoredValueScanCursorConverter, args);
 	}
