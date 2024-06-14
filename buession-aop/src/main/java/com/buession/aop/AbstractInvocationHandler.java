@@ -40,8 +40,9 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractInvocationHandler implements InvocationHandler {
 
-	private final static int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
-			| MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
+	private final static int ALLOWED_MODES =
+			MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED | MethodHandles.Lookup.PUBLIC
+					| MethodHandles.Lookup.PACKAGE;
 
 	protected final static Constructor<MethodHandles.Lookup> lookupConstructor;
 
