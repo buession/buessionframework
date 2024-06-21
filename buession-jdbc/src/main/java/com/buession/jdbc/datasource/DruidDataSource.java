@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -177,15 +177,16 @@ public class DruidDataSource
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
 
-		initialize(dataSource);
+		if(getPoolConfiguration() != null){
+			applyPoolConfiguration(dataSource, propertyMapper);
+		}
 
 		return dataSource;
 	}
 
-	@Override
 	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
-										  final DruidPoolConfiguration poolConfiguration) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+										  final PropertyMapper propertyMapper) {
+		final DruidPoolConfiguration poolConfiguration = getPoolConfiguration();
 
 		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
 		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);

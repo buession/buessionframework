@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -30,7 +30,6 @@ import com.buession.jdbc.datasource.config.Dbcp2PoolConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 /**
  * DBCP2 DataSource 抽象类
@@ -171,26 +170,24 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
 
-		initialize(dataSource);
+		if(getPoolConfiguration() != null){
+			applyPoolConfiguration(dataSource, propertyMapper);
+		}
 
 		return dataSource;
 	}
 
-	@Override
-	protected void applyPoolConfiguration(final BasicDataSource dataSource,
-										  final Dbcp2PoolConfiguration poolConfiguration) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+	protected void applyPoolConfiguration(final BasicDataSource dataSource, final PropertyMapper propertyMapper) {
+		final Dbcp2PoolConfiguration poolConfiguration = getPoolConfiguration();
 
 		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);
-		propertyMapper.from(poolConfiguration::getMaxConnLifetime).as(
-				Duration::toMillis).to(dataSource::setMaxConnLifetimeMillis);
-		propertyMapper.from(poolConfiguration::getDefaultQueryTimeout)
-				.as((v)->(int) TimeUnit.MILLISECONDS.toSeconds(v.toMillis())).to(dataSource::setDefaultQueryTimeout);
+		propertyMapper.from(poolConfiguration::getMaxConnLifetime).to(dataSource::setMaxConn);
+		propertyMapper.from(poolConfiguration::getDefaultQueryTimeout).to(dataSource::setDefaultQueryTimeout);
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
 		propertyMapper.from(poolConfiguration::getMaxTotal).to(dataSource::setMaxTotal);
-		propertyMapper.from(poolConfiguration::getMaxWait).as(Duration::toMillis).to(dataSource::setMaxWaitMillis);
+		propertyMapper.from(poolConfiguration::getMaxWait).to(dataSource::setMaxWait);
 		propertyMapper.from(poolConfiguration::getTestOnCreate).to(dataSource::setTestOnCreate);
 		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
@@ -199,8 +196,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 				.to(dataSource::setConnectionFactoryClassName);
 		propertyMapper.from(poolConfiguration::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
 		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).to(dataSource::setValidationQueryTimeout);
 		propertyMapper.from(poolConfiguration::getDefaultSchema).to(dataSource::setDefaultSchema);
 		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
@@ -218,13 +214,11 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 		propertyMapper.from(poolConfiguration::getClearStatementPoolOnReturn)
 				.to(dataSource::setClearStatementPoolOnReturn);
 		propertyMapper.from(poolConfiguration::getEvictionPolicyClassName).to(dataSource::setEvictionPolicyClassName);
-		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(
-				Duration::toMillis).to(dataSource::setTimeBetweenEvictionRunsMillis);
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns)
+				.to(dataSource::setDurationBetweenEvictionRuns);
 		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
-		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime).as(
-				Duration::toMillis).to(dataSource::setMinEvictableIdleTimeMillis);
-		propertyMapper.from(poolConfiguration::getSoftMinEvictableIdleTime).as(
-				Duration::toMillis).to(dataSource::setSoftMinEvictableIdleTimeMillis);
+		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime).to(dataSource::setMinEvictableIdle);
+		propertyMapper.from(poolConfiguration::getSoftMinEvictableIdleTime).to(dataSource::setSoftMinEvictableIdle);
 		propertyMapper.from(poolConfiguration::getLifo).to(dataSource::setLifo);
 		propertyMapper.from(poolConfiguration::getFastFailValidation).to(dataSource::setFastFailValidation);
 		propertyMapper.from(poolConfiguration::getDisconnectionSqlCodes).to(dataSource::setDisconnectionSqlCodes);

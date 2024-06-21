@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -76,7 +76,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	/**
 	 * 构造函数
 	 */
-	public AbstractDataSource(){
+	public AbstractDataSource() {
 	}
 
 	/**
@@ -89,7 +89,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url){
+	public AbstractDataSource(String driverClassName, String url) {
 		this.driverClassName = driverClassName;
 		this.url = url;
 	}
@@ -106,7 +106,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, String username){
+	public AbstractDataSource(String driverClassName, String url, String username) {
 		this(driverClassName, url);
 		this.username = username;
 	}
@@ -125,7 +125,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, String username, String password){
+	public AbstractDataSource(String driverClassName, String url, String username, String password) {
 		this(driverClassName, url, username);
 		this.password = password;
 	}
@@ -136,7 +136,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public AbstractDataSource(P poolConfiguration){
+	public AbstractDataSource(P poolConfiguration) {
 		this.poolConfiguration = poolConfiguration;
 	}
 
@@ -152,7 +152,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, P poolConfiguration){
+	public AbstractDataSource(String driverClassName, String url, P poolConfiguration) {
 		this(driverClassName, url);
 		this.poolConfiguration = poolConfiguration;
 	}
@@ -171,7 +171,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, String username, P poolConfiguration){
+	public AbstractDataSource(String driverClassName, String url, String username, P poolConfiguration) {
 		this(driverClassName, url, username);
 		this.poolConfiguration = poolConfiguration;
 	}
@@ -193,68 +193,70 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 * @since 2.3.0
 	 */
 	public AbstractDataSource(String driverClassName, String url, String username, String password,
-							  P poolConfiguration){
+							  P poolConfiguration) {
 		this(driverClassName, url, username, password);
 		this.poolConfiguration = poolConfiguration;
 	}
 
 	@Override
-	public String getDriverClassName(){
+	public String getDriverClassName() {
 		return driverClassName;
 	}
 
 	@Override
-	public void setDriverClassName(String driverClassName){
+	public void setDriverClassName(String driverClassName) {
 		this.driverClassName = driverClassName;
 	}
 
 	@Override
-	public String getUrl(){
+	public String getUrl() {
 		return url;
 	}
 
 	@Override
-	public void setUrl(String url){
+	public void setUrl(String url) {
 		this.url = url;
 	}
 
 	@Override
-	public String getUsername(){
+	public String getUsername() {
 		return username;
 	}
 
 	@Override
-	public void setUsername(String username){
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
 	@Override
-	public String getPassword(){
+	public String getPassword() {
 		return password;
 	}
 
 	@Override
-	public void setPassword(String password){
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
 	@Override
-	public P getPoolConfiguration(){
+	public P getPoolConfiguration() {
 		return poolConfiguration;
 	}
 
 	@Override
-	public void setPoolConfiguration(P poolConfiguration){
+	public void setPoolConfiguration(P poolConfiguration) {
 		this.poolConfiguration = poolConfiguration;
 	}
 
-	protected void initialize(final T dataSource){
+	@Deprecated
+	protected void initialize(final T dataSource) {
 		if(getPoolConfiguration() != null){
 			applyPoolConfiguration(dataSource, getPoolConfiguration());
 		}
 	}
 
-	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration){
+	@Deprecated
+	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration) {
 
 	}
 
