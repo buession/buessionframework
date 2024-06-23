@@ -27,53 +27,26 @@ package com.buession.httpclient.conn;
 import com.buession.httpclient.core.Configuration;
 
 /**
- * Apache HttpComponents 连接管理器基类
- *
- * @param <CM>
- * 		原生连接管理器
+ * 连接管理器基本接口
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
-public abstract class ApacheBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
+public interface IConnectionManager {
 
 	/**
-	 * 构造函数，创建驱动默认连接管理器
+	 * 获取连接对象
+	 *
+	 * @return 连接对象
 	 */
-	public ApacheBaseClientConnectionManager() {
-		super();
-	}
+	Configuration getConfiguration();
 
 	/**
-	 * 构造函数，创建驱动默认连接管理器
+	 * 设置连接对象
 	 *
 	 * @param configuration
-	 * 		配置
+	 * 		连接对象
 	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration) {
-		super(configuration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param clientConnectionManager
-	 * 		原生连接管理器
-	 */
-	public ApacheBaseClientConnectionManager(CM clientConnectionManager) {
-		super(clientConnectionManager);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param configuration
-	 * 		配置
-	 * @param clientConnectionManager
-	 * 		原生连接管理器
-	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager) {
-		super(configuration, clientConnectionManager);
-	}
+	void setConfiguration(Configuration configuration);
 
 }

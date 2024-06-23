@@ -44,7 +44,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractHttpClient extends AbstractBaseHttpClient implements HttpClient {
+public abstract class AbstractHttpClient extends AbstractBaseHttpClient<ConnectionManager> implements HttpClient {
 
 	/**
 	 * 构造函数

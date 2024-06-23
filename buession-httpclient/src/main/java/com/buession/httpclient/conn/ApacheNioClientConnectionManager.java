@@ -343,7 +343,7 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 			propertyMapper.from(getIoReactorConfig().getSoTimeout()).to(ioReactorConfigBuilder::setSoTimeout);
 			propertyMapper.from(getIoReactorConfig().isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
 			propertyMapper.from(getIoReactorConfig().getSoLinger()).to(ioReactorConfigBuilder::setSoLinger);
-			propertyMapper.from(getIoReactorConfig().isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
+			propertyMapper.from(getIoReactorConfig().isSoKeepAlive()).to(ioReactorConfigBuilder::setSoKeepAlive);
 			propertyMapper.from(getIoReactorConfig().isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
 			propertyMapper.from(getIoReactorConfig().getConnectTimeout()).to(ioReactorConfigBuilder::setConnectTimeout);
 			propertyMapper.from(getIoReactorConfig().getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);

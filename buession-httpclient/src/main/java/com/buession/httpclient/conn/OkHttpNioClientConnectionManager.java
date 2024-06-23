@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -34,12 +34,13 @@ import okhttp3.nio.NioHttpClientConnectionManager;
  * @since 2.3.0
  */
 public class OkHttpNioClientConnectionManager
-		extends OkHttpBaseClientConnectionManager<NioHttpClientConnectionManager> {
+		extends OkHttpBaseClientConnectionManager<NioHttpClientConnectionManager>
+		implements com.buession.httpclient.okhttp.OkHttpNioClientConnectionManager {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public OkHttpNioClientConnectionManager(){
+	public OkHttpNioClientConnectionManager() {
 		super();
 	}
 
@@ -47,9 +48,9 @@ public class OkHttpNioClientConnectionManager
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
-	public OkHttpNioClientConnectionManager(Configuration configuration){
+	public OkHttpNioClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -57,9 +58,9 @@ public class OkHttpNioClientConnectionManager
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
-	public OkHttpNioClientConnectionManager(NioHttpClientConnectionManager clientConnectionManager){
+	public OkHttpNioClientConnectionManager(NioHttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -67,12 +68,12 @@ public class OkHttpNioClientConnectionManager
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public OkHttpNioClientConnectionManager(Configuration configuration,
-											NioHttpClientConnectionManager clientConnectionManager){
+											NioHttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 
@@ -82,13 +83,13 @@ public class OkHttpNioClientConnectionManager
 	 * @return 连接管理器
 	 */
 	@Override
-	protected NioHttpClientConnectionManager createDefaultClientConnectionManager(){
+	protected NioHttpClientConnectionManager createDefaultClientConnectionManager() {
 		final NioHttpClientConnectionManager connectionManager = new NioHttpClientConnectionManager();
 
 		//最大连接数
 		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
 		// 默认的最大并发请求数量
-		//connectionManager.setMaxRequests(getConfiguration().getMaxPerRoute());
+		connectionManager.setMaxRequests(getConfiguration().getMaxPerRoute());
 		// 同时请求相同主机的请求数量最大值
 		connectionManager.setMaxRequestsPerHost(getConfiguration().getMaxPerRoute());
 		// 空闲连接存活时长

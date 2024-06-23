@@ -49,19 +49,17 @@ public interface ApacheAsyncClient {
 	void post(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 			  final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
 
-	void post(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-			  final List<Header> headers, final RequestBody<?> body, final Callback callback)
-			throws IOException, RequestException;
+	void post(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+			  final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
 
 	void patch(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 			   final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
 
-	void patch(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-			   final List<Header> headers, final RequestBody<?> body, final Callback callback)
-			throws IOException, RequestException;
+	void patch(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+			   final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
 
-	void put(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
-			 final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
+	void put(final URI uri, final Map<String, Object> parameters, final List<Header> headers, final RequestBody<?> body,
+			 final Callback callback) throws IOException, RequestException;
 
 	void put(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
 			 final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
@@ -69,14 +67,14 @@ public interface ApacheAsyncClient {
 	void delete(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				final Callback callback) throws IOException, RequestException;
 
-	void delete(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				final List<Header> headers, final Callback callback) throws IOException, RequestException;
+	void delete(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				final Callback callback) throws IOException, RequestException;
 
 	void connect(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				 final Callback callback) throws IOException, RequestException;
 
-	void connect(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				 final List<Header> headers, final Callback callback) throws IOException, RequestException;
+	void connect(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				 final Callback callback) throws IOException, RequestException;
 
 	void trace(final URI uri, final Map<String, Object> parameters, final List<Header> headers, final Callback callback)
 			throws IOException, RequestException;
@@ -105,8 +103,8 @@ public interface ApacheAsyncClient {
 	void options(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				 final Callback callback) throws IOException, RequestException;
 
-	void options(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				 final List<Header> headers, final Callback callback) throws IOException, RequestException;
+	void options(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				 final Callback callback) throws IOException, RequestException;
 
 	void link(final URI uri, final Map<String, Object> parameters, final List<Header> headers, final Callback callback)
 			throws IOException, RequestException;
@@ -117,8 +115,8 @@ public interface ApacheAsyncClient {
 	void unlink(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				final Callback callback) throws IOException, RequestException;
 
-	void unlink(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				final List<Header> headers, final Callback callback) throws IOException, RequestException;
+	void unlink(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				final Callback callback) throws IOException, RequestException;
 
 	void purge(final URI uri, final Map<String, Object> parameters, final List<Header> headers, final Callback callback)
 			throws IOException, RequestException;
@@ -135,8 +133,8 @@ public interface ApacheAsyncClient {
 	void unlock(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				final Callback callback) throws IOException, RequestException;
 
-	void unlock(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				final List<Header> headers, final Callback callback) throws IOException, RequestException;
+	void unlock(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				final Callback callback) throws IOException, RequestException;
 
 	void propfind(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				  final Callback callback) throws IOException, RequestException;
@@ -154,9 +152,8 @@ public interface ApacheAsyncClient {
 	void report(final URI uri, final Map<String, Object> parameters, final List<Header> headers,
 				final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
 
-	void report(final URI uri, final int readTimeout, final Map<String, Object> parameters,
-				final List<Header> headers, final RequestBody<?> body, final Callback callback)
-			throws IOException, RequestException;
+	void report(final URI uri, final int readTimeout, final Map<String, Object> parameters, final List<Header> headers,
+				final RequestBody<?> body, final Callback callback) throws IOException, RequestException;
 
 	void view(final URI uri, final Map<String, Object> parameters, final List<Header> headers, final Callback callback)
 			throws IOException, RequestException;

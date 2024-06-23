@@ -19,39 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
-
-import com.buession.httpclient.conn.nio.IOReactorConfig;
-import com.buession.httpclient.core.Configuration;
 
 /**
  * 异步连接管理器
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
-public interface NioConnectionManager {
-
-	/**
-	 * 获取连接对象
-	 *
-	 * @return 连接对象
-	 */
-	Configuration getConfiguration();
-
-	/**
-	 * 设置连接对象
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 */
-	void setConfiguration(Configuration configuration);
-
-	IOReactorConfig getIoReactorConfig();
-
-	void setIoReactorConfig(IOReactorConfig ioReactorConfig);
+public interface NioConnectionManager extends IConnectionManager {
 
 }

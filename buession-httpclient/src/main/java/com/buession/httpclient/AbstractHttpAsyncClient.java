@@ -25,7 +25,7 @@
 package com.buession.httpclient;
 
 import com.buession.core.utils.Assert;
-import com.buession.httpclient.conn.ConnectionManager;
+import com.buession.httpclient.conn.NioConnectionManager;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
@@ -45,7 +45,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient implements HttpAsyncClient {
+public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient<NioConnectionManager>
+		implements HttpAsyncClient {
 
 	/**
 	 * 构造函数
@@ -60,7 +61,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient imp
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public AbstractHttpAsyncClient(ConnectionManager connectionManager) {
+	public AbstractHttpAsyncClient(NioConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 

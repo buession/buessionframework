@@ -60,7 +60,7 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public Apache5ClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
@@ -72,7 +72,7 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 	 * @param configuration
 	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public Apache5ClientConnectionManager(Configuration configuration,
 										  HttpClientConnectionManager clientConnectionManager) {

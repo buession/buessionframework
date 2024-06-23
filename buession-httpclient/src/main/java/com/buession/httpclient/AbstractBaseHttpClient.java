@@ -24,19 +24,28 @@
  */
 package com.buession.httpclient;
 
-import com.buession.httpclient.conn.ConnectionManager;
+import com.buession.httpclient.conn.IConnectionManager;
 import com.buession.httpclient.core.ProtocolVersion;
 
 /**
  * HttpClient 基类
  *
+ * @param <CM>
+ * 		连接管理器类型
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-abstract class AbstractBaseHttpClient implements IBaseHttpClient {
+abstract class AbstractBaseHttpClient<CM extends IConnectionManager> implements IBaseHttpClient, IHttpClient {
 
-	private ConnectionManager connectionManager;
+	/**
+	 * 连接管理器
+	 */
+	private CM connectionManager;
 
+	/**
+	 * HTTP 协议版本
+	 */
 	private ProtocolVersion httpVersion;
 
 	/**
@@ -51,17 +60,15 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public AbstractBaseHttpClient(ConnectionManager connectionManager) {
+	public AbstractBaseHttpClient(CM connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 
-	@Override
-	public ConnectionManager getConnectionManager() {
+	public CM getConnectionManager() {
 		return connectionManager;
 	}
-
-	@Override
-	public void setConnectionManager(ConnectionManager connectionManager) {
+	
+	public void setConnectionManager(CM connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 

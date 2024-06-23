@@ -27,6 +27,8 @@ package com.buession.httpclient.apache;
 import com.buession.httpclient.conn.ConnectionManager;
 
 /**
+ * Apache 连接管理器
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */

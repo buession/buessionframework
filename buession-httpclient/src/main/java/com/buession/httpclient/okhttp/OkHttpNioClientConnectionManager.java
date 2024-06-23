@@ -22,58 +22,16 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.conn;
+package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.Configuration;
+import com.buession.httpclient.conn.NioConnectionManager;
 
 /**
- * Apache HttpComponents 连接管理器基类
- *
- * @param <CM>
- * 		原生连接管理器
+ * OkHttp 异步连接管理器
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
-public abstract class ApacheBaseClientConnectionManager<CM> extends AbstractConnectionManager<CM> {
-
-	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 */
-	public ApacheBaseClientConnectionManager() {
-		super();
-	}
-
-	/**
-	 * 构造函数，创建驱动默认连接管理器
-	 *
-	 * @param configuration
-	 * 		配置
-	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration) {
-		super(configuration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param clientConnectionManager
-	 * 		原生连接管理器
-	 */
-	public ApacheBaseClientConnectionManager(CM clientConnectionManager) {
-		super(clientConnectionManager);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param configuration
-	 * 		配置
-	 * @param clientConnectionManager
-	 * 		原生连接管理器
-	 */
-	public ApacheBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager) {
-		super(configuration, clientConnectionManager);
-	}
+public interface OkHttpNioClientConnectionManager extends NioConnectionManager {
 
 }

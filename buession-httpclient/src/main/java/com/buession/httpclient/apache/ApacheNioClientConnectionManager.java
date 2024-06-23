@@ -24,13 +24,30 @@
  */
 package com.buession.httpclient.apache;
 
-import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.conn.NioConnectionManager;
+import com.buession.httpclient.conn.nio.IOReactorConfig;
 
 /**
+ * Apache 异步连接管理器
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ApacheNioClientConnectionManager extends NioConnectionManager, ConnectionManager {
+public interface ApacheNioClientConnectionManager extends NioConnectionManager {
+
+	/**
+	 * 返回异步 I/O 线程配置
+	 *
+	 * @return 异步 I/O 线程配置
+	 */
+	IOReactorConfig getIoReactorConfig();
+
+	/**
+	 * 设置异步 I/O 线程配置
+	 *
+	 * @param ioReactorConfig
+	 * 		异步 I/O 线程配置
+	 */
+	void setIoReactorConfig(IOReactorConfig ioReactorConfig);
 
 }

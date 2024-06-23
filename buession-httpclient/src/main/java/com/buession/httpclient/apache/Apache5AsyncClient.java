@@ -432,7 +432,7 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 			propertyMapper.from(ioReactorConfig.isSoReuseAddress()).to(ioReactorConfigBuilder::setSoReuseAddress);
 			propertyMapper.from(ioReactorConfig.getSoLinger()).as(Timeout::ofMilliseconds)
 					.to(ioReactorConfigBuilder::setSoLinger);
-			propertyMapper.from(ioReactorConfig.isSoKeepalive()).to(ioReactorConfigBuilder::setSoKeepAlive);
+			propertyMapper.from(ioReactorConfig.isSoKeepAlive()).to(ioReactorConfigBuilder::setSoKeepAlive);
 			propertyMapper.from(ioReactorConfig.isTcpNoDelay()).to(ioReactorConfigBuilder::setTcpNoDelay);
 			propertyMapper.from(ioReactorConfig.getSndBufSize()).to(ioReactorConfigBuilder::setSndBufSize);
 			propertyMapper.from(ioReactorConfig.getRcvBufSize()).to(ioReactorConfigBuilder::setRcvBufSize);

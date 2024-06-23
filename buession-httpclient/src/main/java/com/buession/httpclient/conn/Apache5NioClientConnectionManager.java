@@ -61,7 +61,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
 	public Apache5NioClientConnectionManager(Configuration configuration) {
 		this(configuration, new IOReactorConfig());
@@ -71,7 +71,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager) {
 		this(clientConnectionManager, new IOReactorConfig());
@@ -81,9 +81,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public Apache5NioClientConnectionManager(Configuration configuration,
 											 AsyncClientConnectionManager clientConnectionManager) {
@@ -94,7 +94,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 */
 	public Apache5NioClientConnectionManager(IOReactorConfig ioReactorConfig) {
 		super();
@@ -105,9 +105,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 */
 	public Apache5NioClientConnectionManager(Configuration configuration, IOReactorConfig ioReactorConfig) {
 		super(configuration);
@@ -118,9 +118,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 */
 	public Apache5NioClientConnectionManager(AsyncClientConnectionManager clientConnectionManager,
 											 IOReactorConfig ioReactorConfig) {
@@ -132,11 +132,11 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 */
 	public Apache5NioClientConnectionManager(Configuration configuration,
 											 AsyncClientConnectionManager clientConnectionManager,
@@ -160,7 +160,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
@@ -173,7 +173,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
@@ -187,9 +187,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
@@ -204,7 +204,7 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
@@ -218,9 +218,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
@@ -234,9 +234,9 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
@@ -250,11 +250,11 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 * @param ioReactorConfig
-	 *        {@link IOReactorConfig}
+	 * 		异步 I/O 线程配置
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
