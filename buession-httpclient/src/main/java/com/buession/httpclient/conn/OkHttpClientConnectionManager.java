@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.conn;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 import okhttp3.HttpClientConnectionManager;
 
@@ -83,15 +84,16 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
-		//最大连接数
-		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
-		// 默认的最大并发请求数量
-		connectionManager.setMaxRequests(getConfiguration().getMaxRequests());
+		// 最大连接数
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxConnections);
 		// 同时请求相同主机的请求数量最大值
-		connectionManager.setMaxRequestsPerHost(getConfiguration().getMaxPerRoute());
+		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setMaxRequestsPerHost);
+		// 默认的最大并发请求数量
+		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxRequests);
 		// 空闲连接存活时长
-		connectionManager.setIdleConnectionTime(getConfiguration().getIdleConnectionTime());
+		propertyMapper.from(getConfiguration().getIdleConnectionTime()).to(connectionManager::setIdleConnectionTime);
 
 		return connectionManager;
 	}

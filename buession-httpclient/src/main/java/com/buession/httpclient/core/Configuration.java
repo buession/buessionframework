@@ -38,7 +38,9 @@ import java.util.StringJoiner;
 public class Configuration {
 
 	/**
-	 * @since 2.3.0
+	 * 是否在多个实例之间共享连接管理器
+	 *
+	 * @since 3.0.0
 	 */
 	private Boolean connectionManagerShared;
 
@@ -137,7 +139,7 @@ public class Configuration {
 	/**
 	 * 是否开启 Http Basic 认证
 	 */
-	private boolean authenticationEnabled;
+	private Boolean authenticationEnabled;
 
 	/**
 	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
@@ -156,12 +158,12 @@ public class Configuration {
 	/**
 	 * 是否启用内容压缩
 	 */
-	private boolean contentCompressionEnabled;
+	private Boolean contentCompressionEnabled;
 
 	/**
 	 * 是否标准化 URI
 	 */
-	private boolean normalizeUri;
+	private Boolean normalizeUri;
 
 	/**
 	 * Determines the name of the cookie specification to be used for HTTP state management.
@@ -185,23 +187,23 @@ public class Configuration {
 	private Proxy proxy;
 
 	/**
-	 * 返回链接管理器是否共享
+	 * 返回是否在多个实例之间共享连接管理器
 	 *
 	 * @return True / False
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 */
 	public Boolean getConnectionManagerShared() {
 		return connectionManagerShared;
 	}
 
 	/**
-	 * 设置链接管理器是否共享
+	 * 设置是否在多个实例之间共享连接管理器
 	 *
 	 * @param connectionManagerShared
-	 * 		链接管理器是否共享
+	 * 		是否在多个实例之间共享连接管理器
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 */
 	public void setConnectionManagerShared(Boolean connectionManagerShared) {
 		this.connectionManagerShared = connectionManagerShared;
@@ -591,7 +593,7 @@ public class Configuration {
 	 *
 	 * @return 是否开启 Http Basic 认证
 	 */
-	public boolean isAuthenticationEnabled() {
+	public Boolean isAuthenticationEnabled() {
 		return getAuthenticationEnabled();
 	}
 
@@ -600,7 +602,7 @@ public class Configuration {
 	 *
 	 * @return 是否开启 Http Basic 认证
 	 */
-	public boolean getAuthenticationEnabled() {
+	public Boolean getAuthenticationEnabled() {
 		return authenticationEnabled;
 	}
 
@@ -610,7 +612,7 @@ public class Configuration {
 	 * @param authenticationEnabled
 	 * 		是否开启 Http Basic 认证
 	 */
-	public void setAuthenticationEnabled(boolean authenticationEnabled) {
+	public void setAuthenticationEnabled(Boolean authenticationEnabled) {
 		this.authenticationEnabled = authenticationEnabled;
 	}
 
@@ -669,7 +671,7 @@ public class Configuration {
 	 *
 	 * @return 是否启用内容压缩
 	 */
-	public boolean isContentCompressionEnabled() {
+	public Boolean isContentCompressionEnabled() {
 		return getContentCompressionEnabled();
 	}
 
@@ -678,7 +680,7 @@ public class Configuration {
 	 *
 	 * @return 是否启用内容压缩
 	 */
-	public boolean getContentCompressionEnabled() {
+	public Boolean getContentCompressionEnabled() {
 		return contentCompressionEnabled;
 	}
 
@@ -688,7 +690,7 @@ public class Configuration {
 	 * @param contentCompressionEnabled
 	 * 		是否启用内容压缩
 	 */
-	public void setContentCompressionEnabled(boolean contentCompressionEnabled) {
+	public void setContentCompressionEnabled(Boolean contentCompressionEnabled) {
 		this.contentCompressionEnabled = contentCompressionEnabled;
 	}
 
@@ -697,7 +699,7 @@ public class Configuration {
 	 *
 	 * @return 是否标准化 URI
 	 */
-	public boolean isNormalizeUri() {
+	public Boolean isNormalizeUri() {
 		return getNormalizeUri();
 	}
 
@@ -706,7 +708,7 @@ public class Configuration {
 	 *
 	 * @return 是否标准化 URI
 	 */
-	public boolean getNormalizeUri() {
+	public Boolean getNormalizeUri() {
 		return normalizeUri;
 	}
 
@@ -716,7 +718,7 @@ public class Configuration {
 	 * @param normalizeUri
 	 * 		是否标准化 URI
 	 */
-	public void setNormalizeUri(boolean normalizeUri) {
+	public void setNormalizeUri(Boolean normalizeUri) {
 		this.normalizeUri = normalizeUri;
 	}
 

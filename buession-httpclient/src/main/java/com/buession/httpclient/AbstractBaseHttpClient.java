@@ -64,10 +64,21 @@ abstract class AbstractBaseHttpClient<CM extends IConnectionManager> implements 
 		this.connectionManager = connectionManager;
 	}
 
+	/**
+	 * 返回连接管理器
+	 *
+	 * @return 连接管理器
+	 */
 	public CM getConnectionManager() {
 		return connectionManager;
 	}
-	
+
+	/**
+	 * 设置连接管理器
+	 *
+	 * @param connectionManager
+	 * 		连接管理器
+	 */
 	public void setConnectionManager(CM connectionManager) {
 		this.connectionManager = connectionManager;
 	}

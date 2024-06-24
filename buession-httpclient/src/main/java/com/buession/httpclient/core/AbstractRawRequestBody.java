@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -40,7 +40,7 @@ public abstract class AbstractRawRequestBody<V> extends AbstractRequestBody<V>
 	/**
 	 * 构造函数
 	 */
-	public AbstractRawRequestBody(){
+	public AbstractRawRequestBody() {
 		super();
 	}
 
@@ -52,7 +52,7 @@ public abstract class AbstractRawRequestBody<V> extends AbstractRequestBody<V>
 	 * @param content
 	 * 		请求体
 	 */
-	public AbstractRawRequestBody(ContentType contentType, V content){
+	public AbstractRawRequestBody(ContentType contentType, V content) {
 		super(contentType, content);
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractRawRequestBody<V> extends AbstractRequestBody<V>
 	 *
 	 * @since 2.0.0
 	 */
-	public AbstractRawRequestBody(ContentType contentType, V content, Charset charset){
+	public AbstractRawRequestBody(ContentType contentType, V content, Charset charset) {
 		super(new ContentType(contentType.getMimeType(), charset), content);
 	}
 
@@ -82,7 +82,7 @@ public abstract class AbstractRawRequestBody<V> extends AbstractRequestBody<V>
 	 * @param contentLength
 	 * 		请求体大小
 	 */
-	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength){
+	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength) {
 		super(contentType, content, contentLength);
 	}
 
@@ -100,7 +100,7 @@ public abstract class AbstractRawRequestBody<V> extends AbstractRequestBody<V>
 	 *
 	 * @since 2.0.0
 	 */
-	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength, Charset charset){
+	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength, Charset charset) {
 		super(new ContentType(contentType.getMimeType(), charset), content, contentLength);
 	}
 

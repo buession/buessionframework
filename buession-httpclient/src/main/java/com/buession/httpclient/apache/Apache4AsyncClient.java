@@ -375,25 +375,26 @@ public class Apache4AsyncClient extends AbstractApacheAsyncClient {
 	}
 
 	protected RequestConfig createRequestConfig(final Configuration configuration) {
-		final RequestConfig.Builder builder = RequestConfig.custom()
-				.setConnectTimeout(configuration.getConnectTimeout())
-				.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
-				.setSocketTimeout(configuration.getReadTimeout())
-				.setAuthenticationEnabled(configuration.isAuthenticationEnabled())
-				.setContentCompressionEnabled(configuration.isContentCompressionEnabled())
-				.setNormalizeUri(configuration.isNormalizeUri());
+		final RequestConfig.Builder builder = RequestConfig.custom();
 
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
+				.to(builder::setConnectTimeout);
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectionRequestTimeout())
+				.to(builder::setConnectionRequestTimeout);
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
+				.to(builder::setSocketTimeout);
 		propertyMapper.from(configuration.isExpectContinueEnabled()).to(builder::setExpectContinueEnabled);
 		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setRedirectsEnabled);
 		propertyMapper.from(configuration.getMaxRedirects()).to(builder::setMaxRedirects);
 		propertyMapper.from(configuration.isCircularRedirectsAllowed()).to(builder::setCircularRedirectsAllowed);
 		propertyMapper.from(configuration.isRelativeRedirectsAllowed()).to(builder::setRelativeRedirectsAllowed);
-
+		propertyMapper.from(configuration.isAuthenticationEnabled()).to(builder::setAuthenticationEnabled);
+		propertyMapper.from(configuration.isContentCompressionEnabled()).to(builder::setContentCompressionEnabled);
+		propertyMapper.from(configuration.isNormalizeUri()).to(builder::setNormalizeUri);
 		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getTargetPreferredAuthSchemes())
 				.to(builder::setTargetPreferredAuthSchemes);
 		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getProxyPreferredAuthSchemes())
 				.to(builder::setProxyPreferredAuthSchemes);
-
 		propertyMapper.from(configuration.getCookieSpec()).to(builder::setCookieSpec);
 
 		final Configuration.Proxy proxy = configuration.getProxy();

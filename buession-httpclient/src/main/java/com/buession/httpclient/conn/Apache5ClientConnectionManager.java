@@ -24,11 +24,18 @@
  */
 package com.buession.httpclient.conn;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
-import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.URIScheme;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
 import org.apache.hc.core5.util.Timeout;
 
 /**
@@ -86,28 +93,47 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 	 */
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
-		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+		final PoolingHttpClientConnectionManager connectionManager =
+				getConfiguration().getConnectionTimeToLive() > -1 ? new PoolingHttpClientConnectionManager(
+						getDefaultRegistry(), PoolConcurrencyPolicy.STRICT,
+						Timeout.ofMilliseconds(getConfiguration().getConnectionTimeToLive())
+						, null) : new PoolingHttpClientConnectionManager();
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
-		//最大连接数
-		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
-		//并发数
-		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
+		// 最大连接数
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
+		// 每个路由的最大连接数
+		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setDefaultMaxPerRoute);
+		// 连接池中最大连接数
+		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxTotal);
 		// 空闲连接存活时长
-		connectionManager.closeIdle(Timeout.ofMilliseconds(getConfiguration().getIdleConnectionTime()));
+		propertyMapper.from(getConfiguration().getIdleConnectionTime()).as(Timeout::ofMilliseconds)
+				.to(connectionManager::closeIdle);
 
-		final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
-
-		connectionConfigBuilder.setConnectTimeout(Timeout.ofMilliseconds(getConfiguration().getConnectTimeout()));
-		connectionConfigBuilder.setSocketTimeout(Timeout.ofMilliseconds(getConfiguration().getReadTimeout()));
-
-		if(getConfiguration().getConnectionTimeToLive() > -1){
-			connectionConfigBuilder.setTimeToLive(
-					TimeValue.ofMilliseconds(getConfiguration().getConnectionTimeToLive()));
-		}
-
-		connectionManager.setDefaultConnectionConfig(connectionConfigBuilder.build());
+		connectionManager.setDefaultConnectionConfig(createDefaultConnectionConfig());
 
 		return connectionManager;
+	}
+
+	protected ConnectionConfig createDefaultConnectionConfig() {
+		final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
+
+		propertyMapper.from(getConfiguration().getConnectTimeout()).as(Timeout::ofMilliseconds)
+				.to(connectionConfigBuilder::setConnectTimeout);
+		propertyMapper.from(getConfiguration().getReadTimeout()).as(Timeout::ofMilliseconds)
+				.to(connectionConfigBuilder::setSocketTimeout);
+		propertyMapper.from(getConfiguration().getConnectionTimeToLive()).as(Timeout::ofMilliseconds)
+				.to(connectionConfigBuilder::setTimeToLive);
+
+		return connectionConfigBuilder.build();
+	}
+
+	private static Registry<ConnectionSocketFactory> getDefaultRegistry() {
+		return RegistryBuilder.<ConnectionSocketFactory>create()
+				.register(URIScheme.HTTP.id, PlainConnectionSocketFactory.getSocketFactory())
+				.register(URIScheme.HTTPS.id, SSLConnectionSocketFactory.getSocketFactory())
+				.build();
 	}
 
 }

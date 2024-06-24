@@ -31,6 +31,7 @@ import com.buession.httpclient.core.Configuration;
 import com.buession.net.ssl.SslConfiguration;
 import okhttp3.OkHttpClient;
 import okhttp3.nio.HttpAsyncClientBuilder;
+import org.apache.hc.core5.util.Timeout;
 
 import java.util.function.Consumer;
 
@@ -56,11 +57,14 @@ public class OkHttpHttpAsyncClientBuilder
 		final SslConfiguration sslConfiguration = configuration.getSslConfiguration();
 		final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
 				.setConnectionManager(connectionManager.getClientConnectionManager())
-				.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure())
-				.setConnectTimeout(configuration.getConnectTimeout())
-				.setReadTimeout(configuration.getReadTimeout())
-				.setWriteTimeout(configuration.getWriteTimeout());
+				.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure());
 
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
+				.to(builder::setConnectTimeout);
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
+				.to(builder::setReadTimeout);
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())
+				.to(builder::setWriteTimeout);
 		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
 
 		if(sslConfiguration != null){

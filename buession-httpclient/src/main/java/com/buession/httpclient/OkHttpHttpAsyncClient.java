@@ -88,12 +88,15 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 			final Configuration configuration = okHttpNioClientConnectionManager.getConfiguration();
 			final SslConfiguration sslConfiguration = configuration.getSslConfiguration();
 			final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
-					.setConnectionManager(okHttpNioClientConnectionManager.getClientConnectionManager())
-					.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure())
-					.setConnectTimeout(configuration.getConnectTimeout())
-					.setReadTimeout(configuration.getReadTimeout())
-					.setWriteTimeout(configuration.getWriteTimeout());
+					.setConnectionManager(okHttpNioClientConnectionManager.getClientConnectionManager());
 
+			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
+					.to(builder::setConnectTimeout);
+			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
+					.to(builder::setReadTimeout);
+			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())
+					.to(builder::setWriteTimeout);
+			propertyMapper.from(configuration.getRetryOnConnectionFailure()).to(builder::setRetryOnConnectionFailure);
 			propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
 
 			if(sslConfiguration != null){

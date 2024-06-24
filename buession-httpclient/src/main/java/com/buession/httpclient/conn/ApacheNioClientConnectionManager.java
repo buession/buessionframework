@@ -308,20 +308,23 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 	 */
 	@Override
 	protected NHttpClientConnectionManager createDefaultClientConnectionManager() {
-		final Registry<SchemeIOSessionStrategy> ioSessionStrategyRegistry = RegistryBuilder.<SchemeIOSessionStrategy>create()
-				.register("http", NoopIOSessionStrategy.INSTANCE)
-				.register("https", SSLIOSessionStrategy.getDefaultStrategy())
-				.build();
-		final PoolingNHttpClientConnectionManager connectionManager = new PoolingNHttpClientConnectionManager(
-				createConnectingIOReactor(), null, ioSessionStrategyRegistry, null, null,
-				getConfiguration().getConnectionTimeToLive(), TimeUnit.MILLISECONDS);
+		final PoolingNHttpClientConnectionManager connectionManager =
+				getConfiguration().getConnectionTimeToLive() > -1 ? new PoolingNHttpClientConnectionManager(
+						createConnectingIOReactor(), null, getDefaultRegistry(), null, null,
+						getConfiguration().getConnectionTimeToLive(), TimeUnit.MILLISECONDS) :
+						new PoolingNHttpClientConnectionManager(createConnectingIOReactor());
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
-		//最大连接数
-		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
-		//并发数
-		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
+		// 最大连接数
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
+		// 每个路由的最大连接数
+		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setDefaultMaxPerRoute);
+		// 连接池中最大连接数
+		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxTotal);
 		// 空闲连接存活时长
-		connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		if(getConfiguration().getIdleConnectionTime() > 0){
+			connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		}
 
 		return connectionManager;
 	}
@@ -358,6 +361,13 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 		}catch(IOReactorException e){
 			throw new IllegalStateException(e);
 		}
+	}
+
+	private static Registry<SchemeIOSessionStrategy> getDefaultRegistry() {
+		return RegistryBuilder.<SchemeIOSessionStrategy>create()
+				.register("http", NoopIOSessionStrategy.INSTANCE)
+				.register("https", SSLIOSessionStrategy.getDefaultStrategy())
+				.build();
 	}
 
 }

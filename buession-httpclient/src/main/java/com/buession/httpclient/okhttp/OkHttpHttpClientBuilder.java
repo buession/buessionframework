@@ -55,11 +55,14 @@ public class OkHttpHttpClientBuilder extends AbstractHttpClientBuilder<HttpClien
 		final SslConfiguration sslConfiguration = configuration.getSslConfiguration();
 		final HttpClientBuilder builder = HttpClientBuilder.create()
 				.setConnectionManager(connectionManager.getClientConnectionManager())
-				.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure())
-				.setConnectTimeout(configuration.getConnectTimeout())
-				.setReadTimeout(configuration.getReadTimeout())
-				.setWriteTimeout(configuration.getWriteTimeout());
+				.setRetryOnConnectionFailure(configuration.getRetryOnConnectionFailure());
 
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
+				.to(builder::setConnectTimeout);
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
+				.to(builder::setReadTimeout);
+		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())
+				.to(builder::setWriteTimeout);
 		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setFollowRedirects);
 
 		if(sslConfiguration != null){

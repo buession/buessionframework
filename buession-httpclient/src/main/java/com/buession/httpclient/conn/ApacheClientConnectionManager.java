@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.conn;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -87,13 +88,18 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
 				getConfiguration().getConnectionTimeToLive(), TimeUnit.MILLISECONDS);
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
-		//最大连接数
-		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
-		//并发数
-		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
+		// 最大连接数
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
+		// 每个路由的最大连接数
+		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setDefaultMaxPerRoute);
+		// 连接池中最大连接数
+		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxTotal);
 		// 空闲连接存活时长
-		connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		if(getConfiguration().getIdleConnectionTime() > 0){
+			connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		}
 
 		return connectionManager;
 	}
