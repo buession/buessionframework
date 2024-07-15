@@ -40,6 +40,8 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 /**
+ * {@link java.nio.file.Files} 扩展
+ *
  * @author Yong.Teng
  */
 public class Files {

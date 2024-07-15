@@ -22,6 +22,9 @@
 - ApacheClient 新增支持 apache httpcomponents 5，根据依赖的 apache httpcomponents 5 和 apache httpcomponents 4 自动判断，优先使用 apache httpcomponents 5
 - 新增支持 Lettuce（stream 命令不稳定，不推荐使用）
 - jedis 模式下，集群支持管道
+- 新增代理方法调用者 ProxyMethodInvoker
+- 新增代理调用处理器 InvocationHandler 抽象类 AbstractInvocationHandler
+- PropertyMapper 增加正数断言 alwaysApplyingWhenPositiveNumber
 
 
 ### 🔔 变化
@@ -31,6 +34,7 @@
 - Sets.toList 参数为 LinkedHashSet 返回 LinkedList
 - core 包中删除依赖 commons-beanutils
 - 删除 ArrayUtils、StatusUtils、ObjectUtils、MapUtils、BuesssionFrameworkVersion
+- 删除 AbstractAspectAnnotationsMethodInterceptor
 - geoip 删除依赖 apache httpcomponents
 - 废弃 ApacheRequest、ApacheRequestBuilder、ApacheHttpClientBuilder
 - httpClient 优化 ConnectionManager 创建默认原生 ConnectionManager，以解决在创建原生 ConnectionManager 之前，更新了 Configuration 不生效的问题
@@ -46,6 +50,8 @@
 - redis 哨兵连接，如果指定了连接超时、读取超时，但未指定哨兵节点连接超时、读取超时，哨兵节点连接超时、读取超时也使用该值
 - redis 连接池调整在连接对象中创建，不再在 DataSource 中创建
 - redis 不再推荐从 DataSource 中创建 RedisConnection 实例
+- IO MimeType 忽略大小写比较
+- 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 stter 函数
 
 
 ### 🐞 Bug 修复
@@ -61,6 +67,16 @@
 ### ⏪ 优化
 - 优化 redis 转换器，不使用静态属性，以减少内存占用
 - jedis 模式命令运算优化
+- 优化 JDBC 数据源连接池设置
+- 优化 httpclient 配置、连接管理器以及连接客户端
+- 优化默认线程池执行器 DefaultThreadPoolExecutor 初始化
+
+
+### 📔 文档
+
+- 完善 redis 注释
+- 修正 httpclient 错误注释
+- 完善 httpclient 注释
 
 
 ---

@@ -100,6 +100,18 @@ public class PropertyMapper {
 	}
 
 	/**
+	 * Return a new {@link PropertyMapper} instance that applies
+	 * {@link Source#whenPositiveNumber() whenHasText} to every source.
+	 *
+	 * @return a new property mapper instance
+	 *
+	 * @since 3.0.0
+	 */
+	public PropertyMapper alwaysApplyingWhenPositiveNumber() {
+		return alwaysApplying(this::whenPositiveNumber);
+	}
+
+	/**
 	 * Return a new {@link PropertyMapper} instance that applies the given
 	 * {@link SourceOperator} to every source.
 	 *
@@ -183,6 +195,10 @@ public class PropertyMapper {
 
 	private <T> Source<T> whenNonText(Source<T> source) {
 		return source.whenNonText();
+	}
+
+	private <T> Source<T> whenPositiveNumber(Source<T> source) {
+		return source.whenPositiveNumber();
 	}
 
 	private <T> Source<T> whenTrue(Source<T> source) {
@@ -420,6 +436,17 @@ public class PropertyMapper {
 		 */
 		public Source<T> whenNonText() {
 			return when((value)->value == null || Validate.isBlank(Objects.toString(value, null)));
+		}
+
+		/**
+		 * Return a filtered version of the source that will only map values that have a positive number.
+		 *
+		 * @return a new filtered source instance
+		 *
+		 * @since 3.0.0
+		 */
+		public Source<T> whenPositiveNumber() {
+			return when((value)->value instanceof Number && ((Number) value).doubleValue() > 0);
 		}
 
 		/**
