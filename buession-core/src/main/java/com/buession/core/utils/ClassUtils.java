@@ -136,6 +136,21 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 		}
 	}
 
+	/**
+	 * 类初始化
+	 *
+	 * @param clazz
+	 * 		类
+	 * @param args
+	 * 		构造函数参数
+	 * @param <T>
+	 * 		实例类型
+	 *
+	 * @return 类实例
+	 *
+	 * @throws ClassInstantiationException
+	 * 		类初始化异常
+	 */
 	public static <T> T instantiate(Class<T> clazz, Object... args) throws ClassInstantiationException {
 		Assert.isNull(clazz, "Class cloud not be null");
 		Assert.isTrue(clazz.isInterface(),

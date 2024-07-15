@@ -26,10 +26,10 @@ package com.buession.io;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.KeyValueParser;
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.Objects;
 
 /**
  * MimeType
@@ -156,7 +156,7 @@ public final class MimeType {
 
 		if(object instanceof MimeType){
 			MimeType that = (MimeType) object;
-			return Objects.equals(type, that.type) && Objects.equals(subtype, that.subtype);
+			return StringUtils.equalsIgnoreCase(type, that.type) && StringUtils.equalsIgnoreCase(subtype, that.subtype);
 		}
 
 		return false;

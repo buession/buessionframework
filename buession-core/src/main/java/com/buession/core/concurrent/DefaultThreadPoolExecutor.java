@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Supplier;
 
 /**
  * 默认线程池执行器
@@ -56,13 +57,12 @@ public class DefaultThreadPoolExecutor extends ThreadPoolExecutor {
 	 * 		线程池配置
 	 */
 	public DefaultThreadPoolExecutor(final ThreadPoolConfiguration configuration) {
-		super(initValue(configuration.getCorePoolSize(), Runtime.getRuntime().availableProcessors() << 1),
+		super(initValue(configuration.getCorePoolSize(), ()->Runtime.getRuntime().availableProcessors() << 1),
 				configuration.getMaximumPoolSize() > 0 ? configuration.getMaximumPoolSize() :
 						Runtime.getRuntime().availableProcessors() << 1,
-				initValue(configuration.getKeepAliveTime(), DEFAULT_KEEP_ALIVE_TIME),
-				configuration.getKeepAliveTimeUnit(),
-				initValue(configuration.getWorkQueue(), new LinkedBlockingQueue<>()),
-				initValue(configuration.getThreadFactory(), createDefaultThreadFactory(configuration)));
+				initValue(configuration.getKeepAliveTime(), ()->DEFAULT_KEEP_ALIVE_TIME),
+				configuration.getKeepAliveTimeUnit(), initValue(configuration.getWorkQueue(), LinkedBlockingQueue::new),
+				initValue(configuration.getThreadFactory(), ()->createDefaultThreadFactory(configuration)));
 
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
@@ -70,16 +70,16 @@ public class DefaultThreadPoolExecutor extends ThreadPoolExecutor {
 		propertyMapper.from(configuration.getRejectedHandler()).to(this::setRejectedExecutionHandler);
 	}
 
-	protected static int initValue(final int value, final int defaultValue) {
-		return value >= 0 ? value : defaultValue;
+	protected static int initValue(final int value, final Supplier<Integer> defaultValue) {
+		return value >= 0 ? value : defaultValue.get();
 	}
 
-	protected static long initValue(final long value, final long defaultValue) {
-		return value >= 0 ? value : defaultValue;
+	protected static long initValue(final long value, final Supplier<Long> defaultValue) {
+		return value >= 0 ? value : defaultValue.get();
 	}
 
-	protected static <T> T initValue(final T value, final T defaultValue) {
-		return Optional.ofNullable(value).orElse(defaultValue);
+	protected static <T> T initValue(final T value, final Supplier<T> defaultValue) {
+		return Optional.ofNullable(value).orElse(defaultValue.get());
 	}
 
 	protected static ThreadFactory createDefaultThreadFactory(final ThreadPoolConfiguration configuration) {

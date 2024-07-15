@@ -46,6 +46,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
+ * {@link java.io.File} 扩展
+ *
  * @author Yong.Teng
  */
 public class File extends java.io.File {
