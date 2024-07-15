@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc;
@@ -178,26 +178,6 @@ public class Response<E> {
 	 *
 	 * @param state
 	 * 		状态，true 为逻辑成功；false 为逻辑失败或出现异常
-	 * @param code
-	 * 		错误码
-	 * @param message
-	 * 		提示或错误消息
-	 * @param data
-	 * 		数据
-	 * @param pagination
-	 * 		分页对象
-	 */
-	@Deprecated
-	public Response(boolean state, int code, String message, E data, com.buession.core.Pagination<E> pagination) {
-		this(state, code, message, data);
-		setPagination(pagination);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param state
-	 * 		状态，true 为逻辑成功；false 为逻辑失败或出现异常
 	 * @param message
 	 * 		提示或错误消息
 	 * @param data
@@ -208,24 +188,6 @@ public class Response<E> {
 	 * @since 2.3.0
 	 */
 	public Response(boolean state, String message, E data, Pagination pagination) {
-		this(state, message, data);
-		setPagination(pagination);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param state
-	 * 		状态，true 为逻辑成功；false 为逻辑失败或出现异常
-	 * @param message
-	 * 		提示或错误消息
-	 * @param data
-	 * 		数据
-	 * @param pagination
-	 * 		分页对象
-	 */
-	@Deprecated
-	public Response(boolean state, String message, E data, com.buession.core.Pagination<E> pagination) {
 		this(state, message, data);
 		setPagination(pagination);
 	}
@@ -345,15 +307,6 @@ public class Response<E> {
 				.add("data=" + data)
 				.add("pagination=" + pagination)
 				.toString();
-	}
-
-	@Deprecated
-	protected void setPagination(com.buession.core.Pagination<E> pagination) {
-		if(pagination != null){
-			this.pagination = new Pagination(pagination.getPage(), pagination.getPagesize(),
-					pagination.getTotalRecords());
-			this.pagination.setTotalPages(pagination.getTotalPages());
-		}
 	}
 
 }
