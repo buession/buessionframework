@@ -112,20 +112,20 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final String nodeId) {
+	public Long clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Integer, Integer>(client,
+			return new JedisSentinelPipelineCommand<Long, Long>(client,
 					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Integer, Integer>(client,
+			return new JedisSentinelTransactionCommand<Long, Long>(client,
 					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}
 	}
@@ -216,7 +216,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
 
 		if(isPipeline()){
@@ -229,7 +229,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), (v)->v)
+					(cmd)->cmd.clusterGetKeysInSlot(slot, count), (v)->v)
 					.run(args);
 		}
 	}

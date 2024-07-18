@@ -37,6 +37,7 @@ import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ClusterReplicasConverter;
 import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
 import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
@@ -114,20 +115,20 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final String nodeId) {
+	public Long clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
-					(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue)
+					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}
 	}
@@ -227,20 +228,21 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+					(cmd)->cmd.clusterGetKeysInSlot(slot, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+					(cmd)->cmd.clusterGetKeysInSlot(slot, count), listConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
-					(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), binaryToStringListConverter)
+					(cmd)->cmd.clusterGetKeysInSlot(slot, count), listConverter)
 					.run(args);
 		}
 	}

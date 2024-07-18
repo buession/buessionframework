@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
@@ -37,12 +36,6 @@ import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.lettuce.response.ClusterReplicasConverter;
-import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
-import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
-import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
-import com.buession.redis.core.internal.convert.response.ClusterNodesConverter;
-import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
 
 import java.util.List;
 
@@ -60,415 +53,161 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 
 	@Override
 	public String clusterMyId() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_MY_ID);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_ADDSLOTS, args);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		final ListConverter<Object, ClusterSlot> listClusterSlotConverter = ClusterSlotConverter.listConverter();
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SLOTS);
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final String nodeId) {
+	public Long clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+	}
 
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Integer, Integer>(client,
-					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Integer, Integer>(client,
-					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Integer, Integer>(client,
-					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}
+	@Override
+	public Long clusterCountFailureReports(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create("slot", slot);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_DELSLOTS, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_FLUSHSLOTS);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		final boolean force = ClusterFailoverOption.FORCE == clusterFailoverOption;
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_FAILOVER, args);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+	public Status clusterForget(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_FORGET, args);
+	}
 
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<String>, List<String>>(client,
-					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<String>, List<String>>(client,
-					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<List<String>, List<String>>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}
+	@Override
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
+		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+		return notCommand(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
+	}
+
+	@Override
+	public Long clusterKeySlot(final String key) {
+		final CommandArguments args = CommandArguments.create("key", key);
+		return notCommand(client, ProtocolCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
-		final ClusterInfoConverter clusterInfoConverter = new ClusterInfoConverter();
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_INFO);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
-		final ClusterNodesConverter clusterNodesConverter = new ClusterNodesConverter();
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_NODES);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final ListConverter<String, ClusterRedisNode> listClusterNodeConverter = ClusterNodeConverter.listConverter();
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final ClusterReplicasConverter clusterReplicasConverter = new ClusterReplicasConverter();
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		final boolean hard = ClusterResetOption.HARD == clusterResetOption;
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_RESET, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SAVECONFIG);
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH, args);
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		final BumpEpochConverter bumpEpochConverter = new BumpEpochConverter();
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
-					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
-					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
-					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_BUMPEPOCH);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public Status asking() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ASKING)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ASKING)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.ASKING)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.ASKING);
 	}
 
 	@Override
 	public Status readWrite() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.READWRITE)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.READWRITE)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.READWRITE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.READWRITE);
 	}
 
 	@Override
 	public Status readOnly() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.READONLY)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.READONLY)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.READONLY)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.READONLY);
 	}
 
 }

@@ -53,402 +53,179 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 
 	@Override
 	public String clusterMyId() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
-					.run();
-		}else{
-			return new JedisClusterCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_MY_ID);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_ADDSLOTS, args);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
-					.run();
-		}else{
-			return new JedisClusterCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SLOTS);
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final String nodeId) {
+	public Long clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+	}
 
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Integer, Integer>(client,
-					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Integer, Integer>(client,
-					ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Integer, Integer>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
-					.run(args);
-		}
+	@Override
+	public Long clusterCountFailureReports(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create("slot", slot);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_DELSLOTS, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-					.run();
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_FLUSHSLOTS);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_FAILOVER, args);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+	public Status clusterForget(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_FORGET, args);
+	}
 
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<List<String>, List<String>>(client,
-					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<List<String>, List<String>>(client,
-					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<List<String>, List<String>>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}
+	@Override
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
+		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+		return notCommand(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
 	}
 
 	@Override
 	public Long clusterKeySlot(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
+		return notCommand(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
+	}
 
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
-					.run(args);
-		}
+	@Override
+	public Long clusterKeySlot(final byte[] key) {
+		final CommandArguments args = CommandArguments.create("key", key);
+		return notCommand(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-					.run();
-		}else{
-			return new JedisClusterCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_INFO);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
-					.run();
-		}else{
-			return new JedisClusterCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_NODES);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_SLAVES, args);
+	}
 
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
-					.run(args);
-		}
+	@Override
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
+	}
 
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
-					.run(args);
-		}
+	@Override
+	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
+	}
 
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
-					.run(args);
-		}
+	@Override
+	public Status clusterReplicate(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_RESET, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-					.run();
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SAVECONFIG);
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH, args);
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(client,
-					ProtocolCommand.CLUSTER_BUMPEPOCH)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
-					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
-					.run();
-		}else{
-			return new JedisClusterCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(
-					client, ProtocolCommand.CLUSTER_BUMPEPOCH)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_BUMPEPOCH);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public Status asking() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.ASKING)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.ASKING)
-					.run();
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.ASKING)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.ASKING);
 	}
 
 	@Override
 	public Status readWrite() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.READWRITE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.READWRITE)
-					.run();
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.READWRITE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.READWRITE);
 	}
 
 	@Override
 	public Status readOnly() {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.READONLY)
-					.run();
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.READONLY)
-					.run();
-		}else{
-			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.READONLY)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.READONLY);
 	}
 
 }

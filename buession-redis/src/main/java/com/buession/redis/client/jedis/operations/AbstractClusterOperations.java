@@ -51,7 +51,7 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final byte[] nodeId) {
+	public Long clusterCountFailureReports(final byte[] nodeId) {
 		return clusterCountFailureReports(SafeEncoder.encode(nodeId));
 	}
 
