@@ -572,16 +572,10 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 				jedis.close();
 			}
 		}else{
-			logger.info("Jedis quit and disconnect.");
+			logger.info("Jedis disconnect.");
 
 			if(jedis != null){
 				Exception ex = null;
-
-				try{
-					jedis.quit();
-				}catch(Exception e){
-					ex = e;
-				}
 
 				try{
 					jedis.disconnect();

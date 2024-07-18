@@ -1075,16 +1075,10 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 				jedis.close();
 			}
 		}else{
-			logger.info("Jedis quit and disconnect.");
+			logger.info("Jedis disconnect.");
 
 			if(jedis != null){
 				Exception ex = null;
-
-				try{
-					jedis.quit();
-				}catch(Exception e){
-					ex = e;
-				}
 
 				try{
 					jedis.disconnect();
