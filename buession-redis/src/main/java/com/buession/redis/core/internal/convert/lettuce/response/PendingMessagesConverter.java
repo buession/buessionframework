@@ -22,41 +22,36 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.KeyedZSetElement;
-import redis.clients.jedis.BuilderFactory;
-
-import java.util.List;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.StreamPending;
+import io.lettuce.core.models.stream.PendingMessage;
+import org.springframework.lang.Nullable;
 
 /**
- * Jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link KeyedZSetElement}
+ * Lettuce {@link PendingMessage} 转换为 {@link  StreamPending}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class KeyedZSetElementConverter
-		implements Converter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
+public class PendingMessageConverter implements Converter<PendingMessage, StreamPending> {
 
+	@Nullable
 	@Override
-	public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source) {
-		return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
+	public StreamPending convert(final PendingMessage source) {
+		if(source == null){
+			return null;
+		}else{
+			return new StreamPending(new StreamEntryId(source.getId()), source.getConsumer(),
+					source.getMsSinceLastDelivery(), source.getRedeliveryCount());
+		}
 	}
 
-	/**
-	 * Jedis {@link List} 字节型 {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link List} {@link KeyedZSetElement}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	public final static class BinaryDataKeyedZSetElementConverter implements Converter<List<byte[]>, KeyedZSetElement> {
-
-		@Override
-		public KeyedZSetElement convert(final List<byte[]> source) {
-			return new KeyedZSetElement(source.get(0), source.get(1), BuilderFactory.DOUBLE.build(source.get(2)));
-		}
-
+	public static ListConverter<PendingMessage, StreamPending> listConverter() {
+		return new ListConverter<>(new PendingMessageConverter());
 	}
 
 }
