@@ -24,8 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Maps;
-import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
@@ -49,7 +47,6 @@ import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 哨兵模式服务端命令操作
@@ -298,19 +295,33 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 	}
 
 	@Override
-	public List<String> configGet(final String parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return configGet(parameter, Maps::toList, args);
+	public Status configSet(final Map<String, String> configs) {
+		final CommandArguments args = CommandArguments.create("configs", configs);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		final String parameterName = SafeEncoder.encode(parameter);
-		final Converter<Map<String, String>, List<byte[]>> converter =
-				(v)->v.values().stream().map(SafeEncoder::encode).collect(Collectors.toList());
+	public Map<String, String> configGet(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		return configGet(pattern, args);
+	}
 
-		return configGet(parameterName, converter, args);
+	@Override
+	public Map<byte[], byte[]> configGet(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final String sPattern = SafeEncoder.encode(pattern);
+
+		return configGet(sPattern, args);
 	}
 
 	@Override
@@ -901,16 +912,15 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 		}
 	}
 
-	private <V> List<V> configGet(final String parameter, final Converter<Map<String, String>, List<V>> converter,
-								  final CommandArguments args) {
+	private <K, V> Map<K, V> configGet(final String pattern, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.CONFIG_GET)
+			return new LettuceSentinelPipelineCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.CONFIG_GET)
+			return new LettuceSentinelTransactionCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.CONFIG_GET)
+			return new LettuceSentinelCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}
 	}

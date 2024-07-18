@@ -21,10 +21,56 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce.utils;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce.utils;
+
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ScoredValue;
+
+import java.util.Map;
+
+/**
+ * Lettuce {@link  ScoredValue} 工具类
  *
  * @author Yong.Teng
- * @since 2.3.0
- */public class ScoredValueUtils {
+ * @since 3.0.0
+ */
+public class ScoredValueUtils {
+
+	protected ScoredValueUtils() {
+
+	}
+
+	public static ScoredValue<byte[]>[] fromStringMap(final Map<String, Double> values) {
+		if(values == null){
+			return null;
+		}else{
+			final ScoredValue<byte[]>[] result = new ScoredValue[values.size()];
+			int i = 0;
+
+			for(Map.Entry<String, Double> e : values.entrySet()){
+				result[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+						SafeEncoder.encode(e.getKey()));
+			}
+
+			return result;
+		}
+	}
+
+	public static ScoredValue<byte[]>[] fromBinaryMap(final Map<byte[], Double> values) {
+		if(values == null){
+			return null;
+		}else{
+			final ScoredValue<byte[]>[] result = new ScoredValue[values.size()];
+			int i = 0;
+
+			for(Map.Entry<byte[], Double> e : values.entrySet()){
+				result[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+						e.getKey());
+			}
+
+			return result;
+		}
+	}
+
 }

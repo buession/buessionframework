@@ -27,17 +27,17 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetConverter;
 import com.buession.core.utils.NumberUtils;
+import com.buession.lang.KeyValue;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GtLt;
-import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.response.KeyedZSetElementConverter;
+import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
@@ -222,83 +222,85 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout) {
+	public KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final KeyedZSetElementConverter keyedZSetElementConverter = new KeyedZSetElementConverter();
+		final KeyValueConverter<String, redis.clients.jedis.resps.Tuple, String, Tuple> keyValueConverter =
+				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMIN,
-					(cmd)->cmd.bzpopmin(timeout, keys), keyedZSetElementConverter)
+					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMIN,
-					(cmd)->cmd.bzpopmin(timeout, keys), keyedZSetElementConverter)
+					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyedZSetElementConverter)
+					keyValueConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout) {
+	public KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter binaryDataKeyedZSetElementConverter =
-				new KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter();
+		final KeyValueConverter<byte[], redis.clients.jedis.resps.Tuple, byte[], Tuple> keyValueConverter =
+				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMIN,
-					(cmd)->cmd.bzpopmin(timeout, keys), binaryDataKeyedZSetElementConverter)
+					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMIN,
-					(cmd)->cmd.bzpopmin(timeout, keys), binaryDataKeyedZSetElementConverter)
+					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					binaryDataKeyedZSetElementConverter)
+					keyValueConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout) {
+	public KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final KeyedZSetElementConverter keyedZSetElementConverter = new KeyedZSetElementConverter();
+		final KeyValueConverter<String, redis.clients.jedis.resps.Tuple, String, Tuple> keyValueConverter =
+				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMAX,
-					(cmd)->cmd.bzpopmax(timeout, keys), keyedZSetElementConverter)
+					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMAX,
-					(cmd)->cmd.bzpopmax(timeout, keys), keyedZSetElementConverter)
+					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyedZSetElementConverter)
+					keyValueConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout) {
+	public KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter binaryDataKeyedZSetElementConverter =
-				new KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter();
+		final KeyValueConverter<byte[], redis.clients.jedis.resps.Tuple, byte[], Tuple> keyValueConverter =
+				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMAX,
-					(cmd)->cmd.bzpopmax(timeout, keys), binaryDataKeyedZSetElementConverter)
+					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMAX,
-					(cmd)->cmd.bzpopmax(timeout, keys), binaryDataKeyedZSetElementConverter)
+					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					binaryDataKeyedZSetElementConverter)
+					keyValueConverter)
 					.run(args);
 		}
 	}
@@ -568,7 +570,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zDiff(final String... keys) {
+	public List<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
@@ -584,7 +586,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zDiff(final byte[]... keys) {
+	public List<byte[]> zDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
@@ -600,41 +602,41 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final String... keys) {
+	public List<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					setTupleConverter)
+					listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFF,
-					(cmd)->cmd.zdiffWithScores(keys), setTupleConverter)
+					(cmd)->cmd.zdiffWithScores(keys), listConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					setTupleConverter)
+					listConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final byte[]... keys) {
+	public List<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					setTupleConverter)
+					listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFF,
-					(cmd)->cmd.zdiffWithScores(keys), setTupleConverter)
+					(cmd)->cmd.zdiffWithScores(keys), listConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					setTupleConverter)
+					listConverter)
 					.run(args);
 		}
 	}
@@ -718,7 +720,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zInter(final String... keys) {
+	public List<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -726,7 +728,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[]... keys) {
+	public List<byte[]> zInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -734,7 +736,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -742,7 +744,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -750,7 +752,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final double... weights) {
+	public List<String> zInter(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -758,7 +760,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -766,7 +768,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -775,7 +777,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -784,7 +786,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String... keys) {
+	public List<Tuple> zInterWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -792,7 +794,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[]... keys) {
+	public List<Tuple> zInterWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -800,7 +802,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -808,7 +810,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -816,7 +818,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -824,7 +826,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -832,7 +834,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -841,7 +843,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -2662,7 +2664,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zUnion(final String... keys) {
+	public List<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -2670,7 +2672,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[]... keys) {
+	public List<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -2678,7 +2680,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -2686,7 +2688,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -2694,7 +2696,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final double... weights) {
+	public List<String> zUnion(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -2702,7 +2704,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -2710,7 +2712,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -2719,7 +2721,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -2728,7 +2730,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String... keys) {
+	public List<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -2736,7 +2738,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[]... keys) {
+	public List<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		final ZParams zParams = new JedisZParams();
 
@@ -2744,7 +2746,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -2752,7 +2754,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		final ZParams zParams = new JedisZParams(aggregate);
 
@@ -2760,7 +2762,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -2768,7 +2770,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		final ZParams zParams = new JedisZParams(weights);
 
@@ -2776,7 +2778,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -2785,7 +2787,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		final ZParams zParams = new JedisZParams(aggregate, weights);
@@ -2922,7 +2924,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		}
 	}
 
-	private Set<String> zInter(final String[] keys, final ZParams zParams, final CommandArguments args) {
+	private List<String> zInter(final String[] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys),
 					(v)->v)
@@ -2937,7 +2939,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		}
 	}
 
-	private Set<byte[]> zInter(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
+	private List<byte[]> zInter(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys),
 					(v)->v)
@@ -2952,40 +2954,40 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		}
 	}
 
-	private Set<Tuple> zInterWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
+	private List<Tuple> zInterWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys),
-					setTupleConverter)
+					listConverter)
 					.run(args);
 		}
 	}
 
-	private Set<Tuple> zInterWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
+	private List<Tuple> zInterWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys),
-					setTupleConverter)
+					listConverter)
 					.run(args);
 		}
 	}
@@ -3198,7 +3200,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		}
 	}
 
-	private Set<String> zUnion(final String[] keys, final ZParams zParams, final CommandArguments args) {
+	private List<String> zUnion(final String[] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
 					(v)->v)
@@ -3213,7 +3215,7 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		}
 	}
 
-	private Set<byte[]> zUnion(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
+	private List<byte[]> zUnion(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
 					(v)->v)
@@ -3228,39 +3230,38 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		}
 	}
 
-	private Set<Tuple> zUnionWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
+	private List<Tuple> zUnionWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys),
-					setTupleConverter)
+					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}
 	}
 
-	private Set<Tuple> zUnionWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		final SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setTupleConverter = TupleConverter.setConverter();
+	private List<Tuple> zUnionWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
+		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), setTupleConverter)
+					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}
 	}

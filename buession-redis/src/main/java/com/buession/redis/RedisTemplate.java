@@ -1802,187 +1802,187 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final String[] keys) {
+	public <V> List<V> zDiffObject(final String[] keys) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final byte[][] keys) {
+	public <V> List<V> zDiffObject(final byte[][] keys) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final String[] keys, final Class<V> clazz) {
+	public <V> List<V> zDiffObject(final String[] keys, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final byte[][] keys, final Class<V> clazz) {
+	public <V> List<V> zDiffObject(final byte[][] keys, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final String[] keys, final TypeReference<V> type) {
+	public <V> List<V> zDiffObject(final String[] keys, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final byte[][] keys, final TypeReference<V> type) {
+	public <V> List<V> zDiffObject(final byte[][] keys, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys) {
+	public <V> List<V> zInterObject(final String[] keys) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys) {
+	public <V> List<V> zInterObject(final byte[][] keys) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Class<V> clazz) {
+	public <V> List<V> zInterObject(final String[] keys, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Class<V> clazz) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final String[] keys, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final byte[][] keys, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate) {
+	public <V> List<V> zInterObject(final String[] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz) {
+	public <V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final double[] weights) {
+	public <V> List<V> zInterObject(final String[] keys, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights) {
+	public <V> List<V> zInterObject(final byte[][] keys, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz) {
+	public <V> List<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz) {
+	public <V> List<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights) {
+	public <V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-								   final Class<V> clazz) {
+	public <V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+									final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-								   final Class<V> clazz) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+									final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-								   final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+									final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-								   final TypeReference<V> type) {
+	public <V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+									final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
@@ -2696,151 +2696,151 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys) {
+	public <V> List<V> zUnionObject(final String[] keys) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys) {
+	public <V> List<V> zUnionObject(final byte[][] keys) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final String[] keys, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final String[] keys, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate) {
+	public <V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights) {
+	public <V> List<V> zUnionObject(final String[] keys, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights) {
+	public <V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
-				new Converter.SimpleSetStringConverter<>(this));
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
-				new Converter.SimpleSetBinaryConverter<>(this));
+				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-								   final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+									final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
-				new Converter.ClazzSetStringConverter<>(this, clazz));
+				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-								   final Class<V> clazz) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+									final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
-				new Converter.ClazzSetBinaryConverter<>(this, clazz));
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-								   final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+									final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
-				new Converter.TypeSetStringConverter<>(this, type));
+				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-								   final TypeReference<V> type) {
+	public <V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+									final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override

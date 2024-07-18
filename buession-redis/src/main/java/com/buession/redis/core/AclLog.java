@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -47,15 +47,15 @@ public class AclLog implements Serializable {
 
 	private final String username;
 
-	private final String ageSeconds;
+	private final Double ageSeconds;
 
 	private final Client clientInfo;
 
 	private final Map<String, Object> logEntry;
 
 	public AclLog(final long count, final String reason, final String context, final String object,
-				  final String username, final String ageSeconds, final Client clientInfo,
-				  final Map<String, Object> logEntry){
+				  final String username, final Double ageSeconds, final Client clientInfo,
+				  final Map<String, Object> logEntry) {
 		this.count = count;
 		this.reason = reason;
 		this.context = context;
@@ -66,40 +66,40 @@ public class AclLog implements Serializable {
 		this.logEntry = logEntry;
 	}
 
-	public long getCount(){
+	public long getCount() {
 		return count;
 	}
 
-	public String getReason(){
+	public String getReason() {
 		return reason;
 	}
 
-	public String getContext(){
+	public String getContext() {
 		return context;
 	}
 
-	public String getObject(){
+	public String getObject() {
 		return object;
 	}
 
-	public String getUsername(){
+	public String getUsername() {
 		return username;
 	}
 
-	public String getAgeSeconds(){
+	public Double getAgeSeconds() {
 		return ageSeconds;
 	}
 
-	public Client getClientInfo(){
+	public Client getClientInfo() {
 		return clientInfo;
 	}
 
-	public Map<String, Object> getLogEntry(){
+	public Map<String, Object> getLogEntry() {
 		return logEntry;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("count", count)
 				.add("reason", reason)

@@ -22,14 +22,14 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.lang.KeyValue;
 import org.springframework.lang.Nullable;
 
 /**
- * jedis {@link redis.clients.jedis.util.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
+ * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link KeyValue}
  *
  * @param <SK>
  * 		原始 Key 类型
@@ -43,8 +43,8 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.clients.jedis.util.KeyValue<SK, SV>,
-		com.buession.lang.KeyValue<TK, TV>> {
+public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.core.KeyValue<SK, SV>,
+		KeyValue<TK, TV>> {
 
 	/**
 	 * Key 转换器
@@ -71,8 +71,8 @@ public class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.client
 
 	@Nullable
 	@Override
-	public KeyValue<TK, TV> convert(final redis.clients.jedis.util.KeyValue<SK, SV> source) {
-		return new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(
+	public KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
+		return new KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(
 				source.getValue()));
 	}
 

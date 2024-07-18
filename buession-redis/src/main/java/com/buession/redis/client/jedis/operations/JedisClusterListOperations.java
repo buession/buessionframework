@@ -326,8 +326,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams, count),
-					(v)->v)
+					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v)
 					.run(args);
 		}
 	}

@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.collect.Maps;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
@@ -41,6 +40,7 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.RedisServerTimeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.RoleConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.SlowlogConverter;
@@ -50,7 +50,6 @@ import com.buession.redis.utils.SafeEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 集群模式服务端命令操作
@@ -303,19 +302,62 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 	}
 
 	@Override
-	public List<String> configGet(final String parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return configGet(parameter, Maps::toList, args);
+	public Status configSet(final Map<String, String> configs) {
+		final CommandArguments args = CommandArguments.create("configs", configs);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_SET,
+					(cmd)->cmd.configSet(configs), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_SET,
+					(cmd)->cmd.configSet(configs), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(configs),
+					okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		final String parameterName = SafeEncoder.encode(parameter);
-		final Converter<Map<String, String>, List<byte[]>> converter =
-				(v)->v.values().stream().map(SafeEncoder::encode).collect(Collectors.toList());
+	public Map<String, String> configGet(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
 
-		return configGet(parameterName, converter, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_GET,
+					(cmd)->cmd.configGet(pattern), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_GET,
+					(cmd)->cmd.configGet(pattern), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(pattern),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> configGet(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final String sPattern = SafeEncoder.encode(pattern);
+		final Converter<Map<String, String>, Map<byte[], byte[]>> converter = Converters.mapStringToBinary();
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_GET,
+					(cmd)->cmd.configGet(sPattern), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_GET,
+					(cmd)->cmd.configGet(sPattern), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(sPattern),
+					converter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -963,23 +1005,6 @@ public final class LettuceClusterServerOperations extends AbstractServerOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
-					.run(args);
-		}
-	}
-
-	private <V> List<V> configGet(final String parameter, final Converter<Map<String, String>, List<V>> converter,
-								  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CONFIG_GET,
-					(cmd)->cmd.configGet(parameter), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CONFIG_GET,
-					(cmd)->cmd.configGet(parameter), converter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),
-					converter)
 					.run(args);
 		}
 	}

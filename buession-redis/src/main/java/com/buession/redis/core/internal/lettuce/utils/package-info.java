@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.lettuce.utils;

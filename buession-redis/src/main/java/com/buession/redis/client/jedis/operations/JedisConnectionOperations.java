@@ -157,7 +157,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.QUIT)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+			return new JedisCommand<Status, Status>(client, ProtocolCommand.QUIT)
 					.run();
 		}
 	}

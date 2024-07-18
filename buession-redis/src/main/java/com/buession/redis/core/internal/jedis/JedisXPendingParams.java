@@ -28,6 +28,8 @@ import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.params.XPendingParams;
 
 /**
+ * Jedis {@link XPendingParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
@@ -37,19 +39,19 @@ public final class JedisXPendingParams extends XPendingParams {
 		super();
 	}
 
-	public JedisXPendingParams(final long minIdleTime) {
+	public JedisXPendingParams(final long idle) {
 		this();
-		idle(minIdleTime);
+		idle(idle);
 	}
 
-	public JedisXPendingParams(final long minIdleTime, final StreamEntryId start, final StreamEntryId end,
+	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
 							   final long count) {
 		this(start, end, count);
-		idle(minIdleTime);
+		idle(idle);
 	}
 
-	public JedisXPendingParams(final long minIdleTime, final String consumer) {
-		this(minIdleTime);
+	public JedisXPendingParams(final long idle, final String consumer) {
+		this(idle);
 		consumer(consumer);
 	}
 
@@ -63,9 +65,9 @@ public final class JedisXPendingParams extends XPendingParams {
 		consumer(consumer);
 	}
 
-	public JedisXPendingParams(final long minIdleTime, final StreamEntryId start, final StreamEntryId end,
+	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
 							   final long count, final String consumer) {
-		this(minIdleTime, start, end, count);
+		this(idle, start, end, count);
 		consumer(consumer);
 	}
 

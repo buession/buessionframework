@@ -39,6 +39,8 @@ import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.PendingMessageConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.PendingMessagesConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamConsumersInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamEntryIDConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamFullInfoConverter;
@@ -46,11 +48,10 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamGroupInfo
 import com.buession.redis.core.internal.convert.lettuce.response.StreamInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageMapConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingSummaryConverter;
 import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
+import com.buession.redis.core.internal.lettuce.LettuceXPendingArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
@@ -61,6 +62,7 @@ import io.lettuce.core.XAddArgs;
 import io.lettuce.core.XClaimArgs;
 import io.lettuce.core.XGroupCreateArgs;
 import io.lettuce.core.XReadArgs;
+import io.lettuce.core.models.stream.PendingMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -303,19 +305,18 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
-		final Converter<Boolean, Long> converter = (v)->v ? 1L : 0L;
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
-					(cmd)->cmd.xgroupDelconsumer(key, consumer), converter)
+					(cmd)->cmd.xgroupDelconsumer(key, consumer), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
-					(cmd)->cmd.xgroupDelconsumer(key, consumer), converter)
+					(cmd)->cmd.xgroupDelconsumer(key, consumer), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
-					(cmd)->cmd.xgroupDelconsumer(key, consumer), converter)
+					(cmd)->cmd.xgroupDelconsumer(key, consumer), (v)->v)
 					.run(args);
 		}
 	}
@@ -478,19 +479,19 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	@Override
 	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		final StreamPendingSummaryConverter streamPendingSummaryConverter = new StreamPendingSummaryConverter();
+		final PendingMessagesConverter pendingMessagesConverter = new PendingMessagesConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
-					streamPendingSummaryConverter)
+					pendingMessagesConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.XPENDING,
-					(cmd)->cmd.xpending(key, groupName), streamPendingSummaryConverter)
+					(cmd)->cmd.xpending(key, groupName), pendingMessagesConverter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
-					streamPendingSummaryConverter)
+					pendingMessagesConverter)
 					.run(args);
 		}
 	}
@@ -499,18 +500,20 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime);
-		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
+		final LettuceXPendingArgs<byte[]> xPendingArgs = new LettuceXPendingArgs<>(minIdleTime, groupName, null);
+		final ListConverter<PendingMessage, StreamPending> listStreamPendingConverter = PendingMessageConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING,
+					(cmd)->cmd.xpending(key, xPendingArgs),
 					listStreamPendingConverter)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.XPENDING,
-					(cmd)->cmd.xpending(key, groupName), listStreamPendingConverter)
+					(cmd)->cmd.xpending(key, xPendingArgs), listStreamPendingConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+			return new LettuceCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, xPendingArgs),
 					listStreamPendingConverter)
 					.run(args);
 		}
@@ -1001,7 +1004,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 
 	private List<StreamPending> xPending(final byte[] key, final byte[] groupName, Range<String> range,
 										 final Limit limit, final CommandArguments args) {
-		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
+		final ListConverter<PendingMessage, StreamPending> listStreamPendingConverter = PendingMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING,
@@ -1020,7 +1023,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 
 	private List<StreamPending> xPending(final byte[] key, final Consumer<byte[]> consumer, Range<String> range,
 										 final Limit limit, final CommandArguments args) {
-		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
+		final ListConverter<PendingMessage, StreamPending> listStreamPendingConverter = PendingMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XPENDING,

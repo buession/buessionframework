@@ -26,11 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.SetConverter;
 import com.buession.redis.core.Tuple;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
@@ -47,10 +43,6 @@ public final class TupleConverter implements Converter<redis.clients.jedis.resps
 
 	public static ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter() {
 		return new ListConverter<>(new TupleConverter());
-	}
-	
-	public static SetConverter<redis.clients.jedis.resps.Tuple, Tuple> setConverter() {
-		return new SetConverter<>(new TupleConverter());
 	}
 
 }

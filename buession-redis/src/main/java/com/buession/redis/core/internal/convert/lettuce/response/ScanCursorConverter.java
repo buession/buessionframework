@@ -131,7 +131,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 				implements ScanCursorConverter<ScoredValueScanCursor<byte[]>, List<Tuple>> {
 
 			private final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter
-					= ScoredValueConverter.listConverter();
+					= ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 			@Override
 			public ScanResult<List<Tuple>> convert(final ScoredValueScanCursor<byte[]> source) {

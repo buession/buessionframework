@@ -50,7 +50,6 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.GtLt;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.MigrateOperation;
@@ -1962,13 +1961,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> configGet(final String parameter) {
-		return execute((client)->client.serverOperations().configGet(parameter));
+	public Status configSet(final Map<String, String> configs) {
+		return execute((client)->client.serverOperations().configSet(configs));
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter) {
-		return execute((client)->client.serverOperations().configGet(parameter));
+	public Map<String, String> configGet(final String pattern) {
+		return execute((client)->client.serverOperations().configGet(pattern));
+	}
+
+	@Override
+	public Map<byte[], byte[]> configGet(final byte[] pattern) {
+		return execute((client)->client.serverOperations().configGet(pattern));
 	}
 
 	@Override
@@ -2491,22 +2495,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout) {
+	public KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
 		return execute((client)->client.sortedSetOperations().bzPopMin(rawKeys(keys), timeout));
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout) {
+	public KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
 		return execute((client)->client.sortedSetOperations().bzPopMin(rawKeys(keys), timeout));
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout) {
+	public KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
 		return execute((client)->client.sortedSetOperations().bzPopMax(rawKeys(keys), timeout));
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout) {
+	public KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
 		return execute((client)->client.sortedSetOperations().bzPopMax(rawKeys(keys), timeout));
 	}
 
@@ -2625,22 +2629,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Set<String> zDiff(final String... keys) {
+	public List<String> zDiff(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> zDiff(final byte[]... keys) {
+	public List<byte[]> zDiff(final byte[]... keys) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final String... keys) {
+	public List<Tuple> zDiffWithScores(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zDiffWithScores(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final byte[]... keys) {
+	public List<Tuple> zDiffWithScores(final byte[]... keys) {
 		return execute((client)->client.sortedSetOperations().zDiffWithScores(rawKeys(keys)));
 	}
 
@@ -2665,82 +2669,82 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Set<String> zInter(final String... keys) {
+	public List<String> zInter(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[]... keys) {
+	public List<byte[]> zInter(final byte[]... keys) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final double... weights) {
+	public List<String> zInter(final String[] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInter(rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String... keys) {
+	public List<Tuple> zInterWithScores(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[]... keys) {
+	public List<Tuple> zInterWithScores(final byte[]... keys) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zInterWithScores(rawKeys(keys), aggregate, weights));
 	}
 
@@ -3471,82 +3475,82 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Set<String> zUnion(final String... keys) {
+	public List<String> zUnion(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[]... keys) {
+	public List<byte[]> zUnion(final byte[]... keys) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final double... weights) {
+	public List<String> zUnion(final String[] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnion(rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String... keys) {
+	public List<Tuple> zUnionWithScores(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[]... keys) {
+	public List<Tuple> zUnionWithScores(final byte[]... keys) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys)));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys), aggregate));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys), weights));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys), aggregate, weights));
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetOperations().zUnionWithScores(rawKeys(keys), aggregate, weights));
 	}
 

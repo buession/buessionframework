@@ -25,12 +25,11 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.NumberUtils;
+import com.buession.lang.KeyValue;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GtLt;
-import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
@@ -38,13 +37,11 @@ import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceZAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceZStoreArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.KeyValue;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;
 import io.lettuce.core.ScanArgs;
@@ -56,7 +53,6 @@ import io.lettuce.core.ZStoreArgs;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Lettuce 哨兵模式模式有序集合命令操作
@@ -73,7 +69,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public Tuple zPopMin(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final ScoredValueConverter scoredValueConverter = new ScoredValueConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMIN)
@@ -90,7 +85,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
@@ -107,7 +101,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public Tuple zPopMax(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final ScoredValueConverter scoredValueConverter = new ScoredValueConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMAX)
@@ -124,7 +117,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
@@ -139,41 +131,77 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout) {
+	public KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final Converter<KeyValue<byte[], ScoredValue<byte[]>>, KeyedZSetElement> converter =
-				(v)->new KeyedZSetElement(v.getKey(), v.getValue().getValue(), v.getValue().getScore());
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<KeyedZSetElement, KeyedZSetElement>(client,
-					ProtocolCommand.BZPOPMIN)
+			return new LettuceSentinelPipelineCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
+					client, ProtocolCommand.BZPOPMIN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<KeyedZSetElement, KeyedZSetElement>(client,
-					ProtocolCommand.BZPOPMIN)
+			return new LettuceSentinelTransactionCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
+					client, ProtocolCommand.BZPOPMIN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<KeyedZSetElement, KeyedZSetElement>(client, ProtocolCommand.BZPOPMIN)
+			return new LettuceSentinelCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
+					client, ProtocolCommand.BZPOPMIN)
 					.run(args);
 		}
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout) {
+	public KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final Converter<KeyValue<byte[], ScoredValue<byte[]>>, KeyedZSetElement> converter =
-				(v)->new KeyedZSetElement(v.getKey(), v.getValue().getValue(), v.getValue().getScore());
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<KeyedZSetElement, KeyedZSetElement>(client,
-					ProtocolCommand.BZPOPMAX)
+			return new LettuceSentinelPipelineCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
+					client, ProtocolCommand.BZPOPMIN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<KeyedZSetElement, KeyedZSetElement>(client,
-					ProtocolCommand.BZPOPMAX)
+			return new LettuceSentinelTransactionCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
+					client, ProtocolCommand.BZPOPMIN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<KeyedZSetElement, KeyedZSetElement>(client, ProtocolCommand.BZPOPMAX)
+			return new LettuceSentinelCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
+					client, ProtocolCommand.BZPOPMIN)
+					.run(args);
+		}
+	}
+
+	@Override
+	public KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
+					client, ProtocolCommand.BZPOPMAX)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
+					client, ProtocolCommand.BZPOPMAX)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
+					client, ProtocolCommand.BZPOPMAX)
+					.run(args);
+		}
+	}
+
+	@Override
+	public KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
+					client, ProtocolCommand.BZPOPMAX)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
+					client, ProtocolCommand.BZPOPMAX)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
+					client, ProtocolCommand.BZPOPMAX)
 					.run(args);
 		}
 	}
@@ -346,25 +374,25 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public Set<String> zDiff(final String... keys) {
+	public List<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
 
 	@Override
-	public Set<byte[]> zDiff(final byte[]... keys) {
+	public List<byte[]> zDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final String... keys) {
+	public List<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final byte[]... keys) {
+	public List<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
@@ -399,100 +427,100 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public Set<String> zInter(final String... keys) {
+	public List<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[]... keys) {
+	public List<byte[]> zInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final double... weights) {
+	public List<String> zInter(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String... keys) {
+	public List<Tuple> zInterWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[]... keys) {
+	public List<Tuple> zInterWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
@@ -625,7 +653,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGE)
@@ -756,8 +783,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final Range<Double> range = Range.create(min, max);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -777,9 +802,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 											   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final Range<Double> range = Range.create(min, max);
-		final Limit limit = Limit.create(offset, count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
@@ -1020,7 +1042,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
@@ -1151,8 +1172,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final Range<Double> range = Range.create(min, max);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client,
@@ -1173,9 +1192,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 												  final long offset, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		final Range<Double> range = Range.create(min, max);
-		final Limit limit = Limit.create(offset, count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client,
@@ -1318,100 +1334,100 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public Set<String> zUnion(final String... keys) {
+	public List<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[]... keys) {
+	public List<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final double... weights) {
+	public List<String> zUnion(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String... keys) {
+	public List<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[]... keys) {
+	public List<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
@@ -1467,7 +1483,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		int i = 0;
 
 		for(Map.Entry<String, Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), SafeEncoder.encode(e.getKey()));
+			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+					SafeEncoder.encode(e.getKey()));
 		}
 
 		return zAdd(bKey, scoredValues, args);
@@ -1480,7 +1497,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		int i = 0;
 
 		for(Map.Entry<String, Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), SafeEncoder.encode(e.getKey()));
+			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+					SafeEncoder.encode(e.getKey()));
 		}
 
 		return zAdd(bKey, scoredValues, zAddArgs, args);
@@ -1491,7 +1509,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		int i = 0;
 
 		for(Map.Entry<byte[], Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), e.getKey());
+			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+					e.getKey());
 		}
 
 		return zAdd(key, scoredValues, args);
@@ -1503,7 +1522,8 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		int i = 0;
 
 		for(Map.Entry<byte[], Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), e.getKey());
+			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+					e.getKey());
 		}
 
 		return zAdd(key, scoredValues, zAddArgs, args);
@@ -1536,15 +1556,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		}
 	}
 
-	private <V> Set<V> zDiff(final CommandArguments args) {
+	private <V> List<V> zDiff(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
 					.run(args);
 		}
 	}
@@ -1562,15 +1582,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		}
 	}
 
-	private <V> Set<V> zInter(final CommandArguments args) {
+	private <V> List<V> zInter(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
 					.run(args);
 		}
 	}
@@ -1851,15 +1871,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		}
 	}
 
-	private <V> Set<V> zUnion(final CommandArguments args) {
+	private <V> List<V> zUnion(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
 					.run(args);
 		}
 	}

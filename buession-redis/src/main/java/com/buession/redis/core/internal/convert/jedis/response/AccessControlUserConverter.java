@@ -38,7 +38,8 @@ public final class AccessControlUserConverter implements Converter<AccessControl
 
 	@Override
 	public AclUser convert(final AccessControlUser source) {
-		return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
+		return new AclUser(source.getCommands(), source.getUserInfo(), source.getPasswords(), source.getFlags(),
+				source.getKeysList(), source.getChannelsList(), source.getSelectors());
 	}
 
 }

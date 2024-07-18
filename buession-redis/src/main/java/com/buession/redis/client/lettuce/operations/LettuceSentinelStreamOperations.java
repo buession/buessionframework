@@ -39,18 +39,11 @@ import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamConsumersInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamEntryIDConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamFullInfoConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamGroupInfoConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageMapConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.StreamPendingSummaryConverter;
 import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
-import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
@@ -59,7 +52,6 @@ import io.lettuce.core.Range;
 import io.lettuce.core.StreamMessage;
 import io.lettuce.core.XAddArgs;
 import io.lettuce.core.XClaimArgs;
-import io.lettuce.core.XGroupCreateArgs;
 import io.lettuce.core.XReadArgs;
 
 import java.util.List;
@@ -81,7 +73,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("ids", (Object[]) ids);
-		final String[] messageIds = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XACK)
@@ -243,7 +234,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Long xDel(final byte[] key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("ids", (Object[]) ids);
-		final String[] messageIds = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XDEL)
@@ -262,8 +252,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 							   final boolean makeStream) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("id", id);
-		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.latest(key);
-		final XGroupCreateArgs xGroupCreateArgs = new LettuceXGroupCreateArgs(makeStream);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATE)
@@ -329,7 +317,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("id", id);
-		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.from(key, id.toString());
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.XGROUP_SETID)
@@ -346,7 +333,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		final ListConverter<Object, StreamConsumer> listStreamConsumersInfoConverter = StreamConsumersInfoConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamConsumer>, List<StreamConsumer>>(client,
@@ -366,7 +352,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public List<StreamGroup> xInfoGroups(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final ListConverter<Object, StreamGroup> listStreamGroupInfoConverter = StreamGroupInfoConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamGroup>, List<StreamGroup>>(client,
@@ -386,7 +371,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Stream xInfoStream(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final StreamInfoConverter streamInfoConverter = new StreamInfoConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Stream, Stream>(client, ProtocolCommand.XINFO_STREAM)
@@ -403,7 +387,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public StreamFull xInfoStream(final byte[] key, final boolean full) {
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full);
-		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
@@ -420,7 +403,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full).put("count", count);
-		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
@@ -453,7 +435,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
-		final StreamPendingSummaryConverter streamPendingSummaryConverter = new StreamPendingSummaryConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<StreamPendingSummary, StreamPendingSummary>(client,
@@ -474,7 +455,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime);
-		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamPending>, List<StreamPending>>(client,
@@ -564,9 +544,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final Range<String> range = Range.create(start.toString(), end.toString());
-		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
-				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
@@ -586,10 +563,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
 									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final Range<String> range = Range.create(start.toString(), end.toString());
-		final Limit limit = Limit.from(count);
-		final ListConverter<StreamMessage<byte[], byte[]>, StreamEntry> listStreamMessageConverter =
-				StreamMessageConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
@@ -968,8 +941,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	private List<StreamPending> xPending(final byte[] key, final byte[] groupName, Range<String> range,
 										 final Limit limit, final CommandArguments args) {
-		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
-
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamPending>, List<StreamPending>>(client,
 					ProtocolCommand.XPENDING)
@@ -987,8 +958,6 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	private List<StreamPending> xPending(final byte[] key, final Consumer<byte[]> consumer, Range<String> range,
 										 final Limit limit, final CommandArguments args) {
-		final ListConverter<Object, StreamPending> listStreamPendingConverter = StreamPendingConverter.listConverter();
-
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamPending>, List<StreamPending>>(client,
 					ProtocolCommand.XPENDING)

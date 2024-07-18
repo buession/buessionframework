@@ -30,21 +30,21 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GtLt;
-import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
-import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueTupleConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceZAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceZStoreArgs;
+import com.buession.redis.core.internal.lettuce.utils.ScoredValueUtils;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.KeyValue;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;
 import io.lettuce.core.ScanArgs;
@@ -56,7 +56,6 @@ import io.lettuce.core.ZStoreArgs;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Lettuce 集群模式模式有序集合命令操作
@@ -73,7 +72,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	@Override
 	public Tuple zPopMin(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final ScoredValueConverter scoredValueConverter = new ScoredValueConverter();
+		final ScoredValueTupleConverter.BinaryScoredValueTupleConverter scoredValueConverter = new ScoredValueTupleConverter.BinaryScoredValueTupleConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
@@ -93,7 +92,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, count),
@@ -113,7 +112,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	@Override
 	public Tuple zPopMax(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final ScoredValueConverter scoredValueConverter = new ScoredValueConverter();
+		final ScoredValueTupleConverter.BinaryScoredValueTupleConverter scoredValueConverter = new ScoredValueTupleConverter.BinaryScoredValueTupleConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmin(key),
@@ -133,7 +132,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmin(key, count),
@@ -151,45 +150,41 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout) {
+	public com.buession.lang.KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final Converter<KeyValue<byte[], ScoredValue<byte[]>>, KeyedZSetElement> converter =
-				(v)->new KeyedZSetElement(v.getKey(), v.getValue().getValue(), v.getValue().getScore());
+		final byte[][] bKeys = SafeEncoder.encode(keys);
+		final KeyValueConverter<byte[], ScoredValue<byte[]>, String, Tuple> converter = new KeyValueConverter<>(
+				SafeEncoder::encode, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
 
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BZPOPMIN,
-					(cmd)->cmd.bzpopmin(timeout, keys), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BZPOPMIN,
-					(cmd)->cmd.bzpopmin(timeout, keys), converter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					converter)
-					.run(args);
-		}
+		return bzPopMin(bKeys, timeout, converter, args);
 	}
 
 	@Override
-	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout) {
+	public com.buession.lang.KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
-		final Converter<KeyValue<byte[], ScoredValue<byte[]>>, KeyedZSetElement> converter =
-				(v)->new KeyedZSetElement(v.getKey(), v.getValue().getValue(), v.getValue().getScore());
+		final KeyValueConverter<byte[], ScoredValue<byte[]>, byte[], Tuple> converter = new KeyValueConverter<>(
+				(k)->k, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
 
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BZPOPMAX,
-					(cmd)->cmd.bzpopmax(timeout, keys), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BZPOPMAX,
-					(cmd)->cmd.bzpopmax(timeout, keys), converter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					converter)
-					.run(args);
-		}
+		return bzPopMin(keys, timeout, converter, args);
+	}
+
+	@Override
+	public com.buession.lang.KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+		final byte[][] bKeys = SafeEncoder.encode(keys);
+		final KeyValueConverter<byte[], ScoredValue<byte[]>, String, Tuple> converter = new KeyValueConverter<>(
+				SafeEncoder::encode, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
+
+		return bzPopMax(bKeys, timeout, converter, args);
+	}
+
+	@Override
+	public com.buession.lang.KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+		final KeyValueConverter<byte[], ScoredValue<byte[]>, byte[], Tuple> converter = new KeyValueConverter<>(
+				(k)->k, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
+
+		return bzPopMax(keys, timeout, converter, args);
 	}
 
 	@Override
@@ -362,25 +357,25 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	}
 
 	@Override
-	public Set<String> zDiff(final String... keys) {
+	public List<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
 
 	@Override
-	public Set<byte[]> zDiff(final byte[]... keys) {
+	public List<byte[]> zDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final String... keys) {
+	public List<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
 
 	@Override
-	public Set<Tuple> zDiffWithScores(final byte[]... keys) {
+	public List<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zDiff(args);
 	}
@@ -419,100 +414,100 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	}
 
 	@Override
-	public Set<String> zInter(final String... keys) {
+	public List<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[]... keys) {
+	public List<byte[]> zInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final double... weights) {
+	public List<String> zInter(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String... keys) {
+	public List<Tuple> zInterWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[]... keys) {
+	public List<Tuple> zInterWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
 	}
 
 	@Override
-	public Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zInter(args);
@@ -651,7 +646,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZRANGE,
@@ -786,7 +781,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final Range<Double> range = Range.create(min, max);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -810,7 +805,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 				.put("offset", offset).put("count", count);
 		final Range<Double> range = Range.create(min, max);
 		final Limit limit = Limit.create(offset, count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
@@ -1067,7 +1062,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
@@ -1202,7 +1197,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final Range<Double> range = Range.create(min, max);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -1226,7 +1221,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 				.put("offset", offset).put("count", count);
 		final Range<Double> range = Range.create(min, max);
 		final Limit limit = Limit.create(offset, count);
-		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueConverter.listConverter();
+		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
@@ -1375,100 +1370,100 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	}
 
 	@Override
-	public Set<String> zUnion(final String... keys) {
+	public List<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[]... keys) {
+	public List<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final double... weights) {
+	public List<String> zUnion(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String... keys) {
+	public List<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[]... keys) {
+	public List<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
 	}
 
 	@Override
-	public Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
+	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("aggregate", aggregate)
 				.put("weights", weights);
 		return zUnion(args);
@@ -1522,52 +1517,64 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		return zUnionStore(destKey, keys, zStoreArgs, args);
 	}
 
+	private <K> com.buession.lang.KeyValue<K, Tuple> bzPopMin(final byte[][] keys, final int timeout,
+															  final KeyValueConverter<byte[], ScoredValue<byte[]>, K,
+																	  Tuple> converter,
+															  final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BZPOPMIN,
+					(cmd)->cmd.bzpopmin(timeout, keys),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BZPOPMIN,
+					(cmd)->cmd.bzpopmin(timeout, keys), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
+					converter)
+					.run(args);
+		}
+	}
+
+	private <K> com.buession.lang.KeyValue<K, Tuple> bzPopMax(final byte[][] keys, final int timeout,
+															  final KeyValueConverter<byte[], ScoredValue<byte[]>,
+																	  K, Tuple> converter,
+															  final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BZPOPMAX,
+					(cmd)->cmd.bzpopmax(timeout, keys),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BZPOPMAX,
+					(cmd)->cmd.bzpopmax(timeout, keys), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
+					converter)
+					.run(args);
+		}
+	}
+
 	private Long zAdd(final String key, final Map<String, Double> members, final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<String, Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), SafeEncoder.encode(e.getKey()));
-		}
-
-		return zAdd(bKey, scoredValues, args);
+		return zAdd(bKey, ScoredValueUtils.fromStringMap(members), args);
 	}
 
 	private Long zAdd(final String key, final Map<String, Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<String, Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), SafeEncoder.encode(e.getKey()));
-		}
-
-		return zAdd(bKey, scoredValues, zAddArgs, args);
+		return zAdd(bKey, ScoredValueUtils.fromStringMap(members), zAddArgs, args);
 	}
 
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final CommandArguments args) {
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<byte[], Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), e.getKey());
-		}
-
-		return zAdd(key, scoredValues, args);
+		return zAdd(key, ScoredValueUtils.fromBinaryMap(members), args);
 	}
 
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<byte[], Double> e : members.entrySet()){
-			scoredValues[i++] = ScoredValue.fromNullable(e.getValue(), e.getKey());
-		}
-
-		return zAdd(key, scoredValues, zAddArgs, args);
+		return zAdd(key, ScoredValueUtils.fromBinaryMap(members), zAddArgs, args);
 	}
 
 	private Long zAdd(final byte[] key, final ScoredValue<byte[]>[] scoredValues, final CommandArguments args) {
@@ -1602,15 +1609,15 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		}
 	}
 
-	private <V> Set<V> zDiff(final CommandArguments args) {
+	private <V> List<V> zDiff(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceClusterPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceClusterTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceClusterCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
 					.run(args);
 		}
 	}
@@ -1628,15 +1635,15 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		}
 	}
 
-	private <V> Set<V> zInter(final CommandArguments args) {
+	private <V> List<V> zInter(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceClusterPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceClusterTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceClusterCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
 					.run(args);
 		}
 	}
@@ -1950,15 +1957,15 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		}
 	}
 
-	private <V> Set<V> zUnion(final CommandArguments args) {
+	private <V> List<V> zUnion(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceClusterPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceClusterTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<Set<V>, Set<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceClusterCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
 					.run(args);
 		}
 	}

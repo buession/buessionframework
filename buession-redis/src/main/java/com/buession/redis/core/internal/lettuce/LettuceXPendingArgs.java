@@ -21,10 +21,85 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.StreamEntryId;
+import io.lettuce.core.Consumer;
+import io.lettuce.core.Limit;
+import io.lettuce.core.Range;
+import io.lettuce.core.XPendingArgs;
+
+/**
+ * Lettuce {@link XPendingArgs} 扩展
+ *
+ * @param <T>
+ * 		类型
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LettuceXPendingArgs {
+ */
+public class LettuceXPendingArgs<T> extends XPendingArgs<T> {
+
+	public LettuceXPendingArgs() {
+		super();
+	}
+
+	public LettuceXPendingArgs(final long idle) {
+		this();
+		idle(idle);
+	}
+
+	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final long count) {
+		this(start, end, count);
+		idle(idle);
+	}
+
+	public LettuceXPendingArgs(final long idle, final T groupName, final T consumerName) {
+		this(idle);
+		consumer(Consumer.from(groupName, consumerName));
+	}
+
+	public LettuceXPendingArgs(final long idle, final Consumer<T> consumer) {
+		this(idle);
+		consumer(consumer);
+	}
+
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count) {
+		range(Range.create(start.toString(), end.toString()));
+		limit(Limit.from(count));
+	}
+
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count,
+							   final T groupName, final T consumerName) {
+		this(start, end, count, Consumer.from(groupName, consumerName));
+	}
+
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count,
+							   final Consumer<T> consumer) {
+		this(start, end, count);
+		consumer(consumer);
+	}
+
+	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final long count, final T groupName, final T consumerName) {
+		this(idle, start, end, count, Consumer.from(groupName, consumerName));
+	}
+
+	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final long count, final Consumer<T> consumer) {
+		this(idle, start, end, count);
+		consumer(consumer);
+	}
+
+	public LettuceXPendingArgs(final T groupName, final T consumerName) {
+		this(Consumer.from(groupName, consumerName));
+	}
+
+	public LettuceXPendingArgs(final Consumer<T> consumer) {
+		this();
+		consumer(consumer);
+	}
+
 }

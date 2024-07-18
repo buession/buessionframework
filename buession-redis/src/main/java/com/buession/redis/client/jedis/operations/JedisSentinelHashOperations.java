@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListMapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.ScanResult;
@@ -480,18 +481,20 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final ListMapEntryMapConverter<String, String, String, String> converter =
+				new ListMapEntryMapConverter<>((k)->k, (v)->v);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}
 	}
@@ -499,18 +502,20 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final ListMapEntryMapConverter<byte[], byte[], byte[], byte[]> converter =
+				new ListMapEntryMapConverter<>((k)->k, (v)->v);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}
 	}

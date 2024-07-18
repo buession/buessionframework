@@ -31,8 +31,6 @@ import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
-import java.util.List;
-
 /**
  * jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
  *

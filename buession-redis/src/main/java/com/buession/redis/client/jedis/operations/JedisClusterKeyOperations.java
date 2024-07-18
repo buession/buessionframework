@@ -774,8 +774,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey),
-					oneStatusConverter)
+					(cmd)->cmd.renamenx(key, newKey), oneStatusConverter)
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
@@ -1464,7 +1463,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		}
 	}
 
-	public Status move(final CommandArguments args) {
+	private Status move(final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.MOVE)
 					.run(args);

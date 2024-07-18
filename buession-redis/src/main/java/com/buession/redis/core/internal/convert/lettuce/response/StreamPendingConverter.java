@@ -27,9 +27,8 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamPending;
+import io.lettuce.core.models.stream.PendingMessage;
 import org.springframework.lang.Nullable;
-
-import java.util.List;
 
 /**
  * 'xpending' 命令结果转换为 {@link StreamPending}
@@ -37,15 +36,15 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamPendingConverter implements Converter<Object, StreamPending> {
+public final class StreamPendingConverter implements Converter<PendingMessage, StreamPending> {
 
 	@Nullable
 	@Override
-	public StreamPending convert(final Object source) {
+	public StreamPending convert(final PendingMessage source) {
 		return null;
 	}
 
-	public static ListConverter<Object, StreamPending> listConverter() {
+	public static ListConverter<PendingMessage, StreamPending> listConverter() {
 		return new ListConverter<>(new StreamPendingConverter());
 	}
 

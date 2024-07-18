@@ -45,7 +45,6 @@ import com.buession.redis.core.internal.convert.jedis.response.ClusterReplicasCo
 import com.buession.redis.core.internal.convert.jedis.response.ClusterResetOptionConverter;
 import com.buession.redis.core.internal.convert.response.ClusterNodeConverter;
 import com.buession.redis.core.internal.convert.response.ClusterSlotConverter;
-import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.ClusterResetType;
 
 import java.util.List;

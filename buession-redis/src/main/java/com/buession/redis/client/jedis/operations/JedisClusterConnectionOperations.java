@@ -299,7 +299,6 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	@Override
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		final String addr = host + ':' + port;
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_KILL)

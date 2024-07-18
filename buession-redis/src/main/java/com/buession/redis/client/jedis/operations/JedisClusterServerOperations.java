@@ -42,6 +42,7 @@ import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.SaveMode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Jedis 集群模式服务端命令操作
@@ -289,15 +290,58 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public List<String> configGet(final String parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return configGet(args);
+	public Status configSet(final Map<String, String> configs) {
+		final CommandArguments args = CommandArguments.create("configs", configs);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->{
+				configs.forEach(cmd::configSet);
+				return Status.SUCCESS;
+			}, (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
-		return configGet(args);
+	public Map<String, String> configGet(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Map<String, String>, Map<String, String>>(client,
+					ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<Map<String, String>, Map<String, String>>(client,
+					ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<Map<String, String>, Map<String, String>>(client, ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> configGet(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
+					ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
+					ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client, ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -770,9 +814,6 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 
 	@Override
 	public void shutdown(final boolean save) {
-		final CommandArguments args = CommandArguments.create("save", save);
-		final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
-
 		if(isPipeline()){
 			new JedisClusterPipelineCommand<>(client, ProtocolCommand.SHUTDOWN)
 					.run();
@@ -936,19 +977,6 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
 					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	private <V> List<V> configGet(final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.CONFIG_GET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.CONFIG_GET)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<List<V>, List<V>>(client, ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}
 	}

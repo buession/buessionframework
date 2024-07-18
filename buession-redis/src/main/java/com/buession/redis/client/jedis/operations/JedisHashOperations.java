@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListMapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.ScanResult;
@@ -383,8 +384,7 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisStand
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
-					okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -460,18 +460,20 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisStand
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final ListMapEntryMapConverter<String, String, String, String> converter =
+				new ListMapEntryMapConverter<>((k)->k, (v)->v);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}
 	}
@@ -479,18 +481,20 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisStand
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final ListMapEntryMapConverter<byte[], byte[], byte[], byte[]> converter =
+				new ListMapEntryMapConverter<>((k)->k, (v)->v);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.HRANDFIELD,
-					(cmd)->cmd.hrandfieldWithValues(key, count), (v)->v)
+					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}
 	}

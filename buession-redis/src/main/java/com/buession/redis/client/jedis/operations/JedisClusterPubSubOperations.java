@@ -95,8 +95,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PUBLISH,
-					(cmd)->cmd.publish(channel, message), (v)->v)
+			return new JedisClusterTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
@@ -114,8 +113,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.PUBLISH,
-					(cmd)->cmd.publish(channel, message), (v)->v)
+			return new JedisClusterTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),

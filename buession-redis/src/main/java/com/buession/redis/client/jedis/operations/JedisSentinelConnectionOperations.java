@@ -157,7 +157,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.QUIT)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+			return new JedisSentinelCommand<Status, Status>(client, ProtocolCommand.QUIT)
 					.run();
 		}
 	}
@@ -252,8 +252,8 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.CLIENT_GETNAME)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_GETNAME,
-					(cmd)->cmd.clientGetname(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
+					(v)->v)
 					.run();
 		}
 	}

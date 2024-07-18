@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.collect.Arrays;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
@@ -57,6 +56,7 @@ import redis.clients.jedis.resps.AccessControlLogEntry;
 import redis.clients.jedis.resps.Slowlog;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Jedis 单机模式服务端命令操作
@@ -225,13 +225,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->{
-				if(usernames.length > 1){
-					return cmd.aclDelUser(usernames[0], Arrays.subarray(usernames, 1, usernames.length - 1));
-				}else{
-					return cmd.aclDelUser(usernames[0]);
-				}
-			}, (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
 					.run(args);
 		}
 	}
@@ -247,13 +241,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->{
-				if(usernames.length > 1){
-					return cmd.aclDelUser(usernames[0], Arrays.subarray(usernames, 1, usernames.length - 1));
-				}else{
-					return cmd.aclDelUser(usernames[0]);
-				}
-			}, (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
 					.run(args);
 		}
 	}
@@ -429,33 +417,54 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<String> configGet(final String parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
+	public Status configSet(final Map<String, String> configs) {
+		final CommandArguments args = CommandArguments.create("configs", configs);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.CONFIG_GET)
+			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.CONFIG_GET)
+			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(configs),
+					okStatusConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter);
+	public Map<String, String> configGet(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.CONFIG_GET)
+			return new JedisPipelineCommand<Map<String, String>, Map<String, String>>(client,
+					ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.CONFIG_GET)
+			return new JedisTransactionCommand<Map<String, String>, Map<String, String>>(client,
+					ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(pattern), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> configGet(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
+					ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
+					ProtocolCommand.CONFIG_GET)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(pattern), (v)->v)
 					.run(args);
 		}
 	}

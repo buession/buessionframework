@@ -21,10 +21,59 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.lang.KeyValue;
+import org.springframework.lang.Nullable;
+
+/**
+ * Jedis {@link redis.clients.jedis.util.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
+ *
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class KeyValueConverter {
+ */
+public class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.clients.jedis.util.KeyValue<SK, SV>,
+		com.buession.lang.KeyValue<TK, TV>> {
+
+	/**
+	 * Key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * 值转换器
+	 */
+	private final Converter<SV, TV> valueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Key 转换器
+	 * @param valueConverter
+	 * 		值转换器
+	 */
+	public KeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
+
+	@Nullable
+	@Override
+	public KeyValue<TK, TV> convert(final redis.clients.jedis.util.KeyValue<SK, SV> source) {
+		return new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(
+				source.getValue()));
+	}
+
 }

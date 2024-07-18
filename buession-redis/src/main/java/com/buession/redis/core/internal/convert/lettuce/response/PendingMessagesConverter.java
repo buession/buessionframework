@@ -27,31 +27,35 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.StreamPending;
-import io.lettuce.core.models.stream.PendingMessage;
+import com.buession.redis.core.StreamPendingSummary;
+import io.lettuce.core.Range;
+import io.lettuce.core.models.stream.PendingMessages;
 import org.springframework.lang.Nullable;
 
 /**
- * Lettuce {@link PendingMessage} 转换为 {@link  StreamPending}
+ * Lettuce {@link PendingMessages} 转换为 {@link StreamPendingSummary}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class PendingMessageConverter implements Converter<PendingMessage, StreamPending> {
+public class PendingMessagesConverter implements Converter<PendingMessages, StreamPendingSummary> {
 
 	@Nullable
 	@Override
-	public StreamPending convert(final PendingMessage source) {
+	public StreamPendingSummary convert(final PendingMessages source) {
 		if(source == null){
 			return null;
 		}else{
-			return new StreamPending(new StreamEntryId(source.getId()), source.getConsumer(),
-					source.getMsSinceLastDelivery(), source.getRedeliveryCount());
+			final Range<String> messageIds = source.getMessageIds();
+
+			return new StreamPendingSummary(source.getCount(),
+					new StreamEntryId(messageIds.getLower().getValue()),
+					new StreamEntryId(messageIds.getUpper().getValue()), source.getConsumerMessageCount());
 		}
 	}
 
-	public static ListConverter<PendingMessage, StreamPending> listConverter() {
-		return new ListConverter<>(new PendingMessageConverter());
+	public static ListConverter<PendingMessages, StreamPendingSummary> listConverter() {
+		return new ListConverter<>(new PendingMessagesConverter());
 	}
 
 }

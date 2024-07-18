@@ -99,8 +99,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
-					(v)->v)
+			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
@@ -117,8 +116,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
-					(v)->v)
+			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)

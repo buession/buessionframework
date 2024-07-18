@@ -99,8 +99,7 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PUBLISH,
-					(cmd)->cmd.publish(channel, message), (v)->v)
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
@@ -118,8 +117,7 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PUBLISH,
-					(cmd)->cmd.publish(channel, message), (v)->v)
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),

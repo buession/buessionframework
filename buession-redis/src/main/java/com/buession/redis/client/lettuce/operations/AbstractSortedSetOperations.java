@@ -28,7 +28,6 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.utils.SafeEncoder;
@@ -69,16 +68,6 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 	@Override
 	public List<Tuple> zPopMax(final String key, final long count) {
 		return zPopMax(SafeEncoder.encode(key), count);
-	}
-
-	@Override
-	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout) {
-		return bzPopMin(SafeEncoder.encode(keys), timeout);
-	}
-
-	@Override
-	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout) {
-		return bzPopMax(SafeEncoder.encode(keys), timeout);
 	}
 
 	@Override
