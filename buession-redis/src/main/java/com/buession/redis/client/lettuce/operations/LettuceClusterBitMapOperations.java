@@ -118,8 +118,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.BITFIELD,
-					(cmd)->cmd.bitfield(key, bitFieldArgs),
-					(v)->v)
+					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
 					.run(args);
 		}
 	}
@@ -127,13 +126,13 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return bitFieldRo(args);
+		return notCommand(client, ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return bitFieldRo(args);
+		return notCommand(client, ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
@@ -222,8 +221,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value, start, end),
-					(v)->v)
+					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 					.run(args);
 		}
 	}
@@ -263,19 +261,6 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
 					oneBooleanConverter)
-					.run(args);
-		}
-	}
-
-	private List<Long> bitFieldRo(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
 					.run(args);
 		}
 	}

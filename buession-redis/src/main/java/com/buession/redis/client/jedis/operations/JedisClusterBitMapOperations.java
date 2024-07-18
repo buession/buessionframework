@@ -139,8 +139,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end, option),
-					(v)->v)
+					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}
 	}
@@ -162,8 +161,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.BITCOUNT,
-					(cmd)->cmd.bitcount(key, start, end, option),
-					(v)->v)
+					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}
 	}
@@ -222,8 +220,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.BITFIELD_RO,
-					(cmd)->cmd.bitfieldReadonly(key, arguments),
-					(v)->v)
+					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}
 	}
@@ -242,8 +239,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.BITFIELD_RO,
-					(cmd)->cmd.bitfieldReadonly(key, arguments),
-					(v)->v)
+					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}
 	}
@@ -342,8 +338,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.BITPOS,
-					(cmd)->cmd.bitpos(key, value, bitPosParams),
-					(v)->v)
+					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}
 	}
