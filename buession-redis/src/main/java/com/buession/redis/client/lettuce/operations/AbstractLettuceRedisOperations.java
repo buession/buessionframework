@@ -24,8 +24,13 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.lettuce.LettuceSentinelClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
  * Lettuce Redis 命令操作抽象类
@@ -41,6 +46,48 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 
 	public AbstractLettuceRedisOperations(final C client) {
 		super(client);
+	}
+
+	protected <T> T notCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+							   final CommandArguments args) {
+		if(isPipeline()){
+			return new LettucePipelineCommand<T, T>(client, command)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<T, T>(client, command)
+					.run(args);
+		}else{
+			return new LettuceCommand<T, T>(client, command)
+					.run(args);
+		}
+	}
+
+	protected <T> T notCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+							   final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<T, T>(client, command)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<T, T>(client, command)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<T, T>(client, command)
+					.run(args);
+		}
+	}
+
+	protected <T> T notCommand(final LettuceClusterClient client, final ProtocolCommand command,
+							   final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<T, T>(client, command)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<T, T>(client, command)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<T, T>(client, command)
+					.run(args);
+		}
 	}
 
 }
