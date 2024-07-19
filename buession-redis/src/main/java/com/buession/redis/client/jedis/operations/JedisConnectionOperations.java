@@ -63,8 +63,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.AUTH)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(user, password),
-					okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(user, password), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -80,8 +79,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.AUTH)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password),
-					okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -136,30 +134,12 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 
 	@Override
 	public Status reset() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.RESET)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.RESET)
-					.run();
-		}else{
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.RESET)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.RESET);
 	}
 
 	@Override
 	public Status quit() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.QUIT)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.QUIT)
-					.run();
-		}else{
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.QUIT)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.QUIT);
 	}
 
 	@Override
@@ -182,17 +162,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}else{
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_CACHING, args);
 	}
 
 	@Override
@@ -220,8 +190,8 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name), okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
+					okStatusConverter)
 					.run(args);
 		}
 	}
@@ -237,8 +207,8 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name), okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
+					okStatusConverter)
 					.run(args);
 		}
 	}
@@ -252,24 +222,14 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.CLIENT_GETNAME)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLIENT_GETNAME,
-					(cmd)->cmd.clientGetname(), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(), (v)->v)
 					.run();
 		}
 	}
 
 	@Override
 	public Integer clientGetRedir() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}else{
-			return new JedisCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_GETREDIR);
 	}
 
 	@Override
@@ -312,13 +272,13 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 		final ClientConverter clientConverter = new ClientConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Client, Client>(client, ProtocolCommand.CLIENT_LIST)
+			return new JedisPipelineCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Client, Client>(client, ProtocolCommand.CLIENT_LIST)
+			return new JedisTransactionCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientInfo(),
+			return new JedisCommand<>(client, ProtocolCommand.CLIENT_INFO, (cmd)->cmd.clientInfo(),
 					clientConverter)
 					.run();
 		}
@@ -344,17 +304,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create("option", option);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}else{
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_REPLY, args);
 	}
 
 	@Override

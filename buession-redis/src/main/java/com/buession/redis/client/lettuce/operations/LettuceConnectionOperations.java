@@ -194,17 +194,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}else{
-			return new LettuceCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_CACHING, args);
 	}
 
 	@Override
@@ -231,8 +221,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name),
-					okStatusConverter)
+					(cmd)->cmd.clientSetname(name), okStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
@@ -260,16 +249,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Integer clientGetRedir() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}else{
-			return new LettuceCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_GETREDIR);
 	}
 
 	@Override
@@ -313,16 +293,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Client clientInfo() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
-					.run();
-		}else{
-			return new LettuceCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_INFO);
 	}
 
 	@Override
@@ -347,17 +318,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create("option", option);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}else{
-			return new LettuceCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_REPLY, args);
 	}
 
 	@Override

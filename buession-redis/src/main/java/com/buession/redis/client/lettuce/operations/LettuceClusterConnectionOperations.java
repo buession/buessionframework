@@ -180,33 +180,13 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 	@Override
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create("db", db);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.SELECT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.SELECT)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.SELECT)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.SELECT, args);
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_CACHING, args);
 	}
 
 	@Override
@@ -262,16 +242,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Integer clientGetRedir() {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}else{
-			return new LettuceClusterCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_GETREDIR);
 	}
 
 	@Override
@@ -315,16 +286,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Client clientInfo() {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
-					.run();
-		}else{
-			return new LettuceClusterCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_INFO);
 	}
 
 	@Override
@@ -349,17 +311,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create("option", option);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.CLIENT_REPLY, args);
 	}
 
 	@Override
