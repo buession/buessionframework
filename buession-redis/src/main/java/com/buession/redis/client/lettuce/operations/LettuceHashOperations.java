@@ -28,21 +28,21 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.KeyValue;
 import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanArgs;
 import io.lettuce.core.ScanCursor;
-import io.lettuce.core.Value;
 
 import java.util.HashSet;
 import java.util.List;
@@ -198,7 +198,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[][] bFields = SafeEncoder.encode(fields);
-		final ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
+		final ListConverter<io.lettuce.core.KeyValue<byte[], byte[]>, String> listConverter =
 				new ListConverter<>((v)->SafeEncoder.encode(v.getValue()));
 
 		return hMGet(bKey, bFields, listConverter, args);
@@ -207,7 +207,8 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
-		final ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(Value::getValue);
+		final ListConverter<io.lettuce.core.KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(
+				io.lettuce.core.KeyValue::getValue);
 
 		return hMGet(key, fields, listConverter, args);
 	}
@@ -233,37 +234,121 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	@Override
 	public String hRandField(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return hRandField(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
+					SafeEncoder::encode)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfield(bKey), SafeEncoder::encode)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
+					SafeEncoder::encode)
+					.run(args);
+		}
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return hRandField(args);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> hRandField(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return hRandField(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
+					listConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfield(bKey, count), listConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
+					listConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return hRandField(args);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfield(key, count), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return hRandField(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<io.lettuce.core.KeyValue<byte[], byte[]>, KeyValue<String, String>> listConverter =
+				KeyValueConverter.listConverter(SafeEncoder::encode, SafeEncoder::encode);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return hRandField(args);
+		final ListConverter<io.lettuce.core.KeyValue<byte[], byte[]>, KeyValue<byte[], byte[]>> listConverter =
+				KeyValueConverter.listConverter((k)->k, (v)->v);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD,
+					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -414,8 +499,9 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return hVals(bKey, binaryToStringListConverter, args);
+		return hVals(bKey, listConverter, args);
 	}
 
 	@Override
@@ -467,7 +553,7 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	}
 
 	private <V> List<V> hMGet(final byte[] key, final byte[][] fields,
-							  final Converter<List<KeyValue<byte[], byte[]>>, List<V>> converter,
+							  final Converter<List<io.lettuce.core.KeyValue<byte[], byte[]>>, List<V>> converter,
 							  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
@@ -478,19 +564,6 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 					.run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
-					.run(args);
-		}
-	}
-
-	private <SV, TV> TV hRandField(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
-					.run(args);
-		}else{
-			return new LettuceCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
 					.run(args);
 		}
 	}

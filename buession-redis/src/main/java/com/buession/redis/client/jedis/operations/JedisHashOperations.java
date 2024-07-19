@@ -24,7 +24,9 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.ListMapEntryMapConverter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapEntryKeyValueConverter;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.ScanResult;
@@ -458,10 +460,10 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisStand
 	}
 
 	@Override
-	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ListMapEntryMapConverter<String, String, String, String> converter =
-				new ListMapEntryMapConverter<>((k)->k, (v)->v);
+		final ListConverter<Map.Entry<String, String>, KeyValue<String, String>> converter =
+				new ListConverter<>(new MapEntryKeyValueConverter<>((k)->k, (v)->v));
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
@@ -479,10 +481,10 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisStand
 	}
 
 	@Override
-	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final ListMapEntryMapConverter<byte[], byte[], byte[], byte[]> converter =
-				new ListMapEntryMapConverter<>((k)->k, (v)->v);
+		final ListConverter<Map.Entry<byte[], byte[]>, KeyValue<byte[], byte[]>> converter =
+				new ListConverter<>(new MapEntryKeyValueConverter<>((k)->k, (v)->v));
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
