@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
@@ -39,12 +40,14 @@ import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
+import com.buession.redis.core.internal.lettuce.LettuceCopyArgs;
 import com.buession.redis.core.internal.lettuce.LettuceMigrateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceRestoreArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceSortArgs;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.CopyArgs;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MigrateArgs;
 import io.lettuce.core.RestoreArgs;
@@ -279,59 +282,46 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status copy(final String key, final String destKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return copy(args);
-	}
-
-	@Override
 	public Status copy(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		return copy(args);
-	}
 
-	@Override
-	public Status copy(final String key, final String destKey, final int db) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db);
-		return copy(args);
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey),
+					booleanStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("db", db);
-		return copy(args);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final boolean replace) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("replace", replace);
-		return copy(args);
+		final CopyArgs copyArgs = new LettuceCopyArgs(db);
+		return copy(key, destKey, copyArgs, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		return copy(args);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db)
-				.put("replace", replace);
-		return copy(args);
+		final CopyArgs copyArgs = new LettuceCopyArgs(replace);
+		return copy(key, destKey, copyArgs, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db)
-				.put("replace", replace);
-		return copy(args);
+				.put("db", db).put("replace", replace);
+		final CopyArgs copyArgs = new LettuceCopyArgs(db, replace);
+		return copy(key, destKey, copyArgs, args);
 	}
 
 	@Override
@@ -374,8 +364,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] password,
-						  final int timeout,
+	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
@@ -385,8 +374,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] password,
-						  final int timeout,
+	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation)
@@ -397,8 +385,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] user,
-						  final byte[] password,
+	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout)
@@ -409,8 +396,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] user,
-						  final byte[] password,
+	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final MigrateOperation operation, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout)
@@ -624,8 +610,9 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return sort(bKey, binaryToStringListConverter, args);
+		return sort(bKey, listConverter, args);
 	}
 
 	@Override
@@ -639,8 +626,9 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return sort(bKey, sortArgs, binaryToStringListConverter, args);
+		return sort(bKey, sortArgs, listConverter, args);
 	}
 
 	@Override
@@ -761,13 +749,14 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<Long, Long>(client, ProtocolCommand.OBJECT_REFQ)
+			return new LettuceCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -810,15 +799,18 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		}
 	}
 
-	private Status copy(final CommandArguments args) {
+	private Status copy(final byte[] key, final byte[] destKey, final CopyArgs copyArgs, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.COPY)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, copyArgs),
+					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.COPY)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.COPY,
+					(cmd)->cmd.copy(key, destKey, copyArgs), booleanStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<Status, Status>(client, ProtocolCommand.COPY)
+			return new LettuceCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, copyArgs),
+					booleanStatusConverter)
 					.run(args);
 		}
 	}

@@ -114,6 +114,26 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 	}
 
 	@Override
+	public Status copy(final String key, final String destKey) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey));
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final boolean replace) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), replace);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db, replace);
+	}
+
+	@Override
 	public Status move(final String key, final int db) {
 		return move(SafeEncoder.encode(key), db);
 	}

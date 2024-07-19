@@ -1257,8 +1257,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
+					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WAIT,

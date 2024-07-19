@@ -248,8 +248,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime, expiryOption),
-					oneStatusConverter)
+					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -365,8 +364,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.PEXPIREAT,
-					(cmd)->cmd.pexpireAt(key, unixTimestamp),
-					oneStatusConverter)
+					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -385,8 +383,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, ProtocolCommand.PEXPIREAT,
-					(cmd)->cmd.pexpireAt(key, unixTimestamp),
-					oneStatusConverter)
+					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}
 	}
