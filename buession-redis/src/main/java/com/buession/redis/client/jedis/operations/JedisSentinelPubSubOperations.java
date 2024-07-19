@@ -190,28 +190,19 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 
 	@Override
 	public Object pUnSubscribe() {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run();
-		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return pUnSubscribe(args);
+		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return pUnSubscribe(args);
+		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override
@@ -256,28 +247,19 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 
 	@Override
 	public Object unSubscribe() {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run();
-		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return unSubscribe(args);
+		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return unSubscribe(args);
+		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
 	}
 
 	private <V> List<V> pubsubChannels(final String pattern,
@@ -290,8 +272,7 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
-					(cmd)->cmd.pubsubChannels(pattern),
-					converter)
+					(cmd)->cmd.pubsubChannels(pattern), converter)
 					.run();
 		}
 	}
@@ -310,32 +291,6 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(channels),
 					converter)
-					.run(args);
-		}
-	}
-
-	private Object pUnSubscribe(final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run(args);
-		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run(args);
-		}
-	}
-
-	private Object unSubscribe(final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run(args);
-		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run(args);
 		}
 	}

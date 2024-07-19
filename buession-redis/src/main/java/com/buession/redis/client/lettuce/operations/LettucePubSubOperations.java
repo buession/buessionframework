@@ -25,11 +25,13 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -51,14 +53,14 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		pSubscribe(args);
+		notCommand(client, ProtocolCommand.PSUBSCRIBE, args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		pSubscribe(args);
+		notCommand(client, ProtocolCommand.PSUBSCRIBE, args);
 	}
 
 	@Override
@@ -81,17 +83,19 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public List<String> pubsubChannels() {
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
+
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-					binaryToStringListConverter)
+					listConverter)
 					.run();
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-					binaryToStringListConverter)
+					listConverter)
 					.run();
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-					binaryToStringListConverter)
+					listConverter)
 					.run();
 		}
 	}
@@ -100,8 +104,9 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		final byte[] bPattern = SafeEncoder.encode(pattern);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return pubsubChannels(bPattern, binaryToStringListConverter, args);
+		return pubsubChannels(bPattern, listConverter, args);
 	}
 
 	@Override
@@ -143,81 +148,50 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Object pUnSubscribe() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return pUnSubscribe(args);
+		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return pUnSubscribe(args);
+		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		subscribe(args);
+		notCommand(client, ProtocolCommand.SUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		subscribe(args);
+		notCommand(client, ProtocolCommand.SUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return unSubscribe(args);
+		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return unSubscribe(args);
-	}
-
-	private void pSubscribe(final CommandArguments args) {
-		if(isPipeline()){
-			new LettucePipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
-					.run(args);
-		}else if(isTransaction()){
-			new LettuceTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
-					.run(args);
-		}else{
-			new LettuceCommand<>(client, ProtocolCommand.PSUBSCRIBE)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
 	}
 
 	private <V> List<V> pubsubChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
@@ -251,45 +225,6 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
 					converter)
-					.run(args);
-		}
-	}
-
-	private Object pUnSubscribe(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-					.run(args);
-		}
-	}
-
-	private void subscribe(final CommandArguments args) {
-		if(isPipeline()){
-			new LettucePipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
-					.run(args);
-		}else if(isTransaction()){
-			new LettuceTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
-					.run(args);
-		}else{
-			new LettuceCommand<>(client, ProtocolCommand.SUBSCRIBE)
-					.run(args);
-		}
-	}
-
-	private Object unSubscribe(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run(args);
 		}
 	}
