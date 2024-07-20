@@ -43,6 +43,7 @@ public class GeoValueUtils {
 
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static GeoValue<byte[]>[] fromStringMap(final Map<String, Geo> values) {
 		if(values == null){
 			return null;
@@ -58,6 +59,7 @@ public class GeoValueUtils {
 		}
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static GeoValue<byte[]>[] fromBinaryMap(final Map<byte[], Geo> values) {
 		if(values == null){
 			return null;

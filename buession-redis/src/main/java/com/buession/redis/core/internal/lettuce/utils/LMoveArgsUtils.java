@@ -21,10 +21,40 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce.utils;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce.utils;
+
+import com.buession.redis.core.Direction;
+import io.lettuce.core.LMoveArgs;
+
+/**
+ * Lettuce {@link LMoveArgs} 工具类
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LMoveArgsUtils {
+ */
+public class LMoveArgsUtils {
+
+	protected LMoveArgsUtils() {
+
+	}
+
+	public static LMoveArgs fromDirection(final Direction from, final Direction to) {
+		if(Direction.LEFT == from){
+			if(Direction.LEFT == to){
+				return LMoveArgs.Builder.leftLeft();
+			}else if(Direction.RIGHT == to){
+				return LMoveArgs.Builder.leftRight();
+			}
+		}else if(Direction.RIGHT == from){
+			if(Direction.LEFT == to){
+				return LMoveArgs.Builder.rightLeft();
+			}else if(Direction.RIGHT == to){
+				return LMoveArgs.Builder.rightRight();
+			}
+		}
+
+		return null;
+	}
+
 }
