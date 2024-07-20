@@ -32,8 +32,10 @@ import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.lettuce.LettuceGetExArgs;
 import com.buession.redis.core.internal.lettuce.LettuceSetArgs;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.GetExArgs;
 import io.lettuce.core.KeyValue;
 import io.lettuce.core.SetArgs;
 import io.lettuce.core.Value;
@@ -176,13 +178,42 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		return getEx(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final GetExArgs getExArgs = LettuceGetExArgs.from(getExArgument);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(bKey, getExArgs),
+					SafeEncoder::encode)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETEX,
+					(cmd)->cmd.getex(bKey, getExArgs), SafeEncoder::encode)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(bKey, getExArgs),
+					SafeEncoder::encode)
+					.run(args);
+		}
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		return getEx(args);
+		final GetExArgs getExArgs = LettuceGetExArgs.from(getExArgument);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(key, getExArgs),
+					(v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETEX,
+					(cmd)->cmd.getex(key, getExArgs),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(key, getExArgs), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -203,13 +234,15 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 	@Override
 	public String getDel(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return getDel(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+
+		return getDel(bKey, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public byte[] getDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return getDel(args);
+		return getDel(key, (v)->v, args);
 	}
 
 	@Override
@@ -454,19 +487,6 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 		}
 	}
 
-	private <V> V getEx(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<V, V>(client, ProtocolCommand.GETEX)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<V, V>(client, ProtocolCommand.GETEX)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<V, V>(client, ProtocolCommand.GETEX)
-					.run(args);
-		}
-	}
-
 	private <V> V getSet(final byte[] key, final byte[] value, final Converter<byte[], V> converter,
 						 final CommandArguments args) {
 		if(isPipeline()){
@@ -483,15 +503,17 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 		}
 	}
 
-	private <V> V getDel(final CommandArguments args) {
+	private <V> V getDel(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<V, V>(client, ProtocolCommand.GETDEL)
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETDEL, (cmd)->cmd.getdel(key),
+					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<V, V>(client, ProtocolCommand.GETDEL)
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETDEL, (cmd)->cmd.getdel(key),
+					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<V, V>(client, ProtocolCommand.GETDEL)
+			return new LettuceClusterCommand<>(client, ProtocolCommand.GETDEL, (cmd)->cmd.getdel(key), converter)
 					.run(args);
 		}
 	}
