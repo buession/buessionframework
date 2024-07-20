@@ -21,10 +21,25 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core;/**
- * 
+ */
+package com.buession.core;
+
+/**
+ * 值接口
+ *
+ * @param <T>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public interface Value {
+ */
+public interface Value<T> {
+
+	/**
+	 * 返回值
+	 *
+	 * @return 值
+	 */
+	T getValue();
+
 }
