@@ -24,13 +24,11 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -49,173 +47,98 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		final byte[][] bKeys = new byte[][]{};
+		return notCommand(client, ProtocolCommand.EVAL, args);
+	}
 
-		return eval(script, bKeys, null, args);
+	@Override
+	public Object eval(final byte[] script) {
+		final CommandArguments args = CommandArguments.create("script", script);
+		return notCommand(client, ProtocolCommand.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
-		final byte[][] bKeys = new byte[][]{};
-		final byte[][] bParams = SafeEncoder.encode(params);
+		return notCommand(client, ProtocolCommand.EVAL, args);
+	}
 
-		return eval(script, bKeys, bParams, args);
+	@Override
+	public Object eval(final byte[] script, final byte[]... params) {
+		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		return notCommand(client, ProtocolCommand.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final byte[][] bArguments = SafeEncoder.encode(arguments);
+		return notCommand(client, ProtocolCommand.EVAL, args);
+	}
 
-		return eval(script, bKeys, bArguments, args);
+	@Override
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
+		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
+				.put("arguments", (Object[]) arguments);
+		return notCommand(client, ProtocolCommand.EVAL, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		final byte[][] bKeys = new byte[][]{};
-
-		return evalSha(digest, bKeys, null, args);
+		return notCommand(client, ProtocolCommand.EVALSHA, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
-		final byte[][] bKeys = new byte[][]{};
-		final byte[][] bParams = SafeEncoder.encode(params);
-
-		return evalSha(digest, bKeys, bParams, args);
+		return notCommand(client, ProtocolCommand.EVALSHA, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final byte[][] bArguments = SafeEncoder.encode(arguments);
-
-		return evalSha(digest, bKeys, bArguments, args);
+		return notCommand(client, ProtocolCommand.EVALSHA, args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		return notCommand(client, ProtocolCommand.SCRIPT_EXISTS, args);
+	}
 
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Boolean>, List<Boolean>>(client,
-					ProtocolCommand.SCRIPT_EXISTS)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Boolean>, List<Boolean>>(client,
-					ProtocolCommand.SCRIPT_EXISTS)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<List<Boolean>, List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
-					.run(args);
-		}
+	@Override
+	public List<Boolean> scriptExists(final byte[]... sha1) {
+		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		return notCommand(client, ProtocolCommand.SCRIPT_EXISTS, args);
 	}
 
 	@Override
 	public Status scriptFlush() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.SCRIPT_FLUSH);
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.SCRIPT_FLUSH)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.SCRIPT_FLUSH, args);
 	}
 
 	@Override
 	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		final byte[] bScript = SafeEncoder.encode(script);
-
-		return scriptLoad(bScript, (v)->v, args);
+		return notCommand(client, ProtocolCommand.SCRIPT_LOAD, args);
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return scriptLoad(script, SafeEncoder::encode, args);
+		return notCommand(client, ProtocolCommand.SCRIPT_LOAD, args);
 	}
 
 	@Override
 	public Status scriptKill() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SCRIPT_KILL)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SCRIPT_KILL)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.SCRIPT_KILL)
-					.run();
-		}
-	}
-
-	private Object eval(final String script, final byte[][] keys, final byte[][] arguments,
-						final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EVAL)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EVAL)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EVAL)
-					.run(args);
-		}
-	}
-
-	private Object evalSha(final String digest, final byte[][] keys, final byte[][] arguments,
-						   final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.EVALSHA)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.EVALSHA)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.EVALSHA)
-					.run(args);
-		}
-	}
-
-	private <V> V scriptLoad(final byte[] script, final Converter<String, V> converter,
-							 final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.SCRIPT_LOAD)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.SCRIPT_LOAD)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.SCRIPT_LOAD)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.SCRIPT_KILL);
 	}
 
 }

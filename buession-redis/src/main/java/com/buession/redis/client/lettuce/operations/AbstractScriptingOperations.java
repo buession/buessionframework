@@ -40,8 +40,7 @@ import java.util.List;
  * @since 3.0.0
  */
 public abstract class AbstractScriptingOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C>
-		implements ScriptingOperations {
+		extends AbstractLettuceRedisOperations<C> implements ScriptingOperations {
 
 	public AbstractScriptingOperations(final C client) {
 		super(client);
