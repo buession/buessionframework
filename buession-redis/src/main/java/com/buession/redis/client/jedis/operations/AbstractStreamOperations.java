@@ -61,29 +61,8 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 	}
 
 	@Override
-	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
-		return xAck(SafeEncoder.encode(key), SafeEncoder.encode(groupName), ids);
-	}
-
-	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		return xAdd(SafeEncoder.encode(key), id, Converters.mapBinaryToString().convert(hash));
-	}
-
-	@Override
-	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start) {
-		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start);
-	}
-
-	@Override
-	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
-		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start, count);
 	}
 
 	@Override

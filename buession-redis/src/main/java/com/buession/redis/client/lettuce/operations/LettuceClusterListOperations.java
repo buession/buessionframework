@@ -26,15 +26,19 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
+import com.buession.redis.core.internal.lettuce.utils.LMoveArgsUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyValue;
+import io.lettuce.core.LMoveArgs;
 import io.lettuce.core.LPosArgs;
 
 import java.util.List;
@@ -125,8 +129,9 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return lRange(bKey, start, end, binaryToStringListConverter, args);
+		return lRange(bKey, start, end, listConverter, args);
 	}
 
 	@Override
@@ -235,14 +240,44 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		return lMove(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[] bDestKey = SafeEncoder.encode(destKey);
+		final LMoveArgs lMoveArgs = LMoveArgsUtils.fromDirection(from, to);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(bKey, bDestKey, lMoveArgs), SafeEncoder::encode)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(bKey, bDestKey, lMoveArgs), SafeEncoder::encode)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(bKey, bDestKey, lMoveArgs), SafeEncoder::encode)
+					.run(args);
+		}
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		return lMove(args);
+		final LMoveArgs lMoveArgs = LMoveArgsUtils.fromDirection(from, to);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(key, key, lMoveArgs), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(key, key, lMoveArgs), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(key, key, lMoveArgs), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -250,7 +285,23 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		return blMove(args);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[] bDestKey = SafeEncoder.encode(destKey);
+		final LMoveArgs lMoveArgs = LMoveArgsUtils.fromDirection(from, to);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BLMOVE,
+					(cmd)->cmd.lmove(bKey, bDestKey, lMoveArgs), SafeEncoder::encode)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BLMOVE,
+					(cmd)->cmd.lmove(bKey, bDestKey, lMoveArgs), SafeEncoder::encode)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.BLMOVE,
+					(cmd)->cmd.lmove(bKey, bDestKey, lMoveArgs), SafeEncoder::encode)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -258,7 +309,21 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
-		return blMove(args);
+		final LMoveArgs lMoveArgs = LMoveArgsUtils.fromDirection(from, to);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BLMOVE,
+					(cmd)->cmd.blmove(key, key, lMoveArgs, timeout), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BLMOVE,
+					(cmd)->cmd.blmove(key, key, lMoveArgs, timeout), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.BLMOVE,
+					(cmd)->cmd.blmove(key, key, lMoveArgs, timeout), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -458,19 +523,6 @@ public final class LettuceClusterListOperations extends AbstractListOperations<L
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
 					converter)
-					.run(args);
-		}
-	}
-
-	private <V> V lMove(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<V, V>(client, ProtocolCommand.LMOVE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<V, V>(client, ProtocolCommand.LMOVE)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<V, V>(client, ProtocolCommand.LMOVE)
 					.run(args);
 		}
 	}

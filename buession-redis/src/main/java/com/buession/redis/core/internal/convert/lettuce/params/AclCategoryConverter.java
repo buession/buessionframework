@@ -22,24 +22,24 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
 import org.springframework.lang.Nullable;
 
 /**
- * Lettuce {@link io.lettuce.core.AclCategory} 转换为 {@link com.buession.redis.core.AclCategory}
+ * {@link com.buession.redis.core.AclCategory} 转换为 Lettuce {@link io.lettuce.core.AclCategory}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class AclCategoryConverter implements Converter<io.lettuce.core.AclCategory,
-		com.buession.redis.core.AclCategory> {
+public final class AclCategoryConverter
+		implements Converter<com.buession.redis.core.AclCategory, io.lettuce.core.AclCategory> {
 
 	@Nullable
 	@Override
-	public com.buession.redis.core.AclCategory convert(final io.lettuce.core.AclCategory source) {
-		return source == null ? null : Enum.valueOf(com.buession.redis.core.AclCategory.class, source.name());
+	public io.lettuce.core.AclCategory convert(final com.buession.redis.core.AclCategory source) {
+		return source == null ? null : Enum.valueOf(io.lettuce.core.AclCategory.class, source.name());
 	}
 
 }

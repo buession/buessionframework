@@ -21,10 +21,36 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.params;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.params;
+
+import com.buession.core.converter.Converter;
+import org.springframework.lang.Nullable;
+
+/**
+ * {@link com.buession.redis.core.FlushMode} 转换为 Lettuce {@link io.lettuce.core.FlushMode}
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class FlushModeConverter {
+ */
+public final class FlushModeConverter
+		implements Converter<com.buession.redis.core.FlushMode, io.lettuce.core.FlushMode> {
+
+	@Nullable
+	@Override
+	public io.lettuce.core.FlushMode convert(final com.buession.redis.core.FlushMode source) {
+		if(source == null){
+			return null;
+		}
+
+		switch(source){
+			case ASYNC:
+				return io.lettuce.core.FlushMode.ASYNC;
+			case SYNC:
+				return io.lettuce.core.FlushMode.SYNC;
+			default:
+				return null;
+		}
+	}
+
 }

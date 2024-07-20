@@ -21,10 +21,119 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+/**
+ * Redis ACL categories.
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public enum AclCategory {
+ */
+public enum AclCategory {
+
+	/**
+	 * command affects keyspace
+	 */
+	KEYSPACE,
+
+	/**
+	 * read command
+	 */
+	READ,
+
+	/**
+	 * write command
+	 */
+	WRITE,
+
+	/**
+	 * command for sets
+	 */
+	SET,
+
+	/**
+	 * command for sorted sets
+	 */
+	SORTEDSET,
+
+	/**
+	 * command for lists
+	 */
+	LIST,
+
+	/**
+	 * command for hash ops
+	 */
+	HASH,
+
+	/**
+	 * command for strings
+	 */
+	STRING,
+
+	/**
+	 * command for bitmaps
+	 */
+	BITMAP,
+
+	/**
+	 * command for hyperloglog
+	 */
+	HYPERLOGLOG,
+
+	/**
+	 * geo command
+	 */
+	GEO,
+
+	/**
+	 * streaming command
+	 */
+	STREAM,
+
+	/**
+	 * pubsub command
+	 */
+	PUBSUB,
+
+	/**
+	 * admin command
+	 */
+	ADMIN,
+
+	/**
+	 * fast command
+	 */
+	FAST,
+
+	/**
+	 * slow command
+	 */
+	SLOW,
+
+	/**
+	 * blocking command
+	 */
+	BLOCKING,
+
+	/**
+	 * dangerous command
+	 */
+	DANGEROUS,
+
+	/**
+	 * connection-establishing command
+	 */
+	CONNECTION,
+
+	/**
+	 * transactional command
+	 */
+	TRANSACTION,
+
+	/**
+	 * scripting command
+	 */
+	SCRIPTING
 }

@@ -29,6 +29,7 @@ import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.SetConverter;
+import com.buession.core.converter.SetListConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
@@ -53,12 +54,20 @@ public interface Converters {
 		return new SetConverter<>(SafeEncoder::encode);
 	}
 
+	static ListSetConverter<String, byte[]> listSetStringToBinary() {
+		return new ListSetConverter<>(SafeEncoder::encode);
+	}
+
 	static ListSetConverter<byte[], String> listSetBinaryToString() {
 		return new ListSetConverter<>(SafeEncoder::encode);
 	}
 
-	static ListSetConverter<byte[], String> setListBinaryToString() {
-		return new ListSetConverter<>(SafeEncoder::encode);
+	static SetListConverter<String, byte[]> setListStringToBinary() {
+		return new SetListConverter<>(SafeEncoder::encode);
+	}
+
+	static SetListConverter<byte[], String> setListBinaryToString() {
+		return new SetListConverter<>(SafeEncoder::encode);
 	}
 
 	static MapConverter<String, String, byte[], byte[]> mapStringToBinary() {

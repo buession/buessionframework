@@ -72,7 +72,7 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 
 	@Override
 	public Status unwatch() {
-		notCommand(client, ProtocolCommand.UNWATCH);
+		return notCommand(client, ProtocolCommand.UNWATCH);
 	}
 
 }

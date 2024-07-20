@@ -22,37 +22,54 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.utils;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.GeoUnit;
-import io.lettuce.core.GeoArgs;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.XReadArgs;
+
+import java.util.Map;
 
 /**
- * {@link GeoUnit} 转换为 Lettuce {@link GeoArgs.Unit}
+ * Lettuce {@link XReadArgs.StreamOffset} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> {
+public class StreamOffsetUtils {
 
-	@Override
-	public GeoArgs.Unit convert(final GeoUnit source) {
-		if(source == null){
+	protected StreamOffsetUtils() {
+
+	}
+
+	public static XReadArgs.StreamOffset<byte[]>[] fromStringMap(final Map<String, StreamEntryId> streams) {
+		if(streams == null){
 			return null;
+		}else{
+			final XReadArgs.StreamOffset<byte[]>[] result = new XReadArgs.StreamOffset[streams.size()];
+			int i = 0;
+
+			for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+				result[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()),
+						e.getValue().toString());
+			}
+
+			return result;
 		}
-		
-		switch(source){
-			case M:
-				return GeoArgs.Unit.m;
-			case KM:
-				return GeoArgs.Unit.km;
-			case MI:
-				return GeoArgs.Unit.mi;
-			case FT:
-				return GeoArgs.Unit.ft;
-			default:
-				return null;
+	}
+
+	public static XReadArgs.StreamOffset<byte[]>[] fromBinaryMap(final Map<byte[], StreamEntryId> streams) {
+		if(streams == null){
+			return null;
+		}else{
+			final XReadArgs.StreamOffset<byte[]>[] result = new XReadArgs.StreamOffset[streams.size()];
+			int i = 0;
+
+			for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
+				result[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
+			}
+
+			return result;
 		}
 	}
 

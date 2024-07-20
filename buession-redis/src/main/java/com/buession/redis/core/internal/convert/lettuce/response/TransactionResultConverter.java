@@ -21,10 +21,32 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import io.lettuce.core.TransactionResult;
+import org.springframework.lang.Nullable;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Lettuce {@link TransactionResult} 转换为 List&gt;Object&lt;
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class TransactionResultConverter {
+ */
+public final class TransactionResultConverter implements Converter<TransactionResult, List<Object>> {
+
+	@Nullable
+	@Override
+	public List<Object> convert(final TransactionResult source) {
+		if(source == null){
+			return null;
+		}else{
+			return source.stream().collect(Collectors.toList());
+		}
+	}
+
 }

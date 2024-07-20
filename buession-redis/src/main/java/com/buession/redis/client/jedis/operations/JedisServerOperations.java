@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.FlushMode;
@@ -42,7 +43,9 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogEntryConverter;
 import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
+import com.buession.redis.core.internal.convert.jedis.response.AclCategoryConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MemoryStatsConverter;
+import com.buession.redis.core.internal.convert.jedis.response.ProtocolCommandConverter;
 import com.buession.redis.core.internal.convert.response.InfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
 import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
@@ -71,47 +74,37 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<String> aclCat() {
+	public List<AclCategory> aclCat() {
+		final ListConverter<String, AclCategory> converter = new ListConverter<>(new AclCategoryConverter());
+
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+			return new JedisPipelineCommand<List<AclCategory>, List<AclCategory>>(client, ProtocolCommand.ACL_CAT)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+			return new JedisTransactionCommand<List<AclCategory>, List<AclCategory>>(client, ProtocolCommand.ACL_CAT)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(), converter)
 					.run();
 		}
 	}
 
 	@Override
-	public List<String> aclCat(final String categoryName) {
-		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+	public List<ProtocolCommand> aclCat(final AclCategory aclCategory) {
+		final CommandArguments args = CommandArguments.create("aclCategory", aclCategory);
+		final ListConverter<String, ProtocolCommand> converter = new ListConverter<>(new ProtocolCommandConverter());
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+			return new JedisPipelineCommand<List<ProtocolCommand>, List<ProtocolCommand>>(client,
+					ProtocolCommand.ACL_CAT)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+			return new JedisTransactionCommand<List<ProtocolCommand>, List<ProtocolCommand>>(client,
+					ProtocolCommand.ACL_CAT)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(categoryName), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<byte[]> aclCat(final byte[] categoryName) {
-		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(categoryName), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(aclCategory.name()),
+					converter)
 					.run(args);
 		}
 	}
@@ -342,16 +335,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 
 	@Override
 	public Status aclLogSave() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
-					.run();
-		}else{
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.ACL_LOGSAVE);
 	}
 
 	@Override
@@ -807,6 +791,23 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
+	public Status moduleLoad(final String path) {
+		final CommandArguments args = CommandArguments.create("path", path);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, ProtocolCommand.MODULE_LOAD, (cmd)->cmd.moduleLoad(path),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
 	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
 
@@ -869,13 +870,13 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	@Override
 	public Object pSync(final String replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return pSync(args);
+		return notCommand(client, ProtocolCommand.PSYNC, args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return pSync(args);
+		return notCommand(client, ProtocolCommand.PSYNC, args);
 	}
 
 	@Override
@@ -992,7 +993,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 				cmd.shutdown(saveMode);
 				return null;
 			}, (v)->v)
-					.run();
+					.run(args);
 		}
 	}
 
@@ -1104,19 +1105,6 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.FAILOVER, (cmd)->cmd.failover(failoverParams),
 					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	private Object pSync(final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PSYNC)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PSYNC)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PSYNC)
 					.run(args);
 		}
 	}

@@ -25,21 +25,22 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.ProtocolCommand;
+import io.lettuce.core.protocol.CommandType;
 import org.springframework.lang.Nullable;
 
 /**
- * Lettuce {@link io.lettuce.core.AclCategory} 转换为 {@link com.buession.redis.core.AclCategory}
+ * Lettuce {@link CommandType} 转换为 {@link com.buession.redis.core.AclCategory}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class AclCategoryConverter implements Converter<io.lettuce.core.AclCategory,
-		com.buession.redis.core.AclCategory> {
+public final class CommandTypeConverter implements Converter<CommandType, ProtocolCommand> {
 
 	@Nullable
 	@Override
-	public com.buession.redis.core.AclCategory convert(final io.lettuce.core.AclCategory source) {
-		return source == null ? null : Enum.valueOf(com.buession.redis.core.AclCategory.class, source.name());
+	public ProtocolCommand convert(final CommandType source) {
+		return source == null ? null : Enum.valueOf(ProtocolCommand.class, source.name());
 	}
 
 }

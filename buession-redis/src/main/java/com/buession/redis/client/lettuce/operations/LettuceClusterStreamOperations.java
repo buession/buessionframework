@@ -53,6 +53,7 @@ import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXPendingArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
+import com.buession.redis.core.internal.lettuce.utils.StreamOffsetUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;
@@ -113,8 +114,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 							  final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		final StreamEntryIdConverter streamEntryIdConverter = new StreamEntryIdConverter();
-		final XAddArgs xAddArgs = LettuceXAddArgs.from(xAddArgument).id(streamEntryIdConverter.convert(id));
+		final XAddArgs xAddArgs = LettuceXAddArgs.from(xAddArgument).id(id);
 
 		return xAdd(key, hash, xAddArgs, args);
 	}
@@ -1041,14 +1041,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	private List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
 													   final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		int i = 0;
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-
-		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
-		}
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XREAD, (cmd)->cmd.xread(streamOffsets),
@@ -1067,14 +1062,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	private List<Map<String, List<StreamEntry>>> xRead(final XReadArgs xReadArgs, final Map<String,
 			StreamEntryId> streams, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
-		int i = 0;
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-
-		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
-		}
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.XREAD,
@@ -1094,14 +1084,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final Map<String, StreamEntryId> streams,
 															final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-		int i = 0;
-
-		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
-		}
 
 		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets,
 				listStreamMessageMapConverter, args);
@@ -1110,14 +1095,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final Map<byte[], StreamEntryId> streams,
 															final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromBinaryMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-		int i = 0;
-
-		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
-		}
 
 		return xReadGroup(groupName, consumerName, streamOffsets, listStreamMessageMapConverter, args);
 	}
@@ -1147,14 +1127,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final Map<String, StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-		int i = 0;
-
-		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
-		}
 
 		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets, xReadArgs,
 				listStreamMessageMapConverter, args);
@@ -1163,14 +1138,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final Map<byte[], StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromBinaryMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-		int i = 0;
-
-		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
-		}
 
 		return xReadGroup(groupName, consumerName, streamOffsets, xReadArgs, listStreamMessageMapConverter, args);
 	}

@@ -25,6 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.Info;
@@ -55,31 +56,19 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	List<String> aclCat();
+	List<AclCategory> aclCat();
 
 	/**
 	 * The command shows all the Redis commands in the specified category
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
 	 *
-	 * @param categoryName
-	 * 		Category Name
+	 * @param aclCategory
+	 * 		Acl Category Name
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	List<String> aclCat(final String categoryName);
-
-	/**
-	 * The command shows all the Redis commands in the specified category
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
-	 *
-	 * @param categoryName
-	 * 		Category Name
-	 *
-	 * @return A list of ACL categories or a list of commands inside a given category
-	 */
-	List<byte[]> aclCat(final byte[] categoryName);
+	List<ProtocolCommand> aclCat(final AclCategory aclCategory);
 
 	/**
 	 * Create an ACL user with the specified rules or modify the rules of an existing user
@@ -590,6 +579,34 @@ public interface ServerCommands extends RedisCommands {
 	 * @return A list of loaded modules
 	 */
 	List<Module> moduleList();
+
+	/**
+	 * Returns information about the modules loaded to the server
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
+	 *
+	 * @param path
+	 * 		Module Path
+	 *
+	 * @return A list of loaded modules
+	 *
+	 * @since 3.0.0
+	 */
+	Status moduleLoad(final String path);
+
+	/**
+	 * Returns information about the modules loaded to the server
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
+	 *
+	 * @param path
+	 * 		Module Path
+	 *
+	 * @return A list of loaded modules
+	 *
+	 * @since 3.0.0
+	 */
+	Status moduleLoad(final byte[] path);
 
 	/**
 	 * Returns information about the modules loaded to the server

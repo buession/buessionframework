@@ -24,18 +24,18 @@
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.core.converter.EnumConverter;
+import com.buession.core.converter.BinaryEnumConverter;
 import com.buession.redis.core.AclCategory;
 
 /**
- * Jedis 字符串形式的 AclCategory 转换为 {@link AclCategory}
+ * Jedis 二进制形式的 AclCategory 转换为 {@link AclCategory}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class AclCategoryConverter extends EnumConverter<AclCategory> {
+public final class BinaryAclCategoryConverter extends BinaryEnumConverter<AclCategory> {
 
-	public AclCategoryConverter() {
+	public BinaryAclCategoryConverter() {
 		super(AclCategory.class);
 	}
 

@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
@@ -269,8 +270,9 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	public List<String> sRandMember(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return sRandMember(bKey, count, binaryToStringListConverter, args);
+		return sRandMember(bKey, count, listConverter, args);
 	}
 
 	@Override

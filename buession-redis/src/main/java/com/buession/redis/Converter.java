@@ -26,11 +26,13 @@ package com.buession.redis;
 
 import com.buession.core.collect.Maps;
 import com.buession.core.type.TypeReference;
+import com.buession.lang.KeyValue;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.serializer.Serializer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -107,6 +109,13 @@ interface Converter<SV, TV> {
 
 		protected static <T, V> ScanResult<V> addScanResultConverter(ThreadLocal<Integer> index,
 																	 Function<ScanResult<T>, ScanResult<V>> function) {
+			RedisAccessor.getTxConverters().put(index.get(), function);
+			return null;
+		}
+
+		protected static <SK, SV, TK, TV> List<KeyValue<TK, TV>> addKeyValueConverter(ThreadLocal<Integer> index,
+																					  Function<List<KeyValue<SK, SV>>,
+																							  List<KeyValue<TK, TV>>> function) {
 			RedisAccessor.getTxConverters().put(index.get(), function);
 			return null;
 		}
@@ -1122,6 +1131,238 @@ interface Converter<SV, TV> {
 
 			if(isTransactionOrPipeline(connection)){
 				return addScanResultConverter(index, function);
+			}else{
+				return function.apply(value);
+			}
+		}
+
+	}
+
+	abstract class AbstractKeyValueListConverter<SK, SV, TK, TV>
+			extends AbstractConverter<List<KeyValue<SK, SV>>, List<KeyValue<TK, TV>>> {
+
+		public AbstractKeyValueListConverter(final RedisAccessor accessor) {
+			super(accessor);
+		}
+
+	}
+
+	abstract class AbstractKeyValueListStringConverter<V>
+			extends AbstractKeyValueListConverter<String, String, String, V> {
+
+		public AbstractKeyValueListStringConverter(final RedisAccessor accessor) {
+			super(accessor);
+		}
+
+	}
+
+	abstract class AbstractKeyValueListBinaryConverter<V>
+			extends AbstractKeyValueListConverter<byte[], byte[], byte[], V> {
+
+		public AbstractKeyValueListBinaryConverter(final RedisAccessor accessor) {
+			super(accessor);
+		}
+
+	}
+
+	final class SimpleKeyValueListStringConverter<V> extends AbstractKeyValueListStringConverter<V> {
+
+		public SimpleKeyValueListStringConverter(final RedisAccessor accessor) {
+			super(accessor);
+		}
+
+		@Override
+		public List<KeyValue<String, V>> convert(final RedisConnection connection,
+												 final List<KeyValue<String, String>> value) {
+			final Function<List<KeyValue<String, String>>, List<KeyValue<String, V>>> function = (data)->{
+				if(data == null){
+					return null;
+				}else{
+					final List<KeyValue<String, V>> result = new ArrayList<>(data.size());
+
+					for(KeyValue<String, String> r : data){
+						result.add(new KeyValue<>(r.getKey(), serializer.deserialize(r.getValue())));
+					}
+
+					return result;
+				}
+			};
+
+			if(isTransactionOrPipeline(connection)){
+				return addKeyValueConverter(index, function);
+			}else{
+				return function.apply(value);
+			}
+		}
+
+	}
+
+	final class SimpleKeyValueListBinaryConverter<V> extends AbstractKeyValueListBinaryConverter<V> {
+
+		public SimpleKeyValueListBinaryConverter(final RedisAccessor accessor) {
+			super(accessor);
+		}
+
+		@Override
+		public List<KeyValue<byte[], V>> convert(final RedisConnection connection,
+												 final List<KeyValue<byte[], byte[]>> value) {
+			final Function<List<KeyValue<byte[], byte[]>>, List<KeyValue<byte[], V>>> function = (data)->{
+				if(data == null){
+					return null;
+				}else{
+					final List<KeyValue<byte[], V>> result = new ArrayList<>(data.size());
+
+					for(KeyValue<byte[], byte[]> r : data){
+						result.add(new KeyValue<>(r.getKey(), serializer.deserializeBytes(r.getValue())));
+					}
+
+					return result;
+				}
+			};
+
+			if(isTransactionOrPipeline(connection)){
+				return addKeyValueConverter(index, function);
+			}else{
+				return function.apply(value);
+			}
+		}
+
+	}
+
+	final class ClazzKeyValueListStringConverter<V> extends AbstractKeyValueListStringConverter<V> {
+
+		private final Class<V> clazz;
+
+		public ClazzKeyValueListStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
+			super(accessor);
+			this.clazz = clazz;
+		}
+
+		@Override
+		public List<KeyValue<String, V>> convert(final RedisConnection connection,
+												 final List<KeyValue<String, String>> value) {
+			final Function<List<KeyValue<String, String>>, List<KeyValue<String, V>>> function = (data)->{
+				if(data == null){
+					return null;
+				}else{
+					final List<KeyValue<String, V>> result = new ArrayList<>(data.size());
+
+					for(KeyValue<String, String> r : data){
+						result.add(new KeyValue<>(r.getKey(), serializer.deserialize(r.getValue(), clazz)));
+					}
+
+					return result;
+				}
+			};
+
+			if(isTransactionOrPipeline(connection)){
+				return addKeyValueConverter(index, function);
+			}else{
+				return function.apply(value);
+			}
+		}
+
+	}
+
+	final class ClazzKeyValueListBinaryConverter<V> extends AbstractKeyValueListBinaryConverter<V> {
+
+		private final Class<V> clazz;
+
+		public ClazzKeyValueListBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
+			super(accessor);
+			this.clazz = clazz;
+		}
+
+		@Override
+		public List<KeyValue<byte[], V>> convert(final RedisConnection connection,
+												 final List<KeyValue<byte[], byte[]>> value) {
+			final Function<List<KeyValue<byte[], byte[]>>, List<KeyValue<byte[], V>>> function = (data)->{
+				if(data == null){
+					return null;
+				}else{
+					final List<KeyValue<byte[], V>> result = new ArrayList<>(data.size());
+
+					for(KeyValue<byte[], byte[]> r : data){
+						result.add(new KeyValue<>(r.getKey(), serializer.deserializeBytes(r.getValue(), clazz)));
+					}
+
+					return result;
+				}
+			};
+
+			if(isTransactionOrPipeline(connection)){
+				return addKeyValueConverter(index, function);
+			}else{
+				return function.apply(value);
+			}
+		}
+
+	}
+
+	final class TypeKeyValueListStringConverter<V> extends AbstractKeyValueListStringConverter<V> {
+
+		private final TypeReference<V> typeReference;
+
+		public TypeKeyValueListStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+			super(accessor);
+			this.typeReference = typeReference;
+		}
+
+		@Override
+		public List<KeyValue<String, V>> convert(final RedisConnection connection,
+												 final List<KeyValue<String, String>> value) {
+			final Function<List<KeyValue<String, String>>, List<KeyValue<String, V>>> function = (data)->{
+				if(data == null){
+					return null;
+				}else{
+					final List<KeyValue<String, V>> result = new ArrayList<>(data.size());
+
+					for(KeyValue<String, String> r : data){
+						result.add(new KeyValue<>(r.getKey(), serializer.deserialize(r.getValue(), typeReference)));
+					}
+
+					return result;
+				}
+			};
+
+			if(isTransactionOrPipeline(connection)){
+				return addKeyValueConverter(index, function);
+			}else{
+				return function.apply(value);
+			}
+		}
+
+	}
+
+	final class TypeKeyValueListBinaryConverter<V> extends AbstractKeyValueListBinaryConverter<V> {
+
+		private final TypeReference<V> typeReference;
+
+		public TypeKeyValueListBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
+			super(accessor);
+			this.typeReference = typeReference;
+		}
+
+		@Override
+		public List<KeyValue<byte[], V>> convert(final RedisConnection connection,
+												 final List<KeyValue<byte[], byte[]>> value) {
+			final Function<List<KeyValue<byte[], byte[]>>, List<KeyValue<byte[], V>>> function = (data)->{
+				if(data == null){
+					return null;
+				}else{
+					final List<KeyValue<byte[], V>> result = new ArrayList<>(data.size());
+
+					for(KeyValue<byte[], byte[]> r : data){
+						result.add(
+								new KeyValue<>(r.getKey(), serializer.deserializeBytes(r.getValue(), typeReference)));
+					}
+
+					return result;
+				}
+			};
+
+			if(isTransactionOrPipeline(connection)){
+				return addKeyValueConverter(index, function);
 			}else{
 				return function.apply(value);
 			}

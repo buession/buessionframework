@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import org.springframework.lang.Nullable;
 
@@ -74,6 +75,11 @@ public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.c
 	public KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
 		return new KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(
 				source.getValue()));
+	}
+
+	public static <SK, SV, TK, TV> ListConverter<io.lettuce.core.KeyValue<SK, SV>, KeyValue<TK, TV>> listConverter(
+			final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		return new ListConverter<>(new KeyValueConverter<>(keyConverter, valueConverter));
 	}
 
 }

@@ -754,39 +754,37 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 	}
 
 	@Override
-	public String substr(final String key, final long start, final long end) {
+	public String substr(final String key, final int start, final int end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end),
+					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, (int) start, (int) end),
-					(v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end), (v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final long start, final long end) {
+	public byte[] substr(final byte[] key, final int start, final int end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end),
+					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, (int) start, (int) end),
-					(v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end), (v)->v)
 					.run(args);
 		}
 	}

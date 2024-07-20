@@ -181,19 +181,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 		final byte[] bKey = SafeEncoder.encode(key);
 		final GetExArgs getExArgs = LettuceGetExArgs.from(getExArgument);
 
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(bKey, getExArgs),
-					SafeEncoder::encode)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETEX,
-					(cmd)->cmd.getex(bKey, getExArgs), SafeEncoder::encode)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(bKey, getExArgs),
-					SafeEncoder::encode)
-					.run(args);
-		}
+		return getEx(bKey, getExArgs, SafeEncoder::encode, args);
 	}
 
 	@Override
@@ -201,19 +189,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
 		final GetExArgs getExArgs = LettuceGetExArgs.from(getExArgument);
 
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(key, getExArgs),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETEX,
-					(cmd)->cmd.getex(key, getExArgs),
-					(v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(key, getExArgs), (v)->v)
-					.run(args);
-		}
+		return getEx(key, getExArgs, (v)->v, args);
 	}
 
 	@Override
@@ -456,20 +432,19 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 	}
 
 	@Override
-	public String substr(final String key, final long start, final long end) {
+	public String substr(final String key, final int start, final int end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
-		final Converter<byte[], String> converter = (v)->StringUtils.substring(SafeEncoder.encode(v),
-				(int) start, (int) end);
+		final Converter<byte[], String> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), start, end);
 
 		return substr(bKey, converter, args);
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final long start, final long end) {
+	public byte[] substr(final byte[] key, final int start, final int end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final Converter<byte[], byte[]> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), (int) start,
-				(int) end).getBytes(StandardCharsets.UTF_8);
+		final Converter<byte[], byte[]> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), start, end)
+				.getBytes(StandardCharsets.UTF_8);
 
 		return substr(key, converter, args);
 	}
@@ -483,6 +458,23 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), converter)
+					.run(args);
+		}
+	}
+
+	private <V> V getEx(final byte[] key, final GetExArgs getExArgs, final Converter<byte[], V> converter,
+						final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(key, getExArgs),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETEX,
+					(cmd)->cmd.getex(key, getExArgs), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.GETEX, (cmd)->cmd.getex(key, getExArgs),
+					converter)
 					.run(args);
 		}
 	}

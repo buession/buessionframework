@@ -112,6 +112,14 @@ public final class LettuceXAddArgs extends XAddArgs {
 		maxlen(maxLen);
 	}
 
+	public LettuceXAddArgs id(final StreamEntryId id) {
+		if(id != null){
+			id(id.toString());
+		}
+
+		return this;
+	}
+
 	public static LettuceXAddArgs from(final StreamCommands.XAddArgument xAddArgument) {
 		final LettuceXAddArgs xAddArgs = new LettuceXAddArgs();
 

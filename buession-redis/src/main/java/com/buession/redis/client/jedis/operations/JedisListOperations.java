@@ -120,8 +120,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value),
-					(v)->v)
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v)
 					.run(args);
 		}
 	}

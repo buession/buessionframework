@@ -25,8 +25,10 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.SetListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.FlushMode;
@@ -39,6 +41,7 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.RedisServerTimeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.RoleConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.SlowlogConverter;
@@ -61,41 +64,26 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 	}
 
 	@Override
-	public List<String> aclCat() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}
+	public List<AclCategory> aclCat() {
+		return notCommand(client, ProtocolCommand.ACL_CAT);
 	}
 
 	@Override
-	public List<String> aclCat(final String categoryName) {
-		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return aclCat(args);
-	}
-
-	@Override
-	public List<byte[]> aclCat(final byte[] categoryName) {
-		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return aclCat(args);
+	public List<ProtocolCommand> aclCat(final AclCategory aclCategory) {
+		final CommandArguments args = CommandArguments.create("aclCategory", aclCategory);
+		return notCommand(client, ProtocolCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return aclSetUser(args);
+		return notCommand(client, ProtocolCommand.ACL_SETUSER, args);
 	}
 
 	@Override
 	public Status aclSetUser(final byte[] username, final byte[]... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return aclSetUser(args);
+		return notCommand(client, ProtocolCommand.ACL_SETUSER, args);
 	}
 
 	@Override
@@ -594,41 +582,43 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public List<Module> moduleList() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Module>, List<Module>>(client,
-					ProtocolCommand.MODULE_LIST)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.MODULE_LIST);
+	}
+
+	@Override
+	public Status moduleLoad(final String path) {
+		final CommandArguments args = CommandArguments.create("path", path);
+		return notCommand(client, ProtocolCommand.MODULE_LOAD, args);
+	}
+
+	@Override
+	public Status moduleLoad(final byte[] path) {
+		final CommandArguments args = CommandArguments.create("path", path);
+		return notCommand(client, ProtocolCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
-		return moduleLoad(args);
+		return notCommand(client, ProtocolCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
-		return moduleLoad(args);
+		return notCommand(client, ProtocolCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final String name) {
 		final CommandArguments args = CommandArguments.create("name", name);
-		return moduleUnLoad(args);
+		return notCommand(client, ProtocolCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final byte[] name) {
 		final CommandArguments args = CommandArguments.create("name", name);
-		return moduleUnLoad(args);
+		return notCommand(client, ProtocolCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
@@ -857,32 +847,6 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 		}else{
 			return new LettuceSentinelCommand<RedisServerTime, RedisServerTime>(client, ProtocolCommand.TIME)
 					.run();
-		}
-	}
-
-	private <V> List<V> aclCat(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ACL_CAT)
-					.run(args);
-		}
-	}
-
-	private Status aclSetUser(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
 		}
 	}
 

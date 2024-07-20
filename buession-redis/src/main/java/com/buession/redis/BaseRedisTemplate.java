@@ -29,6 +29,7 @@ import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitCountOption;
@@ -75,6 +76,7 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.transaction.Transaction;
 
 import java.util.LinkedHashMap;
@@ -222,12 +224,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final String nodeId) {
+	public Long clusterCountFailureReports(final String nodeId) {
 		return execute((client)->client.clusterOperations().clusterCountFailureReports(nodeId));
 	}
 
 	@Override
-	public Integer clusterCountFailureReports(final byte[] nodeId) {
+	public Long clusterCountFailureReports(final byte[] nodeId) {
 		return execute((client)->client.clusterOperations().clusterCountFailureReports(nodeId));
 	}
 
@@ -262,7 +264,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		return execute((client)->client.clusterOperations().clusterGetKeysInSlot(slot, count));
 	}
 
@@ -780,12 +782,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
 	}
 
 	@Override
-	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
 	}
 
@@ -1851,18 +1853,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> aclCat() {
+	public List<AclCategory> aclCat() {
 		return execute((client)->client.serverOperations().aclCat());
 	}
 
 	@Override
-	public List<String> aclCat(final String categoryName) {
-		return execute((client)->client.serverOperations().aclCat(categoryName));
-	}
-
-	@Override
-	public List<byte[]> aclCat(final byte[] categoryName) {
-		return execute((client)->client.serverOperations().aclCat(categoryName));
+	public List<ProtocolCommand> aclCat(final AclCategory aclCategory) {
+		return execute((client)->client.serverOperations().aclCat(aclCategory));
 	}
 
 	@Override
@@ -2088,6 +2085,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public List<Module> moduleList() {
 		return execute((client)->client.serverOperations().moduleList());
+	}
+
+	@Override
+	public Status moduleLoad(final String path) {
+		return execute((client)->client.serverOperations().moduleLoad(path));
+	}
+
+	@Override
+	public Status moduleLoad(final byte[] path) {
+		return execute((client)->client.serverOperations().moduleLoad(path));
 	}
 
 	@Override
@@ -4376,12 +4383,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public String substr(final String key, final long start, final long end) {
+	public String substr(final String key, final int start, final int end) {
 		return execute((client)->client.stringOperations().substr(rawKey(key), start, end));
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final long start, final long end) {
+	public byte[] substr(final byte[] key, final int start, final int end) {
 		return execute((client)->client.stringOperations().substr(rawKey(key), start, end));
 	}
 

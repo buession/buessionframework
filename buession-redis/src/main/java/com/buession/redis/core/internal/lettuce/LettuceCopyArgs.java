@@ -21,10 +21,36 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import io.lettuce.core.CopyArgs;
+
+/**
+ * Lettuce {@link CopyArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LettuceCopyArgs {
+ */
+public final class LettuceCopyArgs extends CopyArgs {
+
+	public LettuceCopyArgs() {
+		super();
+	}
+
+	public LettuceCopyArgs(final long destinationDb) {
+		super();
+		destinationDb(destinationDb);
+	}
+
+	public LettuceCopyArgs(final boolean replace) {
+		super();
+		replace(replace);
+	}
+
+	public LettuceCopyArgs(final long destinationDb, final boolean replace) {
+		this(destinationDb);
+		replace(replace);
+	}
+
 }

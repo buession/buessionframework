@@ -89,7 +89,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return The number of active failure reports for the node
 	 */
-	Integer clusterCountFailureReports(final String nodeId);
+	Long clusterCountFailureReports(final String nodeId);
 
 	/**
 	 * The command returns the number of failure reports for the specified node
@@ -101,7 +101,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return The number of active failure reports for the node
 	 */
-	Integer clusterCountFailureReports(final byte[] nodeId);
+	Long clusterCountFailureReports(final byte[] nodeId);
 
 	/**
 	 * 返回连接节点负责的指定 hash slot 的 key 的数量；
@@ -185,7 +185,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return count 个储在连接节点的指定 hash slot 里面的 key 的列表
 	 */
-	List<String> clusterGetKeysInSlot(final int slot, final long count);
+	List<String> clusterGetKeysInSlot(final int slot, final int count);
 
 	/**
 	 * 返回一个整数，用于标识指定键所散列到的哈希槽

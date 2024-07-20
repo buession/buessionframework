@@ -782,39 +782,37 @@ public final class JedisClusterStringOperations extends AbstractStringOperations
 	}
 
 	@Override
-	public String substr(final String key, final long start, final long end) {
+	public String substr(final String key, final int start, final int end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+					(cmd)->cmd.substr(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisClusterCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisClusterCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end), (v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final long start, final long end) {
+	public byte[] substr(final byte[] key, final int start, final int end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+					(cmd)->cmd.substr(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisClusterCommand<>(client, ProtocolCommand.SUBSTR,
-					(cmd)->cmd.substr(key, (int) start, (int) end), (v)->v)
+			return new JedisClusterCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.substr(key, start, end), (v)->v)
 					.run(args);
 		}
 	}

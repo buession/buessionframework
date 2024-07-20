@@ -19,17 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.converter.BinaryEnumConverter;
+import com.buession.core.converter.EnumConverter;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.ServerCommands;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 服务端运算
@@ -41,6 +46,40 @@ import java.util.Date;
 public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	/**
+	 * The command shows all the Redis commands in the specified category
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @param categoryName
+	 * 		Category Name
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 *
+	 * @since 3.0.0
+	 */
+	default List<ProtocolCommand> aclCat(final String categoryName) {
+		final AclCategory aclCategory = (new EnumConverter<>(AclCategory.class)).convert(categoryName);
+		return aclCat(aclCategory);
+	}
+
+	/**
+	 * The command shows all the Redis commands in the specified category
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @param categoryName
+	 * 		Category Name
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 *
+	 * @since 3.0.0
+	 */
+	default List<ProtocolCommand> aclCat(final byte[] categoryName) {
+		final AclCategory aclCategory = (new BinaryEnumConverter<>(AclCategory.class)).convert(categoryName);
+		return aclCat(aclCategory);
+	}
+
+	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
@@ -50,7 +89,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
 	 */
-	default Status failover(final RedisNode server){
+	default Status failover(final RedisNode server) {
 		Assert.isNull(server, "Redis server cloud not be null");
 		return failover(server.getHost(), server.getPort());
 	}
@@ -67,7 +106,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
 	 */
-	default Status failover(final RedisNode server, final int timeout){
+	default Status failover(final RedisNode server, final int timeout) {
 		Assert.isNull(server, "Redis server cloud not be null");
 		return failover(server.getHost(), server.getPort(), timeout);
 	}
@@ -86,7 +125,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
 	 */
-	default Status failover(final RedisNode server, final boolean isForce, final int timeout){
+	default Status failover(final RedisNode server, final boolean isForce, final int timeout) {
 		Assert.isNull(server, "Redis server cloud not be null");
 		return failover(server.getHost(), server.getPort(), isForce, timeout);
 	}
@@ -98,7 +137,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return 最近一次成功将数据保存到磁盘上的时间
 	 */
-	default Date lastSaveAt(){
+	default Date lastSaveAt() {
 		return new Date(lastSave());
 	}
 
@@ -113,7 +152,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
-	default Status replicaOf(final String host){
+	default Status replicaOf(final String host) {
 		return replicaOf(host, RedisNode.DEFAULT_PORT);
 	}
 
@@ -129,7 +168,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status replicaOf(final RedisNode server){
+	default Status replicaOf(final RedisNode server) {
 		Assert.isNull(server, "Redis server cloud not be null.");
 		return replicaOf(server.getHost(), server.getPort());
 	}
@@ -145,7 +184,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
-	default Status slaveOf(final String host){
+	default Status slaveOf(final String host) {
 		return slaveOf(host, RedisNode.DEFAULT_PORT);
 	}
 
@@ -160,7 +199,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
-	default Status slaveOf(final RedisNode server){
+	default Status slaveOf(final RedisNode server) {
 		Assert.isNull(server, "Redis server cloud not be null.");
 		return replicaOf(server.getHost(), server.getPort());
 	}

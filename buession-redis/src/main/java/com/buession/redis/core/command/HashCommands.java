@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
 
@@ -382,7 +383,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	Map<String, String> hRandFieldWithValues(final String key, final long count);
+	List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -398,7 +399,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count);
+	List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对

@@ -21,10 +21,22 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.EnumConverter;
+import com.buession.redis.core.command.ProtocolCommand;
+
+/**
+ * Jedis 字符串形式的 ProtocolCommand 转换为 {@link ProtocolCommand}
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class ProtocolCommandConverter {
+ */
+public class ProtocolCommandConverter extends EnumConverter<ProtocolCommand> {
+
+	public ProtocolCommandConverter() {
+		super(ProtocolCommand.class);
+	}
+
 }

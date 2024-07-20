@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -54,7 +54,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default Long hDelete(final String key, final String... fields){
+	default Long hDelete(final String key, final String... fields) {
 		return hDel(key, fields);
 	}
 
@@ -70,7 +70,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default Long hDelete(final byte[] key, final byte[]... fields){
+	default Long hDelete(final byte[] key, final byte[]... fields) {
 		return hDel(key, fields);
 	}
 
@@ -292,7 +292,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Long hDecrBy(final String key, final String field, final long value){
+	default Long hDecrBy(final String key, final String field, final long value) {
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -310,7 +310,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Long hDecrBy(final byte[] key, final byte[] field, final long value){
+	default Long hDecrBy(final byte[] key, final byte[] field, final long value) {
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -328,7 +328,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Double hDecrByFloat(final String key, final String field, final double value){
+	default Double hDecrByFloat(final String key, final String field, final double value) {
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -346,7 +346,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value){
+	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value) {
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -506,7 +506,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count);
+	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -524,27 +524,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count);
-
-	/**
-	 * When called with just the key argument, return a random field from the hash value stored at key.
-	 * If the provided count argument is positive, return an array of distinct fields.
-	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		返回数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return A list fields and their values from the hash
-	 */
-	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count, final Class<V> clazz);
+	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -564,7 +544,27 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz);
+	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count, final Class<V> clazz);
+
+	/**
+	 * When called with just the key argument, return a random field from the hash value stored at key.
+	 * If the provided count argument is positive, return an array of distinct fields.
+	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return A list fields and their values from the hash
+	 */
+	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -586,7 +586,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count, final TypeReference<V> type);
+	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count,
+															 final TypeReference<V> type);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -608,7 +609,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final TypeReference<V> type);
+	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count,
+															 final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象

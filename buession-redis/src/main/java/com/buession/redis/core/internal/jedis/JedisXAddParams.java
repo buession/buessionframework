@@ -206,6 +206,14 @@ public final class JedisXAddParams extends XAddParams {
 		limit(limit);
 	}
 
+	public JedisXAddParams id(final StreamEntryId id) {
+		if(id != null){
+			id(JedisStreamEntryID.from(id));
+		}
+
+		return this;
+	}
+
 	public static JedisXAddParams from(final StreamCommands.XAddArgument xAddArgument) {
 		final JedisXAddParams xAddParams = new JedisXAddParams();
 

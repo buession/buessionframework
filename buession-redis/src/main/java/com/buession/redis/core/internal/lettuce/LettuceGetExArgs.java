@@ -21,10 +21,92 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.command.StringCommands;
+import io.lettuce.core.GetExArgs;
+
+/**
+ * Lettuce {@link GetExArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class LettuceGetExArgs {
+ */
+public final class LettuceGetExArgs extends GetExArgs {
+
+	/**
+	 * 构造函数
+	 */
+	public LettuceGetExArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		键过期设置方式
+	 * @param value
+	 * 		键过期时间
+	 */
+	public LettuceGetExArgs(final StringCommands.GetExArgument.GetExType type, final Long value) {
+		super();
+
+		if(type != null){
+			switch(type){
+				case EX:
+					ex(value);
+					break;
+				case EXAT:
+					exAt(value);
+					break;
+				case PX:
+					px(value);
+					break;
+				case PXAT:
+					pxAt(value);
+					break;
+				case PERSIST:
+					persist();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param persist
+	 * 		设置键是否持久化
+	 */
+	public LettuceGetExArgs(final boolean persist) {
+		super();
+		if(Boolean.TRUE.equals(persist)){
+			persist();
+		}
+	}
+
+	public static LettuceGetExArgs from(final StringCommands.GetExArgument<?> getExArgument) {
+		final LettuceGetExArgs getExArgs = new LettuceGetExArgs();
+
+		if(getExArgument != null){
+			if(getExArgument instanceof StringCommands.GetExArgument.ExGetExArgument){
+				getExArgs.ex(((StringCommands.GetExArgument.ExGetExArgument) getExArgument).getValue());
+			}else if(getExArgument instanceof StringCommands.GetExArgument.ExAtGetExArgument){
+				getExArgs.exAt(((StringCommands.GetExArgument.ExAtGetExArgument) getExArgument).getValue());
+			}else if(getExArgument instanceof StringCommands.GetExArgument.PxGetExArgument){
+				getExArgs.px(((StringCommands.GetExArgument.PxGetExArgument) getExArgument).getValue());
+			}else if(getExArgument instanceof StringCommands.GetExArgument.PxAtGetExArgument){
+				getExArgs.pxAt(((StringCommands.GetExArgument.PxAtGetExArgument) getExArgument).getValue());
+			}else if(getExArgument instanceof StringCommands.GetExArgument.PersistGetExArgument){
+				getExArgs.persist();
+			}
+		}
+
+		return getExArgs;
+	}
+
 }

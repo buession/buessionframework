@@ -21,10 +21,41 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import io.lettuce.core.Value;
+import org.springframework.lang.Nullable;
+
+/**
+ * Lettuce {@link Value} 转换为 &gt;T&lt;
+ *
+ * @param <SV>
+ * 		源类型
+ * @param <TV>
+ * 		目标类型
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class ValueConverter {
+ */
+public final class ValueConverter<SV, TV> implements Converter<Value<SV>, TV> {
+
+	private final Converter<SV, TV> valueConverter;
+
+	public ValueConverter(final Converter<SV, TV> valueConverter) {
+		this.valueConverter = valueConverter;
+	}
+
+	@Nullable
+	@Override
+	public TV convert(final Value<SV> source) {
+		return source == null ? null : valueConverter.convert(source.getValue());
+	}
+
+	public static <SV, TV> ListConverter<Value<SV>, TV> listConverter(final Converter<SV, TV> valueConverter) {
+		return new ListConverter<>(new ValueConverter<>(valueConverter));
+	}
+
 }

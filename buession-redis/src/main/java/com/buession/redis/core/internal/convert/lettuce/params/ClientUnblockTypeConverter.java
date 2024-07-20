@@ -38,6 +38,10 @@ public final class ClientUnblockTypeConverter implements Converter<ClientUnblock
 
 	@Override
 	public UnblockType convert(final ClientUnblockType source) {
+		if(source == null){
+			return null;
+		}
+
 		switch(source){
 			case TIMEOUT:
 				return UnblockType.TIMEOUT;

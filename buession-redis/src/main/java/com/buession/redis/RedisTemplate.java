@@ -199,41 +199,43 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count) {
+	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
-				new Converter.SimpleMapStringConverter<>(this));
+				new Converter.SimpleKeyValueListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count) {
+	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
-				new Converter.SimpleMapBinaryConverter<>(this));
+				new Converter.SimpleKeyValueListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, long count, final Class<V> clazz) {
+	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, long count,
+																	final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
-				new Converter.ClazzMapStringConverter<>(this, clazz));
+				new Converter.ClazzKeyValueListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz) {
+	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count,
+																	final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
-				new Converter.ClazzMapBinaryConverter<>(this, clazz));
+				new Converter.ClazzKeyValueListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count,
-														 final TypeReference<V> type) {
+	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count,
+																	final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
-				new Converter.TypeMapStringConverter<>(this, type));
+				new Converter.TypeKeyValueListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count,
-														 final TypeReference<V> type) {
+	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count,
+																	final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
-				new Converter.TypeMapBinaryConverter<>(this, type));
+				new Converter.TypeKeyValueListBinaryConverter<>(this, type));
 	}
 
 	@Override

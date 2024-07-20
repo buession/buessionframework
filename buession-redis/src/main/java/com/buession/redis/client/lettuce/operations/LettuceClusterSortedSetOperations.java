@@ -36,6 +36,7 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueTupleConverter;
@@ -633,8 +634,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRange(bKey, start, end, binaryToStringListConverter, args);
+		return zRange(bKey, start, end, listConverter, args);
 	}
 
 	@Override
@@ -669,8 +671,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRangeByLex(bKey, bMin, bMax, binaryToStringListConverter, args);
+		return zRangeByLex(bKey, bMin, bMax, listConverter, args);
 	}
 
 	@Override
@@ -689,8 +692,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRangeByLex(bKey, bMin, bMax, binaryToStringListConverter, args);
+		return zRangeByLex(bKey, bMin, bMax, listConverter, args);
 	}
 
 	@Deprecated
@@ -708,8 +712,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRangeByLex(bKey, bMin, bMax, offset, count, binaryToStringListConverter, args);
+		return zRangeByLex(bKey, bMin, bMax, offset, count, listConverter, args);
 	}
 
 	@Override
@@ -732,8 +737,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRangeByLex(bKey, bMin, bMax, offset, count, binaryToStringListConverter, args);
+		return zRangeByLex(bKey, bMin, bMax, offset, count, listConverter, args);
 	}
 
 	@Deprecated
@@ -749,8 +755,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	public List<String> zRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRangeByScore(bKey, min, max, binaryToStringListConverter, args);
+		return zRangeByScore(bKey, min, max, listConverter, args);
 	}
 
 	@Override
@@ -765,8 +772,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRangeByScore(bKey, min, max, offset, count, binaryToStringListConverter, args);
+		return zRangeByScore(bKey, min, max, offset, count, listConverter, args);
 	}
 
 	@Override
@@ -1049,8 +1057,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	public List<String> zRevRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRange(bKey, start, end, binaryToStringListConverter, args);
+		return zRevRange(bKey, start, end, listConverter, args);
 	}
 
 	@Override
@@ -1085,8 +1094,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRangeByLex(bKey, bMin, bMax, binaryToStringListConverter, args);
+		return zRevRangeByLex(bKey, bMin, bMax, listConverter, args);
 	}
 
 	@Override
@@ -1105,8 +1115,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRangeByLex(bKey, bMin, bMax, binaryToStringListConverter, args);
+		return zRevRangeByLex(bKey, bMin, bMax, listConverter, args);
 	}
 
 	@Deprecated
@@ -1124,8 +1135,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRangeByLex(bKey, bMin, bMax, offset, count, binaryToStringListConverter, args);
+		return zRevRangeByLex(bKey, bMin, bMax, offset, count, listConverter, args);
 	}
 
 	@Override
@@ -1148,8 +1160,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRangeByLex(bKey, bMin, bMax, offset, count, binaryToStringListConverter, args);
+		return zRevRangeByLex(bKey, bMin, bMax, offset, count, listConverter, args);
 	}
 
 	@Deprecated
@@ -1165,8 +1178,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRangeByScore(bKey, min, max, binaryToStringListConverter, args);
+		return zRevRangeByScore(bKey, min, max, listConverter, args);
 	}
 
 	@Override
@@ -1181,8 +1195,9 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
-		return zRevRangeByScore(bKey, min, max, offset, count, binaryToStringListConverter, args);
+		return zRevRangeByScore(bKey, min, max, offset, count, listConverter, args);
 	}
 
 	@Override

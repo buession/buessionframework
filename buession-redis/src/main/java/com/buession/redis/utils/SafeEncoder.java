@@ -64,7 +64,7 @@ public class SafeEncoder {
 			final String[] result = new String[data.length];
 
 			for(int i = 0; i < data.length; i++){
-				result[i] = data[i] == null ? null : new String(data[i], StandardCharsets.UTF_8);
+				result[i] = encode(data[i]);
 			}
 
 			return result;

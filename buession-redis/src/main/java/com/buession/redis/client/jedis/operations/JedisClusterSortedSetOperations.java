@@ -50,7 +50,6 @@ import redis.clients.jedis.params.ZRangeParams;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Jedis 集群模式模式模式有序集合命令操作

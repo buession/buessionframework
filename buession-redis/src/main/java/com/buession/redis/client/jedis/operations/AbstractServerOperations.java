@@ -41,27 +41,22 @@ import com.buession.redis.utils.SafeEncoder;
 public abstract class AbstractServerOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements ServerOperations {
 
-	public AbstractServerOperations(final C client){
+	public AbstractServerOperations(final C client) {
 		super(client);
 	}
 
 	@Override
-	public Status moduleLoad(final byte[] path, final byte[]... arguments){
-		if(arguments == null){
-			return moduleLoad(SafeEncoder.encode(path));
-		}else{
-			final String[] args = new String[arguments.length];
-
-			for(int i = 0; i < arguments.length; i++){
-				args[i] = SafeEncoder.encode(arguments[i]);
-			}
-
-			return moduleLoad(SafeEncoder.encode(path), args);
-		}
+	public Status moduleLoad(final byte[] path) {
+		return moduleLoad(SafeEncoder.encode(path));
 	}
 
 	@Override
-	public Status moduleUnLoad(final byte[] name){
+	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
+		return moduleLoad(SafeEncoder.encode(path), SafeEncoder.encode(arguments));
+	}
+
+	@Override
+	public Status moduleUnLoad(final byte[] name) {
 		return moduleUnLoad(SafeEncoder.encode(name));
 	}
 
