@@ -21,10 +21,50 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.converter;/**
- * 
+ */
+package com.buession.core.converter;
+
+import com.buession.lang.KeyValue;
+import org.springframework.lang.Nullable;
+
+import java.util.Map;
+
+/**
+ * {@link Map.Entry} 到 {@link  KeyValue} 转换器
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class MapEntryKeyValueConverter {
+ */
+public class MapEntryKeyValueConverter<SK, SV, TK, TV> implements Converter<Map.Entry<SK, SV>, KeyValue<TK, TV>> {
+
+	/**
+	 * Map key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * Map value 转换器
+	 */
+	private final Converter<SV, TV> valueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Map key 转换器
+	 * @param valueConverter
+	 * 		Map value 转换器
+	 */
+	public MapEntryKeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
+
+	@Nullable
+	@Override
+	public KeyValue<TK, TV> convert(final Map.Entry<SK, SV> source) {
+		return source == null ? null : new KeyValue<>(keyConverter.convert(source.getKey()),
+				valueConverter.convert(source.getValue()));
+	}
+
 }

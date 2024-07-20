@@ -19,60 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.core.converter;
-
-import org.springframework.beans.BeanUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-/**
- * List 转换器
- *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ */package com.buession.core;/**
+ * 
  *
  * @author Yong.Teng
- * @since 1.2.0
- */
-public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
-
-	/**
-	 * List item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param itemConverter
-	 * 		List item 转换器
-	 */
-	public ListConverter(final Converter<S, T> itemConverter) {
-		this.itemConverter = itemConverter;
-	}
-
-	@SuppressWarnings({"unchecked"})
-	@Override
-	public List<T> convert(final List<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			Stream<T> stream = source.stream().map(itemConverter::convert);
-
-			try{
-				return stream.collect(
-						Collectors.toCollection(()->(List<T>) BeanUtils.instantiateClass(source.getClass())));
-			}catch(Exception e){
-				return stream.collect(Collectors.toList());
-			}
-		}
-	}
-
+ * @since 3.0.0
+ */public interface Value {
 }
