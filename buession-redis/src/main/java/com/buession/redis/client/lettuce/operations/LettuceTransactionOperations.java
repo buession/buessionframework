@@ -24,15 +24,13 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import io.lettuce.core.TransactionResult;
+import com.buession.redis.core.internal.convert.lettuce.response.TransactionResultConverter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 单机模式事务命令操作
@@ -62,16 +60,18 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public List<Object> exec() {
-		final Converter<TransactionResult, List<Object>> converter = (v)->v.stream().collect(Collectors.toList());
+		final TransactionResultConverter transactionResultConverter = new TransactionResultConverter();
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(),
+					transactionResultConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(),
+					transactionResultConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), converter)
+			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), transactionResultConverter)
 					.run();
 		}
 	}

@@ -24,15 +24,12 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import io.lettuce.core.TransactionResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 哨兵模式事务命令操作
@@ -48,76 +45,34 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 
 	@Override
 	public Status multi() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.MULTI)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.MULTI);
 	}
 
 	@Override
 	public List<Object> exec() {
-		final Converter<TransactionResult, List<Object>> converter = (v)->v.stream().collect(Collectors.toList());
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.EXEC);
 	}
 
 	@Override
 	public void discard() {
-		if(isPipeline()){
-			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD)
-					.run();
-		}else if(isTransaction()){
-			new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD)
-					.run();
-		}else{
-			new LettuceSentinelCommand<>(client, ProtocolCommand.DISCARD)
-					.run();
-		}
+		notCommand(client, ProtocolCommand.DISCARD);
+	}
+
+	@Override
+	public Status watch(final String... keys) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		return notCommand(client, ProtocolCommand.WATCH, args);
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.WATCH)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.WATCH)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.WATCH, args);
 	}
 
 	@Override
 	public Status unwatch() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}
+		return notCommand(client, ProtocolCommand.UNWATCH);
 	}
 
 }

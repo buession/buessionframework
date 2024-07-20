@@ -52,21 +52,20 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
-				return new Response<>(new Builder<Status>() {
+			return new JedisTransactionCommand<>(client, ProtocolCommand.MULTI,
+					(cmd)->new Response<>(new Builder<Status>() {
 
-					@Override
-					public Status build(Object data) {
-						try{
-							cmd.multi();
-							return Status.SUCCESS;
-						}catch(Exception e){
-							return Status.FAILURE;
+						@Override
+						public Status build(Object data) {
+							try{
+								cmd.multi();
+								return Status.SUCCESS;
+							}catch(Exception e){
+								return Status.FAILURE;
+							}
 						}
-					}
 
-				});
-			}, (v)->v)
+					}), (v)->v)
 					.run();
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.MULTI, (cmd)->{

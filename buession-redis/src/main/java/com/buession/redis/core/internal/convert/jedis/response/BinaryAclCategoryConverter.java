@@ -22,57 +22,21 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceClusterClient;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-
-import java.util.List;
+import com.buession.core.converter.EnumConverter;
+import com.buession.redis.core.AclCategory;
 
 /**
- * Lettuce 集群模式事务命令操作
+ * Jedis 字符串形式的 AclCategory 转换为 {@link AclCategory}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceClusterTransactionOperations extends AbstractTransactionOperations<LettuceClusterClient> {
+public class AclCategoryConverter extends EnumConverter<AclCategory> {
 
-	public LettuceClusterTransactionOperations(final LettuceClusterClient client) {
-		super(client);
-	}
-
-	@Override
-	public Status multi() {
-		return notCommand(client, ProtocolCommand.MULTI);
-	}
-
-	@Override
-	public List<Object> exec() {
-		return notCommand(client, ProtocolCommand.EXEC);
-	}
-
-	@Override
-	public void discard() {
-		notCommand(client, ProtocolCommand.DISCARD);
-	}
-
-	@Override
-	public Status watch(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return notCommand(client, ProtocolCommand.WATCH, args);
-	}
-
-	@Override
-	public Status watch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return notCommand(client, ProtocolCommand.WATCH, args);
-	}
-
-	@Override
-	public Status unwatch() {
-		notCommand(client, ProtocolCommand.UNWATCH);
+	public AclCategoryConverter() {
+		super(AclCategory.class);
 	}
 
 }
