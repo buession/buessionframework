@@ -445,7 +445,8 @@ public class GeoRadiusArgument {
 				add("withDist", withDist).
 				add("withHash", withHash).
 				add("order", order).
-				add("count", count).build();
+				add("count", count)
+				.build();
 	}
 
 }

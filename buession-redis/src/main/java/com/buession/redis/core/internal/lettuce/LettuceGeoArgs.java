@@ -221,6 +221,14 @@ public final class LettuceGeoArgs extends GeoArgs {
 		withCount(count, any);
 	}
 
+	/**
+	 * 从 {@link GeoRadiusArgument} 创建 {@link GeoArgs} 实例
+	 *
+	 * @param geoRadiusArgument
+	 *        {@link GeoRadiusArgument}
+	 *
+	 * @return {@link LettuceGeoArgs} 实例
+	 */
 	public static LettuceGeoArgs from(final GeoRadiusArgument geoRadiusArgument) {
 		final LettuceGeoArgs geoArgs = new LettuceGeoArgs();
 

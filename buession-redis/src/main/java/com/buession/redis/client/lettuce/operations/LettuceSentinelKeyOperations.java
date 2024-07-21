@@ -33,6 +33,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.RestoreArgument;
 
 import java.util.List;
 import java.util.Set;

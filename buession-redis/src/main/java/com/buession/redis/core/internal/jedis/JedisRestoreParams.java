@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.command.args.RestoreArgument;
 import redis.clients.jedis.params.RestoreParams;
 
 import java.util.Optional;
@@ -37,34 +37,59 @@ import java.util.Optional;
  */
 public final class JedisRestoreParams extends RestoreParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisRestoreParams() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 */
 	public JedisRestoreParams(final boolean replace) {
 		super();
 		replace(this, replace);
 	}
 
-	public JedisRestoreParams(final boolean replace, final boolean absTtl) {
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param absTtl
+	 * 		-
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public JedisRestoreParams(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
 		this(replace);
 		absTtl(this, absTtl);
-	}
-
-	public JedisRestoreParams(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
-		this(replace, absTtl);
 		idleTime(idleTime);
 		frequency(frequency);
 	}
 
-	public static JedisRestoreParams from(final KeyCommands.RestoreArgument argument) {
+	/**
+	 * 从 {@link RestoreArgument} 创建 {@link RestoreParams} 实例
+	 *
+	 * @param restoreArgument
+	 *        {@link RestoreArgument}
+	 *
+	 * @return {@link JedisRestoreParams} 实例
+	 */
+	public static JedisRestoreParams from(final RestoreArgument restoreArgument) {
 		final JedisRestoreParams restoreParams = new JedisRestoreParams();
 
-		if(argument != null){
-			replace(restoreParams, argument.isReplace());
-			absTtl(restoreParams, argument.isAbsTtl());
-			Optional.ofNullable(argument.getIdleTime()).ifPresent(restoreParams::idleTime);
-			Optional.ofNullable(argument.getFrequency()).ifPresent(restoreParams::frequency);
+		if(restoreArgument != null){
+			replace(restoreParams, restoreArgument.isReplace());
+			absTtl(restoreParams, restoreArgument.isAbsTtl());
+			Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreParams::idleTime);
+			Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreParams::frequency);
 		}
 
 		return restoreParams;

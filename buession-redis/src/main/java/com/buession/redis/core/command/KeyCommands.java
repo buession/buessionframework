@@ -32,6 +32,7 @@ import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.utils.ObjectStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -1482,100 +1483,6 @@ public interface KeyCommands extends RedisCommands {
 	 * @return key 所对应 value 被引用的次数
 	 */
 	Long objectRefcount(final byte[] key);
-
-	/**
-	 * Restore 参数
-	 *
-	 * @author Yong.Teng
-	 */
-	class RestoreArgument {
-
-		private Boolean replace;
-
-		private Boolean absTtl;
-
-		private Long idleTime;
-
-		private Long frequency;
-
-		private RestoreArgument() {
-		}
-
-		/**
-		 * 获取是否替换已存在 key
-		 *
-		 * @return 是否替换已存在 key
-		 */
-		public Boolean isReplace() {
-			return replace;
-		}
-
-		/**
-		 * If the ABSTTL modifier was used,
-		 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
-		 *
-		 * @return If the ABSTTL modifier was used,
-		 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
-		 */
-		public Boolean isAbsTtl() {
-			return absTtl;
-		}
-
-		public Long getIdleTime() {
-			return idleTime;
-		}
-
-		public Long getFrequency() {
-			return frequency;
-		}
-
-		@Override
-		public String toString() {
-			return ObjectStringBuilder.create().
-					add("replace", replace).
-					add("absTtl", absTtl).
-					add("idleTime", idleTime).
-					add("frequency", frequency).build();
-		}
-
-		public static class Builder {
-
-			private final RestoreArgument restoreArgument = new RestoreArgument();
-
-			private Builder() {
-			}
-
-			public static Builder create() {
-				return new Builder();
-			}
-
-			public Builder replace() {
-				restoreArgument.replace = true;
-				return this;
-			}
-
-			public Builder absTtl() {
-				restoreArgument.absTtl = true;
-				return this;
-			}
-
-			public Builder idleTime(long idleTime) {
-				restoreArgument.idleTime = idleTime;
-				return this;
-			}
-
-			public Builder frequency(long frequency) {
-				restoreArgument.frequency = frequency;
-				return this;
-			}
-
-			public RestoreArgument build() {
-				return restoreArgument;
-			}
-
-		}
-
-	}
 
 	/**
 	 * 排序参数

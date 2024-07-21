@@ -223,7 +223,7 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	}
 
 	/**
-	 * 从 {@link GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
+	 * 从 {@link GeoRadiusArgument} 创建 {@link GeoRadiusParam} 实例
 	 *
 	 * @param geoRadiusArgument
 	 *        {@link GeoRadiusArgument}
