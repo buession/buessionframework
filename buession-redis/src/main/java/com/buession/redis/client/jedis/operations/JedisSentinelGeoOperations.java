@@ -25,16 +25,18 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.params.GeoConverter;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.internal.convert.jedis.params.GeoUnitConverter;
 import com.buession.redis.core.internal.convert.jedis.response.GeoCoordinateConverter;
 import com.buession.redis.core.internal.convert.jedis.response.GeoRadiusResponseConverter;
+import com.buession.redis.core.internal.jedis.JedisGeoCoordinate;
 import com.buession.redis.core.internal.jedis.JedisGeoRadiusParam;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.params.GeoRadiusParam;
@@ -98,8 +100,9 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<String, GeoCoordinate> geoCoordinates = GeoConverter.<String>mapConverter().convert(
-				memberCoordinates);
+		final Map<String, GeoCoordinate> geoCoordinates =
+				(new MapConverter<String, Geo, String, GeoCoordinate>((k)->k, JedisGeoCoordinate::from)).convert(
+						memberCoordinates);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GEOADD,
@@ -119,8 +122,9 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<byte[], GeoCoordinate> geoCoordinates = GeoConverter.<byte[]>mapConverter()
-				.convert(memberCoordinates);
+		final Map<byte[], GeoCoordinate> geoCoordinates =
+				(new MapConverter<byte[], Geo, byte[], GeoCoordinate>((k)->k, JedisGeoCoordinate::from)).convert(
+						memberCoordinates);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GEOADD,

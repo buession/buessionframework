@@ -25,10 +25,8 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 import redis.clients.jedis.params.GeoRadiusParam;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link GeoRadiusParam} 扩展
@@ -87,6 +85,19 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	/**
 	 * 构造函数
 	 *
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		-
+	 */
+	public JedisGeoRadiusParam(final int count, final boolean any) {
+		super();
+		count(count, any);
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param order
 	 * 		排序
 	 * @param count
@@ -95,6 +106,21 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	public JedisGeoRadiusParam(final Order order, final int count) {
 		this(order);
 		count(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param order
+	 * 		排序
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		-
+	 */
+	public JedisGeoRadiusParam(final Order order, final int count, final boolean any) {
+		this(order);
+		count(count, any);
 	}
 
 	/**
@@ -142,6 +168,26 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
 	 * @param withHash
 	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		-
+	 */
+	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
+							   final int count, final boolean any) {
+		this(withCoord, withDist, withHash);
+		count(count, any);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和纬度也一并返回
+	 * @param withDist
+	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
+	 * @param withHash
+	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
 	 * @param order
 	 * 		排序
 	 * @param count
@@ -154,16 +200,39 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	}
 
 	/**
-	 * 从 {@link GeoCommands.GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
+	 * 构造函数
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和纬度也一并返回
+	 * @param withDist
+	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
+	 * @param withHash
+	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param order
+	 * 		排序
+	 * @param count
+	 * 		返回数量
+	 * 		返回数量
+	 * @param any
+	 * 		-
+	 */
+	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
+							   final Order order, final int count, final boolean any) {
+		this(withCoord, withDist, withHash, order);
+		count(count, any);
+	}
+
+	/**
+	 * 从 {@link GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
 	 *
 	 * @param geoRadiusArgument
-	 *        {@link GeoCommands.GeoRadiusArgument}
+	 *        {@link GeoRadiusArgument}
 	 *
 	 * @return {@link JedisGeoRadiusParam} 实例
 	 *
 	 * @since 3.0.0
 	 */
-	public static JedisGeoRadiusParam from(final GeoCommands.GeoRadiusArgument geoRadiusArgument) {
+	public static JedisGeoRadiusParam from(final GeoRadiusArgument geoRadiusArgument) {
 		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
 
 		if(geoRadiusArgument != null){
@@ -171,7 +240,14 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 			withDist(geoRadiusParam, geoRadiusArgument.isWithDist());
 			withHash(geoRadiusParam, geoRadiusArgument.isWithHash());
 			sort(geoRadiusParam, geoRadiusArgument.getOrder());
-			Optional.ofNullable(geoRadiusArgument.getCount()).ifPresent(geoRadiusParam::count);
+
+			if(geoRadiusArgument.getCount() != null){
+				if(geoRadiusArgument.isAny() != null){
+					geoRadiusParam.count(geoRadiusArgument.getCount(), geoRadiusArgument.isAny());
+				}else{
+					geoRadiusParam.count(geoRadiusArgument.getCount());
+				}
+			}
 		}
 
 		return geoRadiusParam;

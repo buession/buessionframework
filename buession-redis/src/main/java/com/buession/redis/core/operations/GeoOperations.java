@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -28,6 +28,7 @@ import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	default Long geoAdd(final String key, final String member, final Geo geo){
+	default Long geoAdd(final String key, final String member, final Geo geo) {
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
@@ -72,7 +73,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	default Long geoAdd(final byte[] key, final byte[] member, final Geo geo){
+	default Long geoAdd(final byte[] key, final byte[] member, final Geo geo) {
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
@@ -93,7 +94,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius){
+									  final double radius) {
 		return geoRadius(key, longitude, latitude, radius, GeoUnit.M);
 	}
 
@@ -114,7 +115,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius){
+									  final double radius) {
 		return geoRadius(key, longitude, latitude, radius, GeoUnit.M);
 	}
 
@@ -132,7 +133,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius){
+	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius);
 	}
 
@@ -150,7 +151,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius){
+	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius);
 	}
 
@@ -171,7 +172,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit){
+	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
@@ -191,7 +192,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit){
+	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
@@ -214,7 +215,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoRadiusArgument geoRadiusArgument){
+									  final double radius, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
@@ -237,7 +238,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoRadiusArgument geoRadiusArgument){
+									  final double radius, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
@@ -258,7 +259,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius,
-									  final GeoRadiusArgument geoRadiusArgument){
+									  final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
 	}
 
@@ -279,7 +280,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius,
-									  final GeoRadiusArgument geoRadiusArgument){
+									  final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
 	}
 
@@ -302,7 +303,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument geoRadiusArgument){
+									  final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
 	}
 
@@ -325,7 +326,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument geoRadiusArgument){
+									  final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
 	}
 
@@ -346,7 +347,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius){
+										final double radius) {
 		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M);
 	}
 
@@ -367,7 +368,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius){
+										final double radius) {
 		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M);
 	}
 
@@ -385,7 +386,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius){
+	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius);
 	}
 
@@ -403,7 +404,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius){
+	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius);
 	}
 
@@ -424,7 +425,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit){
+	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
@@ -444,7 +445,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit){
+	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
@@ -467,7 +468,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoRadiusArgument geoRadiusArgument){
+										final double radius, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
@@ -490,7 +491,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoRadiusArgument geoRadiusArgument){
+										final double radius, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
@@ -511,7 +512,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius,
-										final GeoRadiusArgument geoRadiusArgument){
+										final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
 	}
 
@@ -532,7 +533,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius,
-										final GeoRadiusArgument geoRadiusArgument){
+										final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
 	}
 
@@ -555,7 +556,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument geoRadiusArgument){
+										final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
 	}
 
@@ -578,7 +579,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument geoRadiusArgument){
+										final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
 	}
 
@@ -597,7 +598,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
+	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius) {
 		return geoRadiusByMember(key, member, radius, GeoUnit.M);
 	}
 
@@ -616,7 +617,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 位置元素
 	 */
-	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
+	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius) {
 		return geoRadiusByMember(key, member, radius, GeoUnit.M);
 	}
 
@@ -638,7 +639,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoRadiusArgument geoRadiusArgument){
+											  final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
@@ -660,7 +661,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoRadiusArgument geoRadiusArgument){
+											  final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
 	}
 

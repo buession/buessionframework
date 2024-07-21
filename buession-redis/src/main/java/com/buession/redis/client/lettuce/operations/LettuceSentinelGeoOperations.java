@@ -30,6 +30,7 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 
 import java.util.List;
 import java.util.Map;

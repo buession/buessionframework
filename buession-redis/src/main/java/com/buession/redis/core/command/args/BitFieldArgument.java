@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * BitField 参数
+ * {@code BITFIELD} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0

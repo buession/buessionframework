@@ -19,16 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Geo;
-import com.buession.lang.Order;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
-import com.buession.redis.utils.ObjectStringBuilder;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -565,153 +564,5 @@ public interface GeoCommands extends RedisCommands {
 	 */
 	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
 										final GeoRadiusArgument geoRadiusArgument);
-
-	/**
-	 * GEO 参数
-	 */
-	final class GeoRadiusArgument {
-
-		private Boolean withCoord;
-
-		private Boolean withDist;
-
-		private Boolean withHash;
-
-		private Order order;
-
-		private Integer count;
-
-		private GeoRadiusArgument() {
-		}
-
-		/**
-		 * 获取是否将位置元素的经度和维度也一并返回
-		 *
-		 * @return 是否将位置元素的经度和维度也一并返回
-		 */
-		public Boolean isWithCoord() {
-			return withCoord;
-		}
-
-		/**
-		 * 获取是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-		 *
-		 * @return 是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-		 */
-		public Boolean isWithDist() {
-			return withDist;
-		}
-
-		/**
-		 * 获取是否返回位置元素经过原始 geohash 编码的有序集合分值
-		 *
-		 * @return 是否返回位置元素经过原始 geohash 编码的有序集合分值
-		 */
-		public Boolean isWithHash() {
-			return withHash;
-		}
-
-		/**
-		 * 排序方式
-		 *
-		 * @return 排序方式
-		 */
-		public Order getOrder() {
-			return order;
-		}
-
-		/**
-		 * 获取返回数量
-		 *
-		 * @return 返回数量
-		 */
-		public Integer getCount() {
-			return count;
-		}
-
-		@Override
-		public String toString() {
-			return ObjectStringBuilder.create().
-					add("withCoord", withCoord).
-					add("withDist", withDist).
-					add("withHash", withHash).
-					add("order", order).
-					add("count", count).build();
-		}
-
-		public static class Builder {
-
-			private final GeoRadiusArgument geoRadiusArgument = new GeoRadiusArgument();
-
-			private Builder() {
-			}
-
-			public static Builder create() {
-				return new Builder();
-			}
-
-			/**
-			 * 设置将位置元素的经度和维度也一并返回
-			 *
-			 * @return Builder
-			 */
-			public Builder withCoord() {
-				geoRadiusArgument.withCoord = true;
-				return this;
-			}
-
-			/**
-			 * 设置在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-			 *
-			 * @return Builder
-			 */
-			public Builder withDist() {
-				geoRadiusArgument.withDist = true;
-				return this;
-			}
-
-			/**
-			 * 设置返回位置元素经过原始 geohash 编码的有序集合分值
-			 *
-			 * @return Builder
-			 */
-			public Builder withHash() {
-				geoRadiusArgument.withHash = true;
-				return this;
-			}
-
-			/**
-			 * 设置排序方式
-			 *
-			 * @param order
-			 * 		排序方式
-			 *
-			 * @return Builder
-			 */
-			public Builder order(Order order) {
-				geoRadiusArgument.order = order;
-				return this;
-			}
-
-			/**
-			 * 设置返回数量
-			 *
-			 * @param count
-			 * 		返回数量
-			 *
-			 * @return Builder
-			 */
-			public Builder count(Integer count) {
-				geoRadiusArgument.count = count;
-				return this;
-			}
-
-			public GeoRadiusArgument build() {
-				return geoRadiusArgument;
-			}
-
-		}
-
-	}
 
 }

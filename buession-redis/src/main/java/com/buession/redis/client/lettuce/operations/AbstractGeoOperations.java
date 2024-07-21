@@ -29,6 +29,7 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
