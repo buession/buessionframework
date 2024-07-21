@@ -29,6 +29,7 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
 import io.lettuce.core.BitFieldArgs;
 

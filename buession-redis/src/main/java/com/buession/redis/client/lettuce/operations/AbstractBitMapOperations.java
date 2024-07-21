@@ -28,6 +28,7 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;

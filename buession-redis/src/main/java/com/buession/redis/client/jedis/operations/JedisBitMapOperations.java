@@ -29,10 +29,10 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.BitFieldArgument;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.BitFieldArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
-import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.BitOP;
 import redis.clients.jedis.params.BitPosParams;
 
@@ -165,7 +165,7 @@ public final class JedisBitMapOperations extends AbstractBitMapOperations<JedisS
 	@Override
 	public List<Long> bitField(final String key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		final String[] arguments = (new BitFieldArgumentConverter()).convert(argument);
+		final String[] arguments = Converters.objectArrayToStringArrayConverter().convert(argument.toArray());
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, arguments),
@@ -184,7 +184,7 @@ public final class JedisBitMapOperations extends AbstractBitMapOperations<JedisS
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		final byte[][] arguments = SafeEncoder.encode((new BitFieldArgumentConverter()).convert(argument));
+		final byte[][] arguments = Converters.objectArrayToBinaryArrayConverter().convert(argument.toArray());
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, arguments),

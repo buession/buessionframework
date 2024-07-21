@@ -24,8 +24,10 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.BitMapCommands;
+import com.buession.redis.core.command.args.BitFieldArgument;
 import io.lettuce.core.BitFieldArgs;
+
+import java.util.List;
 
 /**
  * Lettuce {@link BitFieldArgs} 扩展
@@ -35,61 +37,80 @@ import io.lettuce.core.BitFieldArgs;
  */
 public final class LettuceBitFieldArgs extends BitFieldArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceBitFieldArgs() {
 		super();
 	}
 
-	public LettuceBitFieldArgs(final int set, final int get, final int incrBy) {
-		super();
-		set(set);
-		get(set);
-		incrBy(incrBy);
-	}
-
-	public LettuceBitFieldArgs(final int set, final int get, final int incrBy,
-							   final BitMapCommands.BitFieldArgument.Overflow overflow) {
-		this(set, get, incrBy);
-		overflow(this, overflow);
-	}
-
-	public static LettuceBitFieldArgs from(final BitMapCommands.BitFieldArgument bitFieldArgument) {
+	/**
+	 * 从 {@link BitFieldArgument} 创建 {@link BitFieldArgs}
+	 *
+	 * @param bitFieldArgument
+	 *        {@link BitFieldArgument}
+	 *
+	 * @return {@link LettuceBitFieldArgs} 实例
+	 */
+	public static LettuceBitFieldArgs from(final BitFieldArgument bitFieldArgument) {
 		final LettuceBitFieldArgs bitFieldArgs = new LettuceBitFieldArgs();
 
 		if(bitFieldArgument != null){
-			final BitMapCommands.BitFieldArgument.Op setOp = bitFieldArgument.getSet();
-			if(setOp != null){
-				bitFieldArgs.set(
-						setOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(setOp.getBitFieldType().getBits()) :
-								BitFieldArgs.unsigned(setOp.getBitFieldType().getBits()), setOp.getOffset(),
-						setOp.getValue());
-			}
+			List<BitFieldArgument.SubCommand> commands = bitFieldArgument.getCommands();
 
-			final BitMapCommands.BitFieldArgument.Op getOp = bitFieldArgument.getSet();
-			if(getOp != null){
-				bitFieldArgs.get(
-						getOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(getOp.getBitFieldType().getBits()) :
-								BitFieldArgs.unsigned(getOp.getBitFieldType().getBits()), getOp.getOffset());
+			if(commands != null){
+				for(BitFieldArgument.SubCommand command : commands){
+					switch(command.getCommandType()){
+						case GET:
+							get(bitFieldArgs, (BitFieldArgument.Get) command);
+							break;
+						case SET:
+							set(bitFieldArgs, (BitFieldArgument.Set) command);
+							break;
+						case INCRBY:
+							incry(bitFieldArgs, (BitFieldArgument.IncrBy) command);
+							break;
+						case OVERFLOW:
+							overflow(bitFieldArgs, (BitFieldArgument.Overflow) command);
+							break;
+						default:
+							break;
+					}
+				}
 			}
-
-			final BitMapCommands.BitFieldArgument.Op incrByOp = bitFieldArgument.getIncrBy();
-			if(incrByOp != null){
-				bitFieldArgs.incrBy(
-						incrByOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(
-								incrByOp.getBitFieldType().getBits()) :
-								BitFieldArgs.unsigned(incrByOp.getBitFieldType().getBits()), incrByOp.getOffset(),
-						incrByOp.getValue());
-			}
-
-			overflow(bitFieldArgs, bitFieldArgument.getOverflow());
 		}
 
 		return bitFieldArgs;
 	}
 
+	private static void get(final BitFieldArgs bitFieldArgs, final BitFieldArgument.Get get) {
+		if(get != null && get.getBitFieldType() != null){
+			final BitFieldArgument.BitFieldType bitFieldType = get.getBitFieldType();
+			bitFieldArgs.get(bitFieldType.isSigned() ? BitFieldArgs.signed(bitFieldType.getBits()) :
+					BitFieldArgs.unsigned(bitFieldType.getBits()), get.getOffset());
+		}
+	}
+
+	private static void set(final BitFieldArgs bitFieldArgs, final BitFieldArgument.Set set) {
+		if(set != null && set.getBitFieldType() != null){
+			final BitFieldArgument.BitFieldType bitFieldType = set.getBitFieldType();
+			bitFieldArgs.set(bitFieldType.isSigned() ? BitFieldArgs.signed(bitFieldType.getBits()) :
+					BitFieldArgs.unsigned(bitFieldType.getBits()), set.getOffset(), set.getValue());
+		}
+	}
+
+	private static void incry(final BitFieldArgs bitFieldArgs, final BitFieldArgument.IncrBy incrBy) {
+		if(incrBy != null && incrBy.getBitFieldType() != null){
+			final BitFieldArgument.BitFieldType bitFieldType = incrBy.getBitFieldType();
+			bitFieldArgs.set(bitFieldType.isSigned() ? BitFieldArgs.signed(bitFieldType.getBits()) :
+					BitFieldArgs.unsigned(bitFieldType.getBits()), incrBy.getOffset(), incrBy.getValue());
+		}
+	}
+
 	private static void overflow(final BitFieldArgs bitFieldArgs,
-								 final BitMapCommands.BitFieldArgument.Overflow overflow) {
-		if(overflow != null){
-			switch(overflow){
+								 final BitFieldArgument.Overflow overflow) {
+		if(overflow != null && overflow.getOverflowType() != null){
+			switch(overflow.getOverflowType()){
 				case FAIL:
 					bitFieldArgs.overflow(OverflowType.FAIL);
 					break;

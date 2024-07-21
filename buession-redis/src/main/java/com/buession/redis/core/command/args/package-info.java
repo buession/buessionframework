@@ -22,25 +22,9 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
-
-import com.buession.core.converter.Converter;
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.command.BitMapCommands;
-import org.springframework.lang.Nullable;
-
 /**
- * {@link BitMapCommands.BitFieldArgument} 转换为 jedis bitfield 参数
+ * 
  *
  * @author Yong.Teng
- * @since 2.3.0
- */
-public final class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, String[]> {
-
-	@Nullable
-	@Override
-	public String[] convert(final BitMapCommands.BitFieldArgument source) {
-		return source == null ? null : StringUtils.split(source.toString(), " ");
-	}
-
-}
+ * @since 3.0.0
+ */package com.buession.redis.core.command.args;
