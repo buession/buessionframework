@@ -22,71 +22,72 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.command.ListCommands;
-import com.buession.redis.core.command.args.LPosArgument;
-import redis.clients.jedis.params.LPosParams;
-
-import java.util.Optional;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 /**
- * Jedis {@link LPosParams} 扩展
+ * {@code LPOS} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class JedisLPosParams extends LPosParams {
+public class LPosArgument {
 
 	/**
-	 * 构造函数
+	 * 返回第几个匹配的元素
 	 */
-	public JedisLPosParams() {
-		super();
+	private Integer rank;
+
+	/**
+	 * 查找成员个数
+	 */
+	private Integer maxLen;
+
+	/**
+	 * 返回第几个匹配的元素
+	 *
+	 * @return 第几个匹配的元素
+	 */
+	public Integer getRank() {
+		return rank;
 	}
 
 	/**
-	 * 构造函数
+	 * 设置 返回第几个匹配的元素
 	 *
 	 * @param rank
 	 * 		返回第几个匹配的元素
 	 */
-	public JedisLPosParams(final int rank) {
-		super();
-		rank(rank);
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 
 	/**
-	 * 构造函数
+	 * 返回查找成员个数
 	 *
-	 * @param rank
-	 * 		返回第几个匹配的元素
+	 * @return 查找成员个数
+	 */
+	public Integer getMaxLen() {
+		return maxLen;
+	}
+
+	/**
+	 * 设置查找成员个数
+	 *
 	 * @param maxLen
 	 * 		查找成员个数
 	 */
-	public JedisLPosParams(final int rank, final int maxLen) {
-		super();
-		rank(rank);
-		maxlen(maxLen);
+	public void setMaxLen(Integer maxLen) {
+		this.maxLen = maxLen;
 	}
 
-	/**
-	 * 从 {@link LPosArgument} 创建 {@link LPosParams} 实例
-	 *
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 *
-	 * @return {@link JedisLPosParams} 实例
-	 */
-	public static JedisLPosParams from(final LPosArgument lPosArgument) {
-		final JedisLPosParams lPosParams = new JedisLPosParams();
-
-		if(lPosArgument != null){
-			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
-			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
-		}
-
-		return lPosParams;
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("rank", rank)
+				.add("maxLen", maxLen)
+				.build();
 	}
 
 }

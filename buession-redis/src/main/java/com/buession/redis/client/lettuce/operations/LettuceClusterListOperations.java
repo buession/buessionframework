@@ -33,6 +33,7 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
 import com.buession.redis.core.internal.lettuce.utils.LMoveArgsUtils;

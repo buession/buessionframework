@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -27,7 +27,7 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.utils.ObjectStringBuilder;
+import com.buession.redis.core.command.args.LPosArgument;
 
 import java.util.List;
 
@@ -731,56 +731,5 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
 	Long rPushX(final byte[] key, final byte[]... values);
-
-	final class LPosArgument {
-
-		private Integer rank;
-
-		private Integer maxLen;
-
-		private LPosArgument() {
-		}
-
-		public Integer getRank() {
-			return rank;
-		}
-
-		public Integer getMaxLen() {
-			return maxLen;
-		}
-
-		@Override
-		public String toString() {
-			return ObjectStringBuilder.create().add("rank", rank).add("maxLen", maxLen).build();
-		}
-
-		public static class Builder {
-
-			private final LPosArgument lPosArgument = new LPosArgument();
-
-			private Builder() {
-			}
-
-			public static Builder create() {
-				return new Builder();
-			}
-
-			public Builder rank(int rank) {
-				lPosArgument.rank = rank;
-				return this;
-			}
-
-			public Builder maxLen(int maxLen) {
-				lPosArgument.maxLen = maxLen;
-				return this;
-			}
-
-			public LPosArgument build() {
-				return lPosArgument;
-			}
-
-		}
-
-	}
 
 }

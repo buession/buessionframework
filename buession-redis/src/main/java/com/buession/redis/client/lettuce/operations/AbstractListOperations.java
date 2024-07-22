@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
