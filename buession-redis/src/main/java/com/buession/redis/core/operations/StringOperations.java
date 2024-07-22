@@ -28,6 +28,7 @@ import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.command.args.SetArgument;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -574,7 +575,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	default Status mSet(final List<KeyValue<String, String>> values){
+	default Status mSet(final List<KeyValue<String, String>> values) {
 		if(values == null){
 			return Status.FAILURE;
 		}else{
@@ -598,7 +599,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	default Status mSetNx(final List<KeyValue<String, String>> values){
+	default Status mSetNx(final List<KeyValue<String, String>> values) {
 		if(values == null){
 			return Status.FAILURE;
 		}else{

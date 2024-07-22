@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.SetArgument;
 
 import java.util.List;
 import java.util.Map;

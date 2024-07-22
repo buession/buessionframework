@@ -25,10 +25,8 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.command.args.SetArgument;
 import redis.clients.jedis.params.SetParams;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link SetParams} 扩展
@@ -38,58 +36,132 @@ import java.util.Optional;
  */
 public final class JedisSetParams extends SetParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisSetParams() {
 		super();
 	}
 
-	public JedisSetParams(final NxXx nx) {
-		super();
-		nxxx(this, nx);
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 */
+	public JedisSetParams(final SetArgument.SetType type, final long expires) {
+		expx(this, type, expires);
 	}
 
-	public JedisSetParams(final boolean keepTtl) {
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 * @param nxXx
+	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
+	 */
+	public JedisSetParams(final SetArgument.SetType type, final long expires, final NxXx nxXx) {
+		this(type, expires);
+		nxxx(this, nxXx);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
+	 */
+	public JedisSetParams(final NxXx nxXx) {
+		super();
+		nxxx(this, nxXx);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keepTtl
+	 * 		是否获取 key 的过期时间
+	 */
+	public JedisSetParams(final Boolean keepTtl) {
 		super();
 		keepTtl(this, keepTtl);
 	}
 
-	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt) {
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
+	 * @param keepTtl
+	 * 		是否获取 key 的过期时间
+	 */
+	public JedisSetParams(final NxXx nxXx, final Boolean keepTtl) {
 		super();
-		ex(ex);
-		exAt(exAt);
-		px(px);
-		pxAt(pxAt);
-	}
-
-	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx) {
-		this(ex, exAt, px, pxAt);
-		nxxx(this, nx);
-	}
-
-	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final boolean keepTtl) {
-		this(ex, exAt, px, pxAt);
+		nxxx(this, nxXx);
 		keepTtl(this, keepTtl);
 	}
 
-	public JedisSetParams(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx,
-						  final boolean keepTtl) {
-		this(ex, exAt, px, pxAt, nx);
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 * @param nxXx
+	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
+	 * @param keepTtl
+	 * 		是否获取 key 的过期时间
+	 */
+	public JedisSetParams(final SetArgument.SetType type, final long expires, final NxXx nxXx, final Boolean keepTtl) {
+		this(type, expires, nxXx);
 		keepTtl(this, keepTtl);
 	}
 
-	public static JedisSetParams from(final StringCommands.SetArgument setArgument) {
+	/**
+	 * 从 {@link SetArgument} 创建 {@link SetParams} 实例
+	 *
+	 * @param setArgument
+	 *        {@link SetArgument}
+	 *
+	 * @return {@link JedisSetParams} 实例
+	 */
+	public static JedisSetParams from(final SetArgument setArgument) {
 		final JedisSetParams setParams = new JedisSetParams();
 
 		if(setArgument != null){
-			Optional.ofNullable(setArgument.getEx()).ifPresent(setParams::ex);
-			Optional.ofNullable(setArgument.getExAt()).ifPresent(setParams::exAt);
-			Optional.ofNullable(setArgument.getPx()).ifPresent(setParams::px);
-			Optional.ofNullable(setArgument.getPxAt()).ifPresent(setParams::pxAt);
-
+			expx(setParams, setArgument.getType(), setArgument.getExpires());
 			nxxx(setParams, setArgument.getNxXx());
 			keepTtl(setParams, setArgument.isKeepTtl());
 		}
 
 		return setParams;
+	}
+
+	private static void expx(final JedisSetParams setParams, final SetArgument.SetType type, final Long expires) {
+		if(type != null && expires != null){
+			switch(type){
+				case EX:
+					setParams.ex(expires);
+					break;
+				case EXAT:
+					setParams.exAt(expires);
+					break;
+				case PX:
+					setParams.px(expires);
+					break;
+				case PXAT:
+					setParams.pxAt(expires);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	private static void nxxx(final JedisSetParams setParams, final NxXx nx) {

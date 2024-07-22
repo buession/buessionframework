@@ -21,22 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.core;
-
-/**
+ */package com.buession.redis.core.command.args;/**
+ * 
+ *
  * @author Yong.Teng
- */
-public enum NxXx {
-
-	/**
-	 * 只有键 key 不存在的时候
-	 */
-	NX,
-
-	/**
-	 * 只有键 key 存在的时候
-	 */
-	XX
-
+ * @since 3.0.0
+ */public class ArgumentStringBuilder {
 }
