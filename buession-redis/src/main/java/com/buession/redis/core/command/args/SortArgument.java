@@ -22,28 +22,43 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
 import com.buession.redis.core.Limit;
-import com.buession.redis.core.command.args.SortArgument;
-import redis.clients.jedis.params.SortingParams;
+import com.buession.redis.utils.ObjectStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
-import java.util.Optional;
+import java.util.Arrays;
 
 /**
- * Jedis {@link SortingParams} 扩展
+ * {@code SORT} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class JedisSortingParams extends SortingParams {
+public class SortArgument {
+
+	private String by;
+
+	/**
+	 * 排序方式
+	 */
+	private Order order;
+
+	/**
+	 * 结果限制
+	 */
+	private Limit limit;
+
+	private String[] getPatterns;
+
+	private Boolean alpha;
 
 	/**
 	 * 构造函数
 	 */
-	public JedisSortingParams() {
-		super();
+	public SortArgument() {
 	}
 
 	/**
@@ -52,9 +67,8 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param by
 	 * 		-
 	 */
-	public JedisSortingParams(final String by) {
-		super();
-		by(by);
+	public SortArgument(final String by) {
+		this.by = by;
 	}
 
 	/**
@@ -63,9 +77,8 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param by
 	 * 		-
 	 */
-	public JedisSortingParams(final byte[] by) {
-		super();
-		by(by);
+	public SortArgument(final byte[] by) {
+		this.by = SafeEncoder.encode(by);
 	}
 
 	/**
@@ -76,37 +89,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param gets
 	 * 		-
 	 */
-	public JedisSortingParams(final String by, final String[] gets) {
-		super();
-		by(by);
-		get(gets);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 */
-	public JedisSortingParams(final byte[] by, final byte[][] gets) {
-		super();
-		by(by);
-		get(gets);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 */
-	public JedisSortingParams(final String by, final Order order) {
+	public SortArgument(final String by, final String[] gets) {
 		this(by);
-		order(this, order);
+		this.getPatterns = gets;
 	}
 
 	/**
@@ -114,12 +99,38 @@ public final class JedisSortingParams extends SortingParams {
 	 *
 	 * @param by
 	 * 		-
-	 * @param order
-	 * 		排序方式
+	 * @param gets
+	 * 		-
 	 */
-	public JedisSortingParams(final byte[] by, final Order order) {
+	public SortArgument(final byte[] by, final byte[][] gets) {
 		this(by);
-		order(this, order);
+		this.getPatterns = SafeEncoder.encode(gets);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param by
+	 * 		-
+	 * @param order
+	 * 		排序方式
+	 */
+	public SortArgument(final String by, final Order order) {
+		this(by);
+		this.order = order;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param by
+	 * 		-
+	 * @param order
+	 * 		排序方式
+	 */
+	public SortArgument(final byte[] by, final Order order) {
+		this(by);
+		this.order = order;
 	}
 
 	/**
@@ -132,9 +143,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param order
 	 * 		排序方式
 	 */
-	public JedisSortingParams(final String by, final String[] gets, final Order order) {
+	public SortArgument(final String by, final String[] gets, final Order order) {
 		this(by, gets);
-		order(this, order);
+		this.order = order;
 	}
 
 	/**
@@ -147,9 +158,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param order
 	 * 		排序方式
 	 */
-	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order) {
+	public SortArgument(final byte[] by, final byte[][] gets, final Order order) {
 		this(by, gets);
-		order(this, order);
+		this.order = order;
 	}
 
 	/**
@@ -162,9 +173,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param limit
 	 * 		结果限制
 	 */
-	public JedisSortingParams(final String by, final String[] gets, final Limit limit) {
+	public SortArgument(final String by, final String[] gets, final Limit limit) {
 		this(by, gets);
-		limit(this, limit);
+		this.limit = limit;
 	}
 
 	/**
@@ -177,9 +188,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param limit
 	 * 		结果限制
 	 */
-	public JedisSortingParams(final byte[] by, final byte[][] gets, final Limit limit) {
+	public SortArgument(final byte[] by, final byte[][] gets, final Limit limit) {
 		this(by, gets);
-		limit(this, limit);
+		this.limit = limit;
 	}
 
 	/**
@@ -194,9 +205,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param limit
 	 * 		结果限制
 	 */
-	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit) {
+	public SortArgument(final String by, final String[] gets, final Order order, final Limit limit) {
 		this(by, gets, order);
-		limit(this, limit);
+		this.limit = limit;
 	}
 
 	/**
@@ -211,9 +222,9 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param limit
 	 * 		结果限制
 	 */
-	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
+	public SortArgument(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
 		this(by, gets, order);
-		limit(this, limit);
+		this.limit = limit;
 	}
 
 	/**
@@ -230,10 +241,10 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param alpha
 	 * 		-
 	 */
-	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit,
-							  final boolean alpha) {
+	public SortArgument(final String by, final String[] gets, final Order order, final Limit limit,
+						final boolean alpha) {
 		this(by, gets, order, limit);
-		alpha(this, alpha);
+		this.alpha = alpha;
 	}
 
 	/**
@@ -250,52 +261,115 @@ public final class JedisSortingParams extends SortingParams {
 	 * @param alpha
 	 * 		-
 	 */
-	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
-							  final boolean alpha) {
+	public SortArgument(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
+						final boolean alpha) {
 		this(by, gets, order, limit);
-		alpha(this, alpha);
+		this.alpha = alpha;
+	}
+
+	public String getBy() {
+		return by;
+	}
+
+	public byte[] getByAsBytes() {
+		return SafeEncoder.encode(by);
+	}
+
+	public void setBy(String by) {
+		this.by = by;
+	}
+
+	public void setBy(byte[] by) {
+		this.by = SafeEncoder.encode(by);
 	}
 
 	/**
-	 * 从 {@link SortArgument} 创建 {@link SortingParams} 实例
+	 * 获取排序方式
 	 *
-	 * @param sortArgument
-	 *        {@link SortArgument}
-	 *
-	 * @return {@link JedisSortingParams} 实例
+	 * @return 排序方式
 	 */
-	public static JedisSortingParams from(final SortArgument sortArgument) {
-		final JedisSortingParams sortingParams = new JedisSortingParams();
-
-		if(sortArgument != null){
-			Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
-			Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
-			order(sortingParams, sortArgument.getOrder());
-			limit(sortingParams, sortArgument.getLimit());
-			alpha(sortingParams, sortArgument.isAlpha());
-		}
-
-		return sortingParams;
+	public Order getOrder() {
+		return order;
 	}
 
-	private static void alpha(final JedisSortingParams sortingParams, final Boolean alpha) {
-		if(Boolean.TRUE.equals(alpha)){
-			sortingParams.alpha();
-		}
+	/**
+	 * 设置排序方式
+	 *
+	 * @param order
+	 * 		排序方式
+	 */
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
-	private static void limit(final JedisSortingParams sortingParams, final Limit limit) {
-		if(limit != null){
-			sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
-		}
+	/**
+	 * 获取返回结果限制
+	 *
+	 * @return 返回结果限制
+	 */
+	public Limit getLimit() {
+		return limit;
 	}
 
-	private static void order(final JedisSortingParams sortingParams, final Order order) {
-		if(order == Order.ASC){
-			sortingParams.asc();
-		}else if(order == Order.DESC){
-			sortingParams.desc();
+	/**
+	 * 设置结果限制
+	 *
+	 * @param limit
+	 * 		结果限制
+	 */
+	public void setLimit(Limit limit) {
+		this.limit = limit;
+	}
+
+	public String[] getGetPatterns() {
+		return getPatterns;
+	}
+
+	public byte[][] getGetPatternsAsBytes() {
+		return SafeEncoder.encode(getPatterns);
+	}
+
+	public void setGetPatterns(String[] getPatterns) {
+		this.getPatterns = getPatterns;
+	}
+
+	public void setGetPatterns(byte[][] getPatterns) {
+		this.getPatterns = SafeEncoder.encode(getPatterns);
+	}
+
+	public Boolean isAlpha() {
+		return getAlpha();
+	}
+
+	public Boolean getAlpha() {
+		return alpha;
+	}
+
+	public void alpha() {
+		this.alpha = true;
+	}
+
+	public void setAlpha(Boolean alpha) {
+		this.alpha = alpha;
+	}
+
+	@Override
+	public String toString() {
+		final ObjectStringBuilder builder = ObjectStringBuilder.create();
+
+		if(by != null){
+			builder.add("by", SafeEncoder.encode(by));
 		}
+
+		builder.add("order", order).add("limit", limit);
+
+		if(getPatterns != null){
+			builder.add("get patterns", Arrays.toString(getPatterns));
+		}
+
+		builder.add("alpha", alpha);
+
+		return builder.build();
 	}
 
 }

@@ -34,6 +34,7 @@ import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.args.RestoreArgument;
+import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
