@@ -25,8 +25,7 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.command.StreamCommands;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.redis.core.command.args.XAddArgument;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XAddParams;
 
@@ -40,170 +39,406 @@ import java.util.Optional;
  */
 public final class JedisXAddParams extends XAddParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisXAddParams() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 */
 	public JedisXAddParams(final String id) {
 		super();
 		id(id);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 */
 	public JedisXAddParams(final byte[] id) {
 		super();
 		id(id);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 */
 	public JedisXAddParams(final StreamEntryID id) {
 		super();
 		id(id);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 */
 	public JedisXAddParams(final StreamEntryId id) {
 		this(JedisStreamEntryID.from(id));
 	}
 
-	public JedisXAddParams(final String id, final String minId) {
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 */
+	public JedisXAddParams(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
 		this(id);
-		minId(minId);
+		maxLenMinId(this, maxLenMinId);
 	}
 
-	public JedisXAddParams(final byte[] id, final byte[] minId) {
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 */
+	public JedisXAddParams(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
 		this(id);
-		minId(SafeEncoder.encode(minId));
+		maxLenMinId(this, maxLenMinId);
 	}
 
-	public JedisXAddParams(final StreamEntryID id, final String minId) {
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryID id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
 		this(id);
-		minId(minId);
+		maxLenMinId(this, maxLenMinId);
 	}
 
-	public JedisXAddParams(final StreamEntryID id, final byte[] minId) {
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
 		this(id);
-		minId(SafeEncoder.encode(minId));
+		maxLenMinId(this, maxLenMinId);
 	}
 
-	public JedisXAddParams(final StreamEntryId id, final String minId) {
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final String id, final Boolean noMkStream) {
 		this(id);
-		minId(minId);
-	}
-
-	public JedisXAddParams(final StreamEntryId id, final byte[] minId) {
-		this(id);
-		minId(SafeEncoder.encode(minId));
-	}
-
-	public JedisXAddParams(final long maxLen) {
-		super();
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final String id, final long maxLen) {
-		this(id);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final byte[] id, final long maxLen) {
-		this(id);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final StreamEntryID id, final long maxLen) {
-		this(id);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final StreamEntryId id, final long maxLen) {
-		this(id);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final String id, final String minId, final long maxLen) {
-		this(id, minId);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final byte[] id, final byte[] minId, final long maxLen) {
-		this(id, minId);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final StreamEntryID id, final String minId, final long maxLen) {
-		this(id, minId);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final StreamEntryID id, final byte[] minId, final long maxLen) {
-		this(id, minId);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final StreamEntryId id, final String minId, final long maxLen) {
-		this(id, minId);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final StreamEntryId id, final byte[] minId, final long maxLen) {
-		this(id, minId);
-		maxLen(maxLen);
-	}
-
-	public JedisXAddParams(final String id, final String minId, final long maxLen, final boolean approximateTrimming,
-						   final boolean exactTrimming, final boolean noMkStream, final long limit) {
-		this(id, minId, maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
 		noMkStream(this, noMkStream);
-		limit(limit);
 	}
 
-	public JedisXAddParams(final byte[] id, final byte[] minId, final long maxLen, final boolean approximateTrimming,
-						   final boolean exactTrimming, final boolean noMkStream, final long limit) {
-		this(id, minId, maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final byte[] id, final Boolean noMkStream) {
+		this(id);
 		noMkStream(this, noMkStream);
-		limit(limit);
 	}
 
-	public JedisXAddParams(final StreamEntryID id, final String minId, final long maxLen,
-						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
-						   final long limit) {
-		this(id, minId, maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryID id, final Boolean noMkStream) {
+		this(id);
 		noMkStream(this, noMkStream);
-		limit(limit);
 	}
 
-	public JedisXAddParams(final StreamEntryID id, final byte[] minId, final long maxLen,
-						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
-						   final long limit) {
-		this(id, minId, maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryId id, final Boolean noMkStream) {
+		this(id);
 		noMkStream(this, noMkStream);
-		limit(limit);
 	}
 
-	public JedisXAddParams(final StreamEntryId id, final String minId, final long maxLen,
-						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
-						   final long limit) {
-		this(id, minId, maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
-		noMkStream(this, noMkStream);
-		limit(limit);
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final String id, final Long limit) {
+		this(id);
+		Optional.ofNullable(limit).ifPresent(this::limit);
 	}
 
-	public JedisXAddParams(final StreamEntryId id, final byte[] minId, final long maxLen,
-						   final boolean approximateTrimming, final boolean exactTrimming, final boolean noMkStream,
-						   final long limit) {
-		this(id, minId, maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final byte[] id, final Long limit) {
+		this(id);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryID id, final Long limit) {
+		this(id);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryId id, final Long limit) {
+		this(id);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
-		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+		this(id, maxLenMinId);
+		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryID id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
+						   final Boolean noMkStream) {
+		this(id, maxLenMinId);
+		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
+						   final Boolean noMkStream) {
+		this(id, maxLenMinId);
+		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Long limit) {
+		this(id, maxLenMinId);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Long limit) {
+		this(id, maxLenMinId);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryID id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
+						   final Long limit) {
+		this(id, maxLenMinId);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
+						   final Long limit) {
+		this(id, maxLenMinId);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
+						   final Long limit) {
+		this(id, maxLenMinId, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
+						   final Long limit) {
+		this(id, maxLenMinId, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryID id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
+						   final Boolean noMkStream, final Long limit) {
+		this(id, maxLenMinId, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXAddParams(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
+						   final Boolean noMkStream, final Long limit) {
+		this(id, maxLenMinId, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
 	}
 
 	public JedisXAddParams id(final StreamEntryId id) {
@@ -214,14 +449,19 @@ public final class JedisXAddParams extends XAddParams {
 		return this;
 	}
 
-	public static JedisXAddParams from(final StreamCommands.XAddArgument xAddArgument) {
+	/**
+	 * 从 {@link XAddArgument} 创建 {@link XAddParams} 实例
+	 *
+	 * @param xAddArgument
+	 *        {@link XAddArgument}
+	 *
+	 * @return {@link JedisXAddParams} 实例
+	 */
+	public static JedisXAddParams from(final XAddArgument xAddArgument) {
 		final JedisXAddParams xAddParams = new JedisXAddParams();
 
 		if(xAddArgument != null){
-			Optional.ofNullable(xAddArgument.getMinId()).ifPresent(xAddParams::minId);
-			Optional.ofNullable(xAddArgument.getMaxLen()).ifPresent(xAddParams::maxLen);
-			approximateTrimming(xAddParams, xAddArgument.isApproximateTrimming());
-			exactTrimming(xAddParams, xAddArgument.isExactTrimming());
+			maxLenMinId(xAddParams, xAddArgument.getMaxLenMinId());
 			noMkStream(xAddParams, xAddArgument.isNoMkStream());
 			Optional.ofNullable(xAddArgument.getLimit()).ifPresent(xAddParams::limit);
 		}
@@ -229,15 +469,19 @@ public final class JedisXAddParams extends XAddParams {
 		return xAddParams;
 	}
 
-	private static void approximateTrimming(final JedisXAddParams xAddParams, final Boolean approximateTrimming) {
-		if(Boolean.TRUE.equals(approximateTrimming)){
-			xAddParams.approximateTrimming();
-		}
-	}
+	private static void maxLenMinId(final JedisXAddParams xAddParams, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
+		if(maxLenMinId != null){
+			if(maxLenMinId instanceof XAddArgument.MaxLen){
+				xAddParams.maxLen(((XAddArgument.MaxLen) maxLenMinId).getValue());
+			}else if(maxLenMinId instanceof XAddArgument.MinId){
+				xAddParams.minId(((XAddArgument.MinId) maxLenMinId).getValue().toString());
+			}
 
-	private static void exactTrimming(final JedisXAddParams xAddParams, final Boolean exactTrimming) {
-		if(Boolean.TRUE.equals(exactTrimming)){
-			xAddParams.exactTrimming();
+			if(maxLenMinId.getApproximateExactTrimming() == XAddArgument.ApproximateExactTrimming.APPROXIMATE){
+				xAddParams.approximateTrimming();
+			}else if(maxLenMinId.getApproximateExactTrimming() == XAddArgument.ApproximateExactTrimming.EXACT){
+				xAddParams.exactTrimming();
+			}
 		}
 	}
 

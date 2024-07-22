@@ -33,6 +33,7 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
+import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
@@ -1771,107 +1772,6 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit);
-
-	final class XAddArgument {
-
-		private Long maxLen;
-
-		private Boolean approximateTrimming;
-
-		private Boolean exactTrimming;
-
-		private Boolean noMkStream;
-
-		private String minId;
-
-		private Long limit;
-
-		private XAddArgument() {
-		}
-
-		public Long getMaxLen() {
-			return maxLen;
-		}
-
-		public Boolean isApproximateTrimming() {
-			return approximateTrimming;
-		}
-
-		public Boolean isExactTrimming() {
-			return exactTrimming;
-		}
-
-		public Boolean isNoMkStream() {
-			return noMkStream;
-		}
-
-		public String getMinId() {
-			return minId;
-		}
-
-		public Long getLimit() {
-			return limit;
-		}
-
-		@Override
-		public String toString() {
-			return ObjectStringBuilder.create().
-					add("maxLen", maxLen).
-					add("approximateTrimming", approximateTrimming).
-					add("exactTrimming", exactTrimming).
-					add("noMkStream", noMkStream).
-					add("minId", minId).
-					add("limit", limit).build();
-		}
-
-		public static class Builder {
-
-			private final XAddArgument xAddArgument = new XAddArgument();
-
-			private Builder() {
-			}
-
-			public static Builder create() {
-				return new Builder();
-			}
-
-			public Builder maxLen(long maxLen) {
-				xAddArgument.maxLen = maxLen;
-				return this;
-			}
-
-			public Builder approximateTrimming(Boolean approximateTrimming) {
-				xAddArgument.approximateTrimming = approximateTrimming;
-				return this;
-			}
-
-			public Builder exactTrimming(boolean exactTrimming) {
-				xAddArgument.exactTrimming = exactTrimming;
-				return this;
-			}
-
-			public Builder noMkStream(boolean noMkStream) {
-				xAddArgument.noMkStream = noMkStream;
-				return this;
-			}
-
-			public Builder minId(String minId) {
-				xAddArgument.minId = minId;
-				return this;
-			}
-
-			public Builder limit(Long limit) {
-				xAddArgument.limit = limit;
-				return this;
-			}
-
-			public XAddArgument build() {
-				return xAddArgument;
-			}
-
-		}
-
-	}
 
 	final class XClaimArgument {
 

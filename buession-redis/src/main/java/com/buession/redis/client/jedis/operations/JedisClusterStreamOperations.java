@@ -39,6 +39,7 @@ import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.jedis.response.StreamConsumersInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.StreamEntryConverter;

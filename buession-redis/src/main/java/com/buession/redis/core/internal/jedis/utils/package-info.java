@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.utils;
