@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.StreamEntryId;
-
 /**
  * {@code XADD} 命令参数
  *
@@ -36,6 +34,8 @@ public class XAddArgument {
 
 	private MaxLenMinId<?> maxLenMinId;
 
+	private ApproximateExactTrimming approximateExactTrimming;
+
 	private Boolean noMkStream;
 
 	private Long limit;
@@ -44,7 +44,6 @@ public class XAddArgument {
 	 * 构造函数
 	 */
 	public XAddArgument() {
-
 	}
 
 	/**
@@ -131,12 +130,81 @@ public class XAddArgument {
 		this.limit = limit;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 */
+	public XAddArgument(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
+		this(maxLenMinId);
+		this.approximateExactTrimming = approximateExactTrimming;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public XAddArgument(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
+						final Boolean noMkStream) {
+		this(maxLenMinId, approximateExactTrimming);
+		this.noMkStream = noMkStream;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public XAddArgument(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
+						final Long limit) {
+		this(maxLenMinId, approximateExactTrimming);
+		this.limit = limit;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public XAddArgument(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
+						final Boolean noMkStream, final Long limit) {
+		this(maxLenMinId, approximateExactTrimming, noMkStream);
+		this.limit = limit;
+	}
+
 	public MaxLenMinId<?> getMaxLenMinId() {
 		return maxLenMinId;
 	}
 
 	public void setMaxLenMinId(MaxLenMinId<?> maxLenMinId) {
 		this.maxLenMinId = maxLenMinId;
+	}
+
+	public ApproximateExactTrimming getApproximateExactTrimming() {
+		return approximateExactTrimming;
+	}
+
+	public void setApproximateExactTrimming(ApproximateExactTrimming approximateExactTrimming) {
+		this.approximateExactTrimming = approximateExactTrimming;
 	}
 
 	public Boolean isNoMkStream() {
@@ -168,7 +236,8 @@ public class XAddArgument {
 		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 		if(maxLenMinId != null){
-			builder.append(maxLenMinId.toString());
+			builder.add(maxLenMinId.getSubCommand().name(), (approximateExactTrimming != null ?
+					approximateExactTrimming.getValue() + " " : "") + maxLenMinId.getValue());
 		}
 
 		if(Boolean.TRUE.equals(noMkStream)){
@@ -180,104 +249,6 @@ public class XAddArgument {
 		}
 
 		return builder.build();
-	}
-
-	public interface MaxLenMinId<T> {
-
-		ApproximateExactTrimming getApproximateExactTrimming();
-
-		T getValue();
-
-	}
-
-	public final static class MaxLen implements MaxLenMinId<Long> {
-
-		private final ApproximateExactTrimming approximateExactTrimming;
-
-		private final Long value;
-
-		public MaxLen(final ApproximateExactTrimming approximateExactTrimming, final Long value) {
-			this.approximateExactTrimming = approximateExactTrimming;
-			this.value = value;
-		}
-
-		public ApproximateExactTrimming getApproximateExactTrimming() {
-			return approximateExactTrimming;
-		}
-
-		@Override
-		public Long getValue() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
-
-			builder.add("MAXLEN", approximateExactTrimming.getValue() + " " + value);
-
-			return builder.build();
-		}
-
-	}
-
-	public final static class MinId implements MaxLenMinId<StreamEntryId> {
-
-		private final ApproximateExactTrimming approximateExactTrimming;
-
-		private final StreamEntryId value;
-
-		public MinId(final ApproximateExactTrimming approximateExactTrimming, final StreamEntryId value) {
-			this.approximateExactTrimming = approximateExactTrimming;
-			this.value = value;
-		}
-
-		public ApproximateExactTrimming getApproximateExactTrimming() {
-			return approximateExactTrimming;
-		}
-
-		@Override
-		public StreamEntryId getValue() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
-
-			builder.add("MINID", approximateExactTrimming.getValue() + " " + value);
-
-			return builder.build();
-		}
-
-	}
-
-	public enum IdType {
-		MAXLEN,
-
-		MINID
-	}
-
-	public enum ApproximateExactTrimming {
-		APPROXIMATE("~"),
-
-		EXACT("=");
-
-		private final String value;
-
-		ApproximateExactTrimming(final String value) {
-			this.value = value;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return getValue();
-		}
-
 	}
 
 }

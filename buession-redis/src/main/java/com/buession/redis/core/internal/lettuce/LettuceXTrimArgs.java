@@ -22,27 +22,27 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce;
 
 import com.buession.redis.core.command.args.ApproximateExactTrimming;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XTrimArgument;
-import redis.clients.jedis.params.XTrimParams;
+import io.lettuce.core.XTrimArgs;
 
 import java.util.Optional;
 
 /**
- * Jedis {@link XTrimParams} 扩展
+ * Lettuce {@link XTrimArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class JedisXTrimParams extends XTrimParams {
+public class LettuceXTrimArgs extends XTrimArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public JedisXTrimParams() {
+	public LettuceXTrimArgs() {
 		super();
 	}
 
@@ -52,7 +52,7 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param maxLenMinId
 	 * 		-
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId) {
 		super();
 		maxLenMinId(this, maxLenMinId);
 	}
@@ -65,7 +65,7 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final Long limit) {
 		this(maxLenMinId);
 		Optional.ofNullable(limit).ifPresent(this::limit);
 	}
@@ -78,7 +78,7 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param approximateExactTrimming
 	 * 		-
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
 		super();
 		maxLenMinId(this, maxLenMinId, approximateExactTrimming);
 	}
@@ -93,49 +93,49 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
 							final Long limit) {
 		this(maxLenMinId, approximateExactTrimming);
 		Optional.ofNullable(limit).ifPresent(this::limit);
 	}
 
 	/**
-	 * 从 {@link XTrimArgument} 创建 {@link XTrimParams} 实例
+	 * 从 {@link XTrimArgument} 创建 {@link XTrimArgs} 实例
 	 *
 	 * @param xTrimArgument
 	 *        {@link XTrimArgument}
 	 *
-	 * @return {@link JedisXTrimParams} 实例
+	 * @return {@link LettuceXTrimArgs} 实例
 	 */
-	public static JedisXTrimParams from(final XTrimArgument xTrimArgument) {
-		final JedisXTrimParams xTrimParams = new JedisXTrimParams();
+	public static LettuceXTrimArgs from(final XTrimArgument xTrimArgument) {
+		final LettuceXTrimArgs xTrimArgs = new LettuceXTrimArgs();
 
 		if(xTrimArgument != null){
-			maxLenMinId(xTrimParams, xTrimArgument.getMaxLenMinId());
-			Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimParams::limit);
+			maxLenMinId(xTrimArgs, xTrimArgument.getMaxLenMinId());
+			Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimArgs::limit);
 		}
 
-		return xTrimParams;
+		return xTrimArgs;
 	}
 
-	private static void maxLenMinId(final JedisXTrimParams xTrimParams, final MaxLenMinId<?> maxLenMinId) {
+	private static void maxLenMinId(final LettuceXTrimArgs xTrimArgs, final MaxLenMinId<?> maxLenMinId) {
 		if(maxLenMinId != null){
 			if(maxLenMinId instanceof MaxLenMinId.MaxLen){
-				xTrimParams.maxLen(((MaxLenMinId.MaxLen) maxLenMinId).getValue());
+				xTrimArgs.maxlen(((MaxLenMinId.MaxLen) maxLenMinId).getValue());
 			}else if(maxLenMinId instanceof MaxLenMinId.MinId){
-				xTrimParams.minId(((MaxLenMinId.MinId) maxLenMinId).getValue().toString());
+				xTrimArgs.minId(((MaxLenMinId.MinId) maxLenMinId).getValue().toString());
 			}
 		}
 	}
 
-	private static void maxLenMinId(final JedisXTrimParams xTrimParams, final MaxLenMinId<?> maxLenMinId,
+	private static void maxLenMinId(final LettuceXTrimArgs xTrimArgs, final MaxLenMinId<?> maxLenMinId,
 									final ApproximateExactTrimming approximateExactTrimming) {
-		maxLenMinId(xTrimParams, maxLenMinId);
+		maxLenMinId(xTrimArgs, maxLenMinId);
 		if(maxLenMinId != null){
 			if(approximateExactTrimming == ApproximateExactTrimming.APPROXIMATE){
-				xTrimParams.approximateTrimming();
+				xTrimArgs.approximateTrimming();
 			}else if(approximateExactTrimming == ApproximateExactTrimming.EXACT){
-				xTrimParams.exactTrimming();
+				xTrimArgs.exactTrimming();
 			}
 		}
 	}

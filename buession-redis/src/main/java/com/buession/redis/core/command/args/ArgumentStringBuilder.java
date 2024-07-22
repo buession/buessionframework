@@ -21,10 +21,129 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.command.args;/**
- * 
- *
+ */
+package com.buession.redis.core.command.args;
+
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.StringJoiner;
+
+/**
  * @author Yong.Teng
  * @since 3.0.0
- */public class ArgumentStringBuilder {
+ */
+class ArgumentStringBuilder {
+
+	private final StringJoiner joiner = new StringJoiner(" ");
+
+	private ArgumentStringBuilder() {
+	}
+
+	public static ArgumentStringBuilder create() {
+		return new ArgumentStringBuilder();
+	}
+
+	public ArgumentStringBuilder add(final String name, final boolean value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final short value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final int value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final long value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final float value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final double value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final byte[] value) {
+		if(value != null){
+			joiner.add(name + ' ' + SafeEncoder.encode(value));
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final String name, final Object value) {
+		joiner.add(name + ' ' + value);
+		return this;
+	}
+
+	public ArgumentStringBuilder add(final Enum<?> value) {
+		if(value != null){
+			joiner.add(value.name());
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder addIfAbsent(final String name, final Object value) {
+		if(value != null){
+			joiner.add(name + ' ' + value);
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder append(final Float seq) {
+		if(seq != null){
+			joiner.add(seq.toString());
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder append(final Double seq) {
+		if(seq != null){
+			joiner.add(seq.toString());
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder append(final Integer seq) {
+		if(seq != null){
+			joiner.add(seq.toString());
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder append(final Long seq) {
+		if(seq != null){
+			joiner.add(seq.toString());
+		}
+
+		return this;
+	}
+
+	public ArgumentStringBuilder append(final CharSequence seq) {
+		if(seq != null){
+			joiner.add(seq);
+		}
+
+		return this;
+	}
+
+	public String build() {
+		return joiner.toString();
+	}
+
 }

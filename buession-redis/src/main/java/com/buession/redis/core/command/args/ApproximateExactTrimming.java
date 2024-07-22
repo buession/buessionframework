@@ -25,21 +25,27 @@
 package com.buession.redis.core.command.args;
 
 /**
- * 数组参数
- *
- * @param <T>
- * 		值类型
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ArrayArgument<T> {
+public enum ApproximateExactTrimming {
+	APPROXIMATE("~"),
 
-	/**
-	 * 将参数以数组形式返回
-	 *
-	 * @return 以数组形式返回参数列表
-	 */
-	T[] toArray();
+	EXACT("=");
 
+	private final String value;
+
+	ApproximateExactTrimming(final String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
+	}
+	
 }

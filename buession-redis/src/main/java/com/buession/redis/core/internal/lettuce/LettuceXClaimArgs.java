@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.StreamCommands;
+import com.buession.redis.core.command.args.XClaimArgument;
 import io.lettuce.core.XClaimArgs;
 
 import java.util.Optional;
@@ -41,38 +41,71 @@ public class LettuceXClaimArgs extends XClaimArgs {
 		super();
 	}
 
-	public LettuceXClaimArgs(final long minIdleTime) {
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime) {
 		super();
-		minIdleTime((minIdleTime));
+		idleTime(this, idleType, idleTime);
 	}
 
-	public LettuceXClaimArgs(final long minIdleTime, final boolean justId) {
-		this(minIdleTime);
-		justId(this, justId);
+	public LettuceXClaimArgs(final Integer retryCount) {
+		super();
+		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
 	}
 
-	public LettuceXClaimArgs(final long minIdleTime, final long idle, final long time,
-							 final long retryCount, final boolean force, final boolean justId) {
-		this(minIdleTime, force);
-		idle(idle);
-		time(time);
-		retryCount(retryCount);
+	public LettuceXClaimArgs(final Boolean force) {
+		super();
 		force(this, force);
-		justId(this, justId);
 	}
 
-	public static LettuceXClaimArgs from(final StreamCommands.XClaimArgument xClaimArgument) {
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount) {
+		this(idleType, idleTime);
+		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+	}
+
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime, final Boolean force) {
+		this(idleType, idleTime);
+		force(this, force);
+	}
+
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount,
+							 final Boolean force) {
+		this(idleType, idleTime, retryCount);
+		force(this, force);
+	}
+
+	/**
+	 * 从 {@link XClaimArgument} 创建 {@link XClaimArgs} 实例
+	 *
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link LettuceXClaimArgs} 实例
+	 */
+	public static LettuceXClaimArgs from(final XClaimArgument xClaimArgument) {
 		final LettuceXClaimArgs xClaimArgs = new LettuceXClaimArgs();
 
 		if(xClaimArgument != null){
-			Optional.ofNullable(xClaimArgument.getIdleTime()).ifPresent(xClaimArgs::idle);
-			Optional.ofNullable(xClaimArgument.getIdleUnixTime()).ifPresent(xClaimArgs::time);
-			Optional.ofNullable(xClaimArgument.getIdleUnixTime()).ifPresent(xClaimArgs::time);
+			idleTime(xClaimArgs, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
 			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimArgs::retryCount);
 			force(xClaimArgs, xClaimArgument.isForce());
 		}
 
 		return xClaimArgs;
+	}
+
+	private static void idleTime(final LettuceXClaimArgs xClaimArgs, final XClaimArgument.IdleType idleType,
+								 final Long idleTime) {
+		if(idleType != null && idleTime != null){
+			switch(idleType){
+				case IDLE:
+					xClaimArgs.idle(idleTime);
+					break;
+				case UNIX_TIME:
+					xClaimArgs.time(idleTime);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	private static void force(final LettuceXClaimArgs xClaimArgs, final Boolean force) {

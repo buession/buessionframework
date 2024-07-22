@@ -38,12 +38,27 @@ import io.lettuce.core.GeoValue;
  */
 public class LettuceGeoValue<V> extends GeoValue<V> {
 
+	private final static long serialVersionUID = -818577420137908972L;
+
+	/**
+	 * 构造函数
+	 */
 	public LettuceGeoValue() {
 		super();
 	}
 
-	public static <V> GeoValue<V> from(final V value, final Geo geo) {
-		return just(geo.getLongitude(), geo.getLatitude(), value);
+	/**
+	 * 从 {@link Geo} 创建 {@link GeoValue} 实例
+	 *
+	 * @param member
+	 * 		成员
+	 * @param geo
+	 *        {@link Geo}
+	 *
+	 * @return {@link LettuceGeoValue} 实例
+	 */
+	public static <V> GeoValue<V> from(final V member, final Geo geo) {
+		return just(geo.getLongitude(), geo.getLatitude(), member);
 	}
 
 }

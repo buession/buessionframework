@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
 /**
  * {@code LPOS} 命令参数
  *
@@ -43,6 +41,35 @@ public class LPosArgument {
 	 * 查找成员个数
 	 */
 	private Integer maxLen;
+
+	/**
+	 * 构造函数
+	 */
+	public LPosArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param rank
+	 * 		返回第几个匹配的元素
+	 */
+	public LPosArgument(Integer rank) {
+		this.rank = rank;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param rank
+	 * 		返回第几个匹配的元素
+	 * @param maxLen
+	 * 		查找成员个数
+	 */
+	public LPosArgument(Integer rank, Integer maxLen) {
+		this(rank);
+		this.maxLen = maxLen;
+	}
 
 	/**
 	 * 返回第几个匹配的元素
@@ -84,9 +111,9 @@ public class LPosArgument {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("rank", rank)
-				.add("maxLen", maxLen)
+		return ArgumentStringBuilder.create()
+				.add("RANK", rank)
+				.add("MAXLEN", maxLen)
 				.build();
 	}
 

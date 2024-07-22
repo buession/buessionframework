@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.convert;
 
+import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
@@ -37,6 +38,14 @@ import com.buession.redis.utils.SafeEncoder;
  * @since 3.0.0
  */
 public interface Converters {
+
+	static ArrayConverter<Object, String> objectArrayToStringArrayConverter() {
+		return new ArrayConverter<>((o)->o == null ? null : o.toString(), String.class);
+	}
+
+	static ArrayConverter<Object, byte[]> objectArrayToBinaryArrayConverter() {
+		return new ArrayConverter<>((o)->o == null ? null : SafeEncoder.encode(o.toString()), byte[].class);
+	}
 
 	static ListConverter<String, byte[]> listStringToBinary() {
 		return new ListConverter<>(SafeEncoder::encode);

@@ -25,21 +25,96 @@
 package com.buession.redis.core.command.args;
 
 /**
- * 数组参数
- *
- * @param <T>
- * 		值类型
+ * {@code XTRIM} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ArrayArgument<T> {
+public class XTrimArgument {
+
+	private MaxLenMinId<?> maxLenMinId;
+
+	private ApproximateExactTrimming approximateExactTrimming;
+
+	private Long limit;
 
 	/**
-	 * 将参数以数组形式返回
-	 *
-	 * @return 以数组形式返回参数列表
+	 * 构造函数
 	 */
-	T[] toArray();
+	public XTrimArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 */
+	public XTrimArgument(final MaxLenMinId<?> maxLenMinId) {
+		this.maxLenMinId = maxLenMinId;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param limit
+	 * 		-
+	 */
+	public XTrimArgument(final Long limit) {
+		this.limit = limit;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public XTrimArgument(final MaxLenMinId<?> maxLenMinId, final Long limit) {
+		this(maxLenMinId);
+		this.limit = limit;
+	}
+
+	public MaxLenMinId<?> getMaxLenMinId() {
+		return maxLenMinId;
+	}
+
+	public void setMaxLenMinId(MaxLenMinId<?> maxLenMinId) {
+		this.maxLenMinId = maxLenMinId;
+	}
+
+	public ApproximateExactTrimming getApproximateExactTrimming() {
+		return approximateExactTrimming;
+	}
+
+	public void setApproximateExactTrimming(ApproximateExactTrimming approximateExactTrimming) {
+		this.approximateExactTrimming = approximateExactTrimming;
+	}
+
+	public Long getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Long limit) {
+		this.limit = limit;
+	}
+
+	@Override
+	public String toString() {
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(maxLenMinId != null){
+			builder.add(maxLenMinId.getSubCommand().name(), (approximateExactTrimming != null ?
+					approximateExactTrimming.getValue() + " " : "") + maxLenMinId.getValue());
+		}
+
+		if(limit != null){
+			builder.add("LIMIT", limit);
+		}
+
+		return builder.build();
+	}
 
 }

@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
 /**
  * {@code RESTORE} 命令参数
  *
@@ -72,16 +70,43 @@ public class RestoreArgument {
 	 * 		是否替换已存在 key
 	 * @param absTtl
 	 * 		-
+	 */
+	public RestoreArgument(final Boolean replace, final Boolean absTtl) {
+		this(replace);
+		this.absTtl = absTtl;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public RestoreArgument(final Boolean replace, final Long idleTime, final Long frequency) {
+		this(replace);
+		this.idleTime = idleTime;
+		this.frequency = frequency;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param absTtl
+	 * 		-
 	 * @param idleTime
 	 * 		-
 	 * @param frequency
 	 * 		-
 	 */
 	public RestoreArgument(final Boolean replace, final Boolean absTtl, final Long idleTime, final Long frequency) {
-		this.replace = replace;
+		this(replace, idleTime, frequency);
 		this.absTtl = absTtl;
-		this.idleTime = idleTime;
-		this.frequency = frequency;
 	}
 
 	/**
@@ -174,12 +199,25 @@ public class RestoreArgument {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().
-				add("replace", replace).
-				add("absTtl", absTtl).
-				add("idleTime", idleTime).
-				add("frequency", frequency)
-				.build();
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(Boolean.TRUE.equals(replace)){
+			builder.append("REPLACE");
+		}
+
+		if(Boolean.TRUE.equals(absTtl)){
+			builder.append("ABSTTL");
+		}
+
+		if(idleTime != null){
+			builder.add("IDLETIME", idleTime);
+		}
+
+		if(frequency != null){
+			builder.add("FREQ", frequency);
+		}
+
+		return builder.build();
 	}
 
 }

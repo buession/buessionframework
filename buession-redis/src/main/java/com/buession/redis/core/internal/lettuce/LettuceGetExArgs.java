@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.command.args.GetExArgument;
 import io.lettuce.core.GetExArgs;
 
 /**
@@ -50,10 +50,10 @@ public final class LettuceGetExArgs extends GetExArgs {
 	 * @param value
 	 * 		键过期时间
 	 */
-	public LettuceGetExArgs(final StringCommands.GetExArgument.GetExType type, final Long value) {
+	public LettuceGetExArgs(final GetExArgument.GetExType type, final Long value) {
 		super();
 
-		if(type != null){
+		if(type != null && value != null){
 			switch(type){
 				case EX:
 					ex(value);
@@ -89,24 +89,18 @@ public final class LettuceGetExArgs extends GetExArgs {
 		}
 	}
 
-	public static LettuceGetExArgs from(final StringCommands.GetExArgument<?> getExArgument) {
-		final LettuceGetExArgs getExArgs = new LettuceGetExArgs();
-
-		if(getExArgument != null){
-			if(getExArgument instanceof StringCommands.GetExArgument.ExGetExArgument){
-				getExArgs.ex(((StringCommands.GetExArgument.ExGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.ExAtGetExArgument){
-				getExArgs.exAt(((StringCommands.GetExArgument.ExAtGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.PxGetExArgument){
-				getExArgs.px(((StringCommands.GetExArgument.PxGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.PxAtGetExArgument){
-				getExArgs.pxAt(((StringCommands.GetExArgument.PxAtGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.PersistGetExArgument){
-				getExArgs.persist();
-			}
-		}
-
-		return getExArgs;
+	/**
+	 * 从 {@link GetExArgument} 创建 {@link GetExArgs} 实例
+	 *
+	 * @param getExArgument
+	 *        {@link GetExArgument}
+	 *
+	 * @return {@link LettuceGetExArgs} 实例
+	 */
+	public static LettuceGetExArgs from(final GetExArgument getExArgument) {
+		return getExArgument != null && getExArgument.getType() != null && getExArgument.getExpires() != null ?
+				new LettuceGetExArgs(getExArgument.getType(), getExArgument.getExpires()) :
+				new LettuceGetExArgs();
 	}
 
 }

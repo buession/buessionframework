@@ -25,7 +25,6 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.utils.ObjectStringBuilder;
 
 /**
  * {@code GEORADIUS} 命令参数
@@ -69,7 +68,6 @@ public class GeoRadiusArgument {
 	 * 构造函数
 	 */
 	public GeoRadiusArgument() {
-
 	}
 
 	/**
@@ -82,7 +80,7 @@ public class GeoRadiusArgument {
 	 * @param withHash
 	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
-	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
 		this.withCoord = withCoord;
 		this.withDist = withDist;
 		this.withHash = withHash;
@@ -104,7 +102,7 @@ public class GeoRadiusArgument {
 	 * @param count
 	 * 		返回数量
 	 */
-	public GeoRadiusArgument(final int count) {
+	public GeoRadiusArgument(final Integer count) {
 		this.count = count;
 	}
 
@@ -116,7 +114,7 @@ public class GeoRadiusArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoRadiusArgument(final int count, final boolean any) {
+	public GeoRadiusArgument(final Integer count, final Boolean any) {
 		count(count, any);
 	}
 
@@ -128,7 +126,7 @@ public class GeoRadiusArgument {
 	 * @param count
 	 * 		返回数量
 	 */
-	public GeoRadiusArgument(final Order order, final int count) {
+	public GeoRadiusArgument(final Order order, final Integer count) {
 		this(order);
 		count(count);
 	}
@@ -143,8 +141,8 @@ public class GeoRadiusArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoRadiusArgument(final Order order, final int count, final boolean any) {
-		this(order);
+	public GeoRadiusArgument(final Order order, final Integer count, final Boolean any) {
+		this(order, count);
 		this.any = any;
 	}
 
@@ -160,7 +158,7 @@ public class GeoRadiusArgument {
 	 * @param order
 	 * 		排序
 	 */
-	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
 							 final Order order) {
 		this(withCoord, withDist, withHash);
 		this.order = order;
@@ -178,8 +176,8 @@ public class GeoRadiusArgument {
 	 * @param count
 	 * 		返回数量
 	 */
-	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
-							 final int count) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+							 final Integer count) {
 		this(withCoord, withDist, withHash);
 		this.count = count;
 	}
@@ -198,8 +196,8 @@ public class GeoRadiusArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
-							 final int count, final boolean any) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+							 final Integer count, final Boolean any) {
 		this(withCoord, withDist, withHash);
 		count(count, any);
 	}
@@ -218,8 +216,8 @@ public class GeoRadiusArgument {
 	 * @param count
 	 * 		返回数量
 	 */
-	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
-							 final Order order, final int count) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+							 final Order order, final Integer count) {
 		this(withCoord, withDist, withHash, order);
 		this.count = count;
 	}
@@ -241,8 +239,8 @@ public class GeoRadiusArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
-							 final Order order, final int count, final boolean any) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+							 final Order order, final Integer count, final Boolean any) {
 		this(withCoord, withDist, withHash, order);
 		count(count, any);
 	}
@@ -440,13 +438,30 @@ public class GeoRadiusArgument {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().
-				add("withCoord", withCoord).
-				add("withDist", withDist).
-				add("withHash", withHash).
-				add("order", order).
-				add("count", count)
-				.build();
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(Boolean.TRUE.equals(withCoord)){
+			builder.append("WITHCOORD");
+		}
+
+		if(Boolean.TRUE.equals(withDist)){
+			builder.append("WITHDIST");
+		}
+
+		if(Boolean.TRUE.equals(withHash)){
+			builder.append("WITHHASH");
+		}
+
+		if(count != null){
+			builder.add("count", count);
+			if(any != null){
+				builder.append("ANY");
+			}
+		}
+
+		builder.add(order);
+
+		return builder.toString();
 	}
 
 }

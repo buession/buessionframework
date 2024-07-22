@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.command.args.GetExArgument;
 import redis.clients.jedis.params.GetExParams;
 
 /**
@@ -50,10 +50,10 @@ public final class JedisGetExParams extends GetExParams {
 	 * @param value
 	 * 		键过期时间
 	 */
-	public JedisGetExParams(final StringCommands.GetExArgument.GetExType type, final Long value) {
+	public JedisGetExParams(final GetExArgument.GetExType type, final Long value) {
 		super();
 
-		if(type != null){
+		if(type != null && value != null){
 			switch(type){
 				case EX:
 					ex(value);
@@ -82,31 +82,25 @@ public final class JedisGetExParams extends GetExParams {
 	 * @param persist
 	 * 		设置键是否持久化
 	 */
-	public JedisGetExParams(final boolean persist) {
+	public JedisGetExParams(final Boolean persist) {
 		super();
 		if(Boolean.TRUE.equals(persist)){
 			persist();
 		}
 	}
 
-	public static JedisGetExParams from(final StringCommands.GetExArgument<?> getExArgument) {
-		final JedisGetExParams getExParams = new JedisGetExParams();
-
-		if(getExArgument != null){
-			if(getExArgument instanceof StringCommands.GetExArgument.ExGetExArgument){
-				getExParams.ex(((StringCommands.GetExArgument.ExGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.ExAtGetExArgument){
-				getExParams.exAt(((StringCommands.GetExArgument.ExAtGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.PxGetExArgument){
-				getExParams.px(((StringCommands.GetExArgument.PxGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.PxAtGetExArgument){
-				getExParams.pxAt(((StringCommands.GetExArgument.PxAtGetExArgument) getExArgument).getValue());
-			}else if(getExArgument instanceof StringCommands.GetExArgument.PersistGetExArgument){
-				getExParams.persist();
-			}
-		}
-
-		return getExParams;
+	/**
+	 * 从 {@link GetExArgument} 创建 {@link GetExParams} 实例
+	 *
+	 * @param getExArgument
+	 *        {@link GetExArgument}
+	 *
+	 * @return {@link JedisGetExParams} 实例
+	 */
+	public static JedisGetExParams from(final GetExArgument getExArgument) {
+		return getExArgument != null && getExArgument.getType() != null && getExArgument.getExpires() != null ?
+				new JedisGetExParams(getExArgument.getType(), getExArgument.getExpires()) :
+				new JedisGetExParams();
 	}
 
 }

@@ -26,10 +26,7 @@ package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
 import com.buession.redis.core.Limit;
-import com.buession.redis.utils.ObjectStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
-
-import java.util.Arrays;
 
 /**
  * {@code SORT} 命令参数
@@ -242,7 +239,7 @@ public class SortArgument {
 	 * 		-
 	 */
 	public SortArgument(final String by, final String[] gets, final Order order, final Limit limit,
-						final boolean alpha) {
+						final Boolean alpha) {
 		this(by, gets, order, limit);
 		this.alpha = alpha;
 	}
@@ -262,7 +259,7 @@ public class SortArgument {
 	 * 		-
 	 */
 	public SortArgument(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
-						final boolean alpha) {
+						final Boolean alpha) {
 		this(by, gets, order, limit);
 		this.alpha = alpha;
 	}
@@ -355,19 +352,29 @@ public class SortArgument {
 
 	@Override
 	public String toString() {
-		final ObjectStringBuilder builder = ObjectStringBuilder.create();
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 		if(by != null){
-			builder.add("by", SafeEncoder.encode(by));
+			builder.add("BY", by);
 		}
 
-		builder.add("order", order).add("limit", limit);
+		if(limit != null){
+			builder.add("LIMIT", limit.getOffset() + ' ' + limit.getCount());
+		}
 
 		if(getPatterns != null){
-			builder.add("get patterns", Arrays.toString(getPatterns));
+			for(final String pattern : getPatterns){
+				builder.add("GET", pattern);
+			}
 		}
 
-		builder.add("alpha", alpha);
+		if(order != null){
+			builder.add(order);
+		}
+
+		if(Boolean.TRUE.equals(alpha)){
+			builder.append("ALPHA");
+		}
 
 		return builder.build();
 	}

@@ -34,20 +34,43 @@ import io.lettuce.core.CopyArgs;
  */
 public final class LettuceCopyArgs extends CopyArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceCopyArgs() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param destinationDb
+	 * 		目标 DB
+	 */
 	public LettuceCopyArgs(final long destinationDb) {
 		super();
 		destinationDb(destinationDb);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 */
 	public LettuceCopyArgs(final boolean replace) {
 		super();
 		replace(replace);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param destinationDb
+	 * 		目标 DB
+	 * @param replace
+	 * 		是否替换已存在 key
+	 */
 	public LettuceCopyArgs(final long destinationDb, final boolean replace) {
 		this(destinationDb);
 		replace(replace);

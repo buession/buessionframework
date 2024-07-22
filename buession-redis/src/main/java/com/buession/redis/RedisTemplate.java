@@ -35,6 +35,7 @@ import com.buession.redis.core.GtLt;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
 import com.buession.redis.core.operations.*;
 

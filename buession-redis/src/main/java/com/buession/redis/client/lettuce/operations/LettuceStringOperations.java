@@ -31,6 +31,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.lettuce.LettuceGetExArgs;

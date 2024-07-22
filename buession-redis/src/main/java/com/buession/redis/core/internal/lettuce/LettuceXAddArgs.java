@@ -25,6 +25,8 @@
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.command.args.ApproximateExactTrimming;
+import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
 import com.buession.redis.utils.SafeEncoder;
@@ -86,7 +88,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param maxLenMinId
 	 * 		-
 	 */
-	public LettuceXAddArgs(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId) {
 		this(id);
 		maxLenMinId(this, maxLenMinId);
 	}
@@ -99,7 +101,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param maxLenMinId
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId) {
 		this(id);
 		maxLenMinId(this, maxLenMinId);
 	}
@@ -112,7 +114,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param maxLenMinId
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId) {
 		this(id);
 		maxLenMinId(this, maxLenMinId);
 	}
@@ -205,7 +207,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -220,7 +222,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -235,8 +237,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
-						   final Boolean noMkStream) {
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -253,7 +254,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final String id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
 						   final Long limit) {
 		this(id, maxLenMinId, noMkStream);
 		Optional.ofNullable(limit).ifPresent(this::limit);
@@ -271,7 +272,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final XAddArgument.MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
 						   final Long limit) {
 		this(id, maxLenMinId, noMkStream);
 		Optional.ofNullable(limit).ifPresent(this::limit);
@@ -289,9 +290,174 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final XAddArgument.MaxLenMinId<?> maxLenMinId,
-						   final Boolean noMkStream, final Long limit) {
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
+						   final Long limit) {
 		this(id, maxLenMinId, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 */
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming) {
+		this(id);
+		maxLenMinId(this, maxLenMinId, approximateExactTrimming);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 */
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming) {
+		this(id);
+		maxLenMinId(this, maxLenMinId, approximateExactTrimming);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 */
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming) {
+		this(id);
+		maxLenMinId(this, maxLenMinId, approximateExactTrimming);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+		this(id, maxLenMinId, approximateExactTrimming);
+		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+		this(id, maxLenMinId, approximateExactTrimming);
+		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 */
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+		this(id, maxLenMinId, approximateExactTrimming);
+		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
+						   final Long limit) {
+		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
+						   final Long limit) {
+		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
+		Optional.ofNullable(limit).ifPresent(this::limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
+						   final Long limit) {
+		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
 		Optional.ofNullable(limit).ifPresent(this::limit);
 	}
 
@@ -323,17 +489,23 @@ public final class LettuceXAddArgs extends XAddArgs {
 		return xAddArgs;
 	}
 
-	private static void maxLenMinId(final LettuceXAddArgs xAddArgs, final XAddArgument.MaxLenMinId<?> maxLenMinId) {
+	private static void maxLenMinId(final LettuceXAddArgs xAddArgs, final MaxLenMinId<?> maxLenMinId) {
 		if(maxLenMinId != null){
-			if(maxLenMinId instanceof XAddArgument.MaxLen){
-				xAddArgs.maxlen(((XAddArgument.MaxLen) maxLenMinId).getValue());
-			}else if(maxLenMinId instanceof XAddArgument.MinId){
-				xAddArgs.minId(((XAddArgument.MinId) maxLenMinId).getValue().toString());
+			if(maxLenMinId instanceof MaxLenMinId.MaxLen){
+				xAddArgs.maxlen(((MaxLenMinId.MaxLen) maxLenMinId).getValue());
+			}else if(maxLenMinId instanceof MaxLenMinId.MinId){
+				xAddArgs.minId(((MaxLenMinId.MinId) maxLenMinId).getValue().toString());
 			}
+		}
+	}
 
-			if(maxLenMinId.getApproximateExactTrimming() == XAddArgument.ApproximateExactTrimming.APPROXIMATE){
+	private static void maxLenMinId(final LettuceXAddArgs xAddArgs, final MaxLenMinId<?> maxLenMinId,
+									final ApproximateExactTrimming approximateExactTrimming) {
+		maxLenMinId(xAddArgs, maxLenMinId);
+		if(maxLenMinId != null){
+			if(approximateExactTrimming == ApproximateExactTrimming.APPROXIMATE){
 				xAddArgs.approximateTrimming();
-			}else if(maxLenMinId.getApproximateExactTrimming() == XAddArgument.ApproximateExactTrimming.EXACT){
+			}else if(approximateExactTrimming == ApproximateExactTrimming.EXACT){
 				xAddArgs.exactTrimming();
 			}
 		}

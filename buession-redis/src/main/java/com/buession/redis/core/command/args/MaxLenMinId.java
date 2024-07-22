@@ -24,22 +24,61 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.StreamEntryId;
+
 /**
- * 数组参数
- *
- * @param <T>
- * 		值类型
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ArrayArgument<T> {
+public interface MaxLenMinId<T> {
 
-	/**
-	 * 将参数以数组形式返回
-	 *
-	 * @return 以数组形式返回参数列表
-	 */
-	T[] toArray();
+	SubCommand getSubCommand();
+
+	T getValue();
+
+	abstract class BaseMaxLenMinId<T> implements MaxLenMinId<T> {
+
+		private final SubCommand subCommand;
+
+		private final T value;
+
+		public BaseMaxLenMinId(final SubCommand subCommand, final T value) {
+			this.subCommand = subCommand;
+			this.value = value;
+		}
+
+		@Override
+		public SubCommand getSubCommand() {
+			return subCommand;
+		}
+
+		@Override
+		public T getValue() {
+			return value;
+		}
+
+	}
+
+	final class MaxLen extends BaseMaxLenMinId<Long> {
+
+		public MaxLen(final Long value) {
+			super(SubCommand.MAXLEN, value);
+		}
+
+	}
+
+	final class MinId extends BaseMaxLenMinId<StreamEntryId> {
+
+		public MinId(final StreamEntryId value) {
+			super(SubCommand.MINID, value);
+		}
+
+	}
+
+	enum SubCommand {
+		MAXLEN,
+
+		MINID
+	}
 
 }

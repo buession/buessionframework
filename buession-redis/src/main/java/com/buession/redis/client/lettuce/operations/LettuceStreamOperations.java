@@ -38,7 +38,10 @@ import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.ApproximateExactTrimming;
 import com.buession.redis.core.command.args.XAddArgument;
+import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.args.XTrimArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.PendingMessageConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.PendingMessagesConverter;
@@ -230,7 +233,7 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
 		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
-		final XClaimArgs xClaimArgs = new LettuceXClaimArgs(minIdleTime, true);
+		final XClaimArgs xClaimArgs = null;//new LettuceXClaimArgs(minIdleTime, true);
 
 		return xClaimJustId(key, ids, consumer, xClaimArgs, args);
 	}
@@ -886,14 +889,14 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
-		return xTrim(key, xTrimArgument.isApproximateTrimming(), Long.MAX_VALUE, args);
+		return xTrim(key, xTrimArgument.getApproximateExactTrimming(), Long.MAX_VALUE, args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
-		return xTrim(key, xTrimArgument.isApproximateTrimming(), limit, args);
+		return xTrim(key, xTrimArgument.getApproximateExactTrimming(), limit, args);
 	}
 
 	private StreamEntryId xAdd(final byte[] key, final Map<byte[], byte[]> hash, final XAddArgs xAddArgs,
@@ -1175,8 +1178,9 @@ public final class LettuceStreamOperations extends AbstractStreamOperations<Lett
 		}
 	}
 
-	private Long xTrim(final byte[] key, final boolean approximateTrimming, final long limit,
+	private Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming, final long limit,
 					   final CommandArguments args) {
+		final boolean approximateTrimming = ApproximateExactTrimming.APPROXIMATE == approximateExactTrimming;
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.XTRIM,

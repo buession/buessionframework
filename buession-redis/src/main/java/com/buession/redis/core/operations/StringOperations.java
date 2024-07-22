@@ -28,6 +28,7 @@ import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
 
 import java.util.LinkedHashMap;

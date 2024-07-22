@@ -24,8 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.StreamCommands;
+import com.buession.redis.core.command.args.XClaimArgument;
 import redis.clients.jedis.params.XClaimParams;
+
+import java.util.Optional;
 
 /**
  * Jedis {@link XClaimParams} 扩展类
@@ -39,10 +41,77 @@ public class JedisXClaimParams extends XClaimParams {
 		super();
 	}
 
-	public static JedisXClaimParams from(final StreamCommands.XClaimArgument xClaimArgument) {
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime) {
+		super();
+		idleTime(this, idleType, idleTime);
+	}
+
+	public JedisXClaimParams(final Integer retryCount) {
+		super();
+		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+	}
+
+	public JedisXClaimParams(final Boolean force) {
+		super();
+		force(this, force);
+	}
+
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount) {
+		this(idleType, idleTime);
+		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+	}
+
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Boolean force) {
+		this(idleType, idleTime);
+		force(this, force);
+	}
+
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount,
+							 final Boolean force) {
+		this(idleType, idleTime, retryCount);
+		force(this, force);
+	}
+
+	/**
+	 * 从 {@link XClaimArgument} 创建 {@link XClaimParams} 实例
+	 *
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link JedisXClaimParams} 实例
+	 */
+	public static JedisXClaimParams from(final XClaimArgument xClaimArgument) {
 		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
 
+		if(xClaimArgument != null){
+			idleTime(xClaimParams, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
+			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimParams::retryCount);
+			force(xClaimParams, xClaimArgument.isForce());
+		}
+
 		return xClaimParams;
+	}
+
+	private static void idleTime(final XClaimParams xClaimParams, final XClaimArgument.IdleType idleType,
+								 final Long idleTime) {
+		if(idleType != null && idleTime != null){
+			switch(idleType){
+				case IDLE:
+					xClaimParams.idle(idleTime);
+					break;
+				case UNIX_TIME:
+					xClaimParams.time(idleTime);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	private static void force(final XClaimParams xClaimParams, final Boolean force) {
+		if(Boolean.TRUE.equals(force)){
+			xClaimParams.force();
+		}
 	}
 
 }

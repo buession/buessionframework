@@ -112,6 +112,19 @@ public final class JedisFailoverParams extends FailoverParams {
 		timeout(timeout);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param timeout
+	 * 		超时
+	 * @param force
+	 * 		是否强制
+	 */
+	public JedisFailoverParams(final int timeout, final boolean force) {
+		this(timeout);
+		force(force);
+	}
+
 	private void force(boolean force) {
 		if(force){
 			force();

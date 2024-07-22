@@ -45,7 +45,7 @@ public final class LettuceBitFieldArgs extends BitFieldArgs {
 	}
 
 	/**
-	 * 从 {@link BitFieldArgument} 创建 {@link BitFieldArgs}
+	 * 从 {@link BitFieldArgument} 创建 {@link BitFieldArgs} 实例
 	 *
 	 * @param bitFieldArgument
 	 *        {@link BitFieldArgument}

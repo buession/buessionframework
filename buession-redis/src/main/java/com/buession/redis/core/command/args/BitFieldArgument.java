@@ -45,8 +45,7 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 	/**
 	 * 构造函数
 	 */
-	private BitFieldArgument() {
-
+	public BitFieldArgument() {
 	}
 
 	/**
@@ -189,7 +188,6 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 	 * 子命令类型
 	 */
 	public enum CommandType {
-
 		/**
 		 * 返回指定的位域
 		 */
@@ -209,7 +207,6 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 		 * 在期望整数类型的情况下，可以通过i为有符号整数和u无符号整数加上整数类型的位数来构成它
 		 */
 		OVERFLOW
-
 	}
 
 	/**

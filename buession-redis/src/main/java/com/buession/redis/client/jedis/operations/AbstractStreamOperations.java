@@ -38,6 +38,7 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
+import com.buession.redis.core.command.args.XClaimArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 

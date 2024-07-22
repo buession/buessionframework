@@ -25,21 +25,123 @@
 package com.buession.redis.core.command.args;
 
 /**
- * 数组参数
- *
- * @param <T>
- * 		值类型
+ * GETEX 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ArrayArgument<T> {
+public class GetExArgument {
 
 	/**
-	 * 将参数以数组形式返回
-	 *
-	 * @return 以数组形式返回参数列表
+	 * 过期时间方式
 	 */
-	T[] toArray();
+	private GetExType type;
+
+	/**
+	 * 过期时间
+	 */
+	private Long expires;
+
+	/**
+	 * 构造函数
+	 */
+	public GetExArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 */
+	public GetExArgument(GetExType type, Long expires) {
+		this.type = type;
+		this.expires = expires;
+	}
+
+	/**
+	 * 返回过期时间方式
+	 *
+	 * @return 过期时间方式
+	 */
+	public GetExType getType() {
+		return type;
+	}
+
+	/**
+	 * 设置过期时间方式
+	 *
+	 * @param type
+	 * 		过期时间方式
+	 */
+	public void seType(GetExType type) {
+		this.type = type;
+	}
+
+	/**
+	 * 返回过期时间
+	 *
+	 * @return 过期时间
+	 */
+	public Long getExpires() {
+		return expires;
+	}
+
+	/**
+	 * 设置过期时间
+	 *
+	 * @param expires
+	 * 		过期时间
+	 */
+	public void setExpires(Long expires) {
+		this.expires = expires;
+	}
+
+	@Override
+	public String toString() {
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(type != null){
+			if(type == GetExType.PERSIST){
+				builder.append("PERSIST");
+			}else{
+				builder.add(type.name(), expires);
+			}
+		}
+
+		return builder.build();
+	}
+
+	/**
+	 * 过期时间方式
+	 */
+	public enum GetExType {
+		/**
+		 * 设置指定的过期时间，以秒为单位
+		 */
+		EX,
+
+		/**
+		 * 设置指定的过期 Unix 时间戳，以秒为单位
+		 */
+		EXAT,
+
+		/**
+		 * 设置指定的过期时间，以毫秒为单位
+		 */
+		PX,
+
+		/**
+		 * 设置指定的过期 Unix 时间戳，以毫秒为单位
+		 */
+		PXAT,
+
+		/**
+		 * 设置的键永不过期
+		 */
+		PERSIST
+	}
 
 }
