@@ -87,7 +87,7 @@ public class LettuceSetArgs extends SetArgs {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public LettuceSetArgs(final Boolean keepTtl) {
+	public LettuceSetArgs(final boolean keepTtl) {
 		super();
 		keepTtl(this, keepTtl);
 	}
@@ -100,7 +100,7 @@ public class LettuceSetArgs extends SetArgs {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public LettuceSetArgs(final NxXx nxXx, final Boolean keepTtl) {
+	public LettuceSetArgs(final NxXx nxXx, final boolean keepTtl) {
 		super();
 		nxxx(this, nxXx);
 		keepTtl(this, keepTtl);
@@ -134,11 +134,9 @@ public class LettuceSetArgs extends SetArgs {
 	public static LettuceSetArgs from(final SetArgument setArgument) {
 		final LettuceSetArgs setArgs = new LettuceSetArgs();
 
-		if(setArgument != null){
-			expx(setArgs, setArgument.getType(), setArgument.getExpires());
-			nxxx(setArgs, setArgument.getNxXx());
-			keepTtl(setArgs, setArgument.isKeepTtl());
-		}
+		expx(setArgs, setArgument.getType(), setArgument.getExpires());
+		nxxx(setArgs, setArgument.getNxXx());
+		keepTtl(setArgs, setArgument.isKeepTtl());
 
 		return setArgs;
 	}

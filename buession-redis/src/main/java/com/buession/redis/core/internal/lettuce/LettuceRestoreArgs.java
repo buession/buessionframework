@@ -63,15 +63,57 @@ public final class LettuceRestoreArgs extends RestoreArgs {
 	 * 		是否替换已存在 key
 	 * @param absTtl
 	 * 		-
+	 */
+	public LettuceRestoreArgs(final boolean replace, final boolean absTtl) {
+		super();
+		replace(this, replace);
+		absTtl(this, absTtl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public LettuceRestoreArgs(final boolean replace, final long idleTime, final long frequency) {
+		super();
+		replace(this, replace);
+		idleTime(idleTime);
+		frequency(frequency);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param absTtl
+	 * 		-
 	 * @param idleTime
 	 * 		-
 	 * @param frequency
 	 * 		-
 	 */
 	public LettuceRestoreArgs(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
-		super();
-		replace(this, replace);
+		this(replace, idleTime, frequency);
 		absTtl(this, absTtl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public LettuceRestoreArgs(final long idleTime, final long frequency) {
+		super();
 		idleTime(idleTime);
 		frequency(frequency);
 	}
@@ -87,12 +129,10 @@ public final class LettuceRestoreArgs extends RestoreArgs {
 	public static LettuceRestoreArgs from(final RestoreArgument restoreArgument) {
 		final LettuceRestoreArgs restoreArgs = new LettuceRestoreArgs();
 
-		if(restoreArgument != null){
-			replace(restoreArgs, restoreArgument.isReplace());
-			absTtl(restoreArgs, restoreArgument.isAbsTtl());
-			Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreArgs::idleTime);
-			Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreArgs::frequency);
-		}
+		replace(restoreArgs, restoreArgument.isReplace());
+		absTtl(restoreArgs, restoreArgument.isAbsTtl());
+		Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreArgs::idleTime);
+		Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreArgs::frequency);
 
 		return restoreArgs;
 	}

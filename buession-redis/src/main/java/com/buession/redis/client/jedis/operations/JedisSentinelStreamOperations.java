@@ -679,7 +679,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 										final StreamEntryId start, final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("start", start).put("end", end).put("count", count);
-		final XPendingParams xPendingParams = new JedisXPendingParams(minIdleTime, start, end, count);
+		final XPendingParams xPendingParams = new JedisXPendingParams(start, end, count, minIdleTime);
 
 		return xPending(key, groupName, xPendingParams, args);
 	}
@@ -710,7 +710,7 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 										final String consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
-		final XPendingParams xPendingParams = new JedisXPendingParams(minIdleTime, start, end, count, consumerName);
+		final XPendingParams xPendingParams = new JedisXPendingParams(start, end, count, minIdleTime, consumerName);
 
 		return xPending(key, groupName, xPendingParams, args);
 	}

@@ -80,10 +80,8 @@ public final class LettuceLPosArgs extends LPosArgs {
 	public static LettuceLPosArgs from(final LPosArgument lPosArgument) {
 		final LettuceLPosArgs lPosArgs = new LettuceLPosArgs();
 
-		if(lPosArgument != null){
-			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosArgs::rank);
-			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosArgs::maxlen);
-		}
+		Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosArgs::rank);
+		Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosArgs::maxlen);
 
 		return lPosArgs;
 	}

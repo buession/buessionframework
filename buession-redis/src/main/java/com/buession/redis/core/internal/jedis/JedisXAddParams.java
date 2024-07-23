@@ -151,7 +151,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final String id, final Boolean noMkStream) {
+	public JedisXAddParams(final String id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -164,7 +164,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final byte[] id, final Boolean noMkStream) {
+	public JedisXAddParams(final byte[] id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -177,7 +177,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryID id, final Boolean noMkStream) {
+	public JedisXAddParams(final StreamEntryID id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -190,7 +190,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryId id, final Boolean noMkStream) {
+	public JedisXAddParams(final StreamEntryId id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -203,9 +203,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final String id, final Long limit) {
+	public JedisXAddParams(final String id, final long limit) {
 		this(id);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -216,9 +216,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final byte[] id, final Long limit) {
+	public JedisXAddParams(final byte[] id, final long limit) {
 		this(id);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -229,9 +229,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryID id, final Long limit) {
+	public JedisXAddParams(final StreamEntryID id, final long limit) {
 		this(id);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -242,9 +242,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryId id, final Long limit) {
+	public JedisXAddParams(final StreamEntryId id, final long limit) {
 		this(id);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -257,7 +257,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -272,7 +272,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -287,7 +287,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -302,7 +302,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -317,9 +317,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId, final long limit) {
 		this(id, maxLenMinId);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -332,9 +332,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId, final long limit) {
 		this(id, maxLenMinId);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -347,9 +347,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId, final long limit) {
 		this(id, maxLenMinId);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -362,9 +362,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final long limit) {
 		this(id, maxLenMinId);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -379,10 +379,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
+	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -397,10 +397,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
+	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -415,10 +415,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
+	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -433,10 +433,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
+	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -516,7 +516,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
 	}
@@ -534,7 +534,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
 	}
@@ -552,7 +552,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
 	}
@@ -570,7 +570,7 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
 	}
@@ -588,9 +588,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -606,9 +606,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -624,9 +624,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -642,9 +642,9 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -662,10 +662,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final String id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -683,10 +683,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final byte[] id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -704,10 +704,10 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final StreamEntryID id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -725,8 +725,8 @@ public final class JedisXAddParams extends XAddParams {
 	 * 		-
 	 */
 	public JedisXAddParams(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
 		Optional.ofNullable(limit).ifPresent(this::limit);
 	}

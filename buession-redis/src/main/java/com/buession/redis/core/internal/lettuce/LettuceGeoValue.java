@@ -54,6 +54,8 @@ public class LettuceGeoValue<V> extends GeoValue<V> {
 	 * 		成员
 	 * @param geo
 	 *        {@link Geo}
+	 * @param <V>
+	 * 		值类型
 	 *
 	 * @return {@link LettuceGeoValue} 实例
 	 */

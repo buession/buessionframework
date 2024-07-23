@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ScanArgs;
 
 /**
@@ -35,44 +34,70 @@ import io.lettuce.core.ScanArgs;
  */
 public final class LettuceScanArgs extends ScanArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceScanArgs() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 */
 	public LettuceScanArgs(final String pattern) {
 		super();
 		match(pattern);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 */
 	public LettuceScanArgs(final byte[] pattern) {
-		this(SafeEncoder.encode(pattern));
+		super();
+		match(pattern);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
 	public LettuceScanArgs(final int count) {
 		super();
 		limit(count);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 * @param count
+	 * 		返回数量
+	 */
 	public LettuceScanArgs(final String pattern, final int count) {
 		this(pattern);
 		limit(count);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 * @param count
+	 * 		返回数量
+	 */
 	public LettuceScanArgs(final byte[] pattern, final int count) {
 		this(pattern);
 		limit(count);
-	}
-
-	public LettuceScanArgs(final long count) {
-		this((int) count);
-	}
-
-	public LettuceScanArgs(final String pattern, final long count) {
-		this(pattern, (int) count);
-	}
-
-	public LettuceScanArgs(final byte[] pattern, final long count) {
-		this(pattern, (int) count);
 	}
 
 }

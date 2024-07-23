@@ -87,7 +87,7 @@ public final class JedisSetParams extends SetParams {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public JedisSetParams(final Boolean keepTtl) {
+	public JedisSetParams(final boolean keepTtl) {
 		super();
 		keepTtl(this, keepTtl);
 	}
@@ -100,7 +100,7 @@ public final class JedisSetParams extends SetParams {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public JedisSetParams(final NxXx nxXx, final Boolean keepTtl) {
+	public JedisSetParams(final NxXx nxXx, final boolean keepTtl) {
 		super();
 		nxxx(this, nxXx);
 		keepTtl(this, keepTtl);
@@ -134,11 +134,9 @@ public final class JedisSetParams extends SetParams {
 	public static JedisSetParams from(final SetArgument setArgument) {
 		final JedisSetParams setParams = new JedisSetParams();
 
-		if(setArgument != null){
-			expx(setParams, setArgument.getType(), setArgument.getExpires());
-			nxxx(setParams, setArgument.getNxXx());
-			keepTtl(setParams, setArgument.isKeepTtl());
-		}
+		expx(setParams, setArgument.getType(), setArgument.getExpires());
+		nxxx(setParams, setArgument.getNxXx());
+		keepTtl(setParams, setArgument.isKeepTtl());
 
 		return setParams;
 	}

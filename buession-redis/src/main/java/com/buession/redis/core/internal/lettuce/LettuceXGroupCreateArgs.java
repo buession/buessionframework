@@ -34,10 +34,19 @@ import io.lettuce.core.XGroupCreateArgs;
  */
 public final class LettuceXGroupCreateArgs extends XGroupCreateArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceXGroupCreateArgs() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param mkstream
+	 * 		-
+	 */
 	public LettuceXGroupCreateArgs(final boolean mkstream) {
 		super();
 		mkstream(mkstream);

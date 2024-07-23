@@ -67,7 +67,7 @@ public final class LettuceSortArgs extends SortArgs {
 	 */
 	public LettuceSortArgs(final byte[] by) {
 		super();
-		by(SafeEncoder.encode(by));
+		by(by);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public final class LettuceSortArgs extends SortArgs {
 	public LettuceSortArgs(final byte[] by, final byte[][] gets) {
 		this(by);
 		if(gets != null){
-			Arrays.stream(gets).forEach((v)->this.get(SafeEncoder.encode(v)));
+			Arrays.stream(gets).forEach(this::get);
 		}
 	}
 
@@ -235,7 +235,7 @@ public final class LettuceSortArgs extends SortArgs {
 	 * 		-
 	 */
 	public LettuceSortArgs(final String by, final String[] gets, final Order order, final Limit limit,
-						   final Boolean alpha) {
+						   final boolean alpha) {
 		this(by, gets, order, limit);
 		alpha(this, alpha);
 	}
@@ -255,9 +255,25 @@ public final class LettuceSortArgs extends SortArgs {
 	 * 		-
 	 */
 	public LettuceSortArgs(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
-						   final Boolean alpha) {
+						   final boolean alpha) {
 		this(by, gets, order, limit);
 		alpha(this, alpha);
+	}
+
+	public LettuceSortArgs by(byte[] pattern) {
+		if(pattern != null){
+			by(SafeEncoder.encode(pattern));
+		}
+
+		return this;
+	}
+
+	public LettuceSortArgs get(byte[] pattern) {
+		if(pattern != null){
+			get(SafeEncoder.encode(pattern));
+		}
+
+		return this;
 	}
 
 	/**

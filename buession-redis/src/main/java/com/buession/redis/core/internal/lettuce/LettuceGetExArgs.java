@@ -50,10 +50,10 @@ public final class LettuceGetExArgs extends GetExArgs {
 	 * @param value
 	 * 		键过期时间
 	 */
-	public LettuceGetExArgs(final GetExArgument.GetExType type, final Long value) {
+	public LettuceGetExArgs(final GetExArgument.GetExType type, final long value) {
 		super();
 
-		if(type != null && value != null){
+		if(type != null){
 			switch(type){
 				case EX:
 					ex(value);

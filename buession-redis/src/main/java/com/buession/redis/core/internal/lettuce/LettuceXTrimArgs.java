@@ -65,9 +65,9 @@ public class LettuceXTrimArgs extends XTrimArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final long limit) {
 		this(maxLenMinId);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -94,9 +94,20 @@ public class LettuceXTrimArgs extends XTrimArgs {
 	 * 		-
 	 */
 	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
-							final Long limit) {
+							final long limit) {
 		this(maxLenMinId, approximateExactTrimming);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXTrimArgs(final long limit) {
+		super();
+		limit(limit);
 	}
 
 	/**
@@ -110,10 +121,8 @@ public class LettuceXTrimArgs extends XTrimArgs {
 	public static LettuceXTrimArgs from(final XTrimArgument xTrimArgument) {
 		final LettuceXTrimArgs xTrimArgs = new LettuceXTrimArgs();
 
-		if(xTrimArgument != null){
-			maxLenMinId(xTrimArgs, xTrimArgument.getMaxLenMinId());
-			Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimArgs::limit);
-		}
+		maxLenMinId(xTrimArgs, xTrimArgument.getMaxLenMinId());
+		Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimArgs::limit);
 
 		return xTrimArgs;
 	}

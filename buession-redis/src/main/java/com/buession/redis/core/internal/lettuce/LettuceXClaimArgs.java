@@ -37,38 +37,93 @@ import java.util.Optional;
  */
 public class LettuceXClaimArgs extends XClaimArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceXClaimArgs() {
 		super();
 	}
 
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime) {
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 */
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires) {
 		super();
-		idleTime(this, idleType, idleTime);
+		idleTime(this, idleType, expires);
 	}
 
-	public LettuceXClaimArgs(final Integer retryCount) {
+	/**
+	 * 构造函数
+	 *
+	 * @param retryCount
+	 * 		重试次数
+	 */
+	public LettuceXClaimArgs(final int retryCount) {
 		super();
-		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+		retryCount(retryCount);
 	}
 
-	public LettuceXClaimArgs(final Boolean force) {
+	/**
+	 * 构造函数
+	 *
+	 * @param force
+	 * 		是否强制
+	 */
+	public LettuceXClaimArgs(final boolean force) {
 		super();
 		force(this, force);
 	}
 
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount) {
-		this(idleType, idleTime);
-		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 * @param retryCount
+	 * 		重试次数
+	 */
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires, final int retryCount) {
+		this(idleType, expires);
+		retryCount(retryCount);
 	}
 
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime, final Boolean force) {
-		this(idleType, idleTime);
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 * @param force
+	 * 		是否强制
+	 */
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires, final boolean force) {
+		this(idleType, expires);
 		force(this, force);
 	}
 
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount,
-							 final Boolean force) {
-		this(idleType, idleTime, retryCount);
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param expires
+	 * 		过期时间
+	 * @param retryCount
+	 * 		重试次数
+	 * @param force
+	 * 		是否强制
+	 */
+	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires, final int retryCount,
+							 final boolean force) {
+		this(idleType, expires, retryCount);
 		force(this, force);
 	}
 
@@ -83,11 +138,9 @@ public class LettuceXClaimArgs extends XClaimArgs {
 	public static LettuceXClaimArgs from(final XClaimArgument xClaimArgument) {
 		final LettuceXClaimArgs xClaimArgs = new LettuceXClaimArgs();
 
-		if(xClaimArgument != null){
-			idleTime(xClaimArgs, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
-			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimArgs::retryCount);
-			force(xClaimArgs, xClaimArgument.isForce());
-		}
+		idleTime(xClaimArgs, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
+		Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimArgs::retryCount);
+		force(xClaimArgs, xClaimArgument.isForce());
 
 		return xClaimArgs;
 	}
@@ -111,12 +164,6 @@ public class LettuceXClaimArgs extends XClaimArgs {
 	private static void force(final LettuceXClaimArgs xClaimArgs, final Boolean force) {
 		if(Boolean.TRUE.equals(force)){
 			xClaimArgs.force();
-		}
-	}
-
-	private static void justId(final LettuceXClaimArgs xClaimArgs, final Boolean justId) {
-		if(Boolean.TRUE.equals(justId)){
-			xClaimArgs.justid();
 		}
 	}
 

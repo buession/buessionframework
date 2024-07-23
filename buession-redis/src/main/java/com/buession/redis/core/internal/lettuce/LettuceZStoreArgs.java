@@ -50,7 +50,6 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 	 */
 	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
 		super();
-
 		if(aggregate != null){
 			switch(aggregate){
 				case MIN:

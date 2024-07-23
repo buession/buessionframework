@@ -27,6 +27,8 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.ZParams;
 
 /**
+ * Jedis {@link ZParams} 扩展
+ *
  * @author Yong.Teng
  */
 public final class JedisZParams extends ZParams {

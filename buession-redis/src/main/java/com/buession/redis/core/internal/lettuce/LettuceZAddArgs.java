@@ -51,7 +51,18 @@ public final class LettuceZAddArgs extends ZAddArgs {
 	 */
 	public LettuceZAddArgs(final NxXx nxXx) {
 		super();
-		nxXx(nxXx);
+		if(nxXx != null){
+			switch(nxXx){
+				case NX:
+					nx();
+					break;
+				case XX:
+					xx();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	/**
@@ -85,8 +96,7 @@ public final class LettuceZAddArgs extends ZAddArgs {
 	 * 		更新新的分值方式
 	 */
 	public LettuceZAddArgs(final NxXx nxXx, final GtLt gtLt) {
-		super();
-		nxXx(nxXx);
+		this(nxXx);
 		gtLt(gtLt);
 	}
 
@@ -99,8 +109,7 @@ public final class LettuceZAddArgs extends ZAddArgs {
 	 * 		是否返回变更成员的数量
 	 */
 	public LettuceZAddArgs(final NxXx nxXx, final boolean ch) {
-		super();
-		nxXx(nxXx);
+		this(nxXx);
 		ch(ch);
 	}
 
@@ -113,8 +122,7 @@ public final class LettuceZAddArgs extends ZAddArgs {
 	 * 		是否返回变更成员的数量
 	 */
 	public LettuceZAddArgs(final GtLt gtLt, final boolean ch) {
-		super();
-		gtLt(gtLt);
+		this(gtLt);
 		ch(ch);
 	}
 
@@ -129,31 +137,8 @@ public final class LettuceZAddArgs extends ZAddArgs {
 	 * 		是否返回变更成员的数量
 	 */
 	public LettuceZAddArgs(final NxXx nxXx, final GtLt gtLt, final boolean ch) {
-		super();
-		nxXx(nxXx);
-		gtLt(gtLt);
+		this(nxXx, gtLt);
 		ch(ch);
-	}
-
-	/**
-	 * 设置更新成员方式
-	 *
-	 * @param nxXx
-	 * 		更新成员方式
-	 */
-	private void nxXx(final NxXx nxXx) {
-		if(nxXx != null){
-			switch(nxXx){
-				case NX:
-					nx();
-					break;
-				case XX:
-					xx();
-					break;
-				default:
-					break;
-			}
-		}
 	}
 
 	/**

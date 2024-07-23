@@ -125,7 +125,7 @@ public final class JedisZRangeParams extends ZRangeParams {
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisZRangeParams(final int min, final long max, final long offset, final int count) {
+	public JedisZRangeParams(final long min, final long max, final long offset, final int count) {
 		this(min, max);
 		limit((int) offset, count);
 	}

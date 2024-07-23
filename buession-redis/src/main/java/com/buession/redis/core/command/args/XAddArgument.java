@@ -164,6 +164,8 @@ public class XAddArgument {
 	 *
 	 * @param maxLenMinId
 	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
 	 * @param limit
 	 * 		-
 	 */

@@ -62,14 +62,55 @@ public final class JedisRestoreParams extends RestoreParams {
 	 * 		是否替换已存在 key
 	 * @param absTtl
 	 * 		-
+	 */
+	public JedisRestoreParams(final boolean replace, final boolean absTtl) {
+		this(replace);
+		absTtl(this, absTtl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public JedisRestoreParams(final boolean replace, final long idleTime, final long frequency) {
+		this(replace);
+		idleTime(idleTime);
+		frequency(frequency);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param absTtl
+	 * 		-
 	 * @param idleTime
 	 * 		-
 	 * @param frequency
 	 * 		-
 	 */
 	public JedisRestoreParams(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
-		this(replace);
+		this(replace, idleTime, frequency);
 		absTtl(this, absTtl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public JedisRestoreParams(final long idleTime, final long frequency) {
+		super();
 		idleTime(idleTime);
 		frequency(frequency);
 	}

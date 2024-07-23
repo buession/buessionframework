@@ -31,6 +31,7 @@ import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.XAddArgs;
+import redis.clients.jedis.StreamEntryID;
 
 import java.util.Optional;
 
@@ -67,7 +68,8 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		Stream Id
 	 */
 	public LettuceXAddArgs(final byte[] id) {
-		this(SafeEncoder.encode(id));
+		super();
+		id(id);
 	}
 
 	/**
@@ -77,7 +79,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		Stream Id
 	 */
 	public LettuceXAddArgs(final StreamEntryId id) {
-		this((new StreamEntryIdConverter()).convert(id));
+		this(id.toString());
 	}
 
 	/**
@@ -127,7 +129,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final String id, final Boolean noMkStream) {
+	public LettuceXAddArgs(final String id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -140,7 +142,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final Boolean noMkStream) {
+	public LettuceXAddArgs(final byte[] id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -153,7 +155,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final Boolean noMkStream) {
+	public LettuceXAddArgs(final StreamEntryId id, final boolean noMkStream) {
 		this(id);
 		noMkStream(this, noMkStream);
 	}
@@ -179,9 +181,9 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final Long limit) {
+	public LettuceXAddArgs(final byte[] id, final long limit) {
 		this(id);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -192,9 +194,9 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final Long limit) {
+	public LettuceXAddArgs(final StreamEntryId id, final long limit) {
 		this(id);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -207,7 +209,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -222,7 +224,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -237,7 +239,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param noMkStream
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream) {
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream) {
 		this(id, maxLenMinId);
 		noMkStream(this, noMkStream);
 	}
@@ -249,15 +251,42 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		Stream Id
 	 * @param maxLenMinId
 	 * 		-
-	 * @param noMkStream
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final long limit) {
+		this(id, maxLenMinId);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
 	 * 		-
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
-		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final long limit) {
+		this(id, maxLenMinId);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final long limit) {
+		this(id, maxLenMinId);
+		limit(limit);
 	}
 
 	/**
@@ -272,10 +301,10 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -290,10 +319,28 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param limit
 	 * 		-
 	 */
-	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final Boolean noMkStream,
-						   final Long limit) {
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param noMkStream
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId, final boolean noMkStream,
+						   final long limit) {
+		this(id, maxLenMinId, noMkStream);
+		limit(limit);
 	}
 
 	/**
@@ -357,7 +404,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		-
 	 */
 	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
 	}
@@ -375,7 +422,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		-
 	 */
 	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
 	}
@@ -393,9 +440,63 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		-
 	 */
 	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream) {
 		this(id, maxLenMinId, approximateExactTrimming);
 		noMkStream(this, noMkStream);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
+		this(id, maxLenMinId, approximateExactTrimming);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
+		this(id, maxLenMinId, approximateExactTrimming);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		Stream Id
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
+						   final ApproximateExactTrimming approximateExactTrimming, final long limit) {
+		this(id, maxLenMinId, approximateExactTrimming);
+		limit(limit);
 	}
 
 	/**
@@ -413,10 +514,10 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		-
 	 */
 	public LettuceXAddArgs(final String id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -434,10 +535,10 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		-
 	 */
 	public LettuceXAddArgs(final byte[] id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -455,15 +556,23 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * 		-
 	 */
 	public LettuceXAddArgs(final StreamEntryId id, final MaxLenMinId<?> maxLenMinId,
-						   final ApproximateExactTrimming approximateExactTrimming, final Boolean noMkStream,
-						   final Long limit) {
+						   final ApproximateExactTrimming approximateExactTrimming, final boolean noMkStream,
+						   final long limit) {
 		this(id, maxLenMinId, approximateExactTrimming, noMkStream);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	public LettuceXAddArgs id(final StreamEntryId id) {
 		if(id != null){
 			id(id.toString());
+		}
+
+		return this;
+	}
+
+	public LettuceXAddArgs id(byte[] id) {
+		if(id != null){
+			id(SafeEncoder.encode(id));
 		}
 
 		return this;

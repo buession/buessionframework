@@ -47,7 +47,7 @@ public final class LettuceCopyArgs extends CopyArgs {
 	 * @param destinationDb
 	 * 		目标 DB
 	 */
-	public LettuceCopyArgs(final long destinationDb) {
+	public LettuceCopyArgs(final int destinationDb) {
 		super();
 		destinationDb(destinationDb);
 	}
@@ -71,7 +71,7 @@ public final class LettuceCopyArgs extends CopyArgs {
 	 * @param replace
 	 * 		是否替换已存在 key
 	 */
-	public LettuceCopyArgs(final long destinationDb, final boolean replace) {
+	public LettuceCopyArgs(final int destinationDb, final boolean replace) {
 		this(destinationDb);
 		replace(replace);
 	}

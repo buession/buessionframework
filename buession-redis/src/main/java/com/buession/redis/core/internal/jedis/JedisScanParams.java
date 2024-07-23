@@ -82,8 +82,7 @@ public final class JedisScanParams extends ScanParams {
 	 * 		返回数量
 	 */
 	public JedisScanParams(final String pattern, final int count) {
-		super();
-		match(pattern);
+		this(pattern);
 		count(count);
 	}
 
@@ -96,8 +95,7 @@ public final class JedisScanParams extends ScanParams {
 	 * 		返回数量
 	 */
 	public JedisScanParams(final byte[] pattern, final int count) {
-		super();
-		match(pattern);
+		this(pattern);
 		count(count);
 	}
 
