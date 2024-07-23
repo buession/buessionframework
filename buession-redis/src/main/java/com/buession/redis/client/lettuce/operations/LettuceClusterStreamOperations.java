@@ -41,6 +41,8 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.args.ApproximateExactTrimming;
 import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.args.XReadArgument;
+import com.buession.redis.core.command.args.XReadGroupArgument;
 import com.buession.redis.core.command.args.XTrimArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.PendingMessageConverter;
@@ -57,6 +59,7 @@ import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXPendingArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
+import com.buession.redis.core.internal.lettuce.LettuceXReadGroupArgs;
 import com.buession.redis.core.internal.lettuce.utils.StreamOffsetUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
@@ -69,6 +72,7 @@ import io.lettuce.core.XGroupCreateArgs;
 import io.lettuce.core.XReadArgs;
 import io.lettuce.core.models.stream.PendingMessage;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -144,7 +148,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
+															final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -154,7 +158,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
+															final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -184,7 +188,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 																	final byte[] consumerName, final int minIdleTime,
-																	final StreamEntryId start, final long count) {
+																	final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -194,7 +198,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
-																	final StreamEntryId start, final long count) {
+																	final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -446,7 +450,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count) {
+	public StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full).put("count", count);
 		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
@@ -525,7 +529,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count) {
+										final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("start", start).put("end", end).put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());
@@ -547,7 +551,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count) {
+										final StreamEntryId start, final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("start", start).put("end", end).put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());
@@ -570,7 +574,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count, final byte[] consumerName) {
+										final StreamEntryId end, final int count, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
@@ -582,7 +586,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count,
+										final StreamEntryId start, final StreamEntryId end, final int count,
 										final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
@@ -617,7 +621,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
-									final long count) {
+									final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final Range<String> range = Range.create(start.toString(), end.toString());
 		final Limit limit = Limit.from(count);
@@ -646,27 +650,10 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	}
 
 	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("count", count).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
-
-		return xRead(xReadArgs, streams, args);
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("block", block).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
-
-		return xRead(xReadArgs, streams, args);
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
-													  final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("count", count).put("block", block)
-				.put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
+	public List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
+													  final XReadArgument xReadArgument) {
+		final CommandArguments args = CommandArguments.create("streams", streams).put("xReadArgument", xReadArgument);
+		final XReadArgs xReadArgs = LettuceXReadArgs.from(xReadArgument);
 
 		return xRead(xReadArgs, streams, args);
 	}
@@ -689,40 +676,22 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final Map<String, StreamEntryId> streams) {
+														   final Map<String, StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
+				.put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
+		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
 	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final Map<byte[], StreamEntryId> streams) {
+														   final Map<byte[], StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final int block, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("block", block).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final int block, final Map<byte[], StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("block", block).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
+				.put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
+		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
@@ -733,7 +702,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+		final XReadArgs xReadArgs = new LettuceXReadGroupArgs(isNoAck);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
@@ -744,95 +713,31 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
 				.put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+		final XReadArgs xReadArgs = new LettuceXReadGroupArgs(isNoAck);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final int block,
-														   final Map<String, StreamEntryId> streams) {
+														   final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("block", block).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
+				.put("isNoAck", isNoAck).put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
+		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument).noack(isNoAck);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
 	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final int block,
-														   final Map<byte[], StreamEntryId> streams) {
+														   final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("block", block).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final int block, final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final int block, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final int block, final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
-
-		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final int block, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
-		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
+				.put("isNoAck", isNoAck).put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
+		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument).noack(isNoAck);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
@@ -861,7 +766,7 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 
 	@Override
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
-									   final long count) {
+									   final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start)
 				.put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());

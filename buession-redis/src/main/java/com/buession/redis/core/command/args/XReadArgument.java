@@ -22,83 +22,77 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
-
-import redis.clients.jedis.params.ScanParams;
+package com.buession.redis.core.command.args;
 
 /**
- * Jedis {@link ScanParams} 扩展
+ * {@code XREAD} 命令参数
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public final class JedisScanParams extends ScanParams {
+public class XReadArgument {
 
 	/**
-	 * 构造函数
+	 * 返回数量
 	 */
-	public JedisScanParams() {
-		super();
-	}
+	private Integer count;
 
 	/**
-	 * 构造函数
+	 * 阻塞时间（单位：毫秒）
+	 */
+	private Integer block;
+
+	/**
+	 * 返回数量
 	 *
-	 * @param pattern
-	 * 		匹配模式
+	 * @return 返回数量
 	 */
-	public JedisScanParams(final String pattern) {
-		super();
-		match(pattern);
+	public Integer getCount() {
+		return count;
 	}
 
 	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
-	public JedisScanParams(final byte[] pattern) {
-		super();
-		match(pattern);
-	}
-
-	/**
-	 * 构造函数
+	 * 设置返回数量
 	 *
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisScanParams(final int count) {
-		super();
-		count(count);
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	/**
-	 * 构造函数
+	 * 返回阻塞时间（单位：毫秒）
 	 *
-	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
+	 * @return 阻塞时间
 	 */
-	public JedisScanParams(final String pattern, final int count) {
-		super();
-		match(pattern);
-		count(count);
+	public Integer getBlock() {
+		return block;
 	}
 
 	/**
-	 * 构造函数
+	 * 设置阻塞时间
 	 *
-	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
 	 */
-	public JedisScanParams(final byte[] pattern, final int count) {
-		super();
-		match(pattern);
-		count(count);
+	public void setBlock(Integer block) {
+		this.block = block;
+	}
+
+	@Override
+	public String toString() {
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(count != null){
+			builder.add("COUNT", count);
+		}
+
+		if(block != null){
+			builder.add("BLOCK", block);
+		}
+
+		return builder.build();
 	}
 
 }

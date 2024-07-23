@@ -235,18 +235,16 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	public static JedisGeoRadiusParam from(final GeoRadiusArgument geoRadiusArgument) {
 		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
 
-		if(geoRadiusArgument != null){
-			withCoord(geoRadiusParam, geoRadiusArgument.isWithCoord());
-			withDist(geoRadiusParam, geoRadiusArgument.isWithDist());
-			withHash(geoRadiusParam, geoRadiusArgument.isWithHash());
-			sort(geoRadiusParam, geoRadiusArgument.getOrder());
+		withCoord(geoRadiusParam, geoRadiusArgument.isWithCoord());
+		withDist(geoRadiusParam, geoRadiusArgument.isWithDist());
+		withHash(geoRadiusParam, geoRadiusArgument.isWithHash());
+		sort(geoRadiusParam, geoRadiusArgument.getOrder());
 
-			if(geoRadiusArgument.getCount() != null){
-				if(geoRadiusArgument.isAny() != null){
-					geoRadiusParam.count(geoRadiusArgument.getCount(), geoRadiusArgument.isAny());
-				}else{
-					geoRadiusParam.count(geoRadiusArgument.getCount());
-				}
+		if(geoRadiusArgument.getCount() != null){
+			if(geoRadiusArgument.isAny() != null){
+				geoRadiusParam.count(geoRadiusArgument.getCount(), geoRadiusArgument.isAny());
+			}else{
+				geoRadiusParam.count(geoRadiusArgument.getCount());
 			}
 		}
 

@@ -69,6 +69,19 @@ public class XTrimArgument {
 	 *
 	 * @param maxLenMinId
 	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 */
+	public XTrimArgument(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
+		this(maxLenMinId);
+		this.approximateExactTrimming = approximateExactTrimming;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
 	 * @param limit
 	 * 		-
 	 */
@@ -77,11 +90,27 @@ public class XTrimArgument {
 		this.limit = limit;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param maxLenMinId
+	 * 		-
+	 * @param approximateExactTrimming
+	 * 		-
+	 * @param limit
+	 * 		-
+	 */
+	public XTrimArgument(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
+						 final Long limit) {
+		this(maxLenMinId, approximateExactTrimming);
+		this.limit = limit;
+	}
+
 	public MaxLenMinId<?> getMaxLenMinId() {
 		return maxLenMinId;
 	}
 
-	public void setMaxLenMinId(MaxLenMinId<?> maxLenMinId) {
+	public void setMaxLenMinId(final MaxLenMinId<?> maxLenMinId) {
 		this.maxLenMinId = maxLenMinId;
 	}
 
@@ -89,7 +118,7 @@ public class XTrimArgument {
 		return approximateExactTrimming;
 	}
 
-	public void setApproximateExactTrimming(ApproximateExactTrimming approximateExactTrimming) {
+	public void setApproximateExactTrimming(final ApproximateExactTrimming approximateExactTrimming) {
 		this.approximateExactTrimming = approximateExactTrimming;
 	}
 
@@ -97,7 +126,7 @@ public class XTrimArgument {
 		return limit;
 	}
 
-	public void setLimit(Long limit) {
+	public void setLimit(final Long limit) {
 		this.limit = limit;
 	}
 

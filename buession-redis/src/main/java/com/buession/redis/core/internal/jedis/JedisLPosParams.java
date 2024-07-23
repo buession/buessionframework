@@ -81,10 +81,8 @@ public final class JedisLPosParams extends LPosParams {
 	public static JedisLPosParams from(final LPosArgument lPosArgument) {
 		final JedisLPosParams lPosParams = new JedisLPosParams();
 
-		if(lPosArgument != null){
-			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
-			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
-		}
+		Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
+		Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
 
 		return lPosParams;
 	}

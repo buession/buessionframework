@@ -267,13 +267,11 @@ public final class JedisSortingParams extends SortingParams {
 	public static JedisSortingParams from(final SortArgument sortArgument) {
 		final JedisSortingParams sortingParams = new JedisSortingParams();
 
-		if(sortArgument != null){
-			Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
-			Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
-			order(sortingParams, sortArgument.getOrder());
-			limit(sortingParams, sortArgument.getLimit());
-			alpha(sortingParams, sortArgument.isAlpha());
-		}
+		Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
+		Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
+		order(sortingParams, sortArgument.getOrder());
+		limit(sortingParams, sortArgument.getLimit());
+		alpha(sortingParams, sortArgument.isAlpha());
 
 		return sortingParams;
 	}

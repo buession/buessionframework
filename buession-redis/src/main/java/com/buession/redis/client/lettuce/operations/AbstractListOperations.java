@@ -75,12 +75,12 @@ public abstract class AbstractListOperations<C extends LettuceRedisClient> exten
 	}
 
 	@Override
-	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count) {
 		return lPos(SafeEncoder.encode(key), SafeEncoder.encode(element), lPosArgument, count);
 	}
 
 	@Override
-	public Long lRem(final String key, final String value, final long count) {
+	public Long lRem(final String key, final String value, final int count) {
 		return lRem(SafeEncoder.encode(key), SafeEncoder.encode(value), count);
 	}
 

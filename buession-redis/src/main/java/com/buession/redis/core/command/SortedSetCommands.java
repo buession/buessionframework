@@ -80,7 +80,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 弹出的元素和分数列表
 	 */
-	List<Tuple> zPopMin(final String key, final long count);
+	List<Tuple> zPopMin(final String key, final int count);
 
 	/**
 	 * 删除并返回有序集合 key 中的 count 个具有最低得分的成员。
@@ -94,7 +94,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 弹出的元素和分数列表
 	 */
-	List<Tuple> zPopMin(final byte[] key, final long count);
+	List<Tuple> zPopMin(final byte[] key, final int count);
 
 	/**
 	 * 删除并返回有序集合 key 中的 1 个具有最高得分的成员。
@@ -126,7 +126,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 弹出的元素和分数列表
 	 */
-	List<Tuple> zPopMax(final String key, final long count);
+	List<Tuple> zPopMax(final String key, final int count);
 
 	/**
 	 * 删除并返回有序集合 key 中的 count 个具有最高得分的成员。
@@ -138,7 +138,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 弹出的元素和分数列表
 	 */
-	List<Tuple> zPopMax(final byte[] key, final long count);
+	List<Tuple> zPopMax(final byte[] key, final int count);
 
 	/**
 	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
@@ -567,40 +567,6 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
 	Long zCount(final byte[] key, final double min, final double max);
-
-	/**
-	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc.com/sorted_set/zcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return score 值在 min 和 max 之间的成员的数量
-	 */
-	@Deprecated
-	Long zCount(final String key, final String min, final String max);
-
-	/**
-	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc.com/sorted_set/zcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return score 值在 min 和 max 之间的成员的数量
-	 */
-	@Deprecated
-	Long zCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -1095,40 +1061,6 @@ public interface SortedSetCommands extends RedisCommands {
 	Long zLexCount(final byte[] key, final double min, final double max);
 
 	/**
-	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zlexcount.html" target="_blank">http://redisdoc.com/sorted_set/zlexcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
-	 */
-	@Deprecated
-	Long zLexCount(final String key, final String min, final String max);
-
-	/**
-	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zlexcount.html" target="_blank">http://redisdoc.com/sorted_set/zlexcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
-	 */
-	@Deprecated
-	Long zLexCount(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
 	 * 返回有序集中指定成员的 members 的 scores
 	 *
 	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zmscore.html" target="_blank">https://www.redis.com.cn/commands/zmscore.html</a></p>
@@ -1192,7 +1124,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合 key 中的随机元素
 	 */
-	List<String> zRandMember(final String key, final long count);
+	List<String> zRandMember(final String key, final int count);
 
 	/**
 	 * 返回有序集合 key 中的 count 个随机元素
@@ -1206,7 +1138,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合 key 中的随机元素
 	 */
-	List<byte[]> zRandMember(final byte[] key, final long count);
+	List<byte[]> zRandMember(final byte[] key, final int count);
 
 	/**
 	 * 返回有序集合 key 中的 count 个随机元素及 score
@@ -1220,7 +1152,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合 key 中的随机元素
 	 */
-	List<Tuple> zRandMemberWithScores(final String key, final long count);
+	List<Tuple> zRandMemberWithScores(final String key, final int count);
 
 	/**
 	 * 返回有序集合 key 中的 count 个随机元素及 score
@@ -1234,7 +1166,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合 key 中的随机元素
 	 */
-	List<Tuple> zRandMemberWithScores(final byte[] key, final long count);
+	List<Tuple> zRandMemberWithScores(final byte[] key, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1352,7 +1284,7 @@ public interface SortedSetCommands extends RedisCommands {
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的从 offset 开始的 count 个成员
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
 	 *
@@ -1362,29 +1294,14 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		最小 score
 	 * @param max
 	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
 	 *
-	 * @return 包含了有序集合在指定范围内的成员的列表
+	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
 	 */
-	@Deprecated
-	List<String> zRangeByLex(final String key, final String min, final String max);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 包含了有序集合在指定范围内的成员的列表
-	 */
-	@Deprecated
-	List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max);
+	List<String> zRangeByLex(final String key, final double min, final double max, final long offset, final int count);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -1405,72 +1322,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
 	 */
-	List<String> zRangeByLex(final String key, final double min, final double max, final long offset, final long count);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的从 offset 开始的 count 个成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
-	 */
-	List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset, final long count);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的从 offset 开始的 count 个成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
-	 */
-	@Deprecated
-	List<String> zRangeByLex(final String key, final String min, final String max, final long offset, final long count);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的从 offset 开始的 count 个成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
-	 */
-	@Deprecated
-	List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset, final long count);
+	List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员；
@@ -1507,43 +1359,6 @@ public interface SortedSetCommands extends RedisCommands {
 	List<byte[]> zRangeByScore(final byte[] key, final double min, final double max);
 
 	/**
-	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<String> zRangeByScore(final String key, final String min, final String max);
-
-	/**
-	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
 	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
 	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
 	 *
@@ -1563,7 +1378,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
 	 */
 	List<String> zRangeByScore(final String key, final double min, final double max, final long offset,
-							   final long count);
+							   final int count);
 
 	/**
 	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -1585,53 +1400,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
 	 */
 	List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
-							   final long count);
-
-	/**
-	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
-	 */
-	@Deprecated
-	List<String> zRangeByScore(final String key, final String min, final String max, final long offset,
-							   final long count);
-
-	/**
-	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
-	 */
-	@Deprecated
-	List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-							   final long count);
+							   final int count);
 
 	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员；
@@ -1668,42 +1437,6 @@ public interface SortedSetCommands extends RedisCommands {
 	List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max);
 
 	/**
-	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，带有 score 的有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max);
-
-	/**
-	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，带有 score 的有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
 	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
 	 *
@@ -1723,7 +1456,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
-										final long count);
+										final int count);
 
 	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -1745,53 +1478,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-										final long count);
-
-	/**
-	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
-										final long count);
-
-	/**
-	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
-	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										final long count);
+										final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1930,7 +1617,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
-					 final long count);
+					 final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1953,7 +1640,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
-					 final long count);
+					 final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -2024,7 +1711,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-					 final long offset, final long count);
+					 final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -2049,7 +1736,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-					 final long offset, final long count);
+					 final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -2074,7 +1761,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
-					 final long offset, final long count);
+					 final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -2099,7 +1786,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
-					 final long offset, final long count);
+					 final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -2126,7 +1813,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-					 final boolean rev, final long offset, final long count);
+					 final boolean rev, final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -2153,7 +1840,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return The number of elements in the resulting sorted set
 	 */
 	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-					 final boolean rev, final long offset, final long count);
+					 final boolean rev, final long offset, final int count);
 
 	/**
 	 * 获取有序集 key 中成员 member 的排名；其中有序集成员按 score 值递增（从小到大）顺序排列
@@ -2246,40 +1933,6 @@ public interface SortedSetCommands extends RedisCommands {
 	Long zRemRangeByLex(final byte[] key, final double min, final double max);
 
 	/**
-	 * 对于一个所有成员的分值都相同的有序集合键 key 来说，这个命令会移除该集合中，成员介于 min 和 max 范围内的所有元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zremrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zremrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 被移除的元素数量
-	 */
-	@Deprecated
-	Long zRemRangeByLex(final String key, final String min, final String max);
-
-	/**
-	 * 对于一个所有成员的分值都相同的有序集合键 key 来说，这个命令会移除该集合中，成员介于 min 和 max 范围内的所有元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zremrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zremrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 被移除的元素数量
-	 */
-	@Deprecated
-	Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
 	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zremrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zremrangebyscore.html</a></p>
@@ -2310,40 +1963,6 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 被移除成员的数量
 	 */
 	Long zRemRangeByScore(final byte[] key, final double min, final double max);
-
-	/**
-	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zremrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zremrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 被移除成员的数量
-	 */
-	@Deprecated
-	Long zRemRangeByScore(final String key, final String min, final String max);
-
-	/**
-	 * 移除有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zremrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zremrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 被移除成员的数量
-	 */
-	@Deprecated
-	Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
 	 * 移除有序集 key 中，指定排名（rank）区间内的所有成员；
@@ -2495,42 +2114,6 @@ public interface SortedSetCommands extends RedisCommands {
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 包含了有序集合在指定范围内的成员列表
-	 */
-	@Deprecated
-	List<String> zRevRangeByLex(final String key, final String min, final String max);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 包含了有序集合在指定范围内的成员列表
-	 */
-	@Deprecated
-	List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
 	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间从 offset 开始的 count 个成员
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
@@ -2549,7 +2132,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
 	List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
-								final long count);
+								final int count);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -2571,53 +2154,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
 	List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final long offset,
-								final long count);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间从 offset 开始的 count 个成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 包含了有序集合在指定范围内的成员列表
-	 */
-	@Deprecated
-	List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
-								final long count);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间从 offset 开始的 count 个成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 包含了有序集合在指定范围内的成员列表
-	 */
-	@Deprecated
-	List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-								final long count);
+								final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员；
@@ -2656,44 +2193,6 @@ public interface SortedSetCommands extends RedisCommands {
 	List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max);
 
 	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<String> zRevRangeByScore(final String key, final String min, final String max);
-
-	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
 	 * 有序集成员按 score 值递减（从大到小）的次序排列；
 	 * 具有相同 score 值的成员按字典序的逆序排列
@@ -2714,7 +2213,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	List<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
-								  final long count);
+								  final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -2737,55 +2236,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
-								  final long count);
-
-	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
-								  final long count);
-
-	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-								  final long count);
+								  final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的带有 score 的所有的成员；
@@ -2824,44 +2275,6 @@ public interface SortedSetCommands extends RedisCommands {
 	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max);
 
 	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的带有 score 的所有的成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max);
-
-	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的带有 score 的所有的成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max);
-
-	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
 	 * 有序集成员按 score 值递减（从大到小）的次序排列；
 	 * 具有相同 score 值的成员按字典序的逆序排列
@@ -2882,7 +2295,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
-										   final long count);
+										   final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
@@ -2905,55 +2318,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-										   final long count);
-
-	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
-										   final long count);
-
-	/**
-	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
-	 * 有序集成员按 score 值递减（从大到小）的次序排列；
-	 * 具有相同 score 值的成员按字典序的逆序排列
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 指定区间内，有序集成员的列表
-	 */
-	@Deprecated
-	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										   final long count);
+										   final int count);
 
 	/**
 	 * 获取有序集 key 中成员 member 的排名。其中有序集成员按 score 值递减（从大到小）排序
@@ -3119,7 +2484,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<Tuple>> zScan(final String key, final long cursor, final long count);
+	ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3135,7 +2500,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final long count);
+	ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3151,7 +2516,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count);
+	ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3167,7 +2532,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count);
+	ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3185,7 +2550,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final long count);
+	ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3203,7 +2568,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final long count);
+	ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3221,7 +2586,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final long count);
+	ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代有序集 key 中的键值对
@@ -3239,7 +2604,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count);
+	ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 获取有序集 key 中，成员 member 的 score 值

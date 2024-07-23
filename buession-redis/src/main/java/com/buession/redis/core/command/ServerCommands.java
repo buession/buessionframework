@@ -211,7 +211,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL security events
 	 */
-	List<AclLog> aclLog(final long count);
+	List<AclLog> aclLog(final int count);
 
 	/**
 	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
@@ -799,7 +799,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of slow log entries
 	 */
-	List<SlowLog> slowLogGet(final long count);
+	List<SlowLog> slowLogGet(final int count);
 
 	/**
 	 * This command returns the current number of entries in the slow log

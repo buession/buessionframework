@@ -22,44 +22,26 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce;
 
-import redis.clients.jedis.params.ScanParams;
+import com.buession.redis.core.command.args.XReadGroupArgument;
+import io.lettuce.core.XReadArgs;
+
+import java.util.Optional;
 
 /**
- * Jedis {@link ScanParams} 扩展
+ * Lettuce {@link XReadArgs} 扩展
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public final class JedisScanParams extends ScanParams {
+public final class LettuceXReadGroupArgs extends XReadArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public JedisScanParams() {
+	public LettuceXReadGroupArgs() {
 		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
-	public JedisScanParams(final String pattern) {
-		super();
-		match(pattern);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
-	public JedisScanParams(final byte[] pattern) {
-		super();
-		match(pattern);
 	}
 
 	/**
@@ -68,7 +50,7 @@ public final class JedisScanParams extends ScanParams {
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisScanParams(final int count) {
+	public LettuceXReadGroupArgs(final int count) {
 		super();
 		count(count);
 	}
@@ -76,29 +58,71 @@ public final class JedisScanParams extends ScanParams {
 	/**
 	 * 构造函数
 	 *
-	 * @param pattern
-	 * 		匹配模式
 	 * @param count
 	 * 		返回数量
+	 * @param block
+	 * 		阻塞时间
 	 */
-	public JedisScanParams(final String pattern, final int count) {
-		super();
-		match(pattern);
-		count(count);
+	public LettuceXReadGroupArgs(final int count, final int block) {
+		this(count);
+		block(block);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param pattern
-	 * 		匹配模式
+	 * @param noAck
+	 * 		-
+	 */
+	public LettuceXReadGroupArgs(final boolean noAck) {
+		super();
+		noack(noAck);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param noAck
+	 * 		-
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisScanParams(final byte[] pattern, final int count) {
-		super();
-		match(pattern);
-		count(count);
+	public LettuceXReadGroupArgs(final boolean noAck, final int count) {
+		this(count);
+		noack(noAck);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param noAck
+	 * 		-
+	 * @param count
+	 * 		返回数量
+	 * @param block
+	 * 		阻塞时间
+	 */
+	public LettuceXReadGroupArgs(final boolean noAck, final int count, final int block) {
+		this(block, count);
+		noack(noAck);
+	}
+
+	/**
+	 * 从 {@link XReadGroupArgument} 创建 {@link XReadArgs} 实例
+	 *
+	 * @param xReadArgument
+	 *        {@link XReadGroupArgument}
+	 *
+	 * @return {@link LettuceXReadGroupArgs} 实例
+	 */
+	public static LettuceXReadGroupArgs from(final XReadGroupArgument xReadArgument) {
+		final LettuceXReadGroupArgs xReadArgs = new LettuceXReadGroupArgs();
+
+		Optional.ofNullable(xReadArgument.getCount()).ifPresent(xReadArgs::count);
+		Optional.ofNullable(xReadArgument.getBlock()).ifPresent(xReadArgs::block);
+		Optional.ofNullable(xReadArgument.isNoAck()).ifPresent(xReadArgs::noack);
+
+		return xReadArgs;
 	}
 
 }

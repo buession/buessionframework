@@ -36,10 +36,19 @@ import redis.clients.jedis.params.MigrateParams;
  */
 public final class JedisMigrateParams extends MigrateParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisMigrateParams() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param migrateOperation
+	 * 		迁移方式
+	 */
 	public JedisMigrateParams(final MigrateOperation migrateOperation) {
 		super();
 		switch(migrateOperation){
@@ -54,38 +63,102 @@ public final class JedisMigrateParams extends MigrateParams {
 		}
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final String password) {
 		super();
 		auth(password);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final byte[] password) {
 		this(SafeEncoder.encode(password));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final String username, final String password) {
 		super();
 		auth2(username, password);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final byte[] username, final byte[] password) {
 		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param migrateOperation
+	 * 		迁移方式
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final MigrateOperation migrateOperation, final String password) {
 		this(migrateOperation);
 		auth(password);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param migrateOperation
+	 * 		迁移方式
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(password));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param migrateOperation
+	 * 		迁移方式
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final MigrateOperation migrateOperation, final String username, final String password) {
 		this(migrateOperation);
 		auth2(username, password);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param migrateOperation
+	 * 		迁移方式
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
 	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] username, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}

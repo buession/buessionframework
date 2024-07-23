@@ -101,24 +101,24 @@ public abstract class AbstractHashOperations<C extends LettuceRedisClient> exten
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count) {
 		return hScan(key, Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												 final long count) {
+												 final int count) {
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final long count) {
+												 final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 

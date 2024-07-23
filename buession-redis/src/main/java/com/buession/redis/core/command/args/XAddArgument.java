@@ -195,7 +195,7 @@ public class XAddArgument {
 		return maxLenMinId;
 	}
 
-	public void setMaxLenMinId(MaxLenMinId<?> maxLenMinId) {
+	public void setMaxLenMinId(final MaxLenMinId<?> maxLenMinId) {
 		this.maxLenMinId = maxLenMinId;
 	}
 
@@ -203,7 +203,7 @@ public class XAddArgument {
 		return approximateExactTrimming;
 	}
 
-	public void setApproximateExactTrimming(ApproximateExactTrimming approximateExactTrimming) {
+	public void setApproximateExactTrimming(final ApproximateExactTrimming approximateExactTrimming) {
 		this.approximateExactTrimming = approximateExactTrimming;
 	}
 
@@ -219,7 +219,7 @@ public class XAddArgument {
 		this.noMkStream = true;
 	}
 
-	public void setNoMkStream(Boolean noMkStream) {
+	public void setNoMkStream(final Boolean noMkStream) {
 		this.noMkStream = noMkStream;
 	}
 
@@ -227,7 +227,7 @@ public class XAddArgument {
 		return limit;
 	}
 
-	public void setLimit(Long limit) {
+	public void setLimit(final Long limit) {
 		this.limit = limit;
 	}
 

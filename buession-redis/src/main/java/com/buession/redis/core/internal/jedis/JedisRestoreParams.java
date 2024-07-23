@@ -85,12 +85,10 @@ public final class JedisRestoreParams extends RestoreParams {
 	public static JedisRestoreParams from(final RestoreArgument restoreArgument) {
 		final JedisRestoreParams restoreParams = new JedisRestoreParams();
 
-		if(restoreArgument != null){
-			replace(restoreParams, restoreArgument.isReplace());
-			absTtl(restoreParams, restoreArgument.isAbsTtl());
-			Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreParams::idleTime);
-			Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreParams::frequency);
-		}
+		replace(restoreParams, restoreArgument.isReplace());
+		absTtl(restoreParams, restoreArgument.isAbsTtl());
+		Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreParams::idleTime);
+		Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreParams::frequency);
 
 		return restoreParams;
 	}

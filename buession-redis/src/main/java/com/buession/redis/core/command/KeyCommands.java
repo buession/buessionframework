@@ -1085,7 +1085,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回指定数量的数据库键
 	 */
-	ScanResult<List<String>> scan(final long cursor, final long count);
+	ScanResult<List<String>> scan(final long cursor, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1099,7 +1099,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回指定数量的数据库键
 	 */
-	ScanResult<List<String>> scan(final String cursor, final long count);
+	ScanResult<List<String>> scan(final String cursor, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1114,7 +1114,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回指定数量的数据库键
 	 */
-	ScanResult<List<byte[]>> scan(final byte[] cursor, final long count);
+	ScanResult<List<byte[]>> scan(final byte[] cursor, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1130,7 +1130,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的键
 	 */
-	ScanResult<List<String>> scan(final long cursor, final String pattern, final long count);
+	ScanResult<List<String>> scan(final long cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1146,7 +1146,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的键
 	 */
-	ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count);
+	ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1162,7 +1162,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的键
 	 */
-	ScanResult<List<String>> scan(final String cursor, final String pattern, final long count);
+	ScanResult<List<String>> scan(final String cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1178,7 +1178,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的键
 	 */
-	ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count);
+	ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 返回给定列表、集合、有序集合 key 中经过排序的元素

@@ -140,7 +140,7 @@ public class RestoreArgument {
 	 * @param replace
 	 * 		true / false
 	 */
-	public void setReplace(Boolean replace) {
+	public void setReplace(final Boolean replace) {
 		this.replace = replace;
 	}
 
@@ -177,7 +177,7 @@ public class RestoreArgument {
 	 * @param absTtl
 	 * 		true / false
 	 */
-	public void setAbsTtl(Boolean absTtl) {
+	public void setAbsTtl(final Boolean absTtl) {
 		this.absTtl = absTtl;
 	}
 
@@ -185,7 +185,7 @@ public class RestoreArgument {
 		return idleTime;
 	}
 
-	public void setIdleTime(Long idleTime) {
+	public void setIdleTime(final Long idleTime) {
 		this.idleTime = idleTime;
 	}
 
@@ -193,7 +193,7 @@ public class RestoreArgument {
 		return frequency;
 	}
 
-	public void setFrequency(Long frequency) {
+	public void setFrequency(final Long frequency) {
 		this.frequency = frequency;
 	}
 

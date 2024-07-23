@@ -443,7 +443,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<String> hRandField(final String key, final long count) {
+	public List<String> hRandField(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -462,7 +462,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<byte[]> hRandField(final byte[] key, final long count) {
+	public List<byte[]> hRandField(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -481,7 +481,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count) {
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final ListConverter<Map.Entry<String, String>, KeyValue<String, String>> converter =
 				new ListConverter<>(new MapEntryKeyValueConverter<>((k)->k, (v)->v));
@@ -502,7 +502,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count) {
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final ListConverter<Map.Entry<byte[], byte[]>, KeyValue<byte[], byte[]>> converter =
 				new ListConverter<>(new MapEntryKeyValueConverter<>((k)->k, (v)->v));
@@ -581,7 +581,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
@@ -589,7 +589,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
@@ -598,7 +598,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final long count) {
+												 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
@@ -607,7 +607,7 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final long count) {
+												 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);

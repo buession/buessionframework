@@ -30,11 +30,17 @@ import redis.clients.jedis.Protocol;
 import redis.clients.jedis.params.ZRangeParams;
 
 /**
+ * Jedis {@link ZRangeParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class JedisZRangeParams extends ZRangeParams {
-
+	
+	/**
+	 * @param min
+	 * @param max
+	 */
 	public JedisZRangeParams(final int min, final int max) {
 		super(min, max);
 	}

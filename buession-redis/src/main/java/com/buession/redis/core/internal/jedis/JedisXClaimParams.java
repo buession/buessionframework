@@ -37,35 +37,90 @@ import java.util.Optional;
  */
 public class JedisXClaimParams extends XClaimParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisXClaimParams() {
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param idleTime
+	 * 		过期时间
+	 */
 	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime) {
 		super();
 		idleTime(this, idleType, idleTime);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param retryCount
+	 * 		重试次数
+	 */
 	public JedisXClaimParams(final Integer retryCount) {
 		super();
 		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisXClaimParams(final Boolean force) {
 		super();
 		force(this, force);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param idleTime
+	 * 		过期时间
+	 * @param retryCount
+	 * 		重试次数
+	 */
 	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount) {
 		this(idleType, idleTime);
 		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param idleTime
+	 * 		过期时间
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Boolean force) {
 		this(idleType, idleTime);
 		force(this, force);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param idleType
+	 * 		设置过期时间方式
+	 * @param idleTime
+	 * 		过期时间
+	 * @param retryCount
+	 * 		重试次数
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount,
 							 final Boolean force) {
 		this(idleType, idleTime, retryCount);
@@ -83,11 +138,9 @@ public class JedisXClaimParams extends XClaimParams {
 	public static JedisXClaimParams from(final XClaimArgument xClaimArgument) {
 		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
 
-		if(xClaimArgument != null){
-			idleTime(xClaimParams, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
-			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimParams::retryCount);
-			force(xClaimParams, xClaimArgument.isForce());
-		}
+		idleTime(xClaimParams, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
+		Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimParams::retryCount);
+		force(xClaimParams, xClaimArgument.isForce());
 
 		return xClaimParams;
 	}

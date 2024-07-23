@@ -82,7 +82,7 @@ public class XClaimArgument {
 		return idleType;
 	}
 
-	public void setIdleType(IdleType idleType) {
+	public void setIdleType(final IdleType idleType) {
 		this.idleType = idleType;
 	}
 
@@ -90,7 +90,7 @@ public class XClaimArgument {
 		return idleTime;
 	}
 
-	public void setIdleTime(Long idleTime) {
+	public void setIdleTime(final Long idleTime) {
 		this.idleTime = idleTime;
 	}
 
@@ -98,7 +98,7 @@ public class XClaimArgument {
 		return retryCount;
 	}
 
-	public void setRetryCount(Integer retryCount) {
+	public void setRetryCount(final Integer retryCount) {
 		this.retryCount = retryCount;
 	}
 
@@ -114,7 +114,7 @@ public class XClaimArgument {
 		this.force = true;
 	}
 
-	public void setForce(Boolean force) {
+	public void setForce(final Boolean force) {
 		this.force = force;
 	}
 

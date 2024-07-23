@@ -201,40 +201,40 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count) {
+	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final int count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
 				new Converter.SimpleKeyValueListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count) {
+	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final int count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
 				new Converter.SimpleKeyValueListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, long count,
+	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, int count,
 																	final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
 				new Converter.ClazzKeyValueListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count,
+	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final int count,
 																	final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
 				new Converter.ClazzKeyValueListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count,
+	public <V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final int count,
 																	final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
 				new Converter.TypeKeyValueListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count,
+	public <V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final int count,
 																	final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count),
 				new Converter.TypeKeyValueListBinaryConverter<>(this, type));
@@ -397,80 +397,80 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count) {
+	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultMapStringConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count) {
+	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultMapBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
+	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final int count,
 													  final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
+	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final int count,
 													  final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, long count,
+	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, int count,
 													  TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
+	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final int count,
 													  final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count) {
+	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultMapStringConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count) {
+	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultMapBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
+	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final int count,
 													  final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
+	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final int count,
 													  final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
+	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final int count,
 													  final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
+	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final int count,
 													  final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
@@ -478,84 +478,84 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final long count) {
+													  final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultMapStringConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final long count) {
+													  final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultMapBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final long count, final Class<V> clazz) {
+													  final int count, final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final long count, final Class<V> clazz) {
+													  final int count, final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final long count, final TypeReference<V> type) {
+													  final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final long count, final TypeReference<V> type) {
+													  final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final long count) {
+													  final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultMapStringConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final long count) {
+													  final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultMapBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final long count, final Class<V> clazz) {
+													  final int count, final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final long count, final Class<V> clazz) {
+													  final int count, final Class<V> clazz) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final long count, final TypeReference<V> type) {
+													  final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final long count, final TypeReference<V> type) {
+													  final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
@@ -1241,38 +1241,38 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Set<V> sPopObject(final String key, final long count) {
+	public <V> Set<V> sPopObject(final String key, final int count) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.SimpleSetStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Set<V> sPopObject(final byte[] key, final long count) {
+	public <V> Set<V> sPopObject(final byte[] key, final int count) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.SimpleSetBinaryConverter<>(this));
 
 	}
 
 	@Override
-	public <V> Set<V> sPopObject(final String key, final long count, final Class<V> clazz) {
+	public <V> Set<V> sPopObject(final String key, final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.ClazzSetStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> sPopObject(final byte[] key, final long count, final Class<V> clazz) {
+	public <V> Set<V> sPopObject(final byte[] key, final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.ClazzSetBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type) {
+	public <V> Set<V> sPopObject(final String key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.TypeSetStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type) {
+	public <V> Set<V> sPopObject(final byte[] key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.TypeSetBinaryConverter<>(this, type));
 	}
@@ -1314,37 +1314,37 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final String key, final long count) {
+	public <V> List<V> sRandMemberObject(final String key, final int count) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final byte[] key, final long count) {
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz) {
+	public <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz) {
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type) {
+	public <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type) {
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
@@ -1524,80 +1524,80 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count) {
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count) {
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final int count,
 											   final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final int count,
 											   final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, long count,
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, int count,
 											   TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final int count,
 											   final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count) {
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count) {
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final int count,
 											   final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final int count,
 											   final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final int count,
 											   final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final int count,
 											   final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
@@ -1605,84 +1605,84 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final long count) {
+											   final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultListStringConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count) {
+											   final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultListBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final long count, final Class<V> clazz) {
+											   final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count, final Class<V> clazz) {
+											   final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final long count, final TypeReference<V> type) {
+											   final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count, final TypeReference<V> type) {
+											   final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
-											   final long count) {
+											   final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultListStringConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count) {
+											   final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.SimpleScanResultListBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
-											   final long count, final Class<V> clazz) {
+											   final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count, final Class<V> clazz) {
+											   final int count, final Class<V> clazz) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
-											   final long count, final TypeReference<V> type) {
+											   final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count, final TypeReference<V> type) {
+											   final int count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
@@ -2026,37 +2026,37 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRandMemberObject(final String key, final long count) {
+	public <V> List<V> zRandMemberObject(final String key, final int count) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> List<V> zRandMemberObject(final byte[] key, final long count) {
+	public <V> List<V> zRandMemberObject(final byte[] key, final int count) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> List<V> zRandMemberObject(final String key, final long count, final Class<V> clazz) {
+	public <V> List<V> zRandMemberObject(final String key, final int count, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRandMemberObject(final byte[] key, final long count, final Class<V> clazz) {
+	public <V> List<V> zRandMemberObject(final byte[] key, final int count, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRandMemberObject(final String key, final long count, final TypeReference<V> type) {
+	public <V> List<V> zRandMemberObject(final String key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRandMemberObject(final byte[] key, final long count, final TypeReference<V> type) {
+	public <V> List<V> zRandMemberObject(final byte[] key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
@@ -2136,44 +2136,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max,
-										 final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
-										 final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
 				new Converter.SimpleListStringConverter<>(this));
@@ -2212,123 +2174,43 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max,
-										   final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
-										   final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
-										   final long count) {
+										   final int count) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-										   final long count) {
+										   final int count) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
-										   final long count, final Class<V> clazz) {
+	public <V> List<V> zRangeByScoreObject(String key, double min, double max, long offset,
+										   int count, Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-										   final long count, final Class<V> clazz) {
+	public <V> List<V> zRangeByScoreObject(byte[] key, double min, double max, long offset,
+										   int count, Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
-										   final long count, final TypeReference<V> type) {
+	public <V> List<V> zRangeByScoreObject(String key, double min, double max, long offset,
+										   int count, TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-										   final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
-										   final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										   final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
-										   final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										   final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
-										   final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										   final long count, final TypeReference<V> type) {
+	public <V> List<V> zRangeByScoreObject(byte[] key, double min, double max, long offset,
+										   int count, TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
@@ -2412,125 +2294,43 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max,
-											final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
-											final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max,
-											final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
-											final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
-											final long count) {
+											final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
-											final long count) {
+											final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
-											final long count, final Class<V> clazz) {
+											final int count, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
-											final long count, final Class<V> clazz) {
+											final int count, final Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
-											final long count, final TypeReference<V> type) {
+											final int count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
-											final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
-											final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
-											final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
-											final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											final long count, final TypeReference<V> type) {
+											final int count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
@@ -2576,125 +2376,43 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
-											  final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
-											  final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
-											  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
-											  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
-											  final long count) {
+											  final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-											  final long count) {
+											  final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
-											  final long count, final Class<V> clazz) {
+	public <V> List<V> zRevRangeByScoreObject(String key, double min, double max, long offset,
+											  int count, Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-											  final long count, final Class<V> clazz) {
+	public <V> List<V> zRevRangeByScoreObject(byte[] key, double min, double max, long offset,
+											  int count, Class<V> clazz) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
-											  final long count, final TypeReference<V> type) {
+	public <V> List<V> zRevRangeByScoreObject(String key, double min, double max, long offset,
+											  int count, TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-											  final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
-											  final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											  final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
-											  final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											  final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
-											  final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											  final long count, final TypeReference<V> type) {
+	public <V> List<V> zRevRangeByScoreObject(byte[] key, double min, double max, long offset,
+											  int count, TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}

@@ -259,7 +259,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count) {
+	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 
 		if(isPipeline()){
@@ -909,7 +909,7 @@ public final class LettuceServerOperations extends AbstractServerOperations<Lett
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count) {
+	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		final ListConverter<Object, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 

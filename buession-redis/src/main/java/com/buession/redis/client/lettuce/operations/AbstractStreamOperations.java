@@ -155,7 +155,7 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 	}
 
 	@Override
-	public StreamFull xInfoStream(final String key, final boolean full, final long count) {
+	public StreamFull xInfoStream(final String key, final boolean full, final int count) {
 		return xInfoStream(SafeEncoder.encode(key), full, count);
 	}
 
@@ -176,7 +176,7 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count) {
+										final StreamEntryId end, final int count) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), start, end, count);
 	}
 
@@ -187,7 +187,7 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count) {
+										final StreamEntryId start, final StreamEntryId end, final int count) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), minIdleTime, start, end, count);
 	}
 
@@ -200,14 +200,14 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count, final String consumerName) {
+										final StreamEntryId end, final int count, final String consumerName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), start, end, count,
 				SafeEncoder.encode(consumerName));
 	}
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count,
+										final StreamEntryId start, final StreamEntryId end, final int count,
 										final String consumerName) {
 		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName), minIdleTime, start, end, count,
 				SafeEncoder.encode(consumerName));
@@ -220,7 +220,7 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
-									final long count) {
+									final int count) {
 		return xRange(SafeEncoder.encode(key), start, end, count);
 	}
 
@@ -231,7 +231,7 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 
 	@Override
 	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
-									   final long count) {
+									   final int count) {
 		return xRevRange(SafeEncoder.encode(key), end, start, count);
 	}
 

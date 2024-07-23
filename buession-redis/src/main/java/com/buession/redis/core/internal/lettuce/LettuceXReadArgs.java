@@ -24,7 +24,10 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
+import com.buession.redis.core.command.args.XReadArgument;
 import io.lettuce.core.XReadArgs;
+
+import java.util.Optional;
 
 /**
  * Lettuce {@link XReadArgs} 扩展
@@ -34,28 +37,57 @@ import io.lettuce.core.XReadArgs;
  */
 public final class LettuceXReadArgs extends XReadArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceXReadArgs() {
 		super();
 	}
 
-	public LettuceXReadArgs(final long count) {
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
+	public LettuceXReadArgs(final int count) {
 		super();
 		count(count);
 	}
 
-	public LettuceXReadArgs(final long block, final long count) {
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 * @param block
+	 * 		阻塞时间
+	 */
+	public LettuceXReadArgs(final int count, final int block) {
 		this(count);
 		block(block);
 	}
 
-	public LettuceXReadArgs(final boolean noack, final long count) {
-		this(count);
-		noack(noack);
+	@Override
+	public LettuceXReadArgs noack(boolean noAck) {
+		return this;
 	}
 
-	public LettuceXReadArgs(final long block, final boolean noack, final long count) {
-		this(block, count);
-		noack(noack);
+	/**
+	 * 从 {@link XReadArgument} 创建 {@link XReadArgs} 实例
+	 *
+	 * @param xReadArgument
+	 *        {@link XReadArgument}
+	 *
+	 * @return {@link LettuceXReadArgs} 实例
+	 */
+	public static LettuceXReadArgs from(final XReadArgument xReadArgument) {
+		final LettuceXReadArgs xReadArgs = new LettuceXReadArgs();
+
+		Optional.ofNullable(xReadArgument.getCount()).ifPresent(xReadArgs::count);
+		Optional.ofNullable(xReadArgument.getBlock()).ifPresent(xReadArgs::block);
+
+		return xReadArgs;
 	}
 
 }

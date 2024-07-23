@@ -153,7 +153,7 @@ public class SetArgument {
 	 * @param type
 	 * 		过期时间方式
 	 */
-	public void setType(SetType type) {
+	public void setType(final SetType type) {
 		this.type = type;
 	}
 
@@ -172,7 +172,7 @@ public class SetArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public void setExpires(Long expires) {
+	public void setExpires(final Long expires) {
 		this.expires = expires;
 	}
 
@@ -191,7 +191,7 @@ public class SetArgument {
 	 * @param nxXx
 	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
 	 */
-	public void setNxXx(NxXx nxXx) {
+	public void setNxXx(final NxXx nxXx) {
 		this.nxXx = nxXx;
 	}
 
@@ -226,7 +226,7 @@ public class SetArgument {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public void setKeepTtl(Boolean keepTtl) {
+	public void setKeepTtl(final Boolean keepTtl) {
 		this.keepTtl = keepTtl;
 	}
 

@@ -72,7 +72,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final byte[] key, final long count) {
+	public List<Tuple> zPopMin(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -104,7 +104,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public List<Tuple> zPopMax(final byte[] key, final long count) {
+	public List<Tuple> zPopMax(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -524,23 +524,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		return zInterStore(args);
 	}
 
-	@Deprecated
-	@Override
-	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZLEXCOUNT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZLEXCOUNT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZLEXCOUNT)
-					.run(args);
-		}
-	}
-
 	@Override
 	public List<Double> zMScore(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
@@ -566,25 +549,25 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public List<String> zRandMember(final String key, final long count) {
+	public List<String> zRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return zRandMember(args);
 	}
 
 	@Override
-	public List<byte[]> zRandMember(final byte[] key, final long count) {
+	public List<byte[]> zRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return zRandMember(args);
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final String key, final long count) {
+	public List<Tuple> zRandMemberWithScores(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return zRandMember(args);
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count) {
+	public List<Tuple> zRandMemberWithScores(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return zRandMember(args);
 	}
@@ -629,23 +612,9 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		return zRangeByLex(args);
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return zRangeByLex(args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return zRangeByLex(args);
-	}
-
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
-									final long count) {
+									final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return zRangeByLex(args);
@@ -653,25 +622,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
-		return zRangeByLex(args);
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
-									final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
-		return zRangeByLex(args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									final long count) {
+									final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return zRangeByLex(args);
@@ -691,7 +642,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max, final long offset,
-									  final long count) {
+									  final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return zRangeByScore(args);
@@ -699,7 +650,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
-									  final long count) {
+									  final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return zRangeByScore(args);
@@ -724,7 +675,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-											   final long count) {
+											   final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 
@@ -789,7 +740,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
-							final long count) {
+							final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -797,7 +748,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
-							final long count) {
+							final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -821,7 +772,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by, final long offset, final long count) {
+							final ZRangeBy by, final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -829,7 +780,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by, final long offset, final long count) {
+							final ZRangeBy by, final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -837,7 +788,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
-							final long offset, final long count) {
+							final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -845,7 +796,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
-							final long offset, final long count) {
+							final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -853,7 +804,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count) {
+							final boolean rev, final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -861,7 +812,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count) {
+							final boolean rev, final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("key", key).put("start", start)
 				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
 		return zRangeStore(args);
@@ -895,24 +846,6 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZREM)
-					.run(args);
-		}
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final Range<byte[]> range = Range.create(min, max);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYLEX)
 					.run(args);
 		}
 	}
@@ -1001,28 +934,9 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		return null;//zRevRangeByLex(key, bMin, bMax, (v)->v, args);
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bMin = SafeEncoder.encode(min);
-		final byte[] bMax = SafeEncoder.encode(max);
-		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
-
-		return null;//zRevRangeByLex(bKey, bMin, bMax, listConverter, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return null;//zRevRangeByLex(key, min, max, (v)->v, args);
-	}
-
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
-									   final long count) {
+									   final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max).put("count"
 				, count);
 		final byte[] bKey = SafeEncoder.encode(key);
@@ -1035,36 +949,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									   final long count) {
+									   final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max).put("count"
 				, count);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
 		return null;//zRevRangeByLex(key, bMin, bMax, offset, count, (v)->v, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
-									   final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max).put("count"
-				, count);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bMin = SafeEncoder.encode(min);
-		final byte[] bMax = SafeEncoder.encode(max);
-		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
-
-		return null;//zRevRangeByLex(bKey, bMin, bMax, offset, count, listConverter, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									   final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max).put("count"
-				, count);
-		return null;//zRevRangeByLex(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
@@ -1084,7 +975,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
-										 final long count) {
+										 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
@@ -1095,7 +986,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
-										 final long count) {
+										 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 		return null;//zRevRangeByScore(key, min, max, offset, count, (v)->v, args);
@@ -1121,7 +1012,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												  final long offset, final long count) {
+												  final long offset, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
 
@@ -1180,20 +1071,20 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count) {
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		return zScan(args);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		return zScan(args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern,
-										 final long count) {
+										 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		return zScan(args);
@@ -1201,7 +1092,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final long count) {
+										 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		return zScan(args);

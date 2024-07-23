@@ -56,7 +56,7 @@ public class GetExArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public GetExArgument(GetExType type, Long expires) {
+	public GetExArgument(final GetExType type, final Long expires) {
 		this.type = type;
 		this.expires = expires;
 	}
@@ -76,7 +76,7 @@ public class GetExArgument {
 	 * @param type
 	 * 		过期时间方式
 	 */
-	public void seType(GetExType type) {
+	public void seType(final GetExType type) {
 		this.type = type;
 	}
 
@@ -95,7 +95,7 @@ public class GetExArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public void setExpires(Long expires) {
+	public void setExpires(final Long expires) {
 		this.expires = expires;
 	}
 

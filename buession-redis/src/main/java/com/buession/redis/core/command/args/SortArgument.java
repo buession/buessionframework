@@ -272,11 +272,11 @@ public class SortArgument {
 		return SafeEncoder.encode(by);
 	}
 
-	public void setBy(String by) {
+	public void setBy(final String by) {
 		this.by = by;
 	}
 
-	public void setBy(byte[] by) {
+	public void setBy(final byte[] by) {
 		this.by = SafeEncoder.encode(by);
 	}
 
@@ -295,7 +295,7 @@ public class SortArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public void setOrder(Order order) {
+	public void setOrder(final Order order) {
 		this.order = order;
 	}
 
@@ -314,7 +314,7 @@ public class SortArgument {
 	 * @param limit
 	 * 		结果限制
 	 */
-	public void setLimit(Limit limit) {
+	public void setLimit(final Limit limit) {
 		this.limit = limit;
 	}
 
@@ -326,11 +326,11 @@ public class SortArgument {
 		return SafeEncoder.encode(getPatterns);
 	}
 
-	public void setGetPatterns(String[] getPatterns) {
+	public void setGetPatterns(final String[] getPatterns) {
 		this.getPatterns = getPatterns;
 	}
 
-	public void setGetPatterns(byte[][] getPatterns) {
+	public void setGetPatterns(final byte[][] getPatterns) {
 		this.getPatterns = SafeEncoder.encode(getPatterns);
 	}
 
@@ -346,7 +346,7 @@ public class SortArgument {
 		this.alpha = true;
 	}
 
-	public void setAlpha(Boolean alpha) {
+	public void setAlpha(final Boolean alpha) {
 		this.alpha = alpha;
 	}
 

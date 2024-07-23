@@ -134,7 +134,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count) {
+	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		return notCommand(client, ProtocolCommand.ACL_LOG, args);
 	}
@@ -559,7 +559,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count) {
+	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		return notCommand(client, ProtocolCommand.SLOWLOG_GET, args);
 	}

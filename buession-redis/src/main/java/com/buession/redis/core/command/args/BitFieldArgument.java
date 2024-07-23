@@ -307,6 +307,9 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 
 	}
 
+	/**
+	 * Representation for the {@code SET} subcommand for {@code BITFIELD}.
+	 */
 	public final static class Set implements SubCommand {
 
 		private final BitFieldType bitFieldType;
@@ -358,6 +361,9 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 
 	}
 
+	/**
+	 * Representation for the {@code INCRBY} subcommand for {@code BITFIELD}.
+	 */
 	public final static class IncrBy implements SubCommand {
 
 		private final BitFieldType bitFieldType;
@@ -409,6 +415,9 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 
 	}
 
+	/**
+	 * Representation for the {@code OVERFLOW} subcommand for {@code BITFIELD}.
+	 */
 	public final static class Overflow implements SubCommand {
 
 		private final OverflowType overflowType;

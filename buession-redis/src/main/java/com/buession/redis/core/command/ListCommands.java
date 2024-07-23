@@ -276,7 +276,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 返回数据
 	 */
-	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count);
+	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -294,7 +294,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 返回数据
 	 */
-	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count);
+	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final int count);
 
 	/**
 	 * 移除列表中与参数 value 相等的 count 个元素元素
@@ -310,7 +310,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	Long lRem(final String key, final String value, final long count);
+	Long lRem(final String key, final String value, final int count);
 
 	/**
 	 * 移除列表中与参数 value 相等的 count 个元素元素
@@ -326,7 +326,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	Long lRem(final byte[] key, final byte[] value, final long count);
+	Long lRem(final byte[] key, final byte[] value, final int count);
 
 	/**
 	 * 移除列表指定区间外的元素；

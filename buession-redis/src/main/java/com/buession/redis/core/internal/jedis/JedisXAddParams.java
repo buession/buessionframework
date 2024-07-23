@@ -750,11 +750,9 @@ public final class JedisXAddParams extends XAddParams {
 	public static JedisXAddParams from(final XAddArgument xAddArgument) {
 		final JedisXAddParams xAddParams = new JedisXAddParams();
 
-		if(xAddArgument != null){
-			maxLenMinId(xAddParams, xAddArgument.getMaxLenMinId(), xAddArgument.getApproximateExactTrimming());
-			noMkStream(xAddParams, xAddArgument.isNoMkStream());
-			Optional.ofNullable(xAddArgument.getLimit()).ifPresent(xAddParams::limit);
-		}
+		maxLenMinId(xAddParams, xAddArgument.getMaxLenMinId(), xAddArgument.getApproximateExactTrimming());
+		noMkStream(xAddParams, xAddArgument.isNoMkStream());
+		Optional.ofNullable(xAddArgument.getLimit()).ifPresent(xAddParams::limit);
 
 		return xAddParams;
 	}

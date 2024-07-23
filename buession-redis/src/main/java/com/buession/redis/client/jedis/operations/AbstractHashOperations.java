@@ -43,49 +43,49 @@ import java.util.Map;
 public abstract class AbstractHashOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements HashOperations {
 
-	public AbstractHashOperations(final C client){
+	public AbstractHashOperations(final C client) {
 		super(client);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
 		return hScan(key, Long.toString(cursor));
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
 		return hScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
 		return hScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count){
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count) {
 		return hScan(key, Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												 final long count){
+												 final int count) {
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final long count){
+												 final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 

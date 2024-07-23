@@ -276,7 +276,7 @@ public class GeoRadiusArgument {
 	 * @param withCoord
 	 * 		true / false
 	 */
-	public void setWithCoord(Boolean withCoord) {
+	public void setWithCoord(final Boolean withCoord) {
 		this.withCoord = withCoord;
 	}
 
@@ -311,7 +311,7 @@ public class GeoRadiusArgument {
 	 * @param withDist
 	 * 		true / false
 	 */
-	public void setWithDist(Boolean withDist) {
+	public void setWithDist(final Boolean withDist) {
 		this.withDist = withDist;
 	}
 
@@ -346,7 +346,7 @@ public class GeoRadiusArgument {
 	 * @param withHash
 	 * 		true / false
 	 */
-	public void setWithHash(Boolean withHash) {
+	public void setWithHash(final Boolean withHash) {
 		this.withHash = withHash;
 	}
 
@@ -365,7 +365,7 @@ public class GeoRadiusArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public void order(Order order) {
+	public void order(final Order order) {
 		this.order = order;
 	}
 
@@ -384,7 +384,7 @@ public class GeoRadiusArgument {
 	 * @param count
 	 * 		返回数量
 	 */
-	public void count(Integer count) {
+	public void count(final Integer count) {
 		this.count = count;
 	}
 
@@ -396,7 +396,7 @@ public class GeoRadiusArgument {
 	 * @param any
 	 * 		-
 	 */
-	public void count(Integer count, Boolean any) {
+	public void count(final Integer count, final Boolean any) {
 		this.count = count;
 		this.any = any;
 	}
@@ -432,7 +432,7 @@ public class GeoRadiusArgument {
 	 * @param any
 	 * 		true / false
 	 */
-	public void setAny(Boolean any) {
+	public void setAny(final Boolean any) {
 		this.any = any;
 	}
 

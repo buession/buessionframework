@@ -506,7 +506,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count);
+	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final int count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -524,27 +524,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count);
-
-	/**
-	 * When called with just the key argument, return a random field from the hash value stored at key.
-	 * If the provided count argument is positive, return an array of distinct fields.
-	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		返回数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return A list fields and their values from the hash
-	 */
-	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count, final Class<V> clazz);
+	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final int count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -564,7 +544,27 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz);
+	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final int count, final Class<V> clazz);
+
+	/**
+	 * When called with just the key argument, return a random field from the hash value stored at key.
+	 * If the provided count argument is positive, return an array of distinct fields.
+	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return A list fields and their values from the hash
+	 */
+	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final int count, final Class<V> clazz);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -586,7 +586,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final long count,
+	<V> List<KeyValue<String, V>> hRandFieldWithValuesObject(final String key, final int count,
 															 final TypeReference<V> type);
 
 	/**
@@ -609,7 +609,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final long count,
+	<V> List<KeyValue<byte[], V>> hRandFieldWithValuesObject(final byte[] key, final int count,
 															 final TypeReference<V> type);
 
 	/**
@@ -1095,7 +1095,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count);
+	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1113,7 +1113,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count);
+	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1133,7 +1133,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
+	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final int count,
 											   final Class<V> clazz);
 
 	/**
@@ -1154,7 +1154,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
+	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final int count,
 											   final Class<V> clazz);
 
 	/**
@@ -1177,7 +1177,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
+	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final int count,
 											   final TypeReference<V> type);
 
 	/**
@@ -1200,7 +1200,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
+	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final int count,
 											   final TypeReference<V> type);
 
 	/**
@@ -1219,7 +1219,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count);
+	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1237,7 +1237,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count);
+	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1257,7 +1257,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
+	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final int count,
 											   final Class<V> clazz);
 
 	/**
@@ -1278,7 +1278,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
+	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final int count,
 											   final Class<V> clazz);
 
 	/**
@@ -1301,7 +1301,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
+	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final int count,
 											   final TypeReference<V> type);
 
 	/**
@@ -1324,7 +1324,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
+	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final int count,
 											   final TypeReference<V> type);
 
 	/**
@@ -1346,7 +1346,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final long count);
+											   final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1367,7 +1367,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count);
+											   final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1390,7 +1390,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final long count,
+											   final int count,
 											   final Class<V> clazz);
 
 	/**
@@ -1414,7 +1414,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count,
+											   final int count,
 											   final Class<V> clazz);
 
 	/**
@@ -1440,7 +1440,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final long count, final TypeReference<V> type);
+											   final int count, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1465,7 +1465,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count,
+											   final int count,
 											   final TypeReference<V> type);
 
 	/**
@@ -1487,7 +1487,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final long count);
+											   final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1508,7 +1508,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count);
+											   final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1531,7 +1531,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final long count, final Class<V> clazz);
+											   final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1554,7 +1554,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count, final Class<V> clazz);
+											   final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1579,7 +1579,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final long count, final TypeReference<V> type);
+											   final int count, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1604,7 +1604,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count, final TypeReference<V> type);
+											   final int count, final TypeReference<V> type);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。

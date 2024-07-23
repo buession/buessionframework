@@ -567,7 +567,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final long count) {
+	public ScanResult<List<String>> scan(final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -578,7 +578,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -588,7 +588,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
+	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
@@ -600,7 +600,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count) {
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);

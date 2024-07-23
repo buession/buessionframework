@@ -353,7 +353,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 随机获取指定数量的哈希表中存在的域
 	 */
-	List<String> hRandField(final String key, final long count);
+	List<String> hRandField(final String key, final int count);
 
 	/**
 	 * 随机返回一个哈希表中指定数量的存在的域
@@ -367,7 +367,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 随机获取指定数量的哈希表中存在的域
 	 */
-	List<byte[]> hRandField(final byte[] key, final long count);
+	List<byte[]> hRandField(final byte[] key, final int count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -383,7 +383,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count);
+	List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -399,7 +399,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count);
+	List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -535,7 +535,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count);
+	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -551,7 +551,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -567,7 +567,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count);
+	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -583,7 +583,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -601,7 +601,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern, final long count);
+	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -619,7 +619,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern, final long count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -638,7 +638,7 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-										  final long count);
+										  final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -657,7 +657,7 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final long count);
+										  final int count);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。

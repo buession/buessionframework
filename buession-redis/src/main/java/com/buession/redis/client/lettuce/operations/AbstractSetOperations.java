@@ -105,22 +105,22 @@ public abstract class AbstractSetOperations<C extends LettuceRedisClient> extend
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count) {
 		return sScan(key, Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count) {
 		return sScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 

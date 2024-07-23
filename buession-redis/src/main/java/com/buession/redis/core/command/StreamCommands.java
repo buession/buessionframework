@@ -35,6 +35,8 @@ import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.args.XReadArgument;
+import com.buession.redis.core.command.args.XReadGroupArgument;
 import com.buession.redis.core.command.args.XTrimArgument;
 
 import java.util.List;
@@ -222,7 +224,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 													 final String consumerName, final int minIdleTime,
-													 final StreamEntryId start, final long count);
+													 final StreamEntryId start, final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -247,7 +249,7 @@ public interface StreamCommands extends RedisCommands {
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 													 final byte[] consumerName, final int minIdleTime,
 													 final StreamEntryId start,
-													 final long count);
+													 final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -315,7 +317,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 															 final String consumerName, final int minIdleTime,
-															 final StreamEntryId start, final long count);
+															 final StreamEntryId start, final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -339,7 +341,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 															 final byte[] consumerName, final int minIdleTime,
-															 final StreamEntryId start, final long count);
+															 final StreamEntryId start, final int count);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -833,7 +835,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull xInfoStream(final String key, final boolean full, final long count);
+	StreamFull xInfoStream(final String key, final boolean full, final int count);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -849,7 +851,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull xInfoStream(final byte[] key, final boolean full, final long count);
+	StreamFull xInfoStream(final byte[] key, final boolean full, final int count);
 
 	/**
 	 * Returns the number of entries inside a stream
@@ -954,7 +956,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-								 final StreamEntryId end, final long count);
+								 final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -975,7 +977,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-								 final StreamEntryId end, final long count);
+								 final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1030,7 +1032,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final long count);
+								 final StreamEntryId start, final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1053,7 +1055,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final long count);
+								 final StreamEntryId start, final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1114,7 +1116,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-								 final StreamEntryId end, final long count, final String consumerName);
+								 final StreamEntryId end, final int count, final String consumerName);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1137,7 +1139,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-								 final StreamEntryId end, final long count, final byte[] consumerName);
+								 final StreamEntryId end, final int count, final byte[] consumerName);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1162,7 +1164,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final long count,
+								 final StreamEntryId start, final StreamEntryId end, final int count,
 								 final String consumerName);
 
 	/**
@@ -1188,7 +1190,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final long count,
+								 final StreamEntryId start, final StreamEntryId end, final int count,
 								 final byte[] consumerName);
 
 	/**
@@ -1239,7 +1241,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end, final long count);
+	List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end, final int count);
 
 	/**
 	 * The command returns the stream entries matching a given range of IDs
@@ -1257,7 +1259,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end, final long count);
+	List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end, final int count);
 
 	/**
 	 * Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller
@@ -1276,45 +1278,15 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/xread/" target="_blank">https://redis.io/commands/xread/</a></p>
 	 *
-	 * @param count
-	 * 		返回数量
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
+	 * @param xReadArgument
+	 * 		读取参数
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams);
-
-	/**
-	 * Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xread/" target="_blank">https://redis.io/commands/xread/</a></p>
-	 *
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams);
-
-	/**
-	 * Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xread/" target="_blank">https://redis.io/commands/xread/</a></p>
-	 *
-	 * @param count
-	 * 		返回数量
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
-											   final Map<String, StreamEntryId> streams);
+	List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
+											   final XReadArgument xReadArgument);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1359,15 +1331,16 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
+	 * @param xReadGroupArgument
+	 * 		读取参数
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName, final long count,
-													final Map<String, StreamEntryId> streams);
+	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+													final Map<String, StreamEntryId> streams,
+													final XReadGroupArgument xReadGroupArgument);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1378,53 +1351,16 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
+	 * @param xReadGroupArgument
+	 * 		读取参数
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName, final long count,
-													final Map<byte[], StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName, final int block,
-													final Map<String, StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName, final int block,
-													final Map<byte[], StreamEntryId> streams);
+	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+													final Map<byte[], StreamEntryId> streams,
+													final XReadGroupArgument xReadGroupArgument);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1473,59 +1409,18 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName, final long count,
-													final int block, final Map<String, StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName, final long count,
-													final int block, final Map<byte[], StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
 	 * @param isNoAck
 	 * 		No Ack
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
+	 * @param xReadGroupArgument
+	 * 		读取参数
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName, final long count,
-													final boolean isNoAck, final Map<String, StreamEntryId> streams);
+	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+													final boolean isNoAck, final Map<String, StreamEntryId> streams,
+													final XReadGroupArgument xReadGroupArgument);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1536,107 +1431,18 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
 	 * @param isNoAck
 	 * 		No Ack
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
+	 * @param xReadGroupArgument
+	 * 		读取参数
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName, final long count,
-													final boolean isNoAck, final Map<byte[], StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param isNoAck
-	 * 		No Ack
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName, final int block,
-													final boolean isNoAck, final Map<String, StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param isNoAck
-	 * 		No Ack
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName, final int block,
-													final boolean isNoAck, final Map<byte[], StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param isNoAck
-	 * 		No Ack
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName, final long count,
-													final int block, final boolean isNoAck,
-													final Map<String, StreamEntryId> streams);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param count
-	 * 		返回数量
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param isNoAck
-	 * 		No Ack
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName, final long count,
-													final int block, final boolean isNoAck,
-													final Map<byte[], StreamEntryId> streams);
+	List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+													final boolean isNoAck, final Map<byte[], StreamEntryId> streams,
+													final XReadGroupArgument xReadGroupArgument);
 
 	/**
 	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
@@ -1692,7 +1498,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start, final long count);
+	List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start, final int count);
 
 	/**
 	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
@@ -1712,7 +1518,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start, final long count);
+	List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start, final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed

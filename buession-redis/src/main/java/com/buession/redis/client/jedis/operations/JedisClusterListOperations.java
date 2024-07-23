@@ -312,7 +312,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		final LPosParams lPosParams = JedisLPosParams.from(lPosArgument);
@@ -333,7 +333,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		final LPosParams lPosParams = JedisLPosParams.from(lPosArgument);
@@ -354,7 +354,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public Long lRem(final String key, final String value, final long count) {
+	public Long lRem(final String key, final String value, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
 
 		if(isPipeline()){
@@ -372,7 +372,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	}
 
 	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count) {
+	public Long lRem(final byte[] key, final byte[] value, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
 
 		if(isPipeline()){

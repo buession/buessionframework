@@ -300,7 +300,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count) {
+	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
 				AccessControlLogEntryConverter.listConverter();
@@ -1015,7 +1015,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisS
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count) {
+	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 

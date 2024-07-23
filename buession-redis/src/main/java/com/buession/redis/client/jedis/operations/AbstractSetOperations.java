@@ -43,47 +43,47 @@ import java.util.List;
 public abstract class AbstractSetOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements SetOperations {
 
-	public AbstractSetOperations(final C client){
+	public AbstractSetOperations(final C client) {
 		super(client);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor){
+	public ScanResult<List<String>> sScan(final String key, final long cursor) {
 		return sScan(key, Long.toString(cursor));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor) {
 		return sScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern) {
 		return sScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count) {
 		return sScan(key, Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count) {
 		return sScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 

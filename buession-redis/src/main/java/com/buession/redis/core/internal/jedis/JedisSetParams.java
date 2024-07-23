@@ -118,7 +118,7 @@ public final class JedisSetParams extends SetParams {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public JedisSetParams(final SetArgument.SetType type, final long expires, final NxXx nxXx, final Boolean keepTtl) {
+	public JedisSetParams(final SetArgument.SetType type, final long expires, final NxXx nxXx, final boolean keepTtl) {
 		this(type, expires, nxXx);
 		keepTtl(this, keepTtl);
 	}

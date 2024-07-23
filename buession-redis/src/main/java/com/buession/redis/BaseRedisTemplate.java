@@ -773,22 +773,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> hRandField(final String key, final long count) {
+	public List<String> hRandField(final String key, final int count) {
 		return execute((client)->client.hashOperations().hRandField(rawKey(key), count));
 	}
 
 	@Override
-	public List<byte[]> hRandField(final byte[] key, final long count) {
+	public List<byte[]> hRandField(final byte[] key, final int count) {
 		return execute((client)->client.hashOperations().hRandField(rawKey(key), count));
 	}
 
 	@Override
-	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count) {
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
 	}
 
 	@Override
-	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count) {
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count) {
 		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
 	}
 
@@ -833,46 +833,46 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												 final long count) {
+												 final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final long count) {
+												 final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final long count) {
+												 final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final long count) {
+												 final int count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
 	}
 
@@ -1285,37 +1285,37 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final long count) {
+	public ScanResult<List<String>> scan(final long cursor, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final long count) {
+	public ScanResult<List<String>> scan(final String cursor, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count) {
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count) {
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
+	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count) {
 		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
 	}
 
@@ -1505,22 +1505,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<Long> lPos(final String key, String element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final String key, String element, final LPosArgument lPosArgument, final int count) {
 		return execute((client)->client.listOperations().lPos(rawKey(key), element, lPosArgument, count));
 	}
 
 	@Override
-	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final int count) {
 		return execute((client)->client.listOperations().lPos(rawKey(key), element, lPosArgument, count));
 	}
 
 	@Override
-	public Long lRem(final String key, final String value, final long count) {
+	public Long lRem(final String key, final String value, final int count) {
 		return execute((client)->client.listOperations().lRem(rawKey(key), value, count));
 	}
 
 	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count) {
+	public Long lRem(final byte[] key, final byte[] value, final int count) {
 		return execute((client)->client.listOperations().lRem(rawKey(key), value, count));
 	}
 
@@ -1924,7 +1924,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count) {
+	public List<AclLog> aclLog(final int count) {
 		return execute((client)->client.serverOperations().aclLog(count));
 	}
 
@@ -2186,7 +2186,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count) {
+	public List<SlowLog> slowLogGet(final int count) {
 		return execute((client)->client.serverOperations().slowLogGet(count));
 	}
 
@@ -2321,12 +2321,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Set<String> sPop(final String key, final long count) {
+	public Set<String> sPop(final String key, final int count) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count));
 	}
 
 	@Override
-	public Set<byte[]> sPop(final byte[] key, final long count) {
+	public Set<byte[]> sPop(final byte[] key, final int count) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count));
 	}
 
@@ -2341,12 +2341,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count) {
+	public List<String> sRandMember(final String key, final int count) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count));
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count) {
+	public List<byte[]> sRandMember(final byte[] key, final int count) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count));
 	}
 
@@ -2401,44 +2401,44 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-										  final long count) {
+										  final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final long count) {
+										  final int count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count));
 	}
 
@@ -2473,12 +2473,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final String key, long count) {
+	public List<Tuple> zPopMin(final String key, int count) {
 		return execute((client)->client.sortedSetOperations().zPopMin(rawKey(key), count));
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final byte[] key, long count) {
+	public List<Tuple> zPopMin(final byte[] key, int count) {
 		return execute((client)->client.sortedSetOperations().zPopMin(rawKey(key), count));
 	}
 
@@ -2493,12 +2493,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<Tuple> zPopMax(final String key, final long count) {
+	public List<Tuple> zPopMax(final String key, final int count) {
 		return execute((client)->client.sortedSetOperations().zPopMax(rawKey(key), count));
 	}
 
 	@Override
-	public List<Tuple> zPopMax(final byte[] key, final long count) {
+	public List<Tuple> zPopMax(final byte[] key, final int count) {
 		return execute((client)->client.sortedSetOperations().zPopMax(rawKey(key), count));
 	}
 
@@ -2621,18 +2621,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zCount(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zCount(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zCount(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zCount(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zCount(rawKey(key), min, max));
 	}
 
@@ -2810,18 +2798,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zLexCount(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public Long zLexCount(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zLexCount(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zLexCount(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<Double> zMScore(final String key, final String... members) {
 		return execute((client)->client.sortedSetOperations().zMScore(rawKey(key), members));
@@ -2843,22 +2819,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> zRandMember(final String key, final long count) {
+	public List<String> zRandMember(final String key, final int count) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count));
 	}
 
 	@Override
-	public List<byte[]> zRandMember(final byte[] key, final long count) {
+	public List<byte[]> zRandMember(final byte[] key, final int count) {
 		return execute((client)->client.sortedSetOperations().zRandMember(rawKey(key), count));
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final String key, final long count) {
+	public List<Tuple> zRandMemberWithScores(final String key, final int count) {
 		return execute((client)->client.sortedSetOperations().zRandMemberWithScores(rawKey(key), count));
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count) {
+	public List<Tuple> zRandMemberWithScores(final byte[] key, final int count) {
 		return execute((client)->client.sortedSetOperations().zRandMemberWithScores(rawKey(key), count));
 	}
 
@@ -2892,41 +2868,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
-									final long count) {
+									final int count) {
 		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
 	}
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
-									final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									final long count) {
+									final int count) {
 		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
 	}
 
@@ -2940,41 +2890,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByScore(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max, final long offset,
-									  final long count) {
+									  final int count) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
 	}
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
-									  final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRangeByScore(final String key, String min, String max, long offset,
-									  long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									  final long count) {
+									  final int count) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
 	}
 
@@ -2988,44 +2912,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
-											   final long count) {
+											   final int count) {
 		return execute(
 				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-											   final long count) {
-		return execute(
-				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
-											   final long count) {
-		return execute(
-				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											   final long count) {
+											   final int count) {
 		return execute(
 				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
 	}
@@ -3070,14 +2966,14 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
-							final long count) {
+							final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, offset, count));
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
-							final long count) {
+							final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, offset, count));
 	}
@@ -3098,42 +2994,42 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-							final long offset, final long count) {
+							final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, offset, count));
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-							final long offset, final long count) {
+							final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, offset, count));
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
-							final long offset, final long count) {
+							final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, rev, offset, count));
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
-							final long offset, final long count) {
+							final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, rev, offset, count));
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count) {
+							final boolean rev, final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, rev, offset, count));
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count) {
+							final boolean rev, final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRangeStore(rawKey(destKey), rawKey(key), start, end, by, rev, offset, count));
 	}
@@ -3168,18 +3064,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRemRangeByLex(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public Long zRemRangeByLex(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByLex(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByLex(rawKey(key), min, max));
-	}
-
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
@@ -3187,18 +3071,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByScore(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
 	}
 
@@ -3242,41 +3114,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
-									   final long count) {
+									   final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
 	}
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									   final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
-									   final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									   final long count) {
+									   final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
 	}
 
@@ -3290,41 +3136,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
-										 final long count) {
+										 final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
 	}
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
-										 final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
-										 final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										 final long count) {
+										 final int count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
 	}
 
@@ -3338,44 +3158,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
-												  final long offset, final long count) {
+												  final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												  final long offset, final long count) {
-		return execute((client)->client.sortedSetOperations()
-				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-												  final long offset, final long count) {
-		return execute((client)->client.sortedSetOperations()
-				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-												  final long offset, final long count) {
+												  final long offset, final int count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));
 	}
@@ -3431,44 +3223,44 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final long count) {
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final long count) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count) {
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final long count) {
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final long count) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern,
-										 final long count) {
+										 final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final long count) {
+										 final int count) {
 		return execute((client)->client.sortedSetOperations().zScan(rawKey(key), cursor, pattern, count));
 	}
 
@@ -3657,7 +3449,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
+															final StreamEntryId start, final int count) {
 		return execute((client)->client.streamOperations()
 				.xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start, count));
 	}
@@ -3665,7 +3457,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
+															final StreamEntryId start, final int count) {
 		return execute((client)->client.streamOperations()
 				.xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start, count));
 	}
@@ -3689,7 +3481,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
-																	final StreamEntryId start, final long count) {
+																	final StreamEntryId start, final int count) {
 		return execute((client)->client.streamOperations()
 				.xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start, count));
 	}
@@ -3697,7 +3489,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 																	final byte[] consumerName, final int minIdleTime,
-																	final StreamEntryId start, final long count) {
+																	final StreamEntryId start, final int count) {
 		return execute((client)->client.streamOperations()
 				.xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start, count));
 	}
@@ -3865,12 +3657,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public StreamFull xInfoStream(final String key, final boolean full, final long count) {
+	public StreamFull xInfoStream(final String key, final boolean full, final int count) {
 		return execute((client)->client.streamOperations().xInfoStream(rawKey(key), full, count));
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count) {
+	public StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
 		return execute((client)->client.streamOperations().xInfoStream(rawKey(key), full, count));
 	}
 
@@ -3906,13 +3698,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count) {
+										final StreamEntryId end, final int count) {
 		return execute((client)->client.streamOperations().xPending(rawKey(key), groupName, start, end, count));
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count) {
+										final StreamEntryId end, final int count) {
 		return execute((client)->client.streamOperations().xPending(rawKey(key), groupName, start, end, count));
 	}
 
@@ -3928,14 +3720,14 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count) {
+										final StreamEntryId start, final StreamEntryId end, final int count) {
 		return execute(
 				(client)->client.streamOperations().xPending(rawKey(key), groupName, minIdleTime, start, end, count));
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count) {
+										final StreamEntryId start, final StreamEntryId end, final int count) {
 		return execute(
 				(client)->client.streamOperations().xPending(rawKey(key), groupName, minIdleTime, start, end, count));
 	}
@@ -3954,21 +3746,21 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count, final String consumerName) {
+										final StreamEntryId end, final int count, final String consumerName) {
 		return execute(
 				(client)->client.streamOperations().xPending(rawKey(key), groupName, start, end, count, consumerName));
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final long count, final byte[] consumerName) {
+										final StreamEntryId end, final int count, final byte[] consumerName) {
 		return execute(
 				(client)->client.streamOperations().xPending(rawKey(key), groupName, start, end, count, consumerName));
 	}
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count,
+										final StreamEntryId start, final StreamEntryId end, final int count,
 										final String consumerName) {
 		return execute((client)->client.streamOperations()
 				.xPending(rawKey(key), groupName, minIdleTime, start, end, count, consumerName));
@@ -3976,7 +3768,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final long count,
+										final StreamEntryId start, final StreamEntryId end, final int count,
 										final byte[] consumerName) {
 		return execute((client)->client.streamOperations()
 				.xPending(rawKey(key), groupName, minIdleTime, start, end, count, consumerName));
@@ -3994,13 +3786,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
-									final long count) {
+									final int count) {
 		return execute((client)->client.streamOperations().xRange(rawKey(key), start, end));
 	}
 
 	@Override
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
-									final long count) {
+									final int count) {
 		return execute((client)->client.streamOperations().xRange(rawKey(key), start, end));
 	}
 
@@ -4010,19 +3802,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(count, streams));
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(block, streams));
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
-													  final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(count, block, streams));
+	public List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
+													  final XReadArgument xReadArgument) {
+		return execute((client)->client.streamOperations().xRead(streams, xReadArgument));
 	}
 
 	@Override
@@ -4039,26 +3821,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, count, streams));
+														   final Map<String, StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
+		return execute(
+				(client)->client.streamOperations().xReadGroup(groupName, consumerName, streams, xReadGroupArgument));
 	}
 
 	@Override
 	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, count, streams));
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final int block, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, block, streams));
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final int block, final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, block, streams));
+														   final Map<byte[], StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
+		return execute(
+				(client)->client.streamOperations().xReadGroup(groupName, consumerName, streams, xReadGroupArgument));
 	}
 
 	@Override
@@ -4077,64 +3851,22 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final int block,
-														   final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, count, block, streams));
+														   final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
+		return execute(
+				(client)->client.streamOperations()
+						.xReadGroup(groupName, consumerName, isNoAck, streams, xReadGroupArgument));
 	}
 
 	@Override
 	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final int block,
-														   final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, count, block, streams));
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams) {
+														   final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams,
+														   final XReadGroupArgument xReadGroupArgument) {
 		return execute(
-				(client)->client.streamOperations().xReadGroup(groupName, consumerName, count, isNoAck, streams));
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		return execute(
-				(client)->client.streamOperations().xReadGroup(groupName, consumerName, count, isNoAck, streams));
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final int block, final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams) {
-		return execute(
-				(client)->client.streamOperations().xReadGroup(groupName, consumerName, block, isNoAck, streams));
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final int block, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		return execute(
-				(client)->client.streamOperations().xReadGroup(groupName, consumerName, block, isNoAck, streams));
-	}
-
-	@Override
-	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final long count, final int block, final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations()
-				.xReadGroup(groupName, consumerName, count, block, isNoAck, streams));
-	}
-
-	@Override
-	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final long count, final int block, final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations()
-				.xReadGroup(groupName, consumerName, count, block, isNoAck, streams));
+				(client)->client.streamOperations()
+						.xReadGroup(groupName, consumerName, isNoAck, streams, xReadGroupArgument));
 	}
 
 	@Override
@@ -4149,13 +3881,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
-									   final long count) {
+									   final int count) {
 		return execute((client)->client.streamOperations().xRevRange(rawKey(key), end, start, count));
 	}
 
 	@Override
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
-									   final long count) {
+									   final int count) {
 		return execute((client)->client.streamOperations().xRevRange(rawKey(key), end, start, count));
 	}
 

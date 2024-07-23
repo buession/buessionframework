@@ -24,31 +24,65 @@
  */
 package com.buession.redis.core.internal.jedis;
 
+import com.buession.redis.core.command.args.XReadArgument;
 import redis.clients.jedis.params.XReadParams;
 
+import java.util.Optional;
+
 /**
+ * Jedis {@link XReadParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class JedisXReadParams extends XReadParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisXReadParams() {
 		super();
 	}
 
-	public JedisXReadParams(final long count) {
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回条数
+	 */
+	public JedisXReadParams(final int count) {
 		super();
-		count((int) count);
+		count(count);
 	}
 
-	public JedisXReadParams(final long count, final int block) {
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回条数
+	 * @param block
+	 * 		-
+	 */
+	public JedisXReadParams(final int count, final int block) {
 		this(count);
 		block(block);
 	}
 
-	public JedisXReadParams(final int block) {
-		super();
-		block(block);
+	/**
+	 * 从 {@link XReadArgument} 创建 {@link XReadParams} 实例
+	 *
+	 * @param xReadArgument
+	 *        {@link XReadArgument}
+	 *
+	 * @return {@link JedisXReadParams} 实例
+	 */
+	public static JedisXReadParams from(final XReadArgument xReadArgument) {
+		final JedisXReadParams xReadParams = new JedisXReadParams();
+
+		Optional.ofNullable(xReadArgument.getCount()).ifPresent(xReadParams::count);
+		Optional.ofNullable(xReadArgument.getBlock()).ifPresent(xReadParams::block);
+
+		return xReadParams;
 	}
 
 }

@@ -261,7 +261,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															 final String consumerName, final int minIdleTime,
-															 final String start, final long count) {
+															 final String start, final int count) {
 		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
 	}
 
@@ -287,7 +287,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															 final byte[] consumerName, final int minIdleTime,
-															 final byte[] start, final long count) {
+															 final byte[] start, final int count) {
 		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
 	}
 
@@ -361,7 +361,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	 final String consumerName, final int minIdleTime,
-																	 final String start, final long count) {
+																	 final String start, final int count) {
 		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
 	}
 
@@ -387,7 +387,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 																	 final byte[] consumerName, final int minIdleTime,
-																	 final byte[] start, final long count) {
+																	 final byte[] start, final int count) {
 		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
 	}
 
@@ -650,7 +650,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final String start, final String end,
-										 final long count) {
+										 final int count) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -673,7 +673,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start, final byte[] end,
-										 final long count) {
+										 final int count) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -698,7 +698,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										 final String start, final String end, final long count) {
+										 final String start, final String end, final int count) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -723,7 +723,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										 final byte[] start, final byte[] end, final long count) {
+										 final byte[] start, final byte[] end, final int count) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -748,7 +748,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final String start,
-										 final String end, final long count, final String consumerName) {
+										 final String end, final int count, final String consumerName) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count, consumerName);
 	}
 
@@ -773,7 +773,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start,
-										 final byte[] end, final long count, final byte[] consumerName) {
+										 final byte[] end, final int count, final byte[] consumerName) {
 		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count, consumerName);
 	}
 
@@ -800,7 +800,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-										 final String start, final String end, final long count,
+										 final String start, final String end, final int count,
 										 final String consumerName) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count,
 				consumerName);
@@ -829,7 +829,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return {@link StreamPending} 列表
 	 */
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										 final byte[] start, final byte[] end, final long count,
+										 final byte[] start, final byte[] end, final int count,
 										 final byte[] consumerName) {
 		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count,
 				consumerName);
@@ -887,7 +887,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRange(final String key, final String start, final String end, final long count) {
+	default List<StreamEntry> xRange(final String key, final String start, final String end, final int count) {
 		return xRange(key, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -907,7 +907,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRange(final byte[] key, final byte[] start, final byte[] end, final long count) {
+	default List<StreamEntry> xRange(final byte[] key, final byte[] start, final byte[] end, final int count) {
 		return xRange(key, new StreamEntryId(start), new StreamEntryId(end), count);
 	}
 
@@ -969,7 +969,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRevRange(final String key, final String end, final String start, final long count) {
+	default List<StreamEntry> xRevRange(final String key, final String end, final String start, final int count) {
 		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start), count);
 	}
 
@@ -991,7 +991,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xRevRange(final byte[] key, final byte[] end, final byte[] start, final long count) {
+	default List<StreamEntry> xRevRange(final byte[] key, final byte[] end, final byte[] start, final int count) {
 		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start), count);
 	}
 

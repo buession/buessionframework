@@ -238,7 +238,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	}
 
 	@Override
-	public Set<String> sPop(final String key, final long count) {
+	public Set<String> sPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
@@ -247,7 +247,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	}
 
 	@Override
-	public Set<byte[]> sPop(final byte[] key, final long count) {
+	public Set<byte[]> sPop(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return sPop(key, count, (v)->v, args);
 	}
@@ -267,7 +267,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count) {
+	public List<String> sRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
@@ -276,7 +276,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count) {
+	public List<byte[]> sRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		return sRandMember(key, count, (v)->v, args);
 	}
@@ -340,7 +340,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
@@ -352,7 +352,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -363,7 +363,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-										  final long count) {
+										  final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
@@ -377,7 +377,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final long count) {
+										  final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
@@ -495,7 +495,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 		}
 	}
 
-	private <V> Set<V> sPop(final byte[] key, final long count, final Converter<Set<byte[]>, Set<V>> converter,
+	private <V> Set<V> sPop(final byte[] key, final int count, final Converter<Set<byte[]>, Set<V>> converter,
 							final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key, count),
@@ -527,7 +527,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 		}
 	}
 
-	private <V> List<V> sRandMember(final byte[] key, final long count,
+	private <V> List<V> sRandMember(final byte[] key, final int count,
 									final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SRANDMEMBER,

@@ -141,21 +141,21 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	}
 
 	@Override
-	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		return notCommand(client, ProtocolCommand.LPOS, args);
 	}
 
 	@Override
-	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
+	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		return notCommand(client, ProtocolCommand.LPOS, args);
 	}
 
 	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count) {
+	public Long lRem(final byte[] key, final byte[] value, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
 		return notCommand(client, ProtocolCommand.LREM, args);
 	}

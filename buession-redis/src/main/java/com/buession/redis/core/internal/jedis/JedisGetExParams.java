@@ -98,9 +98,7 @@ public final class JedisGetExParams extends GetExParams {
 	 * @return {@link JedisGetExParams} 实例
 	 */
 	public static JedisGetExParams from(final GetExArgument getExArgument) {
-		return getExArgument != null && getExArgument.getType() != null && getExArgument.getExpires() != null ?
-				new JedisGetExParams(getExArgument.getType(), getExArgument.getExpires()) :
-				new JedisGetExParams();
+		return new JedisGetExParams(getExArgument.getType(), getExArgument.getExpires());
 	}
 
 }

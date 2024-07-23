@@ -275,7 +275,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	}
 
 	@Override
-	public List<String> hRandField(final String key, final long count) {
+	public List<String> hRandField(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
@@ -296,7 +296,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	}
 
 	@Override
-	public List<byte[]> hRandField(final byte[] key, final long count) {
+	public List<byte[]> hRandField(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -317,7 +317,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	}
 
 	@Override
-	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final long count) {
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ListConverter<io.lettuce.core.KeyValue<byte[], byte[]>, KeyValue<String, String>> listConverter =
@@ -339,7 +339,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	}
 
 	@Override
-	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final long count) {
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final ListConverter<io.lettuce.core.KeyValue<byte[], byte[]>, KeyValue<byte[], byte[]>> listConverter =
 				KeyValueConverter.listConverter((k)->k, (v)->v);
@@ -402,7 +402,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
@@ -414,7 +414,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -425,7 +425,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final long count) {
+												 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
@@ -438,7 +438,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final long count) {
+												 final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);

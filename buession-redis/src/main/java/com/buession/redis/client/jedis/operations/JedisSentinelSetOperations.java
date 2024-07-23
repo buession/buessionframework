@@ -443,7 +443,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<String> sPop(final String key, final long count) {
+	public Set<String> sPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -460,7 +460,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public Set<byte[]> sPop(final byte[] key, final long count) {
+	public Set<byte[]> sPop(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -514,7 +514,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count) {
+	public List<String> sRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -533,7 +533,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count) {
+	public List<byte[]> sRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
@@ -646,7 +646,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
@@ -654,7 +654,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
@@ -663,7 +663,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-										  final long count) {
+										  final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
@@ -673,7 +673,7 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final long count) {
+										  final int count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
