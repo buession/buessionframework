@@ -65,9 +65,9 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param limit
 	 * 		-
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final Long limit) {
+	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final long limit) {
 		this(maxLenMinId);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
 	}
 
 	/**
@@ -94,9 +94,20 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * 		-
 	 */
 	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
-							final Long limit) {
+							final long limit) {
 		this(maxLenMinId, approximateExactTrimming);
-		Optional.ofNullable(limit).ifPresent(this::limit);
+		limit(limit);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param limit
+	 * 		-
+	 */
+	public JedisXTrimParams(final long limit) {
+		super();
+		limit(limit);
 	}
 
 	/**

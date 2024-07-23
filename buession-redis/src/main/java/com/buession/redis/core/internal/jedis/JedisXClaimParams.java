@@ -49,12 +49,12 @@ public class JedisXClaimParams extends XClaimParams {
 	 *
 	 * @param idleType
 	 * 		设置过期时间方式
-	 * @param idleTime
+	 * @param expires
 	 * 		过期时间
 	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime) {
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires) {
 		super();
-		idleTime(this, idleType, idleTime);
+		idleTime(this, idleType, expires);
 	}
 
 	/**
@@ -63,9 +63,9 @@ public class JedisXClaimParams extends XClaimParams {
 	 * @param retryCount
 	 * 		重试次数
 	 */
-	public JedisXClaimParams(final Integer retryCount) {
+	public JedisXClaimParams(final int retryCount) {
 		super();
-		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+		retryCount(retryCount);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class JedisXClaimParams extends XClaimParams {
 	 * @param force
 	 * 		是否强制
 	 */
-	public JedisXClaimParams(final Boolean force) {
+	public JedisXClaimParams(final boolean force) {
 		super();
 		force(this, force);
 	}
@@ -84,14 +84,14 @@ public class JedisXClaimParams extends XClaimParams {
 	 *
 	 * @param idleType
 	 * 		设置过期时间方式
-	 * @param idleTime
+	 * @param expires
 	 * 		过期时间
 	 * @param retryCount
 	 * 		重试次数
 	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount) {
-		this(idleType, idleTime);
-		Optional.ofNullable(retryCount).ifPresent(this::retryCount);
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires, final int retryCount) {
+		this(idleType, expires);
+		retryCount(retryCount);
 	}
 
 	/**
@@ -99,13 +99,13 @@ public class JedisXClaimParams extends XClaimParams {
 	 *
 	 * @param idleType
 	 * 		设置过期时间方式
-	 * @param idleTime
+	 * @param expires
 	 * 		过期时间
 	 * @param force
 	 * 		是否强制
 	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Boolean force) {
-		this(idleType, idleTime);
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires, final boolean force) {
+		this(idleType, expires);
 		force(this, force);
 	}
 
@@ -114,16 +114,16 @@ public class JedisXClaimParams extends XClaimParams {
 	 *
 	 * @param idleType
 	 * 		设置过期时间方式
-	 * @param idleTime
+	 * @param expires
 	 * 		过期时间
 	 * @param retryCount
 	 * 		重试次数
 	 * @param force
 	 * 		是否强制
 	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final Long idleTime, final Integer retryCount,
-							 final Boolean force) {
-		this(idleType, idleTime, retryCount);
+	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires, final int retryCount,
+							 final boolean force) {
+		this(idleType, expires, retryCount);
 		force(this, force);
 	}
 

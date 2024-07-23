@@ -46,7 +46,21 @@ public final class JedisZParams extends ZParams {
 	 */
 	public JedisZParams(final com.buession.redis.core.Aggregate aggregate) {
 		super();
-		aggregate(aggregate);
+		if(aggregate != null){
+			switch(aggregate){
+				case MIN:
+					aggregate(Aggregate.MIN);
+					break;
+				case MAX:
+					aggregate(Aggregate.MAX);
+					break;
+				case SUM:
+					aggregate(Aggregate.SUM);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	/**
@@ -69,27 +83,8 @@ public final class JedisZParams extends ZParams {
 	 * 		权重
 	 */
 	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
-		super();
-		aggregate(aggregate);
+		this(aggregate);
 		weights(weights);
-	}
-
-	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
-		if(aggregate != null){
-			switch(aggregate){
-				case MIN:
-					aggregate(Aggregate.MIN);
-					break;
-				case MAX:
-					aggregate(Aggregate.MAX);
-					break;
-				case SUM:
-					aggregate(Aggregate.SUM);
-					break;
-				default:
-					break;
-			}
-		}
 	}
 
 }

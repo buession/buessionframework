@@ -358,6 +358,21 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	}
 
 	@Override
+	public Status clusterReset() {
+		if(isPipeline()){
+			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
+					.run();
+		}else{
+			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_RESET,
+					(cmd)->cmd.clusterReset(), okStatusConverter)
+					.run();
+		}
+	}
+
+	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
 		final ClusterResetType clusterResetType = (new ClusterResetOptionConverter()).convert(clusterResetOption);

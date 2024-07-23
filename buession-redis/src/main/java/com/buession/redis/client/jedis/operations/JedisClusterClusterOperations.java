@@ -185,6 +185,11 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
+	public Status clusterReset() {
+		return notCommand(client, ProtocolCommand.CLUSTER_RESET);
+	}
+
+	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
 		return notCommand(client, ProtocolCommand.CLUSTER_RESET, args);
