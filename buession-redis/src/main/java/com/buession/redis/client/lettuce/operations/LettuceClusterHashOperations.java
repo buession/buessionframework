@@ -33,7 +33,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
@@ -66,15 +66,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields),
+			return new LettuceClusterPipelineCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields),
+			return new LettuceClusterTransactionCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}
 	}
@@ -84,15 +84,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
+			return new LettuceClusterPipelineCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HEXISTS,
+			return new LettuceClusterTransactionCommand<>(client, Command.HEXISTS,
 					(cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -132,15 +132,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HINCRBY,
+			return new LettuceClusterPipelineCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrby(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HINCRBY,
+			return new LettuceClusterTransactionCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrby(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
+			return new LettuceClusterCommand<>(client, Command.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
 					(v)->v)
 					.run(args);
 		}
@@ -151,15 +151,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new LettuceClusterPipelineCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new LettuceClusterTransactionCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new LettuceClusterCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}
@@ -186,13 +186,13 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new LettuceClusterPipelineCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new LettuceClusterTransactionCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -222,15 +222,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new LettuceClusterPipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new LettuceClusterTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new LettuceClusterCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}
@@ -242,15 +242,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
+			return new LettuceClusterPipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
 					SafeEncoder::encode)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(bKey), SafeEncoder::encode)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
+			return new LettuceClusterCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
 					SafeEncoder::encode)
 					.run(args);
 		}
@@ -261,15 +261,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new LettuceClusterPipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -281,15 +281,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(bKey, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(bKey, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
+			return new LettuceClusterCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
 					listConverter)
 					.run(args);
 		}
@@ -300,17 +300,17 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
+			return new LettuceClusterCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
 					(v)->v)
 					.run(args);
 		}
@@ -324,15 +324,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 				KeyValueConverter.listConverter(SafeEncoder::encode, SafeEncoder::encode);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
 					.run(args);
 		}
@@ -345,15 +345,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 				KeyValueConverter.listConverter((k)->k, (v)->v);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceClusterCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
 					.run(args);
 		}
@@ -454,15 +454,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final Converter<Boolean, Long> converter = (v)->Boolean.TRUE.equals(v) ? 1L : 0L;
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+			return new LettuceClusterPipelineCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSET,
+			return new LettuceClusterTransactionCommand<>(client, Command.HSET,
 					(cmd)->cmd.hset(key, field, value), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+			return new LettuceClusterCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value),
 					converter)
 					.run(args);
 		}
@@ -473,15 +473,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSETNX,
+			return new LettuceClusterPipelineCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hsetnx(key, field, value), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSETNX,
+			return new LettuceClusterTransactionCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hsetnx(key, field, value), booleanStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+			return new LettuceClusterCommand<>(client, Command.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -492,15 +492,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field),
+			return new LettuceClusterPipelineCommand<>(client, Command.HSETNX, (cmd)->cmd.hstrlen(key, field),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSETNX,
+			return new LettuceClusterTransactionCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -523,15 +523,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	private <V> V hGet(final byte[] key, final byte[] field, final Converter<byte[], V> converter,
 					   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field),
+			return new LettuceClusterPipelineCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field),
+			return new LettuceClusterTransactionCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
+			return new LettuceClusterCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), converter)
 					.run(args);
 		}
 	}
@@ -539,15 +539,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	private <K, V> Map<K, V> hGetAll(final byte[] key, final Converter<Map<byte[], byte[]>, Map<K, V>> converter,
 									 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key),
+			return new LettuceClusterPipelineCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetall(key),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key),
+			return new LettuceClusterTransactionCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetall(key),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+			return new LettuceClusterCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetall(key), converter)
 					.run(args);
 		}
 	}
@@ -555,14 +555,14 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	private <V> Set<V> hKeys(final byte[] key, final Converter<List<byte[]>, Set<V>> converter,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+			return new LettuceClusterPipelineCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key),
+			return new LettuceClusterTransactionCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+			return new LettuceClusterCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), converter)
 					.run(args);
 		}
 	}
@@ -571,15 +571,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 							  final Converter<List<io.lettuce.core.KeyValue<byte[], byte[]>>, List<V>> converter,
 							  final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new LettuceClusterPipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new LettuceClusterTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+			return new LettuceClusterCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields), converter)
 					.run(args);
 		}
 	}
@@ -588,15 +588,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
 											   CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new LettuceClusterPipelineCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new LettuceClusterTransactionCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+			return new LettuceClusterCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
 					.run(args);
 		}
 	}
@@ -605,15 +605,15 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
 											   CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HSCAN,
+			return new LettuceClusterPipelineCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanArgs), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HSCAN,
+			return new LettuceClusterTransactionCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanArgs), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
+			return new LettuceClusterCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
 					converter)
 					.run(args);
 		}
@@ -622,14 +622,14 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 	private <V> List<V> hVals(final byte[] key, final Converter<List<byte[]>, List<V>> converter,
 							  final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+			return new LettuceClusterPipelineCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key),
+			return new LettuceClusterTransactionCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+			return new LettuceClusterCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);
 		}
 	}

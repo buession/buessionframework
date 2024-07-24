@@ -29,7 +29,7 @@ import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
 
 import java.util.List;
@@ -51,78 +51,78 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
-		return notCommand(client, ProtocolCommand.GEOADD, args);
+		return notCommand(client, Command.GEOADD, args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
-		return notCommand(client, ProtocolCommand.GEOADD, args);
+		return notCommand(client, Command.GEOADD, args);
 	}
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		return notCommand(client, ProtocolCommand.GEOADD, args);
+		return notCommand(client, Command.GEOADD, args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		return notCommand(client, ProtocolCommand.GEOADD, args);
+		return notCommand(client, Command.GEOADD, args);
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return notCommand(client, ProtocolCommand.GEOHASH, args);
+		return notCommand(client, Command.GEOHASH, args);
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return notCommand(client, ProtocolCommand.GEOHASH, args);
+		return notCommand(client, Command.GEOHASH, args);
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return notCommand(client, ProtocolCommand.GEOPOS, args);
+		return notCommand(client, Command.GEOPOS, args);
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
-		return notCommand(client, ProtocolCommand.GEOPOS, args);
+		return notCommand(client, Command.GEOPOS, args);
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
-		return notCommand(client, ProtocolCommand.GEODIST, args);
+		return notCommand(client, Command.GEODIST, args);
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2);
-		return notCommand(client, ProtocolCommand.GEODIST, args);
+		return notCommand(client, Command.GEODIST, args);
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEODIST, args);
+		return notCommand(client, Command.GEODIST, args);
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEODIST, args);
+		return notCommand(client, Command.GEODIST, args);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUS, args);
+		return notCommand(client, Command.GEORADIUS, args);
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUS, args);
+		return notCommand(client, Command.GEORADIUS, args);
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUS, args);
+		return notCommand(client, Command.GEORADIUS, args);
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUS, args);
+		return notCommand(client, Command.GEORADIUS, args);
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -184,7 +184,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER, args);
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER, args);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -242,7 +242,7 @@ public final class LettuceSentinelGeoOperations extends AbstractGeoOperations<Le
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 }

@@ -31,7 +31,7 @@ import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.GeoUnitConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoCoordinateConverter;
@@ -68,15 +68,15 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 				.put("longitude", longitude).put("latitude", latitude);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
 					.run(args);
 		}
@@ -89,15 +89,15 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 		final GeoValue<byte[]>[] geoValues = GeoValueUtils.fromStringMap(memberCoordinates);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(bKey, geoValues), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(bKey, geoValues), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(bKey, geoValues), (v)->v)
 					.run(args);
 		}
@@ -109,15 +109,15 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 		final GeoValue<byte[]>[] geoValues = GeoValueUtils.fromBinaryMap(memberCoordinates);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(key, geoValues), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(key, geoValues), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEOADD,
+			return new LettuceClusterCommand<>(client, Command.GEOADD,
 					(cmd)->cmd.geoadd(key, geoValues), (v)->v)
 					.run(args);
 		}
@@ -148,15 +148,15 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 		final ListConverter<GeoCoordinates, Geo> listGeoCoordinateConverter = GeoCoordinateConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
+			return new LettuceClusterPipelineCommand<>(client, Command.GEOPOS, (cmd)->cmd.geopos(key, members),
 					listGeoCoordinateConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEOPOS,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEOPOS,
 					(cmd)->cmd.geopos(key, members), listGeoCoordinateConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
+			return new LettuceClusterCommand<>(client, Command.GEOPOS, (cmd)->cmd.geopos(key, members),
 					listGeoCoordinateConverter)
 					.run(args);
 		}
@@ -188,17 +188,17 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 				GeoRadiusGeneralResultConverter.setListConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEORADIUS,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEORADIUS,
 					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
 					setListGeoRadiusGeneralResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEORADIUS,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEORADIUS,
 					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
 					setListGeoRadiusGeneralResultConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEORADIUS,
+			return new LettuceClusterCommand<>(client, Command.GEORADIUS,
 					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
 					setListGeoRadiusGeneralResultConverter)
 					.run(args);
@@ -218,17 +218,17 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 				GeoRadiusResponseConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEORADIUS,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEORADIUS,
 					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
 					listGeoRadiusResponseConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEORADIUS,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEORADIUS,
 					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
 					listGeoRadiusResponseConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEORADIUS,
+			return new LettuceClusterCommand<>(client, Command.GEORADIUS,
 					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
 					listGeoRadiusResponseConverter)
 					.run(args);
@@ -240,7 +240,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -248,7 +248,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -258,7 +258,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUS_RO, args);
+		return notCommand(client, Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -281,17 +281,17 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 				GeoRadiusGeneralResultConverter.setListConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEORADIUSBYMEMBER,
 					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
 					setListGeoRadiusGeneralResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEORADIUSBYMEMBER,
 					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
 					setListGeoRadiusGeneralResultConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+			return new LettuceClusterCommand<>(client, Command.GEORADIUSBYMEMBER,
 					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
 					setListGeoRadiusGeneralResultConverter)
 					.run(args);
@@ -309,17 +309,17 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 				GeoRadiusResponseConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEORADIUSBYMEMBER,
 					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
 					listGeoRadiusResponseConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEORADIUSBYMEMBER,
 					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
 					listGeoRadiusResponseConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
+			return new LettuceClusterCommand<>(client, Command.GEORADIUSBYMEMBER,
 					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
 					listGeoRadiusResponseConverter)
 					.run(args);
@@ -331,7 +331,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -339,7 +339,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -347,7 +347,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -355,21 +355,21 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		return notCommand(client, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		return notCommand(client, Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	private <V> List<V> geoHash(final byte[] key, final byte[][] members,
 								final ListConverter<Value<String>, V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEOHASH,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEOHASH,
 					(cmd)->cmd.geohash(key, members), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEOHASH,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEOHASH,
 					(cmd)->cmd.geohash(key, members), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
+			return new LettuceClusterCommand<>(client, Command.GEOHASH, (cmd)->cmd.geohash(key, members),
 					converter)
 					.run(args);
 		}
@@ -378,15 +378,15 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	private Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoArgs.Unit unit,
 						   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GEODIST,
+			return new LettuceClusterPipelineCommand<>(client, Command.GEODIST,
 					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GEODIST,
+			return new LettuceClusterTransactionCommand<>(client, Command.GEODIST,
 					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GEODIST,
+			return new LettuceClusterCommand<>(client, Command.GEODIST,
 					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
 					.run(args);
 		}

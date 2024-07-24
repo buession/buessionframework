@@ -28,7 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 import java.util.List;
 
@@ -47,98 +47,98 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return notCommand(client, ProtocolCommand.EVAL, args);
+		return notCommand(client, Command.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return notCommand(client, ProtocolCommand.EVAL, args);
+		return notCommand(client, Command.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
-		return notCommand(client, ProtocolCommand.EVAL, args);
+		return notCommand(client, Command.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params) {
 		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
-		return notCommand(client, ProtocolCommand.EVAL, args);
+		return notCommand(client, Command.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.EVAL, args);
+		return notCommand(client, Command.EVAL, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.EVAL, args);
+		return notCommand(client, Command.EVAL, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		return notCommand(client, ProtocolCommand.EVALSHA, args);
+		return notCommand(client, Command.EVALSHA, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
-		return notCommand(client, ProtocolCommand.EVALSHA, args);
+		return notCommand(client, Command.EVALSHA, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.EVALSHA, args);
+		return notCommand(client, Command.EVALSHA, args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return notCommand(client, ProtocolCommand.SCRIPT_EXISTS, args);
+		return notCommand(client, Command.SCRIPT_EXISTS, args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1) {
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
-		return notCommand(client, ProtocolCommand.SCRIPT_EXISTS, args);
+		return notCommand(client, Command.SCRIPT_EXISTS, args);
 	}
 
 	@Override
 	public Status scriptFlush() {
-		return notCommand(client, ProtocolCommand.SCRIPT_FLUSH);
+		return notCommand(client, Command.SCRIPT_FLUSH);
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		return notCommand(client, ProtocolCommand.SCRIPT_FLUSH, args);
+		return notCommand(client, Command.SCRIPT_FLUSH, args);
 	}
 
 	@Override
 	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return notCommand(client, ProtocolCommand.SCRIPT_LOAD, args);
+		return notCommand(client, Command.SCRIPT_LOAD, args);
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create("script", script);
-		return notCommand(client, ProtocolCommand.SCRIPT_LOAD, args);
+		return notCommand(client, Command.SCRIPT_LOAD, args);
 	}
 
 	@Override
 	public Status scriptKill() {
-		return notCommand(client, ProtocolCommand.SCRIPT_KILL);
+		return notCommand(client, Command.SCRIPT_KILL);
 	}
 
 }

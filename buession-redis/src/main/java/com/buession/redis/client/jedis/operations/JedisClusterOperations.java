@@ -36,7 +36,7 @@ import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.jedis.params.ClusterFailoverOptionConverter;
 import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
 import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
@@ -64,13 +64,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public String clusterMyId() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
+			return new JedisPipelineCommand<String, String>(client, Command.CLUSTER_MY_ID)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.CLUSTER_MY_ID)
+			return new JedisTransactionCommand<String, String>(client, Command.CLUSTER_MY_ID)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
+			return new JedisCommand<>(client, Command.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
 					.run();
 		}
 	}
@@ -80,13 +80,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("slots", slots);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_ADDSLOTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_ADDSLOTS)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS, (cmd)->cmd.clusterAddSlots(slots),
+			return new JedisCommand<>(client, Command.CLUSTER_ADDSLOTS, (cmd)->cmd.clusterAddSlots(slots),
 					okStatusConverter)
 					.run(args);
 		}
@@ -97,14 +97,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final ListConverter<Object, ClusterSlot> listClusterSlotConverter = ClusterSlotConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<ClusterSlot>, List<ClusterSlot>>(client, ProtocolCommand.CLUSTER_SLOTS)
+			return new JedisPipelineCommand<List<ClusterSlot>, List<ClusterSlot>>(client, Command.CLUSTER_SLOTS)
 					.run();
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<List<ClusterSlot>, List<ClusterSlot>>(client,
-					ProtocolCommand.CLUSTER_SLOTS)
+					Command.CLUSTER_SLOTS)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
+			return new JedisCommand<>(client, Command.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
 					listClusterSlotConverter)
 					.run();
 		}
@@ -115,13 +115,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
+			return new JedisPipelineCommand<Long, Long>(client, Command.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS)
+			return new JedisTransactionCommand<Long, Long>(client, Command.CLUSTER_COUNTFAILUREREPORTS)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+			return new JedisCommand<>(client, Command.CLUSTER_COUNTFAILUREREPORTS,
 					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}
@@ -132,13 +132,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("slot", slot);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
+			return new JedisPipelineCommand<Long, Long>(client, Command.CLUSTER_COUNTKEYSINSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
+			return new JedisTransactionCommand<Long, Long>(client, Command.CLUSTER_COUNTKEYSINSLOT)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
+			return new JedisCommand<>(client, Command.CLUSTER_COUNTKEYSINSLOT,
 					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
 					.run(args);
 		}
@@ -149,13 +149,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("slots", slots);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_DELSLOTS)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_DELSLOTS)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS, (cmd)->cmd.clusterDelSlots(slots),
+			return new JedisCommand<>(client, Command.CLUSTER_DELSLOTS, (cmd)->cmd.clusterDelSlots(slots),
 					okStatusConverter)
 					.run(args);
 		}
@@ -164,13 +164,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Status clusterFlushSlots() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_FLUSHSLOTS)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_FLUSHSLOTS)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushSlots(),
+			return new JedisCommand<>(client, Command.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushSlots(),
 					okStatusConverter)
 					.run();
 		}
@@ -183,13 +183,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 				(new ClusterFailoverOptionConverter()).convert(clusterFailoverOption);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_FAILOVER)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FAILOVER)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_FAILOVER)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
+			return new JedisCommand<>(client, Command.CLUSTER_FAILOVER,
 					(cmd)->cmd.clusterFailover(failoverOption), okStatusConverter)
 					.run(args);
 		}
@@ -200,13 +200,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_FORGET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_FORGET)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
+			return new JedisCommand<>(client, Command.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
 					okStatusConverter)
 					.run(args);
 		}
@@ -217,14 +217,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
+			return new JedisPipelineCommand<List<String>, List<String>>(client, Command.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<List<String>, List<String>>(client,
-					ProtocolCommand.CLUSTER_GETKEYSINSLOT)
+					Command.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new JedisCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterGetKeysInSlot(slot, count), (v)->v)
 					.run(args);
 		}
@@ -235,13 +235,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
+			return new JedisPipelineCommand<Long, Long>(client, Command.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
+			return new JedisTransactionCommand<Long, Long>(client, Command.CLUSTER_GETKEYSINSLOT)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, (cmd)->cmd.clusterKeySlot(key),
+			return new JedisCommand<>(client, Command.CLUSTER_GETKEYSINSLOT, (cmd)->cmd.clusterKeySlot(key),
 					(v)->v)
 					.run(args);
 		}
@@ -252,13 +252,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final ClusterInfoConverter clusterInfoConverter = new ClusterInfoConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
+			return new JedisPipelineCommand<ClusterInfo, ClusterInfo>(client, Command.CLUSTER_INFO)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<ClusterInfo, ClusterInfo>(client, ProtocolCommand.CLUSTER_INFO)
+			return new JedisTransactionCommand<ClusterInfo, ClusterInfo>(client, Command.CLUSTER_INFO)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
+			return new JedisCommand<>(client, Command.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
 					clusterInfoConverter)
 					.run();
 		}
@@ -269,13 +269,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_MEET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_MEET)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
+			return new JedisCommand<>(client, Command.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
 					okStatusConverter)
 					.run(args);
 		}
@@ -287,14 +287,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
+					Command.CLUSTER_NODES)
 					.run();
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_NODES)
+					Command.CLUSTER_NODES)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
+			return new JedisCommand<>(client, Command.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
 					clusterNodesConverter)
 					.run();
 		}
@@ -307,14 +307,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
+					Command.CLUSTER_SLAVES)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_SLAVES)
+					Command.CLUSTER_SLAVES)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
+			return new JedisCommand<>(client, Command.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
 					listClusterNodeConverter)
 					.run(args);
 		}
@@ -327,14 +327,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
+					Command.CLUSTER_REPLICAS)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<List<ClusterRedisNode>, List<ClusterRedisNode>>(client,
-					ProtocolCommand.CLUSTER_REPLICAS)
+					Command.CLUSTER_REPLICAS)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS, (cmd)->cmd.clusterReplicas(nodeId),
+			return new JedisCommand<>(client, Command.CLUSTER_REPLICAS, (cmd)->cmd.clusterReplicas(nodeId),
 					listClusterReplicasConverter)
 					.run(args);
 		}
@@ -345,13 +345,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_REPLICATE)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_REPLICATE)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE, (cmd)->cmd.clusterReplicate(nodeId),
+			return new JedisCommand<>(client, Command.CLUSTER_REPLICATE, (cmd)->cmd.clusterReplicate(nodeId),
 					okStatusConverter)
 					.run(args);
 		}
@@ -360,13 +360,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Status clusterReset() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_RESET)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_RESET)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_RESET,
+			return new JedisCommand<>(client, Command.CLUSTER_RESET,
 					(cmd)->cmd.clusterReset(), okStatusConverter)
 					.run();
 		}
@@ -378,13 +378,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final ClusterResetType clusterResetType = (new ClusterResetOptionConverter()).convert(clusterResetOption);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_RESET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_RESET)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_RESET)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_RESET,
+			return new JedisCommand<>(client, Command.CLUSTER_RESET,
 					(cmd)->cmd.clusterReset(clusterResetType), okStatusConverter)
 					.run(args);
 		}
@@ -393,13 +393,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Status clusterSaveConfig() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_SAVECONFIG)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SAVECONFIG)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_SAVECONFIG)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveConfig(),
+			return new JedisCommand<>(client, Command.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveConfig(),
 					okStatusConverter)
 					.run();
 		}
@@ -410,13 +410,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_SETCONFIGEPOCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_SETCONFIGEPOCH)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
+			return new JedisCommand<>(client, Command.CLUSTER_SETCONFIGEPOCH,
 					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
 					.run(args);
 		}
@@ -428,14 +428,14 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(client,
-					ProtocolCommand.CLUSTER_BUMPEPOCH)
+					Command.CLUSTER_BUMPEPOCH)
 					.run();
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<KeyValue<BumpEpoch, Integer>, KeyValue<BumpEpoch, Integer>>(client,
-					ProtocolCommand.CLUSTER_BUMPEPOCH)
+					Command.CLUSTER_BUMPEPOCH)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpEpoch(),
+			return new JedisCommand<>(client, Command.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpEpoch(),
 					bumpEpochConverter)
 					.run();
 		}
@@ -447,13 +447,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 				.put("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
+			return new JedisPipelineCommand<Status, Status>(client, Command.CLUSTER_SETSLOT)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)
+			return new JedisTransactionCommand<Status, Status>(client, Command.CLUSTER_SETSLOT)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
+			return new JedisCommand<>(client, Command.CLUSTER_SETSLOT, (cmd)->{
 				switch(setSlotOption){
 					case IMPORTING:
 						return cmd.clusterSetSlotImporting(slot, nodeId);
@@ -474,13 +474,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Status asking() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ASKING)
+			return new JedisPipelineCommand<Status, Status>(client, Command.ASKING)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ASKING)
+			return new JedisTransactionCommand<Status, Status>(client, Command.ASKING)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(), okStatusConverter)
+			return new JedisCommand<>(client, Command.ASKING, (cmd)->cmd.asking(), okStatusConverter)
 					.run();
 		}
 	}
@@ -488,13 +488,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Status readWrite() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.READWRITE)
+			return new JedisPipelineCommand<Status, Status>(client, Command.READWRITE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.READWRITE)
+			return new JedisTransactionCommand<Status, Status>(client, Command.READWRITE)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readwrite(),
+			return new JedisCommand<>(client, Command.READWRITE, (cmd)->cmd.readwrite(),
 					okStatusConverter)
 					.run();
 		}
@@ -503,13 +503,13 @@ public final class JedisClusterOperations extends AbstractClusterOperations<Jedi
 	@Override
 	public Status readOnly() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.READONLY)
+			return new JedisPipelineCommand<Status, Status>(client, Command.READONLY)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.READONLY)
+			return new JedisTransactionCommand<Status, Status>(client, Command.READONLY)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readonly(), okStatusConverter)
+			return new JedisCommand<>(client, Command.READONLY, (cmd)->cmd.readonly(), okStatusConverter)
 					.run();
 		}
 	}

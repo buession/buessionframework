@@ -28,7 +28,7 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
@@ -55,15 +55,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -73,15 +73,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -91,15 +91,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+			return new JedisSentinelCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -110,15 +110,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+			return new JedisSentinelCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -132,15 +132,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 				bitCountOption);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}
@@ -154,15 +154,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 				bitCountOption);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new JedisSentinelCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end, option), (v)->v)
 					.run(args);
 		}
@@ -174,15 +174,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final String[] arguments = Converters.objectArrayToStringArrayConverter().convert(argument.toArray());
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITFIELD,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, arguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITFIELD,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, arguments), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, arguments),
+			return new JedisSentinelCommand<>(client, Command.BITFIELD, (cmd)->cmd.bitfield(key, arguments),
 					(v)->v)
 					.run(args);
 		}
@@ -194,15 +194,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final byte[][] arguments = Converters.objectArrayToBinaryArrayConverter().convert(argument.toArray());
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITFIELD,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, arguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITFIELD,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, arguments), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, arguments),
+			return new JedisSentinelCommand<>(client, Command.BITFIELD, (cmd)->cmd.bitfield(key, arguments),
 					(v)->v)
 					.run(args);
 		}
@@ -213,15 +213,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITFIELD_RO,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITFIELD_RO,
 					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITFIELD_RO,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITFIELD_RO,
 					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITFIELD_RO,
+			return new JedisSentinelCommand<>(client, Command.BITFIELD_RO,
 					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}
@@ -232,15 +232,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITFIELD_RO,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITFIELD_RO,
 					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITFIELD_RO,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITFIELD_RO,
 					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITFIELD_RO,
+			return new JedisSentinelCommand<>(client, Command.BITFIELD_RO,
 					(cmd)->cmd.bitfieldReadonly(key, arguments), (v)->v)
 					.run(args);
 		}
@@ -253,15 +253,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final BitOP bitOP = (new BitOperationConverter()).convert(operation);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITOP,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITOP,
 					(cmd)->cmd.bitop(bitOP, destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITOP,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITOP,
 					(cmd)->cmd.bitop(bitOP, destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITOP, (cmd)->cmd.bitop(bitOP, destKey, keys),
+			return new JedisSentinelCommand<>(client, Command.BITOP, (cmd)->cmd.bitop(bitOP, destKey, keys),
 					(v)->v)
 					.run(args);
 		}
@@ -274,15 +274,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final BitOP bitOP = (new BitOperationConverter()).convert(operation);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITOP,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITOP,
 					(cmd)->cmd.bitop(bitOP, destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITOP,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITOP,
 					(cmd)->cmd.bitop(bitOP, destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITOP, (cmd)->cmd.bitop(bitOP, destKey, keys),
+			return new JedisSentinelCommand<>(client, Command.BITOP, (cmd)->cmd.bitop(bitOP, destKey, keys),
 					(v)->v)
 					.run(args);
 		}
@@ -293,15 +293,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
+			return new JedisSentinelPipelineCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
+			return new JedisSentinelTransactionCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -311,15 +311,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
+			return new JedisSentinelPipelineCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
+			return new JedisSentinelTransactionCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -331,15 +331,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITPOS,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITPOS,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITPOS,
+			return new JedisSentinelCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}
@@ -352,15 +352,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BITPOS,
+			return new JedisSentinelPipelineCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BITPOS,
+			return new JedisSentinelTransactionCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BITPOS,
+			return new JedisSentinelCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, bitPosParams), (v)->v)
 					.run(args);
 		}
@@ -371,15 +371,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new JedisSentinelPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new JedisSentinelTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
 					.run(args);
 		}
 	}
@@ -389,15 +389,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new JedisSentinelPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new JedisSentinelTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
 					.run(args);
 		}
 	}
@@ -407,15 +407,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SETBIT,
+			return new JedisSentinelPipelineCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SETBIT,
+			return new JedisSentinelTransactionCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, value),
+			return new JedisSentinelCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
 					(v)->v)
 					.run(args);
 		}
@@ -426,15 +426,15 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SETBIT,
+			return new JedisSentinelPipelineCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SETBIT,
+			return new JedisSentinelTransactionCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, value),
+			return new JedisSentinelCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
 					(v)->v)
 					.run(args);
 		}

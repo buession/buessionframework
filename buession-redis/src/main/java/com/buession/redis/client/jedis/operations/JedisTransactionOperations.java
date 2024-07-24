@@ -28,7 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -49,10 +49,10 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			return new JedisPipelineCommand<Status, Status>(client, Command.MULTI)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MULTI,
+			return new JedisTransactionCommand<>(client, Command.MULTI,
 					(cmd)->new Response<>(new Builder<Status>() {
 
 						@Override
@@ -68,7 +68,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					}), (v)->v)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+			return new JedisCommand<>(client, Command.MULTI, (cmd)->{
 				try{
 					cmd.multi();
 					return Status.SUCCESS;
@@ -83,7 +83,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public List<Object> exec() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+			return new JedisPipelineCommand<>(client, Command.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<List<Object>>() {
@@ -96,7 +96,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 				});
 			}, (v)->v).run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+			return new JedisTransactionCommand<>(client, Command.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<List<Object>>() {
@@ -109,7 +109,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 				});
 			}, (v)->v).run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+			return new JedisCommand<>(client, Command.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				return connection.exec();
 			}, (v)->v).run();
@@ -119,21 +119,21 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public void discard() {
 		if(isPipeline()){
-			new JedisPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+			new JedisPipelineCommand<>(client, Command.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
 			}, (v)->v)
 					.run();
 		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+			new JedisTransactionCommand<>(client, Command.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
 			}, (v)->v)
 					.run();
 		}else{
-			new JedisCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+			new JedisCommand<>(client, Command.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
@@ -147,10 +147,10 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+			return new JedisPipelineCommand<Status, Status>(client, Command.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WATCH,
+			return new JedisTransactionCommand<>(client, Command.WATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -161,7 +161,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					}), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+			return new JedisCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -171,10 +171,10 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+			return new JedisPipelineCommand<Status, Status>(client, Command.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WATCH,
+			return new JedisTransactionCommand<>(client, Command.WATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -185,7 +185,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					}), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+			return new JedisCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -193,10 +193,10 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	@Override
 	public Status unwatch() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+			return new JedisPipelineCommand<Status, Status>(client, Command.UNWATCH)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.UNWATCH,
+			return new JedisTransactionCommand<>(client, Command.UNWATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -207,7 +207,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 					}), okStatusConverter)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+			return new JedisCommand<>(client, Command.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
 					.run();
 		}
 	}

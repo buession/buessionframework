@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import io.lettuce.core.protocol.CommandType;
 import org.springframework.lang.Nullable;
 
@@ -35,12 +35,12 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class CommandTypeConverter implements Converter<CommandType, ProtocolCommand> {
+public final class CommandTypeConverter implements Converter<CommandType, Command> {
 
 	@Nullable
 	@Override
-	public ProtocolCommand convert(final CommandType source) {
-		return source == null ? null : Enum.valueOf(ProtocolCommand.class, source.name());
+	public Command convert(final CommandType source) {
+		return source == null ? null : Enum.valueOf(Command.class, source.name());
 	}
 
 }

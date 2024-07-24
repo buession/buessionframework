@@ -25,7 +25,7 @@
 package com.buession.redis.exception;
 
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 /**
  * 不支持事务异常
@@ -40,11 +40,11 @@ public class NotSupportedTransactionCommandException extends NotSupportedCommand
 		super();
 	}
 
-	public NotSupportedTransactionCommandException(ProtocolCommand command) {
+	public NotSupportedTransactionCommandException(Command command) {
 		super(Type.TRANSACTION, command);
 	}
 
-	public NotSupportedTransactionCommandException(RedisMode mode, ProtocolCommand command) {
+	public NotSupportedTransactionCommandException(RedisMode mode, Command command) {
 		super(mode, command);
 	}
 

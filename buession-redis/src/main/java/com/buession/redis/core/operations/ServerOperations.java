@@ -30,7 +30,7 @@ import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.ServerCommands;
 
 import java.util.Date;
@@ -57,7 +57,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @since 3.0.0
 	 */
-	default List<ProtocolCommand> aclCat(final String categoryName) {
+	default List<Command> aclCat(final String categoryName) {
 		final AclCategory aclCategory = (new EnumConverter<>(AclCategory.class)).convert(categoryName);
 		return aclCat(aclCategory);
 	}
@@ -74,7 +74,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 *
 	 * @since 3.0.0
 	 */
-	default List<ProtocolCommand> aclCat(final byte[] categoryName) {
+	default List<Command> aclCat(final byte[] categoryName) {
 		final AclCategory aclCategory = (new BinaryEnumConverter<>(AclCategory.class)).convert(categoryName);
 		return aclCat(aclCategory);
 	}

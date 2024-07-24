@@ -30,7 +30,7 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 /**
  * Jedis Redis 命令操作抽象类
@@ -48,7 +48,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> e
 		super(client);
 	}
 
-	protected <T> T notCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
+	protected <T> T notCommand(final JedisStandaloneClient client, final Command command) {
 		if(isPipeline()){
 			return new JedisPipelineCommand<T, T>(client, command)
 					.run();
@@ -61,7 +61,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> e
 		}
 	}
 
-	protected <T> T notCommand(final JedisStandaloneClient client, final ProtocolCommand command,
+	protected <T> T notCommand(final JedisStandaloneClient client, final Command command,
 							   final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisPipelineCommand<T, T>(client, command)
@@ -75,7 +75,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> e
 		}
 	}
 
-	protected <T> T notCommand(final JedisSentinelClient client, final ProtocolCommand command) {
+	protected <T> T notCommand(final JedisSentinelClient client, final Command command) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<T, T>(client, command)
 					.run();
@@ -88,7 +88,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> e
 		}
 	}
 
-	protected <T> T notCommand(final JedisSentinelClient client, final ProtocolCommand command,
+	protected <T> T notCommand(final JedisSentinelClient client, final Command command,
 							   final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<T, T>(client, command)
@@ -102,7 +102,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> e
 		}
 	}
 
-	protected <T> T notCommand(final JedisClusterClient client, final ProtocolCommand command) {
+	protected <T> T notCommand(final JedisClusterClient client, final Command command) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<T, T>(client, command)
 					.run();
@@ -115,7 +115,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> e
 		}
 	}
 
-	protected <T> T notCommand(final JedisClusterClient client, final ProtocolCommand command,
+	protected <T> T notCommand(final JedisClusterClient client, final Command command,
 							   final CommandArguments args) {
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<T, T>(client, command)

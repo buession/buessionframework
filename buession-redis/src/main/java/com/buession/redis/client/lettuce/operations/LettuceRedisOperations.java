@@ -32,8 +32,7 @@ import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.Command;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisPipelineException;
@@ -60,11 +59,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 	class LettuceCommand<SR, R> extends
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisCommands<byte[], byte[]>, SR, SR, R> {
 
-		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+		public LettuceCommand(final LettuceStandaloneClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+		public LettuceCommand(final LettuceStandaloneClient client, final Command command,
 							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
 							  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -81,11 +80,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 	class LettucePipelineCommand<SR, R> extends
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+		public LettucePipelineCommand(final LettuceStandaloneClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+		public LettucePipelineCommand(final LettuceStandaloneClient client, final Command command,
 									  final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 									  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -119,11 +118,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+		public LettuceTransactionCommand(final LettuceStandaloneClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+		public LettuceTransactionCommand(final LettuceStandaloneClient client, final Command command,
 										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 										 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -155,11 +154,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 	class LettuceSentinelCommand<SR, R> extends
 			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelCommands<byte[], byte[]>, SR, SR, R> {
 
-		public LettuceSentinelCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+		public LettuceSentinelCommand(final LettuceSentinelClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceSentinelCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+		public LettuceSentinelCommand(final LettuceSentinelClient client, final Command command,
 									  final Executor<RedisSentinelCommands<byte[], byte[]>, SR> executor,
 									  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -176,11 +175,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 	class LettuceSentinelPipelineCommand<SR, R> extends
 			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
-		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final Command command,
 											  final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 											  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -214,11 +213,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final Command command,
 												 final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 												 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -250,11 +249,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 	class LettuceClusterCommand<SR, R> extends
 			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterCommands<byte[], byte[]>, SR, SR, R> {
 
-		public LettuceClusterCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+		public LettuceClusterCommand(final LettuceClusterClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceClusterCommand(final LettuceClusterClient client, final ProtocolCommand command,
+		public LettuceClusterCommand(final LettuceClusterClient client, final Command command,
 									 final Executor<RedisClusterCommands<byte[], byte[]>, SR> executor,
 									 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -271,11 +270,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 	class LettuceClusterPipelineCommand<SR, R> extends
 			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
-		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final ProtocolCommand command,
+		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final Command command,
 											 final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 											 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -309,11 +308,11 @@ public interface LettuceRedisOperations extends RedisOperations {
 			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final Command command) {
 			super(client, command);
 		}
 
-		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final ProtocolCommand command,
+		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final Command command,
 												final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 												final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -342,13 +341,13 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements Command.Runner {
+	abstract class PtRunner<T, SR, R> implements com.buession.redis.core.Command.Runner {
 
-		protected final Command.Executor<T, RedisFuture<SR>> executor;
+		protected final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor;
 
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+		public PtRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
 						final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.converter = converter;
@@ -369,7 +368,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		private final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory;
 
-		public PipelineRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+		public PipelineRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
 							  final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory,
 							  final Converter<SR, R> converter) {
 			super(executor, converter);
@@ -389,7 +388,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		private final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy;
 
-		public TransactionRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+		public TransactionRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
 								 final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy,
 								 final Converter<SR, R> converter) {
 			super(executor, converter);

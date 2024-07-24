@@ -30,7 +30,7 @@ import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -53,14 +53,14 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.PSUBSCRIBE, args);
+		notCommand(client, Command.PSUBSCRIBE, args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.PSUBSCRIBE, args);
+		notCommand(client, Command.PSUBSCRIBE, args);
 	}
 
 	@Override
@@ -68,15 +68,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBLISH,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBLISH,
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBLISH,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBLISH,
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+			return new LettuceClusterCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message),
 					(v)->v)
 					.run(args);
 		}
@@ -87,15 +87,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_CHANNELS,
 					(cmd)->cmd.pubsubChannels(), listConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_CHANNELS,
 					(cmd)->cmd.pubsubChannels(), listConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
 					listConverter)
 					.run();
 		}
@@ -121,15 +121,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
 					(cmd)->cmd.pubsubChannels(), listConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
 					(cmd)->cmd.pubsubChannels(), listConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
 					(cmd)->cmd.pubsubChannels(), listConverter)
 					.run();
 		}
@@ -153,15 +153,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 	@Override
 	public Long pubsubNumPat() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
 					(v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_NUMPAT,
 					(cmd)->cmd.pubsubNumpat(), (v)->v)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
 					.run();
 		}
 	}
@@ -171,15 +171,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_NUMSUB,
 					(cmd)->cmd.pubsubNumsub(), converter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_NUMSUB,
 					(cmd)->cmd.pubsubNumsub(), converter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(),
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(),
 					converter)
 					.run();
 		}
@@ -205,15 +205,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_SHARDNUMSUB,
 					(cmd)->cmd.pubsubShardNumsub(), converter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_SHARDNUMSUB,
 					(cmd)->cmd.pubsubShardNumsub(), converter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_SHARDNUMSUB,
 					(cmd)->cmd.pubsubShardNumsub(), converter)
 					.run();
 		}
@@ -236,64 +236,64 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 
 	@Override
 	public Object pUnSubscribe() {
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE);
+		return notCommand(client, Command.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
+		return notCommand(client, Command.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
+		return notCommand(client, Command.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.SUBSCRIBE, args);
+		notCommand(client, Command.SUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.SUBSCRIBE, args);
+		notCommand(client, Command.SUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe() {
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE);
+		return notCommand(client, Command.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
+		return notCommand(client, Command.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
+		return notCommand(client, Command.UNSUBSCRIBE, args);
 	}
 
 	private <V> List<V> pubsubChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
 									   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_CHANNELS,
 					(cmd)->cmd.pubsubChannels(pattern), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_CHANNELS,
 					(cmd)->cmd.pubsubChannels(pattern), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_CHANNELS,
 					(cmd)->cmd.pubsubChannels(pattern), converter)
 					.run(args);
 		}
@@ -302,15 +302,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 	private <V> List<V> pubsubShardChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
 											final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
 					(cmd)->cmd.pubsubShardChannels(pattern), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
 					(cmd)->cmd.pubsubShardChannels(pattern), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
 					(cmd)->cmd.pubsubShardChannels(pattern), converter)
 					.run(args);
 		}
@@ -320,15 +320,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 										  final Converter<Map<byte[], Long>, Map<K, Long>> converter,
 										  final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_NUMSUB,
 					(cmd)->cmd.pubsubNumsub(channels), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_NUMSUB,
 					(cmd)->cmd.pubsubNumsub(channels), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
 					converter)
 					.run(args);
 		}
@@ -338,15 +338,15 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 											   final Converter<Map<byte[], Long>, Map<K, Long>> converter,
 											   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+			return new LettuceClusterPipelineCommand<>(client, Command.PUBSUB_SHARDNUMSUB,
 					(cmd)->cmd.pubsubShardNumsub(channels), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+			return new LettuceClusterTransactionCommand<>(client, Command.PUBSUB_SHARDNUMSUB,
 					(cmd)->cmd.pubsubShardNumsub(channels), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+			return new LettuceClusterCommand<>(client, Command.PUBSUB_SHARDNUMSUB,
 					(cmd)->cmd.pubsubShardNumsub(channels), converter)
 					.run(args);
 		}

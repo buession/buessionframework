@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.lettuce.response.TransactionResultConverter;
 
 import java.util.List;
@@ -47,13 +47,13 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+			return new LettucePipelineCommand<>(client, Command.MULTI, (cmd)->cmd.multi(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+			return new LettuceTransactionCommand<>(client, Command.MULTI, (cmd)->cmd.multi(), okStatusConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.multi(), okStatusConverter)
+			return new LettuceCommand<>(client, Command.MULTI, (cmd)->cmd.multi(), okStatusConverter)
 					.run();
 		}
 	}
@@ -63,15 +63,15 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 		final TransactionResultConverter transactionResultConverter = new TransactionResultConverter();
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(),
+			return new LettucePipelineCommand<>(client, Command.MULTI, (cmd)->cmd.exec(),
 					transactionResultConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(),
+			return new LettuceTransactionCommand<>(client, Command.MULTI, (cmd)->cmd.exec(),
 					transactionResultConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.MULTI, (cmd)->cmd.exec(), transactionResultConverter)
+			return new LettuceCommand<>(client, Command.MULTI, (cmd)->cmd.exec(), transactionResultConverter)
 					.run();
 		}
 	}
@@ -79,13 +79,13 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 	@Override
 	public void discard() {
 		if(isPipeline()){
-			new LettucePipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettucePipelineCommand<>(client, Command.DISCARD, (cmd)->cmd.discard(), (v)->v)
 					.run();
 		}else if(isTransaction()){
-			new LettuceTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceTransactionCommand<>(client, Command.DISCARD, (cmd)->cmd.discard(), (v)->v)
 					.run();
 		}else{
-			new LettuceCommand<>(client, ProtocolCommand.DISCARD, (cmd)->cmd.discard(), (v)->v)
+			new LettuceCommand<>(client, Command.DISCARD, (cmd)->cmd.discard(), (v)->v)
 					.run();
 		}
 	}
@@ -95,15 +95,15 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
+			return new LettucePipelineCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),
+			return new LettuceTransactionCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+			return new LettuceCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -111,15 +111,15 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 	@Override
 	public Status unwatch() {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
+			return new LettucePipelineCommand<>(client, Command.UNWATCH, (cmd)->cmd.unwatch(),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(),
+			return new LettuceTransactionCommand<>(client, Command.UNWATCH, (cmd)->cmd.unwatch(),
 					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+			return new LettuceCommand<>(client, Command.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
 					.run();
 		}
 	}

@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 import java.util.List;
 
@@ -45,34 +45,34 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 
 	@Override
 	public Status multi() {
-		return notCommand(client, ProtocolCommand.MULTI);
+		return notCommand(client, Command.MULTI);
 	}
 
 	@Override
 	public List<Object> exec() {
-		return notCommand(client, ProtocolCommand.EXEC);
+		return notCommand(client, Command.EXEC);
 	}
 
 	@Override
 	public void discard() {
-		notCommand(client, ProtocolCommand.DISCARD);
+		notCommand(client, Command.DISCARD);
 	}
 
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return notCommand(client, ProtocolCommand.WATCH, args);
+		return notCommand(client, Command.WATCH, args);
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return notCommand(client, ProtocolCommand.WATCH, args);
+		return notCommand(client, Command.WATCH, args);
 	}
 
 	@Override
 	public Status unwatch() {
-		return notCommand(client, ProtocolCommand.UNWATCH);
+		return notCommand(client, Command.UNWATCH);
 	}
 
 }

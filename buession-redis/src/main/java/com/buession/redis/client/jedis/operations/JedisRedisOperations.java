@@ -32,8 +32,7 @@ import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.Command;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisPipelineException;
@@ -57,11 +56,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Jedis, SR, SR, R> {
 
-		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
+		public JedisCommand(final JedisStandaloneClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command,
+		public JedisCommand(final JedisStandaloneClient client, final Command command,
 							final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -77,11 +76,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisPipelineCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Pipeline, Response<SR>, SR, R> {
 
-		public JedisPipelineCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
+		public JedisPipelineCommand(final JedisStandaloneClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisPipelineCommand(final JedisStandaloneClient client, final ProtocolCommand command,
+		public JedisPipelineCommand(final JedisStandaloneClient client, final Command command,
 									final Executor<Pipeline, Response<SR>> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -109,11 +108,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisTransactionCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Transaction, Response<SR>, SR, R> {
 
-		public JedisTransactionCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
+		public JedisTransactionCommand(final JedisStandaloneClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisTransactionCommand(final JedisStandaloneClient client, final ProtocolCommand command,
+		public JedisTransactionCommand(final JedisStandaloneClient client, final Command command,
 									   final Executor<Transaction, Response<SR>> executor,
 									   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -141,11 +140,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisSentinelCommand<SR, R> extends
 			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Jedis, SR, SR, R> {
 
-		public JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command) {
+		public JedisSentinelCommand(final JedisSentinelClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command,
+		public JedisSentinelCommand(final JedisSentinelClient client, final Command command,
 									final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -161,11 +160,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisSentinelPipelineCommand<SR, R> extends
 			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Pipeline, Response<SR>, SR, R> {
 
-		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final ProtocolCommand command) {
+		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final ProtocolCommand command,
+		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final Command command,
 											final Executor<Pipeline, Response<SR>> executor,
 											final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -193,11 +192,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisSentinelTransactionCommand<SR, R> extends
 			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Transaction, Response<SR>, SR, R> {
 
-		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final ProtocolCommand command) {
+		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final ProtocolCommand command,
+		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final Command command,
 											   final Executor<Transaction, Response<SR>> executor,
 											   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -225,11 +224,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisClusterCommand<SR, R> extends
 			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, JedisCluster, SR, SR, R> {
 
-		public JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command) {
+		public JedisClusterCommand(final JedisClusterClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command,
+		public JedisClusterCommand(final JedisClusterClient client, final Command command,
 								   final Executor<JedisCluster, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -245,11 +244,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisClusterPipelineCommand<SR, R> extends
 			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, ClusterPipeline, Response<SR>, SR, R> {
 
-		public JedisClusterPipelineCommand(final JedisClusterClient client, final ProtocolCommand command) {
+		public JedisClusterPipelineCommand(final JedisClusterClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisClusterPipelineCommand(final JedisClusterClient client, final ProtocolCommand command,
+		public JedisClusterPipelineCommand(final JedisClusterClient client, final Command command,
 										   final Executor<ClusterPipeline, Response<SR>> executor,
 										   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -278,11 +277,11 @@ public interface JedisRedisOperations extends RedisOperations {
 	class JedisClusterTransactionCommand<SR, R> extends
 			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, Transaction, Response<SR>, SR, R> {
 
-		public JedisClusterTransactionCommand(final JedisClusterClient client, final ProtocolCommand command) {
+		public JedisClusterTransactionCommand(final JedisClusterClient client, final Command command) {
 			super(client, command);
 		}
 
-		public JedisClusterTransactionCommand(final JedisClusterClient client, final ProtocolCommand command,
+		public JedisClusterTransactionCommand(final JedisClusterClient client, final Command command,
 											  final Executor<Transaction, Response<SR>> executor,
 											  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
@@ -307,13 +306,13 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements Command.Runner {
+	abstract class PtRunner<T, SR, R> implements com.buession.redis.core.Command.Runner {
 
-		protected final Command.Executor<T, Response<SR>> executor;
+		protected final com.buession.redis.core.Command.Executor<T, Response<SR>> executor;
 
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final Command.Executor<T, Response<SR>> executor, final Converter<SR, R> converter) {
+		public PtRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor, final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.converter = converter;
 		}
@@ -332,7 +331,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		private final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory;
 
-		public PipelineRunner(final Command.Executor<T, Response<SR>> executor,
+		public PipelineRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
 							  final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory,
 							  final Converter<SR, R> converter) {
 			super(executor, converter);
@@ -352,7 +351,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		private final TransactionProxy<T, JedisResult<Object, Object>> transactionFactory;
 
-		public TransactionRunner(final Command.Executor<T, Response<SR>> executor,
+		public TransactionRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
 								 final TransactionProxy<T, JedisResult<Object, Object>> transactionFactory,
 								 final Converter<SR, R> converter) {
 			super(executor, converter);

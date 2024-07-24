@@ -28,7 +28,7 @@ import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
 import io.lettuce.core.BitFieldArgs;
@@ -52,13 +52,13 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new LettucePipelineCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new LettuceTransactionCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new LettuceCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -68,15 +68,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+			return new LettucePipelineCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new LettuceTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
+			return new LettuceCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}
 	}
@@ -87,15 +87,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 				.put("bitCountOption", bitCountOption);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+			return new LettucePipelineCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new LettuceTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
+			return new LettuceCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}
 	}
@@ -106,15 +106,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITFIELD,
+			return new LettucePipelineCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITFIELD,
+			return new LettuceTransactionCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITFIELD, (cmd)->cmd.bitfield(key, bitFieldArgs),
+			return new LettuceCommand<>(client, Command.BITFIELD, (cmd)->cmd.bitfield(key, bitFieldArgs),
 					(v)->v)
 					.run(args);
 		}
@@ -123,13 +123,13 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.BITFIELD_RO, args);
+		return notCommand(client, Command.BITFIELD_RO, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.BITFIELD_RO, args);
+		return notCommand(client, Command.BITFIELD_RO, args);
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 				.put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			return new LettucePipelineCommand<>(client, Command.BITOP, (cmd)->{
 				if(operation == BitOperation.AND){
 					return cmd.bitopAnd(destKey, keys);
 				}else if(operation == BitOperation.OR){
@@ -153,7 +153,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 			}, (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			return new LettuceTransactionCommand<>(client, Command.BITOP, (cmd)->{
 				if(operation == BitOperation.AND){
 					return cmd.bitopAnd(destKey, keys);
 				}else if(operation == BitOperation.OR){
@@ -168,7 +168,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 			}, (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			return new LettuceCommand<>(client, Command.BITOP, (cmd)->{
 				if(operation == BitOperation.AND){
 					return cmd.bitopAnd(destKey, keys);
 				}else if(operation == BitOperation.OR){
@@ -190,14 +190,14 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+			return new LettucePipelineCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
+			return new LettuceTransactionCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+			return new LettuceCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -208,15 +208,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 				.put("end", end);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BITPOS,
+			return new LettucePipelineCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BITPOS,
+			return new LettuceTransactionCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value, start, end),
+			return new LettuceCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -227,15 +227,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new LettucePipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					oneBooleanConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new LettuceTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					oneBooleanConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new LettuceCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					oneBooleanConverter)
 					.run(args);
 		}
@@ -247,15 +247,15 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 		final int iValue = value ? 1 : 0;
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SETBIT,
+			return new LettucePipelineCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, iValue), oneBooleanConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SETBIT,
+			return new LettuceTransactionCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, iValue), oneBooleanConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
+			return new LettuceCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
 					oneBooleanConverter)
 					.run(args);
 		}

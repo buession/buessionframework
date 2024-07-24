@@ -68,7 +68,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	List<ProtocolCommand> aclCat(final AclCategory aclCategory);
+	List<Command> aclCat(final AclCategory aclCategory);
 
 	/**
 	 * Create an ACL user with the specified rules or modify the rules of an existing user

@@ -32,7 +32,7 @@ import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
@@ -71,13 +71,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new JedisCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -87,13 +87,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
+			return new JedisCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -103,14 +103,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), SafeEncoder::encode)
+			return new JedisPipelineCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), SafeEncoder::encode)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key),
+			return new JedisTransactionCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key),
 					SafeEncoder::encode)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), SafeEncoder::encode)
+			return new JedisCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), SafeEncoder::encode)
 					.run(args);
 		}
 	}
@@ -120,13 +120,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
+			return new JedisCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -136,13 +136,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+			return new JedisCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -152,13 +152,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
+			return new JedisCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -168,13 +168,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new JedisCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -184,13 +184,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+			return new JedisCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -200,15 +200,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+			return new JedisPipelineCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+			return new JedisTransactionCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+			return new JedisCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -219,15 +219,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+			return new JedisPipelineCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+			return new JedisTransactionCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+			return new JedisCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -240,15 +240,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIRE,
+			return new JedisPipelineCommand<>(client, Command.EXPIRE,
 					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXPIRE,
+			return new JedisTransactionCommand<>(client, Command.EXPIRE,
 					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime, expiryOption),
+			return new JedisCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime, expiryOption),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -261,15 +261,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIRE,
+			return new JedisPipelineCommand<>(client, Command.EXPIRE,
 					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXPIRE,
+			return new JedisTransactionCommand<>(client, Command.EXPIRE,
 					(cmd)->cmd.expire(key, lifetime, expiryOption), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXPIRE, (cmd)->cmd.expire(key, lifetime, expiryOption),
+			return new JedisCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime, expiryOption),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -280,15 +280,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
+			return new JedisPipelineCommand<>(client, Command.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
+			return new JedisTransactionCommand<>(client, Command.EXPIREAT,
 					(cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
+			return new JedisCommand<>(client, Command.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -299,15 +299,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
+			return new JedisPipelineCommand<>(client, Command.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXPIREAT,
+			return new JedisTransactionCommand<>(client, Command.EXPIREAT,
 					(cmd)->cmd.expireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
+			return new JedisCommand<>(client, Command.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -318,15 +318,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+			return new JedisPipelineCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+			return new JedisTransactionCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+			return new JedisCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -337,15 +337,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+			return new JedisPipelineCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+			return new JedisTransactionCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+			return new JedisCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -356,15 +356,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIREAT,
+			return new JedisPipelineCommand<>(client, Command.PEXPIREAT,
 					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PEXPIREAT,
+			return new JedisTransactionCommand<>(client, Command.PEXPIREAT,
 					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PEXPIREAT, (cmd)->cmd.pexpireAt(key, unixTimestamp),
+			return new JedisCommand<>(client, Command.PEXPIREAT, (cmd)->cmd.pexpireAt(key, unixTimestamp),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -375,15 +375,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIREAT,
+			return new JedisPipelineCommand<>(client, Command.PEXPIREAT,
 					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PEXPIREAT,
+			return new JedisTransactionCommand<>(client, Command.PEXPIREAT,
 					(cmd)->cmd.pexpireAt(key, unixTimestamp), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PEXPIREAT, (cmd)->cmd.pexpireAt(key, unixTimestamp),
+			return new JedisCommand<>(client, Command.PEXPIREAT, (cmd)->cmd.pexpireAt(key, unixTimestamp),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -394,15 +394,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+			return new JedisPipelineCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+			return new JedisTransactionCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key), oneStatusConverter)
+			return new JedisCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -412,15 +412,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+			return new JedisPipelineCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
+			return new JedisTransactionCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key), oneStatusConverter)
+			return new JedisCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -430,13 +430,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new JedisCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -446,13 +446,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
+			return new JedisCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -462,13 +462,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new JedisCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -478,13 +478,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+			return new JedisCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -546,14 +546,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
+			return new JedisPipelineCommand<>(client, Command.MOVE, (cmd)->cmd.move(key, db),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.MOVE)
+			return new JedisTransactionCommand<Status, Status>(client, Command.MOVE)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db), oneStatusConverter)
+			return new JedisCommand<>(client, Command.MOVE, (cmd)->cmd.move(key, db), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -563,14 +563,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
+			return new JedisPipelineCommand<>(client, Command.MOVE, (cmd)->cmd.move(key, db),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.MOVE)
+			return new JedisTransactionCommand<Status, Status>(client, Command.MOVE)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db), oneStatusConverter)
+			return new JedisCommand<>(client, Command.MOVE, (cmd)->cmd.move(key, db), oneStatusConverter)
 					.run(args);
 		}
 	}
@@ -702,13 +702,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+			return new JedisCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
 					.run(args);
 		}
 	}
@@ -718,13 +718,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
+			return new JedisCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), (v)->v)
 					.run(args);
 		}
 	}
@@ -732,13 +732,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public String randomKey() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
 					.run();
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
+			return new JedisCommand<>(client, Command.RANDOMKEY, (cmd)->cmd.randomKey(), (v)->v)
 					.run();
 		}
 	}
@@ -748,15 +748,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+			return new JedisPipelineCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+			return new JedisTransactionCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey), okStatusConverter)
+			return new JedisCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -766,15 +766,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+			return new JedisPipelineCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey),
+			return new JedisTransactionCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RENAME, (cmd)->cmd.rename(key, newKey), okStatusConverter)
+			return new JedisCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -784,15 +784,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+			return new JedisPipelineCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+			return new JedisTransactionCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+			return new JedisCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -803,15 +803,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+			return new JedisPipelineCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+			return new JedisTransactionCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+			return new JedisCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -823,15 +823,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 				.put("ttl", ttl);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisPipelineCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisTransactionCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
+			return new JedisCommand<>(client, Command.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
 					okStatusConverter)
 					.run(args);
 		}
@@ -843,15 +843,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 				.put("ttl", ttl);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisPipelineCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisTransactionCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
+			return new JedisCommand<>(client, Command.RESTORE, (cmd)->cmd.restore(key, ttl, serializedValue),
 					okStatusConverter)
 					.run(args);
 		}
@@ -865,15 +865,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final RestoreParams restoreParams = JedisRestoreParams.from(argument);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisPipelineCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisTransactionCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
 					.run(args);
 		}
@@ -887,15 +887,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final RestoreParams restoreParams = JedisRestoreParams.from(argument);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisPipelineCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisTransactionCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RESTORE,
+			return new JedisCommand<>(client, Command.RESTORE,
 					(cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), okStatusConverter)
 					.run(args);
 		}
@@ -908,15 +908,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 				new ScanResultConverter.ListScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+			return new JedisPipelineCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor),
 					listScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+			return new JedisTransactionCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor),
 					listScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), listScanResultConverter)
+			return new JedisCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor), listScanResultConverter)
 					.run(args);
 		}
 	}
@@ -928,15 +928,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 				new ScanResultConverter.ListScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+			return new JedisPipelineCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor),
 					listScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor),
+			return new JedisTransactionCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor),
 					listScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor), listScanResultConverter)
+			return new JedisCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor), listScanResultConverter)
 					.run(args);
 		}
 	}
@@ -996,13 +996,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.SORT, (cmd)->cmd.sort(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.SORT, (cmd)->cmd.sort(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1012,13 +1012,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.SORT, (cmd)->cmd.sort(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.SORT, (cmd)->cmd.sort(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key), (v)->v)
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1029,14 +1029,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams),
+			return new JedisTransactionCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
 					.run(args);
 		}
 	}
@@ -1047,14 +1047,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams),
+			return new JedisTransactionCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams), (v)->v)
 					.run(args);
 		}
 	}
@@ -1064,13 +1064,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
 					.run(args);
 		}
 	}
@@ -1080,13 +1080,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
 					.run(args);
 		}
 	}
@@ -1098,15 +1098,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT,
+			return new JedisPipelineCommand<>(client, Command.SORT,
 					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT,
+			return new JedisTransactionCommand<>(client, Command.SORT,
 					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams, destKey),
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams, destKey),
 					(v)->v)
 					.run(args);
 		}
@@ -1119,15 +1119,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT,
+			return new JedisPipelineCommand<>(client, Command.SORT,
 					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SORT,
+			return new JedisTransactionCommand<>(client, Command.SORT,
 					(cmd)->cmd.sort(key, sortingParams, destKey), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, sortingParams, destKey),
+			return new JedisCommand<>(client, Command.SORT, (cmd)->cmd.sort(key, sortingParams, destKey),
 					(v)->v)
 					.run(args);
 		}
@@ -1138,13 +1138,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new JedisCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -1154,13 +1154,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
+			return new JedisCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -1171,13 +1171,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final TypeConverter typeConverter = new TypeConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new JedisPipelineCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new JedisTransactionCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new JedisCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}
 	}
@@ -1188,13 +1188,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final TypeConverter typeConverter = new TypeConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new JedisPipelineCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new JedisTransactionCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TYPE, (cmd)->cmd.type(key), typeConverter)
+			return new JedisCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}
 	}
@@ -1204,13 +1204,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new JedisCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -1220,13 +1220,13 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
+			return new JedisCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -1236,15 +1236,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
+			return new JedisPipelineCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WAIT,
+			return new JedisTransactionCommand<>(client, Command.WAIT,
 					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
+			return new JedisCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}
 	}
@@ -1255,16 +1255,16 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+			return new JedisPipelineCommand<>(client, Command.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
 					objectEncodingConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+			return new JedisTransactionCommand<>(client, Command.OBJECT_ENCODING,
 					(cmd)->cmd.objectEncoding(key),
 					objectEncodingConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+			return new JedisCommand<>(client, Command.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
 					objectEncodingConverter)
 					.run(args);
 		}
@@ -1276,15 +1276,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final BinaryObjectEncodingConverter binaryObjectEncodingConverter = new BinaryObjectEncodingConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+			return new JedisPipelineCommand<>(client, Command.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
 					binaryObjectEncodingConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_ENCODING,
+			return new JedisTransactionCommand<>(client, Command.OBJECT_ENCODING,
 					(cmd)->cmd.objectEncoding(key), binaryObjectEncodingConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
+			return new JedisCommand<>(client, Command.OBJECT_ENCODING, (cmd)->cmd.objectEncoding(key),
 					binaryObjectEncodingConverter)
 					.run(args);
 		}
@@ -1295,14 +1295,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+			return new JedisTransactionCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
+			return new JedisCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1312,14 +1312,14 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
+			return new JedisTransactionCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
+			return new JedisCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1329,15 +1329,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
+			return new JedisPipelineCommand<>(client, Command.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+			return new JedisTransactionCommand<>(client, Command.OBJECT_IDLETIME,
 					(cmd)->cmd.objectIdletime(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key), (v)->v)
+			return new JedisCommand<>(client, Command.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1347,15 +1347,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
+			return new JedisPipelineCommand<>(client, Command.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_IDLETIME,
+			return new JedisTransactionCommand<>(client, Command.OBJECT_IDLETIME,
 					(cmd)->cmd.objectIdletime(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key), (v)->v)
+			return new JedisCommand<>(client, Command.OBJECT_IDLETIME, (cmd)->cmd.objectIdletime(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1365,15 +1365,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
+			return new JedisPipelineCommand<>(client, Command.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+			return new JedisTransactionCommand<>(client, Command.OBJECT_REFCOUNT,
 					(cmd)->cmd.objectRefcount(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key), (v)->v)
+			return new JedisCommand<>(client, Command.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1383,30 +1383,30 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
+			return new JedisPipelineCommand<>(client, Command.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT,
+			return new JedisTransactionCommand<>(client, Command.OBJECT_REFCOUNT,
 					(cmd)->cmd.objectRefcount(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key), (v)->v)
+			return new JedisCommand<>(client, Command.OBJECT_REFCOUNT, (cmd)->cmd.objectRefcount(key), (v)->v)
 					.run(args);
 		}
 	}
 
 	private Status copy(final String key, final String destKey, final boolean replace, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+			return new JedisPipelineCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, replace),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+			return new JedisTransactionCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, replace),
 					booleanStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+			return new JedisCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, replace),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -1414,15 +1414,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	private Status copy(final byte[] key, final byte[] destKey, final boolean replace, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+			return new JedisPipelineCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, replace),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+			return new JedisTransactionCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, replace),
 					booleanStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, replace),
+			return new JedisCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, replace),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -1431,15 +1431,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	private Status copy(final String key, final String destKey, final int db, final boolean replace,
 						final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
+			return new JedisPipelineCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.COPY,
+			return new JedisTransactionCommand<>(client, Command.COPY,
 					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
+			return new JedisCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -1448,15 +1448,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	private Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace,
 						final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
+			return new JedisPipelineCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.COPY,
+			return new JedisTransactionCommand<>(client, Command.COPY,
 					(cmd)->cmd.copy(key, destKey, replace), booleanStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
+			return new JedisCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey, db, replace),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -1465,15 +1465,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	private Status migrate(final String host, final int port, final int db, final int timeout, final String[] keys,
 						   final MigrateParams migrateParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MIGRATE,
+			return new JedisPipelineCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MIGRATE,
+			return new JedisTransactionCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MIGRATE,
+			return new JedisCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys), okStatusConverter)
 					.run(args);
 		}
@@ -1482,15 +1482,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	private Status migrate(final String host, final int port, final int db, final int timeout, final byte[][] keys,
 						   final MigrateParams migrateParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MIGRATE,
+			return new JedisPipelineCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MIGRATE,
+			return new JedisTransactionCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MIGRATE,
+			return new JedisCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys), okStatusConverter)
 					.run(args);
 		}
@@ -1502,15 +1502,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 				new ScanResultConverter.ListScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+			return new JedisPipelineCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanParams),
 					listScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+			return new JedisTransactionCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanParams),
 					listScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+			return new JedisCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanParams),
 					listScanResultConverter)
 					.run(args);
 		}
@@ -1522,15 +1522,15 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 				new ScanResultConverter.ListScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+			return new JedisPipelineCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanParams),
 					listScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+			return new JedisTransactionCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanParams),
 					listScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SCAN, (cmd)->cmd.scan(cursor, scanParams),
+			return new JedisCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanParams),
 					listScanResultConverter)
 					.run(args);
 		}

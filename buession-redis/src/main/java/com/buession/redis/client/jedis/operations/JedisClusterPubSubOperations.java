@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 
@@ -52,13 +52,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisClusterPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+			new JedisClusterPipelineCommand<>(client, Command.PSUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisClusterTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+			new JedisClusterTransactionCommand<>(client, Command.PSUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisClusterCommand<>(client, ProtocolCommand.PSUBSCRIBE, (cmd)->{
+			new JedisClusterCommand<>(client, Command.PSUBSCRIBE, (cmd)->{
 				cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
 				return null;
 			}, (v)->v)
@@ -72,13 +72,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisClusterPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+			new JedisClusterPipelineCommand<>(client, Command.PSUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisClusterTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+			new JedisClusterTransactionCommand<>(client, Command.PSUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisClusterCommand<>(client, ProtocolCommand.PSUBSCRIBE, (cmd)->{
+			new JedisClusterCommand<>(client, Command.PSUBSCRIBE, (cmd)->{
 				cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
 				return null;
 			}, (v)->v)
@@ -91,14 +91,14 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PUBLISH,
+			return new JedisClusterPipelineCommand<>(client, Command.PUBLISH,
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
+			return new JedisClusterTransactionCommand<Long, Long>(client, Command.PUBLISH)
 					.run(args);
 		}else{
-			return new JedisClusterCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+			return new JedisClusterCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message),
 					(v)->v)
 					.run(args);
 		}
@@ -109,14 +109,14 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PUBLISH,
+			return new JedisClusterPipelineCommand<>(client, Command.PUBLISH,
 					(cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
+			return new JedisClusterTransactionCommand<Long, Long>(client, Command.PUBLISH)
 					.run(args);
 		}else{
-			return new JedisClusterCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+			return new JedisClusterCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message),
 					(v)->v)
 					.run(args);
 		}
@@ -124,92 +124,92 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public List<String> pubsubChannels() {
-		return notCommand(client, ProtocolCommand.PUBSUB_CHANNELS);
+		return notCommand(client, Command.PUBSUB_CHANNELS);
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_CHANNELS, args);
+		return notCommand(client, Command.PUBSUB_CHANNELS, args);
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_CHANNELS, args);
+		return notCommand(client, Command.PUBSUB_CHANNELS, args);
 	}
 
 	@Override
 	public List<String> pubsubShardChannels() {
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS);
+		return notCommand(client, Command.PUBSUB_SHARDCHANNELS);
 	}
 
 	@Override
 	public List<String> pubsubShardChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS, args);
+		return notCommand(client, Command.PUBSUB_SHARDCHANNELS, args);
 	}
 
 	@Override
 	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS, args);
+		return notCommand(client, Command.PUBSUB_SHARDCHANNELS, args);
 	}
 
 	@Override
 	public Long pubsubNumPat() {
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMPAT);
+		return notCommand(client, Command.PUBSUB_NUMPAT);
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub() {
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB);
+		return notCommand(client, Command.PUBSUB_NUMSUB);
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB, args);
+		return notCommand(client, Command.PUBSUB_NUMSUB, args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB, args);
+		return notCommand(client, Command.PUBSUB_NUMSUB, args);
 	}
 
 	@Override
 	public Map<String, Long> pubsubShardNumSub() {
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB);
+		return notCommand(client, Command.PUBSUB_SHARDNUMSUB);
 	}
 
 	@Override
 	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
 		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB, args);
+		return notCommand(client, Command.PUBSUB_SHARDNUMSUB, args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
 		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB, args);
+		return notCommand(client, Command.PUBSUB_SHARDNUMSUB, args);
 	}
 
 	@Override
 	public Object pUnSubscribe() {
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE);
+		return notCommand(client, Command.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
+		return notCommand(client, Command.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
+		return notCommand(client, Command.PUNSUBSCRIBE, args);
 	}
 
 	@Override
@@ -218,13 +218,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
+			new JedisClusterPipelineCommand<>(client, Command.SUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisClusterTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
+			new JedisClusterTransactionCommand<>(client, Command.SUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisClusterCommand<>(client, ProtocolCommand.SUBSCRIBE, (cmd)->{
+			new JedisClusterCommand<>(client, Command.SUBSCRIBE, (cmd)->{
 				cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
 				return null;
 			}, (v)->v)
@@ -238,13 +238,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
+			new JedisClusterPipelineCommand<>(client, Command.SUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisClusterTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
+			new JedisClusterTransactionCommand<>(client, Command.SUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisClusterCommand<>(client, ProtocolCommand.SUBSCRIBE, (cmd)->{
+			new JedisClusterCommand<>(client, Command.SUBSCRIBE, (cmd)->{
 				cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
 				return null;
 			}, (v)->v)
@@ -254,19 +254,19 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public Object unSubscribe() {
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE);
+		return notCommand(client, Command.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
+		return notCommand(client, Command.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
+		return notCommand(client, Command.UNSUBSCRIBE, args);
 	}
 
 }

@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 /**
  * Lettuce 集群模式 HyperLogLog 命令操作
@@ -46,15 +46,15 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
+			return new LettuceClusterPipelineCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PFADD,
+			return new LettuceClusterTransactionCommand<>(client, Command.PFADD,
 					(cmd)->cmd.pfadd(key, elements), oneStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
+			return new LettuceClusterCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -65,15 +65,15 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFMERGE,
+			return new LettuceClusterPipelineCommand<>(client, Command.PFMERGE,
 					(cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PFMERGE,
+			return new LettuceClusterTransactionCommand<>(client, Command.PFMERGE,
 					(cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+			return new LettuceClusterCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
 					okStatusConverter)
 					.run(args);
 		}
@@ -84,15 +84,15 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys),
+			return new LettuceClusterPipelineCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys),
+			return new LettuceClusterTransactionCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}
 	}

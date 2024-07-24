@@ -29,7 +29,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.lettuce.params.FlushModeConverter;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ScriptOutputType;
@@ -54,15 +54,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] bKeys = new byte[][]{};
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+			return new LettucePipelineCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceTransactionCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys), (v)->v)
 					.run(args);
 		}
@@ -74,15 +74,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] keys = new byte[][]{};
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+			return new LettucePipelineCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceTransactionCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys), (v)->v)
 					.run(args);
 		}
@@ -95,15 +95,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] bParams = SafeEncoder.encode(params);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+			return new LettucePipelineCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys, bParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceTransactionCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys, bParams), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys, bParams), (v)->v)
 					.run(args);
 		}
@@ -115,15 +115,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] keys = new byte[][]{};
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+			return new LettucePipelineCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, params), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceTransactionCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, params), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, params), (v)->v)
 					.run(args);
 		}
@@ -137,15 +137,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+			return new LettucePipelineCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys, bArguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceTransactionCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys, bArguments), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, bKeys, bArguments), (v)->v)
 					.run(args);
 		}
@@ -157,15 +157,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 				.put("arguments", (Object[]) arguments);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVAL,
+			return new LettucePipelineCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, arguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceTransactionCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, arguments), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVAL,
+			return new LettuceCommand<>(client, Command.EVAL,
 					(cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, arguments), (v)->v)
 					.run(args);
 		}
@@ -203,15 +203,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+			return new LettucePipelineCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
+			return new LettuceTransactionCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
+			return new LettuceCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
 					.run(args);
 		}
 	}
@@ -219,15 +219,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	@Override
 	public Status scriptFlush() {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+			return new LettucePipelineCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+			return new LettuceTransactionCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
 					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+			return new LettuceCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
 					okStatusConverter)
 					.run();
 		}
@@ -239,15 +239,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 		final io.lettuce.core.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
+			return new LettucePipelineCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
+			return new LettuceTransactionCommand<>(client, Command.SCRIPT_FLUSH,
 					(cmd)->cmd.scriptFlush(flushMode), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
+			return new LettuceCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
 					okStatusConverter)
 					.run(args);
 		}
@@ -270,15 +270,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	@Override
 	public Status scriptKill() {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+			return new LettucePipelineCommand<>(client, Command.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+			return new LettuceTransactionCommand<>(client, Command.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
 					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+			return new LettuceCommand<>(client, Command.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
 					okStatusConverter)
 					.run();
 		}
@@ -287,15 +287,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	private Object evalSha(final String digest, final byte[][] keys, final byte[][] arguments,
 						   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.EVALSHA,
+			return new LettucePipelineCommand<>(client, Command.EVALSHA,
 					(cmd)->cmd.evalsha(digest, ScriptOutputType.OBJECT, keys, arguments), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.EVALSHA,
+			return new LettuceTransactionCommand<>(client, Command.EVALSHA,
 					(cmd)->cmd.evalsha(digest, ScriptOutputType.OBJECT, keys, arguments), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.EVALSHA,
+			return new LettuceCommand<>(client, Command.EVALSHA,
 					(cmd)->cmd.evalsha(digest, ScriptOutputType.OBJECT, keys, arguments), (v)->v)
 					.run(args);
 		}
@@ -304,15 +304,15 @@ public final class LettuceScriptingOperations extends AbstractScriptingOperation
 	private <V> V scriptLoad(final byte[] script, final Converter<String, V> converter,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+			return new LettucePipelineCommand<>(client, Command.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
+			return new LettuceTransactionCommand<>(client, Command.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), converter)
+			return new LettuceCommand<>(client, Command.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), converter)
 					.run(args);
 		}
 	}

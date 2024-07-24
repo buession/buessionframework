@@ -22,44 +22,49 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.core.internal.convert.lettuce.params;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.Command;
+import io.lettuce.core.protocol.CommandType;
+import org.springframework.lang.Nullable;
 
 /**
- * Redis 协议命令
+ * {@link Command} 转换为 Lettuce {@link CommandType}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ProtocolCommand {
+public final class CommandConverter implements Converter<Command, CommandType> {
 
-	/**
-	 * 返回命令名称
-	 *
-	 * @return 命令名称
-	 */
-	String getName();
+	@Nullable
+	@Override
+	public CommandType convert(final Command source) {
+		if(source == null){
+			return null;
+		}else{
+			switch(source){
+				case BITCOUNT:
+					return CommandType.BITCOUNT;
+				case BITFIELD:
+					return CommandType.BITFIELD;
+				case BITFIELD_RO:
+					break;
+				case BITOP:
+					return CommandType.BITOP;
+				case BITPOS:
+					return CommandType.BITPOS;
+				case GETBIT:
+					return CommandType.GETBIT;
+				case SETBIT:
+					return CommandType.SETBIT;
+				case CLUSTER_MY_ID:
+					return CommandType.CLUSTER;
 
-	/**
-	 * 返回是否为读命令
-	 *
-	 * @return true / false
-	 */
-	boolean isRead();
+			}
+		}
 
-	/**
-	 * 返回是否为只读命令
-	 *
-	 * @return true / false
-	 */
-	default boolean isReadonly() {
-		return isRead() && isWrite() == false;
+		return null;
 	}
-
-	/**
-	 * 返回是否为写命令
-	 *
-	 * @return true / false
-	 */
-	boolean isWrite();
 
 }

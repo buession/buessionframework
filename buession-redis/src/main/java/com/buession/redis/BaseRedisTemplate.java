@@ -78,7 +78,7 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.*;
 import com.buession.redis.transaction.Transaction;
 
@@ -1936,7 +1936,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<ProtocolCommand> aclCat(final AclCategory aclCategory) {
+	public List<Command> aclCat(final AclCategory aclCategory) {
 		return execute((client)->client.serverOperations().aclCat(aclCategory));
 	}
 

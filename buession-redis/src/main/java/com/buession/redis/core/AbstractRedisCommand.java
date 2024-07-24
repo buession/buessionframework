@@ -26,7 +26,7 @@ package com.buession.redis.core;
 
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -39,21 +39,21 @@ import org.slf4j.LoggerFactory;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractRedisCommand<C extends RedisClient, R> implements Command<R> {
+public abstract class AbstractRedisCommand<C extends RedisClient, R> implements com.buession.redis.core.Command<R> {
 
 	protected final C client;
 
-	private final ProtocolCommand command;
+	private final Command command;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected AbstractRedisCommand(final C client, final ProtocolCommand command) {
+	protected AbstractRedisCommand(final C client, final Command command) {
 		this.client = client;
 		this.command = command;
 	}
 
 	@Override
-	public ProtocolCommand getCommand() {
+	public Command getCommand() {
 		return command;
 	}
 

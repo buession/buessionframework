@@ -25,18 +25,18 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.EnumConverter;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 /**
- * Jedis 字符串形式的 ProtocolCommand 转换为 {@link ProtocolCommand}
+ * Jedis 字符串形式的 ProtocolCommand 转换为 {@link Command}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ProtocolCommandConverter extends EnumConverter<ProtocolCommand> {
+public class ProtocolCommandConverter extends EnumConverter<Command> {
 
 	public ProtocolCommandConverter() {
-		super(ProtocolCommand.class);
+		super(Command.class);
 	}
 
 }

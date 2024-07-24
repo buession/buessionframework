@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 import java.util.List;
 import java.util.Map;
@@ -48,147 +48,147 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.PSUBSCRIBE, args);
+		notCommand(client, Command.PSUBSCRIBE, args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.PSUBSCRIBE, args);
+		notCommand(client, Command.PSUBSCRIBE, args);
 	}
 
 	@Override
 	public Long publish(final String channel, final String message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return notCommand(client, ProtocolCommand.PUBLISH, args);
+		return notCommand(client, Command.PUBLISH, args);
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return notCommand(client, ProtocolCommand.PUBLISH, args);
+		return notCommand(client, Command.PUBLISH, args);
 	}
 
 	@Override
 	public List<String> pubsubChannels() {
-		return notCommand(client, ProtocolCommand.PUBSUB_CHANNELS);
+		return notCommand(client, Command.PUBSUB_CHANNELS);
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_CHANNELS, args);
+		return notCommand(client, Command.PUBSUB_CHANNELS, args);
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_CHANNELS, args);
+		return notCommand(client, Command.PUBSUB_CHANNELS, args);
 	}
 
 	@Override
 	public List<String> pubsubShardChannels() {
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS);
+		return notCommand(client, Command.PUBSUB_SHARDCHANNELS);
 	}
 
 	@Override
 	public List<String> pubsubShardChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS, args);
+		return notCommand(client, Command.PUBSUB_SHARDCHANNELS, args);
 	}
 
 	@Override
 	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS, args);
+		return notCommand(client, Command.PUBSUB_SHARDCHANNELS, args);
 	}
 
 	@Override
 	public Long pubsubNumPat() {
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMPAT);
+		return notCommand(client, Command.PUBSUB_NUMPAT);
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub() {
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB);
+		return notCommand(client, Command.PUBSUB_NUMSUB);
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB, args);
+		return notCommand(client, Command.PUBSUB_NUMSUB, args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB, args);
+		return notCommand(client, Command.PUBSUB_NUMSUB, args);
 	}
 
 	@Override
 	public Map<String, Long> pubsubShardNumSub() {
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB);
+		return notCommand(client, Command.PUBSUB_SHARDNUMSUB);
 	}
 
 	@Override
 	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
 		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB, args);
+		return notCommand(client, Command.PUBSUB_SHARDNUMSUB, args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
 		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
-		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB, args);
+		return notCommand(client, Command.PUBSUB_SHARDNUMSUB, args);
 	}
 
 	@Override
 	public Object pUnSubscribe() {
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE);
+		return notCommand(client, Command.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
+		return notCommand(client, Command.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return notCommand(client, ProtocolCommand.PUNSUBSCRIBE, args);
+		return notCommand(client, Command.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.SUBSCRIBE, args);
+		notCommand(client, Command.SUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		notCommand(client, ProtocolCommand.SUBSCRIBE, args);
+		notCommand(client, Command.SUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe() {
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE);
+		return notCommand(client, Command.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
+		return notCommand(client, Command.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.UNSUBSCRIBE, args);
+		return notCommand(client, Command.UNSUBSCRIBE, args);
 	}
 
 }

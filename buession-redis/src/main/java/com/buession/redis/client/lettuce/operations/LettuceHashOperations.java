@@ -33,7 +33,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
@@ -66,13 +66,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+			return new LettucePipelineCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+			return new LettuceTransactionCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+			return new LettuceCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}
 	}
@@ -82,14 +82,14 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+			return new LettucePipelineCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
+			return new LettuceTransactionCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+			return new LettuceCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -129,15 +129,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
+			return new LettucePipelineCommand<>(client, Command.HINCRBY, (cmd)->cmd.hincrby(key, field, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HINCRBY,
+			return new LettuceTransactionCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrby(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrby(key, field, value), (v)->v)
+			return new LettuceCommand<>(client, Command.HINCRBY, (cmd)->cmd.hincrby(key, field, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -147,15 +147,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new LettucePipelineCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new LettuceTransactionCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new LettuceCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrbyfloat(key, field, value), (v)->v)
 					.run(args);
 		}
@@ -182,13 +182,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new LettucePipelineCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new LettuceTransactionCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new LettuceCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -218,15 +218,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new LettucePipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new LettuceTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data), okStatusConverter)
+			return new LettuceCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -237,15 +237,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
+			return new LettucePipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
 					SafeEncoder::encode)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(bKey), SafeEncoder::encode)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
+			return new LettuceCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey),
 					SafeEncoder::encode)
 					.run(args);
 		}
@@ -256,15 +256,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new LettucePipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new LettuceTransactionCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
+			return new LettuceCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -276,15 +276,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
+			return new LettucePipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
 					listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(bKey, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
+			return new LettuceCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(bKey, count),
 					listConverter)
 					.run(args);
 		}
@@ -295,15 +295,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
+			return new LettucePipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count), (v)->v)
+			return new LettuceCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key, count), (v)->v)
 					.run(args);
 		}
 	}
@@ -316,15 +316,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 				KeyValueConverter.listConverter(SafeEncoder::encode, SafeEncoder::encode);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettucePipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(bKey, count), listConverter)
 					.run(args);
 		}
@@ -337,15 +337,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 				KeyValueConverter.listConverter((k)->k, (v)->v);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettucePipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new LettuceCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithvalues(key, count), listConverter)
 					.run(args);
 		}
@@ -446,15 +446,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final Converter<Boolean, Long> converter = (v)->Boolean.TRUE.equals(v) ? 1L : 0L;
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+			return new LettucePipelineCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+			return new LettuceTransactionCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value), converter)
+			return new LettuceCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value), converter)
 					.run(args);
 		}
 	}
@@ -464,15 +464,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+			return new LettucePipelineCommand<>(client, Command.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+			return new LettuceTransactionCommand<>(client, Command.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					booleanStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+			return new LettuceCommand<>(client, Command.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -483,14 +483,14 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+			return new LettucePipelineCommand<>(client, Command.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field),
+			return new LettuceTransactionCommand<>(client, Command.HSETNX, (cmd)->cmd.hstrlen(key, field),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
+			return new LettuceCommand<>(client, Command.HSETNX, (cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -513,13 +513,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <V> V hGet(final byte[] key, final byte[] field, final Converter<byte[], V> converter,
 					   final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
+			return new LettucePipelineCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
+			return new LettuceTransactionCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), converter)
+			return new LettuceCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), converter)
 					.run(args);
 		}
 	}
@@ -527,13 +527,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <K, V> Map<K, V> hGetAll(final byte[] key, final Converter<Map<byte[], byte[]>, Map<K, V>> converter,
 									 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+			return new LettucePipelineCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetall(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+			return new LettuceTransactionCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetall(key), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetall(key), converter)
+			return new LettuceCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetall(key), converter)
 					.run(args);
 		}
 	}
@@ -541,13 +541,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <V> Set<V> hKeys(final byte[] key, final Converter<List<byte[]>, Set<V>> converter,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+			return new LettucePipelineCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+			return new LettuceTransactionCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), converter)
+			return new LettuceCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), converter)
 					.run(args);
 		}
 	}
@@ -556,14 +556,14 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 							  final Converter<List<io.lettuce.core.KeyValue<byte[], byte[]>>, List<V>> converter,
 							  final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+			return new LettucePipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new LettuceTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), converter)
+			return new LettuceCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields), converter)
 					.run(args);
 		}
 	}
@@ -572,14 +572,14 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
 											   CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+			return new LettucePipelineCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new LettuceTransactionCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
+			return new LettuceCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor), converter)
 					.run(args);
 		}
 	}
@@ -588,15 +588,15 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
 											   CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
+			return new LettucePipelineCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HSCAN,
+			return new LettuceTransactionCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanArgs), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
+			return new LettuceCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor, scanArgs),
 					converter)
 					.run(args);
 		}
@@ -605,13 +605,13 @@ public final class LettuceHashOperations extends AbstractHashOperations<LettuceS
 	private <V> List<V> hVals(final byte[] key, final Converter<List<byte[]>, List<V>> converter,
 							  final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+			return new LettucePipelineCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+			return new LettuceTransactionCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), converter)
+			return new LettuceCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), converter)
 					.run(args);
 		}
 	}

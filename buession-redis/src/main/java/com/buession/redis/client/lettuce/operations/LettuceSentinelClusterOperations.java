@@ -35,7 +35,7 @@ import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 import java.util.List;
 
@@ -53,179 +53,179 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 
 	@Override
 	public String clusterMyId() {
-		return notCommand(client, ProtocolCommand.CLUSTER_MY_ID);
+		return notCommand(client, Command.CLUSTER_MY_ID);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return notCommand(client, ProtocolCommand.CLUSTER_ADDSLOTS, args);
+		return notCommand(client, Command.CLUSTER_ADDSLOTS, args);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		return notCommand(client, ProtocolCommand.CLUSTER_SLOTS);
+		return notCommand(client, Command.CLUSTER_SLOTS);
 	}
 
 	@Override
 	public Long clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+		return notCommand(client, Command.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Long clusterCountFailureReports(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+		return notCommand(client, Command.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create("slot", slot);
-		return notCommand(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT, args);
+		return notCommand(client, Command.CLUSTER_COUNTKEYSINSLOT, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return notCommand(client, ProtocolCommand.CLUSTER_DELSLOTS, args);
+		return notCommand(client, Command.CLUSTER_DELSLOTS, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
-		return notCommand(client, ProtocolCommand.CLUSTER_FLUSHSLOTS);
+		return notCommand(client, Command.CLUSTER_FLUSHSLOTS);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		return notCommand(client, ProtocolCommand.CLUSTER_FAILOVER, args);
+		return notCommand(client, Command.CLUSTER_FAILOVER, args);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_FORGET, args);
+		return notCommand(client, Command.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public Status clusterForget(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_FORGET, args);
+		return notCommand(client, Command.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
-		return notCommand(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
+		return notCommand(client, Command.CLUSTER_GETKEYSINSLOT, args);
 	}
 
 	@Override
 	public Long clusterKeySlot(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, ProtocolCommand.CLUSTER_KEYSLOT, args);
+		return notCommand(client, Command.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, ProtocolCommand.CLUSTER_KEYSLOT, args);
+		return notCommand(client, Command.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
-		return notCommand(client, ProtocolCommand.CLUSTER_INFO);
+		return notCommand(client, Command.CLUSTER_INFO);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return notCommand(client, ProtocolCommand.CLUSTER_MEET, args);
+		return notCommand(client, Command.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
-		return notCommand(client, ProtocolCommand.CLUSTER_NODES);
+		return notCommand(client, Command.CLUSTER_NODES);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_SLAVES, args);
+		return notCommand(client, Command.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_SLAVES, args);
+		return notCommand(client, Command.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
+		return notCommand(client, Command.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
+		return notCommand(client, Command.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
+		return notCommand(client, Command.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
+		return notCommand(client, Command.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		return notCommand(client, ProtocolCommand.CLUSTER_RESET, args);
+		return notCommand(client, Command.CLUSTER_RESET, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		return notCommand(client, ProtocolCommand.CLUSTER_SAVECONFIG);
+		return notCommand(client, Command.CLUSTER_SAVECONFIG);
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return notCommand(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH, args);
+		return notCommand(client, Command.CLUSTER_SETCONFIGEPOCH, args);
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return notCommand(client, ProtocolCommand.CLUSTER_BUMPEPOCH);
+		return notCommand(client, Command.CLUSTER_BUMPEPOCH);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-		return notCommand(client, ProtocolCommand.CLUSTER_SETSLOT, args);
+		return notCommand(client, Command.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public Status asking() {
-		return notCommand(client, ProtocolCommand.ASKING);
+		return notCommand(client, Command.ASKING);
 	}
 
 	@Override
 	public Status readWrite() {
-		return notCommand(client, ProtocolCommand.READWRITE);
+		return notCommand(client, Command.READWRITE);
 	}
 
 	@Override
 	public Status readOnly() {
-		return notCommand(client, ProtocolCommand.READONLY);
+		return notCommand(client, Command.READONLY);
 	}
 
 }

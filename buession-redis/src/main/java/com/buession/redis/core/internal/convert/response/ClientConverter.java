@@ -30,7 +30,7 @@ import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -114,7 +114,7 @@ public final class ClientConverter implements Converter<String, Client> {
 			}else if("events".equals(keyValueParser.getKey())){
 				client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
 			}else if("cmd".equals(keyValueParser.getKey())){
-				client.setCmd(keyValueParser.getEnumValue(ProtocolCommand.class));
+				client.setCmd(keyValueParser.getEnumValue(Command.class));
 			}
 		}
 

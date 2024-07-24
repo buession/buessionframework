@@ -33,7 +33,7 @@ import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.AbstractRedisOperationsCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
@@ -50,11 +50,11 @@ public interface RedisOperations {
 	abstract class AbstractStandaloneCommand<CLIENT extends RedisStandaloneClient, CONN extends RedisStandaloneConnection, CXT, OSR, SR, R>
 			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, OSR, SR, R> {
 
-		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command) {
+		public AbstractStandaloneCommand(final CLIENT client, final Command command) {
 			super(client, command);
 		}
 
-		public AbstractStandaloneCommand(final CLIENT client, final ProtocolCommand command,
+		public AbstractStandaloneCommand(final CLIENT client, final Command command,
 										 final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -86,11 +86,11 @@ public interface RedisOperations {
 	abstract class AbstractSentinelCommand<CLIENT extends RedisSentinelClient, CONN extends RedisSentinelConnection, CXT, OSR, SR, R>
 			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, OSR, SR, R> {
 
-		public AbstractSentinelCommand(final CLIENT client, final ProtocolCommand command) {
+		public AbstractSentinelCommand(final CLIENT client, final Command command) {
 			super(client, command);
 		}
 
-		public AbstractSentinelCommand(final CLIENT client, ProtocolCommand command,
+		public AbstractSentinelCommand(final CLIENT client, Command command,
 									   final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
@@ -122,11 +122,11 @@ public interface RedisOperations {
 	abstract class AbstractClusterCommand<CLIENT extends RedisClusterClient, CONN extends RedisClusterConnection, CXT, OSR, SR, R>
 			extends AbstractRedisOperationsCommand<CLIENT, CONN, CXT, OSR, SR, R> {
 
-		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command) {
+		public AbstractClusterCommand(final CLIENT client, final Command command) {
 			super(client, command);
 		}
 
-		public AbstractClusterCommand(final CLIENT client, final ProtocolCommand command,
+		public AbstractClusterCommand(final CLIENT client, final Command command,
 									  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}

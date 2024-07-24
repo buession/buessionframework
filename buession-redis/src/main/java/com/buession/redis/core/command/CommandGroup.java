@@ -22,103 +22,112 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
-
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.exception.RedisException;
+package com.buession.redis.core.command;
 
 /**
- * Redis 命令接口
- *
- * @param <R>
- * 		命令执行结果类型
+ * Redis 协议命令分组
  *
  * @author Yong.Teng
- * @since 2.0.0
  */
-public interface Command<R> {
+public enum CommandGroup {
 
 	/**
-	 * 返回协议命令
-	 *
-	 * @return 协议命令
+	 * 位图命令
 	 */
-	com.buession.redis.core.command.Command getCommand();
+	BITMAP("BitMap"),
 
 	/**
-	 * 执行 Redis 命令
-	 *
-	 * @return Redis 命令执行结果
-	 *
-	 * @throws RedisException
-	 * 		Redis 命令执行异常
+	 * 集群命令
 	 */
-	R execute() throws RedisException;
+	CLUSTER("Cluster"),
 
 	/**
-	 * 运行 Redis 命令
-	 *
-	 * @return Redis 命令运行结果
-	 *
-	 * @throws RedisException
-	 * 		Redis 命令运行异常
+	 * 连接命令
 	 */
-	default R run() throws RedisException {
-		return run(null);
+	CONNECTION("Connection"),
+
+	/**
+	 * 地理位置命令
+	 */
+	GEO("Geo"),
+
+	/**
+	 * 哈希命令
+	 */
+	HASH("Hash"),
+
+	/**
+	 * HyperLogLog 命令
+	 */
+	HYPERLOGLOG("HyperLogLog"),
+
+	/**
+	 * 键命令
+	 */
+	KEY("Key"),
+
+	/**
+	 * 列表命令
+	 */
+	LIST("List"),
+
+	/**
+	 * 发布订阅命令
+	 */
+	PUBSUB("PubSub"),
+
+	/**
+	 * 脚本命令
+	 */
+	SCRIPTING("Scripting"),
+
+	/**
+	 * 服务器命令
+	 */
+	SERVER("Server"),
+
+	/**
+	 * 集合命令
+	 */
+	SET("Set"),
+
+	/**
+	 * 有序集合命令
+	 */
+	SORTEDSET("Sorted Set"),
+
+	/**
+	 * 流命令
+	 */
+	STREAM("Stream"),
+
+	/**
+	 * 字符串命令
+	 */
+	STRING("String"),
+
+	/**
+	 * 事务命令
+	 */
+	TRANSACTION("Transaction");
+
+	private final String name;
+
+	CommandGroup(final String name) {
+		this.name = name;
 	}
 
-	/**
-	 * 运行 Redis 命令
-	 *
-	 * @param arguments
-	 * 		Redis 命令参数
-	 *
-	 * @return Redis 命令运行结果
-	 *
-	 * @throws RedisException
-	 * 		Redis 命令运行异常
-	 */
-	R run(final CommandArguments arguments) throws RedisException;
-
-	/**
-	 * Redis 命令执行器
-	 *
-	 * @param <C>
-	 * 		Redis 对象上下文
-	 * @param <R>
-	 * 		命令执行返回值类型
-	 *
-	 * @since 3.0.0
-	 */
-	@FunctionalInterface
-	interface Executor<C, R> extends com.buession.core.Executor<C, R> {
-
-		@Override
-		R execute(C context) throws RedisException;
-
+	public String getName() {
+		return name;
 	}
 
-	/**
-	 * Redis 命令运行器
-	 *
-	 * @author Yong.Teng
-	 */
-	@FunctionalInterface
-	interface Runner {
+	public String getValue() {
+		return getName();
+	}
 
-		/**
-		 * 运行 Redis 命令
-		 *
-		 * @param <R>
-		 * 		命令运行结果类型
-		 *
-		 * @return Redis 命令运行结果
-		 *
-		 * @throws RedisException
-		 * 		Redis 命令运行异常
-		 */
-		<R> R run() throws RedisException;
-
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 }

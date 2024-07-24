@@ -28,7 +28,7 @@ import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.BitFieldArgument;
 
 import java.util.List;
@@ -48,127 +48,127 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 	@Override
 	public Long bitCount(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public List<Long> bitField(final String key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		return notCommand(client, ProtocolCommand.BITFIELD, args);
+		return notCommand(client, Command.BITFIELD, args);
 	}
 
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
-		return notCommand(client, ProtocolCommand.BITFIELD, args);
+		return notCommand(client, Command.BITFIELD, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.BITFIELD_RO, args);
+		return notCommand(client, Command.BITFIELD_RO, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.BITFIELD_RO, args);
+		return notCommand(client, Command.BITFIELD_RO, args);
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
-		return notCommand(client, ProtocolCommand.BITOP, args);
+		return notCommand(client, Command.BITOP, args);
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
-		return notCommand(client, ProtocolCommand.BITOP, args);
+		return notCommand(client, Command.BITOP, args);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return notCommand(client, ProtocolCommand.BITPOS, args);
+		return notCommand(client, Command.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return notCommand(client, ProtocolCommand.BITPOS, args);
+		return notCommand(client, Command.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return notCommand(client, ProtocolCommand.BITPOS, args);
+		return notCommand(client, Command.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return notCommand(client, ProtocolCommand.BITPOS, args);
+		return notCommand(client, Command.BITPOS, args);
 	}
 
 	@Override
 	public Boolean getBit(final String key, final long offset) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return notCommand(client, ProtocolCommand.GETBIT, args);
+		return notCommand(client, Command.GETBIT, args);
 	}
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return notCommand(client, ProtocolCommand.GETBIT, args);
+		return notCommand(client, Command.GETBIT, args);
 	}
 
 	@Override
 	public Boolean setBit(final String key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return notCommand(client, ProtocolCommand.SETBIT, args);
+		return notCommand(client, Command.SETBIT, args);
 	}
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return notCommand(client, ProtocolCommand.SETBIT, args);
+		return notCommand(client, Command.SETBIT, args);
 	}
 
 }

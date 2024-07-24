@@ -38,7 +38,7 @@ import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.command.args.XClaimArgument;
 import com.buession.redis.core.command.args.XReadArgument;
@@ -95,15 +95,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamEntryID[] streamEntryIDS = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XACK,
+			return new JedisPipelineCommand<>(client, Command.XACK,
 					(cmd)->cmd.xack(key, groupName, streamEntryIDS), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XACK,
+			return new JedisTransactionCommand<>(client, Command.XACK,
 					(cmd)->cmd.xack(key, groupName, streamEntryIDS), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XACK, (cmd)->cmd.xack(key, groupName, streamEntryIDS),
+			return new JedisCommand<>(client, Command.XACK, (cmd)->cmd.xack(key, groupName, streamEntryIDS),
 					(v)->v)
 					.run(args);
 		}
@@ -116,15 +116,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final byte[][] streamEntryIDS = StreamEntryIdConverter.binaryArrayConverter().convert(ids);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XACK,
+			return new JedisPipelineCommand<>(client, Command.XACK,
 					(cmd)->cmd.xack(key, groupName, streamEntryIDS), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XACK,
+			return new JedisTransactionCommand<>(client, Command.XACK,
 					(cmd)->cmd.xack(key, groupName, streamEntryIDS), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XACK, (cmd)->cmd.xack(key, groupName, streamEntryIDS),
+			return new JedisCommand<>(client, Command.XACK, (cmd)->cmd.xack(key, groupName, streamEntryIDS),
 					(v)->v)
 					.run(args);
 		}
@@ -137,15 +137,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, streamEntryID, hash),
+			return new JedisPipelineCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, streamEntryID, hash),
 					streamEntryIDConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XADD,
+			return new JedisTransactionCommand<>(client, Command.XADD,
 					(cmd)->cmd.xadd(key, streamEntryID, hash), streamEntryIDConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, streamEntryID, hash),
+			return new JedisCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, streamEntryID, hash),
 					streamEntryIDConverter)
 					.run(args);
 		}
@@ -159,15 +159,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				new StreamEntryIDConverter.BinaryStreamEntryIdConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisPipelineCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					streamEntryIDConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisTransactionCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					streamEntryIDConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					streamEntryIDConverter)
 					.run(args);
 		}
@@ -182,15 +182,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisPipelineCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					streamEntryIDConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisTransactionCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					streamEntryIDConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					streamEntryIDConverter)
 					.run(args);
 		}
@@ -206,15 +206,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				new StreamEntryIDConverter.BinaryStreamEntryIdConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisPipelineCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					binaryStreamEntryIdConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisTransactionCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					binaryStreamEntryIdConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
+			return new JedisCommand<>(client, Command.XADD, (cmd)->cmd.xadd(key, hash, xAddParams),
 					binaryStreamEntryIdConverter)
 					.run(args);
 		}
@@ -340,15 +340,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, streamEntryIDs),
+			return new JedisPipelineCommand<>(client, Command.XDEL, (cmd)->cmd.xdel(key, streamEntryIDs),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, streamEntryIDs),
+			return new JedisTransactionCommand<>(client, Command.XDEL, (cmd)->cmd.xdel(key, streamEntryIDs),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XDEL, (cmd)->cmd.xdel(key, streamEntryIDs), (v)->v)
+			return new JedisCommand<>(client, Command.XDEL, (cmd)->cmd.xdel(key, streamEntryIDs), (v)->v)
 					.run(args);
 		}
 	}
@@ -361,15 +361,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_CREATE,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_CREATE,
 					(cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_CREATE,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_CREATE,
 					(cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_CREATE,
+			return new JedisCommand<>(client, Command.XGROUP_CREATE,
 					(cmd)->cmd.xgroupCreate(key, groupName, streamEntryID, makeStream), okStatusConverter)
 					.run(args);
 		}
@@ -381,15 +381,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_CREATECONSUMER,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_CREATECONSUMER,
 					(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_CREATECONSUMER,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_CREATECONSUMER,
 					(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), booleanStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_CREATECONSUMER,
+			return new JedisCommand<>(client, Command.XGROUP_CREATECONSUMER,
 					(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), booleanStatusConverter)
 					.run(args);
 		}
@@ -401,15 +401,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_CREATECONSUMER,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_CREATECONSUMER,
 					(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_CREATECONSUMER,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_CREATECONSUMER,
 					(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), booleanStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_CREATECONSUMER,
+			return new JedisCommand<>(client, Command.XGROUP_CREATECONSUMER,
 					(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), booleanStatusConverter)
 					.run(args);
 		}
@@ -421,15 +421,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_DELCONSUMER,
 					(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_DELCONSUMER,
 					(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER, (cmd)->cmd.xgroupDelConsumer(key,
+			return new JedisCommand<>(client, Command.XGROUP_DELCONSUMER, (cmd)->cmd.xgroupDelConsumer(key,
 					groupName, consumerName), (v)->v)
 					.run(args);
 		}
@@ -441,15 +441,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_DELCONSUMER,
 					(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_DELCONSUMER,
 					(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_DELCONSUMER, (cmd)->cmd.xgroupDelConsumer(key,
+			return new JedisCommand<>(client, Command.XGROUP_DELCONSUMER, (cmd)->cmd.xgroupDelConsumer(key,
 					groupName, consumerName), (v)->v)
 					.run(args);
 		}
@@ -460,15 +460,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_DESTROY,
 					(cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_DESTROY,
 					(cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_DESTROY, (cmd)->cmd.xgroupDestroy(key, groupName),
+			return new JedisCommand<>(client, Command.XGROUP_DESTROY, (cmd)->cmd.xgroupDestroy(key, groupName),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -479,15 +479,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_DESTROY,
 					(cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_DESTROY,
 					(cmd)->cmd.xgroupDestroy(key, groupName), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_DESTROY, (cmd)->cmd.xgroupDestroy(key, groupName),
+			return new JedisCommand<>(client, Command.XGROUP_DESTROY, (cmd)->cmd.xgroupDestroy(key, groupName),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -499,15 +499,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_SETID,
+			return new JedisPipelineCommand<>(client, Command.XGROUP_SETID,
 					(cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XGROUP_SETID,
+			return new JedisTransactionCommand<>(client, Command.XGROUP_SETID,
 					(cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XGROUP_SETID,
+			return new JedisCommand<>(client, Command.XGROUP_SETID,
 					(cmd)->cmd.xgroupSetID(key, groupName, streamEntryID), okStatusConverter)
 					.run(args);
 		}
@@ -520,15 +520,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamConsumersInfoConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XINFO_CONSUMERS,
+			return new JedisPipelineCommand<>(client, Command.XINFO_CONSUMERS,
 					(cmd)->cmd.xinfoConsumers(key, groupName), listStreamConsumersInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XINFO_CONSUMERS,
+			return new JedisTransactionCommand<>(client, Command.XINFO_CONSUMERS,
 					(cmd)->cmd.xinfoConsumers(key, groupName), listStreamConsumersInfoConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XINFO_CONSUMERS,
+			return new JedisCommand<>(client, Command.XINFO_CONSUMERS,
 					(cmd)->cmd.xinfoConsumers(key, groupName), listStreamConsumersInfoConverter)
 					.run(args);
 		}
@@ -541,15 +541,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamGroupInfoConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
+			return new JedisPipelineCommand<>(client, Command.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
 					listStreamGroupInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
+			return new JedisTransactionCommand<>(client, Command.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
 					listStreamGroupInfoConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
+			return new JedisCommand<>(client, Command.XINFO_GROUPS, (cmd)->cmd.xinfoGroups(key),
 					listStreamGroupInfoConverter)
 					.run(args);
 		}
@@ -561,15 +561,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamInfoConverter streamInfoConverter = new StreamInfoConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+			return new JedisPipelineCommand<>(client, Command.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
 					streamInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+			return new JedisTransactionCommand<>(client, Command.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
 					streamInfoConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
+			return new JedisCommand<>(client, Command.XINFO_STREAM, (cmd)->cmd.xinfoStream(key),
 					streamInfoConverter)
 					.run(args);
 		}
@@ -581,15 +581,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStreamFull(key),
+			return new JedisPipelineCommand<>(client, Command.XINFO_STREAM, (cmd)->cmd.xinfoStreamFull(key),
 					streamFullInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStreamFull(key),
+			return new JedisTransactionCommand<>(client, Command.XINFO_STREAM, (cmd)->cmd.xinfoStreamFull(key),
 					streamFullInfoConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XINFO_STREAM, (cmd)->cmd.xinfoStreamFull(key),
+			return new JedisCommand<>(client, Command.XINFO_STREAM, (cmd)->cmd.xinfoStreamFull(key),
 					streamFullInfoConverter)
 					.run(args);
 		}
@@ -601,15 +601,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XINFO_STREAM,
+			return new JedisPipelineCommand<>(client, Command.XINFO_STREAM,
 					(cmd)->cmd.xinfoStreamFull(key, (int) count), streamFullInfoConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XINFO_STREAM,
+			return new JedisTransactionCommand<>(client, Command.XINFO_STREAM,
 					(cmd)->cmd.xinfoStreamFull(key, (int) count), streamFullInfoConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XINFO_STREAM,
+			return new JedisCommand<>(client, Command.XINFO_STREAM,
 					(cmd)->cmd.xinfoStreamFull(key, (int) count), streamFullInfoConverter)
 					.run(args);
 		}
@@ -620,13 +620,13 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.XLEN, (cmd)->cmd.xlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.XLEN, (cmd)->cmd.xlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+			return new JedisCommand<>(client, Command.XLEN, (cmd)->cmd.xlen(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -636,13 +636,13 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.XLEN, (cmd)->cmd.xlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+			return new JedisTransactionCommand<>(client, Command.XLEN, (cmd)->cmd.xlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
+			return new JedisCommand<>(client, Command.XLEN, (cmd)->cmd.xlen(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -653,15 +653,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final StreamPendingSummaryConverter streamPendingSummaryConverter = new StreamPendingSummaryConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+			return new JedisPipelineCommand<>(client, Command.XPENDING, (cmd)->cmd.xpending(key, groupName),
 					streamPendingSummaryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+			return new JedisTransactionCommand<>(client, Command.XPENDING, (cmd)->cmd.xpending(key, groupName),
 					streamPendingSummaryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XPENDING, (cmd)->cmd.xpending(key, groupName),
+			return new JedisCommand<>(client, Command.XPENDING, (cmd)->cmd.xpending(key, groupName),
 					streamPendingSummaryConverter)
 					.run(args);
 		}
@@ -746,15 +746,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, startID, endID),
+			return new JedisPipelineCommand<>(client, Command.XRANGE, (cmd)->cmd.xrange(key, startID, endID),
 					listStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, startID, endID),
+			return new JedisTransactionCommand<>(client, Command.XRANGE, (cmd)->cmd.xrange(key, startID, endID),
 					listStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XRANGE, (cmd)->cmd.xrange(key, startID, endID),
+			return new JedisCommand<>(client, Command.XRANGE, (cmd)->cmd.xrange(key, startID, endID),
 					listStreamEntryConverter)
 					.run(args);
 		}
@@ -770,15 +770,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XRANGE,
+			return new JedisPipelineCommand<>(client, Command.XRANGE,
 					(cmd)->cmd.xrange(key, startID, endID, (int) count), listStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XRANGE,
+			return new JedisTransactionCommand<>(client, Command.XRANGE,
 					(cmd)->cmd.xrange(key, startID, endID, (int) count), listStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XRANGE,
+			return new JedisCommand<>(client, Command.XRANGE,
 					(cmd)->cmd.xrange(key, startID, endID, (int) count), listStreamEntryConverter)
 					.run(args);
 		}
@@ -854,15 +854,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XREVRANGE,
+			return new JedisPipelineCommand<>(client, Command.XREVRANGE,
 					(cmd)->cmd.xrevrange(key, endID, startID), listStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XREVRANGE,
+			return new JedisTransactionCommand<>(client, Command.XREVRANGE,
 					(cmd)->cmd.xrevrange(key, endID, startID), listStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XREVRANGE, (cmd)->cmd.xrevrange(key, endID, startID),
+			return new JedisCommand<>(client, Command.XREVRANGE, (cmd)->cmd.xrevrange(key, endID, startID),
 					listStreamEntryConverter)
 					.run(args);
 		}
@@ -879,15 +879,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XREVRANGE,
+			return new JedisPipelineCommand<>(client, Command.XREVRANGE,
 					(cmd)->cmd.xrevrange(key, endID, startID, (int) count), listStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XREVRANGE,
+			return new JedisTransactionCommand<>(client, Command.XREVRANGE,
 					(cmd)->cmd.xrevrange(key, endID, startID, (int) count), listStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XREVRANGE,
+			return new JedisCommand<>(client, Command.XREVRANGE,
 					(cmd)->cmd.xrevrange(key, endID, startID, (int) count), listStreamEntryConverter)
 					.run(args);
 		}
@@ -937,17 +937,17 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				new StreamEntryConverter.MapEntryStreamEntryConverter<>(new StreamEntryIDConverter());
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisPipelineCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams),
 					mapEntryStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisTransactionCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams),
 					mapEntryStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams),
 					mapEntryStreamEntryConverter)
 					.run(args);
@@ -965,17 +965,17 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final Converter<List<Object>, Map<StreamEntryId, List<StreamEntry>>> converter = null;
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisPipelineCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisTransactionCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams),
 					converter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams),
 					converter)
 					.run(args);
@@ -991,17 +991,17 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final MapEntryMapConverter<StreamEntryID, List<StreamEntryID>, StreamEntryId, List<StreamEntryId>> mapEntryStreamEntryIdConverter = StreamEntryIDConverter.mapEntryMapConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisPipelineCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams)
 					, mapEntryStreamEntryIdConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisTransactionCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams)
 					, mapEntryStreamEntryIdConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XAUTOCLAIM,
+			return new JedisCommand<>(client, Command.XAUTOCLAIM,
 					(cmd)->cmd.xautoclaimJustId(key, groupName, consumerName, minIdleTime, startID, xAutoClaimParams)
 					, mapEntryStreamEntryIdConverter)
 					.run(args);
@@ -1016,17 +1016,17 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XCLAIM,
+			return new JedisPipelineCommand<>(client, Command.XCLAIM,
 					(cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, xClaimParams, streamEntryIDs),
 					listStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XCLAIM,
+			return new JedisTransactionCommand<>(client, Command.XCLAIM,
 					(cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, xClaimParams, streamEntryIDs),
 					listStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XCLAIM,
+			return new JedisCommand<>(client, Command.XCLAIM,
 					(cmd)->cmd.xclaim(key, groupName, consumerName, minIdleTime, xClaimParams, streamEntryIDs),
 					listStreamEntryConverter)
 					.run(args);
@@ -1040,17 +1040,17 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 		final ListConverter<StreamEntryID, StreamEntryId> listStreamEntryIDConverter = StreamEntryIDConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XCLAIM,
+			return new JedisPipelineCommand<>(client, Command.XCLAIM,
 					(cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, xClaimParams, streamEntryIDs),
 					listStreamEntryIDConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XCLAIM,
+			return new JedisTransactionCommand<>(client, Command.XCLAIM,
 					(cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, xClaimParams, streamEntryIDs),
 					listStreamEntryIDConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XCLAIM,
+			return new JedisCommand<>(client, Command.XCLAIM,
 					(cmd)->cmd.xclaimJustId(key, groupName, consumerName, minIdleTime, xClaimParams, streamEntryIDs),
 					listStreamEntryIDConverter)
 					.run(args);
@@ -1063,15 +1063,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				StreamPendingEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XPENDING,
+			return new JedisPipelineCommand<>(client, Command.XPENDING,
 					(cmd)->cmd.xpending(key, groupName, xPendingParams), listStreamPendingEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XPENDING,
+			return new JedisTransactionCommand<>(client, Command.XPENDING,
 					(cmd)->cmd.xpending(key, groupName, xPendingParams), listStreamPendingEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XPENDING,
+			return new JedisCommand<>(client, Command.XPENDING,
 					(cmd)->cmd.xpending(key, groupName, xPendingParams), listStreamPendingEntryConverter)
 					.run(args);
 		}
@@ -1085,15 +1085,15 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				new StreamEntryConverter.ListMapEntryStreamEntryConverter<>((k)->k);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XREAD,
+			return new JedisPipelineCommand<>(client, Command.XREAD,
 					(cmd)->cmd.xread(xReadParams, stringStreamEntryIDMap), listMapEntryStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XREAD,
+			return new JedisTransactionCommand<>(client, Command.XREAD,
 					(cmd)->cmd.xread(xReadParams, stringStreamEntryIDMap), listMapEntryStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XREAD,
+			return new JedisCommand<>(client, Command.XREAD,
 					(cmd)->cmd.xread(xReadParams, stringStreamEntryIDMap), listMapEntryStreamEntryConverter)
 					.run(args);
 		}
@@ -1109,17 +1109,17 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 				new StreamEntryConverter.ListMapEntryStreamEntryConverter<>((k)->k);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XREADGROUP,
+			return new JedisPipelineCommand<>(client, Command.XREADGROUP,
 					(cmd)->cmd.xreadGroup(groupName, consumerName, xReadGroupParams, stringStreamEntryIDMap),
 					listMapEntryStreamEntryConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XREADGROUP,
+			return new JedisTransactionCommand<>(client, Command.XREADGROUP,
 					(cmd)->cmd.xreadGroup(groupName, consumerName, xReadGroupParams, stringStreamEntryIDMap),
 					listMapEntryStreamEntryConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XREADGROUP,
+			return new JedisCommand<>(client, Command.XREADGROUP,
 					(cmd)->cmd.xreadGroup(groupName, consumerName, xReadGroupParams, stringStreamEntryIDMap),
 					listMapEntryStreamEntryConverter)
 					.run(args);
@@ -1128,28 +1128,28 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	private Long xTrim(final String key, final XTrimParams xTrimParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams),
+			return new JedisTransactionCommand<>(client, Command.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
+			return new JedisCommand<>(client, Command.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
 					.run(args);
 		}
 	}
 
 	private Long xTrim(final byte[] key, final XTrimParams xTrimParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
+			return new JedisPipelineCommand<>(client, Command.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams),
+			return new JedisTransactionCommand<>(client, Command.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
+			return new JedisCommand<>(client, Command.XTRIM, (cmd)->cmd.xtrim(key, xTrimParams), (v)->v)
 					.run(args);
 		}
 	}

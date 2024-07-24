@@ -31,7 +31,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import redis.clients.jedis.params.ScanParams;
@@ -57,15 +57,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields),
+			return new JedisSentinelPipelineCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields),
+			return new JedisSentinelTransactionCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}
 	}
@@ -75,15 +75,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields),
+			return new JedisSentinelPipelineCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields),
+			return new JedisSentinelTransactionCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
 					.run(args);
 		}
 	}
@@ -93,15 +93,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
+			return new JedisSentinelPipelineCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HEXISTS,
+			return new JedisSentinelTransactionCommand<>(client, Command.HEXISTS,
 					(cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -111,15 +111,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
+			return new JedisSentinelPipelineCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HEXISTS,
+			return new JedisSentinelTransactionCommand<>(client, Command.HEXISTS,
 					(cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HEXISTS, (cmd)->cmd.hexists(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -129,14 +129,14 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field),
+			return new JedisSentinelTransactionCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -146,14 +146,14 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field),
+			return new JedisSentinelTransactionCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HGET, (cmd)->cmd.hget(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -163,14 +163,14 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetAll(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -180,14 +180,14 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetAll(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -197,15 +197,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HINCRBY,
+			return new JedisSentinelPipelineCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrBy(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HINCRBY,
+			return new JedisSentinelTransactionCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrBy(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrBy(key, field, value),
+			return new JedisSentinelCommand<>(client, Command.HINCRBY, (cmd)->cmd.hincrBy(key, field, value),
 					(v)->v)
 					.run(args);
 		}
@@ -216,15 +216,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HINCRBY,
+			return new JedisSentinelPipelineCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrBy(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HINCRBY,
+			return new JedisSentinelTransactionCommand<>(client, Command.HINCRBY,
 					(cmd)->cmd.hincrBy(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HINCRBY, (cmd)->cmd.hincrBy(key, field, value),
+			return new JedisSentinelCommand<>(client, Command.HINCRBY, (cmd)->cmd.hincrBy(key, field, value),
 					(v)->v)
 					.run(args);
 		}
@@ -235,15 +235,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new JedisSentinelPipelineCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrByFloat(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new JedisSentinelTransactionCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrByFloat(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new JedisSentinelCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrByFloat(key, field, value), (v)->v)
 					.run(args);
 		}
@@ -254,15 +254,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new JedisSentinelPipelineCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrByFloat(key, field, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new JedisSentinelTransactionCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrByFloat(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HINCRBYFLOAT,
+			return new JedisSentinelCommand<>(client, Command.HINCRBYFLOAT,
 					(cmd)->cmd.hincrByFloat(key, field, value), (v)->v)
 					.run(args);
 		}
@@ -273,13 +273,13 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -289,13 +289,13 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -305,13 +305,13 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -321,13 +321,13 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HLEN, (cmd)->cmd.hlen(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -337,15 +337,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new JedisSentinelPipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new JedisSentinelTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields), (v)->v)
 					.run(args);
 		}
 	}
@@ -355,15 +355,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new JedisSentinelPipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
+			return new JedisSentinelTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HMGET, (cmd)->cmd.hmget(key, fields), (v)->v)
 					.run(args);
 		}
 	}
@@ -373,15 +373,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new JedisSentinelPipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new JedisSentinelTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new JedisSentinelCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}
@@ -392,15 +392,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new JedisSentinelPipelineCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new JedisSentinelTransactionCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
+			return new JedisSentinelCommand<>(client, Command.HMGET, (cmd)->cmd.hmset(key, data),
 					okStatusConverter)
 					.run(args);
 		}
@@ -411,15 +411,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -429,15 +429,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -447,15 +447,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
+			return new JedisSentinelCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
 					(v)->v)
 					.run(args);
 		}
@@ -466,15 +466,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfield(key, count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
+			return new JedisSentinelCommand<>(client, Command.HRANDFIELD, (cmd)->cmd.hrandfield(key, count),
 					(v)->v)
 					.run(args);
 		}
@@ -487,15 +487,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 				new ListConverter<>(new MapEntryKeyValueConverter<>((k)->k, (v)->v));
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}
@@ -508,15 +508,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 				new ListConverter<>(new MapEntryKeyValueConverter<>((k)->k, (v)->v));
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelPipelineCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelTransactionCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HRANDFIELD,
+			return new JedisSentinelCommand<>(client, Command.HRANDFIELD,
 					(cmd)->cmd.hrandfieldWithValues(key, count), converter)
 					.run(args);
 		}
@@ -529,15 +529,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 				new ScanResultConverter.MapScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new JedisSentinelPipelineCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					mapScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new JedisSentinelTransactionCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					mapScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new JedisSentinelCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					mapScanResultConverter)
 					.run(args);
 		}
@@ -550,15 +550,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 				new ScanResultConverter.MapScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new JedisSentinelPipelineCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					mapScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new JedisSentinelTransactionCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					mapScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor),
+			return new JedisSentinelCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor),
 					mapScanResultConverter)
 					.run(args);
 		}
@@ -620,15 +620,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+			return new JedisSentinelPipelineCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSET,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSET,
 					(cmd)->cmd.hset(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -638,15 +638,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
+			return new JedisSentinelPipelineCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSET,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSET,
 					(cmd)->cmd.hset(key, field, value), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HSET, (cmd)->cmd.hset(key, field, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -656,15 +656,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSETNX,
+			return new JedisSentinelPipelineCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSETNX,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+			return new JedisSentinelCommand<>(client, Command.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -675,15 +675,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSETNX,
+			return new JedisSentinelPipelineCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSETNX,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSETNX,
 					(cmd)->cmd.hsetnx(key, field, value), oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
+			return new JedisSentinelCommand<>(client, Command.HSETNX, (cmd)->cmd.hsetnx(key, field, value),
 					oneStatusConverter)
 					.run(args);
 		}
@@ -694,15 +694,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSTRLEN, (cmd)->cmd.hstrlen(key, field),
+			return new JedisSentinelPipelineCommand<>(client, Command.HSTRLEN, (cmd)->cmd.hstrlen(key, field),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSTRLEN,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSTRLEN,
 					(cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSTRLEN, (cmd)->cmd.hstrlen(key, field), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HSTRLEN, (cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -712,15 +712,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSTRLEN, (cmd)->cmd.hstrlen(key, field),
+			return new JedisSentinelPipelineCommand<>(client, Command.HSTRLEN, (cmd)->cmd.hstrlen(key, field),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSTRLEN,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSTRLEN,
 					(cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSTRLEN, (cmd)->cmd.hstrlen(key, field), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HSTRLEN, (cmd)->cmd.hstrlen(key, field), (v)->v)
 					.run(args);
 		}
 	}
@@ -730,13 +730,13 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -746,13 +746,13 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HVALS, (cmd)->cmd.hvals(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.HVALS, (cmd)->cmd.hvals(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -763,15 +763,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 				new ScanResultConverter.MapScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSCAN,
+			return new JedisSentinelPipelineCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanParams), mapScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSCAN,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanParams), mapScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanParams),
+			return new JedisSentinelCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor, scanParams),
 					mapScanResultConverter)
 					.run(args);
 		}
@@ -783,15 +783,15 @@ public final class JedisSentinelHashOperations extends AbstractHashOperations<Je
 				new ScanResultConverter.MapScanResultConverter<>();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.HSCAN,
+			return new JedisSentinelPipelineCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanParams), mapScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.HSCAN,
+			return new JedisSentinelTransactionCommand<>(client, Command.HSCAN,
 					(cmd)->cmd.hscan(key, cursor, scanParams), mapScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.HSCAN, (cmd)->cmd.hscan(key, cursor, scanParams),
+			return new JedisSentinelCommand<>(client, Command.HSCAN, (cmd)->cmd.hscan(key, cursor, scanParams),
 					mapScanResultConverter)
 					.run(args);
 		}

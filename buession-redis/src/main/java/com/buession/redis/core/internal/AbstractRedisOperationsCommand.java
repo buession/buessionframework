@@ -28,7 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.AbstractRedisCommand;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.exception.RedisException;
 
 /**
@@ -47,12 +47,12 @@ public abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient,
 	protected final Converter<SR, R> converter;
 
 	@SuppressWarnings({"unchecked"})
-	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command) {
+	public AbstractRedisOperationsCommand(final CLIENT client, final Command command) {
 		this(client, command, null, (value)->(R) value);
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public AbstractRedisOperationsCommand(final CLIENT client, final ProtocolCommand command,
+	public AbstractRedisOperationsCommand(final CLIENT client, final Command command,
 										  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 		super(client, command);
 		connection = (CONN) client.getConnection();

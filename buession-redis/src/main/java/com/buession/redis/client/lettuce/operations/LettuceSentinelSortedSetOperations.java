@@ -35,7 +35,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Range;
@@ -60,13 +60,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMIN)
+			return new LettuceSentinelPipelineCommand<Tuple, Tuple>(client, Command.ZPOPMIN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMIN)
+			return new LettuceSentinelTransactionCommand<Tuple, Tuple>(client, Command.ZPOPMIN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMIN)
+			return new LettuceSentinelCommand<Tuple, Tuple>(client, Command.ZPOPMIN)
 					.run(args);
 		}
 	}
@@ -76,13 +76,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
+			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, Command.ZPOPMIN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
+			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, Command.ZPOPMIN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMIN)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZPOPMIN)
 					.run(args);
 		}
 	}
@@ -92,13 +92,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMAX)
+			return new LettuceSentinelPipelineCommand<Tuple, Tuple>(client, Command.ZPOPMAX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMAX)
+			return new LettuceSentinelTransactionCommand<Tuple, Tuple>(client, Command.ZPOPMAX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Tuple, Tuple>(client, ProtocolCommand.ZPOPMAX)
+			return new LettuceSentinelCommand<Tuple, Tuple>(client, Command.ZPOPMAX)
 					.run(args);
 		}
 	}
@@ -108,13 +108,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
+			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, Command.ZPOPMAX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
+			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, Command.ZPOPMAX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZPOPMAX)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZPOPMAX)
 					.run(args);
 		}
 	}
@@ -125,15 +125,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
-					client, ProtocolCommand.BZPOPMIN)
+					client, Command.BZPOPMIN)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
-					client, ProtocolCommand.BZPOPMIN)
+					client, Command.BZPOPMIN)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
-					client, ProtocolCommand.BZPOPMIN)
+					client, Command.BZPOPMIN)
 					.run(args);
 		}
 	}
@@ -144,15 +144,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
-					client, ProtocolCommand.BZPOPMIN)
+					client, Command.BZPOPMIN)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
-					client, ProtocolCommand.BZPOPMIN)
+					client, Command.BZPOPMIN)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
-					client, ProtocolCommand.BZPOPMIN)
+					client, Command.BZPOPMIN)
 					.run(args);
 		}
 	}
@@ -163,15 +163,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
-					client, ProtocolCommand.BZPOPMAX)
+					client, Command.BZPOPMAX)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
-					client, ProtocolCommand.BZPOPMAX)
+					client, Command.BZPOPMAX)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<KeyValue<String, Tuple>, KeyValue<String, Tuple>>(
-					client, ProtocolCommand.BZPOPMAX)
+					client, Command.BZPOPMAX)
 					.run(args);
 		}
 	}
@@ -182,15 +182,15 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
-					client, ProtocolCommand.BZPOPMAX)
+					client, Command.BZPOPMAX)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
-					client, ProtocolCommand.BZPOPMAX)
+					client, Command.BZPOPMAX)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<KeyValue<byte[], Tuple>, KeyValue<byte[], Tuple>>(
-					client, ProtocolCommand.BZPOPMAX)
+					client, Command.BZPOPMAX)
 					.run(args);
 		}
 	}
@@ -306,13 +306,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZCARD)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZCARD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZCARD)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZCARD)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZCARD)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZCARD)
 					.run(args);
 		}
 	}
@@ -322,13 +322,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZCOUNT)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZCOUNT)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZCOUNT)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZCOUNT)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZCOUNT)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZCOUNT)
 					.run(args);
 		}
 	}
@@ -375,13 +375,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 				.put("member", member);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Double, Double>(client, ProtocolCommand.ZINCRBY)
+			return new LettuceSentinelPipelineCommand<Double, Double>(client, Command.ZINCRBY)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Double, Double>(client, ProtocolCommand.ZINCRBY)
+			return new LettuceSentinelTransactionCommand<Double, Double>(client, Command.ZINCRBY)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Double, Double>(client, ProtocolCommand.ZINCRBY)
+			return new LettuceSentinelCommand<Double, Double>(client, Command.ZINCRBY)
 					.run(args);
 		}
 	}
@@ -491,13 +491,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZINTERSTORE)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZINTERSTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZINTERSTORE)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZINTERSTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZINTERSTORE)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZINTERSTORE)
 					.run(args);
 		}
 	}
@@ -589,13 +589,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGE)
+			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGE)
+			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGE)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGE)
 					.run(args);
 		}
 	}
@@ -661,14 +661,14 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client,
-					ProtocolCommand.ZRANGEBYSCORE)
+					Command.ZRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}
 	}
@@ -680,14 +680,14 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 				.put("offset", offset).put("count", count);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client,
-					ProtocolCommand.ZRANGEBYSCORE)
+					Command.ZRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}
 	}
@@ -823,13 +823,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZRANK)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZRANK)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZRANK)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZRANK)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZRANK)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZRANK)
 					.run(args);
 		}
 	}
@@ -839,13 +839,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZREM)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZREM)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZREM)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZREM)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZREM)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZREM)
 					.run(args);
 		}
 	}
@@ -856,13 +856,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final Range<Double> range = Range.create(min, max);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZREMRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZREMRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYSCORE)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZREMRANGEBYSCORE)
 					.run(args);
 		}
 	}
@@ -872,13 +872,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZREMRANGEBYRANK)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZREMRANGEBYRANK)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZREMRANGEBYRANK)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZREMRANGEBYRANK)
 					.run(args);
 		}
 	}
@@ -903,13 +903,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
+			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client, Command.ZREVRANGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
+			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client, Command.ZREVRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZREVRANGE)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZREVRANGE)
 					.run(args);
 		}
 	}
@@ -998,14 +998,14 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client,
-					ProtocolCommand.ZREVRANGEBYSCORE)
+					Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client,
-					ProtocolCommand.ZREVRANGEBYSCORE)
+					Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}
 	}
@@ -1018,14 +1018,14 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Tuple>, List<Tuple>>(client,
-					ProtocolCommand.ZREVRANGEBYSCORE)
+					Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Tuple>, List<Tuple>>(client,
-					ProtocolCommand.ZREVRANGEBYSCORE)
+					Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+			return new LettuceSentinelCommand<List<Tuple>, List<Tuple>>(client, Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}
 	}
@@ -1035,13 +1035,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZREVRANK)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZREVRANK)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZREVRANK)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZREVRANK)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZREVRANK)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZREVRANK)
 					.run(args);
 		}
 	}
@@ -1103,13 +1103,13 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Double, Double>(client, ProtocolCommand.ZSCORE)
+			return new LettuceSentinelPipelineCommand<Double, Double>(client, Command.ZSCORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Double, Double>(client, ProtocolCommand.ZSCORE)
+			return new LettuceSentinelTransactionCommand<Double, Double>(client, Command.ZSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Double, Double>(client, ProtocolCommand.ZSCORE)
+			return new LettuceSentinelCommand<Double, Double>(client, Command.ZSCORE)
 					.run(args);
 		}
 	}
@@ -1244,182 +1244,182 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	private Long zAdd(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZADD)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZADD)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZADD)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZADD)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZADD)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZADD)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zDiff(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZDIFF)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZDIFF)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZDIFF)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZDIFF)
 					.run(args);
 		}
 	}
 
 	private Long zDiffStore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZDIFFSTORE)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZDIFFSTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZDIFFSTORE)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZDIFFSTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZDIFFSTORE)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZDIFFSTORE)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zInter(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZINTER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZINTER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZINTER)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZINTER)
 					.run(args);
 		}
 	}
 
 	private Long zInterStore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZINTERSTORE)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZINTERSTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZINTERSTORE)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZINTERSTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZINTERSTORE)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZINTERSTORE)
 					.run(args);
 		}
 	}
 
 	private List<Double> zMScore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<Double>, List<Double>>(client, ProtocolCommand.ZMSCORE)
+			return new LettuceSentinelPipelineCommand<List<Double>, List<Double>>(client, Command.ZMSCORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<Double>, List<Double>>(client, ProtocolCommand.ZMSCORE)
+			return new LettuceSentinelTransactionCommand<List<Double>, List<Double>>(client, Command.ZMSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<Double>, List<Double>>(client, ProtocolCommand.ZMSCORE)
+			return new LettuceSentinelCommand<List<Double>, List<Double>>(client, Command.ZMSCORE)
 					.run(args);
 		}
 	}
 
 	private <V> V zRandMember(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.ZRANDMEMBER)
+			return new LettuceSentinelPipelineCommand<V, V>(client, Command.ZRANDMEMBER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.ZRANDMEMBER)
+			return new LettuceSentinelTransactionCommand<V, V>(client, Command.ZRANDMEMBER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.ZRANDMEMBER)
+			return new LettuceSentinelCommand<V, V>(client, Command.ZRANDMEMBER)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zRange(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGE)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZRANGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGE)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGE)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZRANGE)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zRangeByLex(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGEBYLEX)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZRANGEBYLEX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGEBYLEX)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZRANGEBYLEX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGEBYLEX)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZRANGEBYLEX)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zRangeByScore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZRANGEBYSCORE)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZRANGEBYSCORE)
 					.run(args);
 		}
 	}
 
 	private Long zRangeStore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZRANGESTORE)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZRANGESTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZRANGESTORE)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZRANGESTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZRANGESTORE)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZRANGESTORE)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zRevRange(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGE)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZREVRANGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGE)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZREVRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGE)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZREVRANGE)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zRevRangeByLex(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZREVRANGEBYLEX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZREVRANGEBYLEX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGEBYLEX)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZREVRANGEBYLEX)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zRevRangeByScore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZREVRANGEBYSCORE)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZREVRANGEBYSCORE)
 					.run(args);
 		}
 	}
@@ -1427,41 +1427,41 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	private ScanResult<List<Tuple>> zScan(final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<ScanResult<List<Tuple>>, ScanResult<List<Tuple>>>(client,
-					ProtocolCommand.ZREVRANK)
+					Command.ZREVRANK)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<ScanResult<List<Tuple>>, ScanResult<List<Tuple>>>(client,
-					ProtocolCommand.ZREVRANK)
+					Command.ZREVRANK)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<ScanResult<List<Tuple>>, ScanResult<List<Tuple>>>(client,
-					ProtocolCommand.ZREVRANK)
+					Command.ZREVRANK)
 					.run(args);
 		}
 	}
 
 	private <V> List<V> zUnion(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.ZUNION)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.ZUNION)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.ZUNION)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.ZUNION)
 					.run(args);
 		}
 	}
 
 	private Long zUnionStore(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ZUNIONSTORE)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ZUNIONSTORE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ZUNIONSTORE)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ZUNIONSTORE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.ZUNIONSTORE)
+			return new LettuceSentinelCommand<Long, Long>(client, Command.ZUNIONSTORE)
 					.run(args);
 		}
 	}

@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.SetConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.KeyValue;
 import com.buession.redis.client.jedis.JedisSentinelClient;
@@ -36,7 +35,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
@@ -70,15 +69,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key),
 					tupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key),
 					tupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
+			return new JedisSentinelCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
 					.run(args);
 		}
 	}
@@ -89,15 +88,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key),
 					tupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key),
 					tupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
+			return new JedisSentinelCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
 					.run(args);
 		}
 	}
@@ -108,15 +107,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMIN,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMIN,
 					(cmd)->cmd.zpopmin(key, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMIN,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMIN,
 					(cmd)->cmd.zpopmin(key, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
+			return new JedisSentinelCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
 					listTupleConverter)
 					.run(args);
 		}
@@ -128,15 +127,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMIN,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMIN,
 					(cmd)->cmd.zpopmin(key, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMIN,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMIN,
 					(cmd)->cmd.zpopmin(key, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
+			return new JedisSentinelCommand<>(client, Command.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
 					listTupleConverter)
 					.run(args);
 		}
@@ -148,15 +147,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key),
 					tupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key),
 					tupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
+			return new JedisSentinelCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
 					.run(args);
 		}
 	}
@@ -167,15 +166,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key),
 					tupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key),
 					tupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
+			return new JedisSentinelCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
 					.run(args);
 		}
 	}
@@ -186,15 +185,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMAX,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMAX,
 					(cmd)->cmd.zpopmax(key, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMAX,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMAX,
 					(cmd)->cmd.zpopmax(key, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
+			return new JedisSentinelCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
 					listTupleConverter)
 					.run(args);
 		}
@@ -206,15 +205,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZPOPMAX,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZPOPMAX,
 					(cmd)->cmd.zpopmax(key, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZPOPMAX,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZPOPMAX,
 					(cmd)->cmd.zpopmax(key, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
+			return new JedisSentinelCommand<>(client, Command.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
 					listTupleConverter)
 					.run(args);
 		}
@@ -227,15 +226,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMIN,
+			return new JedisSentinelPipelineCommand<>(client, Command.BZPOPMIN,
 					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMIN,
+			return new JedisSentinelTransactionCommand<>(client, Command.BZPOPMIN,
 					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
+			return new JedisSentinelCommand<>(client, Command.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
 					keyValueConverter)
 					.run(args);
 		}
@@ -248,15 +247,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMIN,
+			return new JedisSentinelPipelineCommand<>(client, Command.BZPOPMIN,
 					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMIN,
+			return new JedisSentinelTransactionCommand<>(client, Command.BZPOPMIN,
 					(cmd)->cmd.bzpopmin(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
+			return new JedisSentinelCommand<>(client, Command.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
 					keyValueConverter)
 					.run(args);
 		}
@@ -269,15 +268,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMAX,
+			return new JedisSentinelPipelineCommand<>(client, Command.BZPOPMAX,
 					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMAX,
+			return new JedisSentinelTransactionCommand<>(client, Command.BZPOPMAX,
 					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
+			return new JedisSentinelCommand<>(client, Command.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
 					keyValueConverter)
 					.run(args);
 		}
@@ -290,15 +289,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new KeyValueConverter<>((k)->k, new TupleConverter());
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.BZPOPMAX,
+			return new JedisSentinelPipelineCommand<>(client, Command.BZPOPMAX,
 					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.BZPOPMAX,
+			return new JedisSentinelTransactionCommand<>(client, Command.BZPOPMAX,
 					(cmd)->cmd.bzpopmax(timeout, keys), keyValueConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
+			return new JedisSentinelCommand<>(client, Command.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
 					keyValueConverter)
 					.run(args);
 		}
@@ -309,15 +308,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
 					.run(args);
 		}
 	}
@@ -327,15 +326,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("keys", key).put("members", members);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
 					.run(args);
 		}
 	}
@@ -467,13 +466,13 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -483,13 +482,13 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -499,15 +498,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZCOUNT, (cmd)->cmd.zcount(key, min, max),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZCOUNT,
 					(cmd)->cmd.zcount(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
 					.run(args);
 		}
 	}
@@ -517,15 +516,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZCOUNT, (cmd)->cmd.zcount(key, min, max),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZCOUNT,
 					(cmd)->cmd.zcount(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
 					.run(args);
 		}
 	}
@@ -535,13 +534,13 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -551,13 +550,13 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -568,15 +567,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
 					listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFF,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZDIFF,
 					(cmd)->cmd.zdiffWithScores(keys), listConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
+			return new JedisSentinelCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
 					listConverter)
 					.run(args);
 		}
@@ -588,15 +587,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
 					listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFF,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZDIFF,
 					(cmd)->cmd.zdiffWithScores(keys), listConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
+			return new JedisSentinelCommand<>(client, Command.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
 					listConverter)
 					.run(args);
 		}
@@ -607,15 +606,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFFSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZDIFFSTORE,
 					(cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFFSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZDIFFSTORE,
 					(cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys),
+			return new JedisSentinelCommand<>(client, Command.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys),
 					(v)->v)
 					.run(args);
 		}
@@ -626,15 +625,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZDIFFSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZDIFFSTORE,
 					(cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZDIFFSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZDIFFSTORE,
 					(cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys),
+			return new JedisSentinelCommand<>(client, Command.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys),
 					(v)->v)
 					.run(args);
 		}
@@ -646,15 +645,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				.put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINCRBY,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINCRBY,
 					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINCRBY,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINCRBY,
 					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINCRBY,
+			return new JedisSentinelCommand<>(client, Command.ZINCRBY,
 					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
 					.run(args);
 		}
@@ -666,15 +665,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				.put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINCRBY,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINCRBY,
 					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINCRBY,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINCRBY,
 					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINCRBY,
+			return new JedisSentinelCommand<>(client, Command.ZINCRBY,
 					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
 					.run(args);
 		}
@@ -817,15 +816,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}
@@ -836,15 +835,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
 					.run(args);
 		}
@@ -929,15 +928,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZMSCORE, (cmd)->cmd.zmscore(key, members),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZMSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZMSCORE,
 					(cmd)->cmd.zmscore(key, members), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
 					.run(args);
 		}
 	}
@@ -947,15 +946,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZMSCORE, (cmd)->cmd.zmscore(key, members),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZMSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZMSCORE,
 					(cmd)->cmd.zmscore(key, members), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
 					.run(args);
 		}
 	}
@@ -965,15 +964,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmember(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -983,15 +982,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmember(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -1001,15 +1000,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmember(key, count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmember(key, count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count),
+			return new JedisSentinelCommand<>(client, Command.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count),
 					(v)->v)
 					.run(args);
 		}
@@ -1020,15 +1019,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmember(key, count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmember(key, count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count),
+			return new JedisSentinelCommand<>(client, Command.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count),
 					(v)->v)
 					.run(args);
 		}
@@ -1040,15 +1039,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
 					.run(args);
 		}
@@ -1060,15 +1059,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANDMEMBER,
+			return new JedisSentinelCommand<>(client, Command.ZRANDMEMBER,
 					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
 					.run(args);
 		}
@@ -1079,15 +1078,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrange(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrange(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end),
+			return new JedisSentinelCommand<>(client, Command.ZRANGE, (cmd)->cmd.zrange(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -1098,15 +1097,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrange(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrange(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end),
+			return new JedisSentinelCommand<>(client, Command.ZRANGE, (cmd)->cmd.zrange(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -1118,15 +1117,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}
@@ -1138,15 +1137,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGE,
 					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}
@@ -1197,15 +1196,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -1216,15 +1215,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -1237,15 +1236,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				.put("offset", offset).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}
@@ -1258,15 +1257,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				.put("offset", offset).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}
@@ -1278,15 +1277,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}
@@ -1298,15 +1297,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}
@@ -1320,15 +1319,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}
@@ -1342,15 +1341,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYSCORE,
 					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}
@@ -1519,15 +1518,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANK, (cmd)->cmd.zrank(key, member),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANK, (cmd)->cmd.zrank(key, member),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
 					.run(args);
 		}
 	}
@@ -1537,15 +1536,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANK, (cmd)->cmd.zrank(key, member),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANK, (cmd)->cmd.zrank(key, member),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
 					.run(args);
 		}
 	}
@@ -1555,15 +1554,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREM, (cmd)->cmd.zrem(key, members),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREM, (cmd)->cmd.zrem(key, members),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
 					.run(args);
 		}
 	}
@@ -1573,15 +1572,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREM, (cmd)->cmd.zrem(key, members),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREM, (cmd)->cmd.zrem(key, members),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
 					.run(args);
 		}
 	}
@@ -1591,15 +1590,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREMRANGEBYSCORE,
 					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREMRANGEBYSCORE,
 					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREMRANGEBYSCORE,
 					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -1610,15 +1609,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREMRANGEBYSCORE,
 					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREMRANGEBYSCORE,
 					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREMRANGEBYSCORE,
 					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -1629,15 +1628,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREMRANGEBYRANK,
 					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREMRANGEBYRANK,
 					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
+			return new JedisSentinelCommand<>(client, Command.ZREMRANGEBYRANK,
 					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
 					.run(args);
 		}
@@ -1648,15 +1647,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREMRANGEBYRANK,
 					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREMRANGEBYRANK,
 					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
+			return new JedisSentinelCommand<>(client, Command.ZREMRANGEBYRANK,
 					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
 					.run(args);
 		}
@@ -1667,15 +1666,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGE, (cmd)->cmd.zrevrange(key, start, end),
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGE, (cmd)->cmd.zrevrange(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -1686,15 +1685,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGE, (cmd)->cmd.zrevrange(key, start, end),
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGE, (cmd)->cmd.zrevrange(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -1706,15 +1705,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}
@@ -1726,15 +1725,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGE,
 					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
 					.run(args);
 		}
@@ -1745,15 +1744,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -1764,15 +1763,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -1785,15 +1784,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				.put("offset", offset).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}
@@ -1806,15 +1805,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				.put("offset", offset).put("count", count);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}
@@ -1826,15 +1825,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}
@@ -1846,15 +1845,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
 					.run(args);
 		}
@@ -1868,15 +1867,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}
@@ -1890,15 +1889,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
+			return new JedisSentinelCommand<>(client, Command.ZREVRANGEBYSCORE,
 					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
 					.run(args);
 		}
@@ -1909,15 +1908,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANK,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANK,
 					(cmd)->cmd.zrevrank(key, member), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANK,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANK,
 					(cmd)->cmd.zrevrank(key, member), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
+			return new JedisSentinelCommand<>(client, Command.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
 					(v)->v)
 					.run(args);
 		}
@@ -1928,15 +1927,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZREVRANK,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZREVRANK,
 					(cmd)->cmd.zrevrank(key, member), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZREVRANK,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZREVRANK,
 					(cmd)->cmd.zrevrank(key, member), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
+			return new JedisSentinelCommand<>(client, Command.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
 					(v)->v)
 					.run(args);
 		}
@@ -1949,15 +1948,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new ScanResultConverter.ListTupleScanResultConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor),
 					listTupleScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor),
 					listTupleScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
+			return new JedisSentinelCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor),
 					listTupleScanResultConverter)
 					.run(args);
 		}
@@ -1970,15 +1969,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new ScanResultConverter.ListTupleScanResultConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor),
 					listTupleScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor),
 					listTupleScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
+			return new JedisSentinelCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor),
 					listTupleScanResultConverter)
 					.run(args);
 		}
@@ -2041,15 +2040,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZSCORE, (cmd)->cmd.zscore(key, member),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZSCORE, (cmd)->cmd.zscore(key, member),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
 					.run(args);
 		}
 	}
@@ -2059,15 +2058,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZSCORE, (cmd)->cmd.zscore(key, member),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member),
+			return new JedisSentinelTransactionCommand<>(client, Command.ZSCORE, (cmd)->cmd.zscore(key, member),
 					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
 					.run(args);
 		}
 	}
@@ -2209,15 +2208,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}
@@ -2228,15 +2227,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
 					.run(args);
 		}
@@ -2301,15 +2300,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zAdd(final String key, final Map<String, Double> members, final ZAddParams zAddParams,
 					  final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZADD,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZADD,
 					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZADD,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZADD,
 					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members, zAddParams),
+			return new JedisSentinelCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members, zAddParams),
 					(v)->v)
 					.run(args);
 		}
@@ -2318,16 +2317,16 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddParams zAddParams,
 					  final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZADD,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZADD,
 					(cmd)->cmd.zadd(key, members, zAddParams),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZADD,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZADD,
 					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members, zAddParams),
+			return new JedisSentinelCommand<>(client, Command.ZADD, (cmd)->cmd.zadd(key, members, zAddParams),
 					(v)->v)
 					.run(args);
 		}
@@ -2335,30 +2334,30 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	private List<String> zInter(final String[] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTER, (cmd)->cmd.zinter(zParams, keys),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinter(zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
 					.run(args);
 		}
 	}
 
 	private List<byte[]> zInter(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTER, (cmd)->cmd.zinter(zParams, keys),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinter(zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -2367,15 +2366,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys),
 					listConverter)
 					.run(args);
@@ -2386,15 +2385,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTER,
+			return new JedisSentinelCommand<>(client, Command.ZINTER,
 					(cmd)->cmd.zinterWithScores(zParams, keys),
 					listConverter)
 					.run(args);
@@ -2404,15 +2403,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zInterStore(final String destKey, final String[] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}
@@ -2421,15 +2420,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zInterStore(final byte[] destKey, final byte[][] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZINTERSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZINTERSTORE,
 					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}
@@ -2437,15 +2436,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	private Long zLexCount(final String key, final String min, final String max, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZLEXCOUNT,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZLEXCOUNT,
 					(cmd)->cmd.zlexcount(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZLEXCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZLEXCOUNT,
 					(cmd)->cmd.zlexcount(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
+			return new JedisSentinelCommand<>(client, Command.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
 					(v)->v)
 					.run(args);
 		}
@@ -2453,15 +2452,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	private Long zLexCount(final byte[] key, final byte[] min, final byte[] max, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZLEXCOUNT,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZLEXCOUNT,
 					(cmd)->cmd.zlexcount(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZLEXCOUNT,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZLEXCOUNT,
 					(cmd)->cmd.zlexcount(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
+			return new JedisSentinelCommand<>(client, Command.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
 					(v)->v)
 					.run(args);
 		}
@@ -2470,15 +2469,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private List<String> zRangeByLex(final String key, final String min, final String max,
 									 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -2487,15 +2486,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max,
 									 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
 					.run(args);
 		}
@@ -2504,15 +2503,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
 									 final int count, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}
@@ -2521,15 +2520,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									 final int count, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
+			return new JedisSentinelCommand<>(client, Command.ZRANGEBYLEX,
 					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
 					.run(args);
 		}
@@ -2538,15 +2537,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zRangeStore(final String destKey, final String key, final ZRangeParams zRangeParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGESTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGESTORE,
 					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGESTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGESTORE,
 					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGESTORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGESTORE,
 					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
 					.run(args);
 		}
@@ -2555,15 +2554,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zRangeStore(final byte[] destKey, final byte[] key, final ZRangeParams zRangeParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZRANGESTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZRANGESTORE,
 					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZRANGESTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZRANGESTORE,
 					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZRANGESTORE,
+			return new JedisSentinelCommand<>(client, Command.ZRANGESTORE,
 					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
 					.run(args);
 		}
@@ -2575,15 +2574,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new ScanResultConverter.ListTupleScanResultConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZSCAN,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZSCAN,
 					(cmd)->cmd.zscan(key, cursor, scanParams), listTupleScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZSCAN,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZSCAN,
 					(cmd)->cmd.zscan(key, cursor, scanParams), listTupleScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
+			return new JedisSentinelCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
 					listTupleScanResultConverter)
 					.run(args);
 		}
@@ -2595,15 +2594,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 				new ScanResultConverter.ListTupleScanResultConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZSCAN,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZSCAN,
 					(cmd)->cmd.zscan(key, cursor, scanParams), listTupleScanResultConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZSCAN,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZSCAN,
 					(cmd)->cmd.zscan(key, cursor, scanParams), listTupleScanResultConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
+			return new JedisSentinelCommand<>(client, Command.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
 					listTupleScanResultConverter)
 					.run(args);
 		}
@@ -2611,30 +2610,30 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 
 	private List<String> zUnion(final String[] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNION, (cmd)->cmd.zunion(zParams, keys),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunion(zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
 					.run(args);
 		}
 	}
 
 	private List<byte[]> zUnion(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNION, (cmd)->cmd.zunion(zParams, keys),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunion(zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
+			return new JedisSentinelCommand<>(client, Command.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
 					.run(args);
 		}
 	}
@@ -2643,15 +2642,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}
@@ -2661,15 +2660,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNION,
+			return new JedisSentinelCommand<>(client, Command.ZUNION,
 					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
 					.run(args);
 		}
@@ -2678,15 +2677,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zUnionStore(final String destKey, final String[] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}
@@ -2695,15 +2694,15 @@ public final class JedisSentinelSortedSetOperations extends AbstractSortedSetOpe
 	private Long zUnionStore(final byte[] destKey, final byte[][] keys, final ZParams zParams,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelPipelineCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelTransactionCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.ZUNIONSTORE,
+			return new JedisSentinelCommand<>(client, Command.ZUNIONSTORE,
 					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
 					.run(args);
 		}

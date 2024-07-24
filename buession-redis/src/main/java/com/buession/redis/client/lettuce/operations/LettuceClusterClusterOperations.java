@@ -36,7 +36,7 @@ import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ClusterReplicasConverter;
 import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
@@ -62,15 +62,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	@Override
 	public String clusterMyId() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(),
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(),
 					(v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_MY_ID,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_MY_ID,
 					(cmd)->cmd.clusterMyId(), (v)->v)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_MY_ID, (cmd)->cmd.clusterMyId(), (v)->v)
 					.run();
 		}
 	}
@@ -80,15 +80,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("slots", slots);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_ADDSLOTS,
 					(cmd)->cmd.clusterAddSlots(slots), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_ADDSLOTS,
 					(cmd)->cmd.clusterAddSlots(slots), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_ADDSLOTS,
 					(cmd)->cmd.clusterAddSlots(slots),
 					okStatusConverter)
 					.run(args);
@@ -100,15 +100,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final ListConverter<Object, ClusterSlot> listClusterSlotConverter = ClusterSlotConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
 					listClusterSlotConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_SLOTS,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_SLOTS,
 					(cmd)->cmd.clusterSlots(), listClusterSlotConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
 					listClusterSlotConverter)
 					.run();
 		}
@@ -119,15 +119,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_COUNTFAILUREREPORTS,
 					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_COUNTFAILUREREPORTS,
 					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_COUNTFAILUREREPORTS,
 					(cmd)->cmd.clusterCountFailureReports(nodeId), (v)->v)
 					.run(args);
 		}
@@ -138,15 +138,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("slot", slot);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_COUNTKEYSINSLOT,
 					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_COUNTKEYSINSLOT,
 					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_COUNTKEYSINSLOT,
 					(cmd)->cmd.clusterCountKeysInSlot(slot), (v)->v)
 					.run(args);
 		}
@@ -157,15 +157,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("slots", slots);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_DELSLOTS,
 					(cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_DELSLOTS,
 					(cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_DELSLOTS,
 					(cmd)->cmd.clusterDelSlots(slots), okStatusConverter)
 					.run(args);
 		}
@@ -174,15 +174,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	@Override
 	public Status clusterFlushSlots() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_FLUSHSLOTS,
 					(cmd)->cmd.clusterFlushslots(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_FLUSHSLOTS,
 					(cmd)->cmd.clusterFlushslots(), okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_FLUSHSLOTS,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_FLUSHSLOTS,
 					(cmd)->cmd.clusterFlushslots(), okStatusConverter)
 					.run();
 		}
@@ -194,15 +194,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final boolean force = ClusterFailoverOption.FORCE == clusterFailoverOption;
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_FAILOVER,
 					(cmd)->cmd.clusterFailover(force), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_FAILOVER,
 					(cmd)->cmd.clusterFailover(force), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_FAILOVER,
 					(cmd)->cmd.clusterFailover(force), okStatusConverter)
 					.run(args);
 		}
@@ -213,15 +213,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_FORGET,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_FORGET,
 					(cmd)->cmd.clusterForget(nodeId), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_FORGET,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_FORGET,
 					(cmd)->cmd.clusterForget(nodeId), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_FORGET, (cmd)->cmd.clusterForget(nodeId),
 					okStatusConverter)
 					.run(args);
 		}
@@ -233,15 +233,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterGetKeysInSlot(slot, count), listConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterGetKeysInSlot(slot, count), listConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterGetKeysInSlot(slot, count), listConverter)
 					.run(args);
 		}
@@ -252,15 +252,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterKeyslot(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterKeyslot(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_GETKEYSINSLOT,
 					(cmd)->cmd.clusterKeyslot(key), (v)->v)
 					.run(args);
 		}
@@ -271,15 +271,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final ClusterInfoConverter clusterInfoConverter = new ClusterInfoConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
 					clusterInfoConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_INFO,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_INFO,
 					(cmd)->cmd.clusterInfo(), clusterInfoConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
 					clusterInfoConverter)
 					.run();
 		}
@@ -290,15 +290,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_MEET,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_MEET,
 					(cmd)->cmd.clusterMeet(ip, port), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_MEET,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_MEET,
 					(cmd)->cmd.clusterMeet(ip, port), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_MEET, (cmd)->cmd.clusterMeet(ip, port),
 					okStatusConverter)
 					.run(args);
 		}
@@ -309,15 +309,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final ClusterNodesConverter clusterNodesConverter = new ClusterNodesConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
 					clusterNodesConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_NODES,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_NODES,
 					(cmd)->cmd.clusterNodes(), clusterNodesConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
 					clusterNodesConverter)
 					.run();
 		}
@@ -329,15 +329,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final ListConverter<String, ClusterRedisNode> listClusterNodeConverter = ClusterNodeConverter.listConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SLAVES,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_SLAVES,
 					(cmd)->cmd.clusterSlaves(nodeId), listClusterNodeConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_SLAVES,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_SLAVES,
 					(cmd)->cmd.clusterSlaves(nodeId), listClusterNodeConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_SLAVES, (cmd)->cmd.clusterSlaves(nodeId),
 					listClusterNodeConverter)
 					.run(args);
 		}
@@ -349,15 +349,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final ClusterReplicasConverter clusterReplicasConverter = new ClusterReplicasConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_REPLICAS,
 					(cmd)->cmd.clusterReplicate(nodeId), clusterReplicasConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_REPLICAS,
 					(cmd)->cmd.clusterReplicate(nodeId), clusterReplicasConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_REPLICAS,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_REPLICAS,
 					(cmd)->cmd.clusterReplicate(nodeId), clusterReplicasConverter)
 					.run(args);
 		}
@@ -368,15 +368,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_REPLICATE,
 					(cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_REPLICATE,
 					(cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_REPLICATE,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_REPLICATE,
 					(cmd)->cmd.clusterReplicate(nodeId), okStatusConverter)
 					.run(args);
 		}
@@ -388,15 +388,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final boolean hard = ClusterResetOption.HARD == clusterResetOption;
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_RESET,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_RESET,
 					(cmd)->cmd.clusterReset(hard), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_RESET,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_RESET,
 					(cmd)->cmd.clusterReset(hard), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_RESET, (cmd)->cmd.clusterReset(hard),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_RESET, (cmd)->cmd.clusterReset(hard),
 					okStatusConverter)
 					.run(args);
 		}
@@ -405,15 +405,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	@Override
 	public Status clusterSaveConfig() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_SAVECONFIG,
 					(cmd)->cmd.clusterSaveconfig(), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_SAVECONFIG,
 					(cmd)->cmd.clusterSaveconfig(), okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_SAVECONFIG,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_SAVECONFIG,
 					(cmd)->cmd.clusterSaveconfig(), okStatusConverter)
 					.run();
 		}
@@ -424,15 +424,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_SETCONFIGEPOCH,
 					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_SETCONFIGEPOCH,
 					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_SETCONFIGEPOCH,
 					(cmd)->cmd.clusterSetConfigEpoch(configEpoch), okStatusConverter)
 					.run(args);
 		}
@@ -443,15 +443,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 		final BumpEpochConverter bumpEpochConverter = new BumpEpochConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH,
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_BUMPEPOCH,
 					(cmd)->cmd.clusterBumpepoch(), bumpEpochConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH,
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_BUMPEPOCH,
 					(cmd)->cmd.clusterBumpepoch(), bumpEpochConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
 					bumpEpochConverter)
 					.run();
 		}
@@ -463,7 +463,7 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 				.put("nodeId", nodeId);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
+			return new LettuceClusterPipelineCommand<>(client, Command.CLUSTER_SETSLOT, (cmd)->{
 				switch(setSlotOption){
 					case IMPORTING:
 						return cmd.clusterSetSlotImporting(slot, nodeId);
@@ -479,7 +479,7 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 			}, okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
+			return new LettuceClusterTransactionCommand<>(client, Command.CLUSTER_SETSLOT, (cmd)->{
 				switch(setSlotOption){
 					case IMPORTING:
 						return cmd.clusterSetSlotImporting(slot, nodeId);
@@ -495,7 +495,7 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 			}, okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{
+			return new LettuceClusterCommand<>(client, Command.CLUSTER_SETSLOT, (cmd)->{
 				switch(setSlotOption){
 					case IMPORTING:
 						return cmd.clusterSetSlotImporting(slot, nodeId);
@@ -516,15 +516,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	@Override
 	public Status asking() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(),
+			return new LettuceClusterPipelineCommand<>(client, Command.ASKING, (cmd)->cmd.asking(),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(),
+			return new LettuceClusterTransactionCommand<>(client, Command.ASKING, (cmd)->cmd.asking(),
 					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.ASKING, (cmd)->cmd.asking(), okStatusConverter)
+			return new LettuceClusterCommand<>(client, Command.ASKING, (cmd)->cmd.asking(), okStatusConverter)
 					.run();
 		}
 	}
@@ -532,15 +532,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	@Override
 	public Status readWrite() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
+			return new LettuceClusterPipelineCommand<>(client, Command.READWRITE, (cmd)->cmd.readWrite(),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
+			return new LettuceClusterTransactionCommand<>(client, Command.READWRITE, (cmd)->cmd.readWrite(),
 					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.READWRITE, (cmd)->cmd.readWrite(),
+			return new LettuceClusterCommand<>(client, Command.READWRITE, (cmd)->cmd.readWrite(),
 					okStatusConverter)
 					.run();
 		}
@@ -549,15 +549,15 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 	@Override
 	public Status readOnly() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
+			return new LettuceClusterPipelineCommand<>(client, Command.READONLY, (cmd)->cmd.readOnly(),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
+			return new LettuceClusterTransactionCommand<>(client, Command.READONLY, (cmd)->cmd.readOnly(),
 					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.READONLY, (cmd)->cmd.readOnly(),
+			return new LettuceClusterCommand<>(client, Command.READONLY, (cmd)->cmd.readOnly(),
 					okStatusConverter)
 					.run();
 		}

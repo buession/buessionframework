@@ -30,7 +30,7 @@ import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 
 /**
  * Lettuce Redis 命令操作抽象类
@@ -48,7 +48,7 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 		super(client);
 	}
 
-	protected <T> T notCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
+	protected <T> T notCommand(final LettuceStandaloneClient client, final Command command) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<T, T>(client, command)
 					.run();
@@ -61,7 +61,7 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 		}
 	}
 
-	protected <T> T notCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
+	protected <T> T notCommand(final LettuceStandaloneClient client, final Command command,
 							   final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<T, T>(client, command)
@@ -75,7 +75,7 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 		}
 	}
 
-	protected <T> T notCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
+	protected <T> T notCommand(final LettuceSentinelClient client, final Command command) {
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<T, T>(client, command)
 					.run();
@@ -88,7 +88,7 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 		}
 	}
 
-	protected <T> T notCommand(final LettuceSentinelClient client, final ProtocolCommand command,
+	protected <T> T notCommand(final LettuceSentinelClient client, final Command command,
 							   final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<T, T>(client, command)
@@ -102,7 +102,7 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 		}
 	}
 
-	protected <T> T notCommand(final LettuceClusterClient client, final ProtocolCommand command) {
+	protected <T> T notCommand(final LettuceClusterClient client, final Command command) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<T, T>(client, command)
 					.run();
@@ -115,7 +115,7 @@ public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClien
 		}
 	}
 
-	protected <T> T notCommand(final LettuceClusterClient client, final ProtocolCommand command,
+	protected <T> T notCommand(final LettuceClusterClient client, final Command command,
 							   final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<T, T>(client, command)

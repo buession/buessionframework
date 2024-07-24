@@ -28,7 +28,7 @@ import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
 import io.lettuce.core.BitFieldArgs;
@@ -52,15 +52,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
+			return new LettuceClusterPipelineCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key),
+			return new LettuceClusterTransactionCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -70,15 +70,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new LettuceClusterPipelineCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new LettuceClusterTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+			return new LettuceClusterCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -90,15 +90,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 				.put("bitCountOption", bitCountOption);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new LettuceClusterPipelineCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITCOUNT,
+			return new LettuceClusterTransactionCommand<>(client, Command.BITCOUNT,
 					(cmd)->cmd.bitcount(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
+			return new LettuceClusterCommand<>(client, Command.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
 					(v)->v)
 					.run(args);
 		}
@@ -110,15 +110,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITFIELD,
+			return new LettuceClusterPipelineCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITFIELD,
+			return new LettuceClusterTransactionCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITFIELD,
+			return new LettuceClusterCommand<>(client, Command.BITFIELD,
 					(cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v)
 					.run(args);
 		}
@@ -127,13 +127,13 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
-		return notCommand(client, ProtocolCommand.BITCOUNT, args);
+		return notCommand(client, Command.BITCOUNT, args);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 				.put("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			return new LettuceClusterPipelineCommand<>(client, Command.BITOP, (cmd)->{
 				if(operation == BitOperation.AND){
 					return cmd.bitopAnd(destKey, keys);
 				}else if(operation == BitOperation.OR){
@@ -157,7 +157,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 			}, (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			return new LettuceClusterTransactionCommand<>(client, Command.BITOP, (cmd)->{
 				if(operation == BitOperation.AND){
 					return cmd.bitopAnd(destKey, keys);
 				}else if(operation == BitOperation.OR){
@@ -172,7 +172,7 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 			}, (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
+			return new LettuceClusterCommand<>(client, Command.BITOP, (cmd)->{
 				if(operation == BitOperation.AND){
 					return cmd.bitopAnd(destKey, keys);
 				}else if(operation == BitOperation.OR){
@@ -194,15 +194,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
+			return new LettuceClusterPipelineCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITPOS,
+			return new LettuceClusterTransactionCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -213,15 +213,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 				.put("end", end);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.BITPOS,
+			return new LettuceClusterPipelineCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.BITPOS,
+			return new LettuceClusterTransactionCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.BITPOS,
+			return new LettuceClusterCommand<>(client, Command.BITPOS,
 					(cmd)->cmd.bitpos(key, value, start, end), (v)->v)
 					.run(args);
 		}
@@ -232,15 +232,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new LettuceClusterPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					oneBooleanConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.GETBIT,
+			return new LettuceClusterTransactionCommand<>(client, Command.GETBIT,
 					(cmd)->cmd.getbit(key, offset), oneBooleanConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
+			return new LettuceClusterCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
 					oneBooleanConverter)
 					.run(args);
 		}
@@ -252,15 +252,15 @@ public final class LettuceClusterBitMapOperations extends AbstractBitMapOperatio
 		final int iValue = value ? 1 : 0;
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SETBIT,
+			return new LettuceClusterPipelineCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, iValue), oneBooleanConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.SETBIT,
+			return new LettuceClusterTransactionCommand<>(client, Command.SETBIT,
 					(cmd)->cmd.setbit(key, offset, iValue), oneBooleanConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, ProtocolCommand.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
+			return new LettuceClusterCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, iValue),
 					oneBooleanConverter)
 					.run(args);
 		}
