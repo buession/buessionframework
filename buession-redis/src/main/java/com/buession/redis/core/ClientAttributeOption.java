@@ -22,48 +22,16 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.core.ClientAttributeOption;
-import com.buession.redis.utils.SafeEncoder;
+package com.buession.redis.core;
 
 /**
- * Jedis 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * 客户端属性选项
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ConnectionOperations {
+public enum ClientAttributeOption {
+	LIB_NAME,
 
-	public AbstractConnectionOperations(final C client) {
-		super(client);
-	}
-
-	@Override
-	public Status auth(final byte[] user, final byte[] password) {
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status auth(final byte[] password) {
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status clientSetName(final String name) {
-		return clientSetName(SafeEncoder.encode(name));
-	}
-
-	@Override
-	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
-		return clientSetInfo(clientAttributeOption, SafeEncoder.encode(value));
-	}
-
+	LIB_VER
 }

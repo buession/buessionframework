@@ -155,13 +155,31 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	}
 
 	@Override
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_SLAVES, args);
+	}
+
+	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
+	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICAS, args);
+	}
+
+	@Override
 	public Status clusterReplicate(final String nodeId) {
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
+	}
+
+	@Override
+	public Status clusterReplicate(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
 		return notCommand(client, ProtocolCommand.CLUSTER_REPLICATE, args);
 	}

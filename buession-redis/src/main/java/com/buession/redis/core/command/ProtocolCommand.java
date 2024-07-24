@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -139,11 +139,19 @@ public enum ProtocolCommand {
 
 	CLIENT_INFO(ProtocolCommandGroup.CONNECTION),
 
+	CLIENT_SET_INFO(ProtocolCommandGroup.CONNECTION),
+
 	CLIENT_PAUSE(ProtocolCommandGroup.CONNECTION),
+
+	CLIENT_UNPAUSE(ProtocolCommandGroup.CONNECTION),
 
 	CLIENT_REPLY(ProtocolCommandGroup.CONNECTION),
 
 	CLIENT_UNBLOCK(ProtocolCommandGroup.CONNECTION),
+
+	CLIENT_NO_EVICT(ProtocolCommandGroup.CONNECTION),
+
+	CLIENT_NO_TOUCH(ProtocolCommandGroup.CONNECTION),
 	/**
 	 * connection command end
 	 */
@@ -687,16 +695,16 @@ public enum ProtocolCommand {
 
 	private final ProtocolCommandGroup group;
 
-	ProtocolCommand(final ProtocolCommandGroup group){
+	ProtocolCommand(final ProtocolCommandGroup group) {
 		this.group = group;
 	}
 
-	public ProtocolCommandGroup getGroup(){
+	public ProtocolCommandGroup getGroup() {
 		return group;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return StringUtils.replace(name(), "_", " ");
 	}
 

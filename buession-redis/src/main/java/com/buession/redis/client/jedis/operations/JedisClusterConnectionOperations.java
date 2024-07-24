@@ -27,11 +27,14 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientAttributeOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.ClientKillArgument;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 
 import java.util.List;
@@ -159,14 +162,45 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	}
 
 	@Override
+	public List<Client> clientList(final long... clientIds) {
+		final CommandArguments args = CommandArguments.create("clientIds", clientIds);
+		return notCommand(client, ProtocolCommand.CLIENT_LIST, args);
+	}
+
+	@Override
 	public Client clientInfo() {
 		return notCommand(client, ProtocolCommand.CLIENT_INFO);
+	}
+
+	@Override
+	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final String value) {
+		final CommandArguments args = CommandArguments.create("clientAttributeOption", clientAttributeOption).put(
+				"value", value);
+		return notCommand(client, ProtocolCommand.CLIENT_SET_INFO, args);
+	}
+
+	@Override
+	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
+		final CommandArguments args = CommandArguments.create("clientAttributeOption", clientAttributeOption).put(
+				"value", value);
+		return notCommand(client, ProtocolCommand.CLIENT_SET_INFO, args);
 	}
 
 	@Override
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		return notCommand(client, ProtocolCommand.CLIENT_PAUSE, args);
+	}
+
+	@Override
+	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
+		final CommandArguments args = CommandArguments.create("timeout", timeout).put("pauseMode", pauseMode);
+		return notCommand(client, ProtocolCommand.CLIENT_PAUSE, args);
+	}
+
+	@Override
+	public Status clientUnPause() {
+		return notCommand(client, ProtocolCommand.CLIENT_UNPAUSE);
 	}
 
 	@Override
@@ -182,6 +216,12 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	}
 
 	@Override
+	public Long clientKill(final ClientKillArgument clientKillArgument) {
+		final CommandArguments args = CommandArguments.create("clientKillArgument", clientKillArgument);
+		return notCommand(client, ProtocolCommand.CLIENT_KILL, args);
+	}
+
+	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
 		return notCommand(client, ProtocolCommand.CLIENT_UNBLOCK, args);
@@ -191,6 +231,18 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		return notCommand(client, ProtocolCommand.CLIENT_UNBLOCK, args);
+	}
+
+	@Override
+	public Status clientNoEvict(final boolean on) {
+		final CommandArguments args = CommandArguments.create("on", on);
+		return notCommand(client, ProtocolCommand.CLIENT_NO_EVICT, args);
+	}
+
+	@Override
+	public Status clientNoTouch(final boolean on) {
+		final CommandArguments args = CommandArguments.create("on", on);
+		return notCommand(client, ProtocolCommand.CLIENT_NO_TOUCH, args);
 	}
 
 }

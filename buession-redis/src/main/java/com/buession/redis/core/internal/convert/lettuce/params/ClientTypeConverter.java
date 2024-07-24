@@ -22,48 +22,43 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.core.ClientAttributeOption;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClientType;
+import io.lettuce.core.ClientListArgs;
+import org.springframework.lang.Nullable;
 
 /**
- * Jedis 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * {@link ClientType} 转换为 Lettuce {@link ClientListArgs}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ConnectionOperations {
+public final class ClientTypeConverter implements Converter<ClientType, ClientListArgs> {
 
-	public AbstractConnectionOperations(final C client) {
-		super(client);
-	}
-
+	@Nullable
 	@Override
-	public Status auth(final byte[] user, final byte[] password) {
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status auth(final byte[] password) {
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status clientSetName(final String name) {
-		return clientSetName(SafeEncoder.encode(name));
-	}
-
-	@Override
-	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
-		return clientSetInfo(clientAttributeOption, SafeEncoder.encode(value));
+	public ClientListArgs convert(final ClientType source) {
+		if(source == null){
+			return null;
+		}else{
+			switch(source){
+				case NORMAL:
+					return ClientListArgs.Builder.typeNormal();
+				case MASTER:
+					return ClientListArgs.Builder.typeMaster();
+				case SLAVE:
+					break;
+				case REPLICA:
+					return ClientListArgs.Builder.typeReplica();
+				case PUBSUB:
+					return ClientListArgs.Builder.typePubsub();
+				default:
+					break;
+			}
+		}
+		return null;
 	}
 
 }

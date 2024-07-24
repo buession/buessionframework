@@ -19,16 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientAttributeOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.command.args.ClientKillArgument;
 
 import java.util.List;
 
@@ -236,16 +239,30 @@ public interface ConnectionCommands extends RedisCommands {
 	List<Client> clientList();
 
 	/**
-	 * 获取所有连接到服务器的客户端信息和统计数据
+	 * 获取连接到服务器的指定类型客户端信息和统计数据
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_list.html" target="_blank">http://redisdoc.com/client_and_server/client_list.html</a></p>
 	 *
 	 * @param clientType
 	 * 		客户端类型
 	 *
-	 * @return 所有连接到服务器的客户端信息和统计数据
+	 * @return 连接到服务器的指定类型客户端信息和统计数据
 	 */
 	List<Client> clientList(final ClientType clientType);
+
+	/**
+	 * 根据客户端 ID 获取客户端信息和统计数据
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_list.html" target="_blank">http://redisdoc.com/client_and_server/client_list.html</a></p>
+	 *
+	 * @param clientIds
+	 * 		客户端 ID
+	 *
+	 * @return 客户端信息和统计数据
+	 *
+	 * @since 3.0.0
+	 */
+	List<Client> clientList(final long... clientIds);
 
 	/**
 	 * The command returns information and statistics about the current client connection in a mostly human readable format
@@ -255,6 +272,38 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 连接到服务器的客户端信息
 	 */
 	Client clientInfo();
+
+	/**
+	 * The CLIENT SETINFO command assigns various info attributes to the current connection which are displayed in the output of CLIENT LIST and CLIENT INFO.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/client-info/" target="_blank">https://redis.io/commands/client-info/</a></p>
+	 *
+	 * @param clientAttributeOption
+	 * 		客户端属性选项
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
+	 */
+	Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final String value);
+
+	/**
+	 * The CLIENT SETINFO command assigns various info attributes to the current connection which are displayed in the output of CLIENT LIST and CLIENT INFO.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/client-info/" target="_blank">https://redis.io/commands/client-info/</a></p>
+	 *
+	 * @param clientAttributeOption
+	 * 		客户端属性选项
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
+	 */
+	Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value);
 
 	/**
 	 * 将所有客户端的访问暂停给定的毫秒数
@@ -267,6 +316,29 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status clientPause(final int timeout);
+
+	/**
+	 * 将所有客户端的访问暂停给定的毫秒数
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 *
+	 * @param timeout
+	 * 		暂停时间（单位：毫秒）
+	 * @param pauseMode
+	 * 		客户端暂停模式
+	 *
+	 * @return 操作结果
+	 */
+	Status clientPause(final int timeout, final ClientPauseMode pauseMode);
+
+	/**
+	 * 取消客户端暂停
+	 *
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
+	 */
+	Status clientUnPause();
 
 	/**
 	 * 当需要完全禁用redis服务器对当前客户端的回复时可使用该命令
@@ -295,6 +367,20 @@ public interface ConnectionCommands extends RedisCommands {
 	Status clientKill(final String host, final int port);
 
 	/**
+	 * 关闭地址为 host:port 的客户端
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
+	 *
+	 * @param clientKillArgument
+	 * 		客户端关闭参数
+	 *
+	 * @return 关闭客户端数量
+	 *
+	 * @since 3.0.0
+	 */
+	Long clientKill(final ClientKillArgument clientKillArgument);
+
+	/**
 	 * 该命令可以通过其他连接解除客户端的阻塞
 	 *
 	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-unblock.html" target="_blank">http://www.redis.cn/commands/client-unblock.html</a></p>
@@ -319,5 +405,29 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 当执行命令设置为 OFF 或 SKIP，设置命令收不到任何回复，当设置为 ON 时，返回OK
 	 */
 	Status clientUnblock(final int clientId, final ClientUnblockType type);
+
+	/**
+	 * Sets the client eviction mode for the current connection.
+	 *
+	 * @param on
+	 *        {@code true} will turn eviction mode on, and {@code false} will turn it off.
+	 *
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
+	 */
+	Status clientNoEvict(final boolean on);
+
+	/**
+	 * Sets the client touch mode for the current connection.
+	 *
+	 * @param on
+	 *        {@code true} will turn touch mode on, and {@code false} will turn it off.
+	 *
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
+	 */
+	Status clientNoTouch(final boolean on);
 
 }

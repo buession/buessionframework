@@ -22,48 +22,28 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.core.ClientAttributeOption;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamConsumer;
+import redis.clients.jedis.resps.StreamConsumerInfo;
 
 /**
- * Jedis 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * jedis {@link StreamConsumerInfo} 转换为 {@link StreamConsumer}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ConnectionOperations {
-
-	public AbstractConnectionOperations(final C client) {
-		super(client);
-	}
+public final class StreamConsumerInfoConverter implements Converter<StreamConsumerInfo, StreamConsumer> {
 
 	@Override
-	public Status auth(final byte[] user, final byte[] password) {
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
+	public StreamConsumer convert(final StreamConsumerInfo source) {
+		return new StreamConsumer(source.getName(), source.getIdle(), source.getPending(), source.getConsumerInfo());
 	}
 
-	@Override
-	public Status auth(final byte[] password) {
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status clientSetName(final String name) {
-		return clientSetName(SafeEncoder.encode(name));
-	}
-
-	@Override
-	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
-		return clientSetInfo(clientAttributeOption, SafeEncoder.encode(value));
+	public static ListConverter<StreamConsumerInfo, StreamConsumer> listConverter() {
+		return new ListConverter<>(new StreamConsumerInfoConverter());
 	}
 
 }

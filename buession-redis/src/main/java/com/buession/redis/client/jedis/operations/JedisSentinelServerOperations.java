@@ -45,7 +45,6 @@ import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogE
 import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.AclCategoryConverter;
-import com.buession.redis.core.internal.convert.jedis.response.BinaryAclCategoryConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MemoryStatsConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ProtocolCommandConverter;
 import com.buession.redis.core.internal.convert.response.InfoConverter;

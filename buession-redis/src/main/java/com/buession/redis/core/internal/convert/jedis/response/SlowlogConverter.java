@@ -28,9 +28,8 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.SlowLog;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.resps.Slowlog;
-
-import java.util.List;
 
 /**
  * jedis {@link Slowlog} 转换为 {@link SlowLog}
@@ -43,9 +42,12 @@ public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 	@Override
 	public SlowLog convert(final Slowlog source) {
 		final Client client = new Client();
+		final HostAndPort clientIpPort = source.getClientIpPort();
 
-		client.setHost(source.getClientIpPort().getHost());
-		client.setPort(source.getClientIpPort().getPort());
+		if(clientIpPort != null){
+			client.setHost(clientIpPort.getHost());
+			client.setPort(clientIpPort.getPort());
+		}
 
 		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
 				client, source.getClientName());

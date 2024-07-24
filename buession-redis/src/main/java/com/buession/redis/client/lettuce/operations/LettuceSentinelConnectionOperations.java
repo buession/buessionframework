@@ -27,14 +27,21 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientAttributeOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.ClientKillArgument;
+import com.buession.redis.core.internal.convert.lettuce.params.ClientTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
+import com.buession.redis.core.internal.lettuce.LettuceKillArgs;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ClientListArgs;
+import io.lettuce.core.KillArgs;
 
 import java.util.List;
 
@@ -194,26 +201,56 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
+		final ClientListArgs clientListArgs = (new ClientTypeConverter()).convert(clientType);
 
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-					clientListConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-					clientListConverter)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-					clientListConverter)
-					.run(args);
-		}
+		return clientList(clientListArgs, args);
+	}
+
+	@Override
+	public List<Client> clientList(final long... clientIds) {
+		final CommandArguments args = CommandArguments.create("clientIds", clientIds);
+		final ClientListArgs clientListArgs = ClientListArgs.Builder.ids(clientIds);
+
+		return clientList(clientListArgs, args);
 	}
 
 	@Override
 	public Client clientInfo() {
-		return notCommand(client, ProtocolCommand.CLIENT_INFO);
+		final ClientConverter clientConverter = new ClientConverter();
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_INFO,
+					(cmd)->cmd.clientInfo(), clientConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLIENT_INFO,
+					(cmd)->cmd.clientInfo(), clientConverter)
+					.run();
+		}else{
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLIENT_INFO, (cmd)->cmd.clientInfo(),
+					clientConverter)
+					.run();
+		}
+	}
+
+	@Override
+	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final String value) {
+		final CommandArguments args = CommandArguments.create("clientAttributeOption", clientAttributeOption).put(
+				"value", value);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
+					(cmd)->cmd.clientSetinfo(clientAttributeOption.name(), value), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
+					(cmd)->cmd.clientSetinfo(clientAttributeOption.name(), value), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
+					(cmd)->cmd.clientSetinfo(clientAttributeOption.name(), value), okStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -233,6 +270,30 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 					okStatusConverter)
 					.run(args);
 		}
+	}
+
+	@Override
+	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
+		final CommandArguments args = CommandArguments.create("timeout", timeout).put("pauseMode", pauseMode);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
+					(cmd)->cmd.clientPause(timeout), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
+					(cmd)->cmd.clientPause(timeout), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLIENT_PAUSE, (cmd)->cmd.clientPause(timeout),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status clientUnPause() {
+		return notCommand(client, ProtocolCommand.CLIENT_UNPAUSE);
 	}
 
 	@Override
@@ -262,6 +323,26 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 	}
 
 	@Override
+	public Long clientKill(final ClientKillArgument clientKillArgument) {
+		final CommandArguments args = CommandArguments.create("clientKillArgument", clientKillArgument);
+		final KillArgs killArgs = LettuceKillArgs.from(clientKillArgument);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_KILL,
+					(cmd)->cmd.clientKill(killArgs), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLIENT_KILL,
+					(cmd)->cmd.clientKill(killArgs), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(killArgs),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
 		return notCommand(client, ProtocolCommand.CLIENT_UNBLOCK, args);
@@ -271,6 +352,36 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		return notCommand(client, ProtocolCommand.CLIENT_UNBLOCK, args);
+	}
+
+	@Override
+	public Status clientNoEvict(final boolean on) {
+		final CommandArguments args = CommandArguments.create("on", on);
+		return notCommand(client, ProtocolCommand.CLIENT_NO_EVICT, args);
+	}
+
+	@Override
+	public Status clientNoTouch(final boolean on) {
+		final CommandArguments args = CommandArguments.create("on", on);
+		return notCommand(client, ProtocolCommand.CLIENT_NO_TOUCH, args);
+	}
+
+	private List<Client> clientList(final ClientListArgs clientListArgs, final CommandArguments args) {
+		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_LIST,
+					(cmd)->cmd.clientList(clientListArgs), clientListConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.CLIENT_LIST,
+					(cmd)->cmd.clientList(clientListArgs), clientListConverter)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<>(client, ProtocolCommand.CLIENT_LIST,
+					(cmd)->cmd.clientList(clientListArgs), clientListConverter)
+					.run(args);
+		}
 	}
 
 }

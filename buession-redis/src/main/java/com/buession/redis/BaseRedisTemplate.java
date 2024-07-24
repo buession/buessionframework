@@ -36,6 +36,8 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientAttributeOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
@@ -465,13 +467,38 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public List<Client> clientList(final long... clientIds) {
+		return execute((client)->client.connectionOperations().clientList(clientIds));
+	}
+
+	@Override
 	public Client clientInfo() {
 		return execute((client)->client.connectionOperations().clientInfo());
 	}
 
 	@Override
+	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, String value) {
+		return execute((client)->client.connectionOperations().clientSetInfo(clientAttributeOption, value));
+	}
+
+	@Override
+	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, byte[] value) {
+		return execute((client)->client.connectionOperations().clientSetInfo(clientAttributeOption, value));
+	}
+
+	@Override
 	public Status clientPause(final int timeout) {
 		return execute((client)->client.connectionOperations().clientPause(timeout));
+	}
+
+	@Override
+	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
+		return execute((client)->client.connectionOperations().clientPause(timeout, pauseMode));
+	}
+
+	@Override
+	public Status clientUnPause() {
+		return execute((client)->client.connectionOperations().clientUnPause());
 	}
 
 	@Override
@@ -485,6 +512,11 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Long clientKill(final ClientKillArgument clientKillArgument) {
+		return execute((client)->client.connectionOperations().clientKill(clientKillArgument));
+	}
+
+	@Override
 	public Status clientUnblock(final int clientId) {
 		return execute((client)->client.connectionOperations().clientUnblock(clientId));
 	}
@@ -492,6 +524,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		return execute((client)->client.connectionOperations().clientUnblock(clientId, type));
+	}
+
+	@Override
+	public Status clientNoEvict(final boolean on) {
+		return execute((client)->client.connectionOperations().clientNoEvict(on));
+	}
+
+	@Override
+	public Status clientNoTouch(final boolean on) {
+		return execute((client)->client.connectionOperations().clientNoTouch(on));
 	}
 
 	@Override

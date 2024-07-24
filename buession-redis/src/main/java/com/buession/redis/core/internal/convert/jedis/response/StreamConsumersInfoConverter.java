@@ -27,10 +27,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamConsumer;
-import com.buession.redis.core.StreamConsumerFull;
 import redis.clients.jedis.resps.StreamConsumersInfo;
-
-import java.util.List;
 
 /**
  * jedis {@link StreamConsumersInfo} 转换为 {@link StreamConsumer}

@@ -22,48 +22,35 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.core.ClientAttributeOption;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import org.springframework.lang.Nullable;
 
 /**
- * Jedis 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * {@link com.buession.redis.core.ClientPauseMode} 转换为 {@link redis.clients.jedis.args.ClientPauseMode}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ConnectionOperations {
+public final class ClientPauseModeConverter
+		implements Converter<com.buession.redis.core.ClientPauseMode, redis.clients.jedis.args.ClientPauseMode> {
 
-	public AbstractConnectionOperations(final C client) {
-		super(client);
-	}
-
+	@Nullable
 	@Override
-	public Status auth(final byte[] user, final byte[] password) {
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status auth(final byte[] password) {
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status clientSetName(final String name) {
-		return clientSetName(SafeEncoder.encode(name));
-	}
-
-	@Override
-	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
-		return clientSetInfo(clientAttributeOption, SafeEncoder.encode(value));
+	public redis.clients.jedis.args.ClientPauseMode convert(final com.buession.redis.core.ClientPauseMode source) {
+		if(source == null){
+			return null;
+		}else{
+			switch(source){
+				case WRITE:
+					return redis.clients.jedis.args.ClientPauseMode.WRITE;
+				case ALL:
+					return redis.clients.jedis.args.ClientPauseMode.ALL;
+				default:
+					return null;
+			}
+		}
 	}
 
 }
