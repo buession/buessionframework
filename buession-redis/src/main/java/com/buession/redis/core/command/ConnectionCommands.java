@@ -371,14 +371,14 @@ public interface ConnectionCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
 	 *
-	 * @param clientKillArgument
+	 * @param clientKillArguments
 	 * 		客户端关闭参数
 	 *
 	 * @return 关闭客户端数量
 	 *
 	 * @since 3.0.0
 	 */
-	Long clientKill(final ClientKillArgument clientKillArgument);
+	Long clientKill(final ClientKillArgument... clientKillArguments);
 
 	/**
 	 * 该命令可以通过其他连接解除客户端的阻塞

@@ -140,20 +140,59 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 	}
 
 	@Override
+	public List<String> pubsubShardChannels() {
+		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS);
+	}
+
+	@Override
+	public List<String> pubsubShardChannels(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS, args);
+	}
+
+	@Override
+	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		return notCommand(client, ProtocolCommand.PUBSUB_SHARDCHANNELS, args);
+	}
+
+	@Override
 	public Long pubsubNumPat() {
 		return notCommand(client, ProtocolCommand.PUBSUB_NUMPAT);
 	}
 
 	@Override
+	public Map<String, Long> pubsubNumSub() {
+		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB);
+	}
+
+	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMPAT, args);
+		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB, args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return notCommand(client, ProtocolCommand.PUBSUB_NUMPAT, args);
+		return notCommand(client, ProtocolCommand.PUBSUB_NUMSUB, args);
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub() {
+		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB);
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
+		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
+		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB, args);
+	}
+
+	@Override
+	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
+		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
+		return notCommand(client, ProtocolCommand.PUBSUB_SHARDNUMSUB, args);
 	}
 
 	@Override

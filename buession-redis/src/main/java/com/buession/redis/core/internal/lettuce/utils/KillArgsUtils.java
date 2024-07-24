@@ -24,54 +24,43 @@
  */
 package com.buession.redis.core.internal.lettuce.utils;
 
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.XReadArgs;
+import com.buession.redis.core.command.args.ClientKillArgument;
+import com.buession.redis.core.internal.lettuce.LettuceKillArgs;
+import io.lettuce.core.KillArgs;
 
-import java.util.Map;
+import java.util.Optional;
 
 /**
- * Lettuce {@link XReadArgs.StreamOffset} 扩展
+ * {@link KillArgs} 工具类
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamOffsetUtils {
+public class KillArgsUtils {
 
-	protected StreamOffsetUtils() {
+	protected KillArgsUtils() {
 
 	}
 
-	@SuppressWarnings({"unchecked"})
-	public static XReadArgs.StreamOffset<byte[]>[] fromStringMap(final Map<String, StreamEntryId> streams) {
-		if(streams == null){
-			return null;
-		}else{
-			final XReadArgs.StreamOffset<byte[]>[] result = new XReadArgs.StreamOffset[streams.size()];
-			int i = 0;
+	public static KillArgs fromClientKillArgumentArray(final ClientKillArgument... clientKillArguments) {
+		if(clientKillArguments != null && clientKillArguments.length > 0){
+			final LettuceKillArgs killArgs = LettuceKillArgs.from(clientKillArguments[0]);
+			ClientKillArgument clientKillArgument;
 
-			for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-				result[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()),
-						e.getValue().toString());
+			for(int i = 1; i < clientKillArguments.length; i++){
+				clientKillArgument = clientKillArguments[i];
+
+				Optional.ofNullable(clientKillArgument.getClientId()).ifPresent(killArgs::id);
+				Optional.ofNullable(clientKillArgument.getClientType()).ifPresent(killArgs::type);
+				Optional.ofNullable(clientKillArgument.getUsername()).ifPresent(killArgs::user);
+				Optional.ofNullable(clientKillArgument.getAddr()).ifPresent(killArgs::addr);
+				Optional.ofNullable(clientKillArgument.getLaddr()).ifPresent(killArgs::laddr);
+				Optional.ofNullable(clientKillArgument.getSkipMe()).ifPresent(killArgs::skipme);
 			}
 
-			return result;
-		}
-	}
-
-	@SuppressWarnings({"unchecked"})
-	public static XReadArgs.StreamOffset<byte[]>[] fromBinaryMap(final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return null;
+			return killArgs;
 		}else{
-			final XReadArgs.StreamOffset<byte[]>[] result = new XReadArgs.StreamOffset[streams.size()];
-			int i = 0;
-
-			for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
-				result[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
-			}
-
-			return result;
+			return null;
 		}
 	}
 

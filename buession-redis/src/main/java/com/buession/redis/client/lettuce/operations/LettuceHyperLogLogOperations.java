@@ -84,13 +84,13 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}
 	}

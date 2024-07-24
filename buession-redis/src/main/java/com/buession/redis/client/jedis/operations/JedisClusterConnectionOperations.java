@@ -216,8 +216,8 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	}
 
 	@Override
-	public Long clientKill(final ClientKillArgument clientKillArgument) {
-		final CommandArguments args = CommandArguments.create("clientKillArgument", clientKillArgument);
+	public Long clientKill(final ClientKillArgument... clientKillArguments) {
+		final CommandArguments args = CommandArguments.create("clientKillArguments", clientKillArguments);
 		return notCommand(client, ProtocolCommand.CLIENT_KILL, args);
 	}
 

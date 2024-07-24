@@ -42,51 +42,39 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 	}
 
 	@Override
+	public Status pfAdd(final String key, final String... elements) {
+		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		return notCommand(client, ProtocolCommand.PFADD, args);
+	}
+
+	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		return notCommand(client, ProtocolCommand.PFADD, args);
+	}
 
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFADD)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFADD)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFADD)
-					.run(args);
-		}
+	@Override
+	public Status pfMerge(final String destKey, final String... keys) {
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		return notCommand(client, ProtocolCommand.PFMERGE, args);
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		return notCommand(client, ProtocolCommand.PFMERGE, args);
+	}
 
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}
+	@Override
+	public Long pfCount(final String... keys) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		return notCommand(client, ProtocolCommand.PFCOUNT, args);
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}
+		return notCommand(client, ProtocolCommand.PFCOUNT, args);
 	}
 
 }

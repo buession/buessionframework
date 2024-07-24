@@ -512,8 +512,8 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Long clientKill(final ClientKillArgument clientKillArgument) {
-		return execute((client)->client.connectionOperations().clientKill(clientKillArgument));
+	public Long clientKill(final ClientKillArgument... clientKillArguments) {
+		return execute((client)->client.connectionOperations().clientKill(clientKillArguments));
 	}
 
 	@Override
@@ -1740,8 +1740,28 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public List<String> pubsubShardChannels() {
+		return execute((client)->client.pubSubOperations().pubsubShardChannels());
+	}
+
+	@Override
+	public List<String> pubsubShardChannels(final String pattern) {
+		return execute((client)->client.pubSubOperations().pubsubShardChannels(pattern));
+	}
+
+	@Override
+	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
+		return execute((client)->client.pubSubOperations().pubsubShardChannels(pattern));
+	}
+
+	@Override
 	public Long pubsubNumPat() {
 		return execute((client)->client.pubSubOperations().pubsubNumPat());
+	}
+
+	@Override
+	public Map<String, Long> pubsubNumSub() {
+		return execute((client)->client.pubSubOperations().pubsubNumSub());
 	}
 
 	@Override
@@ -1752,6 +1772,21 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub() {
+		return execute((client)->client.pubSubOperations().pubsubShardNumSub());
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
+		return execute((client)->client.pubSubOperations().pubsubShardNumSub(shardChannels));
+	}
+
+	@Override
+	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
+		return execute((client)->client.pubSubOperations().pubsubShardNumSub(shardChannels));
 	}
 
 	@Override

@@ -343,9 +343,13 @@ public enum ProtocolCommand {
 
 	PUBSUB_CHANNELS(ProtocolCommandGroup.PUBSUB),
 
+	PUBSUB_SHARDCHANNELS(ProtocolCommandGroup.PUBSUB),
+
 	PUBSUB_NUMPAT(ProtocolCommandGroup.PUBSUB),
 
 	PUBSUB_NUMSUB(ProtocolCommandGroup.PUBSUB),
+
+	PUBSUB_SHARDNUMSUB(ProtocolCommandGroup.PUBSUB),
 
 	PUBLISH(ProtocolCommandGroup.PUBSUB),
 

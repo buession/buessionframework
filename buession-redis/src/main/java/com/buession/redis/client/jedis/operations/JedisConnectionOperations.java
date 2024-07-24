@@ -41,7 +41,7 @@ import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter
 import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
-import com.buession.redis.core.internal.jedis.JedisClientKillParams;
+import com.buession.redis.core.internal.jedis.utils.ClientKillParamsUtils;
 import redis.clients.jedis.args.UnblockType;
 import redis.clients.jedis.params.ClientKillParams;
 
@@ -425,9 +425,10 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	}
 
 	@Override
-	public Long clientKill(final ClientKillArgument clientKillArgument) {
-		final CommandArguments args = CommandArguments.create("clientKillArgument", clientKillArgument);
-		final ClientKillParams clientKillParams = JedisClientKillParams.from(clientKillArgument);
+	public Long clientKill(final ClientKillArgument... clientKillArguments) {
+		final CommandArguments args = CommandArguments.create("clientKillArguments", clientKillArguments);
+		final ClientKillParams clientKillParams =
+				ClientKillParamsUtils.fromClientKillArgumentArray(clientKillArguments);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.CLIENT_KILL)

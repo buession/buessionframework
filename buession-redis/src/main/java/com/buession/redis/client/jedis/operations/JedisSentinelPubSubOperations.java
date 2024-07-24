@@ -159,6 +159,39 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 	}
 
 	@Override
+	public List<String> pubsubShardChannels() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client,
+					ProtocolCommand.PUBSUB_SHARDCHANNELS)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<String>, List<String>>(client,
+					ProtocolCommand.PUBSUB_SHARDCHANNELS)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubShardChannels(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public List<String> pubsubShardChannels(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		return pubsubShardChannels(pattern, (v)->v, args);
+	}
+
+	@Override
+	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final String sPattern = SafeEncoder.encode(pattern);
+		final com.buession.core.converter.ListConverter<String, byte[]> stringToBinaryListConverter =
+				Converters.listStringToBinary();
+
+		return pubsubShardChannels(sPattern, stringToBinaryListConverter, args);
+	}
+
+	@Override
 	public Long pubsubNumPat() {
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
@@ -168,6 +201,23 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 					.run();
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumPat(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public Map<String, Long> pubsubNumSub() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Map<String, Long>, Map<String, Long>>(client,
+					ProtocolCommand.PUBSUB_NUMSUB)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Map<String, Long>, Map<String, Long>>(client,
+					ProtocolCommand.PUBSUB_NUMSUB)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(),
+					(v)->v)
 					.run();
 		}
 	}
@@ -186,6 +236,39 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 				new MapConverter<>(SafeEncoder::encode, (v)->v);
 
 		return pubsubNumSub(sChannels, stringToBinaryKeyPrimitiveValueMapConverter, args);
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Map<String, Long>, Map<String, Long>>(client,
+					ProtocolCommand.PUBSUB_SHARDNUMSUB)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Map<String, Long>, Map<String, Long>>(client,
+					ProtocolCommand.PUBSUB_SHARDNUMSUB)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumSub(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
+		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
+		return pubsubShardNumSub(shardChannels, (v)->v, args);
+	}
+
+	@Override
+	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
+		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
+		final String[] sChannels = SafeEncoder.encode(shardChannels);
+		final MapConverter<String, Long, byte[], Long> stringToBinaryKeyPrimitiveValueMapConverter =
+				new MapConverter<>(SafeEncoder::encode, (v)->v);
+
+		return pubsubShardNumSub(sChannels, stringToBinaryKeyPrimitiveValueMapConverter, args);
 	}
 
 	@Override
@@ -277,10 +360,25 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 		}
 	}
 
+	private <V> List<V> pubsubShardChannels(final String pattern,
+											final Converter<List<String>, List<V>> converter,
+											final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubShardChannels(pattern), converter)
+					.run();
+		}
+	}
+
 	private <K> Map<K, Long> pubsubNumSub(final String[] channels,
 										  final Converter<Map<String, Long>, Map<K, Long>> converter,
 										  final CommandArguments args) {
-
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 					.run(args);
@@ -291,6 +389,23 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(channels),
 					converter)
+					.run(args);
+		}
+	}
+
+	private <K> Map<K, Long> pubsubShardNumSub(final String[] shardChannels,
+											   final Converter<Map<String, Long>, Map<K, Long>> converter,
+											   final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Map<K, Long>, Map<K, Long>>(client,
+					ProtocolCommand.PUBSUB_NUMSUB)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+					(cmd)->cmd.pubsubShardNumSub(shardChannels), converter)
 					.run(args);
 		}
 	}

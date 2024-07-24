@@ -117,6 +117,40 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 	}
 
 	@Override
+	public List<String> pubsubShardChannels() {
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubChannels(), listConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubChannels(), listConverter)
+					.run();
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubChannels(), listConverter)
+					.run();
+		}
+	}
+
+	@Override
+	public List<String> pubsubShardChannels(final String pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final byte[] bPattern = SafeEncoder.encode(pattern);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
+
+		return pubsubShardChannels(bPattern, listConverter, args);
+	}
+
+	@Override
+	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		return pubsubShardChannels(pattern, (v)->v, args);
+	}
+
+	@Override
 	public Long pubsubNumPat() {
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
@@ -128,6 +162,25 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 					.run();
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public Map<String, Long> pubsubNumSub() {
+		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+					(cmd)->cmd.pubsubNumsub(), converter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB,
+					(cmd)->cmd.pubsubNumsub(), converter)
+					.run();
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(),
+					converter)
 					.run();
 		}
 	}
@@ -145,6 +198,40 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
 		return pubsubNumSub(channels, (v)->v, args);
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub() {
+		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumsub(), converter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumsub(), converter)
+					.run();
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumsub(), converter)
+					.run();
+		}
+	}
+
+	@Override
+	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
+		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
+		final byte[][] bShardChannels = SafeEncoder.encode(shardChannels);
+		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
+
+		return pubsubShardNumSub(bShardChannels, converter, args);
+	}
+
+	@Override
+	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
+		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
+		return pubsubShardNumSub(shardChannels, (v)->v, args);
 	}
 
 	@Override
@@ -212,6 +299,23 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		}
 	}
 
+	private <V> List<V> pubsubShardChannels(final byte[] pattern, final Converter<List<byte[]>, List<V>> converter,
+											final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubShardChannels(pattern), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubShardChannels(pattern), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDCHANNELS,
+					(cmd)->cmd.pubsubShardChannels(pattern), converter)
+					.run(args);
+		}
+	}
+
 	private <K> Map<K, Long> pubsubNumSub(final byte[][] channels,
 										  final Converter<Map<byte[], Long>, Map<K, Long>> converter,
 										  final CommandArguments args) {
@@ -226,6 +330,24 @@ public final class LettuceClusterPubSubOperations extends AbstractPubSubOperatio
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(channels),
 					converter)
+					.run(args);
+		}
+	}
+
+	private <K> Map<K, Long> pubsubShardNumSub(final byte[][] channels,
+											   final Converter<Map<byte[], Long>, Map<K, Long>> converter,
+											   final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumsub(channels), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumsub(channels), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.PUBSUB_SHARDNUMSUB,
+					(cmd)->cmd.pubsubShardNumsub(channels), converter)
 					.run(args);
 		}
 	}

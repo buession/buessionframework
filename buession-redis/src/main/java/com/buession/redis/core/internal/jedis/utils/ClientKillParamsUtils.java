@@ -22,56 +22,45 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce.utils;
+package com.buession.redis.core.internal.jedis.utils;
 
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.XReadArgs;
+import com.buession.redis.core.command.args.ClientKillArgument;
+import com.buession.redis.core.internal.jedis.JedisClientKillParams;
+import redis.clients.jedis.params.ClientKillParams;
 
-import java.util.Map;
+import java.util.Optional;
 
 /**
- * Lettuce {@link XReadArgs.StreamOffset} 扩展
+ * {@link ClientKillParams} 工具类
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamOffsetUtils {
+public class ClientKillParamsUtils {
 
-	protected StreamOffsetUtils() {
+	protected ClientKillParamsUtils() {
 
 	}
 
-	@SuppressWarnings({"unchecked"})
-	public static XReadArgs.StreamOffset<byte[]>[] fromStringMap(final Map<String, StreamEntryId> streams) {
-		if(streams == null){
-			return null;
-		}else{
-			final XReadArgs.StreamOffset<byte[]>[] result = new XReadArgs.StreamOffset[streams.size()];
-			int i = 0;
+	public static ClientKillParams fromClientKillArgumentArray(final ClientKillArgument... clientKillArguments) {
+		if(clientKillArguments != null && clientKillArguments.length > 0){
+			final JedisClientKillParams clientKillParams = JedisClientKillParams.from(clientKillArguments[0]);
+			ClientKillArgument clientKillArgument;
 
-			for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-				result[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()),
-						e.getValue().toString());
+			for(int i = 1; i < clientKillArguments.length; i++){
+				clientKillArgument = clientKillArguments[i];
+
+				Optional.ofNullable(clientKillArgument.getClientId()).ifPresent(clientKillParams::id);
+				Optional.ofNullable(clientKillArgument.getClientType()).ifPresent(clientKillParams::type);
+				Optional.ofNullable(clientKillArgument.getUsername()).ifPresent(clientKillParams::user);
+				Optional.ofNullable(clientKillArgument.getAddr()).ifPresent(clientKillParams::addr);
+				Optional.ofNullable(clientKillArgument.getLaddr()).ifPresent(clientKillParams::laddr);
+				Optional.ofNullable(clientKillArgument.getSkipMe()).ifPresent(clientKillParams::skipMe);
 			}
 
-			return result;
-		}
-	}
-
-	@SuppressWarnings({"unchecked"})
-	public static XReadArgs.StreamOffset<byte[]>[] fromBinaryMap(final Map<byte[], StreamEntryId> streams) {
-		if(streams == null){
-			return null;
+			return clientKillParams;
 		}else{
-			final XReadArgs.StreamOffset<byte[]>[] result = new XReadArgs.StreamOffset[streams.size()];
-			int i = 0;
-
-			for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
-				result[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
-			}
-
-			return result;
+			return null;
 		}
 	}
 

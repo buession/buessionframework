@@ -40,7 +40,7 @@ import com.buession.redis.core.internal.convert.lettuce.params.ClientTypeConvert
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
-import com.buession.redis.core.internal.lettuce.LettuceKillArgs;
+import com.buession.redis.core.internal.lettuce.utils.KillArgsUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ClientListArgs;
 import io.lettuce.core.KillArgs;
@@ -363,9 +363,9 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 	}
 
 	@Override
-	public Long clientKill(final ClientKillArgument clientKillArgument) {
-		final CommandArguments args = CommandArguments.create("clientKillArgument", clientKillArgument);
-		final KillArgs killArgs = LettuceKillArgs.from(clientKillArgument);
+	public Long clientKill(final ClientKillArgument... clientKillArguments) {
+		final CommandArguments args = CommandArguments.create("clientKillArguments", clientKillArguments);
+		final KillArgs killArgs = KillArgsUtils.fromClientKillArgumentArray(clientKillArguments);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLIENT_KILL,
