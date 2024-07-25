@@ -142,16 +142,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> aclUsers() {
-		return execute((client)->client.aclOperations().aclUsers());
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		return execute((client)->client.aclOperations().aclWhoAmI());
-	}
-
-	@Override
 	public Long aclDelUser(final String... usernames) {
 		return execute((client)->client.aclOperations().aclDelUser(usernames));
 	}
@@ -159,6 +149,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Long aclDelUser(final byte[]... username) {
 		return execute((client)->client.aclOperations().aclDelUser(username));
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		return execute((client)->client.aclOperations().aclUsers());
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		return execute((client)->client.aclOperations().aclWhoAmI());
 	}
 
 	@Override

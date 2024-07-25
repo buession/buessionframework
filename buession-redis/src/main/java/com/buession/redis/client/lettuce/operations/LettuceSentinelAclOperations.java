@@ -58,6 +58,18 @@ public final class LettuceSentinelAclOperations extends AbstractAclOperations<Le
 	}
 
 	@Override
+	public Long aclDelUser(final String... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		return aclDelUser(args);
+	}
+
+	@Override
+	public Long aclDelUser(final byte[]... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		return aclDelUser(args);
+	}
+
+	@Override
 	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return notCommand(client, Command.ACL_SETUSER, args);
@@ -107,18 +119,6 @@ public final class LettuceSentinelAclOperations extends AbstractAclOperations<Le
 			return new LettuceSentinelCommand<String, String>(client, Command.ACL_WHOAMI)
 					.run();
 		}
-	}
-
-	@Override
-	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return aclDelUser(args);
-	}
-
-	@Override
-	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return aclDelUser(args);
 	}
 
 	@Override

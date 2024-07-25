@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * Redis 协议命令
@@ -34,6 +34,14 @@ import com.buession.core.validator.Validate;
  * @since 3.0.0
  */
 public enum Command implements ProtocolCommand {
+	/**
+	 * ACL command start
+	 **/
+	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER),
+	/**
+	 * ACL command end
+	 **/
+
 	/**
 	 * bitmat command start
 	 **/
@@ -699,6 +707,8 @@ public enum Command implements ProtocolCommand {
 	 * transaction command end
 	 **/
 
+	private final byte[] raw;
+
 	/**
 	 * 命令分组
 	 */
@@ -724,6 +734,7 @@ public enum Command implements ProtocolCommand {
 	}
 
 	Command(final String mode, final CommandGroup group, final SubCommand... subCommands) {
+		raw = SafeEncoder.encode(name());
 		this.group = group;
 		this.subCommands = subCommands;
 		if(Validate.hasText(mode)){
@@ -741,6 +752,15 @@ public enum Command implements ProtocolCommand {
 		return name();
 	}
 
+	public CommandGroup getGroup() {
+		return group;
+	}
+
+	@Override
+	public byte[] getRaw() {
+		return raw;
+	}
+
 	@Override
 	public boolean isRead() {
 		return read;
@@ -751,13 +771,9 @@ public enum Command implements ProtocolCommand {
 		return write;
 	}
 
-	public CommandGroup getGroup() {
-		return group;
-	}
-
 	@Override
 	public String toString() {
-		return StringUtils.replace(name(), "_", " ");
+		return getName();
 	}
 
 }

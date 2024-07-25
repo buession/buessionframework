@@ -27,6 +27,7 @@ package com.buession.redis.core;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -41,20 +42,58 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractRedisCommand<C extends RedisClient, R> implements com.buession.redis.core.Command<R> {
 
+	/**
+	 * Redis 客户端 {@link RedisClient} 实例
+	 */
 	protected final C client;
 
+	/**
+	 * Redis 命令
+	 */
 	private final Command command;
+
+	/**
+	 * Redis 子命令
+	 */
+	private final SubCommand subCommand;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * 构造函数
+	 *
+	 * @param client
+	 * 		Redis 客户端 {@link RedisClient} 实例
+	 * @param command
+	 * 		Redis 命令
+	 */
 	protected AbstractRedisCommand(final C client, final Command command) {
+		this(client, command, null);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param client
+	 * 		Redis 客户端 {@link RedisClient} 实例
+	 * @param command
+	 * 		Redis 命令
+	 * @param subCommand
+	 * 		Redis 子命令
+	 */
+	protected AbstractRedisCommand(final C client, final Command command, final SubCommand subCommand) {
 		this.client = client;
 		this.command = command;
+		this.subCommand = subCommand;
 	}
 
 	@Override
 	public Command getCommand() {
 		return command;
+	}
+
+	public SubCommand getSubCommand() {
+		return subCommand;
 	}
 
 	@Override

@@ -24,13 +24,15 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.core.Rawable;
+
 /**
  * Redis 协议命令
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ProtocolCommand {
+public interface ProtocolCommand extends Rawable {
 
 	/**
 	 * 返回命令名称

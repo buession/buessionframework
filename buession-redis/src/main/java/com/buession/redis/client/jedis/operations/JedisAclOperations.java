@@ -89,6 +89,38 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 	}
 
 	@Override
+	public Long aclDelUser(final String... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
+					.run();
+		}else{
+			return new JedisCommand<>(client, Command.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long aclDelUser(final byte[]... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
+					.run();
+		}else{
+			return new JedisCommand<>(client, Command.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
 	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 
@@ -183,38 +215,6 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 		}else{
 			return new JedisCommand<>(client, Command.ACL_WHOAMI, (cmd)->cmd.aclWhoAmI(), (v)->v)
 					.run();
-		}
-	}
-
-	@Override
-	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
-					.run(args);
 		}
 	}
 

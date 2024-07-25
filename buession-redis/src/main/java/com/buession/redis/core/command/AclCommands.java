@@ -63,6 +63,94 @@ public interface AclCommands extends RedisCommands {
 	List<Command> aclCat(final AclCategory aclCategory);
 
 	/**
+	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
+	 *
+	 * @param usernames
+	 * 		用户名
+	 *
+	 * @return 删除用户数量
+	 */
+	Long aclDelUser(final String... usernames);
+
+	/**
+	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
+	 *
+	 * @param usernames
+	 * 		用户名
+	 *
+	 * @return 删除用户数量
+	 */
+	Long aclDelUser(final byte[]... usernames);
+
+	/**
+	 * Simulate the execution of a given command by a given user.
+	 * This command can be used to test the permissions of a given user without having to enable the user or cause the side effects of running the command.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 *
+	 * @return 操作结果
+	 */
+	Status aclDryRun(final String username, final Command command);
+
+	/**
+	 * Simulate the execution of a given command by a given user.
+	 * This command can be used to test the permissions of a given user without having to enable the user or cause the side effects of running the command.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 *
+	 * @return 操作结果
+	 */
+	Status aclDryRun(final byte[] username, final Command command);
+
+	/**
+	 * Simulate the execution of a given command by a given user.
+	 * This command can be used to test the permissions of a given user without having to enable the user or cause the side effects of running the command.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 * @param arguments
+	 * 		命令参数
+	 *
+	 * @return 操作结果
+	 */
+	Status aclDryRun(final String username, final Command command, final String... arguments);
+
+	/**
+	 * Simulate the execution of a given command by a given user.
+	 * This command can be used to test the permissions of a given user without having to enable the user or cause the side effects of running the command.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 * @param arguments
+	 * 		命令参数
+	 *
+	 * @return 操作结果
+	 */
+	Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments);
+
+	/**
 	 * Create an ACL user with the specified rules or modify the rules of an existing user
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
@@ -131,30 +219,6 @@ public interface AclCommands extends RedisCommands {
 	 * @return The username of the current connection
 	 */
 	String aclWhoAmI();
-
-	/**
-	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
-	 *
-	 * @param usernames
-	 * 		用户名
-	 *
-	 * @return 删除用户数量
-	 */
-	Long aclDelUser(final String... usernames);
-
-	/**
-	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
-	 *
-	 * @param usernames
-	 * 		用户名
-	 *
-	 * @return 删除用户数量
-	 */
-	Long aclDelUser(final byte[]... usernames);
 
 	/**
 	 * ACL users need a solid password in order to authenticate to the server without security risks

@@ -58,6 +58,18 @@ public final class JedisClusterAclOperations extends AbstractAclOperations<Jedis
 	}
 
 	@Override
+	public Long aclDelUser(final String... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		return notCommand(client, Command.ACL_DELUSER, args);
+	}
+
+	@Override
+	public Long aclDelUser(final byte[]... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		return notCommand(client, Command.ACL_DELUSER, args);
+	}
+
+	@Override
 	public Status aclSetUser(final String username, final String... rules) {
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
 		return notCommand(client, Command.ACL_SETUSER, args);
@@ -89,18 +101,6 @@ public final class JedisClusterAclOperations extends AbstractAclOperations<Jedis
 	@Override
 	public String aclWhoAmI() {
 		return notCommand(client, Command.ACL_WHOAMI);
-	}
-
-	@Override
-	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return notCommand(client, Command.ACL_DELUSER, args);
-	}
-
-	@Override
-	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return notCommand(client, Command.ACL_DELUSER, args);
 	}
 
 	@Override
