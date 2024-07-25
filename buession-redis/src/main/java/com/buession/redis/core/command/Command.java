@@ -37,7 +37,9 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * ACL command start
 	 **/
-	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER),
+	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
+			SubCommand.ACL_GENPASS, SubCommand.ACL_GETUSER, SubCommand.LIST, SubCommand.LOAD, SubCommand.ACL_LOG,
+			SubCommand.SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI),
 	/**
 	 * ACL command end
 	 **/
@@ -393,29 +395,7 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * server command start
 	 **/
-	ACL_CAT(CommandGroup.SERVER),
 
-	ACL_SETUSER(CommandGroup.SERVER),
-
-	ACL_GETUSER(CommandGroup.SERVER),
-
-	ACL_USERS(CommandGroup.SERVER),
-
-	ACL_WHOAMI(CommandGroup.SERVER),
-
-	ACL_DELUSER(CommandGroup.SERVER),
-
-	ACL_GENPASS(CommandGroup.SERVER),
-
-	ACL_LIST(CommandGroup.SERVER),
-
-	ACL_LOAD(CommandGroup.SERVER),
-
-	ACL_LOG(CommandGroup.SERVER),
-
-	ACL_LOGREST(CommandGroup.SERVER),
-
-	ACL_LOGSAVE(CommandGroup.SERVER),
 
 	BGREWRITEAOF(CommandGroup.SERVER),
 

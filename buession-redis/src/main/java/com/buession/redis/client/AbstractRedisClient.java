@@ -44,43 +44,92 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 
 	/**
 	 * Redis 连接对象
-	 *
-	 * @since 3.0.0
 	 */
 	protected CONN connection;
 
+	/**
+	 * 权限操作命令
+	 */
 	protected AclOperations aclOperations;
 
+	/**
+	 * BitMap 命令操作
+	 */
 	protected BitMapOperations bitMapOperations;
 
+	/**
+	 * 集群命令操作
+	 */
 	protected ClusterOperations clusterOperations;
 
+	/**
+	 * 连接命令操作
+	 */
 	protected ConnectionOperations connectionOperations;
 
+	/**
+	 * 地理位置操作命令
+	 */
 	protected GeoOperations geoOperations;
 
+	/**
+	 * 哈希表命令操作
+	 */
 	protected HashOperations hashOperations;
 
+	/**
+	 * HyperLogLog 命令操作
+	 */
 	protected HyperLogLogOperations hyperLogLogOperations;
 
+	/**
+	 * KEY 命令操作
+	 */
 	protected KeyOperations keyOperations;
 
+	/**
+	 * 列表命令操作
+	 */
 	protected ListOperations listOperations;
 
+	/**
+	 * 发布订阅命令操作
+	 */
 	protected PubSubOperations pubSubOperations;
 
+	/**
+	 * Script 命令操作
+	 */
 	protected ScriptingOperations scriptingOperations;
 
+	/**
+	 * 服务端操作命令
+	 */
 	protected ServerOperations serverOperations;
 
+	/**
+	 * 集合命令操作
+	 */
 	protected SetOperations setOperations;
 
+	/**
+	 * 有序集合命令操作
+	 */
 	protected SortedSetOperations sortedSetOperations;
 
+	/**
+	 * Stream 命令操作
+	 */
 	protected StreamOperations streamOperations;
 
+	/**
+	 * 字符串命令操作
+	 */
 	protected StringOperations stringOperations;
 
+	/**
+	 * 事务命令操作
+	 */
 	protected TransactionOperations transactionOperations;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -122,9 +171,11 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 
 		if(logger.isDebugEnabled()){
 			if(arguments != null){
-				logger.debug("Execute command '{}' with arguments: {}", command, arguments);
+				logger.debug("Execute command '{}' {}{} {}", command, command.getCommand(),
+						(command.getSubCommand() == null ? "" : command.getSubCommand()), arguments);
 			}else{
-				logger.debug("Execute command '{}'", command);
+				logger.debug("Execute command '{}' {}{}", command, command.getCommand(),
+						(command.getSubCommand() == null ? "" : " " + command.getSubCommand()));
 			}
 		}
 
@@ -133,10 +184,12 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
-					logger.error("Execute command '{}' with arguments: {}, failure: {}", command,
-							arguments, e.getMessage(), e);
+					logger.error("Execute command '{}' {}{} {}, failure: {}", command, command.getCommand(),
+							(command.getSubCommand() == null ? "" : command.getSubCommand()), arguments, e.getMessage(),
+							e);
 				}else{
-					logger.error("Execute command '{}', failure: {}", command, e.getMessage(), e);
+					logger.error("Execute command '{}' {}{}, failure: {}", command, command.getCommand(),
+							(command.getSubCommand() == null ? "" : " " + command.getSubCommand()), e.getMessage(), e);
 				}
 			}
 			throw e;

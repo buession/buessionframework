@@ -24,9 +24,12 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +40,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class AclSetUserArgument implements ArrayArgument<Object> {
+public class AclSetUserArgument implements ArrayArgument<String> {
 
 	/**
 	 * 参数列表
@@ -335,8 +338,8 @@ public class AclSetUserArgument implements ArrayArgument<Object> {
 	}
 
 	@Override
-	public Object[] toArray() {
-		Object[] result = new Object[arguments.size()];
+	public String[] toArray() {
+		final String[] result = new String[arguments.size()];
 		Argument argument;
 
 		for(int i = 0, l = arguments.size(); i < l; i++){
@@ -350,6 +353,28 @@ public class AclSetUserArgument implements ArrayArgument<Object> {
 		}
 
 		return result;
+	}
+
+	public byte[][] toBinaryArray() {
+		final byte[][] result = new byte[arguments.size()][];
+		Argument argument;
+
+		for(int i = 0, l = arguments.size(); i < l; i++){
+			argument = arguments.get(i);
+
+			if(argument instanceof State){
+				result[i] = SafeEncoder.encode(((State) argument).name());
+			}else{
+				result[i] = SafeEncoder.encode(argument.toString());
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return StringUtils.join(arguments, " ");
 	}
 
 	public interface Argument {
@@ -377,6 +402,25 @@ public class AclSetUserArgument implements ArrayArgument<Object> {
 		@Override
 		public String toString() {
 			return getValue();
+		}
+
+	}
+
+	public static abstract class ProtocolCommandArgument implements Argument {
+
+		private final ProtocolCommand command;
+
+		public ProtocolCommandArgument(final ProtocolCommand command) {
+			this.command = command;
+		}
+
+		public ProtocolCommand getCommand() {
+			return command;
+		}
+
+		@Override
+		public String toString() {
+			return getCommand().getName();
 		}
 
 	}
@@ -632,10 +676,10 @@ public class AclSetUserArgument implements ArrayArgument<Object> {
 
 	}
 
-	public final static class Reset extends StringArgument {
+	public final static class Reset extends ProtocolCommandArgument {
 
 		Reset() {
-			super("reset");
+			super(SubCommand.RESET);
 		}
 
 	}

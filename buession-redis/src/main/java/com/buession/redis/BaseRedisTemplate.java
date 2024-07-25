@@ -122,26 +122,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		return execute((client)->client.aclOperations().aclSetUser(username, rules));
-	}
-
-	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		return execute((client)->client.aclOperations().aclSetUser(username, rules));
-	}
-
-	@Override
-	public AclUser aclGetUser(final String username) {
-		return execute((client)->client.aclOperations().aclGetUser(username));
-	}
-
-	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		return execute((client)->client.aclOperations().aclGetUser(username));
-	}
-
-	@Override
 	public Long aclDelUser(final String... usernames) {
 		return execute((client)->client.aclOperations().aclDelUser(usernames));
 	}
@@ -152,18 +132,43 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> aclUsers() {
-		return execute((client)->client.aclOperations().aclUsers());
+	public Status aclDryRun(final String username, final Command command) {
+		return execute((client)->client.aclOperations().aclDryRun(username, command));
 	}
 
 	@Override
-	public String aclWhoAmI() {
-		return execute((client)->client.aclOperations().aclWhoAmI());
+	public Status aclDryRun(final byte[] username, final Command command) {
+		return execute((client)->client.aclOperations().aclDryRun(username, command));
+	}
+
+	@Override
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		return execute((client)->client.aclOperations().aclDryRun(username, command, arguments));
+	}
+
+	@Override
+	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+		return execute((client)->client.aclOperations().aclDryRun(username, command, arguments));
 	}
 
 	@Override
 	public String aclGenPass() {
 		return execute((client)->client.aclOperations().aclGenPass());
+	}
+
+	@Override
+	public String aclGenPass(final int bits) {
+		return execute((client)->client.aclOperations().aclGenPass(bits));
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		return execute((client)->client.aclOperations().aclGetUser(username));
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username) {
+		return execute((client)->client.aclOperations().aclGetUser(username));
 	}
 
 	@Override
@@ -192,8 +197,29 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status aclLogSave() {
-		return execute((client)->client.aclOperations().aclLogSave());
+	public Status aclSave() {
+		return execute((client)->client.aclOperations().aclSave());
+	}
+
+
+	@Override
+	public Status aclSetUser(final String username, final AclSetUserArgument rules) {
+		return execute((client)->client.aclOperations().aclSetUser(username, rules));
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final AclSetUserArgument rules) {
+		return execute((client)->client.aclOperations().aclSetUser(username, rules));
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		return execute((client)->client.aclOperations().aclUsers());
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		return execute((client)->client.aclOperations().aclWhoAmI());
 	}
 
 	@Override

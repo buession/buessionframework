@@ -39,11 +39,20 @@ import com.buession.redis.exception.RedisException;
 public interface Command<R> {
 
 	/**
-	 * 返回协议命令
+	 * 返回 Redis 命令
 	 *
-	 * @return 协议命令
+	 * @return Redis 命令
 	 */
 	com.buession.redis.core.command.Command getCommand();
+
+	/**
+	 * 返回 Redis 子命令
+	 *
+	 * @return Redis 子命令
+	 *
+	 * @since 3.0.0
+	 */
+	com.buession.redis.core.command.SubCommand getSubCommand();
 
 	/**
 	 * 执行 Redis 命令

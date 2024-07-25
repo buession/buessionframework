@@ -31,6 +31,8 @@ import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.AclSetUserArgument;
 
 import java.util.List;
 
@@ -48,95 +50,126 @@ public final class JedisClusterAclOperations extends AbstractAclOperations<Jedis
 
 	@Override
 	public List<AclCategory> aclCat() {
-		return notCommand(client, Command.ACL_CAT);
+		return notCommand(client, Command.ACL, SubCommand.ACL_CAT);
 	}
 
 	@Override
 	public List<Command> aclCat(final AclCategory aclCategory) {
-		final CommandArguments args = CommandArguments.create("aclCategory", aclCategory);
-		return notCommand(client, Command.ACL_CAT, args);
+		final CommandArguments args = CommandArguments.create(aclCategory);
+		return notCommand(client, Command.ACL, SubCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return notCommand(client, Command.ACL_DELUSER, args);
+		final CommandArguments args = CommandArguments.create(usernames);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return notCommand(client, Command.ACL_DELUSER, args);
+		final CommandArguments args = CommandArguments.create(usernames);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return notCommand(client, Command.ACL_SETUSER, args);
+	public Status aclDryRun(final String username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return notCommand(client, Command.ACL_SETUSER, args);
+	public Status aclDryRun(final byte[] username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final String username) {
-		final CommandArguments args = CommandArguments.create("username", username);
-		return notCommand(client, Command.ACL_GETUSER, args);
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		final CommandArguments args = CommandArguments.create("username", username);
-		return notCommand(client, Command.ACL_GETUSER, args);
-	}
-
-	@Override
-	public List<String> aclUsers() {
-		return notCommand(client, Command.ACL_USERS);
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		return notCommand(client, Command.ACL_WHOAMI);
+	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
 	public String aclGenPass() {
-		return notCommand(client, Command.ACL_GENPASS);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GENPASS);
+	}
+
+	@Override
+	public String aclGenPass(final int bits) {
+		final CommandArguments args = CommandArguments.create(bits);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GENPASS, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		final CommandArguments args = CommandArguments.create(username);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GETUSER, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username) {
+		final CommandArguments args = CommandArguments.create(username);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GETUSER, args);
 	}
 
 	@Override
 	public List<String> aclList() {
-		return notCommand(client, Command.ACL_LIST);
+		return notCommand(client, Command.ACL, SubCommand.LIST);
 	}
 
 	@Override
 	public Status aclLoad() {
-		return notCommand(client, Command.ACL_LOAD);
+		return notCommand(client, Command.ACL, SubCommand.LOAD);
 	}
 
 	@Override
 	public List<AclLog> aclLog() {
-		return notCommand(client, Command.ACL_LOG);
+		return notCommand(client, Command.ACL, SubCommand.ACL_LOG);
 	}
 
 	@Override
 	public List<AclLog> aclLog(final int count) {
-		final CommandArguments args = CommandArguments.create("count", count);
-		return notCommand(client, Command.ACL_LOG, args);
+		final CommandArguments args = CommandArguments.create(count);
+		return notCommand(client, Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclLogReset() {
-		return notCommand(client, Command.ACL_LOGREST);
+		final CommandArguments args = CommandArguments.create(SubCommand.RESET);
+		return notCommand(client, Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
-	public Status aclLogSave() {
-		return notCommand(client, Command.ACL_LOGSAVE);
+	public Status aclSave() {
+		return notCommand(client, Command.ACL, SubCommand.SAVE);
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+		return notCommand(client, Command.ACL, SubCommand.ACL_SETUSER, args);
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+		return notCommand(client, Command.ACL, SubCommand.ACL_SETUSER, args);
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		return notCommand(client, Command.ACL, SubCommand.ACL_USERS);
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		return notCommand(client, Command.ACL, SubCommand.ACL_WHOAMI);
 	}
 
 }

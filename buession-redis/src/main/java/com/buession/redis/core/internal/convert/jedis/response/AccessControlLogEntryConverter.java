@@ -24,31 +24,30 @@
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.beans.DefaultBeanConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.internal.convert.response.ClientConverter;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
+ * Jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class AccessControlLogEntryConverter implements Converter<AccessControlLogEntry, AclLog> {
 
-	private final DefaultBeanConverter beanConverter = new DefaultBeanConverter();
+	private final static ClientConverter clientConverter = new ClientConverter();
 
 	@Override
 	public AclLog convert(final AccessControlLogEntry source) {
-		final Client client = new Client();
+		final Client client = clientConverter.convert((String) source.getlogEntry().get(AclLog.CLIENT_INFO));
 
-		beanConverter.convert(source.getClientInfo(), client);
-
-		return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
-				source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
+		return new AclLog(source.getEntryId(), source.getCount(), source.getReason(), source.getContext(),
+				source.getObject(), source.getUsername(), source.getAgeSeconds(), client, source.getTimestampCreated(),
+				source.getTimestampLastUpdated(), source.getlogEntry());
 	}
 
 	public static ListConverter<AccessControlLogEntry, AclLog> listConverter() {

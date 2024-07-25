@@ -24,8 +24,11 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AclOperations;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * Jedis 权限命令操作抽象类
@@ -41,6 +44,16 @@ public abstract class AbstractAclOperations<C extends JedisRedisClient> extends 
 
 	public AbstractAclOperations(final C client) {
 		super(client);
+	}
+
+	@Override
+	public Status aclDryRun(final byte[] username, final Command command) {
+		return aclDryRun(SafeEncoder.encode(username), command);
+	}
+
+	@Override
+	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+		return aclDryRun(SafeEncoder.encode(username), command, SafeEncoder.encode(arguments));
 	}
 
 }

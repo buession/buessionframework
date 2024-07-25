@@ -36,6 +36,20 @@ import com.buession.redis.utils.SafeEncoder;
  */
 public enum SubCommand implements ProtocolCommand {
 	/**
+	 * Common command start
+	 **/
+	LIST("r"),
+
+	LOAD("r"),
+
+	RESET("w"),
+
+	SAVE("w"),
+	/**
+	 * Common command end
+	 **/
+
+	/**
 	 * ACL command start
 	 **/
 	ACL_CAT("r"),
@@ -43,6 +57,18 @@ public enum SubCommand implements ProtocolCommand {
 	ACL_DELUSER("w"),
 
 	ACL_DRYRUN("w"),
+
+	ACL_GENPASS("r"),
+
+	ACL_GETUSER("r"),
+
+	ACL_LOG("rw"),
+
+	ACL_SETUSER("w"),
+	
+	ACL_USERS("r"),
+
+	ACL_WHOAMI("r"),
 	/**
 	 * ACL command end
 	 **/

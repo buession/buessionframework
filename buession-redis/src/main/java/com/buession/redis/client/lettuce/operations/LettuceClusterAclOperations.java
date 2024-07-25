@@ -32,7 +32,14 @@ import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.AclSetUserArgument;
+import com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.AclGetUserConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.AclLogConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.CommandTypeConverter;
+import com.buession.redis.core.internal.lettuce.LettuceAclSetuserArgs;
+import io.lettuce.core.AclSetuserArgs;
 import io.lettuce.core.protocol.CommandType;
 
 import java.util.List;
@@ -51,133 +58,168 @@ public final class LettuceClusterAclOperations extends AbstractAclOperations<Let
 
 	@Override
 	public List<AclCategory> aclCat() {
-		final SetListConverter<io.lettuce.core.AclCategory, AclCategory> converter = new SetListConverter<>(
-				new com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter());
+		final SetListConverter<io.lettuce.core.AclCategory, AclCategory> converter = AclCategoryConverter.setListConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(), converter)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_CAT, (cmd)->cmd.aclCat(),
+					converter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(),
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_CAT, (cmd)->cmd.aclCat(),
 					converter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(), converter)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_CAT, (cmd)->cmd.aclCat(), converter)
 					.run();
 		}
 	}
 
 	@Override
 	public List<Command> aclCat(final AclCategory aclCategory) {
-		final CommandArguments args = CommandArguments.create("aclCategory", aclCategory);
+		final CommandArguments args = CommandArguments.create(aclCategory);
 		final io.lettuce.core.AclCategory aclCate =
 				(new com.buession.redis.core.internal.convert.lettuce.params.AclCategoryConverter()).convert(
 						aclCategory);
-		final SetListConverter<CommandType, Command> converter =
-				new SetListConverter<>(new CommandTypeConverter());
+		final SetListConverter<CommandType, Command> converter = CommandTypeConverter.setListConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(aclCate),
-					converter)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_CAT,
+					(cmd)->cmd.aclCat(aclCate), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(aclCate),
-					converter)
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_CAT,
+					(cmd)->cmd.aclCat(aclCate), converter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(aclCate), converter)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_CAT, (cmd)->cmd.aclCat(aclCate),
+					converter)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return aclDelUser(args);
-	}
+		final CommandArguments args = CommandArguments.create(usernames);
 
-	@Override
-	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return aclDelUser(args);
-	}
-
-	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return aclSetUser(args);
-	}
-
-	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return aclSetUser(args);
-	}
-
-	@Override
-	public AclUser aclGetUser(final String username) {
-		final CommandArguments args = CommandArguments.create("username", username);
-		return aclGetUser(args);
-	}
-
-	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		final CommandArguments args = CommandArguments.create("username", username);
-		return aclGetUser(args);
-	}
-
-	@Override
-	public List<String> aclUsers() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_DELUSER,
+					(cmd)->cmd.aclDeluser(usernames), (v)->v)
+					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_DELUSER,
+					(cmd)->cmd.aclDeluser(usernames), (v)->v)
+					.run(args);
 		}else{
-			return new LettuceClusterCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_DELUSER,
+					(cmd)->cmd.aclDeluser(usernames), (v)->v)
+					.run(args);
 		}
 	}
 
 	@Override
-	public String aclWhoAmI() {
+	public Status aclDryRun(final String username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName()), okStatusConverter)
+					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName()), okStatusConverter)
+					.run(args);
 		}else{
-			return new LettuceClusterCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName()), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName(), arguments), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName(), arguments), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName(), arguments), okStatusConverter)
+					.run(args);
 		}
 	}
 
 	@Override
 	public String aclGenPass() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<String, String>(client, Command.ACL_GENPASS)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS,
+					(cmd)->cmd.aclGenpass(), (v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<String, String>(client, Command.ACL_GENPASS)
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS,
+					(cmd)->cmd.aclGenpass(), (v)->v)
 					.run();
 		}else{
-			return new LettuceClusterCommand<String, String>(client, Command.ACL_GENPASS)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS, (cmd)->cmd.aclGenpass(),
+					(v)->v)
 					.run();
+		}
+	}
+
+	@Override
+	public String aclGenPass(final int bits) {
+		final CommandArguments args = CommandArguments.create(bits);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS,
+					(cmd)->cmd.aclGenpass(bits), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS,
+					(cmd)->cmd.aclGenpass(bits), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS, (cmd)->cmd.aclGenpass(bits),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		final CommandArguments args = CommandArguments.create(username);
+		final AclGetUserConverter aclGetUserConverter = new AclGetUserConverter();
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<AclUser, AclUser>(client, Command.ACL, SubCommand.ACL_GETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<AclUser, AclUser>(client, Command.ACL, SubCommand.ACL_GETUSER)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_GETUSER,
+					(cmd)->cmd.aclGetuser(username), aclGetUserConverter)
+					.run(args);
 		}
 	}
 
 	@Override
 	public List<String> aclList() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<List<String>, List<String>>(client, Command.ACL_LIST)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.LIST, (cmd)->cmd.aclList(),
+					(v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<List<String>, List<String>>(client, Command.ACL_LIST)
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.LIST, (cmd)->cmd.aclList(),
+					(v)->v)
 					.run();
 		}else{
-			return new LettuceClusterCommand<List<String>, List<String>>(client, Command.ACL_LIST)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.LIST, (cmd)->cmd.aclList(), (v)->v)
 					.run();
 		}
 	}
@@ -185,111 +227,146 @@ public final class LettuceClusterAclOperations extends AbstractAclOperations<Let
 	@Override
 	public Status aclLoad() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, Command.ACL_LOAD)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.LOAD, (cmd)->cmd.aclLoad(),
+					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, Command.ACL_LOAD)
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.LOAD, (cmd)->cmd.aclLoad(),
+					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<Status, Status>(client, Command.ACL_LOAD)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.LOAD, (cmd)->cmd.aclLoad(),
+					okStatusConverter)
 					.run();
 		}
 	}
 
 	@Override
 	public List<AclLog> aclLog() {
+		final AclLogConverter aclLogConverter = new AclLogConverter();
+
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new LettuceClusterPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL,
+					SubCommand.ACL_LOG)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new LettuceClusterTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL,
+					SubCommand.ACL_LOG)
 					.run();
 		}else{
-			return new LettuceClusterCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLog(),
+					aclLogConverter)
 					.run();
 		}
 	}
 
 	@Override
 	public List<AclLog> aclLog(final int count) {
-		final CommandArguments args = CommandArguments.create("count", count);
+		final CommandArguments args = CommandArguments.create(count);
+		final AclLogConverter aclLogConverter = new AclLogConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new LettuceClusterPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL,
+					SubCommand.ACL_LOG)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new LettuceClusterTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL,
+					SubCommand.ACL_LOG)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLog(count),
+					aclLogConverter)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Status aclLogReset() {
+		final CommandArguments args = CommandArguments.create(SubCommand.RESET);
+
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, Command.ACL_LOGREST)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_LOG,
+					(cmd)->cmd.aclLogReset(), okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_LOG,
+					(cmd)->cmd.aclLogReset(), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLogReset(),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclSave() {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.SAVE, (cmd)->cmd.aclSave(),
+					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, Command.ACL_LOGREST)
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.SAVE, (cmd)->cmd.aclSave(),
+					okStatusConverter)
 					.run();
 		}else{
-			return new LettuceClusterCommand<Status, Status>(client, Command.ACL_LOGREST)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.SAVE, (cmd)->cmd.aclSave(),
+					okStatusConverter)
 					.run();
 		}
 	}
 
 	@Override
-	public Status aclLogSave() {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, Command.ACL_LOGSAVE)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, Command.ACL_LOGSAVE)
-					.run();
-		}else{
-			return new LettuceClusterCommand<Status, Status>(client, Command.ACL_LOGSAVE)
-					.run();
-		}
-	}
+	public Status aclSetUser(final String username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+		final AclSetuserArgs aclSetuserArgs = LettuceAclSetuserArgs.from(rules);
 
-	private Status aclSetUser(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, Command.ACL_SETUSER)
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetuser(username, aclSetuserArgs), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, Command.ACL_SETUSER)
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetuser(username, aclSetuserArgs), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<Status, Status>(client, Command.ACL_SETUSER)
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetuser(username, aclSetuserArgs), okStatusConverter)
 					.run(args);
 		}
 	}
 
-	private AclUser aclGetUser(final CommandArguments args) {
+	@Override
+	public List<String> aclUsers() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
-					.run(args);
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_USERS, (cmd)->cmd.aclUsers(),
+					(v)->v)
+					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
-					.run(args);
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_USERS,
+					(cmd)->cmd.aclUsers(), (v)->v)
+					.run();
 		}else{
-			return new LettuceClusterCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
-					.run(args);
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_USERS, (cmd)->cmd.aclUsers(),
+					(v)->v)
+					.run();
 		}
 	}
 
-	private Long aclDelUser(final CommandArguments args) {
+	@Override
+	public String aclWhoAmI() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run(args);
+			return new LettuceClusterPipelineCommand<>(client, Command.ACL, SubCommand.ACL_WHOAMI,
+					(cmd)->cmd.aclWhoami(), (v)->v)
+					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run(args);
+			return new LettuceClusterTransactionCommand<>(client, Command.ACL, SubCommand.ACL_WHOAMI,
+					(cmd)->cmd.aclWhoami(), (v)->v)
+					.run();
 		}else{
-			return new LettuceClusterCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run(args);
+			return new LettuceClusterCommand<>(client, Command.ACL, SubCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoami(),
+					(v)->v)
+					.run();
 		}
 	}
 

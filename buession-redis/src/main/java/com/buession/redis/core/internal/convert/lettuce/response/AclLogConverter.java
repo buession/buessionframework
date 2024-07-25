@@ -25,27 +25,48 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.SetListConverter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.AclLog;
+import com.buession.redis.core.Client;
+import com.buession.redis.core.internal.convert.response.ClientConverter;
 import org.springframework.lang.Nullable;
 
+import java.util.Map;
+
 /**
- * Lettuce {@link io.lettuce.core.AclCategory} 转换为 {@link com.buession.redis.core.AclCategory}
+ * Lettuce {@code ACL LOG} 命令结果转换为 {@link AclLog}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class AclCategoryConverter implements Converter<io.lettuce.core.AclCategory,
-		com.buession.redis.core.AclCategory> {
+public final class AclLogConverter extends ListConverter<Map<String, Object>, AclLog> {
 
-	@Nullable
-	@Override
-	public com.buession.redis.core.AclCategory convert(final io.lettuce.core.AclCategory source) {
-		return source == null ? null : Enum.valueOf(com.buession.redis.core.AclCategory.class, source.name());
+	public AclLogConverter() {
+		super(new AclLogEntryConverter());
 	}
 
-	public static SetListConverter<io.lettuce.core.AclCategory,
-			com.buession.redis.core.AclCategory> setListConverter() {
-		return new SetListConverter<>(new AclCategoryConverter());
+	private final static class AclLogEntryConverter implements Converter<Map<String, Object>, AclLog> {
+
+		private final static ClientConverter clientConverter = new ClientConverter();
+
+		@Nullable
+		@Override
+		public AclLog convert(final Map<String, Object> source) {
+			final long entryId = (long) source.get(AclLog.ENTRY_ID);
+			final long count = (long) source.get(AclLog.COUNT);
+			final String reason = (String) source.get(AclLog.REASON);
+			final String context = (String) source.get(AclLog.CONTEXT);
+			final String object = (String) source.get(AclLog.OBJECT);
+			final String username = (String) source.get(AclLog.USERNAME);
+			final Double ageSeconds = (Double) source.get(AclLog.AGE_SECONDS);
+			final Client client = clientConverter.convert((String) source.get(AclLog.CLIENT_INFO));
+			final long timestampCreated = (long) source.get(AclLog.TIMESTAMP_CREATED);
+			final long timestampLastUpdated = (long) source.get(AclLog.TIMESTAMP_LAST_UPDATED);
+
+			return new AclLog(entryId, count, reason, context, object, username, ageSeconds, client,
+					timestampCreated, timestampLastUpdated, source);
+		}
+
 	}
 
 }

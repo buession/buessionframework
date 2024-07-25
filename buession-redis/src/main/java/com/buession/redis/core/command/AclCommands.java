@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
+import com.buession.redis.core.command.args.AclSetUserArgument;
 
 import java.util.List;
 
@@ -151,32 +152,25 @@ public interface AclCommands extends RedisCommands {
 	Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments);
 
 	/**
-	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 * ACL users need a solid password in order to authenticate to the server without security risks
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
 	 *
-	 * @param username
-	 * 		用户名
-	 * @param rules
-	 * 		the specified rules
-	 *
-	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
 	 */
-	Status aclSetUser(final String username, final String... rules);
+	String aclGenPass();
 
 	/**
-	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 * ACL users need a solid password in order to authenticate to the server without security risks
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
 	 *
-	 * @param username
-	 * 		用户名
-	 * @param rules
-	 * 		the specified rules
+	 * @param bits
+	 * 		位
 	 *
-	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
 	 */
-	Status aclSetUser(final byte[] username, final byte[]... rules);
+	String aclGenPass(final int bits);
 
 	/**
 	 * The command returns all the rules defined for an existing ACL user
@@ -203,38 +197,14 @@ public interface AclCommands extends RedisCommands {
 	AclUser aclGetUser(final byte[] username);
 
 	/**
-	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
-	 *
-	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
-	 */
-	List<String> aclUsers();
-
-	/**
-	 * Return the username the current connection is authenticated with
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
-	 *
-	 * @return The username of the current connection
-	 */
-	String aclWhoAmI();
-
-	/**
-	 * ACL users need a solid password in order to authenticate to the server without security risks
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
-	 *
-	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
-	 */
-	String aclGenPass();
-
-	/**
-	 * The command shows the currently active ACL rules in the Redis server
+	 * The command shows the currently active ACL rules in the Redis server.
+	 * Each line in the returned array defines a different user, and the format is the same used in the redis.conf
+	 * file or the external ACL file, so you can cut and paste what is returned by the ACL LIST command directly
+	 * inside a configuration file if you wish (but make sure to check ACL SAVE).
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-list/" target="_blank">https://redis.io/commands/acl-list/</a></p>
 	 *
-	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
+	 * @return Acl List
 	 */
 	List<String> aclList();
 
@@ -286,6 +256,52 @@ public interface AclCommands extends RedisCommands {
 	 *
 	 * @return 保存成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status aclLogSave();
+	Status aclSave();
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rules
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final String username, final AclSetUserArgument rules);
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rules
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final byte[] username, final AclSetUserArgument rules);
+
+	/**
+	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
+	 *
+	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
+	 */
+	List<String> aclUsers();
+
+	/**
+	 * Return the username the current connection is authenticated with
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
+	 *
+	 * @return The username of the current connection
+	 */
+	String aclWhoAmI();
 
 }

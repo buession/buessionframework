@@ -24,13 +24,15 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.SafeEncoder;
+
 /**
  * Redis ACL categories.
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public enum AclCategory {
+public enum AclCategory implements Keyword {
 
 	/**
 	 * command affects keyspace
@@ -135,5 +137,22 @@ public enum AclCategory {
 	/**
 	 * scripting command
 	 */
-	SCRIPTING
+	SCRIPTING;
+
+	private final byte[] raw;
+
+	AclCategory() {
+		this.raw = SafeEncoder.encode(name());
+	}
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public byte[] getRaw() {
+		return raw;
+	}
+
 }

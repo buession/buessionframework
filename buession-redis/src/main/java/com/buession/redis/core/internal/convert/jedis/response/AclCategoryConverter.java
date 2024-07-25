@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.EnumConverter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AclCategory;
 
 /**
@@ -37,6 +38,10 @@ public final class AclCategoryConverter extends EnumConverter<AclCategory> {
 
 	public AclCategoryConverter() {
 		super(AclCategory.class);
+	}
+
+	public static ListConverter<String, AclCategory> listConverter() {
+		return new ListConverter<>(new AclCategoryConverter());
 	}
 
 }

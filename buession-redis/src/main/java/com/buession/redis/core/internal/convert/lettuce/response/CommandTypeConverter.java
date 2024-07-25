@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.SetListConverter;
 import com.buession.redis.core.command.Command;
 import io.lettuce.core.protocol.CommandType;
 import org.springframework.lang.Nullable;
@@ -41,6 +42,10 @@ public final class CommandTypeConverter implements Converter<CommandType, Comman
 	@Override
 	public Command convert(final CommandType source) {
 		return source == null ? null : Enum.valueOf(Command.class, source.name());
+	}
+
+	public static SetListConverter<CommandType, Command> setListConverter() {
+		return new SetListConverter<>(new CommandTypeConverter());
 	}
 
 }

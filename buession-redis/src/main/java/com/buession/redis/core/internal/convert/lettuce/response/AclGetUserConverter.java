@@ -22,55 +22,26 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.AclOperations;
+import com.buession.core.converter.Converter;
 import com.buession.redis.core.AclUser;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.args.AclSetUserArgument;
-import com.buession.redis.utils.SafeEncoder;
+import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
- * Lettuce 权限命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * Lettuce {@code ACL GETUSER} 命令结果转换为 {@link AclUser}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractAclOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
-		implements AclOperations {
+public final class AclGetUserConverter implements Converter<List<Object>, AclUser> {
 
-	public AbstractAclOperations(final C client) {
-		super(client);
-	}
-
+	@Nullable
 	@Override
-	public Long aclDelUser(final byte[]... usernames) {
-		return aclDelUser(SafeEncoder.encode(usernames));
-	}
-
-	@Override
-	public Status aclDryRun(final byte[] username, final Command command) {
-		return aclDryRun(SafeEncoder.encode(username), command);
-	}
-
-	@Override
-	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
-		return aclDryRun(SafeEncoder.encode(username), command, SafeEncoder.encode(arguments));
-	}
-
-	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		return aclGetUser(SafeEncoder.encode(username));
-	}
-
-	@Override
-	public Status aclSetUser(final byte[] username, final AclSetUserArgument rules) {
-		return aclSetUser(SafeEncoder.encode(username), rules);
+	public AclUser convert(final List<Object> source) {
+		return null;
 	}
 
 }

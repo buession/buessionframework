@@ -32,6 +32,8 @@ import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.AclSetUserArgument;
 import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogEntryConverter;
 import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
 import com.buession.redis.core.internal.convert.jedis.response.AclCategoryConverter;
@@ -54,35 +56,35 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 
 	@Override
 	public List<AclCategory> aclCat() {
-		final ListConverter<String, AclCategory> converter = new ListConverter<>(new AclCategoryConverter());
+		final ListConverter<String, AclCategory> converter = AclCategoryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<AclCategory>, List<AclCategory>>(client, Command.ACL_CAT)
+			return new JedisPipelineCommand<List<AclCategory>, List<AclCategory>>(client, Command.ACL,
+					SubCommand.ACL_CAT)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<AclCategory>, List<AclCategory>>(client, Command.ACL_CAT)
+			return new JedisTransactionCommand<List<AclCategory>, List<AclCategory>>(client, Command.ACL,
+					SubCommand.ACL_CAT)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(), converter)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_CAT, (cmd)->cmd.aclCat(), converter)
 					.run();
 		}
 	}
 
 	@Override
 	public List<Command> aclCat(final AclCategory aclCategory) {
-		final CommandArguments args = CommandArguments.create("aclCategory", aclCategory);
-		final ListConverter<String, Command> converter = new ListConverter<>(new ProtocolCommandConverter());
+		final CommandArguments args = CommandArguments.create(aclCategory);
+		final ListConverter<String, Command> converter = ProtocolCommandConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<Command>, List<Command>>(client,
-					Command.ACL_CAT)
+			return new JedisPipelineCommand<List<Command>, List<Command>>(client, Command.ACL, SubCommand.ACL_CAT)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<Command>, List<Command>>(client,
-					Command.ACL_CAT)
+			return new JedisTransactionCommand<List<Command>, List<Command>>(client, Command.ACL, SubCommand.ACL_CAT)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_CAT, (cmd)->cmd.aclCat(aclCategory.name()),
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_CAT, (cmd)->cmd.aclCat(aclCategory.name()),
 					converter)
 					.run(args);
 		}
@@ -90,83 +92,115 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		final CommandArguments args = CommandArguments.create(usernames);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
+			return new JedisPipelineCommand<Long, Long>(client, Command.ACL, SubCommand.ACL_DELUSER)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
+			return new JedisTransactionCommand<Long, Long>(client, Command.ACL, SubCommand.ACL_DELUSER)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames),
+					(v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		final CommandArguments args = CommandArguments.create(usernames);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
+			return new JedisPipelineCommand<Long, Long>(client, Command.ACL, SubCommand.ACL_DELUSER)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
+			return new JedisTransactionCommand<Long, Long>(client, Command.ACL, SubCommand.ACL_DELUSER)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames),
+					(v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
+	public Status aclDryRun(final String username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, Command.ACL_SETUSER)
-					.run(args);
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_DRYRUN)
+					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, Command.ACL_SETUSER)
-					.run(args);
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_DRYRUN)
+					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_SETUSER, (cmd)->cmd.aclSetUser(username, rules),
-					okStatusConverter)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName()), okStatusConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, Command.ACL_SETUSER)
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_DRYRUN)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_DRYRUN)
+					.run();
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_DRYRUN,
+					(cmd)->cmd.aclDryRun(username, command.getName(), arguments), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public String aclGenPass() {
+		if(isPipeline()){
+			return new JedisPipelineCommand<String, String>(client, Command.ACL, SubCommand.ACL_GENPASS)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<String, String>(client, Command.ACL, SubCommand.ACL_GENPASS)
+					.run();
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS, (cmd)->cmd.aclGenPass(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public String aclGenPass(final int bits) {
+		final CommandArguments args = CommandArguments.create(bits);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<String, String>(client, Command.ACL, SubCommand.ACL_GENPASS)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, Command.ACL_SETUSER)
+			return new JedisTransactionCommand<String, String>(client, Command.ACL, SubCommand.ACL_GENPASS)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.ACL_SETUSER, (cmd)->cmd.aclSetUser(username, rules),
-					okStatusConverter)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_GENPASS, (cmd)->cmd.aclGenPass(bits), (v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
 	public AclUser aclGetUser(final String username) {
-		final CommandArguments args = CommandArguments.create("username", username);
+		final CommandArguments args = CommandArguments.create(username);
 		final AccessControlUserConverter accessControlUserConverter = new AccessControlUserConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
+			return new JedisPipelineCommand<AclUser, AclUser>(client, Command.ACL, SubCommand.ACL_GETUSER)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
+			return new JedisTransactionCommand<AclUser, AclUser>(client, Command.ACL, SubCommand.ACL_GETUSER)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
 					accessControlUserConverter)
 					.run(args);
 		}
@@ -174,74 +208,32 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 
 	@Override
 	public AclUser aclGetUser(final byte[] username) {
-		final CommandArguments args = CommandArguments.create("username", username);
+		final CommandArguments args = CommandArguments.create(username);
 		final AccessControlUserConverter accessControlUserConverter = new AccessControlUserConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
+			return new JedisPipelineCommand<AclUser, AclUser>(client, Command.ACL, SubCommand.ACL_GETUSER)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
+			return new JedisTransactionCommand<AclUser, AclUser>(client, Command.ACL, SubCommand.ACL_GETUSER)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
 					accessControlUserConverter)
 					.run(args);
 		}
 	}
 
 	@Override
-	public List<String> aclUsers() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.ACL_USERS, (cmd)->cmd.aclUsers(), (v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.ACL_WHOAMI, (cmd)->cmd.aclWhoAmI(), (v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public String aclGenPass() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, Command.ACL_GENPASS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, Command.ACL_GENPASS)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.ACL_GENPASS, (cmd)->cmd.aclGenPass(), (v)->v)
-					.run();
-		}
-	}
-
-	@Override
 	public List<String> aclList() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, Command.ACL_LIST)
+			return new JedisPipelineCommand<List<String>, List<String>>(client, Command.ACL, SubCommand.LIST)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, Command.ACL_LIST)
+			return new JedisTransactionCommand<List<String>, List<String>>(client, Command.ACL, SubCommand.LIST)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_LIST, (cmd)->cmd.aclList(), (v)->v)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.LIST, (cmd)->cmd.aclList(), (v)->v)
 					.run();
 		}
 	}
@@ -249,13 +241,13 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 	@Override
 	public Status aclLoad() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, Command.ACL_LOAD)
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.LOAD)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, Command.ACL_LOAD)
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.LOAD)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_LOAD, (cmd)->cmd.aclLoad(), okStatusConverter)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.LOAD, (cmd)->cmd.aclLoad(), okStatusConverter)
 					.run();
 		}
 	}
@@ -266,13 +258,13 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 				AccessControlLogEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL, SubCommand.ACL_LOG)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new JedisTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL, SubCommand.ACL_LOG)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_LOG, (cmd)->cmd.aclLog(),
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLog(),
 					listAccessControlLogEntryConverter)
 					.run();
 		}
@@ -280,18 +272,18 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 
 	@Override
 	public List<AclLog> aclLog(final int count) {
-		final CommandArguments args = CommandArguments.create("count", count);
+		final CommandArguments args = CommandArguments.create(count);
 		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
 				AccessControlLogEntryConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL, SubCommand.ACL_LOG)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
+			return new JedisTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL, SubCommand.ACL_LOG)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.ACL_LOG, (cmd)->cmd.aclLog((int) count),
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLog(count),
 					listAccessControlLogEntryConverter)
 					.run(args);
 		}
@@ -299,22 +291,95 @@ public final class JedisAclOperations extends AbstractAclOperations<JedisStandal
 
 	@Override
 	public Status aclLogReset() {
+		final CommandArguments args = CommandArguments.create(SubCommand.RESET);
+
 		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, Command.ACL_LOGREST)
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_LOG)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_LOG)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLogReset(),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclSave() {
+		if(isPipeline()){
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.SAVE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, Command.ACL_LOGREST)
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.SAVE)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.ACL_LOGREST, (cmd)->cmd.aclLogReset(),
-					okStatusConverter)
+			return new JedisCommand<>(client, Command.ACL, SubCommand.SAVE, (cmd)->cmd.aclSave(), okStatusConverter)
 					.run();
 		}
 	}
 
 	@Override
-	public Status aclLogSave() {
-		return notCommand(client, Command.ACL_LOGSAVE);
+	public Status aclSetUser(final String username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_SETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_SETUSER)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetUser(username, rules.toArray()), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_SETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<Status, Status>(client, Command.ACL, SubCommand.ACL_SETUSER)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetUser(username, rules.toBinaryArray()), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		if(isPipeline()){
+			return new JedisPipelineCommand<List<String>, List<String>>(client, Command.ACL, SubCommand.ACL_USERS)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<List<String>, List<String>>(client, Command.ACL, SubCommand.ACL_USERS)
+					.run();
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_USERS, (cmd)->cmd.aclUsers(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		if(isPipeline()){
+			return new JedisPipelineCommand<String, String>(client, Command.ACL, SubCommand.ACL_WHOAMI)
+					.run();
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<String, String>(client, Command.ACL, SubCommand.ACL_WHOAMI)
+					.run();
+		}else{
+			return new JedisCommand<>(client, Command.ACL, SubCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoAmI(), (v)->v)
+					.run();
+		}
 	}
 
 }

@@ -31,6 +31,8 @@ import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.AclSetUserArgument;
 
 import java.util.List;
 
@@ -48,203 +50,126 @@ public final class LettuceSentinelAclOperations extends AbstractAclOperations<Le
 
 	@Override
 	public List<AclCategory> aclCat() {
-		return notCommand(client, Command.ACL_CAT);
+		return notCommand(client, Command.ACL, SubCommand.ACL_CAT);
 	}
 
 	@Override
 	public List<Command> aclCat(final AclCategory aclCategory) {
-		final CommandArguments args = CommandArguments.create("aclCategory", aclCategory);
-		return notCommand(client, Command.ACL_CAT, args);
+		final CommandArguments args = CommandArguments.create(aclCategory);
+		return notCommand(client, Command.ACL, SubCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return aclDelUser(args);
+		final CommandArguments args = CommandArguments.create(usernames);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
-		return aclDelUser(args);
+		final CommandArguments args = CommandArguments.create(usernames);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return notCommand(client, Command.ACL_SETUSER, args);
+	public Status aclDryRun(final String username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
-		return notCommand(client, Command.ACL_SETUSER, args);
+	public Status aclDryRun(final byte[] username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final String username) {
-		final CommandArguments args = CommandArguments.create("username", username);
-		return aclGetUser(args);
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		final CommandArguments args = CommandArguments.create("username", username);
-		return aclGetUser(args);
-	}
-
-	@Override
-	public List<String> aclUsers() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<String>, List<String>>(client, Command.ACL_USERS)
-					.run();
-		}
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<String, String>(client, Command.ACL_WHOAMI)
-					.run();
-		}
+	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return notCommand(client, Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
 	public String aclGenPass() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<String, String>(client, Command.ACL_GENPASS)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<String, String>(client, Command.ACL_GENPASS)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<String, String>(client, Command.ACL_GENPASS)
-					.run();
-		}
+		return notCommand(client, Command.ACL, SubCommand.ACL_GENPASS);
+	}
+
+	@Override
+	public String aclGenPass(final int bits) {
+		final CommandArguments args = CommandArguments.create(bits);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GENPASS, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		final CommandArguments args = CommandArguments.create(username);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GETUSER, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username) {
+		final CommandArguments args = CommandArguments.create(username);
+		return notCommand(client, Command.ACL, SubCommand.ACL_GETUSER, args);
 	}
 
 	@Override
 	public List<String> aclList() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<String>, List<String>>(client, Command.ACL_LIST)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<String>, List<String>>(client, Command.ACL_LIST)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<String>, List<String>>(client, Command.ACL_LIST)
-					.run();
-		}
+		return notCommand(client, Command.ACL, SubCommand.LIST);
 	}
 
 	@Override
 	public Status aclLoad() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.ACL_LOAD)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.ACL_LOAD)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.ACL_LOAD)
-					.run();
-		}
+		return notCommand(client, Command.ACL, SubCommand.LOAD);
 	}
 
 	@Override
 	public List<AclLog> aclLog() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
-					.run();
-		}
+		return notCommand(client, Command.ACL, SubCommand.ACL_LOG);
 	}
 
 	@Override
 	public List<AclLog> aclLog(final int count) {
-		final CommandArguments args = CommandArguments.create("count", count);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<List<AclLog>, List<AclLog>>(client, Command.ACL_LOG)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(count);
+		return notCommand(client, Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclLogReset() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.ACL_LOGREST)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.ACL_LOGREST)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.ACL_LOGREST)
-					.run();
-		}
+		final CommandArguments args = CommandArguments.create(SubCommand.RESET);
+		return notCommand(client, Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
-	public Status aclLogSave() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.ACL_LOGSAVE)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.ACL_LOGSAVE)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.ACL_LOGSAVE)
-					.run();
-		}
+	public Status aclSave() {
+		return notCommand(client, Command.ACL, SubCommand.SAVE);
 	}
 
-	private AclUser aclGetUser(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<AclUser, AclUser>(client, Command.ACL_GETUSER)
-					.run(args);
-		}
+	@Override
+	public Status aclSetUser(final String username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+		return notCommand(client, Command.ACL, SubCommand.ACL_SETUSER, args);
 	}
 
-	private Long aclDelUser(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.ACL_DELUSER)
-					.run(args);
-		}
+	@Override
+	public Status aclSetUser(final byte[] username, final AclSetUserArgument rules) {
+		final CommandArguments args = CommandArguments.create(username).add(rules);
+		return notCommand(client, Command.ACL, SubCommand.ACL_SETUSER, args);
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		return notCommand(client, Command.ACL, SubCommand.ACL_USERS);
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		return notCommand(client, Command.ACL, SubCommand.ACL_WHOAMI);
 	}
 
 }

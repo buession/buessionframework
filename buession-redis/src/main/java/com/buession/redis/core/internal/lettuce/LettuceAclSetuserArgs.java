@@ -59,7 +59,7 @@ public class LettuceAclSetuserArgs extends AclSetuserArgs {
 	 *
 	 * @return {@link LettuceAclSetuserArgs} 实例
 	 */
-	public LettuceAclSetuserArgs from(final AclSetUserArgument aclSetUserArgument) {
+	public static LettuceAclSetuserArgs from(final AclSetUserArgument aclSetUserArgument) {
 		final LettuceAclSetuserArgs aclSetuserArgs = new LettuceAclSetuserArgs();
 
 		for(AclSetUserArgument.Argument argument : aclSetUserArgument.getArguments()){
@@ -88,7 +88,7 @@ public class LettuceAclSetuserArgs extends AclSetuserArgs {
 
 				aclSetuserArgs.addCommand(
 						commandConverter.convert(addCommand.getCommand()), addCommand.getSubCommand() == null ? null
-								: new CommandProtocolKeyword(addCommand.getSubCommand()));
+								: new LettuceCommandProtocolKeyword(addCommand.getSubCommand()));
 			}else if(argument instanceof AclSetUserArgument.AllCommands){
 				aclSetuserArgs.allCommands();
 			}else if(argument instanceof AclSetUserArgument.RemoveCommand){
@@ -97,7 +97,7 @@ public class LettuceAclSetuserArgs extends AclSetuserArgs {
 				aclSetuserArgs.removeCommand(
 						commandConverter.convert(removeCommand.getCommand()),
 						removeCommand.getSubCommand() == null ? null
-								: new CommandProtocolKeyword(removeCommand.getSubCommand()));
+								: new LettuceCommandProtocolKeyword(removeCommand.getSubCommand()));
 			}else if(argument instanceof AclSetUserArgument.NoCommands){
 				aclSetuserArgs.noCommands();
 			}else if(argument instanceof AclSetUserArgument.AddCategory){
@@ -124,11 +124,11 @@ public class LettuceAclSetuserArgs extends AclSetuserArgs {
 		return aclSetuserArgs;
 	}
 
-	protected static class CommandProtocolKeyword implements ProtocolKeyword {
+	protected static class LettuceCommandProtocolKeyword implements ProtocolKeyword {
 
 		private final ProtocolCommand command;
 
-		protected CommandProtocolKeyword(final ProtocolCommand command) {
+		protected LettuceCommandProtocolKeyword(final ProtocolCommand command) {
 			this.command = command;
 		}
 
