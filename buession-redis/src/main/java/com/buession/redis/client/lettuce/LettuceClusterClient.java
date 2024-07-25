@@ -26,6 +26,7 @@ package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisClusterClient;
 import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
+import com.buession.redis.client.lettuce.operations.LettuceClusterAclOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterBitMapOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterConnectionOperations;
@@ -68,6 +69,15 @@ public class LettuceClusterClient extends AbstractLettuceRedisClient<LettuceClus
 	 */
 	public LettuceClusterClient(final LettuceClusterConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public AclOperations aclOperations() {
+		if(aclOperations == null){
+			aclOperations = new LettuceClusterAclOperations(this);
+		}
+
+		return aclOperations;
 	}
 
 	@Override

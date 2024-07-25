@@ -26,6 +26,7 @@ package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
+import com.buession.redis.client.lettuce.operations.LettuceAclOperations;
 import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
@@ -68,6 +69,15 @@ public class LettuceStandaloneClient extends AbstractLettuceRedisClient<LettuceC
 	 */
 	public LettuceStandaloneClient(final LettuceConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public AclOperations aclOperations() {
+		if(aclOperations == null){
+			aclOperations = new LettuceAclOperations(this);
+		}
+
+		return aclOperations;
 	}
 
 	@Override

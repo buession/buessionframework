@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.jedis.JedisConnection;
+import com.buession.redis.client.jedis.operations.JedisAclOperations;
 import com.buession.redis.client.jedis.operations.JedisBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
@@ -66,6 +67,15 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient<JedisConnect
 	 */
 	public JedisStandaloneClient(final JedisConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public AclOperations aclOperations() {
+		if(aclOperations == null){
+			aclOperations = new JedisAclOperations(this);
+		}
+
+		return aclOperations;
 	}
 
 	@Override

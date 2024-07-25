@@ -112,6 +112,91 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public List<AclCategory> aclCat() {
+		return execute((client)->client.aclOperations().aclCat());
+	}
+
+	@Override
+	public List<Command> aclCat(final AclCategory aclCategory) {
+		return execute((client)->client.aclOperations().aclCat(aclCategory));
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final String... rules) {
+		return execute((client)->client.aclOperations().aclSetUser(username, rules));
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final byte[]... rules) {
+		return execute((client)->client.aclOperations().aclSetUser(username, rules));
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		return execute((client)->client.aclOperations().aclGetUser(username));
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username) {
+		return execute((client)->client.aclOperations().aclGetUser(username));
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		return execute((client)->client.aclOperations().aclUsers());
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		return execute((client)->client.aclOperations().aclWhoAmI());
+	}
+
+	@Override
+	public Long aclDelUser(final String... usernames) {
+		return execute((client)->client.aclOperations().aclDelUser(usernames));
+	}
+
+	@Override
+	public Long aclDelUser(final byte[]... username) {
+		return execute((client)->client.aclOperations().aclDelUser(username));
+	}
+
+	@Override
+	public String aclGenPass() {
+		return execute((client)->client.aclOperations().aclGenPass());
+	}
+
+	@Override
+	public List<String> aclList() {
+		return execute((client)->client.aclOperations().aclList());
+	}
+
+	@Override
+	public Status aclLoad() {
+		return execute((client)->client.aclOperations().aclLoad());
+	}
+
+	@Override
+	public List<AclLog> aclLog() {
+		return execute((client)->client.aclOperations().aclLog());
+	}
+
+	@Override
+	public List<AclLog> aclLog(final int count) {
+		return execute((client)->client.aclOperations().aclLog(count));
+	}
+
+	@Override
+	public Status aclLogReset() {
+		return execute((client)->client.aclOperations().aclLogReset());
+	}
+
+	@Override
+	public Status aclLogSave() {
+		return execute((client)->client.aclOperations().aclLogSave());
+	}
+
+	@Override
 	public Long bitCount(final String key) {
 		return execute((client)->client.bitMapOperations().bitCount(rawKey(key)));
 	}
@@ -1928,91 +2013,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status scriptKill() {
 		return execute((client)->client.scriptingOperations().scriptKill());
-	}
-
-	@Override
-	public List<AclCategory> aclCat() {
-		return execute((client)->client.serverOperations().aclCat());
-	}
-
-	@Override
-	public List<Command> aclCat(final AclCategory aclCategory) {
-		return execute((client)->client.serverOperations().aclCat(aclCategory));
-	}
-
-	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		return execute((client)->client.serverOperations().aclSetUser(username, rules));
-	}
-
-	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		return execute((client)->client.serverOperations().aclSetUser(username, rules));
-	}
-
-	@Override
-	public AclUser aclGetUser(final String username) {
-		return execute((client)->client.serverOperations().aclGetUser(username));
-	}
-
-	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		return execute((client)->client.serverOperations().aclGetUser(username));
-	}
-
-	@Override
-	public List<String> aclUsers() {
-		return execute((client)->client.serverOperations().aclUsers());
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		return execute((client)->client.serverOperations().aclWhoAmI());
-	}
-
-	@Override
-	public Long aclDelUser(final String... usernames) {
-		return execute((client)->client.serverOperations().aclDelUser(usernames));
-	}
-
-	@Override
-	public Long aclDelUser(final byte[]... username) {
-		return execute((client)->client.serverOperations().aclDelUser(username));
-	}
-
-	@Override
-	public String aclGenPass() {
-		return execute((client)->client.serverOperations().aclGenPass());
-	}
-
-	@Override
-	public List<String> aclList() {
-		return execute((client)->client.serverOperations().aclList());
-	}
-
-	@Override
-	public Status aclLoad() {
-		return execute((client)->client.serverOperations().aclLoad());
-	}
-
-	@Override
-	public List<AclLog> aclLog() {
-		return execute((client)->client.serverOperations().aclLog());
-	}
-
-	@Override
-	public List<AclLog> aclLog(final int count) {
-		return execute((client)->client.serverOperations().aclLog(count));
-	}
-
-	@Override
-	public Status aclLogReset() {
-		return execute((client)->client.serverOperations().aclLogReset());
-	}
-
-	@Override
-	public Status aclLogSave() {
-		return execute((client)->client.serverOperations().aclLogSave());
 	}
 
 	@Override

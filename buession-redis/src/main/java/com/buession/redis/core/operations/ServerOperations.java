@@ -24,17 +24,12 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.converter.BinaryEnumConverter;
-import com.buession.core.converter.EnumConverter;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
-import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.ServerCommands;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * 服务端运算
@@ -44,40 +39,6 @@ import java.util.List;
  * @author Yong.Teng
  */
 public interface ServerOperations extends ServerCommands, RedisOperations {
-
-	/**
-	 * The command shows all the Redis commands in the specified category
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
-	 *
-	 * @param categoryName
-	 * 		Category Name
-	 *
-	 * @return A list of ACL categories or a list of commands inside a given category
-	 *
-	 * @since 3.0.0
-	 */
-	default List<Command> aclCat(final String categoryName) {
-		final AclCategory aclCategory = (new EnumConverter<>(AclCategory.class)).convert(categoryName);
-		return aclCat(aclCategory);
-	}
-
-	/**
-	 * The command shows all the Redis commands in the specified category
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
-	 *
-	 * @param categoryName
-	 * 		Category Name
-	 *
-	 * @return A list of ACL categories or a list of commands inside a given category
-	 *
-	 * @since 3.0.0
-	 */
-	default List<Command> aclCat(final byte[] categoryName) {
-		final AclCategory aclCategory = (new BinaryEnumConverter<>(AclCategory.class)).convert(categoryName);
-		return aclCat(aclCategory);
-	}
 
 	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas

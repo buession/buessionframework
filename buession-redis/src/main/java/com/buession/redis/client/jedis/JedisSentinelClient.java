@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.jedis.operations.JedisSentinelAclOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
@@ -68,6 +69,15 @@ public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelC
 	 */
 	public JedisSentinelClient(final JedisSentinelConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public AclOperations aclOperations() {
+		if(aclOperations == null){
+			aclOperations = new JedisSentinelAclOperations(this);
+		}
+
+		return aclOperations;
 	}
 
 	@Override
