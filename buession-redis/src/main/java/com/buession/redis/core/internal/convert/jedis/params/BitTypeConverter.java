@@ -25,27 +25,31 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitType;
+import redis.clients.jedis.args.BitCountOption;
 
 /**
- * {@link BitCountOption} 转换为 Jedis {@link redis.clients.jedis.args.BitCountOption} 互转
+ * {@link BitType} 转换为 Jedis {@link BitCountOption} 互转
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class BitCountOptionConverter
-		implements Converter<BitCountOption, redis.clients.jedis.args.BitCountOption> {
+public final class BitTypeConverter implements Converter<BitType, BitCountOption> {
 
 	@Override
-	public redis.clients.jedis.args.BitCountOption convert(final BitCountOption source) {
-		switch(source){
-			case BYTE:
-				return redis.clients.jedis.args.BitCountOption.BYTE;
-			case BIT:
-				return redis.clients.jedis.args.BitCountOption.BIT;
-			default:
-				return null;
+	public BitCountOption convert(final BitType source) {
+		if(source != null){
+			switch(source){
+				case BYTE:
+					return BitCountOption.BYTE;
+				case BIT:
+					return BitCountOption.BIT;
+				default:
+					break;
+			}
 		}
+
+		return null;
 	}
 
 }

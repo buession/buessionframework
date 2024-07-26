@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitType;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.args.BitFieldArgument;
+import com.buession.redis.core.command.args.BitFieldRoArgument;
 
 import java.util.List;
 
@@ -107,12 +108,12 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param bitCountOption
-	 *        {@link BitCountOption}
+	 * @param bitType
+	 *        {@link BitType}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption);
+	Long bitCount(final String key, final long start, final long end, final BitType bitType);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -125,12 +126,44 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param bitCountOption
-	 *        {@link BitCountOption}
+	 * @param bitType
+	 *        {@link BitType}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption);
+	Long bitCount(final byte[] key, final long start, final long end, final BitType bitType);
+
+	/**
+	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
+	 * 可以在一次调用中同时对多个位范围进行操作，
+	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitfield.html" target="_blank">http://redisdoc.com/bitmap/bitfield.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
+	 *
+	 * @since 3.0.0
+	 */
+	List<Long> bitField(final String key);
+
+	/**
+	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
+	 * 可以在一次调用中同时对多个位范围进行操作，
+	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitfield.html" target="_blank">http://redisdoc.com/bitmap/bitfield.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
+	 *
+	 * @since 3.0.0
+	 */
+	List<Long> bitField(final byte[] key);
 
 	/**
 	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
@@ -177,12 +210,10 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param arguments
-	 * 		命令参数
 	 *
 	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
 	 */
-	List<Long> bitFieldRo(final String key, final String... arguments);
+	List<Long> bitFieldRo(final String key);
 
 	/**
 	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
@@ -193,12 +224,42 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param arguments
+	 *
+	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
+	 */
+	List<Long> bitFieldRo(final byte[] key);
+
+	/**
+	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
+	 * 可以在一次调用中同时对多个位范围进行操作，
+	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitfield.html" target="_blank">http://redisdoc.com/bitmap/bitfield.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
 	 * 		命令参数
 	 *
 	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
 	 */
-	List<Long> bitFieldRo(final byte[] key, final byte[]... arguments);
+	List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument);
+
+	/**
+	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
+	 * 可以在一次调用中同时对多个位范围进行操作，
+	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitfield.html" target="_blank">http://redisdoc.com/bitmap/bitfield.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		命令参数
+	 *
+	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
+	 */
+	List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument);
 
 	/**
 	 * 对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
@@ -273,6 +334,82 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		位
 	 * @param start
 	 * 		开始位置
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * @since 3.0.0
+	 */
+	Long bitPos(final String key, final boolean value, final long start);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * @since 3.0.0
+	 */
+	Long bitPos(final byte[] key, final boolean value, final long start);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
+	 * @param bitType
+	 *        {@link BitType}
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * @since 3.0.0
+	 */
+	Long bitPos(final String key, final boolean value, final long start, final BitType bitType);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
+	 * @param bitType
+	 *        {@link BitType}
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * @since 3.0.0
+	 */
+	Long bitPos(final byte[] key, final boolean value, final long start, final BitType bitType);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
 	 * @param end
 	 * 		结束位置
 	 *
@@ -297,6 +434,50 @@ public interface BitMapCommands extends RedisCommands {
 	 * @return 位图中第一个值为 bit 的二进制位的位置
 	 */
 	Long bitPos(final byte[] key, final boolean value, final long start, final long end);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param bitType
+	 *        {@link BitType}
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * @since 3.0.0
+	 */
+	Long bitPos(final String key, final boolean value, final long start, final long end, final BitType bitType);
+
+	/**
+	 * 获取位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/bitmap/bitpos.html" target="_blank">http://redisdoc.com/bitmap/bitpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		位
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param bitType
+	 *        {@link BitType}
+	 *
+	 * @return 位图中第一个值为 bit 的二进制位的位置
+	 *
+	 * @since 3.0.0
+	 */
+	Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType bitType);
 
 	/**
 	 * 获取 key 指定偏移量上的位

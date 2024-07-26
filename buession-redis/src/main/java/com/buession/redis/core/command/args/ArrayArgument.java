@@ -42,4 +42,11 @@ public interface ArrayArgument<T> {
 	 */
 	T[] toArray();
 
+	/**
+	 * 将参数以二进制数组形式返回
+	 *
+	 * @return 以数组形式返回参数列表
+	 */
+	byte[][] toBinaryArray();
+
 }

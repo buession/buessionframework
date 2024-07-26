@@ -26,7 +26,7 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.BitMapOperations;
-import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitType;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.utils.SafeEncoder;
@@ -60,8 +60,13 @@ public abstract class AbstractBitMapOperations<C extends LettuceRedisClient> ext
 	}
 
 	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
-		return bitCount(SafeEncoder.encode(key), start, end, bitCountOption);
+	public Long bitCount(final String key, final long start, final long end, final BitType bitType) {
+		return bitCount(SafeEncoder.encode(key), start, end, bitType);
+	}
+
+	@Override
+	public List<Long> bitField(final String key) {
+		return bitField(SafeEncoder.encode(key));
 	}
 
 	@Override
@@ -80,8 +85,23 @@ public abstract class AbstractBitMapOperations<C extends LettuceRedisClient> ext
 	}
 
 	@Override
+	public Long bitPos(final String key, final boolean value, final long start) {
+		return bitPos(SafeEncoder.encode(key), value, start);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final BitType bitType) {
+		return bitPos(SafeEncoder.encode(key), value, start, bitType);
+	}
+
+	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
 		return bitPos(SafeEncoder.encode(key), value, start, end);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType bitType) {
+		return bitPos(SafeEncoder.encode(key), value, start, end, bitType);
 	}
 
 	@Override

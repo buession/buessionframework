@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.converter.BinaryEnumConverter;
-import com.buession.core.converter.EnumConverter;
 import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.command.AclCommands;
 import com.buession.redis.core.command.Command;
@@ -55,8 +53,7 @@ public interface AclOperations extends AclCommands, RedisOperations {
 	 * @since 3.0.0
 	 */
 	default List<Command> aclCat(final String categoryName) {
-		final AclCategory aclCategory = (new EnumConverter<>(AclCategory.class)).convert(categoryName);
-		return aclCat(aclCategory);
+		return aclCat(AclCategory.from(categoryName));
 	}
 
 	/**
@@ -72,8 +69,7 @@ public interface AclOperations extends AclCommands, RedisOperations {
 	 * @since 3.0.0
 	 */
 	default List<Command> aclCat(final byte[] categoryName) {
-		final AclCategory aclCategory = (new BinaryEnumConverter<>(AclCategory.class)).convert(categoryName);
-		return aclCat(aclCategory);
+		return aclCat(AclCategory.from(categoryName));
 	}
 
 }

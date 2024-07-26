@@ -355,6 +355,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 		return result;
 	}
 
+	@Override
 	public byte[][] toBinaryArray() {
 		final byte[][] result = new byte[arguments.size()][];
 		Argument argument;

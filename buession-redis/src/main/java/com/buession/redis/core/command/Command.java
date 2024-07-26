@@ -34,6 +34,23 @@ import com.buession.redis.utils.SafeEncoder;
  * @since 3.0.0
  */
 public enum Command implements ProtocolCommand {
+
+	/**
+	 * bitmat command start
+	 **/
+	BITCOUNT("r", CommandGroup.BITMAP),
+
+	BITFIELD("r", CommandGroup.BITMAP),
+
+	BITFIELD_RO("r", CommandGroup.BITMAP),
+
+	BITOP("r", CommandGroup.BITMAP),
+
+	BITPOS("r", CommandGroup.BITMAP),
+	/**
+	 * bitmat command end
+	 **/
+
 	/**
 	 * ACL command start
 	 **/
@@ -43,19 +60,6 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * ACL command end
 	 **/
-
-	/**
-	 * bitmat command start
-	 **/
-	BITCOUNT(CommandGroup.BITMAP),
-
-	BITFIELD(CommandGroup.BITMAP),
-
-	BITFIELD_RO(CommandGroup.BITMAP),
-
-	BITOP(CommandGroup.BITMAP),
-
-	BITPOS(CommandGroup.BITMAP),
 
 	GETBIT(CommandGroup.BITMAP),
 

@@ -25,7 +25,9 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.core.collect.Arrays;
+import com.buession.core.utils.NumberUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class BitFieldArgument implements ArrayArgument<Object> {
+public class BitFieldArgument implements ArrayArgument<String> {
 
 	/**
 	 * 子命令列表
@@ -174,11 +176,22 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 	}
 
 	@Override
-	public Object[] toArray() {
-		Object[] result = new Object[]{};
+	public String[] toArray() {
+		String[] result = new String[]{};
 
 		for(SubCommand subCommand : commands){
 			result = Arrays.merge(result, subCommand.toArray());
+		}
+
+		return result;
+	}
+
+	@Override
+	public byte[][] toBinaryArray() {
+		byte[][] result = new byte[][]{};
+
+		for(SubCommand subCommand : commands){
+			result = Arrays.merge(result, subCommand.toBinaryArray());
 		}
 
 		return result;
@@ -255,7 +268,7 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 
 	}
 
-	public interface SubCommand extends ArrayArgument<Object> {
+	public interface SubCommand extends ArrayArgument<String> {
 
 		CommandType getCommandType();
 
@@ -296,8 +309,21 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 		}
 
 		@Override
-		public Object[] toArray() {
-			return new Object[]{getCommandType().name(), bitFieldType.toString(), bitOffset ? "#" + offset : offset};
+		public String[] toArray() {
+			return new String[]{
+					getCommandType().name(),
+					bitFieldType.toString(),
+					bitOffset ? "#" + offset : Integer.toString(offset)
+			};
+		}
+
+		@Override
+		public byte[][] toBinaryArray() {
+			return new byte[][]{
+					getCommandType().name().getBytes(StandardCharsets.US_ASCII),
+					bitFieldType.toString().getBytes(StandardCharsets.US_ASCII),
+					bitOffset ? ("#" + offset).getBytes(StandardCharsets.US_ASCII) : NumberUtils.int2bytes(offset)
+			};
 		}
 
 		@Override
@@ -349,9 +375,23 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 		}
 
 		@Override
-		public Object[] toArray() {
-			return new Object[]{getCommandType().name(), bitFieldType.toString(), bitOffset ? "#" + offset : offset,
-					value};
+		public String[] toArray() {
+			return new String[]{
+					getCommandType().name(),
+					bitFieldType.toString(),
+					bitOffset ? "#" + offset : Integer.toString(offset),
+					Long.toString(value)
+			};
+		}
+
+		@Override
+		public byte[][] toBinaryArray() {
+			return new byte[][]{
+					getCommandType().name().getBytes(StandardCharsets.US_ASCII),
+					bitFieldType.toString().getBytes(StandardCharsets.US_ASCII),
+					bitOffset ? ("#" + offset).getBytes(StandardCharsets.US_ASCII) : NumberUtils.long2bytes(offset),
+					NumberUtils.long2bytes(value)
+			};
 		}
 
 		@Override
@@ -403,9 +443,23 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 		}
 
 		@Override
-		public Object[] toArray() {
-			return new Object[]{getCommandType().name(), bitFieldType.toString(), bitOffset ? "#" + offset : offset,
-					value};
+		public String[] toArray() {
+			return new String[]{
+					getCommandType().name(),
+					bitFieldType.toString(),
+					bitOffset ? "#" + offset : Integer.toString(offset),
+					Long.toString(value)
+			};
+		}
+
+		@Override
+		public byte[][] toBinaryArray() {
+			return new byte[][]{
+					getCommandType().name().getBytes(StandardCharsets.US_ASCII),
+					bitFieldType.toString().getBytes(StandardCharsets.US_ASCII),
+					bitOffset ? ("#" + offset).getBytes(StandardCharsets.US_ASCII) : NumberUtils.long2bytes(offset),
+					NumberUtils.long2bytes(value)
+			};
 		}
 
 		@Override
@@ -436,8 +490,19 @@ public class BitFieldArgument implements ArrayArgument<Object> {
 		}
 
 		@Override
-		public Object[] toArray() {
-			return new Object[]{getCommandType().name(), overflowType.name()};
+		public String[] toArray() {
+			return new String[]{
+					getCommandType().name(),
+					overflowType.name()
+			};
+		}
+
+		@Override
+		public byte[][] toBinaryArray() {
+			return new byte[][]{
+					getCommandType().name().getBytes(StandardCharsets.US_ASCII),
+					overflowType.name().getBytes(StandardCharsets.US_ASCII)
+			};
 		}
 
 		@Override

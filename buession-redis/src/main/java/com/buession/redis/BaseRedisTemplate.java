@@ -32,7 +32,7 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitType;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
@@ -109,6 +109,158 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	 */
 	public BaseRedisTemplate(DataSource dataSource) {
 		super(dataSource);
+	}
+
+	@Override
+	public Long bitCount(final String key) {
+		return execute((client)->client.bitMapOperations().bitCount(rawKey(key)));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key) {
+		return execute((client)->client.bitMapOperations().bitCount(rawKey(key)));
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end) {
+		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end) {
+		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end));
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end, final BitType bitType) {
+		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end, bitType));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end, final BitType bitType) {
+		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end, bitType));
+	}
+
+	@Override
+	public List<Long> bitField(final String key) {
+		return execute((client)->client.bitMapOperations().bitField(rawKey(key)));
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key) {
+		return execute((client)->client.bitMapOperations().bitField(rawKey(key)));
+	}
+
+	@Override
+	public List<Long> bitField(final String key, final BitFieldArgument argument) {
+		return execute((client)->client.bitMapOperations().bitField(rawKey(key), argument));
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
+		return execute((client)->client.bitMapOperations().bitField(rawKey(key), argument));
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final String key) {
+		return execute((client)->client.bitMapOperations().bitFieldRo(rawKey(key)));
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final byte[] key) {
+		return execute((client)->client.bitMapOperations().bitFieldRo(rawKey(key)));
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
+		return execute((client)->client.bitMapOperations().bitFieldRo(rawKey(key), argument));
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
+		return execute((client)->client.bitMapOperations().bitFieldRo(rawKey(key), argument));
+	}
+
+	@Override
+	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
+		return execute((client)->client.bitMapOperations().bitOp(operation, rawKey(destKey), rawKeys(keys)));
+	}
+
+	@Override
+	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
+		return execute((client)->client.bitMapOperations().bitOp(operation, rawKey(destKey), rawKeys(keys)));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final BitType bitType) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, bitType));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final BitType bitType) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, bitType));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, end));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, end));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end,
+					   final BitType bitType) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, end, bitType));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end,
+					   final BitType bitType) {
+		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, end, bitType));
+	}
+
+	@Override
+	public Boolean getBit(final String key, final long offset) {
+		return execute((client)->client.bitMapOperations().getBit(rawKey(key), offset));
+	}
+
+	@Override
+	public Boolean getBit(final byte[] key, final long offset) {
+		return execute((client)->client.bitMapOperations().getBit(rawKey(key), offset));
+	}
+
+	@Override
+	public Boolean setBit(final String key, final long offset, final boolean value) {
+		return execute((client)->client.bitMapOperations().setBit(rawKey(key), offset, value));
+	}
+
+	@Override
+	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
+		return execute((client)->client.bitMapOperations().setBit(rawKey(key), offset, value));
 	}
 
 	@Override
@@ -201,7 +353,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.aclOperations().aclSave());
 	}
 
-
 	@Override
 	public Status aclSetUser(final String username, final AclSetUserArgument rules) {
 		return execute((client)->client.aclOperations().aclSetUser(username, rules));
@@ -220,106 +371,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public String aclWhoAmI() {
 		return execute((client)->client.aclOperations().aclWhoAmI());
-	}
-
-	@Override
-	public Long bitCount(final String key) {
-		return execute((client)->client.bitMapOperations().bitCount(rawKey(key)));
-	}
-
-	@Override
-	public Long bitCount(final byte[] key) {
-		return execute((client)->client.bitMapOperations().bitCount(rawKey(key)));
-	}
-
-	@Override
-	public Long bitCount(final String key, final long start, final long end) {
-		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end));
-	}
-
-	@Override
-	public Long bitCount(final byte[] key, final long start, final long end) {
-		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end));
-	}
-
-	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
-		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end, bitCountOption));
-	}
-
-	@Override
-	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
-		return execute((client)->client.bitMapOperations().bitCount(rawKey(key), start, end, bitCountOption));
-	}
-
-	@Override
-	public List<Long> bitField(final String key, final BitFieldArgument argument) {
-		return execute((client)->client.bitMapOperations().bitField(rawKey(key), argument));
-	}
-
-	@Override
-	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		return execute((client)->client.bitMapOperations().bitField(rawKey(key), argument));
-	}
-
-	@Override
-	public List<Long> bitFieldRo(final String key, final String... arguments) {
-		return execute((client)->client.bitMapOperations().bitFieldRo(rawKey(key), arguments));
-	}
-
-	@Override
-	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
-		return execute((client)->client.bitMapOperations().bitFieldRo(rawKey(key), arguments));
-	}
-
-	@Override
-	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
-		return execute((client)->client.bitMapOperations().bitOp(operation, rawKey(destKey), rawKeys(keys)));
-	}
-
-	@Override
-	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.bitMapOperations().bitOp(operation, rawKey(destKey), rawKeys(keys)));
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value) {
-		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value));
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value) {
-		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value));
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final long end) {
-		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, end));
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		return execute((client)->client.bitMapOperations().bitPos(rawKey(key), value, start, end));
-	}
-
-	@Override
-	public Boolean getBit(final String key, final long offset) {
-		return execute((client)->client.bitMapOperations().getBit(rawKey(key), offset));
-	}
-
-	@Override
-	public Boolean getBit(final byte[] key, final long offset) {
-		return execute((client)->client.bitMapOperations().getBit(rawKey(key), offset));
-	}
-
-	@Override
-	public Boolean setBit(final String key, final long offset, final boolean value) {
-		return execute((client)->client.bitMapOperations().setBit(rawKey(key), offset, value));
-	}
-
-	@Override
-	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		return execute((client)->client.bitMapOperations().setBit(rawKey(key), offset, value));
 	}
 
 	@Override

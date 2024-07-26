@@ -24,7 +24,11 @@
  */
 package com.buession.redis.core;
 
+import com.buession.core.validator.Validate;
 import com.buession.redis.utils.SafeEncoder;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * Redis ACL categories.
@@ -142,7 +146,7 @@ public enum AclCategory implements Keyword {
 	private final byte[] raw;
 
 	AclCategory() {
-		this.raw = SafeEncoder.encode(name());
+		this.raw = name().getBytes(StandardCharsets.US_ASCII);
 	}
 
 	@Override
@@ -153,6 +157,32 @@ public enum AclCategory implements Keyword {
 	@Override
 	public byte[] getRaw() {
 		return raw;
+	}
+
+	public static AclCategory from(final String str) {
+		if(Validate.hasText(str)){
+			String upperStr = str.toUpperCase();
+
+			for(AclCategory category : values()){
+				if(category.getValue().equals(upperStr)){
+					return category;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static AclCategory from(final byte[] raw) {
+		if(raw != null){
+			for(AclCategory category : values()){
+				if(Objects.equals(category.getRaw(), raw)){
+					return category;
+				}
+			}
+		}
+
+		return null;
 	}
 
 }

@@ -38,6 +38,8 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * Common command start
 	 **/
+	GET("r"),
+	
 	LIST("r"),
 
 	LOAD("r"),
@@ -65,7 +67,7 @@ public enum SubCommand implements ProtocolCommand {
 	ACL_LOG("rw"),
 
 	ACL_SETUSER("w"),
-	
+
 	ACL_USERS("r"),
 
 	ACL_WHOAMI("r"),
