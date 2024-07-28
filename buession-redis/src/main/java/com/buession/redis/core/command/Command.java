@@ -36,7 +36,7 @@ import com.buession.redis.utils.SafeEncoder;
 public enum Command implements ProtocolCommand {
 
 	/**
-	 * bitmat command start
+	 * BitMap command start
 	 **/
 	BITCOUNT("r", CommandGroup.BITMAP),
 
@@ -47,8 +47,34 @@ public enum Command implements ProtocolCommand {
 	BITOP("r", CommandGroup.BITMAP),
 
 	BITPOS("r", CommandGroup.BITMAP),
+
+	GETBIT("r", CommandGroup.BITMAP),
+
+	SETBIT("w", CommandGroup.BITMAP),
 	/**
-	 * bitmat command end
+	 * BitMap command end
+	 **/
+
+	/**
+	 * Cluster command start
+	 **/
+	ASKING("r", CommandGroup.CLUSTER),
+
+	CLUSTER("rw", CommandGroup.CLUSTER, SubCommand.CLUSTER_ADDSLOTS, SubCommand.CLUSTER_ADDSLOTSRANGE,
+			SubCommand.CLUSTER_BUMPEPOCH, SubCommand.CLUSTER_COUNTFAILUREREPORTS, SubCommand.CLUSTER_COUNTKEYSINSLOT,
+			SubCommand.CLUSTER_DELSLOTS, SubCommand.CLUSTER_DELSLOTSRANGE, SubCommand.CLUSTER_FAILOVER,
+			SubCommand.CLUSTER_FLUSHSLOTS, SubCommand.CLUSTER_FORGET, SubCommand.CLUSTER_GETKEYSINSLOT,
+			SubCommand.INFO, SubCommand.CLUSTER_KEYSLOT, SubCommand.CLUSTER_LINKS, SubCommand.CLUSTER_MEET,
+			SubCommand.CLUSTER_MYID, SubCommand.CLUSTER_MYSHARDID, SubCommand.NODES, SubCommand.CLUSTER_REPLICAS,
+			SubCommand.CLUSTER_REPLICATE, SubCommand.RESET, SubCommand.CLUSTER_SAVECONFIG,
+			SubCommand.CLUSTER_SETCONFIGEPOCH, SubCommand.CLUSTER_SETSLOT, SubCommand.CLUSTER_SHARDS,
+			SubCommand.SLAVES, SubCommand.CLUSTER_SLOTS),
+
+	READONLY("r", CommandGroup.CLUSTER),
+
+	READWRITE("r", CommandGroup.CLUSTER),
+	/**
+	 * Cluster command end
 	 **/
 
 	/**
@@ -60,66 +86,6 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * ACL command end
 	 **/
-
-	GETBIT(CommandGroup.BITMAP),
-
-	SETBIT(CommandGroup.BITMAP),
-	/**
-	 * bitmat command end
-	 **/
-
-	/**
-	 * cluster command start
-	 **/
-	CLUSTER_MY_ID(CommandGroup.CLUSTER),
-
-	CLUSTER_ADDSLOTS(CommandGroup.CLUSTER),
-
-	CLUSTER_SLOTS(CommandGroup.CLUSTER),
-
-	CLUSTER_COUNTFAILUREREPORTS(CommandGroup.CLUSTER),
-
-	CLUSTER_COUNTKEYSINSLOT(CommandGroup.CLUSTER),
-
-	CLUSTER_DELSLOTS(CommandGroup.CLUSTER),
-
-	CLUSTER_FLUSHSLOTS(CommandGroup.CLUSTER),
-
-	CLUSTER_FAILOVER(CommandGroup.CLUSTER),
-
-	CLUSTER_FORGET(CommandGroup.CLUSTER),
-
-	CLUSTER_GETKEYSINSLOT(CommandGroup.CLUSTER),
-
-	CLUSTER_KEYSLOT(CommandGroup.CLUSTER),
-
-	CLUSTER_SETCONFIGEPOCH(CommandGroup.CLUSTER),
-
-	CLUSTER_BUMPEPOCH(CommandGroup.CLUSTER),
-
-	CLUSTER_INFO(CommandGroup.CLUSTER),
-
-	CLUSTER_MEET(CommandGroup.CLUSTER),
-
-	CLUSTER_NODES(CommandGroup.CLUSTER),
-
-	CLUSTER_SLAVES(CommandGroup.CLUSTER),
-
-	CLUSTER_REPLICAS(CommandGroup.CLUSTER),
-
-	CLUSTER_REPLICATE(CommandGroup.CLUSTER),
-
-	CLUSTER_RESET(CommandGroup.CLUSTER),
-
-	CLUSTER_SAVECONFIG(CommandGroup.CLUSTER),
-
-	CLUSTER_SETSLOT(CommandGroup.CLUSTER),
-
-	ASKING(CommandGroup.CLUSTER),
-
-	READWRITE(CommandGroup.CLUSTER),
-
-	READONLY(CommandGroup.CLUSTER),
 	/**
 	 * cluster command end
 	 **/

@@ -24,12 +24,10 @@
  */
 package com.buession.redis.core;
 
-import com.buession.lang.Status;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
 import java.util.Properties;
-import java.util.StringJoiner;
 
 /**
  * 集群信息，更多信息 <a href="http://www.redis.cn/commands/cluster-info.html" target="_blank">http://www.redis.cn/commands/cluster-info.html</a>
@@ -163,7 +161,7 @@ public class ClusterInfo implements Serializable {
 					   final int slotsFail, final int knownNodes, final int size, final int currentEpoch,
 					   final int myEpoch, final long messagesPingSent, final long messagesPongSent,
 					   final long messagesSent, final long messagesPingReceived, final long messagesPongReceived,
-					   final long messagesMeetReceived, final long messagesReceived){
+					   final long messagesMeetReceived, final long messagesReceived) {
 		this.state = state;
 		this.slotsAssigned = slotsAssigned;
 		this.slotsOk = slotsOk;
@@ -187,7 +185,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 集群状态
 	 */
-	public State getState(){
+	public State getState() {
 		return state;
 	}
 
@@ -196,7 +194,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 已分配到集群节点的哈希槽数量
 	 */
-	public int getSlotsAssigned(){
+	public int getSlotsAssigned() {
 		return slotsAssigned;
 	}
 
@@ -205,7 +203,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 哈希槽状态不是 FAIL 和 PFAIL 的数量
 	 */
-	public int getSlotsOk(){
+	public int getSlotsOk() {
 		return slotsOk;
 	}
 
@@ -214,7 +212,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 哈希槽状态是 PFAIL 的数量
 	 */
-	public int getSlotsPfail(){
+	public int getSlotsPfail() {
 		return slotsPfail;
 	}
 
@@ -223,7 +221,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 哈希槽状态是 FAIL 的数量
 	 */
-	public int getSlotsFail(){
+	public int getSlotsFail() {
 		return slotsFail;
 	}
 
@@ -232,7 +230,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 集群中节点数量，包括处于握手状态还没有成为集群正式成员的节点
 	 */
-	public int getKnownNodes(){
+	public int getKnownNodes() {
 		return knownNodes;
 	}
 
@@ -241,7 +239,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 至少包含一个哈希槽且能够提供服务的 master 节点数量
 	 */
-	public int getSize(){
+	public int getSize() {
 		return size;
 	}
 
@@ -250,7 +248,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 集群本地 Current Epoch 变量的值
 	 */
-	public int getCurrentEpoch(){
+	public int getCurrentEpoch() {
 		return currentEpoch;
 	}
 
@@ -259,7 +257,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 当前正在使用的节点的 Config Epoch 值
 	 */
-	public int getMyEpoch(){
+	public int getMyEpoch() {
 		return myEpoch;
 	}
 
@@ -268,7 +266,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return -
 	 */
-	public long getMessagesPingSent(){
+	public long getMessagesPingSent() {
 		return messagesPingSent;
 	}
 
@@ -277,7 +275,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return -
 	 */
-	public long getMessagesPongSent(){
+	public long getMessagesPongSent() {
 		return messagesPongSent;
 	}
 
@@ -286,7 +284,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 通过 node-to-node 二进制总线发送的消息数量
 	 */
-	public long getMessagesSent(){
+	public long getMessagesSent() {
 		return messagesSent;
 	}
 
@@ -295,7 +293,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return -
 	 */
-	public long getMessagesPingReceived(){
+	public long getMessagesPingReceived() {
 		return messagesPingReceived;
 	}
 
@@ -304,7 +302,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return -
 	 */
-	public long getMessagesPongReceived(){
+	public long getMessagesPongReceived() {
 		return messagesPongReceived;
 	}
 
@@ -313,7 +311,7 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return -
 	 */
-	public long getMessagesMeetReceived(){
+	public long getMessagesMeetReceived() {
 		return messagesMeetReceived;
 	}
 
@@ -322,17 +320,17 @@ public class ClusterInfo implements Serializable {
 	 *
 	 * @return 通过 node-to-node 二进制总线接收的消息数量
 	 */
-	public long getMessagesReceived(){
+	public long getMessagesReceived() {
 		return messagesReceived;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static <E> E getObject(final Properties properties, final String key){
+	protected static <E> E getObject(final Properties properties, final String key) {
 		return (E) properties.get(key);
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add(Key.STATE.value, state)
 				.add(Key.SLOTS_ASSIGNED.value, slotsAssigned)
@@ -361,16 +359,16 @@ public class ClusterInfo implements Serializable {
 
 		private String value;
 
-		State(final String value){
+		State(final String value) {
 			this.value = value;
 		}
 
-		public String getValue(){
+		public String getValue() {
 			return value;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return getValue();
 		}
 
@@ -412,11 +410,11 @@ public class ClusterInfo implements Serializable {
 
 		private final String value;
 
-		Key(final String value){
+		Key(final String value) {
 			this.value = value;
 		}
 
-		public String getValue(){
+		public String getValue() {
 			return value;
 		}
 

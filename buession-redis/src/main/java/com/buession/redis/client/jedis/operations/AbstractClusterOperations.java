@@ -29,6 +29,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.SlotRange;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -65,11 +66,6 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		return clusterSlaves(SafeEncoder.encode(nodeId));
-	}
-
-	@Override
 	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
 		return clusterReplicas(SafeEncoder.encode(nodeId));
 	}
@@ -82,6 +78,22 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
 		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
+	}
+
+	@Override
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+		return clusterSlaves(SafeEncoder.encode(nodeId));
+	}
+
+	protected static int[] numberRangeArray(final SlotRange[] values) {
+		final int[] result = new int[values.length * 2];
+
+		for(int i = 0; i < values.length; i++){
+			result[i] = values[i].getStart();
+			result[++i] = values[i].getEnd();
+		}
+
+		return result;
 	}
 
 }

@@ -48,6 +48,7 @@ import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
@@ -170,6 +171,11 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 			@Override
 			public Command getCommand() {
+				return null;
+			}
+
+			@Override
+			public SubCommand getSubCommand() {
 				return null;
 			}
 

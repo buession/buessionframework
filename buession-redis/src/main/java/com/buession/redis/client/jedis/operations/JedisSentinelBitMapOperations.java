@@ -451,15 +451,13 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 
 	@Override
 	public Boolean getBit(final String key, final long offset) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(key).add(offset);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
-					(v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
-					(v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
@@ -469,15 +467,13 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(key).add(offset);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
-					(v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset),
-					(v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
 					.run(args);
 		}else{
 			return new JedisSentinelCommand<>(client, Command.GETBIT, (cmd)->cmd.getbit(key, offset), (v)->v)
@@ -487,38 +483,36 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 
 	@Override
 	public Boolean setBit(final String key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.SETBIT,
-					(cmd)->cmd.setbit(key, offset, value), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.SETBIT,
-					(cmd)->cmd.setbit(key, offset, value), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
+					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
-					(v)->v)
+			return new JedisSentinelCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value), (v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.SETBIT,
-					(cmd)->cmd.setbit(key, offset, value), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.SETBIT,
-					(cmd)->cmd.setbit(key, offset, value), (v)->v)
+			return new JedisSentinelTransactionCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
+					(v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value),
-					(v)->v)
+			return new JedisSentinelCommand<>(client, Command.SETBIT, (cmd)->cmd.setbit(key, offset, value), (v)->v)
 					.run(args);
 		}
 	}

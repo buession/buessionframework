@@ -30,6 +30,8 @@ import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.SlotRange;
+import com.buession.redis.core.internal.convert.lettuce.params.RangeConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -66,11 +68,6 @@ public abstract class AbstractClusterOperations<C extends LettuceRedisClient> ex
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		return clusterSlaves(SafeEncoder.encode(nodeId));
-	}
-
-	@Override
 	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
 		return clusterReplicas(SafeEncoder.encode(nodeId));
 	}
@@ -81,6 +78,11 @@ public abstract class AbstractClusterOperations<C extends LettuceRedisClient> ex
 	}
 
 	@Override
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+		return clusterSlaves(SafeEncoder.encode(nodeId));
+	}
+
+	@Override
 	public Status clusterReset() {
 		return clusterReset(ClusterResetOption.SOFT);
 	}
@@ -88,6 +90,17 @@ public abstract class AbstractClusterOperations<C extends LettuceRedisClient> ex
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
 		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
+	}
+
+	protected static io.lettuce.core.Range<Integer>[] numberRangeArrayToRange(final SlotRange[] values) {
+		final RangeConverter<Integer> rangeConverter = new RangeConverter<>();
+		final io.lettuce.core.Range<Integer>[] result = new io.lettuce.core.Range[values.length];
+
+		for(int i = 0; i < values.length; i++){
+			result[i] = rangeConverter.convert(values[i]);
+		}
+
+		return result;
 	}
 
 }

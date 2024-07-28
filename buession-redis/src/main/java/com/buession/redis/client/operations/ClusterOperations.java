@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
@@ -28,6 +28,8 @@ import com.buession.redis.core.command.ClusterCommands;
 
 /**
  * 集群命令操作接口
+ *
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=cluster" target="_blank">https://redis.io/docs/latest/commands/?group=cluster</a></p>
  *
  * @author Yong.Teng
  * @since 2.0.0

@@ -21,10 +21,28 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.params;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.params;
+
+import com.buession.core.converter.Converter;
+import io.lettuce.core.Range;
+import org.springframework.lang.Nullable;
+
+/**
+ * 从 {@link com.buession.core.Range} 转换为 {@link io.lettuce.core.Range}
+ *
+ * @param <T>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class RangeConverter {
+ */
+public final class RangeConverter<T> implements Converter<com.buession.core.Range<T>, io.lettuce.core.Range<T>> {
+
+	@Nullable
+	@Override
+	public Range<T> convert(final com.buession.core.Range<T> source) {
+		return source == null ? null : io.lettuce.core.Range.create(source.getStart(), source.getEnd());
+	}
+
 }

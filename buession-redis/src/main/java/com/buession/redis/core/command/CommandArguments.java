@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.core.Range;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
@@ -31,7 +32,6 @@ import com.buession.redis.core.Keyword;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Yong.Teng
@@ -87,6 +87,10 @@ public final class CommandArguments {
 		add(value);
 	}
 
+	private CommandArguments(final Range<?> value) {
+		add(value);
+	}
+
 	private CommandArguments(final Object value) {
 		add(value);
 	}
@@ -132,6 +136,10 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final ProtocolCommand... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Range<?>... values) {
 		add(values);
 	}
 
@@ -187,6 +195,10 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
+	public static CommandArguments create(final Range<?> value) {
+		return new CommandArguments(value);
+	}
+
 	public static CommandArguments create(final Object value) {
 		return new CommandArguments(value);
 	}
@@ -235,6 +247,10 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
+	public static CommandArguments create(final Range<?>... values) {
+		return new CommandArguments(values);
+	}
+
 	public static CommandArguments create(final Object... values) {
 		return new CommandArguments(values);
 	}
@@ -278,7 +294,7 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final boolean value) {
-		parameters.add(value);
+		parameters.add(value ? "1" : "0");
 		return this;
 	}
 
@@ -301,6 +317,15 @@ public final class CommandArguments {
 	public CommandArguments add(final ProtocolCommand value) {
 		if(value != null){
 			parameters.add(value.getName());
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Range<?> value) {
+		if(value != null){
+			parameters.add(value.getStart());
+			parameters.add(value.getEnd());
 		}
 
 		return this;
@@ -415,6 +440,16 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final ProtocolCommand... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Object value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Range<?>... values) {
 		if(Validate.isNotEmpty(values)){
 			for(Object value : values){
 				add(value);

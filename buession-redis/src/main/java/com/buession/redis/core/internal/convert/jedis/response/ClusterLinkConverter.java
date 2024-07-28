@@ -21,10 +21,66 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.ClusterLink;
+import org.springframework.lang.Nullable;
+
+import java.util.Map;
+
+/**
+ * Jedis {@code CLUSTER LINKS} 命令结果转换为 {@link ClusterLink}
  *
  * @author Yong.Teng
  * @since 3.0.0
- */public class ClusterLinkConverter {
+ */
+public final class ClusterLinkConverter implements Converter<Map<String, Object>, ClusterLink> {
+
+	@Nullable
+	@Override
+	public ClusterLink convert(final Map<String, Object> source) {
+		if(source == null){
+			return null;
+		}else{
+			final ClusterLink clusterLink = new ClusterLink();
+
+			clusterLink.setNode((String) source.get("node"));
+
+			String direction = (String) source.get("direction");
+			if("from".equals(direction)){
+				clusterLink.setDirection(ClusterLink.Direction.FROM);
+			}else if("to".equals(direction)){
+				clusterLink.setDirection(ClusterLink.Direction.TO);
+			}
+
+			clusterLink.setCreateTime((Long) source.get("create-time"));
+
+			String event = (String) source.get("events");
+			if(event != null){
+				boolean containsR = event.contains("r");
+				boolean containsW = event.contains("w");
+
+				if(containsR && containsW){
+					clusterLink.setEvents(new ClusterLink.Event[]{ClusterLink.Event.R, ClusterLink.Event.W});
+				}else if(containsR && containsW == false){
+					clusterLink.setEvents(new ClusterLink.Event[]{ClusterLink.Event.R});
+				}else if(containsR == false && containsW){
+					clusterLink.setEvents(new ClusterLink.Event[]{ClusterLink.Event.W});
+				}
+			}
+
+			clusterLink.setSendBufferAllocated((Integer) source.get("send-buffer-allocated"));
+			clusterLink.setSendBufferUsed((Integer) source.get("send-buffer-used"));
+
+			return clusterLink;
+		}
+	}
+
+	public static ListConverter<Map<String, Object>, ClusterLink> listConverter() {
+		return new ListConverter<>(new ClusterLinkConverter());
+	}
+
 }

@@ -21,10 +21,85 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
- *
+ */
+package com.buession.redis.core;
+
+/**
  * @author Yong.Teng
  * @since 3.0.0
- */public class ClusterLink {
+ */
+public class ClusterLink {
+
+	private String node;
+
+	private Direction direction;
+
+	private Long createTime;
+
+	private Event[] events;
+
+	private Integer sendBufferAllocated;
+
+	private Integer sendBufferUsed;
+
+	public String getNode() {
+		return node;
+	}
+
+	public void setNode(String node) {
+		this.node = node;
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
+	public Long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Long createTime) {
+		this.createTime = createTime;
+	}
+
+	public Event[] getEvents() {
+		return events;
+	}
+
+	public void setEvents(Event[] events) {
+		this.events = events;
+	}
+
+	public Integer getSendBufferAllocated() {
+		return sendBufferAllocated;
+	}
+
+	public void setSendBufferAllocated(Integer sendBufferAllocated) {
+		this.sendBufferAllocated = sendBufferAllocated;
+	}
+
+	public Integer getSendBufferUsed() {
+		return sendBufferUsed;
+	}
+
+	public void setSendBufferUsed(Integer sendBufferUsed) {
+		this.sendBufferUsed = sendBufferUsed;
+	}
+
+	public enum Direction {
+		FROM,
+
+		TO
+	}
+
+	public enum Event {
+		R,
+
+		W
+	}
+
 }

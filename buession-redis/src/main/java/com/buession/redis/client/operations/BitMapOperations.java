@@ -29,6 +29,8 @@ import com.buession.redis.core.command.BitMapCommands;
 /**
  * BitMap 命令操作接口
  *
+ * <p>详情说明 <a href="https://redis.io/commands/?group=bitmap" target="_blank">https://redis.io/commands/?group=bitmap</a></p>
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */

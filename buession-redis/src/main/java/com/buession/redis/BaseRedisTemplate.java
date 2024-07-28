@@ -34,15 +34,12 @@ import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitType;
 import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientAttributeOption;
 import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
-import com.buession.redis.core.ClusterFailoverOption;
-import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
@@ -264,6 +261,17 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Long clusterKeySlot(final String key) {
+		return execute((client)->client.clusterOperations().clusterKeySlot(rawKey(key)));
+	}
+
+	@Override
+	public Long clusterKeySlot(final byte[] key) {
+		return execute((client)->client.clusterOperations().clusterKeySlot(rawKey(key)));
+	}
+
+
+	@Override
 	public List<AclCategory> aclCat() {
 		return execute((client)->client.aclOperations().aclCat());
 	}
@@ -371,171 +379,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public String aclWhoAmI() {
 		return execute((client)->client.aclOperations().aclWhoAmI());
-	}
-
-	@Override
-	public String clusterMyId() {
-		return execute((client)->client.clusterOperations().clusterMyId());
-	}
-
-	@Override
-	public Status clusterAddSlots(final int... slots) {
-		return execute((client)->client.clusterOperations().clusterAddSlots(slots));
-	}
-
-	@Override
-	public List<ClusterSlot> clusterSlots() {
-		return execute((client)->client.clusterOperations().clusterSlots());
-	}
-
-	@Override
-	public Long clusterCountFailureReports(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterCountFailureReports(nodeId));
-	}
-
-	@Override
-	public Long clusterCountFailureReports(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterCountFailureReports(nodeId));
-	}
-
-	@Override
-	public Long clusterCountKeysInSlot(final int slot) {
-		return execute((client)->client.clusterOperations().clusterCountKeysInSlot(slot));
-	}
-
-	@Override
-	public Status clusterDelSlots(final int... slots) {
-		return execute((client)->client.clusterOperations().clusterDelSlots(slots));
-	}
-
-	@Override
-	public Status clusterFlushSlots() {
-		return execute((client)->client.clusterOperations().clusterFlushSlots());
-	}
-
-	@Override
-	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		return execute((client)->client.clusterOperations().clusterFailover(clusterFailoverOption));
-	}
-
-	@Override
-	public Status clusterForget(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterForget(nodeId));
-	}
-
-	@Override
-	public Status clusterForget(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterForget(nodeId));
-	}
-
-	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
-		return execute((client)->client.clusterOperations().clusterGetKeysInSlot(slot, count));
-	}
-
-	@Override
-	public Long clusterKeySlot(final String key) {
-		return execute((client)->client.clusterOperations().clusterKeySlot(rawKey(key)));
-	}
-
-	@Override
-	public Long clusterKeySlot(final byte[] key) {
-		return execute((client)->client.clusterOperations().clusterKeySlot(rawKey(key)));
-	}
-
-	@Override
-	public ClusterInfo clusterInfo() {
-		return execute((client)->client.clusterOperations().clusterInfo());
-	}
-
-	@Override
-	public Status clusterMeet(final String ip, final int port) {
-		return execute((client)->client.clusterOperations().clusterMeet(ip, port));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterNodes() {
-		return execute((client)->client.clusterOperations().clusterNodes());
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicas(nodeId));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicas(nodeId));
-	}
-
-	@Override
-	public Status clusterReplicate(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicate(nodeId));
-	}
-
-	@Override
-	public Status clusterReplicate(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicate(nodeId));
-	}
-
-	@Override
-	public Status clusterReset() {
-		return execute((client)->client.clusterOperations().clusterReset());
-	}
-
-	@Override
-	public Status clusterReset(final ClusterResetOption clusterResetOption) {
-		return execute((client)->client.clusterOperations().clusterReset(clusterResetOption));
-	}
-
-	@Override
-	public Status clusterSaveConfig() {
-		return execute((client)->client.clusterOperations().clusterSaveConfig());
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final long configEpoch) {
-		return execute((client)->client.clusterOperations().clusterSetConfigEpoch(configEpoch));
-	}
-
-	@Override
-	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return execute((client)->client.clusterOperations().clusterBumpEpoch());
-	}
-
-	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
-	}
-
-	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
-	}
-
-	@Override
-	public Status asking() {
-		return execute((client)->client.clusterOperations().asking());
-	}
-
-	@Override
-	public Status readWrite() {
-		return execute((client)->client.clusterOperations().readWrite());
-	}
-
-	@Override
-	public Status readOnly() {
-		return execute((client)->client.clusterOperations().readOnly());
 	}
 
 	@Override

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -47,6 +47,21 @@ public class ClusterRedisNode extends RedisNode {
 	 * 标记位
 	 */
 	private final Set<Flag> flags;
+
+	/**
+	 * 是否是自身
+	 */
+	private final boolean isMySelf;
+
+	/**
+	 * 主机角色
+	 */
+	private Role role;
+
+	/**
+	 * Master 主机 ID
+	 */
+	private String masterId;
 
 	/**
 	 * 最近一次发送 ping 的时间（unix 毫秒时间戳），0 代表没有发送过
@@ -84,6 +99,8 @@ public class ClusterRedisNode extends RedisNode {
 	 * 		客户端与节点通信使用的端口
 	 * @param flags
 	 * 		标记位
+	 * @param role
+	 * 		主机角色
 	 * @param masterId
 	 * 		Master 节点 Id
 	 * @param pingSent
@@ -96,15 +113,24 @@ public class ClusterRedisNode extends RedisNode {
 	 * 		node-to-node 集群总线使用的链接的状态
 	 * @param slot
 	 * 		哈希槽值或者一个哈希槽范围
+	 *
+	 * @
 	 */
 	public ClusterRedisNode(final String id, final String ip, final int port, final Set<Flag> flags,
-							final String masterId, final long pingSent, final long pongSent, final long configEpoch,
+							final Role role, final String masterId, final long pingSent, final long pongSent,
+							final long configEpoch,
 							final LinkState linkState, final SlotRange slot) {
 		super(ip, port);
 		setId(id);
 		this.ip = ip;
 		this.flags = flags;
-		setMasterId(masterId);
+		if(flags == null){
+			this.isMySelf = false;
+		}else{
+			this.isMySelf = flags.contains(Flag.MYSELF);
+		}
+		this.role = role;
+		this.masterId = masterId;
 		this.pingSent = pingSent;
 		this.pongSent = pongSent;
 		this.configEpoch = configEpoch;
@@ -128,6 +154,53 @@ public class ClusterRedisNode extends RedisNode {
 	 */
 	public Set<Flag> getFlags() {
 		return flags;
+	}
+
+	/**
+	 * 是否是自身
+	 *
+	 * @return true / false
+	 */
+	public boolean isMySelf() {
+		return isMySelf;
+	}
+
+	/**
+	 * 返回主机角色
+	 *
+	 * @return 主机角色
+	 */
+	public Role getRole() {
+		return role;
+	}
+
+	/**
+	 * 设置主机角色
+	 *
+	 * @param role
+	 * 		主机角色
+	 */
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	/**
+	 * 返回 Master 主机 ID
+	 *
+	 * @return Master 主机 ID
+	 */
+	public String getMasterId() {
+		return masterId;
+	}
+
+	/**
+	 * 设置 Master 主机 ID
+	 *
+	 * @param masterId
+	 * 		Master 主机 ID
+	 */
+	public void setMasterId(String masterId) {
+		this.masterId = masterId;
 	}
 
 	/**

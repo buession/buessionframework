@@ -30,12 +30,16 @@ import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterLink;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.ClusterRedisShard;
 import com.buession.redis.core.ClusterSlot;
+import com.buession.redis.core.SlotRange;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.SubCommand;
 
 import java.util.List;
 
@@ -52,180 +56,212 @@ public final class LettuceSentinelClusterOperations extends AbstractClusterOpera
 	}
 
 	@Override
-	public String clusterMyId() {
-		return notCommand(client, Command.CLUSTER_MY_ID);
-	}
-
-	@Override
-	public Status clusterAddSlots(final int... slots) {
-		final CommandArguments args = CommandArguments.create("slots", slots);
-		return notCommand(client, Command.CLUSTER_ADDSLOTS, args);
-	}
-
-	@Override
-	public List<ClusterSlot> clusterSlots() {
-		return notCommand(client, Command.CLUSTER_SLOTS);
-	}
-
-	@Override
-	public Long clusterCountFailureReports(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_COUNTFAILUREREPORTS, args);
-	}
-
-	@Override
-	public Long clusterCountFailureReports(final byte[] nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_COUNTFAILUREREPORTS, args);
-	}
-
-	@Override
-	public Long clusterCountKeysInSlot(final int slot) {
-		final CommandArguments args = CommandArguments.create("slot", slot);
-		return notCommand(client, Command.CLUSTER_COUNTKEYSINSLOT, args);
-	}
-
-	@Override
-	public Status clusterDelSlots(final int... slots) {
-		final CommandArguments args = CommandArguments.create("slots", slots);
-		return notCommand(client, Command.CLUSTER_DELSLOTS, args);
-	}
-
-	@Override
-	public Status clusterFlushSlots() {
-		return notCommand(client, Command.CLUSTER_FLUSHSLOTS);
-	}
-
-	@Override
-	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		return notCommand(client, Command.CLUSTER_FAILOVER, args);
-	}
-
-	@Override
-	public Status clusterForget(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_FORGET, args);
-	}
-
-	@Override
-	public Status clusterForget(final byte[] nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_FORGET, args);
-	}
-
-	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
-		return notCommand(client, Command.CLUSTER_GETKEYSINSLOT, args);
-	}
-
-	@Override
-	public Long clusterKeySlot(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, Command.CLUSTER_KEYSLOT, args);
-	}
-
-	@Override
-	public Long clusterKeySlot(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, Command.CLUSTER_KEYSLOT, args);
-	}
-
-	@Override
-	public ClusterInfo clusterInfo() {
-		return notCommand(client, Command.CLUSTER_INFO);
-	}
-
-	@Override
-	public Status clusterMeet(final String ip, final int port) {
-		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return notCommand(client, Command.CLUSTER_MEET, args);
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterNodes() {
-		return notCommand(client, Command.CLUSTER_NODES);
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_SLAVES, args);
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_SLAVES, args);
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_REPLICAS, args);
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_REPLICAS, args);
-	}
-
-	@Override
-	public Status clusterReplicate(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_REPLICATE, args);
-	}
-
-	@Override
-	public Status clusterReplicate(final byte[] nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_REPLICATE, args);
-	}
-
-	@Override
-	public Status clusterReset(final ClusterResetOption clusterResetOption) {
-		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		return notCommand(client, Command.CLUSTER_RESET, args);
-	}
-
-	@Override
-	public Status clusterSaveConfig() {
-		return notCommand(client, Command.CLUSTER_SAVECONFIG);
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final long configEpoch) {
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return notCommand(client, Command.CLUSTER_SETCONFIGEPOCH, args);
-	}
-
-	@Override
-	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return notCommand(client, Command.CLUSTER_BUMPEPOCH);
-	}
-
-	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
-				.put("nodeId", nodeId);
-		return notCommand(client, Command.CLUSTER_SETSLOT, args);
-	}
-
-	@Override
 	public Status asking() {
 		return notCommand(client, Command.ASKING);
 	}
 
 	@Override
-	public Status readWrite() {
-		return notCommand(client, Command.READWRITE);
+	public Status clusterAddSlots(final int... slots) {
+		final CommandArguments args = CommandArguments.create(slots);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS, args);
+	}
+
+	@Override
+	public Status clusterAddSlotsRange(final SlotRange... slots) {
+		final CommandArguments args = CommandArguments.create(slots);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTSRANGE, args);
+	}
+
+	@Override
+	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_BUMPEPOCH);
+	}
+
+	@Override
+	public Long clusterCountFailureReports(final String nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+	}
+
+	@Override
+	public Long clusterCountFailureReports(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+	}
+
+	@Override
+	public Long clusterCountKeysInSlot(final int slot) {
+		final CommandArguments args = CommandArguments.create(slot);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_COUNTKEYSINSLOT, args);
+	}
+
+	@Override
+	public Status clusterDelSlots(final int... slots) {
+		final CommandArguments args = CommandArguments.create(slots);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_DELSLOTS, args);
+	}
+
+	@Override
+	public Status clusterDelSlotsRange(final SlotRange... slots) {
+		final CommandArguments args = CommandArguments.create(slots);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_DELSLOTSRANGE, args);
+	}
+
+	@Override
+	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
+		final CommandArguments args = CommandArguments.create(clusterFailoverOption);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_FAILOVER, args);
+	}
+
+	@Override
+	public Status clusterForget(final String nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_FORGET, args);
+	}
+
+	@Override
+	public Status clusterForget(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_FORGET, args);
+	}
+
+	@Override
+	public Status clusterFlushSlots() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_FLUSHSLOTS);
+	}
+
+	@Override
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
+		final CommandArguments args = CommandArguments.create(slot).add(count);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_GETKEYSINSLOT, args);
+	}
+
+	@Override
+	public ClusterInfo clusterInfo() {
+		return notCommand(client, Command.CLUSTER, SubCommand.INFO);
+	}
+
+	@Override
+	public Long clusterKeySlot(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT, args);
+	}
+
+	@Override
+	public Long clusterKeySlot(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT, args);
+	}
+
+	@Override
+	public List<ClusterLink> clusterLinks() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_LINKS);
+	}
+
+	@Override
+	public Status clusterMeet(final String ip, final int port) {
+		final CommandArguments args = CommandArguments.create(ip).add(port);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_MEET, args);
+	}
+
+	@Override
+	public String clusterMyId() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_MYID);
+	}
+
+	@Override
+	public String clusterMyShardId() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_MYSHARDID);
+	}
+
+	@Override
+	public List<ClusterRedisNode> clusterNodes() {
+		return notCommand(client, Command.CLUSTER, SubCommand.NODES);
+	}
+
+	@Override
+	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_REPLICAS, args);
+	}
+
+	@Override
+	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_REPLICAS, args);
+	}
+
+	@Override
+	public Status clusterReplicate(final String nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_REPLICATE, args);
+	}
+
+	@Override
+	public Status clusterReplicate(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_REPLICATE, args);
+	}
+
+	@Override
+	public Status clusterReset(final ClusterResetOption clusterResetOption) {
+		final CommandArguments args = CommandArguments.create(clusterResetOption);
+		return notCommand(client, Command.CLUSTER, SubCommand.RESET, args);
+	}
+
+	@Override
+	public Status clusterSaveConfig() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_SAVECONFIG);
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final long configEpoch) {
+		final CommandArguments args = CommandArguments.create(configEpoch);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_SETCONFIGEPOCH, args);
+	}
+
+	@Override
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
+		final CommandArguments args = CommandArguments.create(slot).add(setSlotOption).add(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_SETSLOT, args);
+	}
+
+	@Override
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(slot).add(setSlotOption).add(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_SETSLOT, args);
+	}
+
+	@Override
+	public List<ClusterRedisShard> clusterShards() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_SHARDS);
+	}
+
+	@Override
+	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.SLAVES, args);
+	}
+
+	@Override
+	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return notCommand(client, Command.CLUSTER, SubCommand.SLAVES, args);
+	}
+
+	@Override
+	public List<ClusterSlot> clusterSlots() {
+		return notCommand(client, Command.CLUSTER, SubCommand.CLUSTER_SLOTS);
 	}
 
 	@Override
 	public Status readOnly() {
 		return notCommand(client, Command.READONLY);
+	}
+
+	@Override
+	public Status readWrite() {
+		return notCommand(client, Command.READWRITE);
 	}
 
 }

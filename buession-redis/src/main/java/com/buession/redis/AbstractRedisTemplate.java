@@ -24,12 +24,13 @@
  */
 package com.buession.redis;
 
-import com.buession.core.collect.Arrays;
 import com.buession.core.utils.ByteUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.command.*;
 import com.buession.redis.utils.SafeEncoder;
+
+import java.util.function.Function;
 
 /**
  * @author Yong.Teng
@@ -68,7 +69,13 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Acl
 
 	protected final String[] rawKeys(final String[] keys) {
 		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
+
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
+			return keys;
+		}
+
+		final String[] result = new String[keys.length];
+		return rawKeys(keys, result, prefix::concat);
 	}
 
 	protected final byte[][] rawKeys(final byte[][] keys) {
@@ -79,7 +86,17 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Acl
 		}
 
 		byte[] prefixByte = SafeEncoder.encode(prefix);
-		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
+		final byte[][] result = new byte[keys.length][];
+
+		return rawKeys(keys, result, (b)->ByteUtils.concat(prefixByte, b));
+	}
+
+	private <T> T[] rawKeys(final T[] keys, final T[] result, final Function<T, T> fn) {
+		for(int i = 0; i < keys.length; i++){
+			result[i] = fn.apply(keys[i]);
+		}
+
+		return result;
 	}
 
 }

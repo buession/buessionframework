@@ -39,16 +39,76 @@ public enum SubCommand implements ProtocolCommand {
 	 * Common command start
 	 **/
 	GET("r"),
-	
+
+	INFO("r"),
+
 	LIST("r"),
 
 	LOAD("r"),
 
+	NODES("rw"),
+
 	RESET("w"),
 
 	SAVE("w"),
+
+	SLAVES("r"),
 	/**
 	 * Common command end
+	 **/
+
+	/**
+	 * Cluster command start
+	 **/
+	CLUSTER_ADDSLOTS("w"),
+
+	CLUSTER_ADDSLOTSRANGE("w"),
+
+	CLUSTER_BUMPEPOCH("r"),
+
+	CLUSTER_COUNTFAILUREREPORTS("rw"),
+
+	CLUSTER_COUNTKEYSINSLOT("r"),
+
+	CLUSTER_DELSLOTS("w"),
+
+	CLUSTER_DELSLOTSRANGE("w"),
+
+	CLUSTER_FAILOVER("rw"),
+
+	CLUSTER_FLUSHSLOTS("w"),
+
+	CLUSTER_FORGET("w"),
+
+	CLUSTER_GETKEYSINSLOT("r"),
+
+	CLUSTER_KEYSLOT("r"),
+
+	CLUSTER_LINKS("r"),
+
+	CLUSTER_MEET("w"),
+
+	CLUSTER_MYID("r"),
+
+	CLUSTER_MYSHARDID("r"),
+
+	CLUSTER_REPLICAS("rw"),
+
+	CLUSTER_REPLICATE("rw"),
+
+	CLUSTER_SAVECONFIG("rw"),
+
+	CLUSTER_SETCONFIGEPOCH("rw"),
+
+	CLUSTER_SETSLOT("w"),
+
+	CLUSTER_SHARDS("r"),
+
+	CLUSTER_SLOTS("r"),
+
+
+	/**
+	 * Cluster command end
 	 **/
 
 	/**
