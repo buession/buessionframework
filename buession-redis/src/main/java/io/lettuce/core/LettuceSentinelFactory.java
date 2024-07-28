@@ -70,10 +70,13 @@ public class LettuceSentinelFactory
 				.to(builder::withTimeout);
 		propertyMapper.from(lettuceClientConfig.getClientName()).to(builder::withClientName);
 		sentinels.forEach((sentinel)->{
+			builder.withSentinel(sentinel.getHost(), sentinel.getPort());
 			if(Validate.hasText(lettuceClientConfig.getPassword())){
-				builder.withSentinel(sentinel.getHost(), sentinel.getPort(), lettuceClientConfig.getPassword());
-			}else{
-				builder.withSentinel(sentinel.getHost(), sentinel.getPort());
+				if(Validate.hasText(lettuceClientConfig.getUser())){
+					builder.withAuthentication(lettuceClientConfig.getUser(), lettuceClientConfig.getPassword());
+				}else{
+					builder.withPassword(lettuceClientConfig.getPassword());
+				}
 			}
 		});
 

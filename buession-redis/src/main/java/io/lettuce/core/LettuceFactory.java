@@ -24,6 +24,7 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.validator.Validate;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 
@@ -60,7 +61,14 @@ public class LettuceFactory extends AbstractLettuceFactory<StatefulRedisConnecti
 
 	private static RedisURI buildRedisURI(final RedisURI uri, final LettuceClientConfig lettuceClientConfig) {
 		if(lettuceClientConfig != null){
-			Optional.ofNullable(lettuceClientConfig.getPassword()).ifPresent(uri::setPassword);
+			if(Validate.hasText(lettuceClientConfig.getPassword())){
+				final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(
+						lettuceClientConfig.getPassword()) ? new StaticCredentialsProvider(
+						Validate.hasText(lettuceClientConfig.getUser()) ? lettuceClientConfig.getUser() :
+								null, lettuceClientConfig.getPassword().toCharArray()) : null;
+				uri.setCredentialsProvider(redisCredentialsProvider);
+			}
+			
 			uri.setDatabase(lettuceClientConfig.getDatabase());
 			Optional.ofNullable(lettuceClientConfig.getConnectionTimeout()).ifPresent(uri::setTimeout);
 			uri.setClientName(lettuceClientConfig.getClientName());

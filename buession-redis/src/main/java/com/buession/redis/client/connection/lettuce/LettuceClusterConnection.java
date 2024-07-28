@@ -25,12 +25,11 @@
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.core.validator.Validate;
 import com.buession.net.HostAndPort;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
-import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
-import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
@@ -44,23 +43,21 @@ import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettuceClusterPool;
 import io.lettuce.core.LettucePoolConfig;
-import io.lettuce.core.LettuceSentinelPool;
+import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
-import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -603,11 +600,14 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
+		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
+				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
+						null, dataSource.getPassword().toCharArray()) : null;
 		final Set<RedisURI> redisURIs = dataSource.getNodes().stream().map((node)->{
 			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
 			final RedisURI redisURI = RedisURI.create(node.getHost(), port);
 
-			propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
+			propertyMapper.from(redisCredentialsProvider).to(redisURI::setCredentialsProvider);
 			propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
 
 			if(dataSource.getConnectTimeout() > 0){

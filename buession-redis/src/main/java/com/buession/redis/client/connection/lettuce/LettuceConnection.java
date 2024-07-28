@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
@@ -43,7 +44,9 @@ import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -400,12 +403,15 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
+		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
+				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
+						null, dataSource.getPassword().toCharArray()) : null;
 
 		if(dataSource.getDatabase() >= 0){
 			redisURI.setDatabase(dataSource.getDatabase());
 		}
 
-		propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
+		propertyMapper.from(redisCredentialsProvider).to(redisURI::setCredentialsProvider);
 		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
 
 		if(dataSource.getConnectTimeout() > 0){

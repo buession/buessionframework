@@ -68,10 +68,13 @@ public class LettuceClusterFactory
 				.to(builder::withTimeout);
 		propertyMapper.from(lettuceClientConfig.getClientName()).to(builder::withClientName);
 		nodes.forEach((node)->{
+			builder.withHost(node.getHost()).withPort(node.getPort());
 			if(Validate.hasText(lettuceClientConfig.getPassword())){
-				builder.withSentinel(node.getHost(), node.getPort(), lettuceClientConfig.getPassword());
-			}else{
-				builder.withSentinel(node.getHost(), node.getPort());
+				if(Validate.hasText(lettuceClientConfig.getUser())){
+					builder.withAuthentication(lettuceClientConfig.getUser(), lettuceClientConfig.getPassword());
+				}else{
+					builder.withPassword(lettuceClientConfig.getPassword());
+				}
 			}
 		});
 

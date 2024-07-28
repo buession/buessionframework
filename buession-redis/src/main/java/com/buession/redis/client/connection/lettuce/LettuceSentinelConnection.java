@@ -31,7 +31,6 @@ import com.buession.net.HostAndPort;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
@@ -53,7 +52,9 @@ import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -63,7 +64,6 @@ import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisSentinelPool;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -719,22 +719,25 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		final RedisURI redisURI = null;
+		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
+		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
+				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
+						null, dataSource.getPassword().toCharArray()) : null;
 
 		if(dataSource.getDatabase() >= 0){
-			redisURI.setDatabase(dataSource.getDatabase());
+			redisURIBuilder.withDatabase(dataSource.getDatabase());
 		}
 
-		propertyMapper.from(dataSource.getPassword()).to(redisURI::setPassword);
-		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
+		propertyMapper.from(redisCredentialsProvider).to(redisURIBuilder::withAuthentication);
+		propertyMapper.from(dataSource.getClientName()).to(redisURIBuilder::withClientName);
 
 		if(dataSource.getConnectTimeout() > 0){
-			redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
+			redisURIBuilder.withTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
 		}
 
-		redisURI.setSsl(dataSource.getSslConfiguration() != null);
+		redisURIBuilder.withSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClient.create(redisURI).connectSentinel(codec);
+		return RedisClient.create(redisURIBuilder.build()).connectSentinel(codec);
 	}
 
 	@Override
