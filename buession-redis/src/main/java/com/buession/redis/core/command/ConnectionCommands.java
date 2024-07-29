@@ -29,9 +29,13 @@ import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientAttributeOption;
 import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientTrackingInfo;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.command.args.ClientKillArgument;
+import com.buession.redis.core.command.args.ClientTracking;
+import com.buession.redis.core.command.args.HelloArgument;
 
 import java.util.List;
 
@@ -99,69 +103,16 @@ public interface ConnectionCommands extends RedisCommands {
 	Status auth(final byte[] password);
 
 	/**
-	 * 打印一个特定的字符串
+	 * This command controls the tracking of the keys in the next command executed by the connection,
+	 * when tracking is enabled in OPTIN or OPTOUT mode
 	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/client-caching/" target="_blank">https://redis.io/commands/client-caching/</a></p>
 	 *
-	 * @param str
-	 * 		待打印的字符串
+	 * @return Status.SUCCESS or Status.FAILURE if the argument is not yes or no
 	 *
-	 * @return 字符串本身
+	 * @since 3.0.0
 	 */
-	String echo(final String str);
-
-	/**
-	 * 打印一个特定的字符串
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
-	 *
-	 * @param str
-	 * 		待打印的字符串
-	 *
-	 * @return 字符串本身
-	 */
-	byte[] echo(final byte[] str);
-
-	/**
-	 * 使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG；
-	 * 通常用于测试与服务器的连接是否仍然生效，或者用于测量延迟值
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/ping.html" target="_blank">http://www.redis.cn/commands/ping.html</a></p>
-	 *
-	 * @return PING 结果
-	 */
-	Status ping();
-
-	/**
-	 * This command performs a full reset of the connection’s server-side context,
-	 * mimicking the effect of disconnecting and reconnecting again.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/reset/" target="_blank">https://redis.io/commands/reset/</a></p>
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status reset();
-
-	/**
-	 * 请求服务器关闭与当前客户端的连接
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/quit.html" target="_blank">http://www.redis.cn/commands/quit.html</a></p>
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status quit();
-
-	/**
-	 * 切换到指定的数据库
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/select.html" target="_blank">http://redisdoc.com/database/select.html</a></p>
-	 *
-	 * @param db
-	 * 		数据库索引号
-	 *
-	 * @return 切换成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status select(final int db);
+	Status clientCaching();
 
 	/**
 	 * This command controls the tracking of the keys in the next command executed by the connection,
@@ -175,39 +126,6 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return Status.SUCCESS or Status.FAILURE if the argument is not yes or no
 	 */
 	Status clientCaching(final boolean isYes);
-
-	/**
-	 * 返回当前连接的 ID
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-id.html" target="_blank">http://www.redis.cn/commands/client-id.html</a></p>
-	 *
-	 * @return 当前连接的 ID
-	 */
-	Long clientId();
-
-	/**
-	 * 为当前连接分配一个名字
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc.com/client_and_server/client_setname.html</a></p>
-	 *
-	 * @param name
-	 * 		名字
-	 *
-	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status clientSetName(final String name);
-
-	/**
-	 * 为当前连接分配一个名字
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc.com/client_and_server/client_setname.html</a></p>
-	 *
-	 * @param name
-	 * 		名字
-	 *
-	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status clientSetName(final byte[] name);
 
 	/**
 	 * 获取连接时设置的名字
@@ -228,6 +146,52 @@ public interface ConnectionCommands extends RedisCommands {
 	 * or 0 if client tracking is enabled but we are not redirecting the notifications to any client
 	 */
 	Integer clientGetRedir();
+
+	/**
+	 * 返回当前连接的 ID
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-id.html" target="_blank">http://www.redis.cn/commands/client-id.html</a></p>
+	 *
+	 * @return 当前连接的 ID
+	 */
+	Long clientId();
+
+	/**
+	 * The command returns information and statistics about the current client connection in a mostly human readable format
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/client-info/" target="_blank">https://redis.io/commands/client-info/</a></p>
+	 *
+	 * @return 连接到服务器的客户端信息
+	 */
+	Client clientInfo();
+
+	/**
+	 * 关闭地址为 host:port 的客户端
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
+	 *
+	 * @param host
+	 * 		客户端地址
+	 * @param port
+	 * 		客户端端口
+	 *
+	 * @return 当指定的客户端存在，且被成功关闭时，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status clientKill(final String host, final int port);
+
+	/**
+	 * 关闭地址为 host:port 的客户端
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
+	 *
+	 * @param clientKillArguments
+	 * 		客户端关闭参数
+	 *
+	 * @return 关闭客户端数量
+	 *
+	 * @since 3.0.0
+	 */
+	Long clientKill(final ClientKillArgument... clientKillArguments);
 
 	/**
 	 * 获取所有连接到服务器的客户端信息和统计数据
@@ -265,13 +229,66 @@ public interface ConnectionCommands extends RedisCommands {
 	List<Client> clientList(final long... clientIds);
 
 	/**
-	 * The command returns information and statistics about the current client connection in a mostly human readable format
+	 * Sets the client eviction mode for the current connection.
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/client-info/" target="_blank">https://redis.io/commands/client-info/</a></p>
+	 * @param on
+	 *        {@code true} will turn eviction mode on, and {@code false} will turn it off.
 	 *
-	 * @return 连接到服务器的客户端信息
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
 	 */
-	Client clientInfo();
+	Status clientNoEvict(final boolean on);
+
+	/**
+	 * Sets the client touch mode for the current connection.
+	 *
+	 * @param on
+	 *        {@code true} will turn touch mode on, and {@code false} will turn it off.
+	 *
+	 * @return 操作结果
+	 *
+	 * @since 3.0.0
+	 */
+	Status clientNoTouch(final boolean on);
+
+	/**
+	 * 将所有客户端的访问暂停给定的毫秒数
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 *
+	 * @param timeout
+	 * 		暂停时间（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	Status clientPause(final int timeout);
+
+	/**
+	 * 将所有客户端的访问暂停给定的毫秒数
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 *
+	 * @param timeout
+	 * 		暂停时间（单位：毫秒）
+	 * @param pauseMode
+	 * 		客户端暂停模式
+	 *
+	 * @return 操作结果
+	 */
+	Status clientPause(final int timeout, final ClientPauseMode pauseMode);
+
+	/**
+	 * 当需要完全禁用redis服务器对当前客户端的回复时可使用该命令
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-reply.html" target="_blank">http://www.redis.cn/commands/client-reply.html</a></p>
+	 *
+	 * @param option
+	 * 		选项
+	 *
+	 * @return 当执行命令设置为 OFF 或 SKIP，设置命令收不到任何回复，当设置为 ON 时，返回OK
+	 */
+	Status clientReply(final ClientReply option);
 
 	/**
 	 * The CLIENT SETINFO command assigns various info attributes to the current connection which are displayed in the output of CLIENT LIST and CLIENT INFO.
@@ -306,79 +323,54 @@ public interface ConnectionCommands extends RedisCommands {
 	Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value);
 
 	/**
-	 * 将所有客户端的访问暂停给定的毫秒数
+	 * 为当前连接分配一个名字
 	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc.com/client_and_server/client_setname.html</a></p>
 	 *
-	 * @param timeout
-	 * 		暂停时间（单位：毫秒）
+	 * @param name
+	 * 		名字
 	 *
-	 * @return 操作结果
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status clientPause(final int timeout);
+	Status clientSetName(final String name);
 
 	/**
-	 * 将所有客户端的访问暂停给定的毫秒数
+	 * 为当前连接分配一个名字
 	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc.com/client_and_server/client_setname.html</a></p>
 	 *
-	 * @param timeout
-	 * 		暂停时间（单位：毫秒）
-	 * @param pauseMode
-	 * 		客户端暂停模式
+	 * @param name
+	 * 		名字
 	 *
-	 * @return 操作结果
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status clientPause(final int timeout, final ClientPauseMode pauseMode);
+	Status clientSetName(final byte[] name);
 
 	/**
-	 * 取消客户端暂停
+	 * This command enables the tracking feature of the Redis server, that is used for server assisted client side
+	 * caching.
 	 *
-	 * @return 操作结果
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-tracking/" target="_blank">https://redis.io/docs/latest/commands/client-tracking/</a></p>
+	 *
+	 * @param clientTracking
+	 * 		跟踪参数
+	 *
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 *
 	 * @since 3.0.0
 	 */
-	Status clientUnPause();
+	Status clientTracking(final ClientTracking clientTracking);
 
 	/**
-	 * 当需要完全禁用redis服务器对当前客户端的回复时可使用该命令
+	 * The command returns information about the current client connection's use of the server assisted client side caching feature.
 	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-reply.html" target="_blank">http://www.redis.cn/commands/client-reply.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-trackinginfo/" target="_blank">https://redis.io/docs/latest/commands/client-trackinginfo/</a></p>
 	 *
-	 * @param option
-	 * 		选项
-	 *
-	 * @return 当执行命令设置为 OFF 或 SKIP，设置命令收不到任何回复，当设置为 ON 时，返回OK
-	 */
-	Status clientReply(final ClientReply option);
-
-	/**
-	 * 关闭地址为 host:port 的客户端
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
-	 *
-	 * @param host
-	 * 		客户端地址
-	 * @param port
-	 * 		客户端端口
-	 *
-	 * @return 当指定的客户端存在，且被成功关闭时，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status clientKill(final String host, final int port);
-
-	/**
-	 * 关闭地址为 host:port 的客户端
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
-	 *
-	 * @param clientKillArguments
-	 * 		客户端关闭参数
-	 *
-	 * @return 关闭客户端数量
+	 * @return The information about the current client connection's use of the server assisted client side caching feature.
 	 *
 	 * @since 3.0.0
 	 */
-	Long clientKill(final ClientKillArgument... clientKillArguments);
+	ClientTrackingInfo clientTrackingInfo();
 
 	/**
 	 * 该命令可以通过其他连接解除客户端的阻塞
@@ -407,27 +399,89 @@ public interface ConnectionCommands extends RedisCommands {
 	Status clientUnblock(final int clientId, final ClientUnblockType type);
 
 	/**
-	 * Sets the client eviction mode for the current connection.
-	 *
-	 * @param on
-	 *        {@code true} will turn eviction mode on, and {@code false} will turn it off.
+	 * 取消客户端暂停
 	 *
 	 * @return 操作结果
 	 *
 	 * @since 3.0.0
 	 */
-	Status clientNoEvict(final boolean on);
+	Status clientUnPause();
 
 	/**
-	 * Sets the client touch mode for the current connection.
+	 * 打印一个特定的字符串
 	 *
-	 * @param on
-	 *        {@code true} will turn touch mode on, and {@code false} will turn it off.
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
 	 *
-	 * @return 操作结果
+	 * @param str
+	 * 		待打印的字符串
 	 *
-	 * @since 3.0.0
+	 * @return 字符串本身
 	 */
-	Status clientNoTouch(final boolean on);
+	String echo(final String str);
+
+	/**
+	 * 打印一个特定的字符串
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
+	 *
+	 * @param str
+	 * 		待打印的字符串
+	 *
+	 * @return 字符串本身
+	 */
+	byte[] echo(final byte[] str);
+
+	/**
+	 * Switch to a different protocol, optionally authenticating and setting the connection's name, or provide a contextual client report.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param helloArgument
+	 *        {@link HelloArgument}
+	 *
+	 * @return A list of server properties.
+	 */
+	RedisServer hello(final HelloArgument helloArgument);
+
+	/**
+	 * 使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG；
+	 * 通常用于测试与服务器的连接是否仍然生效，或者用于测量延迟值
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/ping.html" target="_blank">http://www.redis.cn/commands/ping.html</a></p>
+	 *
+	 * @return PING 结果
+	 */
+	Status ping();
+
+	/**
+	 * 请求服务器关闭与当前客户端的连接
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/quit.html" target="_blank">http://www.redis.cn/commands/quit.html</a></p>
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status quit();
+
+	/**
+	 * This command performs a full reset of the connection’s server-side context,
+	 * mimicking the effect of disconnecting and reconnecting again.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/reset/" target="_blank">https://redis.io/commands/reset/</a></p>
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status reset();
+
+	/**
+	 * 切换到指定的数据库
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/select.html" target="_blank">http://redisdoc.com/database/select.html</a></p>
+	 *
+	 * @param db
+	 * 		数据库索引号
+	 *
+	 * @return 切换成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status select(final int db);
 
 }

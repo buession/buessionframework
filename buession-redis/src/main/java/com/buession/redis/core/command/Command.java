@@ -78,6 +78,32 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * Connection command start
+	 */
+	AUTH("rw", CommandGroup.CONNECTION),
+
+	CLIENT("rw", CommandGroup.CONNECTION, SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME,
+			SubCommand.CLIENT_GETREDIR, SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL,
+			SubCommand.CLIENT_LIST, SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
+			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING,
+			SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK, SubCommand.CLIENT_UNPAUSE),
+
+	ECHO("w", CommandGroup.CONNECTION),
+
+	HELLO("w", CommandGroup.CONNECTION),
+
+	PING("r", CommandGroup.CONNECTION),
+
+	QUIT("rw", CommandGroup.CONNECTION),
+
+	RESET("w", CommandGroup.CONNECTION),
+
+	SELECT("w", CommandGroup.CONNECTION),
+	/**
+	 * Connection command end
+	 */
+
+	/**
 	 * ACL command start
 	 **/
 	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
@@ -90,50 +116,6 @@ public enum Command implements ProtocolCommand {
 	 * cluster command end
 	 **/
 
-	/**
-	 * connection command start
-	 */
-	AUTH(CommandGroup.CONNECTION),
-
-	ECHO(CommandGroup.CONNECTION),
-
-	PING(CommandGroup.CONNECTION),
-
-	RESET(CommandGroup.CONNECTION),
-
-	QUIT(CommandGroup.CONNECTION),
-
-	SELECT(CommandGroup.CONNECTION),
-
-	CLIENT_KILL(CommandGroup.CONNECTION),
-
-	CLIENT_SETNAME(CommandGroup.CONNECTION),
-
-	CLIENT_GETNAME(CommandGroup.CONNECTION),
-
-	CLIENT_GETREDIR(CommandGroup.CONNECTION),
-
-	CLIENT_CACHING(CommandGroup.CONNECTION),
-
-	CLIENT_ID(CommandGroup.CONNECTION),
-
-	CLIENT_LIST(CommandGroup.CONNECTION),
-
-	CLIENT_INFO(CommandGroup.CONNECTION),
-
-	CLIENT_SET_INFO(CommandGroup.CONNECTION),
-
-	CLIENT_PAUSE(CommandGroup.CONNECTION),
-
-	CLIENT_UNPAUSE(CommandGroup.CONNECTION),
-
-	CLIENT_REPLY(CommandGroup.CONNECTION),
-
-	CLIENT_UNBLOCK(CommandGroup.CONNECTION),
-
-	CLIENT_NO_EVICT(CommandGroup.CONNECTION),
-
-	CLIENT_NO_TOUCH(CommandGroup.CONNECTION),
 	/**
 	 * connection command end
 	 */

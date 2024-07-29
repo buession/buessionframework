@@ -35,4 +35,28 @@ import com.buession.core.Value;
  */
 public interface Keyword extends Value<String>, Rawable {
 
+	enum Common {
+		ID,
+
+		USER,
+
+		TYPE,
+
+		ADDR,
+
+		LADDR,
+
+		SKIPME,
+
+		MAXAGE,
+
+		YES,
+
+		NO,
+
+		ON,
+
+		OFF
+	}
+
 }

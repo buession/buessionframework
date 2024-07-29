@@ -22,46 +22,14 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis.utils;
-
-import com.buession.redis.core.command.args.ClientKillArgument;
-import com.buession.redis.core.internal.jedis.JedisClientKillParams;
-import redis.clients.jedis.params.ClientKillParams;
-
-import java.util.Optional;
+package com.buession.redis.core;
 
 /**
- * {@link ClientKillParams} 工具类
+ * {@code CLIENT TRACKINGINFO} 结果
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ClientKillParamsUtils {
-
-	protected ClientKillParamsUtils() {
-
-	}
-
-	public static ClientKillParams fromClientKillArgumentArray(final ClientKillArgument... clientKillArguments) {
-		if(clientKillArguments != null && clientKillArguments.length > 0){
-			final JedisClientKillParams clientKillParams = JedisClientKillParams.from(clientKillArguments[0]);
-			ClientKillArgument clientKillArgument;
-
-			for(int i = 1; i < clientKillArguments.length; i++){
-				clientKillArgument = clientKillArguments[i];
-
-				Optional.ofNullable(clientKillArgument.getClientId()).ifPresent(clientKillParams::id);
-				Optional.ofNullable(clientKillArgument.getClientType()).ifPresent(clientKillParams::type);
-				Optional.ofNullable(clientKillArgument.getUsername()).ifPresent(clientKillParams::user);
-				Optional.ofNullable(clientKillArgument.getAddr()).ifPresent(clientKillParams::addr);
-				Optional.ofNullable(clientKillArgument.getLaddr()).ifPresent(clientKillParams::laddr);
-				Optional.ofNullable(clientKillArgument.getSkipMe()).ifPresent(clientKillParams::skipMe);
-			}
-
-			return clientKillParams;
-		}else{
-			return null;
-		}
-	}
+public class ClientTrackingInfo {
 
 }

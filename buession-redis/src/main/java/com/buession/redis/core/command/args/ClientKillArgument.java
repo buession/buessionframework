@@ -24,7 +24,10 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.core.utils.StringJoiner;
+import com.buession.core.validator.Validate;
 import com.buession.redis.core.ClientType;
+import com.buession.redis.core.Keyword;
 
 /**
  * {@code CLIENT KILL} 命令参数
@@ -356,6 +359,35 @@ public class ClientKillArgument {
 	 */
 	public void setMaxAge(Long maxAge) {
 		this.maxAge = maxAge;
+	}
+
+	@Override
+	public String toString() {
+		final StringJoiner joiner = new StringJoiner(" ");
+
+		if(clientId != null){
+			joiner.add(Keyword.Common.ID).add(clientId);
+		}
+		if(clientType != null){
+			joiner.add(Keyword.Common.TYPE).add(clientType);
+		}
+		if(Validate.hasText(username)){
+			joiner.add(Keyword.Common.USER).add(username);
+		}
+		if(Validate.hasText(addr)){
+			joiner.add(Keyword.Common.ADDR).add(addr);
+		}
+		if(Validate.hasText(laddr)){
+			joiner.add(Keyword.Common.LADDR).add(addr);
+		}
+		if(skipMe != null){
+			joiner.add(Keyword.Common.SKIPME).add(skipMe ? Keyword.Common.YES : Keyword.Common.NO);
+		}
+		if(maxAge != null){
+			joiner.add(Keyword.Common.MAXAGE).add(maxAge);
+		}
+
+		return joiner.toString();
 	}
 
 }

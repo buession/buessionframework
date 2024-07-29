@@ -105,10 +105,48 @@ public enum SubCommand implements ProtocolCommand {
 	CLUSTER_SHARDS("r"),
 
 	CLUSTER_SLOTS("r"),
-
-
 	/**
 	 * Cluster command end
+	 **/
+
+	/**
+	 * Client command start
+	 **/
+	CLIENT_CACHING("r"),
+
+	CLIENT_GETNAME("r"),
+
+	CLIENT_GETREDIR("r"),
+
+	CLIENT_ID("r"),
+
+	CLIENT_INFO("r"),
+
+	CLIENT_KILL("w"),
+
+	CLIENT_LIST("r"),
+
+	CLIENT_NO_EVICT("r"),
+
+	CLIENT_NO_TOUCH("r"),
+
+	CLIENT_PAUSE("w"),
+
+	CLIENT_REPLY("w"),
+
+	CLIENT_SETINFO("w"),
+
+	CLIENT_SETNAME("w"),
+
+	CLIENT_TRACKING("r"),
+
+	CLIENT_TRACKINGINFO("r"),
+
+	CLIENT_UNBLOCK("w"),
+
+	CLIENT_UNPAUSE("w"),
+	/**
+	 * Client command end
 	 **/
 
 	/**

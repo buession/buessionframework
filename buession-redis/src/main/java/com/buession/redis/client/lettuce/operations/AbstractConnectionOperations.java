@@ -28,7 +28,12 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.core.ClientAttributeOption;
+import com.buession.redis.core.command.args.ClientKillArgument;
+import com.buession.redis.core.internal.lettuce.LettuceKillArgs;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.KillArgs;
+
+import java.util.Optional;
 
 /**
  * Jedis 连接命令操作抽象类
@@ -57,13 +62,35 @@ public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
 	}
 
 	@Override
+	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
+		return clientSetInfo(clientAttributeOption, SafeEncoder.encode(value));
+	}
+
+	@Override
 	public Status clientSetName(final String name) {
 		return clientSetName(SafeEncoder.encode(name));
 	}
 
-	@Override
-	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final byte[] value) {
-		return clientSetInfo(clientAttributeOption, SafeEncoder.encode(value));
+	protected static KillArgs createKillArgsFromClientKillArgument(final ClientKillArgument... clientKillArguments) {
+		if(clientKillArguments != null && clientKillArguments.length > 0){
+			final LettuceKillArgs killArgs = LettuceKillArgs.from(clientKillArguments[0]);
+			ClientKillArgument clientKillArgument;
+
+			for(int i = 1; i < clientKillArguments.length; i++){
+				clientKillArgument = clientKillArguments[i];
+
+				Optional.ofNullable(clientKillArgument.getClientId()).ifPresent(killArgs::id);
+				Optional.ofNullable(clientKillArgument.getClientType()).ifPresent(killArgs::type);
+				Optional.ofNullable(clientKillArgument.getUsername()).ifPresent(killArgs::user);
+				Optional.ofNullable(clientKillArgument.getAddr()).ifPresent(killArgs::addr);
+				Optional.ofNullable(clientKillArgument.getLaddr()).ifPresent(killArgs::laddr);
+				Optional.ofNullable(clientKillArgument.getSkipMe()).ifPresent(killArgs::skipme);
+			}
+
+			return killArgs;
+		}else{
+			return null;
+		}
 	}
 
 }
