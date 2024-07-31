@@ -369,7 +369,7 @@ public class SortArgument {
 		}
 
 		if(order != null){
-			builder.add(order);
+			builder.append(order);
 		}
 
 		if(Boolean.TRUE.equals(alpha)){

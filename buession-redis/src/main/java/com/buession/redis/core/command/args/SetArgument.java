@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.NxXx;
 
 /**
@@ -235,12 +236,12 @@ public class SetArgument {
 		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 		if(type != null){
-			builder.add(type);
+			builder.append(type);
 		}
-		builder.append(expires).add(nxXx);
+		builder.append(expires).append(nxXx);
 
 		if(Boolean.TRUE.equals(keepTtl)){
-			builder.append("KEEPTTL");
+			builder.append(Keyword.Common.KEEPTTL);
 		}
 
 		return builder.build();

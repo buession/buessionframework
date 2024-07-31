@@ -78,7 +78,7 @@ import java.util.Set;
  *
  * @author Yong.Teng
  */
-public class BaseRedisTemplate extends AbstractRedisTemplate {
+public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	/**
 	 * 构造函数
@@ -566,13 +566,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument restoreArgument) {
-		return execute((client)->client.keyOperations().restore(rawKey(key), serializedValue, ttl, argument));
+		return execute((client)->client.keyOperations().restore(rawKey(key), serializedValue, ttl, restoreArgument));
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument restoreArgument) {
-		return execute((client)->client.keyOperations().restore(rawKey(key), serializedValue, ttl, argument));
+		return execute((client)->client.keyOperations().restore(rawKey(key), serializedValue, ttl, restoreArgument));
 	}
 
 	@Override
@@ -746,6 +746,224 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
+		return execute((client)->client.geoOperations().geoAdd(rawKey(key), member, longitude, latitude));
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
+		return execute((client)->client.geoOperations().geoAdd(rawKey(key), member, longitude, latitude));
+	}
+
+	@Override
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
+		return execute((client)->client.geoOperations().geoAdd(rawKey(key), memberCoordinates));
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
+		return execute((client)->client.geoOperations().geoAdd(rawKey(key), memberCoordinates));
+	}
+
+	@Override
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude,
+					   final GeoAddArgument geoAddArgument) {
+		return execute(
+				(client)->client.geoOperations().geoAdd(rawKey(key), member, longitude, latitude, geoAddArgument));
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude,
+					   final GeoAddArgument geoAddArgument) {
+		return execute(
+				(client)->client.geoOperations().geoAdd(rawKey(key), member, longitude, latitude, geoAddArgument));
+	}
+
+	@Override
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates,
+					   final GeoAddArgument geoAddArgument) {
+		return execute((client)->client.geoOperations().geoAdd(rawKey(key), memberCoordinates, geoAddArgument));
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates,
+					   final GeoAddArgument geoAddArgument) {
+		return execute((client)->client.geoOperations().geoAdd(rawKey(key), memberCoordinates, geoAddArgument));
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2) {
+		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2));
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
+		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2));
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2, unit));
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2, unit));
+	}
+
+	@Override
+	public List<String> geoHash(final String key, final String... members) {
+		return execute((client)->client.geoOperations().geoHash(rawKey(key), members));
+	}
+
+	@Override
+	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
+		return execute((client)->client.geoOperations().geoHash(rawKey(key), members));
+	}
+
+	@Override
+	public List<Geo> geoPos(final String key, final String... members) {
+		return execute((client)->client.geoOperations().geoPos(rawKey(key), members));
+	}
+
+	@Override
+	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
+		return execute((client)->client.geoOperations().geoPos(rawKey(key), members));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadius(rawKey(key), longitude, latitude, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadius(rawKey(key), longitude, latitude, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit,
+									 final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadius(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit,
+									 final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadius(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadiusRo(rawKey(key), longitude, latitude, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadiusRo(rawKey(key), longitude, latitude, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadiusByMember(rawKey(key), member, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadiusByMember(rawKey(key), member, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadiusByMember(rawKey(key), member, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadiusByMember(rawKey(key), member, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadiusByMemberRo(rawKey(key), member, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoRadiusByMemberRo(rawKey(key), member, radius, unit));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadiusByMemberRo(rawKey(key), member, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
+		return execute((client)->client.geoOperations()
+				.geoRadiusByMemberRo(rawKey(key), member, radius, unit, geoRadiusArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final GeoSearchArgument geoSearchArgument) {
+		return execute((client)->client.geoOperations().geoSearch(rawKey(key), geoSearchArgument));
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final GeoSearchArgument geoSearchArgument) {
+		return execute((client)->client.geoOperations().geoSearch(rawKey(key), geoSearchArgument));
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key,
+							   final GeoSearchStoreArgument geoSearchStoreArgument) {
+		return execute(
+				(client)->client.geoOperations().geoSearchStore(rawKey(destKey), rawKey(key), geoSearchStoreArgument));
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key,
+							   final GeoSearchStoreArgument geoSearchStoreArgument) {
+		return execute(
+				(client)->client.geoOperations().geoSearchStore(rawKey(destKey), rawKey(key), geoSearchStoreArgument));
+	}
+
+	@Override
 	public List<AclCategory> aclCat() {
 		return execute((client)->client.aclOperations().aclCat());
 	}
@@ -853,174 +1071,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public String aclWhoAmI() {
 		return execute((client)->client.aclOperations().aclWhoAmI());
-	}
-
-	@Override
-	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
-		return execute((client)->client.geoOperations().geoAdd(rawKey(key), member, longitude, latitude));
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
-		return execute((client)->client.geoOperations().geoAdd(rawKey(key), member, longitude, latitude));
-	}
-
-	@Override
-	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
-		return execute((client)->client.geoOperations().geoAdd(rawKey(key), memberCoordinates));
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
-		return execute((client)->client.geoOperations().geoAdd(rawKey(key), memberCoordinates));
-	}
-
-	@Override
-	public List<String> geoHash(final String key, final String... members) {
-		return execute((client)->client.geoOperations().geoHash(rawKey(key), members));
-	}
-
-	@Override
-	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
-		return execute((client)->client.geoOperations().geoHash(rawKey(key), members));
-	}
-
-	@Override
-	public List<Geo> geoPos(final String key, final String... members) {
-		return execute((client)->client.geoOperations().geoPos(rawKey(key), members));
-	}
-
-	@Override
-	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
-		return execute((client)->client.geoOperations().geoPos(rawKey(key), members));
-	}
-
-	@Override
-	public Double geoDist(final String key, final String member1, final String member2) {
-		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2));
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
-		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2));
-	}
-
-	@Override
-	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2, unit));
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoDist(rawKey(key), member1, member2, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadius(rawKey(key), longitude, latitude, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadius(rawKey(key), longitude, latitude, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadius(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadius(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadiusRo(rawKey(key), longitude, latitude, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadiusRo(rawKey(key), longitude, latitude, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadiusByMember(rawKey(key), member, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadiusByMember(rawKey(key), member, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMember(rawKey(key), member, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMember(rawKey(key), member, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadiusByMemberRo(rawKey(key), member, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit) {
-		return execute((client)->client.geoOperations().geoRadiusByMemberRo(rawKey(key), member, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMemberRo(rawKey(key), member, radius, unit, geoRadiusArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMemberRo(rawKey(key), member, radius, unit, geoRadiusArgument));
 	}
 
 	@Override

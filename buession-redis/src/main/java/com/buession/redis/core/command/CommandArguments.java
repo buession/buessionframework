@@ -31,7 +31,9 @@ import com.buession.lang.Constants;
 import com.buession.redis.core.Keyword;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -91,6 +93,14 @@ public final class CommandArguments {
 		add(value);
 	}
 
+	private CommandArguments(final Collection<?> value) {
+		add(value);
+	}
+
+	private CommandArguments(final Map<?, ?> value) {
+		add(value);
+	}
+
 	private CommandArguments(final Object value) {
 		add(value);
 	}
@@ -140,6 +150,14 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final Range<?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Collection<?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Map<?, ?>... values) {
 		add(values);
 	}
 
@@ -199,6 +217,14 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
+	public static CommandArguments create(final Collection<?> value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final Map<?, ?> value) {
+		return new CommandArguments(value);
+	}
+
 	public static CommandArguments create(final Object value) {
 		return new CommandArguments(value);
 	}
@@ -248,6 +274,14 @@ public final class CommandArguments {
 	}
 
 	public static CommandArguments create(final Range<?>... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Collection<?>... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Map<?, ?>... values) {
 		return new CommandArguments(values);
 	}
 
@@ -326,6 +360,22 @@ public final class CommandArguments {
 		if(value != null){
 			parameters.add(value.getStart());
 			parameters.add(value.getEnd());
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Collection<?> value) {
+		if(value != null){
+			value.forEach(this::add);
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Map<?, ?> value) {
+		if(value != null){
+			value.forEach(this::add);
 		}
 
 		return this;
@@ -450,6 +500,26 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final Range<?>... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Object value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Collection<?>... values) {
+		if(Validate.isNotEmpty(values)){
+			for(Object value : values){
+				add(value);
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Map<?, ?>... values) {
 		if(Validate.isNotEmpty(values)){
 			for(Object value : values){
 				add(value);

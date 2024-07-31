@@ -160,12 +160,44 @@ public enum Command implements ProtocolCommand {
 	TYPE("r", CommandGroup.KEY),
 
 	UNLINK("w", CommandGroup.KEY),
+	/**
+	 * Key command end
+	 **/
 
+	/**
+	 * Generic command start
+	 **/
 	WAIT("w", CommandGroup.KEY),
 
 	WAITOF("w", CommandGroup.KEY),
 	/**
-	 * Key command end
+	 * Generic command end
+	 **/
+
+	/**
+	 * Geo command start
+	 **/
+	GEOADD("w", CommandGroup.GEO),
+
+	GEODIST("r", CommandGroup.GEO),
+
+	GEOHASH("r", CommandGroup.GEO),
+
+	GEOPOS("r", CommandGroup.GEO),
+
+	GEORADIUS("r", CommandGroup.GEO),
+
+	GEORADIUS_RO("r", CommandGroup.GEO),
+
+	GEORADIUSBYMEMBER("r", CommandGroup.GEO),
+
+	GEORADIUSBYMEMBER_RO("r", CommandGroup.GEO),
+
+	GEOSEARCH("r", CommandGroup.GEO),
+
+	GEOSEARCHSTORE("rw", CommandGroup.GEO),
+	/**
+	 * Geo command end
 	 **/
 
 	/**
@@ -185,24 +217,6 @@ public enum Command implements ProtocolCommand {
 	 * connection command end
 	 */
 
-	/**
-	 * geo command start
-	 **/
-	GEOADD(CommandGroup.GEO),
-
-	GEOHASH(CommandGroup.GEO),
-
-	GEOPOS(CommandGroup.GEO),
-
-	GEODIST(CommandGroup.GEO),
-
-	GEORADIUS(CommandGroup.GEO),
-
-	GEORADIUS_RO(CommandGroup.GEO),
-
-	GEORADIUSBYMEMBER(CommandGroup.GEO),
-
-	GEORADIUSBYMEMBER_RO(CommandGroup.TRANSACTION),
 	/**
 	 * geo command end
 	 **/

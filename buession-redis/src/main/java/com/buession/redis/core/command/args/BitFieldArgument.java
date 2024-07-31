@@ -328,7 +328,12 @@ public class BitFieldArgument implements ArrayArgument<String> {
 
 		@Override
 		public String toString() {
-			return getCommandType() + " " + bitFieldType + " " + (bitOffset ? "#" + offset : offset);
+			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+			builder.append(getCommandType()).append(bitFieldType).append(bitOffset ? "#" + offset :
+					Integer.toString(offset));
+
+			return builder.build();
 		}
 
 	}
@@ -396,7 +401,12 @@ public class BitFieldArgument implements ArrayArgument<String> {
 
 		@Override
 		public String toString() {
-			return getCommandType() + " " + bitFieldType + " " + (bitOffset ? "#" + offset : offset) + " " + value;
+			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+			builder.append(getCommandType()).append(bitFieldType).append(bitOffset ? "#" + offset :
+					Integer.toString(offset));
+
+			return builder.build();
 		}
 
 	}
@@ -464,7 +474,12 @@ public class BitFieldArgument implements ArrayArgument<String> {
 
 		@Override
 		public String toString() {
-			return getCommandType() + " " + bitFieldType + " " + (bitOffset ? "#" + offset : offset) + " " + value;
+			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+			builder.append(getCommandType()).append(bitFieldType).add(bitOffset ? "#" + offset :
+					Integer.toString(offset), value);
+
+			return builder.build();
 		}
 
 	}
@@ -507,7 +522,11 @@ public class BitFieldArgument implements ArrayArgument<String> {
 
 		@Override
 		public String toString() {
-			return getCommandType() + " " + overflowType;
+			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+			builder.append(getCommandType()).append(overflowType);
+
+			return builder.build();
 		}
 
 	}

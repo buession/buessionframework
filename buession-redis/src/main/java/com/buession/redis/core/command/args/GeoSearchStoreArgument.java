@@ -22,34 +22,70 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.SetListConverter;
-import com.buession.redis.core.GeoRadius;
-import io.lettuce.core.GeoWithin;
-
-import java.util.List;
+import com.buession.redis.core.Keyword;
 
 /**
- * Lettuce georadius 命令结果转换为 {@link GeoRadius}
+ * {@code GEOSEARCHSTORE} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byte[]>, GeoRadius> {
+public class GeoSearchStoreArgument extends BaseGeoSearchArgument {
 
-	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
+	private Boolean storeDist;
 
-	@Override
-	public GeoRadius convert(final GeoWithin<byte[]> source) {
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
+	/**
+	 * 构造函数
+	 */
+	public GeoSearchStoreArgument() {
 	}
 
-	public static ListConverter<GeoWithin<byte[]>, GeoRadius> listConverter() {
-		return new ListConverter<>(new GeoRadiusResponseConverter());
+	public Boolean isStoreDist() {
+		return getStoreDist();
+	}
+
+	public Boolean getStoreDist() {
+		return storeDist;
+	}
+
+	public void storeDist() {
+		this.storeDist = true;
+	}
+
+	public void setStoreDist(Boolean storeDist) {
+		this.storeDist = storeDist;
+	}
+
+	@Override
+	public String toString() {
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(getFromMode() instanceof BaseGeoSearchArgument.FromMember){
+			builder.add(Keyword.Geo.FROMMEMBER.name(), getFromMode().toString());
+		}else if(getFromMode() instanceof BaseGeoSearchArgument.FromLonLat){
+			builder.add(Keyword.Geo.FROMLONLAT.name(), getFromMode().toString());
+		}
+
+		if(getPredicate() instanceof BaseGeoSearchArgument.RadiusPredicate){
+			builder.add(Keyword.Geo.FROMLONLAT.BYRADIUS.name(), getPredicate().toString());
+		}else if(getPredicate() instanceof BaseGeoSearchArgument.BoxPredicate){
+			builder.add(Keyword.Geo.FROMLONLAT.BYBOX.name(), getPredicate().toString());
+		}
+
+		if(getOrder() != null){
+			builder.append(getOrder());
+		}
+
+		if(getCount() != null){
+			builder.add(Keyword.Common.COUNT, getCount());
+			if(Boolean.TRUE.equals(isAny())){
+				builder.append(Keyword.Common.ANY);
+			}
+		}
+
+		return builder.toString();
 	}
 
 }

@@ -40,7 +40,13 @@ public interface Keyword extends Value<String>, Rawable {
 
 		BCAST,
 
+		CH,
+
 		ID,
+
+		COUNT,
+
+		ANY,
 
 		IDLETIME,
 
@@ -77,6 +83,8 @@ public interface Keyword extends Value<String>, Rawable {
 		SETNAME,
 
 		KEYS,
+		
+		KEEPTTL,
 
 		YES,
 
@@ -85,6 +93,27 @@ public interface Keyword extends Value<String>, Rawable {
 		ON,
 
 		OFF
+	}
+
+	enum Key {
+	}
+
+	enum Geo {
+		FROMMEMBER,
+
+		FROMLONLAT,
+
+		BYRADIUS,
+
+		BYBOX,
+
+		WITHCOORD,
+
+		WITHDIST,
+
+		WITHHASH,
+
+		STOREDIST
 	}
 
 }

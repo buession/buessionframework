@@ -22,59 +22,99 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.lang.Geo;
-import io.lettuce.core.GeoValue;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.GeoAddArgument;
+import redis.clients.jedis.params.GeoAddParams;
 
 /**
- * Lettuce {@link GeoValue} 扩展
- *
- * @param <V>
- * 		值类型
+ * Jedis {@link redis.clients.jedis.params.GeoAddParams} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceGeoValue<V> extends GeoValue<V> {
-
-	private final static long serialVersionUID = -818577420137908972L;
+public final class JedisGeoAddParam extends GeoAddParams {
 
 	/**
 	 * 构造函数
 	 */
-	public LettuceGeoValue() {
+	public JedisGeoAddParam() {
 		super();
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param member
-	 * 		成员
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
+	 * @param nxXx
+	 *        {@link NxXx}
 	 */
-	public LettuceGeoValue(final V member, final double longitude, final double latitude) {
+	public JedisGeoAddParam(final NxXx nxXx) {
 		super();
+		nxXx(this, nxXx);
 	}
 
 	/**
-	 * 从 {@link Geo} 创建 {@link GeoValue} 实例
+	 * 构造函数
 	 *
-	 * @param member
-	 * 		成员
-	 * @param geo
-	 *        {@link Geo}
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return {@link LettuceGeoValue} 实例
+	 * @param ch
+	 * 		-
 	 */
-	public static <V> GeoValue<V> from(final V member, final Geo geo) {
-		return just(geo.getLongitude(), geo.getLatitude(), member);
+	public JedisGeoAddParam(final boolean ch) {
+		super();
+		ch(this, ch);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param ch
+	 * 		-
+	 */
+	public JedisGeoAddParam(final NxXx nxXx, final boolean ch) {
+		super();
+		nxXx(this, nxXx);
+		ch(this, ch);
+	}
+
+	/**
+	 * 从 {@link GeoAddArgument} 创建 {@link GeoAddParams} 实例
+	 *
+	 * @param geoAddArgument
+	 *        {@link GeoAddArgument}
+	 *
+	 * @return {@link JedisGeoAddParam} 实例
+	 */
+	public static JedisGeoAddParam from(final GeoAddArgument geoAddArgument) {
+		final JedisGeoAddParam geoAddParam = new JedisGeoAddParam();
+
+		nxXx(geoAddParam, geoAddArgument.getNxXx());
+		ch(geoAddParam, geoAddArgument.isCh());
+
+		return geoAddParam;
+	}
+
+	private static void nxXx(final JedisGeoAddParam geoAddParam, final NxXx nxXx) {
+		if(nxXx != null){
+			switch(nxXx){
+				case NX:
+					geoAddParam.nx();
+					break;
+				case XX:
+					geoAddParam.xx();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	private static void ch(final JedisGeoAddParam geoRadiusParam, final Boolean ch) {
+		if(Boolean.TRUE.equals(ch)){
+			geoRadiusParam.ch();
+		}
 	}
 
 }

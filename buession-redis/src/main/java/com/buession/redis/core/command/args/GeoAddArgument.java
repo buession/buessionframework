@@ -22,57 +22,102 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce.utils;
+package com.buession.redis.core.command.args;
 
-import com.buession.lang.Geo;
-import com.buession.redis.core.internal.lettuce.LettuceGeoValue;
-import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.GeoValue;
-
-import java.util.Map;
+import com.buession.redis.core.Keyword;
+import com.buession.redis.core.NxXx;
 
 /**
- * Lettuce {@link GeoValue} 工具类
+ * {@code GEOADD} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class GeoValueUtils {
+public class GeoAddArgument {
 
-	protected GeoValueUtils() {
+	/**
+	 * {@link NxXx}
+	 */
+	private NxXx nxXx;
 
+	private Boolean ch;
+
+	/**
+	 * 构造函数
+	 */
+	public GeoAddArgument() {
 	}
 
-	@SuppressWarnings({"unchecked"})
-	public static GeoValue<byte[]>[] fromStringMap(final Map<String, Geo> values) {
-		if(values == null){
-			return null;
-		}else{
-			final GeoValue<byte[]>[] result = new GeoValue[values.size()];
-			int i = 0;
-
-			for(Map.Entry<String, Geo> e : values.entrySet()){
-				result[i++] = LettuceGeoValue.from(SafeEncoder.encode(e.getKey()), e.getValue());
-			}
-
-			return result;
-		}
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 */
+	public GeoAddArgument(final NxXx nxXx) {
+		this.nxXx = nxXx;
 	}
 
-	@SuppressWarnings({"unchecked"})
-	public static GeoValue<byte[]>[] fromBinaryMap(final Map<byte[], Geo> values) {
-		if(values == null){
-			return null;
-		}else{
-			final GeoValue<byte[]>[] result = new GeoValue[values.size()];
-			int i = 0;
+	/**
+	 * 构造函数
+	 *
+	 * @param ch
+	 * 		-
+	 */
+	public GeoAddArgument(final Boolean ch) {
+		this.ch = ch;
+	}
 
-			for(Map.Entry<byte[], Geo> e : values.entrySet()){
-				result[i++] = LettuceGeoValue.from(e.getKey(), e.getValue());
-			}
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param ch
+	 * 		-
+	 */
+	public GeoAddArgument(final NxXx nxXx, final Boolean ch) {
+		this(nxXx);
+		this.ch = ch;
+	}
 
-			return result;
+	public NxXx getNxXx() {
+		return nxXx;
+	}
+
+	public void setNxXx(NxXx nxXx) {
+		this.nxXx = nxXx;
+	}
+
+	public Boolean isCh() {
+		return getCh();
+	}
+
+	public Boolean getCh() {
+		return ch;
+	}
+
+	public void ch() {
+		this.ch = true;
+	}
+
+	public void setCh(Boolean ch) {
+		this.ch = ch;
+	}
+
+	@Override
+	public String toString() {
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(nxXx != null){
+			builder.append(nxXx);
 		}
+
+		if(Boolean.TRUE.equals(ch)){
+			builder.append(Keyword.Common.CH);
+		}
+
+		return builder.toString();
 	}
 
 }

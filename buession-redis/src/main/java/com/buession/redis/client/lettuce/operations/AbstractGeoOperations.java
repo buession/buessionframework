@@ -24,15 +24,23 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.lang.Geo;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.command.args.GeoSearchStoreArgument;
+import com.buession.redis.core.internal.convert.lettuce.params.GeoUnitConverter;
+import com.buession.redis.core.internal.lettuce.LettuceGeoValue;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.GeoSearch;
+import io.lettuce.core.GeoValue;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce 地理位置命令操作抽象类
@@ -56,11 +64,6 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 	}
 
 	@Override
-	public List<Geo> geoPos(final String key, final String... members) {
-		return geoPos(SafeEncoder.encode(key), SafeEncoder.encode(members));
-	}
-
-	@Override
 	public Double geoDist(final String key, final String member1, final String member2) {
 		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2));
 	}
@@ -68,6 +71,11 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
 		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2), unit);
+	}
+
+	@Override
+	public List<Geo> geoPos(final String key, final String... members) {
+		return geoPos(SafeEncoder.encode(key), SafeEncoder.encode(members));
 	}
 
 	@Override
@@ -93,6 +101,96 @@ public abstract class AbstractGeoOperations<C extends LettuceRedisClient> extend
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
 		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, geoRadiusArgument);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final GeoSearchArgument geoSearchArgument) {
+		return geoSearch(SafeEncoder.encode(key), geoSearchArgument);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key,
+							   final GeoSearchStoreArgument geoSearchStoreArgument) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), geoSearchStoreArgument);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected static <SK, TK> GeoValue<TK>[] createGeoValueArrayFromGeoMap(final Map<SK, Geo> memberCoordinates, final
+	Converter<SK, TK> keyConverter) {
+		if(memberCoordinates == null){
+			return null;
+		}else{
+			final GeoValue<TK>[] result = new GeoValue[memberCoordinates.size()];
+			int i = 0;
+
+			for(Map.Entry<SK, Geo> e : memberCoordinates.entrySet()){
+				result[i++] = LettuceGeoValue.from(keyConverter.convert(e.getKey()), e.getValue());
+			}
+
+			return result;
+		}
+	}
+
+	protected static GeoSearch.GeoRef<byte[]> createGeoRefFromGeoSearchArgument(
+			final GeoSearchArgument geoSearchArgument) {
+		if(geoSearchArgument.getFromMode() instanceof GeoSearchArgument.FromMember){
+			return GeoSearch.fromMember(SafeEncoder.encode(
+					((GeoSearchArgument.FromMember) geoSearchArgument.getFromMode()).getMember()));
+		}else if(geoSearchArgument.getFromMode() instanceof GeoSearchArgument.FromLonLat){
+			final Geo geo = ((GeoSearchArgument.FromLonLat) geoSearchArgument.getFromMode()).getGeo();
+			return GeoSearch.fromCoordinates(geo.getLongitude(), geo.getLatitude());
+		}else{
+			return null;
+		}
+	}
+
+	protected static GeoSearch.GeoPredicate createGeoPredicateFromGeoSearchArgument(
+			final GeoSearchArgument geoSearchArgument) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+
+		if(geoSearchArgument.getPredicate() instanceof GeoSearchArgument.RadiusPredicate){
+			final GeoSearchArgument.RadiusPredicate predicate = (GeoSearchArgument.RadiusPredicate) geoSearchArgument.getPredicate();
+
+			return GeoSearch.byRadius(predicate.getRadius(), geoUnitConverter.convert(predicate.getUnit()));
+		}else if(geoSearchArgument.getPredicate() instanceof GeoSearchArgument.BoxPredicate){
+			final GeoSearchArgument.BoxPredicate predicate = (GeoSearchArgument.BoxPredicate) geoSearchArgument.getPredicate();
+
+			return GeoSearch.byBox(predicate.getWidth(), predicate.getHeight(),
+					geoUnitConverter.convert(predicate.getUnit()));
+		}else{
+			return null;
+		}
+	}
+
+	protected static GeoSearch.GeoRef<byte[]> createGeoRefFromGeoSearchStoreArgument(
+			final GeoSearchStoreArgument geoSearchStoreArgument) {
+		if(geoSearchStoreArgument.getFromMode() instanceof GeoSearchStoreArgument.FromMember){
+			return GeoSearch.fromMember(SafeEncoder.encode(
+					((GeoSearchStoreArgument.FromMember) geoSearchStoreArgument.getFromMode()).getMember()));
+		}else if(geoSearchStoreArgument.getFromMode() instanceof GeoSearchStoreArgument.FromLonLat){
+			final Geo geo = ((GeoSearchStoreArgument.FromLonLat) geoSearchStoreArgument.getFromMode()).getGeo();
+			return GeoSearch.fromCoordinates(geo.getLongitude(), geo.getLatitude());
+		}else{
+			return null;
+		}
+	}
+
+	protected static GeoSearch.GeoPredicate createGeoPredicateFromGeoSearchStoreArgument(
+			final GeoSearchStoreArgument geoSearchStoreArgument) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+
+		if(geoSearchStoreArgument.getPredicate() instanceof GeoSearchStoreArgument.RadiusPredicate){
+			final GeoSearchStoreArgument.RadiusPredicate predicate = (GeoSearchStoreArgument.RadiusPredicate) geoSearchStoreArgument.getPredicate();
+
+			return GeoSearch.byRadius(predicate.getRadius(), geoUnitConverter.convert(predicate.getUnit()));
+		}else if(geoSearchStoreArgument.getPredicate() instanceof GeoSearchStoreArgument.BoxPredicate){
+			final GeoSearchStoreArgument.BoxPredicate predicate = (GeoSearchStoreArgument.BoxPredicate) geoSearchStoreArgument.getPredicate();
+
+			return GeoSearch.byBox(predicate.getWidth(), predicate.getHeight(),
+					geoUnitConverter.convert(predicate.getUnit()));
+		}else{
+			return null;
+		}
 	}
 
 }

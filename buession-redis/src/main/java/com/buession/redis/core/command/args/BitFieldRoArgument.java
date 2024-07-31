@@ -191,8 +191,12 @@ public class BitFieldRoArgument implements ArrayArgument<String> {
 
 		@Override
 		public String toString() {
-			return com.buession.redis.core.command.SubCommand.GET + " " + bitFieldType + " " +
-					(bitOffset ? "#" + offset : offset);
+			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+			builder.append(com.buession.redis.core.command.SubCommand.GET).append(bitFieldType)
+					.append(bitOffset ? "#" + offset : Integer.toString(offset));
+
+			return builder.build();
 		}
 
 	}

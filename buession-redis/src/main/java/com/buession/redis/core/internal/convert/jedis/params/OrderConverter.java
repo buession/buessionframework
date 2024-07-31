@@ -22,34 +22,34 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.SetListConverter;
-import com.buession.redis.core.GeoRadius;
-import io.lettuce.core.GeoWithin;
-
-import java.util.List;
+import com.buession.lang.Order;
+import redis.clients.jedis.args.SortingOrder;
 
 /**
- * Lettuce georadius 命令结果转换为 {@link GeoRadius}
+ * {@link com.buession.lang.Order} 转换为 jedis {@link SortingOrder}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byte[]>, GeoRadius> {
-
-	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
+public final class OrderConverter implements Converter<Order, SortingOrder> {
 
 	@Override
-	public GeoRadius convert(final GeoWithin<byte[]> source) {
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
-	}
+	public SortingOrder convert(final Order source) {
+		if(source != null){
+			switch(source){
+				case ASC:
+					return SortingOrder.ASC;
+				case DESC:
+					return SortingOrder.DESC;
+				default:
+					break;
+			}
+		}
 
-	public static ListConverter<GeoWithin<byte[]>, GeoRadius> listConverter() {
-		return new ListConverter<>(new GeoRadiusResponseConverter());
+		return null;
 	}
 
 }

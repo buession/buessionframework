@@ -26,6 +26,8 @@ package com.buession.redis.core.internal.lettuce;
 
 import com.buession.lang.Order;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.command.args.GeoSearchStoreArgument;
 import io.lettuce.core.GeoArgs;
 
 /**
@@ -244,6 +246,57 @@ public final class LettuceGeoArgs extends GeoArgs {
 				}else{
 					geoArgs.withCount(geoRadiusArgument.getCount());
 				}
+			}
+		}
+
+		return geoArgs;
+	}
+
+	/**
+	 * 从 {@link GeoSearchArgument} 创建 {@link GeoArgs} 实例
+	 *
+	 * @param geoSearchArgument
+	 *        {@link GeoRadiusArgument}
+	 *
+	 * @return {@link LettuceGeoArgs} 实例
+	 */
+	public static LettuceGeoArgs from(final GeoSearchArgument geoSearchArgument) {
+		final LettuceGeoArgs geoArgs = new LettuceGeoArgs();
+
+		withCoordinates(geoArgs, geoSearchArgument.isWithCoord());
+		withDistance(geoArgs, geoSearchArgument.isWithDist());
+		withHash(geoArgs, geoSearchArgument.isWithHash());
+		sort(geoArgs, geoSearchArgument.getOrder());
+
+		if(geoSearchArgument.getCount() != null){
+			if(geoSearchArgument.isAny() != null){
+				geoArgs.withCount(geoSearchArgument.getCount(), geoSearchArgument.isAny());
+			}else{
+				geoArgs.withCount(geoSearchArgument.getCount());
+			}
+		}
+
+		return geoArgs;
+	}
+
+	/**
+	 * 从 {@link GeoSearchStoreArgument} 创建 {@link GeoArgs} 实例
+	 *
+	 * @param geoSearchStoreArgument
+	 *        {@link GeoSearchStoreArgument}
+	 *
+	 * @return {@link LettuceGeoArgs} 实例
+	 */
+	public static LettuceGeoArgs from(final GeoSearchStoreArgument geoSearchStoreArgument) {
+		final LettuceGeoArgs geoArgs = new LettuceGeoArgs();
+		
+		sort(geoArgs, geoSearchStoreArgument.getOrder());
+
+		if(geoSearchStoreArgument.getCount() != null){
+			if(geoSearchStoreArgument.isAny() != null){
+				geoArgs.withCount(geoSearchStoreArgument.getCount(), geoSearchStoreArgument.isAny());
+			}else{
+				geoArgs.withCount(geoSearchStoreArgument.getCount());
 			}
 		}
 

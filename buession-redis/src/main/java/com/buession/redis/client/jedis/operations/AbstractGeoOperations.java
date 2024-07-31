@@ -24,8 +24,14 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.MapConverter;
+import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
+import com.buession.redis.core.internal.jedis.JedisGeoCoordinate;
+import redis.clients.jedis.GeoCoordinate;
+
+import java.util.Map;
 
 /**
  * Jedis 地理位置命令操作抽象类
@@ -41,6 +47,12 @@ public abstract class AbstractGeoOperations<C extends JedisRedisClient> extends 
 
 	public AbstractGeoOperations(final C client) {
 		super(client);
+	}
+
+	protected static <K> Map<K, GeoCoordinate> createGeoCoordinateMapFromGeoMap(final Map<K, Geo> memberCoordinates) {
+		final MapConverter<K, Geo, K, GeoCoordinate> geoCoordinateMapConverter = new MapConverter<>((k)->k,
+				JedisGeoCoordinate::from);
+		return geoCoordinateMapConverter.convert(memberCoordinates);
 	}
 
 }

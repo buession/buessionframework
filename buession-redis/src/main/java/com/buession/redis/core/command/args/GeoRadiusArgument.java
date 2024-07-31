@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.Keyword;
 
 /**
  * {@code GEORADIUS} 命令参数
@@ -419,47 +420,30 @@ public class GeoRadiusArgument {
 		return any;
 	}
 
-	/**
-	 * -
-	 */
-	public void any() {
-		this.any = true;
-	}
-
-	/**
-	 * -
-	 *
-	 * @param any
-	 * 		true / false
-	 */
-	public void setAny(final Boolean any) {
-		this.any = any;
-	}
-
 	@Override
 	public String toString() {
 		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 		if(Boolean.TRUE.equals(withCoord)){
-			builder.append("WITHCOORD");
+			builder.append(Keyword.Geo.WITHCOORD);
 		}
 
 		if(Boolean.TRUE.equals(withDist)){
-			builder.append("WITHDIST");
+			builder.append(Keyword.Geo.WITHDIST);
 		}
 
 		if(Boolean.TRUE.equals(withHash)){
-			builder.append("WITHHASH");
+			builder.append(Keyword.Geo.WITHHASH);
 		}
 
 		if(count != null){
-			builder.add("count", count);
+			builder.add(Keyword.Common.COUNT, count);
 			if(any != null){
-				builder.append("ANY");
+				builder.append(Keyword.Common.ANY);
 			}
 		}
 
-		builder.add(order);
+		builder.append(order);
 
 		return builder.toString();
 	}
