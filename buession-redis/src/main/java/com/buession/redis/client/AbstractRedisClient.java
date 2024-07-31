@@ -68,6 +68,11 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected ConnectionOperations connectionOperations;
 
 	/**
+	 * 一般命令
+	 */
+	protected GenericOperations genericOperations;
+
+	/**
 	 * 地理位置操作命令
 	 */
 	protected GeoOperations geoOperations;

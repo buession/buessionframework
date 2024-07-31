@@ -30,6 +30,7 @@ import com.buession.redis.client.jedis.operations.JedisClusterAclOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHashOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHyperLogLogOperations;
@@ -104,6 +105,15 @@ public class JedisClusterClient extends AbstractJedisRedisClient<JedisClusterCon
 		}
 
 		return connectionOperations;
+	}
+
+	@Override
+	public GenericOperations genericOperations() {
+		if(genericOperations == null){
+			genericOperations = new JedisClusterGenericOperations(this);
+		}
+
+		return genericOperations;
 	}
 
 	@Override

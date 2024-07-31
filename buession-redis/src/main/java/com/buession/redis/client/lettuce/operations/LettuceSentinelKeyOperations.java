@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.ExpireOption;
@@ -623,18 +622,6 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return notCommand(client, Command.UNLINK, args);
-	}
-
-	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return notCommand(client, Command.WAIT, args);
-	}
-
-	@Override
-	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return notCommand(client, Command.WAITOF, args);
 	}
 
 }

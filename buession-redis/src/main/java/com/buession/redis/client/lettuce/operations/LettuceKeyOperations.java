@@ -27,7 +27,6 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.ExpireOption;
@@ -866,31 +865,6 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 			return new LettuceCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}
-	}
-
-	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return notCommand(client, Command.WAITOF, args);
 	}
 
 	private Status copy(final byte[] key, final byte[] destKey, final CopyArgs copyArgs, final CommandArguments args) {

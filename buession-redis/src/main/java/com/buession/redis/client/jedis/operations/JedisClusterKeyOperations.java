@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ExpireOption;
@@ -39,7 +38,6 @@ import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.BinaryObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
@@ -85,13 +83,13 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status copy(final String key, final String destKey, final int db) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db);
-		return copy(key, destKey, db, false, args);
+		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db);
-		return copy(key, destKey, db, false, args);
+		return copy(key, destKey, false, args);
 	}
 
 	@Override
@@ -1515,45 +1513,6 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					.run(args);
 		}else{
 			return new JedisClusterCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitReplicas((String) null, replicas, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		final KeyValueConverter<Long, Long, Long, Long> keyValueConverter = new KeyValueConverter<>((k)->k, (v)->v);
-
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
 					.run(args);
 		}
 	}

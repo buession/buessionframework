@@ -30,6 +30,7 @@ import com.buession.redis.client.jedis.operations.JedisSentinelAclOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHyperLogLogOperations;
@@ -105,6 +106,15 @@ public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelC
 		}
 
 		return connectionOperations;
+	}
+
+	@Override
+	public GenericOperations genericOperations() {
+		if(genericOperations == null){
+			genericOperations = new JedisSentinelGenericOperations(this);
+		}
+
+		return genericOperations;
 	}
 
 	@Override

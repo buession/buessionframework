@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.ExpireOption;
@@ -39,7 +38,6 @@ import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.BinaryObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
@@ -1508,44 +1506,6 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		final KeyValueConverter<Long, Long, Long, Long> keyValueConverter = new KeyValueConverter<>((k)->k, (v)->v);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, Command.WAIT, (cmd)->cmd.waitAOF(locals, replicas, timeout),
-					keyValueConverter)
 					.run(args);
 		}
 	}

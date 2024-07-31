@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.ObjectEncoding;
@@ -40,8 +39,7 @@ import java.util.Set;
 /**
  * KEY 命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/database/index.html" target="_blank">http://redisdoc.com/database/index.html</a>
- * 和 <a href="http://redisdoc.com/expire/index.html" target="_blank">http://redisdoc.com/expire/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=generic" target="_blank">https://redis.io/docs/latest/commands/?group=generic</a></p>
  *
  * @author Yong.Teng
  */
@@ -1492,41 +1490,5 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 被删除 key 的数量
 	 */
 	Long unlink(final byte[]... keys);
-
-	/**
-	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/wait.html" target="_blank">http://www.redis.cn/commands/wait.html</a></p>
-	 *
-	 * @param replicas
-	 * 		副本数量
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return The number of replicas reached by all the writes performed in the context of the current connection.
-	 */
-	Long wait(final int replicas, final int timeout);
-
-	/**
-	 * Return the number of masters and replicas that have fsynced all write commands sent by the current client
-	 * before the {@code WAITAOF} command, both in the case where the specified thresholds were met, and when the
-	 * timeout is reached.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/waitaof/" target="_blank">https://redis.io/docs/latest/commands/waitaof/</a></p>
-	 *
-	 * @param locals
-	 * 		-
-	 * @param replicas
-	 * 		副本数量
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return The number of masters and replicas that have fsynced all write commands sent by the current client
-	 * before the {@code WAITAOF} command, both in the case where the specified thresholds were met, and when the
-	 * timeout is reached.
-	 *
-	 * @since 3.0.0
-	 */
-	KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout);
 
 }

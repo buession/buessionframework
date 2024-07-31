@@ -36,8 +36,8 @@ import java.util.function.Function;
  * @author Yong.Teng
  */
 public abstract class AbstractRedisTemplate extends RedisAccessor implements AclCommands, BitMapCommands,
-		ClusterCommands, ConnectionCommands, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands,
-		ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands,
+		ClusterCommands, ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands,
+		KeyCommands, ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands,
 		StreamCommands, StringCommands, TransactionCommands {
 
 	/**

@@ -53,8 +53,8 @@ import java.util.stream.Collectors;
  * @see BaseRedisTemplate
  */
 public class RedisTemplate extends BaseRedisTemplate implements AclOperations, BitMapOperations, ClusterOperations,
-		ConnectionOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations, ListOperations,
-		PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
+		ConnectionOperations, GenericOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations,
+		ListOperations, PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
 		StreamOperations, StringOperations, TransactionOperations {
 
 	/**

@@ -81,6 +81,15 @@ public interface RedisClient {
 	ConnectionOperations connectionOperations();
 
 	/**
+	 * 返回一般命令操作实例
+	 *
+	 * @return 一般命令操作实例
+	 *
+	 * @since 3.0.0
+	 */
+	GenericOperations genericOperations();
+
+	/**
 	 * 返回地理位置命令操作实例
 	 *
 	 * @return 地理位置命令操作实例

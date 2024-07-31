@@ -25,7 +25,6 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.utils.Assert;
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.RedisNode;
@@ -490,16 +489,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	default Status restore(final byte[] key, final byte[] serializedValue, final Date ttl) {
 		Assert.isNull(ttl, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
-	}
-
-	@Override
-	default Long wait(final int replicas, final int timeout) {
-		return execute((client)->client.keyOperations().wait(replicas, timeout));
-	}
-
-	@Override
-	default KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		return execute((client)->client.keyOperations().waitOf(locals, replicas, timeout));
 	}
 
 }
