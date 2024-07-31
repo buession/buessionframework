@@ -24,7 +24,8 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.MigrateOperation;
+import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.MigrateParams;
 
@@ -49,18 +50,9 @@ public final class JedisMigrateParams extends MigrateParams {
 	 * @param migrateOperation
 	 * 		迁移方式
 	 */
-	public JedisMigrateParams(final MigrateOperation migrateOperation) {
+	public JedisMigrateParams(final MigrateArgument.Mode migrateOperation) {
 		super();
-		switch(migrateOperation){
-			case COPY:
-				copy();
-				break;
-			case REPLACE:
-				replace();
-				break;
-			default:
-				break;
-		}
+		mode(this, migrateOperation);
 	}
 
 	/**
@@ -117,7 +109,7 @@ public final class JedisMigrateParams extends MigrateParams {
 	 * @param password
 	 * 		密码
 	 */
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final String password) {
+	public JedisMigrateParams(final MigrateArgument.Mode migrateOperation, final String password) {
 		this(migrateOperation);
 		auth(password);
 	}
@@ -130,7 +122,7 @@ public final class JedisMigrateParams extends MigrateParams {
 	 * @param password
 	 * 		密码
 	 */
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] password) {
+	public JedisMigrateParams(final MigrateArgument.Mode migrateOperation, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(password));
 	}
 
@@ -144,7 +136,8 @@ public final class JedisMigrateParams extends MigrateParams {
 	 * @param password
 	 * 		密码
 	 */
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final String username, final String password) {
+	public JedisMigrateParams(final MigrateArgument.Mode migrateOperation, final String username,
+							  final String password) {
 		this(migrateOperation);
 		auth2(username, password);
 	}
@@ -159,8 +152,43 @@ public final class JedisMigrateParams extends MigrateParams {
 	 * @param password
 	 * 		密码
 	 */
-	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] username, final byte[] password) {
+	public JedisMigrateParams(final MigrateArgument.Mode migrateOperation, final byte[] username,
+							  final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
+
+	/**
+	 * 从 {@link MigrateArgument} 创建 {@link MigrateParams} 实例
+	 *
+	 * @param migrateArgument
+	 *        {@link MigrateArgument}
+	 *
+	 * @return {@link JedisMigrateParams} 实例
+	 *
+	 * @since 3.0.0
+	 */
+	public static JedisMigrateParams from(final MigrateArgument migrateArgument) {
+		final JedisMigrateParams migrateParams = new JedisMigrateParams();
+
+		mode(migrateParams, migrateArgument.getMode());
+
+		if(Validate.hasText(migrateArgument.getPassword())){
+			if(Validate.hasText(migrateArgument.getUsername())){
+				migrateParams.auth2(migrateArgument.getUsername(), migrateArgument.getPassword());
+			}else{
+				migrateParams.auth(migrateArgument.getPassword());
+			}
+		}
+
+		return migrateParams;
+	}
+
+	private static void mode(final MigrateParams migrateParams, final MigrateArgument.Mode migrateOperation) {
+		if(migrateOperation == MigrateArgument.Mode.COPY){
+			migrateParams.copy();
+		}else if(migrateOperation == MigrateArgument.Mode.REPLACE){
+			migrateParams.replace();
+		}
 	}
 
 }

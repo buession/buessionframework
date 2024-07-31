@@ -104,6 +104,71 @@ public enum Command implements ProtocolCommand {
 	 */
 
 	/**
+	 * Key command start
+	 **/
+	COPY("rw", CommandGroup.KEY),
+
+	DEL("rw", CommandGroup.KEY),
+
+	DUMP("r", CommandGroup.KEY),
+
+	EXISTS("r", CommandGroup.KEY),
+
+	EXPIRE("w", CommandGroup.KEY),
+
+	EXPIREAT("w", CommandGroup.KEY),
+
+	EXPIRETIME("r", CommandGroup.KEY),
+
+	KEYS("r", CommandGroup.KEY),
+
+	MIGRATE("w", CommandGroup.KEY),
+
+	MOVE("w", CommandGroup.KEY),
+
+	OBJECT("rw", CommandGroup.KEY, SubCommand.OBJECT_ENCODING, SubCommand.OBJECT_REFQ, SubCommand.OBJECT_IDLETIME,
+			SubCommand.OBJECT_REFCOUNT),
+
+	PERSIST("w", CommandGroup.KEY),
+
+	PEXPIRE("w", CommandGroup.KEY),
+
+	PEXPIREAT("w", CommandGroup.KEY),
+
+	PEXPIRETIME("r", CommandGroup.KEY),
+
+	PTTL("r", CommandGroup.KEY),
+
+	RANDOMKEY("r", CommandGroup.KEY),
+
+	RENAME("w", CommandGroup.KEY),
+
+	RENAMENX("w", CommandGroup.KEY),
+
+	RESTORE("w", CommandGroup.KEY),
+
+	SCAN("r", CommandGroup.KEY),
+
+	SORT("rw", CommandGroup.KEY),
+
+	SORT_RO("r", CommandGroup.KEY),
+
+	TOUCH("w", CommandGroup.KEY),
+
+	TTL("r", CommandGroup.KEY),
+
+	TYPE("r", CommandGroup.KEY),
+
+	UNLINK("w", CommandGroup.KEY),
+
+	WAIT("w", CommandGroup.KEY),
+
+	WAITOF("w", CommandGroup.KEY),
+	/**
+	 * Key command end
+	 **/
+
+	/**
 	 * ACL command start
 	 **/
 	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
@@ -191,68 +256,6 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * hyperloglog command end
 	 **/
-
-	/**
-	 * key command start
-	 **/
-	COPY(CommandGroup.KEY),
-
-	DEL(CommandGroup.KEY),
-
-	DUMP(CommandGroup.KEY),
-
-	EXISTS(CommandGroup.KEY),
-
-	EXPIRE(CommandGroup.KEY),
-
-	EXPIREAT(CommandGroup.KEY),
-
-	MIGRATE(CommandGroup.KEY),
-
-	MOVE(CommandGroup.KEY),
-
-	KEYS(CommandGroup.KEY),
-
-	PERSIST(CommandGroup.KEY),
-
-	PEXPIRE(CommandGroup.KEY),
-
-	PEXPIREAT(CommandGroup.KEY),
-
-	PTTL(CommandGroup.KEY),
-
-	RANDOMKEY(CommandGroup.KEY),
-
-	RENAME(CommandGroup.KEY),
-
-	RENAMENX(CommandGroup.KEY),
-
-	RESTORE(CommandGroup.KEY),
-
-	SCAN(CommandGroup.KEY),
-
-	SORT(CommandGroup.KEY),
-
-	SORT_RO(CommandGroup.KEY),
-
-	TTL(CommandGroup.KEY),
-
-	TYPE(CommandGroup.KEY),
-
-	TOUCH(CommandGroup.KEY),
-
-	UNLINK(CommandGroup.KEY),
-
-	WAIT(CommandGroup.KEY),
-
-	OBJECT_ENCODING(CommandGroup.KEY),
-
-	OBJECT_REFQ(CommandGroup.KEY),
-
-	OBJECT_IDLETIME(CommandGroup.KEY),
-
-	OBJECT_REFCOUNT(CommandGroup.KEY),
-	/** key command end **/
 
 	/**
 	 * list command start

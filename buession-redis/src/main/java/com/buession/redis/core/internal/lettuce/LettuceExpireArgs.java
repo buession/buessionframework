@@ -22,23 +22,56 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.lettuce;
+
+import com.buession.redis.core.ExpireOption;
+import io.lettuce.core.ExpireArgs;
 
 /**
- * 迁移方式
+ * Lettuce {@link ExpireArgs} 扩展
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public enum MigrateOperation {
+public final class LettuceExpireArgs extends ExpireArgs {
 
 	/**
-	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，不移除源实例上的 key
+	 * 构造函数
 	 */
-	COPY,
+	public LettuceExpireArgs() {
+		super();
+	}
 
 	/**
-	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，替换目标实例上已存在的 key
+	 * 构造函数
+	 *
+	 * @param expireOption
+	 * 		过期选项
 	 */
-	REPLACE
+	public LettuceExpireArgs(final ExpireOption expireOption) {
+		super();
+		expireOption(this, expireOption);
+	}
+
+	private static void expireOption(final ExpireArgs expireArgs, final ExpireOption expireOption) {
+		if(expireOption != null){
+			switch(expireOption){
+				case NX:
+					expireArgs.nx();
+					break;
+				case XX:
+					expireArgs.xx();
+					break;
+				case LT:
+					expireArgs.gt();
+					break;
+				case GT:
+					expireArgs.gt();
+					break;
+				default:
+					break;
+			}
+		}
+	}
 
 }

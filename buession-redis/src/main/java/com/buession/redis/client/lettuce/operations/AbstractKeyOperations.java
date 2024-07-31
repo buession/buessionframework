@@ -29,10 +29,10 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.ExpireOption;
-import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.utils.SafeEncoder;
@@ -53,6 +53,26 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 
 	public AbstractKeyOperations(final C client) {
 		super(client);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey));
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final boolean replace) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), replace);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
+		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db, replace);
 	}
 
 	@Override
@@ -91,53 +111,13 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 	}
 
 	@Override
-	public Status pExpire(final String key, final int lifetime) {
-		return pExpire(SafeEncoder.encode(key), lifetime);
+	public Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
+		return expireAt(SafeEncoder.encode(key), unixTimestamp, expireOption);
 	}
 
 	@Override
-	public Status pExpireAt(final String key, final long unixTimestamp) {
-		return pExpireAt(SafeEncoder.encode(key), unixTimestamp);
-	}
-
-	@Override
-	public Status persist(final String key) {
-		return persist(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Long ttl(final String key) {
-		return ttl(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Long pTtl(final String key) {
-		return pTtl(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey) {
-		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey));
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final int db) {
-		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final boolean replace) {
-		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), replace);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		return copy(SafeEncoder.encode(key), SafeEncoder.encode(destKey), db, replace);
-	}
-
-	@Override
-	public Status move(final String key, final int db) {
-		return move(SafeEncoder.encode(key), db);
+	public Long expireTime(String key) {
+		return expireTime(SafeEncoder.encode(key));
 	}
 
 	@Override
@@ -147,34 +127,68 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation, final String... keys) {
-		return migrate(host, port, db, timeout, operation, SafeEncoder.encode(keys));
+						  final MigrateArgument migrateArgument, final String... keys) {
+		return migrate(host, port, db, timeout, migrateArgument, SafeEncoder.encode(keys));
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
-						  final String... keys) {
-		return migrate(host, port, db, SafeEncoder.encode(password), timeout, SafeEncoder.encode(keys));
+	public Status move(final String key, final int db) {
+		return move(SafeEncoder.encode(key), db);
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
-						  final MigrateOperation operation, final String... keys) {
-		return migrate(host, port, db, SafeEncoder.encode(password), timeout, operation, SafeEncoder.encode(keys));
+	public ObjectEncoding objectEncoding(final String key) {
+		return objectEncoding(SafeEncoder.encode(key));
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final String user, final String password,
-						  final int timeout, final String... keys) {
-		return migrate(host, port, db, SafeEncoder.encode(user), SafeEncoder.encode(password), timeout,
-				SafeEncoder.encode(keys));
+	public Long objectFreq(final String key) {
+		return objectFreq(SafeEncoder.encode(key));
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final String user, final String password,
-						  final int timeout, final MigrateOperation operation, final String... keys) {
-		return migrate(host, port, db, SafeEncoder.encode(user), SafeEncoder.encode(password), timeout, operation,
-				SafeEncoder.encode(keys));
+	public Long objectIdleTime(final String key) {
+		return objectIdleTime(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long objectRefcount(final String key) {
+		return objectRefcount(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Status persist(final String key) {
+		return persist(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Status pExpire(final String key, final int lifetime) {
+		return pExpire(SafeEncoder.encode(key), lifetime);
+	}
+
+	@Override
+	public Status pExpire(final String key, final int lifetime, final ExpireOption expireOption) {
+		return pExpire(SafeEncoder.encode(key), lifetime, expireOption);
+	}
+
+	@Override
+	public Status pExpireAt(final String key, final long unixTimestamp) {
+		return pExpireAt(SafeEncoder.encode(key), unixTimestamp);
+	}
+
+	@Override
+	public Status pExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
+		return pExpireAt(SafeEncoder.encode(key), unixTimestamp, expireOption);
+	}
+
+	@Override
+	public Long pExpireTime(final String key) {
+		return pExpireTime(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long pTtl(final String key) {
+		return pTtl(SafeEncoder.encode(key));
 	}
 
 	@Override
@@ -194,8 +208,8 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl,
-						  final RestoreArgument argument) {
-		return restore(SafeEncoder.encode(key), serializedValue, ttl, argument);
+						  final RestoreArgument restoreArgument) {
+		return restore(SafeEncoder.encode(key), serializedValue, ttl, restoreArgument);
 	}
 
 	@Override
@@ -244,6 +258,11 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 	}
 
 	@Override
+	public Long ttl(final String key) {
+		return ttl(SafeEncoder.encode(key));
+	}
+
+	@Override
 	public Type type(final String key) {
 		return type(SafeEncoder.encode(key));
 	}
@@ -251,26 +270,6 @@ public abstract class AbstractKeyOperations<C extends LettuceRedisClient> extend
 	@Override
 	public Long unlink(final String... keys) {
 		return unlink(SafeEncoder.encode(keys));
-	}
-
-	@Override
-	public ObjectEncoding objectEncoding(final String key) {
-		return objectEncoding(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Long objectFreq(final String key) {
-		return objectFreq(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Long objectIdleTime(final String key) {
-		return objectIdleTime(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Long objectRefcount(final String key) {
-		return objectRefcount(SafeEncoder.encode(key));
 	}
 
 }

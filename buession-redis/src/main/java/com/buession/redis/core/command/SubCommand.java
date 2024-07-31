@@ -150,6 +150,20 @@ public enum SubCommand implements ProtocolCommand {
 	 **/
 
 	/**
+	 * Key command start
+	 **/
+	OBJECT_ENCODING("r"),
+
+	OBJECT_REFQ("r"),
+
+	OBJECT_IDLETIME("r"),
+
+	OBJECT_REFCOUNT("r"),
+	/**
+	 * Key command end
+	 **/
+
+	/**
 	 * ACL command start
 	 **/
 	ACL_CAT("r"),

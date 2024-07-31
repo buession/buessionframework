@@ -27,15 +27,18 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.ExpireOption;
-import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.core.internal.convert.Converters;
@@ -43,6 +46,7 @@ import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConve
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
 import com.buession.redis.core.internal.lettuce.LettuceCopyArgs;
+import com.buession.redis.core.internal.lettuce.LettuceExpireArgs;
 import com.buession.redis.core.internal.lettuce.LettuceMigrateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceRestoreArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
@@ -50,6 +54,7 @@ import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceSortArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.CopyArgs;
+import io.lettuce.core.ExpireArgs;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MigrateArgs;
 import io.lettuce.core.RestoreArgs;
@@ -73,222 +78,8 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public Long del(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public byte[] dump(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Boolean exists(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key),
-					(v)->v == 1L)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key),
-					(v)->v == 1L)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long exists(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status expire(final byte[] key, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
-				.put("expireOption", expireOption);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.EXPIRE,
-					(cmd)->cmd.expire(key, lifetime), booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
-					booleanStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status expireAt(final byte[] key, final long unixTimestamp) {
-		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.EXPIREAT,
-					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status pExpire(final byte[] key, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.PEXPIRE,
-					(cmd)->cmd.pexpire(key, lifetime), booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.PEXPIRE,
-					(cmd)->cmd.pexpire(key, lifetime), booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
-					booleanStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
-		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.EXPIREAT,
-					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.EXPIREAT,
-					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.EXPIREAT,
-					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status persist(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
-					booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
-					booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
-					booleanStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long ttl(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long pTtl(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
 	public Status copy(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.COPY, (cmd)->cmd.copy(key, destKey),
@@ -307,31 +98,237 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db);
 		final CopyArgs copyArgs = new LettuceCopyArgs(db);
+
 		return copy(key, destKey, copyArgs, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("replace", replace);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 		final CopyArgs copyArgs = new LettuceCopyArgs(replace);
+
+		if(replace){
+			args.add(Keyword.Common.REPLACE);
+		}
+
 		return copy(key, destKey, copyArgs, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db).put("replace", replace);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db);
 		final CopyArgs copyArgs = new LettuceCopyArgs(db, replace);
+
+		if(replace){
+			args.add(Keyword.Common.REPLACE);
+		}
+
 		return copy(key, destKey, copyArgs, args);
 	}
 
 	@Override
+	public Long del(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(keys);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.DEL, (cmd)->cmd.del(keys), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public byte[] dump(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.DUMP, (cmd)->cmd.dump(key), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Boolean exists(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key),
+					(v)->v == 1L)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key),
+					(v)->v == 1L)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long exists(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(keys);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status expire(final byte[] key, final int lifetime) {
+		final CommandArguments args = CommandArguments.create(key).add(lifetime);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
+		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
+		final ExpireArgs expireArgs = new LettuceExpireArgs(expireOption);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIRE,
+					(cmd)->cmd.expire(key, lifetime, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIRE, (cmd)->cmd.expire(key, lifetime, expireArgs),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status expireAt(final byte[] key, final long unixTimestamp) {
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIREAT, (cmd)->cmd.expireat(key, unixTimestamp),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
+		final ExpireArgs expireArgs = new LettuceExpireArgs(expireOption);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.expireat(key, unixTimestamp, expireArgs), booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long expireTime(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXPIRETIME, (cmd)->cmd.expiretime(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIRETIME, (cmd)->cmd.expiretime(key),
+					(v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIRETIME, (cmd)->cmd.expiretime(key), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Set<String> keys(final String pattern) {
+		final CommandArguments args = CommandArguments.create(pattern);
+		final byte[] bPattern = SafeEncoder.encode(pattern);
+		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
+				Converters.listSetBinaryToString();
+
+		return keys(bPattern, binaryToStringListSetConverter, args);
+	}
+
+	@Override
+	public Set<byte[]> keys(final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create(pattern);
+		final ListSetConverter<byte[], byte[]> converter = new ListSetConverter<>((v)->v);
+
+		return keys(pattern, converter, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db).add(timeout).add(keys);
+		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys);
+
+		return migrate(host, port, db, timeout, migrateArgs, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout,
+						  final MigrateArgument migrateArgument, final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db).add(timeout).add(migrateArgument)
+				.add(keys);
+		final MigrateArgs<byte[]> migrateArgs = LettuceMigrateArgs.<byte[]>from(migrateArgument).keys(keys);
+
+		return migrate(host, port, db, timeout, migrateArgs, args);
+	}
+
+	@Override
 	public Status move(final byte[] key, final int db) {
-		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
+		final CommandArguments args = CommandArguments.create(key).add(db);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.MOVE, (cmd)->cmd.move(key, db),
@@ -349,84 +346,208 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("keys", (Object[]) keys);
-		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys);
+	public ObjectEncoding objectEncoding(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
 
-		return migrate(host, port, db, timeout, migrateArgs, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT, SubCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT, SubCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.OBJECT, SubCommand.OBJECT_ENCODING,
+					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
-		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(operation, keys);
+	public Long objectFreq(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
 
-		return migrate(host, port, db, timeout, migrateArgs, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT, SubCommand.OBJECT_REFQ,
+					(cmd)->cmd.objectFreq(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT, SubCommand.OBJECT_REFQ,
+					(cmd)->cmd.objectFreq(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.OBJECT, SubCommand.OBJECT_REFQ,
+					(cmd)->cmd.objectFreq(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
-						  final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
-		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys, password);
+	public Long objectIdleTime(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
 
-		return migrate(host, port, db, timeout, migrateArgs, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT, SubCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT, SubCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.OBJECT, SubCommand.OBJECT_IDLETIME,
+					(cmd)->cmd.objectIdletime(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
-						  final MigrateOperation operation, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
-		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(operation, keys, password);
+	public Long objectRefcount(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
 
-		return migrate(host, port, db, timeout, migrateArgs, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT, SubCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT, SubCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.OBJECT, SubCommand.OBJECT_REFCOUNT,
+					(cmd)->cmd.objectRefcount(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
-						  final int timeout, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout)
-				.put("keys", (Object[]) keys);
-		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys, user, password);
+	public Status persist(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
 
-		return migrate(host, port, db, timeout, migrateArgs, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
+					booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key),
+					booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.PERSIST, (cmd)->cmd.persist(key), booleanStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
-						  final int timeout, final MigrateOperation operation, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout)
-				.put("operation", operation)
-				.put("keys", (Object[]) keys);
-		final MigrateArgs<byte[]> migrateArgs = new LettuceMigrateArgs<>(keys, user, password);
+	public Status pExpire(final byte[] key, final int lifetime) {
+		final CommandArguments args = CommandArguments.create(key).add(lifetime);
 
-		return migrate(host, port, db, timeout, migrateArgs, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.PEXPIRE,
+					(cmd)->cmd.pexpire(key, lifetime), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.PEXPIRE,
+					(cmd)->cmd.pexpire(key, lifetime), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
+					booleanStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Set<String> keys(final String pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		final byte[] bPattern = SafeEncoder.encode(pattern);
-		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
-				Converters.listSetBinaryToString();
+	public Status pExpire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
+		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
+		final ExpireArgs expireArgs = new LettuceExpireArgs(expireOption);
 
-		return keys(bPattern, binaryToStringListSetConverter, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.PEXPIRE,
+					(cmd)->cmd.pexpire(key, lifetime, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.PEXPIRE,
+					(cmd)->cmd.pexpire(key, lifetime, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime, expireArgs),
+					booleanStatusConverter)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Set<byte[]> keys(final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		final ListSetConverter<byte[], byte[]> converter = new ListSetConverter<>((v)->v);
+	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 
-		return keys(pattern, converter, args);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIREAT, (cmd)->cmd.pexpireat(key, unixTimestamp),
+					booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status pExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
+		final ExpireArgs expireArgs = new LettuceExpireArgs(expireOption);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.PEXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.PEXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp, expireArgs), booleanStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.PEXPIREAT,
+					(cmd)->cmd.pexpireat(key, unixTimestamp, expireArgs), booleanStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long pExpireTime(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.PEXPIRETIME, (cmd)->cmd.pexpiretime(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.EXPIREAT, (cmd)->cmd.pexpiretime(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.EXPIREAT, (cmd)->cmd.pexpiretime(key), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long pTtl(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.PTTL, (cmd)->cmd.pttl(key), (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -440,15 +561,14 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					SafeEncoder::encode)
 					.run();
 		}else{
-			return new LettuceClusterCommand<>(client, Command.RANDOMKEY, (cmd)->cmd.randomkey(),
-					SafeEncoder::encode)
+			return new LettuceClusterCommand<>(client, Command.RANDOMKEY, (cmd)->cmd.randomkey(), SafeEncoder::encode)
 					.run();
 		}
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
+		final CommandArguments args = CommandArguments.create(key).add(newKey);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.RENAME, (cmd)->cmd.rename(key, newKey),
@@ -467,15 +587,15 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
+		final CommandArguments args = CommandArguments.create(key).add(newKey);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey), booleanStatusConverter)
+			return new LettuceClusterPipelineCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.RENAMENX,
-					(cmd)->cmd.renamenx(key, newKey), booleanStatusConverter)
+			return new LettuceClusterTransactionCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
+					booleanStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, Command.RENAMENX, (cmd)->cmd.renamenx(key, newKey),
@@ -486,8 +606,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
-		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
-				.put("ttl", ttl);
+		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.RESTORE,
@@ -506,10 +625,9 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
-						  final RestoreArgument argument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
-				.put("ttl", ttl).put("argument", argument);
-		final RestoreArgs restoreArgs = LettuceRestoreArgs.from(argument).ttl(ttl);
+						  final RestoreArgument restoreArgument) {
+		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(restoreArgument);
+		final RestoreArgs restoreArgs = LettuceRestoreArgs.from(restoreArgument).ttl(ttl);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.RESTORE,
@@ -528,7 +646,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
 				new ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter();
@@ -538,7 +656,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
 
@@ -547,7 +665,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
 		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
@@ -558,7 +676,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
 		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
@@ -568,7 +686,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
 		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
@@ -579,7 +697,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
 		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
@@ -589,8 +707,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
 		final ScanCursorConverter.KeyScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
@@ -601,8 +718,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count) {
-		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
 		final ScanCursorConverter.KeyScanCursorConverter<byte[]> keyScanCursorConverter = new ScanCursorConverter.KeyScanCursorConverter<>();
@@ -612,7 +728,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public List<String> sort(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
 
@@ -621,13 +737,13 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public List<byte[]> sort(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return sort(key, (v)->v, args);
 	}
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(sortArgument);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
 		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
@@ -637,7 +753,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(sortArgument);
 		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
 
 		return sort(key, sortArgs, (v)->v, args);
@@ -645,7 +761,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 		final SortArgs sortArgs = new LettuceSortArgs();
 
 		return sortStore(key, destKey, sortArgs, args);
@@ -653,16 +769,48 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(sortArgument);
 		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
 
 		return sortStore(key, destKey, sortArgs, args);
 	}
 
 	@Override
+	public List<String> sortRo(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
+
+		return sortRo(bKey, listConverter, args);
+	}
+
+	@Override
+	public List<byte[]> sortRo(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return sortRo(key, (v)->v, args);
+	}
+
+	@Override
+	public List<String> sortRo(final String key, final SortArgument sortArgument) {
+		final CommandArguments args = CommandArguments.create(key).add(sortArgument);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
+		final ListConverter<byte[], String> listConverter = Converters.listBinaryToString();
+
+		return sortRo(bKey, sortArgs, listConverter, args);
+	}
+
+	@Override
+	public List<byte[]> sortRo(final byte[] key, final SortArgument sortArgument) {
+		final CommandArguments args = CommandArguments.create(key).add(sortArgument);
+		final SortArgs sortArgs = LettuceSortArgs.from(sortArgument);
+
+		return sortRo(key, sortArgs, (v)->v, args);
+	}
+
+	@Override
 	public Long touch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.TOUCH, (cmd)->cmd.touch(keys), (v)->v)
@@ -677,17 +825,31 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
+	public Long ttl(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.TTL, (cmd)->cmd.ttl(key), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
 	public Type type(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final TypeConverter typeConverter = new TypeConverter();
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.TYPE, (cmd)->cmd.type(key),
-					typeConverter)
+			return new LettuceClusterPipelineCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.TYPE, (cmd)->cmd.type(key),
-					typeConverter)
+			return new LettuceClusterTransactionCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, Command.TYPE, (cmd)->cmd.type(key), typeConverter)
@@ -697,14 +859,13 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Long unlink(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys),
-					(v)->v)
+			return new LettuceClusterTransactionCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, Command.UNLINK, (cmd)->cmd.unlink(keys), (v)->v)
@@ -714,7 +875,7 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 
 	@Override
 	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.WAIT,
@@ -732,80 +893,9 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 	}
 
 	@Override
-	public ObjectEncoding objectEncoding(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT_ENCODING,
-					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT_ENCODING,
-					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.OBJECT_ENCODING,
-					(cmd)->cmd.objectEncoding(key), objectEncodingConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long objectFreq(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT_REFQ,
-					(cmd)->cmd.objectFreq(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.OBJECT_REFQ, (cmd)->cmd.objectFreq(key),
-					(v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long objectIdleTime(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT_IDLETIME,
-					(cmd)->cmd.objectIdletime(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT_IDLETIME,
-					(cmd)->cmd.objectIdletime(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.OBJECT_IDLETIME,
-					(cmd)->cmd.objectIdletime(key), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long objectRefcount(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.OBJECT_REFCOUNT,
-					(cmd)->cmd.objectRefcount(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.OBJECT_REFCOUNT,
-					(cmd)->cmd.objectRefcount(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.OBJECT_REFCOUNT,
-					(cmd)->cmd.objectRefcount(key), (v)->v)
-					.run(args);
-		}
+	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
+		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
+		return notCommand(client, Command.WAITOF, args);
 	}
 
 	private Status copy(final byte[] key, final byte[] destKey, final CopyArgs copyArgs, final CommandArguments args) {
@@ -824,6 +914,22 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 		}
 	}
 
+	private <V> Set<V> keys(final byte[] pattern, final ListSetConverter<byte[], V> converter,
+							final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), converter)
+					.run(args);
+		}
+	}
+
 	private Status migrate(final String host, final int port, final int db, final int timeout,
 						   final MigrateArgs<byte[]> migrateArgs, final CommandArguments args) {
 		if(isPipeline()){
@@ -837,22 +943,6 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 		}else{
 			return new LettuceClusterCommand<>(client, Command.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> keys(final byte[] pattern, final ListSetConverter<byte[], V> converter,
-							final CommandArguments args) {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern),
-					converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern),
-					converter)
-					.run(args);
-		}else{
-			return new LettuceClusterCommand<>(client, Command.KEYS, (cmd)->cmd.keys(pattern), converter)
 					.run(args);
 		}
 	}
@@ -881,8 +971,8 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.SCAN,
-					(cmd)->cmd.scan(cursor, scanArgs), converter)
+			return new LettuceClusterTransactionCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
+					converter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, Command.SCAN, (cmd)->cmd.scan(cursor, scanArgs),
@@ -933,8 +1023,40 @@ public final class LettuceClusterKeyOperations extends AbstractKeyOperations<Let
 					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, Command.SORT,
-					(cmd)->cmd.sortStore(key, sortArgs, destKey), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.SORT, (cmd)->cmd.sortStore(key, sortArgs, destKey),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> sortRo(final byte[] key,
+							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.SORT_RO, (cmd)->cmd.sortReadOnly(key), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.SORT_RO, (cmd)->cmd.sortReadOnly(key),
+					converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.SORT_RO, (cmd)->cmd.sortReadOnly(key), converter)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> sortRo(final byte[] key, final SortArgs sortArgs,
+							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, Command.SORT_RO, (cmd)->cmd.sortReadOnly(key, sortArgs),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, Command.SORT_RO,
+					(cmd)->cmd.sortReadOnly(key, sortArgs), converter)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, Command.SORT_RO, (cmd)->cmd.sortReadOnly(key, sortArgs),
+					converter)
 					.run(args);
 		}
 	}

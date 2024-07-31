@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.Keyword;
+
 /**
  * {@code RESTORE} 命令参数
  *
@@ -202,19 +204,19 @@ public class RestoreArgument {
 		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 		if(Boolean.TRUE.equals(replace)){
-			builder.append("REPLACE");
+			builder.append(Keyword.Common.REPLACE);
 		}
 
 		if(Boolean.TRUE.equals(absTtl)){
-			builder.append("ABSTTL");
+			builder.append(Keyword.Common.ABSTTL);
 		}
 
 		if(idleTime != null){
-			builder.add("IDLETIME", idleTime);
+			builder.add(Keyword.Common.IDLETIME, idleTime);
 		}
 
 		if(frequency != null){
-			builder.add("FREQ", frequency);
+			builder.add(Keyword.Common.FREQ, frequency);
 		}
 
 		return builder.build();

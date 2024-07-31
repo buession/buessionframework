@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.core.utils.StringJoiner;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Keyword;
 
@@ -179,36 +178,36 @@ public class ClientTracking {
 
 	@Override
 	public String toString() {
-		final StringJoiner joiner = new StringJoiner(" ");
+		final ArgumentStringBuilder joiner = ArgumentStringBuilder.create();
 
 		if(enabled != null){
-			joiner.add(enabled ? Keyword.Common.ON : Keyword.Common.OFF);
+			joiner.append(enabled ? Keyword.Common.ON : Keyword.Common.OFF);
 		}
 
 		if(redirect != null){
-			joiner.add("REDIRECT").add(redirect);
+			joiner.add(Keyword.Common.REDIRECT, redirect);
 		}
 
 		if(Validate.isNotEmpty(prefixes)){
 			for(String prefix : prefixes){
-				joiner.add("PREFIX").add(prefix);
+				joiner.add(Keyword.Common.PREFIX, prefix);
 			}
 		}
 
 		if(bcast != null){
-			joiner.add("BCAST");
+			joiner.append(Keyword.Common.BCAST);
 		}
 
 		if(optin != null){
-			joiner.add("OPTIN");
+			joiner.append(Keyword.Common.OPTIN);
 		}
 
 		if(optout != null){
-			joiner.add("OPTOUT");
+			joiner.append(Keyword.Common.OPTOUT);
 		}
 
 		if(noloop != null){
-			joiner.add("NOLOOP");
+			joiner.append(Keyword.Common.NOLOOP);
 		}
 
 		return joiner.toString();

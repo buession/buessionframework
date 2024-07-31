@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.core.utils.StringJoiner;
 import com.buession.core.validator.Validate;
+import com.buession.redis.core.Keyword;
 
 /**
  * {@code HELLO} 命令参数
@@ -223,25 +223,25 @@ public class HelloArgument {
 
 	@Override
 	public String toString() {
-		final StringJoiner joiner = new StringJoiner(" ");
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 		if(protoVer != null){
-			joiner.add(protoVer);
+			builder.append(protoVer);
 		}
 
 		if(Validate.hasText(password)){
-			joiner.add("AUTH");
+			builder.append(Keyword.Common.AUTH);
 			if(Validate.hasText(username)){
-				joiner.add(username);
+				builder.append(username);
 			}
-			joiner.add(password);
+			builder.append(password);
 		}
 
 		if(Validate.hasText(clientName)){
-			joiner.add("SETNAME").add(clientName);
+			builder.add(Keyword.Common.SETNAME, clientName);
 		}
 
-		return joiner.toString();
+		return builder.build();
 	}
 
 }
