@@ -83,7 +83,7 @@ public interface Keyword extends Value<String>, Rawable {
 		SETNAME,
 
 		KEYS,
-		
+
 		KEEPTTL,
 
 		YES,
@@ -96,6 +96,9 @@ public interface Keyword extends Value<String>, Rawable {
 	}
 
 	enum Key {
+		MATCH,
+
+		NOVALUES
 	}
 
 	enum Geo {
@@ -114,6 +117,12 @@ public interface Keyword extends Value<String>, Rawable {
 		WITHHASH,
 
 		STOREDIST
+	}
+
+	enum Hash {
+		FIELDS,
+
+		WITHVALUES
 	}
 
 }

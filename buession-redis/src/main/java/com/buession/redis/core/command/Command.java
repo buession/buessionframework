@@ -201,6 +201,62 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * Hash command start
+	 **/
+	HDEL("w", CommandGroup.HASH),
+
+	HEXISTS("r", CommandGroup.HASH),
+
+	HEXPIRE("w", CommandGroup.HASH),
+
+	HEXPIREAT("w", CommandGroup.HASH),
+
+	HEXPIRETIME("r", CommandGroup.HASH),
+
+	HGET("r", CommandGroup.HASH),
+
+	HGETALL("r", CommandGroup.HASH),
+
+	HINCRBY("rw", CommandGroup.HASH),
+
+	HINCRBYFLOAT("rw", CommandGroup.HASH),
+
+	HKEYS("r", CommandGroup.HASH),
+
+	HLEN("r", CommandGroup.HASH),
+
+	HMGET("r", CommandGroup.HASH),
+
+	HMSET("w", CommandGroup.HASH),
+
+	HPERSIST("w", CommandGroup.HASH),
+
+	HPEXPIRE("w", CommandGroup.HASH),
+
+	HPEXPIREAT("w", CommandGroup.HASH),
+
+	HPEXPIRETIME("r", CommandGroup.HASH),
+
+	HPTTL("r", CommandGroup.HASH),
+
+	HRANDFIELD("r", CommandGroup.HASH),
+
+	HSCAN("r", CommandGroup.HASH),
+
+	HSET("w", CommandGroup.HASH),
+
+	HSETNX("w", CommandGroup.HASH),
+
+	HSTRLEN("r", CommandGroup.HASH),
+
+	HTTL("r", CommandGroup.HASH),
+
+	HVALS("r", CommandGroup.HASH),
+	/**
+	 * Hash command start
+	 **/
+
+	/**
 	 * ACL command start
 	 **/
 	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
@@ -208,55 +264,6 @@ public enum Command implements ProtocolCommand {
 			SubCommand.SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI),
 	/**
 	 * ACL command end
-	 **/
-	/**
-	 * cluster command end
-	 **/
-
-	/**
-	 * connection command end
-	 */
-
-	/**
-	 * geo command end
-	 **/
-
-	/**
-	 * hash command start
-	 **/
-	HDEL(CommandGroup.HASH),
-
-	HEXISTS(CommandGroup.HASH),
-
-	HGET(CommandGroup.HASH),
-
-	HGETALL(CommandGroup.HASH),
-
-	HINCRBY(CommandGroup.HASH),
-
-	HINCRBYFLOAT(CommandGroup.HASH),
-
-	HKEYS(CommandGroup.HASH),
-
-	HLEN(CommandGroup.HASH),
-
-	HMGET(CommandGroup.HASH),
-
-	HMSET(CommandGroup.HASH),
-
-	HRANDFIELD(CommandGroup.HASH),
-
-	HSCAN(CommandGroup.HASH),
-
-	HSET(CommandGroup.HASH),
-
-	HSETNX(CommandGroup.HASH),
-
-	HSTRLEN(CommandGroup.HASH),
-
-	HVALS(CommandGroup.HASH),
-	/**
-	 * hash command end
 	 **/
 
 	/**

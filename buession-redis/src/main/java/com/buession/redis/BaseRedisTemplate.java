@@ -68,6 +68,7 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.*;
 import com.buession.redis.transaction.Transaction;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -964,6 +965,358 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Long hDel(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hDel(rawKey(key), fields));
+	}
+
+	@Override
+	public Long hDel(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hDel(rawKey(key), fields));
+	}
+
+	@Override
+	public Boolean hExists(final String key, final String field) {
+		return execute((client)->client.hashOperations().hExists(rawKey(key), field));
+	}
+
+	@Override
+	public Boolean hExists(final byte[] key, final byte[] field) {
+		return execute((client)->client.hashOperations().hExists(rawKey(key), field));
+	}
+
+	@Override
+	public List<Long> hExpire(final String key, final int lifetime, final String... fields) {
+		return execute((client)->client.hashOperations().hExpire(rawKey(key), lifetime, fields));
+	}
+
+	@Override
+	public List<Long> hExpire(final byte[] key, final int lifetime, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpire(rawKey(key), lifetime, fields));
+	}
+
+	@Override
+	public List<Long> hExpire(final String key, final int lifetime, final ExpireOption expireOption,
+							  final String... fields) {
+		return execute((client)->client.hashOperations().hExpire(rawKey(key), lifetime, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hExpire(final byte[] key, final int lifetime, final ExpireOption expireOption,
+							  final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpire(rawKey(key), lifetime, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(rawKey(key), unixTimestamp, fields));
+	}
+
+	@Override
+	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(rawKey(key), unixTimestamp, fields));
+	}
+
+	@Override
+	public List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption,
+								final String... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(rawKey(key), unixTimestamp, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption,
+								final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(rawKey(key), unixTimestamp, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hExpireTime(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hExpireTime(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpireTime(rawKey(key), fields));
+	}
+
+	@Override
+	public String hGet(final String key, final String field) {
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field));
+	}
+
+	@Override
+	public byte[] hGet(final byte[] key, final byte[] field) {
+		return execute((client)->client.hashOperations().hGet(rawKey(key), field));
+	}
+
+	@Override
+	public Map<String, String> hGetAll(final String key) {
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)));
+	}
+
+	@Override
+	public Map<byte[], byte[]> hGetAll(final byte[] key) {
+		return execute((client)->client.hashOperations().hGetAll(rawKey(key)));
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final long value) {
+		return execute((client)->client.hashOperations().hIncrBy(rawKey(key), field, value));
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
+		return execute((client)->client.hashOperations().hIncrBy(rawKey(key), field, value));
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final double value) {
+		return execute((client)->client.hashOperations().hIncrByFloat(rawKey(key), field, value));
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
+		return execute((client)->client.hashOperations().hIncrByFloat(rawKey(key), field, value));
+	}
+
+	@Override
+	public Set<String> hKeys(final String key) {
+		return execute((client)->client.hashOperations().hKeys(rawKey(key)));
+	}
+
+	@Override
+	public Set<byte[]> hKeys(final byte[] key) {
+		return execute((client)->client.hashOperations().hKeys(rawKey(key)));
+	}
+
+	@Override
+	public Long hLen(final String key) {
+		return execute((client)->client.hashOperations().hLen(rawKey(key)));
+	}
+
+	@Override
+	public Long hLen(final byte[] key) {
+		return execute((client)->client.hashOperations().hLen(rawKey(key)));
+	}
+
+	@Override
+	public List<String> hMGet(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields));
+	}
+
+	@Override
+	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields));
+	}
+
+	@Override
+	public Status hMSet(final String key, final Map<String, String> data) {
+		return execute((client)->client.hashOperations().hMSet(rawKey(key), data));
+	}
+
+	@Override
+	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
+		return execute((client)->client.hashOperations().hMSet(rawKey(key), data));
+	}
+
+	@Override
+	public List<Long> hPersist(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hPersist(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hPersist(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPersist(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hpExpire(final String key, final int lifetime, final String... fields) {
+		return execute((client)->client.hashOperations().hpExpire(rawKey(key), lifetime, fields));
+	}
+
+	@Override
+	public List<Long> hpExpire(final byte[] key, final int lifetime, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hpExpire(rawKey(key), lifetime, fields));
+	}
+
+	@Override
+	public List<Long> hpExpire(final String key, final int lifetime, final ExpireOption expireOption,
+							   final String... fields) {
+		return execute((client)->client.hashOperations().hpExpire(rawKey(key), lifetime, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hpExpire(final byte[] key, final int lifetime, final ExpireOption expireOption,
+							   final byte[]... fields) {
+		return execute((client)->client.hashOperations().hpExpire(rawKey(key), lifetime, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hpExpireAt(final String key, final long unixTimestamp, final String... fields) {
+		return execute((client)->client.hashOperations().hpExpireAt(rawKey(key), unixTimestamp, fields));
+	}
+
+	@Override
+	public List<Long> hpExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hpExpireAt(rawKey(key), unixTimestamp, fields));
+	}
+
+	@Override
+	public List<Long> hpExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption,
+								 final String... fields) {
+		return execute((client)->client.hashOperations().hpExpireAt(rawKey(key), unixTimestamp, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hpExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption,
+								 final byte[]... fields) {
+		return execute((client)->client.hashOperations().hpExpireAt(rawKey(key), unixTimestamp, expireOption, fields));
+	}
+
+	@Override
+	public List<Long> hpExpireTime(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hpExpireTime(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hpExpireTime(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hpExpireTime(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hpTtl(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hpTtl(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hpTtl(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hpTtl(rawKey(key), fields));
+	}
+
+	@Override
+	public String hRandField(final String key) {
+		return execute((client)->client.hashOperations().hRandField(rawKey(key)));
+	}
+
+	@Override
+	public byte[] hRandField(final byte[] key) {
+		return execute((client)->client.hashOperations().hRandField(rawKey(key)));
+	}
+
+	@Override
+	public List<String> hRandField(final String key, final int count) {
+		return execute((client)->client.hashOperations().hRandField(rawKey(key), count));
+	}
+
+	@Override
+	public List<byte[]> hRandField(final byte[] key, final int count) {
+		return execute((client)->client.hashOperations().hRandField(rawKey(key), count));
+	}
+
+	@Override
+	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count) {
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
+	}
+
+	@Override
+	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count) {
+		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor,
+												 final HScanArgument<String> scanArgument) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, scanArgument));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor,
+												 final HScanArgument<byte[]> scanArgument) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, scanArgument));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor,
+												 final HScanArgument<String> scanArgument) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, scanArgument));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor,
+												 final HScanArgument<byte[]> scanArgument) {
+		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, scanArgument));
+	}
+
+	@Override
+	public Long hSet(final String key, final KeyValue<String, String>... data) {
+		return execute((client)->client.hashOperations().hSet(rawKey(key), data));
+	}
+
+	@Override
+	public Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
+		return execute((client)->client.hashOperations().hSet(rawKey(key), data));
+	}
+
+	@Override
+	public Status hSetNx(final String key, final String field, final String value) {
+		return execute((client)->client.hashOperations().hSetNx(rawKey(key), field, value));
+	}
+
+	@Override
+	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
+		return execute((client)->client.hashOperations().hSetNx(rawKey(key), field, value));
+	}
+
+	@Override
+	public Long hStrLen(final String key, final String field) {
+		return execute((client)->client.hashOperations().hStrLen(rawKey(key), field));
+	}
+
+	@Override
+	public Long hStrLen(final byte[] key, final byte[] field) {
+		return execute((client)->client.hashOperations().hStrLen(rawKey(key), field));
+	}
+
+	@Override
+	public List<Long> hTtl(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hTtl(rawKey(key), fields));
+	}
+
+	@Override
+	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hTtl(rawKey(key), fields));
+	}
+
+	@Override
+	public List<String> hVals(final String key) {
+		return execute((client)->client.hashOperations().hVals(rawKey(key)));
+	}
+
+	@Override
+	public List<byte[]> hVals(final byte[] key) {
+		return execute((client)->client.hashOperations().hVals(rawKey(key)));
+	}
+
+	@Override
 	public List<AclCategory> aclCat() {
 		return execute((client)->client.aclOperations().aclCat());
 	}
@@ -1071,260 +1424,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public String aclWhoAmI() {
 		return execute((client)->client.aclOperations().aclWhoAmI());
-	}
-
-	@Override
-	public Long hDel(final String key, final String... fields) {
-		return execute((client)->client.hashOperations().hDel(rawKey(key), fields));
-	}
-
-	@Override
-	public Long hDel(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashOperations().hDel(rawKey(key), fields));
-	}
-
-	@Override
-	public Boolean hExists(final String key, final String field) {
-		return execute((client)->client.hashOperations().hExists(rawKey(key), field));
-	}
-
-	@Override
-	public Boolean hExists(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashOperations().hExists(rawKey(key), field));
-	}
-
-	@Override
-	public String hGet(final String key, final String field) {
-		return execute((client)->client.hashOperations().hGet(rawKey(key), field));
-	}
-
-	@Override
-	public byte[] hGet(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashOperations().hGet(rawKey(key), field));
-	}
-
-	@Override
-	public Map<String, String> hGetAll(final String key) {
-		return execute((client)->client.hashOperations().hGetAll(rawKey(key)));
-	}
-
-	@Override
-	public Map<byte[], byte[]> hGetAll(final byte[] key) {
-		return execute((client)->client.hashOperations().hGetAll(rawKey(key)));
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final long value) {
-		return execute((client)->client.hashOperations().hIncrBy(rawKey(key), field, value));
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		return execute((client)->client.hashOperations().hIncrBy(rawKey(key), field, value));
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final double value) {
-		return execute((client)->client.hashOperations().hIncrByFloat(rawKey(key), field, value));
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		return execute((client)->client.hashOperations().hIncrByFloat(rawKey(key), field, value));
-	}
-
-	@Override
-	public Set<String> hKeys(final String key) {
-		return execute((client)->client.hashOperations().hKeys(rawKey(key)));
-	}
-
-	@Override
-	public Set<byte[]> hKeys(final byte[] key) {
-		return execute((client)->client.hashOperations().hKeys(rawKey(key)));
-	}
-
-	@Override
-	public Long hLen(final String key) {
-		return execute((client)->client.hashOperations().hLen(rawKey(key)));
-	}
-
-	@Override
-	public Long hLen(final byte[] key) {
-		return execute((client)->client.hashOperations().hLen(rawKey(key)));
-	}
-
-	@Override
-	public List<String> hMGet(final String key, final String... fields) {
-		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields));
-	}
-
-	@Override
-	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields));
-	}
-
-	@Override
-	public Status hMSet(final String key, final Map<String, String> data) {
-		return execute((client)->client.hashOperations().hMSet(rawKey(key), data));
-	}
-
-	@Override
-	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
-		return execute((client)->client.hashOperations().hMSet(rawKey(key), data));
-	}
-
-	@Override
-	public String hRandField(final String key) {
-		return execute((client)->client.hashOperations().hRandField(rawKey(key)));
-	}
-
-	@Override
-	public byte[] hRandField(final byte[] key) {
-		return execute((client)->client.hashOperations().hRandField(rawKey(key)));
-	}
-
-	@Override
-	public List<String> hRandField(final String key, final int count) {
-		return execute((client)->client.hashOperations().hRandField(rawKey(key), count));
-	}
-
-	@Override
-	public List<byte[]> hRandField(final byte[] key, final int count) {
-		return execute((client)->client.hashOperations().hRandField(rawKey(key), count));
-	}
-
-	@Override
-	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count) {
-		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
-	}
-
-	@Override
-	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count) {
-		return execute((client)->client.hashOperations().hRandFieldWithValues(rawKey(key), count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												 final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final int count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count));
-	}
-
-	@Override
-	public Long hSet(final String key, final String field, final String value) {
-		return execute((client)->client.hashOperations().hSet(rawKey(key), field, value));
-	}
-
-	@Override
-	public Long hSet(final byte[] key, final byte[] field, final byte[] value) {
-		return execute((client)->client.hashOperations().hSet(rawKey(key), field, value));
-	}
-
-	@Override
-	public Status hSetNx(final String key, final String field, final String value) {
-		return execute((client)->client.hashOperations().hSetNx(rawKey(key), field, value));
-	}
-
-	@Override
-	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		return execute((client)->client.hashOperations().hSetNx(rawKey(key), field, value));
-	}
-
-	@Override
-	public Long hStrLen(final String key, final String field) {
-		return execute((client)->client.hashOperations().hStrLen(rawKey(key), field));
-	}
-
-	@Override
-	public Long hStrLen(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashOperations().hStrLen(rawKey(key), field));
-	}
-
-	@Override
-	public List<String> hVals(final String key) {
-		return execute((client)->client.hashOperations().hVals(rawKey(key)));
-	}
-
-	@Override
-	public List<byte[]> hVals(final byte[] key) {
-		return execute((client)->client.hashOperations().hVals(rawKey(key)));
 	}
 
 	@Override

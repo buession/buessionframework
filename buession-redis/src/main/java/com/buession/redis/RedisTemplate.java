@@ -39,6 +39,7 @@ import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
 import com.buession.redis.core.operations.*;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,19 +184,37 @@ public class RedisTemplate extends BaseRedisTemplate implements AclOperations, B
 	}
 
 	@Override
-	public <V> Status hMSet(final String key, final List<KeyValue<String, V>> data) {
-		Map<String, String> temp = data.stream()
-				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()),
-						(key1, key2)->key2, LinkedHashMap::new));
+	public <V> Status hMSet(final String key, final KeyValue<String, V>... data) {
+		final Class<?> clazz = data[0].getValue().getClass();
+		Map<String, String> temp = new LinkedHashMap<>(data.length);
+
+		if(clazz == String.class){
+			for(KeyValue<String, V> kv : data){
+				temp.put(kv.getKey(), (String) kv.getValue());
+			}
+		}else{
+			for(KeyValue<String, V> kv : data){
+				temp.put(kv.getKey(), serializer.serialize(kv.getValue()));
+			}
+		}
 
 		return hMSet(key, temp);
 	}
 
 	@Override
-	public <V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		Map<byte[], byte[]> temp = data.stream()
-				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()),
-						(key1, key2)->key2, LinkedHashMap::new));
+	public <V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data) {
+		final Class<?> clazz = data[0].getValue().getClass();
+		Map<byte[], byte[]> temp = new LinkedHashMap<>(data.length);
+
+		if(clazz == byte[].class){
+			for(KeyValue<byte[], V> kv : data){
+				temp.put(kv.getKey(), (byte[]) kv.getValue());
+			}
+		}else{
+			for(KeyValue<byte[], V> kv : data){
+				temp.put(kv.getKey(), serializer.serializeAsBytes(kv.getValue()));
+			}
+		}
 
 		return hMSet(key, temp);
 	}

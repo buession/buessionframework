@@ -25,18 +25,23 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.type.TypeReference;
+import com.buession.core.utils.Assert;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.HashCommands;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 哈希表运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/hash/index.html" target="_blank">http://redisdoc.com/hash/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=hash" target="_blank">https://redis.io/docs/latest/commands/?group=hash</a></p>
  *
  * @author Yong.Teng
  */
@@ -72,6 +77,156 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	default Long hDelete(final byte[] key, final byte[]... fields) {
 		return hDel(key, fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hExpireAt(final String key, final Date date, final String... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hExpireAt(key, date.getTime() / 1000L, fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hExpireAt(final byte[] key, final Date date, final byte[]... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hExpireAt(key, date.getTime() / 1000L, fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param expireOption
+	 * 		过期选项
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hExpireAt(final String key, final Date date, final ExpireOption expireOption,
+								 final String... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hExpireAt(key, date.getTime() / 1000L, expireOption, fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param expireOption
+	 * 		过期选项
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hExpireAt(final byte[] key, final Date date, final ExpireOption expireOption,
+								 final byte[]... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hExpireAt(key, date.getTime() / 1000L, expireOption, fields);
+	}
+
+	/**
+	 * Returns the absolute Unix timestamp in seconds since Unix epoch at which the given key's field(s) will expire.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		域
+	 *
+	 * @return The expiration Unix timestamp in seconds;
+	 * -1 if the key exists but has no associated expiration time;
+	 * -2 if the key does not exist;
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Date> hExpireTimeAt(final String key, final String... fields) {
+		List<Long> data = hExpireTime(key, fields);
+		return data == null ? null : data.stream().map((v)->v != null && v > 0 ? new Date(v * 1000) : null)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns the absolute Unix timestamp in seconds since Unix epoch at which the given key's field(s) will expire.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		域
+	 *
+	 * @return The expiration Unix timestamp in seconds;
+	 * -1 if the key exists but has no associated expiration time;
+	 * -2 if the key does not exist;
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Date> hExpireTimeAt(final byte[] key, final byte[]... fields) {
+		List<Long> data = hExpireTime(key, fields);
+		return data == null ? null : data.stream().map((v)->v != null && v > 0 ? new Date(v * 1000) : null)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -279,78 +434,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	<V> Map<byte[], V> hGetAllObject(final byte[] key, TypeReference<V> type);
 
 	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	default Long hDecrBy(final String key, final String field, final long value) {
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
-	}
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	default Long hDecrBy(final byte[] key, final byte[] field, final long value) {
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
-	}
-
-	/**
-	 * 为哈希表 key 中的域 field 加上浮点数减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc.com/hash/hincrbyfloat.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	default Double hDecrByFloat(final String key, final String field, final double value) {
-		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
-	}
-
-	/**
-	 * 为哈希表 key 中的域 field 加上浮点数减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc.com/hash/hincrbyfloat.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value) {
-		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
-	}
-
-	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a></p>
@@ -471,8 +554,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 *
+	 * @since 3.0.0
 	 */
-	<V> Status hMSet(final String key, final List<KeyValue<String, V>> data);
+	<V> Status hMSet(final String key, final KeyValue<String, V>... data);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -487,8 +572,160 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 *
+	 * @since 3.0.0
 	 */
-	<V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data);
+	<V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data);
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hpExpireAt(final String key, final Date date, final String... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hpExpireAt(key, date.getTime(), fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hpExpireAt(final byte[] key, final Date date, final byte[]... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hpExpireAt(key, date.getTime(), fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param expireOption
+	 * 		过期选项
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hpExpireAt(final String key, final Date date, final ExpireOption expireOption,
+								  final String... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hpExpireAt(key, date.getTime(), expireOption, fields);
+	}
+
+	/**
+	 * 为给定 key 的域 fields 设置过期时间，具体过期时间戳
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param expireOption
+	 * 		过期选项
+	 * @param fields
+	 * 		域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist.
+	 * 0 if the specified {@code NX | XX | GT | LT} condition has not been met.
+	 * 1 if the expiration time was set/updated.
+	 * 2 when {@code HEXPIRE/HPEXPIRE} is called with 0 seconds/milliseconds or when {@code HEXPIREAT/HPEXPIREAT} is called
+	 * with a past Unixtime in seconds/milliseconds.
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Long> hpExpireAt(final byte[] key, final Date date, final ExpireOption expireOption,
+								  final byte[]... fields) {
+		Assert.isNull(date, "Expire date could not be null");
+		return hpExpireAt(key, date.getTime(), expireOption, fields);
+	}
+
+	/**
+	 * Returns the absolute Unix timestamp in milliseconds since Unix epoch at which the given key's field(s) will expire.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		域
+	 *
+	 * @return The expiration Unix timestamp in seconds;
+	 * -1 if the key exists but has no associated expiration time;
+	 * -2 if the key does not exist;
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Date> hpExpireTimeAt(final String key, final String... fields) {
+		List<Long> data = hpExpireTime(key, fields);
+		return data == null ? null : data.stream().map((v)->v != null && v > 0 ? new Date(v) : null)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns the absolute Unix timestamp in milliseconds since Unix epoch at which the given key's field(s) will expire.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		域
+	 *
+	 * @return The expiration Unix timestamp in seconds;
+	 * -1 if the key exists but has no associated expiration time;
+	 * -2 if the key does not exist;
+	 *
+	 * @since 3.0.0
+	 */
+	default List<Date> hpExpireTimeAt(final byte[] key, final byte[]... fields) {
+		List<Long> data = hpExpireTime(key, fields);
+		return data == null ? null : data.stream().map((v)->v != null && v > 0 ? new Date(v) : null)
+				.collect(Collectors.toList());
+	}
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -1613,16 +1850,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
+	 * @param data
+	 * 		域和值
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	<V> Long hSet(final String key, final String field, final V value);
+	<V> Long hSet(final String key, final KeyValue<String, V>... data);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。
@@ -1631,16 +1866,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
+	 * @param data
+	 * 		域和值
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	<V> Long hSet(final byte[] key, final byte[] field, final V value);
+	<V> Long hSet(final byte[] key, KeyValue<byte[], V>... data);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value

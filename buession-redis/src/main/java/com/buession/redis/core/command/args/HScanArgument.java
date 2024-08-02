@@ -22,25 +22,31 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.command.args.HScanArgument;
-import io.lettuce.core.ScanArgs;
-
-import java.util.Optional;
+import com.buession.redis.core.Keyword;
+import com.buession.redis.core.Type;
 
 /**
- * Lettuce {@link ScanArgs} 扩展
+ * {@code HSCAN} 参数基类
+ *
+ * @param <T>
+ * 		模式值类型
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceScanArgs extends ScanArgs {
+public class HScanArgument<T> extends BaseScanArgument<T> {
+
+	/**
+	 * -
+	 */
+	private Boolean noValues;
 
 	/**
 	 * 构造函数
 	 */
-	public LettuceScanArgs() {
+	public HScanArgument() {
 		super();
 	}
 
@@ -48,80 +54,118 @@ public final class LettuceScanArgs extends ScanArgs {
 	 * 构造函数
 	 *
 	 * @param pattern
-	 * 		匹配模式
+	 * 		模式
 	 */
-	public LettuceScanArgs(final String pattern) {
-		super();
-		match(pattern);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
-	public LettuceScanArgs(final byte[] pattern) {
-		super();
-		match(pattern);
+	public HScanArgument(final T pattern) {
+		super(pattern);
 	}
 
 	/**
 	 * 构造函数
 	 *
 	 * @param count
-	 * 		返回数量
+	 * 		返回个数
 	 */
-	public LettuceScanArgs(final int count) {
-		super();
-		limit(count);
+	public HScanArgument(final int count) {
+		super(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param noValues
+	 * 		-
+	 */
+	public HScanArgument(final Boolean noValues) {
+		this.noValues = noValues;
 	}
 
 	/**
 	 * 构造函数
 	 *
 	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
+	 * 		模式
+	 * @param noValues
+	 * 		-
 	 */
-	public LettuceScanArgs(final String pattern, final int count) {
-		this(pattern);
-		limit(count);
+	public HScanArgument(final T pattern, final Boolean noValues) {
+		super(pattern);
+		this.noValues = noValues;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回个数
+	 * @param noValues
+	 * 		-
+	 */
+	public HScanArgument(final int count, final Boolean noValues) {
+		super(count);
+		this.noValues = noValues;
 	}
 
 	/**
 	 * 构造函数
 	 *
 	 * @param pattern
-	 * 		匹配模式
+	 * 		模式
 	 * @param count
-	 * 		返回数量
+	 * 		返回个数
 	 */
-	public LettuceScanArgs(final byte[] pattern, final int count) {
-		this(pattern);
-		limit(count);
+	public HScanArgument(final T pattern, final int count) {
+		super(pattern, count);
 	}
 
 	/**
-	 * 从 {@link HScanArgument} 创建 {@link ScanArgs} 实例
+	 * 构造函数
 	 *
-	 * @param scanArgument
-	 *        {@link HScanArgument}
-	 *
-	 * @return {@link LettuceScanArgs} 实例
+	 * @param pattern
+	 * 		模式
+	 * @param count
+	 * 		返回个数
+	 * @param noValues
+	 * 		-
 	 */
-	public static <T> LettuceScanArgs from(final HScanArgument<T> scanArgument) {
-		final LettuceScanArgs scanArgs = new LettuceScanArgs();
+	public HScanArgument(final T pattern, final int count, final Boolean noValues) {
+		super(pattern, count);
+		this.noValues = noValues;
+	}
 
-		if(scanArgument.getPattern() instanceof String){
-			scanArgs.match((String) scanArgument.getPattern());
-		}else if(scanArgument.getPattern() instanceof byte[]){
-			scanArgs.match((byte[]) scanArgument.getPattern());
+	public Boolean isNoValues() {
+		return getNoValues();
+	}
+
+	public Boolean getNoValues() {
+		return noValues;
+	}
+
+	public void noValues() {
+		this.noValues = true;
+	}
+
+	public void setNoValues(final Boolean noValues) {
+		this.noValues = noValues;
+	}
+
+	@Override
+	public String toString() {
+		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+
+		if(getPattern() != null){
+			builder.add(Keyword.Key.MATCH, getPattern());
 		}
-		Optional.ofNullable(scanArgument.getCount()).ifPresent(scanArgs::limit);
 
-		return scanArgs;
+		if(getCount() != null){
+			builder.add(Keyword.Common.COUNT, getCount());
+		}
+
+		if(Boolean.TRUE.equals(noValues)){
+			builder.append(Keyword.Key.NOVALUES);
+		}
+
+		return builder.build();
 	}
 
 }

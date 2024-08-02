@@ -31,6 +31,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
+import com.buession.redis.core.command.args.ScanArgument;
 import com.buession.redis.core.command.args.SortArgument;
 
 import java.util.List;
@@ -1057,12 +1058,14 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @param cursor
 	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
+	 * @param scanArgument
+	 *        {@link ScanArgument}
 	 *
 	 * @return 返回和给定模式相匹配的数据库键
+	 *
+	 * @since 3.0.0
 	 */
-	ScanResult<List<String>> scan(final long cursor, final String pattern);
+	ScanResult<List<String>> scan(final long cursor, final ScanArgument.StringScanArgument scanArgument);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1071,147 +1074,14 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @param cursor
 	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
+	 * @param scanArgument
+	 *        {@link ScanArgument}
 	 *
 	 * @return 返回和给定模式相匹配的数据库键
+	 *
+	 * @since 3.0.0
 	 */
-	ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的数据库键
-	 */
-	ScanResult<List<String>> scan(final String cursor, final String pattern);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的数据库键
-	 */
-	ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回指定数量的数据库键
-	 */
-	ScanResult<List<String>> scan(final long cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回指定数量的数据库键
-	 */
-	ScanResult<List<String>> scan(final String cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回指定数量的数据库键
-	 */
-	ScanResult<List<byte[]>> scan(final byte[] cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的键
-	 */
-	ScanResult<List<String>> scan(final long cursor, final String pattern, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的键
-	 */
-	ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的键
-	 */
-	ScanResult<List<String>> scan(final String cursor, final String pattern, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的键
-	 */
-	ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count);
+	ScanResult<List<byte[]>> scan(final long cursor, final ScanArgument.ByteScanArgument scanArgument);
 
 	/**
 	 * 返回给定列表、集合、有序集合 key 中经过排序的元素

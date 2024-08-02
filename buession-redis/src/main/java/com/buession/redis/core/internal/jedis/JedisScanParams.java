@@ -24,7 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis;
 
+import com.buession.redis.core.command.args.HScanArgument;
 import redis.clients.jedis.params.ScanParams;
+
+import java.util.Optional;
 
 /**
  * Jedis {@link ScanParams} 扩展
@@ -97,6 +100,27 @@ public final class JedisScanParams extends ScanParams {
 	public JedisScanParams(final byte[] pattern, final int count) {
 		this(pattern);
 		count(count);
+	}
+
+	/**
+	 * 从 {@link HScanArgument} 创建 {@link ScanParams} 实例
+	 *
+	 * @param scanArgument
+	 *        {@link HScanArgument}
+	 *
+	 * @return {@link JedisScanParams} 实例
+	 */
+	public static <T> JedisScanParams from(final HScanArgument<T> scanArgument) {
+		final JedisScanParams scanParams = new JedisScanParams();
+
+		if(scanArgument.getPattern() instanceof String){
+			scanParams.match((String) scanArgument.getPattern());
+		}else if(scanArgument.getPattern() instanceof byte[]){
+			scanParams.match((byte[]) scanArgument.getPattern());
+		}
+		Optional.ofNullable(scanArgument.getCount()).ifPresent(scanParams::count);
+
+		return scanParams;
 	}
 
 }

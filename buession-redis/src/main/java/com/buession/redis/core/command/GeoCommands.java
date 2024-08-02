@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * 地理位置命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/geo/index.html" target="_blank">http://redisdoc.com/geo/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=geo" target="_blank">https://redis.io/docs/latest/commands/?group=geo</a></p>
  *
  * @author Yong.Teng
  */

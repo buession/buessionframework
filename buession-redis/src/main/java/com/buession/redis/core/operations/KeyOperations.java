@@ -161,8 +161,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @since 3.0.0
 	 */
 	default Date expireTimeAt(final String key) {
-		Long ttl = expireTime(key);
-		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl) : null;
+		Long expireTime = expireTime(key);
+		return expireTime != null && expireTime > 0 ? new Date(System.currentTimeMillis() + expireTime) : null;
 	}
 
 	/**
@@ -178,8 +178,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @since 3.0.0
 	 */
 	default Date expireTimeAt(final byte[] key) {
-		Long ttl = expireTime(key);
-		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl) : null;
+		Long expireTime = expireTime(key);
+		return expireTime != null && expireTime > 0 ? new Date(System.currentTimeMillis() + expireTime) : null;
 	}
 
 	@Override
@@ -431,8 +431,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @since 3.0.0
 	 */
 	default Date pExpireTimeAt(final String key) {
-		Long ttl = pExpireTime(key);
-		return ttl != null && ttl >= 0 ? new Date(ttl) : null;
+		Long expireTime = pExpireTime(key);
+		return expireTime != null && expireTime > 0 ? new Date(expireTime) : null;
 	}
 
 	/**
@@ -448,8 +448,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @since 3.0.0
 	 */
 	default Date pExpireTimeAt(final byte[] key) {
-		Long ttl = pExpireTime(key);
-		return ttl != null && ttl >= 0 ? new Date(ttl) : null;
+		Long expireTime = pExpireTime(key);
+		return expireTime != null && expireTime > 0 ? new Date(expireTime) : null;
 	}
 
 	@Override

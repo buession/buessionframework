@@ -22,17 +22,104 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.operations;
-
-import com.buession.redis.core.command.HashCommands;
+package com.buession.redis.core.command.args;
 
 /**
- * 哈希表命令操作接口
+ * {@code SCAN}、{@code SSCAN}、{@code HSCAN}、{@code ZSCAN} 参数基类
  *
- * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=hash" target="_blank">https://redis.io/docs/latest/commands/?group=hash</a></p>
+ * @param <T>
+ * 		模式值类型
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public interface HashOperations extends HashCommands, RedisOperations {
+abstract class BaseScanArgument<T> {
+
+	/**
+	 * 模式
+	 */
+	private T pattern;
+
+	/**
+	 * 返回个数
+	 */
+	private Integer count;
+
+	/**
+	 * 构造函数
+	 */
+	public BaseScanArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param pattern
+	 * 		模式
+	 */
+	public BaseScanArgument(final T pattern) {
+		this.pattern = pattern;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回个数
+	 */
+	public BaseScanArgument(final int count) {
+		this.count = count;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param pattern
+	 * 		模式
+	 * @param count
+	 * 		返回个数
+	 */
+	public BaseScanArgument(final T pattern, final int count) {
+		this(pattern);
+		this.count = count;
+	}
+
+	/**
+	 * 返回模式
+	 *
+	 * @return 模式
+	 */
+	public T getPattern() {
+		return pattern;
+	}
+
+	/**
+	 * 设置模式
+	 *
+	 * @param pattern
+	 * 		模式
+	 */
+	public void setPattern(final T pattern) {
+		this.pattern = pattern;
+	}
+
+	/**
+	 * 返回个数
+	 *
+	 * @return 返回个数
+	 */
+	public Integer getCount() {
+		return count;
+	}
+
+	/**
+	 * 设置返回个数
+	 *
+	 * @param count
+	 * 		返回个数
+	 */
+	public void setCount(final Integer count) {
+		this.count = count;
+	}
 
 }
