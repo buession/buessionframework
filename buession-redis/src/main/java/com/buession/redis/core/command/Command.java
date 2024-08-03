@@ -257,6 +257,18 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * Hyperloglog command start
+	 **/
+	PFADD("w", CommandGroup.HYPERLOGLOG),
+
+	PFCOUNT("r", CommandGroup.HYPERLOGLOG),
+
+	PFMERGE("w", CommandGroup.HYPERLOGLOG),
+	/**
+	 * Hyperloglog command end
+	 **/
+
+	/**
 	 * ACL command start
 	 **/
 	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
@@ -264,18 +276,6 @@ public enum Command implements ProtocolCommand {
 			SubCommand.SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI),
 	/**
 	 * ACL command end
-	 **/
-
-	/**
-	 * hyperloglog command start
-	 **/
-	PFADD(CommandGroup.HYPERLOGLOG),
-
-	PFCOUNT(CommandGroup.HYPERLOGLOG),
-
-	PFMERGE(CommandGroup.HYPERLOGLOG),
-	/**
-	 * hyperloglog command end
 	 **/
 
 	/**

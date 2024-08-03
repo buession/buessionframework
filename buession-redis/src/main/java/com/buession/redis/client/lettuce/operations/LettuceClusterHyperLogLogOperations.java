@@ -43,15 +43,15 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		final CommandArguments args = CommandArguments.create(key).add(elements);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
 					oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.PFADD,
-					(cmd)->cmd.pfadd(key, elements), oneStatusConverter)
+			return new LettuceClusterTransactionCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
+					oneStatusConverter)
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
@@ -61,38 +61,36 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 	}
 
 	@Override
-	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+	public Long pfCount(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.PFMERGE,
-					(cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+			return new LettuceClusterPipelineCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.PFMERGE,
-					(cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+			return new LettuceClusterTransactionCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+			return new LettuceClusterCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
-	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys),
-					(v)->v)
+			return new LettuceClusterPipelineCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys),
-					(v)->v)
+			return new LettuceClusterTransactionCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+			return new LettuceClusterCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
 					.run(args);
 		}
 	}

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -29,7 +29,7 @@ import com.buession.redis.core.command.HyperLogLogCommands;
 /**
  * HyperLogLog 运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=hyperloglog" target="_blank">https://redis.io/docs/latest/commands/?group=hyperloglog</a></p>
  *
  * @author Yong.Teng
  */

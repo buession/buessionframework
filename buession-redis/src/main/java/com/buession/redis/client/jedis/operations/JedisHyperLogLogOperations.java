@@ -43,7 +43,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 
 	@Override
 	public Status pfAdd(final String key, final String... elements) {
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		final CommandArguments args = CommandArguments.create(key).add(elements);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
@@ -54,15 +54,14 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
+			return new JedisCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements), oneStatusConverter)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		final CommandArguments args = CommandArguments.create(key).add(elements);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
@@ -73,53 +72,14 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 					oneStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status pfMerge(final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
+			return new JedisCommand<>(client, Command.PFADD, (cmd)->cmd.pfadd(key, elements), oneStatusConverter)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Long pfCount(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
@@ -135,7 +95,7 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
@@ -145,6 +105,42 @@ public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperati
 					.run(args);
 		}else{
 			return new JedisCommand<>(client, Command.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status pfMerge(final String destKey, final String... keys) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, Command.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys), okStatusConverter)
 					.run(args);
 		}
 	}
